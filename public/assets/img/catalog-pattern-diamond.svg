@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="131" height="131" viewBox="0 0 131 131" fill="none" overflow="hidden">
-<!-- Геометрія 1:1 з home-pattern-diamond.svg. Тони на зеленій базі --color-green #223520 (SVG не бере CSS-змінні — вручну; токен --color-pattern-catalog = чорний 8%):
+<!-- Геометрія 1:1 з home-pattern-diamond.svg. Тони на зеленій базі color-green #223520 (SVG не бере CSS-змінні — вручну; токен color-pattern-catalog = чорний 8%):
      світлий ромб = колір сторінки (34,53,32); середній (основа, 1 шар чорного 8%) ≈ (31,49,29); темний (перекриття, 2 шари) ≈ (29,45,27). -->
 <rect width="131" height="131" fill="#000000" fill-opacity="0.08"/>
 <path fill="#000000" fill-opacity="0.08" d="M74.0 44L108.5 0L143.0 44L108.5 88ZM-57.0 44L-22.5 0L12.0 44L-22.5 88ZM24 110L44 84L64 110L44 136ZM24 -21L44 -47L64 -21L44 5Z"/>
