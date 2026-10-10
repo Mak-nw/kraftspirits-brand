@@ -18,6 +18,8 @@
   text-align: center; color: var(--color-green);
 }
 .product-card--main .product-card__body { color: var(--color-black); }
+/* ціна на ітемі: EB Garamond (токен ролі --type-price-card-*); лише картки товару — «додати в кошик» (btn--serif) не змінюється */
+.product-card .t-price { font-family: var(--type-price-card-font); font-weight: var(--type-price-card-weight); }
 /* назва: без підкреслення ні в стані спокою, ні на hover (підкреслень при hover немає, крім футера) */
 .product-card__body h3 { text-decoration: none; }
 @media (hover: hover) {

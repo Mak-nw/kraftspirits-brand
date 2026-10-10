@@ -1,5 +1,5 @@
 /* Поле фільтра (catalog 204:2333 «Frame 72»): підпис (EB Garamond SemiBold 16) + значення (Manrope 14, caps) + шеврон 12×6;
-   фон rgba(220,219,207,.05), радіус 5, padding 10/15, gap 30; значення 200 u. Для темної сторінки каталогу. */
+   фон непрозорий --color-select-bg (#354632 ≈ #223520 + 10% beige; раніше rgba(220,219,207,.05) просвічував візерунок), радіус 5, padding 10/15, gap 30; значення 200 u. Для темної сторінки каталогу. */
 .select {
   position: relative; display: flex; align-items: center; gap: var(--space-30);
   padding: var(--space-select-py) var(--space-select-px);

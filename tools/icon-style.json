@@ -1,0 +1,286 @@
+{
+  "name": "YasnoCraft × Bazylsprings — brand line icons",
+  "version": 1,
+  "grid": {
+    "viewBox": "0 0 24 24 (пляшки 24 × H: 40 / 50 / 64)",
+    "unit": "1 = 1 одиниця viewBox; на сайті масштабується в u (22u хедер)",
+    "safeArea": "контент між ≈2.75 і 21.25 по обох осях (з урахуванням товщини штриха 1.5: центр лінії від 3.5 до 20.5, зовнішній край ≥2.75)",
+    "opticalPadding": "≈2.75 від краю viewBox до зовнішнього краю штриха; виступи (обідок кошика 2.75–21.25, мікрофон гарнітури) — єдине, що доходить до межі безпечної зони; пляшки: 1.5 зверху (корок) і 1.5 знизу",
+    "axis": "симетричні об'єкти (кошик, пляшка, склянка) центровані по x=12; асиметричні (гарнітура, каталог) врівноважені по вазі"
+  },
+  "stroke": {
+    "color": "#223420",
+    "width": 1.5,
+    "linecap": "round",
+    "linejoin": "round",
+    "fill": "none",
+    "gradients": false,
+    "fills": false,
+    "scaling": "stroke масштабується разом з іконкою (не vector-effect: non-scaling-stroke)"
+  },
+  "geometryRules": {
+    "primitives": [
+      "path (M L H V C Q S A Z)",
+      "rect із rx",
+      "нуль-довжинні штрихи M x y H x+0.01 для крапок (круглі кінці)"
+    ],
+    "forbidden": [
+      "circle/ellipse як заливка",
+      "fill",
+      "gradient",
+      "filter/shadow",
+      "text",
+      "clip/mask всередині файлу"
+    ],
+    "cornerRadii": "0.5–1.25 для прямокутних елементів (rx 0.5 корок, 0.75 мікрофон, 1.25 чашки/обкладинка); ≈1.5–2 для великих скруглень (дно пляшки/склянки, плече)",
+    "strokesPerIcon": "3–5 контурів/елементів на іконку (arrow 2, basket 4, headset 5, bottle 3, catalog 3, strength 3)",
+    "minDetail": "жодних деталей менших за 1.5 (товщина штриха); внутрішній просвіт між паралельними лініями не менше 1.5, зазвичай ≈3 (за центрами 3 — напр. M8 26H16 і M8 29H16)",
+    "parallelSpacing": "≈3 між центрами паралельних ліній (2.75–3.5)",
+    "symmetry": "вертикальна вісь x=12 де об'єкт симетричний; кути — прямі або 45°, нахили ≤ ~10° (боки кошика/склянки)",
+    "visualWeight": "легкі «лінійні» іконки: заповнення площі ≈ 25–35 %, рівна густина штрихів між іконками; всередині — не більше 3 дрібних елементів",
+    "terminals": "усі кінці ліній і «крапки» — круглі (linecap round); вхідні/вихідні точки ліній лежать на контурі або з'єднані round-join, відкритих «хвостів» нема; ручки/штанги закінчуються на об'єкті чи закругленням",
+    "noText": "без літер і цифр усередині іконки"
+  },
+  "icons": [
+    {
+      "id": "arrow-up-right",
+      "label": "стрілка вгору-вправо",
+      "purpose": "Стрілка простих кнопок .btn (CTA, «детальніше», «перейти»)",
+      "semantics": "Діагональна стрілка: довга діагональ від лівого нижнього до правого верхнього кута і «наконечник» — кутова скоба з горизонталі й вертикалі, що сходяться у правому верхньому куті.",
+      "width": 24,
+      "height": 24,
+      "elements": [
+        {
+          "type": "path",
+          "role": "стебло",
+          "d": "M7 17L17 7",
+          "note": "діагональ 45°, довжина ≈14.1"
+        },
+        {
+          "type": "path",
+          "role": "наконечник",
+          "d": "M8.5 7H17V15.5",
+          "note": "кутова скоба 8.5 × 8.5, гострий кут (linejoin round)"
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 17L17 7\"/><path d=\"M8.5 7H17V15.5\"/></svg>",
+      "file": "/assets/icons/arrow-up-right.svg",
+      "siteUsage": "прості кнопки .btn: знак ≈24u у боксі 12u"
+    },
+    {
+      "id": "basket",
+      "label": "кошик",
+      "purpose": "Кнопка «Кошик ( N )» у хедері",
+      "semantics": "Кошик-торба: трапецієвидний кошик (звужується донизу) з горизонтальним бортиком-обідком, дугова ручка над обідком і три вертикальні штрихи всередині.",
+      "width": 24,
+      "height": 24,
+      "elements": [
+        {
+          "type": "path",
+          "role": "корпус",
+          "d": "M4 9L5.5 20.5H18.5L20 9",
+          "note": "відкрита зверху трапеція, нахил боків ≈1.5 на 11.5"
+        },
+        {
+          "type": "path",
+          "role": "обідок",
+          "d": "M2.75 9H21.25",
+          "note": "горизонталь на всю ширину контенту"
+        },
+        {
+          "type": "path",
+          "role": "ручка",
+          "d": "M7.5 9C7.5 5 9.5 3.25 12 3.25S16.5 5 16.5 9",
+          "note": "симетрична дуга, вершина y=3.25"
+        },
+        {
+          "type": "path",
+          "role": "штрихи",
+          "d": "M9.25 12.5V17M12 12.5V17M14.75 12.5V17",
+          "note": "3 вертикалі довжиною 4.5, крок 2.75"
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 9L5.5 20.5H18.5L20 9\"/><path d=\"M2.75 9H21.25\"/><path d=\"M7.5 9C7.5 5 9.5 3.25 12 3.25S16.5 5 16.5 9\"/><path d=\"M9.25 12.5V17M12 12.5V17M14.75 12.5V17\"/></svg>",
+      "file": "/assets/icons/basket.svg",
+      "siteUsage": "хедер: 22u, gap до тексту 8u"
+    },
+    {
+      "id": "headset",
+      "label": "гарнітура",
+      "purpose": "Кнопка «підказати?» у хедері",
+      "semantics": "Навушники з мікрофоном: дуга оголів'я, дві чашки-амбушюри (закруглені прямокутники) і штанга мікрофона, що йде вниз від правої чашки і вліво до маленького закругленого мікрофона.",
+      "width": 24,
+      "height": 24,
+      "elements": [
+        {
+          "type": "path",
+          "role": "оголів'я",
+          "d": "M5 13.25V11.5A7 7 0 0 1 19 11.5V13.25",
+          "note": "півколо R7 на ніжках"
+        },
+        {
+          "type": "rect",
+          "role": "ліва чашка",
+          "x": 3.25,
+          "y": 13.25,
+          "width": 3.5,
+          "height": 5.5,
+          "rx": 1.25
+        },
+        {
+          "type": "rect",
+          "role": "права чашка",
+          "x": 17.25,
+          "y": 13.25,
+          "width": 3.5,
+          "height": 5.5,
+          "rx": 1.25
+        },
+        {
+          "type": "path",
+          "role": "штанга мікрофона",
+          "d": "M19 18.75V19.25Q19 21 17.25 21H14",
+          "note": "вниз із закругленням Q і вліво до мікрофона"
+        },
+        {
+          "type": "rect",
+          "role": "мікрофон",
+          "x": 11.5,
+          "y": 20,
+          "width": 2.5,
+          "height": 2,
+          "rx": 0.75
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 13.25V11.5A7 7 0 0 1 19 11.5V13.25\"/><rect x=\"3.25\" y=\"13.25\" width=\"3.5\" height=\"5.5\" rx=\"1.25\"/><rect x=\"17.25\" y=\"13.25\" width=\"3.5\" height=\"5.5\" rx=\"1.25\"/><path d=\"M19 18.75V19.25Q19 21 17.25 21H14\"/><rect x=\"11.5\" y=\"20\" width=\"2.5\" height=\"2\" rx=\"0.75\"/></svg>",
+      "file": "/assets/icons/headset.svg",
+      "siteUsage": "хедер: 22u, gap 8u"
+    },
+    {
+      "id": "bottle-0-5",
+      "label": "пляшка 0,5 л",
+      "purpose": "Іконка об'єму 0,5 л поруч з «500 мл» (сторінка товару, картка, акордеони)",
+      "semantics": "Пляшка зі шийкою-циліндром: маленька прямокутна корка зверху, плавне плече, пряме тіло з закругленим дном і двома горизонтальними рисками-«етикеткою» у нижній третині.",
+      "width": 24,
+      "height": 40,
+      "elements": [
+        {
+          "type": "rect",
+          "role": "корок",
+          "x": 10.25,
+          "y": 1.5,
+          "width": 3.5,
+          "height": 2,
+          "rx": 0.5
+        },
+        {
+          "type": "path",
+          "role": "силует",
+          "d": "M10.25 3.5V11C10.25 14 4 13.5 4 17V36.5Q4 38.5 6 38.5H18Q20 38.5 20 36.5V17C20 13.5 13.75 14 13.75 11V3.5Z",
+          "note": "симетрична вісь x=12, радіус дна 2"
+        },
+        {
+          "type": "path",
+          "role": "етикетка",
+          "d": "M8 26H16M8 29H16",
+          "note": "дві лінії, відстань між ними 3"
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"40\" viewBox=\"0 0 24 40\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"10.25\" y=\"1.5\" width=\"3.5\" height=\"2\" rx=\"0.5\"/><path d=\"M10.25 3.5V11C10.25 14 4 13.5 4 17V36.5Q4 38.5 6 38.5H18Q20 38.5 20 36.5V17C20 13.5 13.75 14 13.75 11V3.5Z\"/><path d=\"M8 26H16M8 29H16\"/></svg>",
+      "file": "/assets/icons/bottle-0-5.svg",
+      "siteUsage": "поруч з об'ємом: 16.8u × 28u (0,5 л), --icon-ratio 40/24"
+    },
+    {
+      "id": "catalog",
+      "label": "каталог",
+      "purpose": "Пункт «каталог» у хедері (ліворуч від тексту)",
+      "semantics": "Каталог-буклет: вертикальний прямокутник із закругленими кутами, з «корінцем» (вертикальна лінія зліва) і двома короткими горизонтальними рядками «змісту» на обкладинці.",
+      "width": 24,
+      "height": 24,
+      "elements": [
+        {
+          "type": "rect",
+          "role": "обкладинка",
+          "x": 4.75,
+          "y": 3.25,
+          "width": 14.5,
+          "height": 17.5,
+          "rx": 1.25
+        },
+        {
+          "type": "path",
+          "role": "корінець",
+          "d": "M8.75 3.25V20.75",
+          "note": "вертикаль на повну висоту, крок від лівого краю 4"
+        },
+        {
+          "type": "path",
+          "role": "рядки",
+          "d": "M12.25 8H15.75M12.25 11.5H15.75",
+          "note": "2 горизонталі довжиною 3.5, відстань 3.5"
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4.75\" y=\"3.25\" width=\"14.5\" height=\"17.5\" rx=\"1.25\"/><path d=\"M8.75 3.25V20.75\"/><path d=\"M12.25 8H15.75M12.25 11.5H15.75\"/></svg>",
+      "file": "/assets/icons/catalog.svg",
+      "siteUsage": "хедер: 22u, gap 8u, ліворуч від «каталог»"
+    },
+    {
+      "id": "strength",
+      "label": "міцність",
+      "purpose": "Поруч зі значенням «42% alc» (шапка продукту YC, «Характеристики»)",
+      "semantics": "Склянка-тумблер (конус, що звужується донизу, з закругленим дном) з лінією рівня напою та двома бульбашками-крапками під рівнем; без тексту й цифр.",
+      "width": 24,
+      "height": 24,
+      "elements": [
+        {
+          "type": "path",
+          "role": "склянка",
+          "d": "M5.5 4.5H18.5L17.25 19.5Q17.1 21 15.5 21H8.5Q6.9 21 6.75 19.5Z",
+          "note": "симетрична вісь x=12, дно R≈1.5"
+        },
+        {
+          "type": "path",
+          "role": "рівень",
+          "d": "M6.1 10.5H17.9",
+          "note": "горизонталь, кінці впираються в стінки"
+        },
+        {
+          "type": "path",
+          "role": "бульбашки",
+          "d": "M10 15H10.01M14 16.5H14.01",
+          "note": "2 точки (круглі кінці штриха), діаметр = товщина штриха 1.5, зсунуті по висоті"
+        }
+      ],
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5.5 4.5H18.5L17.25 19.5Q17.1 21 15.5 21H8.5Q6.9 21 6.75 19.5Z\"/><path d=\"M6.1 10.5H17.9\"/><path d=\"M10 15H10.01M14 16.5H14.01\"/></svg>",
+      "file": "/assets/icons/strength.svg",
+      "siteUsage": "шапка продукту: 24u, ліворуч від «42% alc»"
+    }
+  ],
+  "usage": {
+    "mechanism": "CSS-маска: <span class=\"icon icon--NAME\" aria-hidden=\"true\"></span>; mask-image: url('/assets/icons/NAME.svg'); background-color: currentColor — колір завжди = колір тексту, у файлах колір #223420 жорстко",
+    "css": "src/styles/components/icon.css (.icon, --icon-size, --icon-ratio)",
+    "sizes": {
+      "header": "22u (--header3-icon-size), gap до тексту 8u",
+      "bottle0_5": "16.8u × 28u (--size-volume-icon-w, ratio 40/24)",
+      "arrow": "24u знак у боксі 12u (прості кнопки)",
+      "strength": "24u × 24u поруч з рядком міцності"
+    },
+    "files": "photo/generative/site/icons/*.svg → site_brand/public/assets/icons/"
+  },
+  "do": [
+    "Дотримуватись сітки 24×24 і безпечної зони 2.75–21.25",
+    "Лише контур: stroke #223420, 1.5, round caps/joins, fill none",
+    "Закруглювати кути (0.5–1.25 на rect, більші скруглення на великих формах)",
+    "3–5 простих контурів, симетрія по x=12, чітка читабельність на 22–24 px",
+    "Перевіряти рендер на 24/48/96 px на світлому й зеленому тлі"
+  ],
+  "dont": [
+    "Заливки, градієнти, тіні, прозорість",
+    "Міняти товщину штриха або мішати різні товщини",
+    "Дрібні деталі <1.5, більше 5 елементів",
+    "Гострі зовнішні кути без round join, відкриті хвости",
+    "Текст і цифри всередині іконки",
+    "Прямий колір у CSS: використовувати currentColor через маску"
+  ],
+  "prompt": "Minimal monochrome line icon on a 24x24 grid, drawn only with a uniform 1.5px dark-green (#223420) outline stroke with round caps and round joins, no fills, no gradients, no shadows, transparent background. Keep content inside a 2.75px safe margin. Build the object from 3-5 simple clean strokes using straight lines, short quadratic curves, arcs and small rounded rectangles (corner radius 0.5-1.25); the object is symmetrical around the vertical center axis where possible and has a slightly flat, geometric, friendly look.\n\nNo tiny details (nothing smaller than the stroke width), parallel inner lines spaced about 3px apart, no text or numbers, equal visual density with sibling icons (basket, headset, bottle, arrow). Output as clean SVG paths with stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" so it can be used as a CSS mask with currentColor."
+}

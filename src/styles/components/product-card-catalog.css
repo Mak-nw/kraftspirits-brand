@@ -19,6 +19,7 @@
   left: var(--offset-arch); top: var(--offset-arch);
   width: var(--size-arch-w); height: var(--size-arch-h);
   background: var(--color-green);
+  border-radius: var(--radius-card-arch); /* клип зовнішніх кутів арки/блоку; внутрішні кути рамки — дуги в самому SVG-маскі (--radius-card-arch-inner) */
   -webkit-mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
   mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
 }
@@ -27,7 +28,6 @@
    Клип картки (overflow:hidden уже є) обрізає і фото, і «рідину» на hover. Арка (::before) — той самий єдиний елемент-маска, лише border-radius
    концентричний: 10u − 6u (відступ арки) = 4u; рамка арки 2.476u лишається рівною, щілин між шарами немає. */
 .product-card--catalog:not(.slider__slide) { border-radius: var(--radius-card-catalog); }
-.product-card--catalog:not(.slider__slide)::before { border-radius: calc(var(--radius-card-catalog) - var(--offset-arch)); }
 
 .product-card--catalog .product-card__media { z-index: 2; padding: var(--space-card-cat2-photo-top) 0 0; overflow: visible; }
 .product-card--catalog .product-card__body { z-index: 2; }

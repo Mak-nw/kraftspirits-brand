@@ -248,7 +248,7 @@
         <div>
           <div class="t-kicker">.t-price</div>
           <div class="ds-meta" data-spec="#spec-price"></div>
-          <div class="ds-meta is-muted">Figma 194:1332</div>
+          <div class="ds-meta is-muted">Figma 194:1332 (сімейство Manrope — базова ціна; на ітемі картки — EB Garamond Medium, токен --type-price-card-font / --type-price-card-weight, правило .product-card .t-price)</div>
         </div>
         <div class="type-row__sample"><span id="spec-price" class="t-price">1 250 ₴</span></div>
       </div>
@@ -353,14 +353,14 @@
         <!--@include components/btn variant="btn--teal" href="#" text="додати в кошик" price="1 250 ₴"-->
       </div>
 
-      <p class="demo-label t-kicker">Навігація header 2 (206:2495): пункт-комірка 150×42 (.nav-cell), «Кошик» — контурна кнопка 150×44, «підказати?» — залита 150×44 (радіус 5); hover/focus: колір тексту (пункти, без підкреслення), заливка (кнопки)</p>
+      <p class="demo-label t-kicker">Навігація header 3 (214:2902): пункт-комірка 150×42 (.nav-cell), «Кошик» — контурна кнопка 150×44, «підказати?» — залита 150×44 (радіус 5); hover/focus: колір тексту (пункти, без підкреслення), заливка (кнопки); «каталог» (.nav-cell--ghost) — без рамки у спокої, на hover/focus та ж світла заливка, що в «Кошик» (радіус 5, темний текст і іконка)</p>
       <div class="demo-panel theme-green">
         <a class="nav-link nav-cell t-nav-head" href="#">Головна</a>
-        <a class="nav-link nav-cell t-nav-head" href="#">каталог</a>
+        <a class="nav-link nav-cell nav-cell--icon nav-cell--ghost t-nav-head" href="#"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a>
         <a class="nav-cell nav-cell--outline t-nav-head" href="#">Кошик ( 0 )</a>
         <a class="nav-cell nav-cell--fill t-nav-head" href="#">підказати?</a>
       </div>
-      <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline) і «підказати?» (.nav-cell--fill) — beige (--color-beige) незалежно від предка; логотипи в хедері: hover — opacity 1 → --opacity-logo-hover (0.8), --duration-fast; футер: колонки мають запас --footer-ring-room під кільце посилань</p>
+      <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline) і «підказати?» (.nav-cell--fill) — beige (--color-beige) незалежно від предка; логотипи в хедері: спільний hover пари (група .site-header__logos) — обидва opacity 1 → --opacity-logo-hover (0.8) разом, --duration-fast; футер: колонки мають запас --footer-ring-room під кільце посилань</p>
       <p class="demo-label t-kicker">Навігація футера (.nav-link--on-light .t-nav, 194:1240); підкреслення на hover/focus — лише тут (демо-футер, .site-footer)</p>
       <div class="demo-panel theme-beige site-footer">
         <a class="nav-link nav-link--on-light t-nav" href="#">Головна</a>
@@ -448,11 +448,13 @@
         <span class="icon icon--arrow-up-right" aria-hidden="true"></span>
         <span class="icon icon--basket" aria-hidden="true"></span>
         <span class="icon icon--headset" aria-hidden="true"></span>
+        <span class="icon icon--catalog" aria-hidden="true"></span>
+        <span class="icon icon--strength" aria-hidden="true"></span>
         <span class="icon icon--bottle-0-5" aria-hidden="true"></span>
         <span class="icon icon--bottle-0-7" aria-hidden="true"></span>
         <span class="icon icon--bottle-1" aria-hidden="true"></span>
       </div>
-      <p class="ds-note ds-meta">arrow-up-right (24x24): прості кнопки .btn (бокс-розкладка 11.948, знак ≈ 12u; --size-icon-arrow-glyph 24u) · basket (24x24): кнопка «Кошик» у хедері, 22u · headset (24x24): кнопка «підказати?» у хедері, 22u · bottle-0-5 (24x40) / bottle-0-7 (24x50) / bottle-1 (24x64): поруч з об'ємом на сторінці товару (500 / 700 мл / 1 л), ширина 16.8u (0,5 л — висота 28u), рядок об'єму не змінює висоту (компенсація margin).</p>
+      <p class="ds-note ds-meta">arrow-up-right (24x24): прості кнопки .btn (бокс-розкладка 11.948, знак ≈ 12u; --size-icon-arrow-glyph 24u) · basket (24x24): кнопка «Кошик» у хедері, 22u · headset (24x24): кнопка «підказати?» у хедері, 22u · catalog (24x24): пункт «каталог» у хедері, 22u, gap 8u · strength (24x24): поруч з «42% alc» у шапці продукту YC (24u) і в рядку «Міцність» акордеона «Характеристики» (18u), компонент .strength (margin-компенсація, висота рядка не змінюється) · bottle-0-5 (24x40) / bottle-0-7 (24x50) / bottle-1 (24x64): поруч з об'ємом на сторінці товару (500 / 700 мл / 1 л), ширина 16.8u (0,5 л — висота 28u), рядок об'єму не змінює висоту (компенсація margin). Компонент «об'єм з пляшкою» <span class="ds-meta">.vol</span> (icon.css): <span class="ds-meta">.vol--inline</span> (0.5×, --scale-volume-inline) — рядки акордеонів сторінки товару («Характеристики», «Особливості» тощо). Картка каталогу (лише фото, назва, ціна), слайдер підбору й картка головної об'єм не показують — пляшок там немає.</p>
     </section>
 
     <section class="ds-section" id="hit-area">
@@ -517,7 +519,7 @@
           <span class="ds-meta is-muted">інерція паралакса: частка догонки цілі за кадр; новий</span></div></div>
         <p class="ds-note ds-meta">Фото hero (<code>home-hero-bg.webp</code>): експорт Figma 224:4011 з уже застосованою обробкою зображення (темніше за сирий растр ≈×0.67); CSS-оверлея нема.</p>
       </div>
-      <p class="ds-note t-body">Reveal: атрибут data-reveal="rise" (opacity 0→1 + зсув на --reveal-shift) або data-reveal="fade" (лише opacity); спрацьовує один раз, коли елемент входить у в'юпорт (src/js/reveal.js, IntersectionObserver). Групи, що з'являються разом, йдуть із stagger (--reveal-stagger). Hero (секція з data-reveal-load) з'являється при завантаженні. Приховування вмикає лише JS (клас .js-reveal на html); без JS, при prefers-reduced-motion: reduce та при друці контент видно одразу. Header 3 — пілюля без анімації; випадне меню: opacity + зсув на --header3-menu-shift за --duration-base / --ease-out (reduced-motion — миттєво).</p>
+      <p class="ds-note t-body">Reveal: атрибут data-reveal="rise" (opacity 0→1 + зсув на --reveal-shift) або data-reveal="fade" (лише opacity); спрацьовує один раз, коли елемент входить у в'юпорт (src/js/reveal.js, IntersectionObserver). Групи, що з'являються разом, йдуть із stagger (--reveal-stagger). Hero (секція з data-reveal-load) з'являється при завантаженні. Приховування вмикає лише JS (клас .js-reveal на html); без JS, при prefers-reduced-motion: reduce та при друці контент видно одразу. Header 3 — пілюля без анімації; випадне меню: opacity + зсув на --header3-menu-shift за --duration-base / --ease-out (reduced-motion — миттєво). Блюр панелі меню — --header3-menu-blur (16u); демо відкритого меню показує великий текст позаду панелі.</p>
 
       <p class="ds-note t-body">Паралакс фото (лише головна, src/js/parallax.js): атрибут data-parallax на контейнері з обрізанням (hero, brand-half, фото tour-card, фон picker), data-parallax="soft" — менший зсув для великих фонів. Фото — прямий нащадок img, розміром з контейнер: у нейтральній точці (контейнер по центру в’юпорта; hero — scroll=0) зсув 0 і масштаб 1, тож кадр збігається з макетом і ?parallax=off. Далі фото зсувається вниз через translate на 0…--parallax-range від висоти контейнера, а scale 1 + y/h від нижнього краю (transform-origin) закриває верхній край — порожніх країв нема; інерція --parallax-lerp, rAF лише для видимих блоків. Не конфліктує з hover-zoom (transform) і reveal (opacity). Вимкнення: ?parallax=off (автоматизовані перевірки, як ?reveal=off) і prefers-reduced-motion: reduce — статична позиція без зсуву. Кнопки в секціях tours і intro (Figma 224:3688/224:3691/224:3639) — btn--serif (EB Garamond Bold), як «додати в кошик».</p>
 
@@ -551,7 +553,7 @@
         </div>
       </div>
 
-      <p class="ds-note ds-meta">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
+      <p class="ds-note ds-meta">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid; ціна на ітемі — EB Garamond Medium: токен <span class="ds-meta">--type-price-card-font</span> = --font-family-serif, <span class="ds-meta">--type-price-card-weight</span> = --fw-medium, правило <span class="ds-meta">.product-card .t-price</span>; розмір і регістр — як у --type-price-*) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
     </section>
 
     <section class="ds-section" id="partials">
@@ -614,9 +616,9 @@
 
     <section class="ds-section" id="catalog-components">
       <h2 class="t-h2 ds-section__title">Каталог (194:1443)</h2>
-      <p class="ds-note t-body">Нові компоненти сторінки каталогу: картка каталогу, випадний список фільтра, заголовок-навігація категорій. Рендер карток із даних — src/data/products.js + src/js/catalog.js (див. README).</p>
+      <p class="ds-note t-body">Нові компоненти сторінки каталогу: картка каталогу, випадний список фільтра, заголовок-навігація категорій. Рендер карток із даних — src/data/products.js + src/js/catalog.js (див. README). Перехід при зміні фільтра/сортування — плавний (src/js/catalog-motion.js): картки, що відпали, гаснуть на місці (--duration-fast, scale 0.98), решта переїжджає на нові місця FLIP-ом (--duration-base, --ease-out, легкий stagger --catalog-move-stagger), нові з'являються (opacity + --reveal-shift, stagger --reveal-stagger), футер плавно їде на нове місце (transform), порожній стан з'являється fade; prefers-reduced-motion і ?reveal=off — миттєво. Розкладка після переходу ідентична попередній.</p>
 
-      <p class="demo-label t-kicker">product-card--catalog (204:2223, 426.25×547.67): partial components/product-card, мод. product-card--catalog; фон #B7BAAC (--color-card-bg-catalog), арка 204:2230 (один ::before), радіус зовнішніх кутів --radius-card-catalog 10px (арка концентрично 4px; слайдер підбору на головній — без закруглення), hover — світла «рідина» --color-liquid-catalog (#DCDBCF), текст лишається --color-green</p>
+      <p class="demo-label t-kicker">product-card--catalog (204:2223, 426.25×547.67): partial components/product-card, мод. product-card--catalog; фон #B7BAAC (--color-card-bg-catalog), арка 204:2230 (один ::before), радіус зовнішніх кутів --radius-card-catalog 10px (арка/зелений блок --radius-card-arch 5px, внутрішній контур рамки --radius-card-arch-inner 2.524px (в SVG); слайдер підбору на головній — без закруглення), hover — світла «рідина» --color-liquid-catalog (#DCDBCF), текст лишається --color-green</p>
       <div class="demo-panel demo-panel--card theme-green">
         <div class="demo-variant ds-catalog-card">
           <!--@include components/product-card mod=" product-card--catalog" slug="gin-barrel" name="Джин<br>Ясногородський" price="850 ₴" image="/assets/img/products/gin-yasnyi.webp" brand="yasnocraft"-->
@@ -629,7 +631,7 @@
         </div>
       </div>
 
-      <p class="demo-label t-kicker">select: поле фільтра (204:2333: підпис + значення 200 u + шеврон 12×6, фон rgba(220,219,207,.05), радіус 5); клавіатура: Enter/Space/стрілки, Esc, літера. Клікабельна вся плитка (лейбл, значення, шеврон, відступи): кнопка з .hit-area, hover/focus/відкрито — фон --color-select-bg-hover на всю плитку</p>
+      <p class="demo-label t-kicker">select: поле фільтра (204:2333: підпис + значення 200 u + шеврон 12×6, фон НЕПРОЗОРИЙ --color-select-bg #354632 (= #223520 + 10% beige, радіус 5; раніше rgba .05 просвічував ромби візерунка каталогу); клавіатура: Enter/Space/стрілки, Esc, літера. Клікабельна вся плитка (лейбл, значення, шеврон, відступи): кнопка з .hit-area, hover/focus/відкрито — непрозорий --color-select-bg-hover #364733 (≈ +11% beige поверх 10%; 16–18% дало б контраст ≈ 6.1–6.2:1 і не проходить ≥ 7:1); текст beige, контраст ≈ 7.3:1 у спокої і ≈ 7.2:1 на hover. Список опцій — непрозорий beige (без змін), пункт hover/активний — --color-hover-faq</p>
       <div class="demo-panel theme-green">
         <!--@include components/select id="ds-select-brand" name="ds-brand" label="Бренд" options="all:Усі|yasnocraft:YasnoCraft|bazylsprings:Bazylsprings"-->
       </div>
@@ -695,7 +697,7 @@
 
     <section class="ds-section" id="header-footer">
       <h2 class="t-h2 ds-section__title">Header / Footer</h2>
-      <p class="ds-note t-body">Єдині partials: header 3 (214:2902, плаваюча пілюля 1216.67×73 по центру, відступ зверху 30; ліворуч «меню» 150×44 (контур + іконка-бургер 11.47×13) і «каталог» 150×42, по центру два лого, праворуч «Кошик ( 0 )» (контур 150×44) і «підказати?» (заливка 150×44); фон rgba(0,0,0,0.1) + blur 25, радіус 10, бічний padding --header3-pad-x = 15 (у Figma 10, +5 за рішенням замовника; ширина 1216.67 фіксована)), footer 194:1235 (856). Підключаються на кожній сторінці через include. Пілюля position: fixed; зона header у потоці = 103 (30 + 73).</p>
+      <p class="ds-note t-body">Єдині partials: header 3 (214:2902, плаваюча пілюля 1216.67×73 по центру, відступ зверху 30; ліворуч «меню» 150×44 (контур + іконка-бургер 11.47×13: інлайн-SVG із трьох смуг; на hover/focus-visible/відкритому меню крайні смуги звужуються зліва до --scale-burger-bar 0.6 за --duration-fast, середня лишається повною) і «каталог» 150×42, по центру два лого, праворуч «Кошик ( 0 )» (контур 150×44) і «підказати?» (заливка 150×44); фон rgba(0,0,0,0.1) + blur 25, радіус 10, бічний padding --header3-pad-x = 15 (у Figma 10, +5 за рішенням замовника; ширина 1216.67 фіксована)), footer 194:1235 (856). Підключаються на кожній сторінці через include. Пілюля position: fixed; зона header у потоці = 103 (30 + 73).</p>
       <p class="ds-note t-body">Варіанти розташування хедера: (1) стандартний — зона в потоці <code>.site-header</code> висотою <code>--size-header-h</code> (103u, зелена) + пілюля fixed (каталог, товар, ці демо); (2) головна — <code>&lt;body class="page-home"&gt;</code>: зона в потоці = 0 (<code>--size-header-zone-h: 0px</code>), hero починається з y=0, пілюля fixed висить поверх нього. Розмітка partial однакова, токен <code>--size-header-h</code> не змінюється.</p>
       <p class="demo-label t-kicker">Header 3: закритий стан (інтерактивний: «меню» відкриває список)</p>
       <div class="ds-header-demo">
@@ -703,6 +705,7 @@
       </div>
       <p class="demo-label t-kicker">Header 3: випадне меню відкрите (оверлей під пілюлею: Головна, про дім, Faq, Контакти + дві кнопки дії «замовити екскурсію» / «замовити бочку» — хедерна контурна кнопка .nav-cell--outline з модифікатором .nav-cell--block на всю ширину, hover/focus як у «Кошик», focus-кільце на пілюлі — --color-beige (контраст ≈ 8:1), якорі index.html#tour / #barrel, після кліку меню закривається; відкривається і по ховері (лише hover: hover + pointer: fine): миттєво, лишається відкритим поки курсор над кнопкою або меню, «місток» над панеллю без діри, закриття через --header3-menu-close-delay 0.25s; клік по кнопці після ховер-відкриття закріплює меню, наступний клік закриває; поява opacity + зсув за --duration-base / --ease-out, Esc / клік поза / Tab поза меню закривають, ↑ ↓ Home End між пунктами)</p>
       <div class="ds-header-demo ds-header-demo--open">
+        <p class="ds-menu-backdrop t-hero" aria-hidden="true">Весь каталог, джин, кальвадос, фрукт у пляшці</p>
         <!--@include header menu-id="site-menu-demo"-->
       </div>
       <!--@include footer-->

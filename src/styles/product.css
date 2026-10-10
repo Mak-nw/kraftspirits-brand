@@ -2,7 +2,10 @@
    Один шаблон, тема бренду — data-brand на <main class="product">. Усі значення — токени.
    Розкладка ОДНАКОВА для обох брендів (рішення замовника): поле 50 + фото 905 з мініатюрами-накладками + зазор 5 + панель 910 + поле 50 = 1920;
    усе — в базових правилах нижче. Бренд-модифікатори (data-brand) додають лише відмінності: YC — арка-шапка і рамка панелі beige,
-   BS — шапка-бейдж на всю ширину панелі (відступ збоку = зверху) і верхній відступ панелі. */
+   BS — шапка-бейдж на всю ширину панелі (відступ збоку = зверху) і верхній відступ панелі.
+   Фон сторінки — той самий візерунок ромбів, що на каталозі (класс page-product на body, як page-catalog): плитка від y=0 через зону header до футера; зона header прозора. */
+.page-product { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.page-product .site-header { background: transparent; }
 .product {
   --accent: var(--color-product-accent);
   --accent-line: var(--color-product-accent-line);
@@ -16,15 +19,11 @@
   padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
   color: var(--accent);
 }
-.product[data-brand] {
-  background: var(--color-green); /* тло сторінки обох брендів: як зона header, панель з рамкою і фото з радіусом читаються на ньому */
-  box-shadow: 0 0 0 100vmax var(--color-green); clip-path: inset(0 -100vmax); /* тло на всю ширину вікна, якщо воно ширше за макет */
-}
 .product[data-brand="bazylsprings"] { --accent: var(--color-product-accent-bs); --accent-line: var(--color-product-accent-bs); }
 
 /* обгортка фото+мініатюр (обидва бренди): одна sticky-комірка 905×(100svh − 123u); мініатюри — накладки всередині фрейму фото */
-/* резерв до рендера JS (атрибут data-pending у product.html, знімається в product.js): зелене тло і висота = фрейм + верхній/нижній відступи, щоб футер не стрибав. Без JS (noscript) резерв не потрібен — але атрибут статичний, тому для <noscript>-стану див. product.html (вміст noscript короткий, мінімум висоти безпечний). */
-.product[data-pending] { min-height: calc(var(--size-product-frame-h) + var(--space-product-top) + var(--space-product-page-bottom)); background: var(--color-green); box-shadow: 0 0 0 100vmax var(--color-green); clip-path: inset(0 -100vmax); }
+/* резерв до рендера JS (атрибут data-pending у product.html, знімається в product.js): висота = фрейм + верхній/нижній відступи, щоб футер не стрибав. Тла немає: фон дає body.page-product (візерунок). Без JS (noscript) резерв не потрібен — але атрибут статичний, тому для <noscript>-стану див. product.html (вміст noscript короткий, мінімум висоти безпечний). */
+.product[data-pending] { min-height: calc(var(--size-product-frame-h) + var(--space-product-top) + var(--space-product-page-bottom)); }
 .product-media { position: sticky; top: var(--offset-product-stage-sticky); grid-area: 1 / 1; align-self: start; width: var(--size-product-stage-w); height: var(--size-product-frame-h); }
 .product-panel { grid-area: 1 / 2; }
 
@@ -95,6 +94,8 @@
 .product-specs { display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-30); row-gap: var(--space-5); }
 .product-specs dt { font-weight: var(--fw-bold); }
 .product-specs dd { margin: 0; }
+.product-specs dd:has(.vol) { display: flex; flex-wrap: wrap; gap: 0 var(--space-product-volumes-gap); }
+.product-specs dd:has(.strength) { display: flex; } /* inline-flex у рядку збільшував лінійний бокс: flex-контейнер тримає висоту рядка */
 
 /* ======================================================================
    YasnoCraft: лише відмінності від спільної розкладки — рамка панелі beige (BS — teal), арка-шапка 900×359.93 з круглим лого,

@@ -72,5 +72,7 @@
 .ds-header-demo:not(.ds-header-demo--open) { position: relative; z-index: var(--z-dropdown); }
 .ds-header-demo--open { padding-bottom: calc(4 * var(--header2-cell-h) + 2 * var(--header2-btn-outline-h) + 4 * var(--header3-menu-pad) + var(--header3-menu-gap)); }
 .ds-header-demo--open .site-header__menu { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+/* Демо blur меню: великий текст позаду панелі (як на каталозі); панель розмиває його через --header3-menu-blur */
+.ds-menu-backdrop { position: absolute; left: 0; right: 0; top: calc(var(--header3-top) + var(--header3-h) + var(--space-10)); margin: 0; text-align: center; color: var(--color-beige); pointer-events: none; }
 .ds-uc-demo { display: block; padding: 0; }
 .ds-uc-demo .under-construction { min-height: 0; }

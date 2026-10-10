@@ -1,6 +1,9 @@
 /* Сторінка каталогу (catalog 204:2221): тло --color-green; заголовок-навігація 204:2351, панель фільтрів 204:2331, сітка 204:2222. */
 /* Фон-візерунок (та сама геометрія 131u, що в tours; колір тон-в-тон): вертикальні ромби на зеленому, фон сторінки (scroll, не fixed) — картки й текст лежать зверху; колір фігур --color-pattern-catalog, плитка --size-pattern-catalog-tile (ціле px) */
-.catalog-page, .pattern-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.pattern-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+/* Каталог: візерунок на body (початок плитки = y=0 документа), щоб сітка йшла суцільно від верху через зону хедера до main і футера без шва; зона .site-header на каталозі прозора (тло — тло body); .catalog-page без власного фону */
+.page-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.page-catalog .site-header { background: transparent; }
 .catalog-page { color: var(--color-beige); }
 .catalog-nav {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center;
@@ -30,6 +33,13 @@
 }
 /* Резерв висоти до рендеру карток (їх малює catalog.js): повна сітка за замовчуванням (--catalog-grid-reserve-rows рядків), щоб footer не стрибав (CLS) */
 .catalog-grid[data-pending] { min-height: calc(var(--catalog-grid-reserve-rows) * (var(--size-card-cat2-h) + var(--space-catalog-grid-gap)) - var(--space-catalog-grid-gap)); }
+/* Перехід фільтра/сортування (catalog-motion.js): WAAPI на translate/scale/opacity; картки, що відпали, лишаються на своєму місці (is-leaving) і гаснуть; клас is-animating — на час анімації (зсуви не дають горизонтального скролу) */
+.catalog-grid { position: relative; }
+.catalog-grid.is-animating { overflow-x: clip; }
+.catalog-grid .product-card.is-leaving { position: absolute; left: var(--ghost-x); top: var(--ghost-y); width: var(--ghost-w); height: var(--ghost-h); margin: 0; pointer-events: none; z-index: 0; }
+.catalog-grid.is-collapsing { padding-bottom: 0; } /* результат порожній: на час згасання карток сітка не додає свій нижній відступ (розкладка = кінцева) */
+.catalog-grid > .catalog-empty.is-leaving { position: absolute; left: var(--ghost-x); top: var(--ghost-y); width: var(--ghost-w); height: var(--ghost-h); pointer-events: none; }
+.catalog-grid .product-card.is-moving { will-change: translate, scale, opacity; }
 .catalog-grid[hidden], .catalog-empty[hidden] { display: none; }
 .catalog-empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); padding: var(--space-85) 0; text-align: center; }
 .catalog-noscript { display: flex; flex-wrap: wrap; gap: var(--space-20) var(--space-30); padding: var(--space-30) var(--gutter); }

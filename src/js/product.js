@@ -11,6 +11,16 @@ const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
 const fmtVol = (l) => `${String(l).replace('.', ',')} л`;
 const volIcon = (l) => (l <= 0.6 ? 'bottle-0-5' : l <= 0.85 ? 'bottle-0-7' : 'bottle-1'); // іконка пляшки за об'ємом (0,5 / 0,7 / 1 л)
 const withIcon = (node, l) => { const i = el('span', `icon icon--${volIcon(l)}`); i.setAttribute('aria-hidden', 'true'); node.prepend(i); return node; };
+// «пляшка + об'єм» (.vol--inline): окремий вузол або фрагменти тексту, де згадано об'єм у літрах («0,5 л», «0,7 л»)
+const volNode = (l) => { const n = el('span', 'vol vol--inline'); n.append(el('span', `icon icon--${volIcon(l)}`), fmtVol(l)); n.firstChild.setAttribute('aria-hidden', 'true'); return n; };
+// «іконка міцності + значення» (.strength): шапка продукту YC («42% alc») і рядок «Міцність» у «Характеристиках»
+const strengthNode = (text, cls = '') => { const n = el('span', `strength ${cls}`.trim()); const i = el('span', 'icon icon--strength'); i.setAttribute('aria-hidden', 'true'); n.append(i, text); return n; };
+const richVol = (str) => {
+  const parts = String(str).split(/(\d+[.,]?\d*)\s+л(?![а-яіїєґ])/i);
+  const out = [];
+  parts.forEach((t, i) => { if (i % 2) out.push(volNode(parseFloat(t.replace(',', '.')))); else if (t) out.push(t); });
+  return out;
+};
 const fmtMl = (l) => `${Math.round(l * 1000)} мл`; // 0.5 л → «500 мл» (YasnoCraft 205:2442)
 const SUFFIX = 'YasnoCraft × Bazylsprings';
 
@@ -30,7 +40,7 @@ const el = (tag, cls, text) => {
 const labelled = (label, text) => {
   const p = el('p');
   p.append(el('strong', '', text == null ? label : `${label}:`));
-  if (text != null) p.append(` ${text}`);
+  if (text != null) p.append(' ', ...richVol(text));
   return p;
 };
 
@@ -43,15 +53,15 @@ function buildSections(p) {
   const sensory = [];
   const features = [];
   if (t) {
-    about.push(...[t.lead, ...t.about].filter(Boolean).map((s) => el('p', '', s)));
+    about.push(...[t.lead, ...t.about].filter(Boolean).map((s) => { const n = el('p'); n.append(...richVol(s)); return n; }));
     t.sensory.forEach(([k, v]) => sensory.push(labelled(k, v)));
-    t.features.forEach((f) => features.push(el('li', '', f)));
+    t.features.forEach((f) => { const li = el('li'); li.append(...richVol(f)); features.push(li); });
   } else {
     if (p.description) about.push(el('p', '', p.description));
     if (p.notes) sensory.push(labelled('Смак', p.notes));
     if (p.kind) features.push(el('li', '', `Тип: ${p.kind}`));
     if (p.abv) features.push(el('li', '', `Міцність: ${p.abv}%`));
-    if (volumes) features.push(el('li', '', `Об'єм: ${volumes}`));
+    if (p.volumes.length) { const li = el('li', '', `${p.volumes.length > 1 ? "Об'єми" : "Об'єм"}: `); p.volumes.forEach((v, i) => li.append(i ? ' ' : '', volNode(v.l))); features.push(li); }
   }
   const ul = features.length ? el('ul') : null;
   if (ul) ul.append(...features);
@@ -70,7 +80,11 @@ function buildSections(p) {
     ['Виробник', 'Дистилерія в Ясногородці, Київська область'],
   ].filter(([, v]) => v);
   const dl = el('dl', 'product-specs');
-  specRows.forEach(([k, v]) => { dl.append(el('dt', '', k), el('dd', '', v)); });
+  specRows.forEach(([k, v]) => {
+    const dd = el('dd');
+    if (k.startsWith("Об'єм")) p.volumes.forEach((x) => dd.append(volNode(x.l))); else if (k === 'Міцність') dd.append(strengthNode(v, 'strength--inline')); else dd.textContent = v;
+    dl.append(el('dt', '', k), dd);
+  });
   // «Доставка й оплата»
   const delivery = PRODUCT_DELIVERY.map(([k, v]) => labelled(k, v));
   return [
@@ -86,6 +100,7 @@ function buildSections(p) {
 function renderNotFound() {
   main.removeAttribute('data-pending'); // не знайдено: резерв висоти фрейму не потрібен
   main.removeAttribute('data-brand');
+  document.body.classList.remove('page-product'); // «не знайдено»: бежеве тло без візерунка (зона header знову зелена)
   main.replaceChildren(tpl('product-notfound-template'));
   setMeta('Товар не знайдено');
   document.title = `Товар не знайдено — ${SUFFIX}`;
@@ -206,7 +221,7 @@ function renderProduct(p) {
     volWrap.append(withIcon(el('span', '', fmtVolRow(current.l)), current.l));
   }
   // YasnoCraft (205:2441): після об'єму — міцність «40% alc» з даних
-  if (isYc && p.abv) volWrap.append(el('span', '', `${p.abv}% alc`));
+  if (isYc && p.abv) volWrap.append(strengthNode(`${p.abv}% alc`));
   renderBtn();
   btn.addEventListener('click', (e) => {
     e.preventDefault();

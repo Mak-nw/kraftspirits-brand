@@ -43,3 +43,11 @@ a.nav-cell--fill:focus-visible { outline-color: var(--color-beige); background: 
   a.nav-cell--outline:hover, button.nav-cell--outline:hover { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
   a.nav-cell--fill:hover { background: var(--color-hover-header-fill-bg); }
 }
+
+/* «каталог» (пункт-комірка 150×42, 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик»: --color-hover-header-outline-bg, темний текст і іконка (currentColor) --color-hover-header-outline-text; радіус --radius-btn; перехід --duration-fast (focus — --duration-focus). Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
+.nav-cell--ghost { border-radius: var(--radius-btn); transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+a.nav-cell--ghost:focus-visible { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); transition-duration: var(--duration-focus); }
+@media (hover: hover) {
+  a.nav-cell--ghost:hover { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
+}
+@media (prefers-reduced-motion: reduce) { .nav-cell--ghost { transition: none; } }

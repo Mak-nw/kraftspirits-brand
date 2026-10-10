@@ -1,5 +1,6 @@
 import { PRODUCTS, BRANDS, CATEGORIES } from '../data/products.js';
 import { initSelect } from './select.js';
+import { createGridMotion } from './catalog-motion.js';
 
 // ---- дані та стан ----
 const ALL = 'all';
@@ -57,6 +58,8 @@ PRODUCTS.forEach((p) => {
   grid.append(a);
 });
 
+const motion = createGridMotion({ grid, empty, cards });
+
 // ---- селекти ----
 const sels = {
   brand: initSelect(document.querySelector('[data-select="brand"]'), { options: [{ value: ALL, label: 'Усі' }, ...BRANDS.map((b) => ({ value: b.id, label: b.label }))] }),
@@ -89,16 +92,14 @@ const sorters = {
   'price-desc': (a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity) || a.id - b.id,
   name: (a, b) => a.name.localeCompare(b.name, 'uk'),
 };
+let firstApply = true;
 const apply = () => {
   const shown = PRODUCTS
     .filter((p) => (state.category === ALL || p.category === state.category) && (state.brand === ALL || p.brand === state.brand))
     .sort(sorters[state.sort]);
-  const keep = new Set(shown.map((p) => p.slug));
-  cards.forEach((el, slug) => { el.hidden = !keep.has(slug); });
-  shown.forEach((p) => grid.append(cards.get(p.slug))); // порядок DOM = порядок сортування
+  motion.update(shown.map((p) => p.slug), !firstApply); // hidden/порядок DOM/порожній стан; зі згасанням, FLIP-переїздом і плавною висотою (перший рендер — миттєво)
+  firstApply = false;
   countEl.textContent = plural(shown.length);
-  empty.hidden = shown.length > 0;
-  grid.hidden = shown.length === 0;
   navItems.forEach((a) => {
     const on = a.dataset.cat === state.category;
     a.classList.toggle('is-active', on);
