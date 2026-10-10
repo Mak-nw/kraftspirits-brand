@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--@include head-icons-->
+  <!--@include head-fonts-->
+  <title>Дизайн-система</title>
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script type="module" src="/src/js/viewport.js"></script>
+  <script type="module" src="/src/js/header-menu.js"></script>
+  <script type="module" src="/src/js/design-system.js"></script>
+</head>
+<body>
+  <main class="ds">
+    <h1 class="t-hero">Дизайн-система</h1>
+    <p class="ds-note t-body">Джерело: Figma JO2rsMY0AhFutzAQwfl0WV, des_brand 194:1183. Масштаб: <span data-u></span></p>
+
+    <section class="ds-section" id="colors">
+      <h2 class="t-h2 ds-section__title">Палітра</h2>
+      <div class="ds-grid">
+      <div class="swatch swatch--green">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-green</span>
+          <span class="ds-meta" data-token="--color-green"></span>
+          <span class="ds-meta">Figma 194:1374</span>
+          <span class="ds-meta is-muted">header, текст/рамки на світлому, кнопка YasnoCraft</span>
+        </div>
+      </div>
+      <div class="swatch swatch--teal">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-teal</span>
+          <span class="ds-meta" data-token="--color-teal"></span>
+          <span class="ds-meta">Figma 194:1355</span>
+          <span class="ds-meta is-muted">фон/текст Bazylsprings, bottom-блок футера</span>
+        </div>
+      </div>
+      <div class="swatch swatch--gold">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-gold</span>
+          <span class="ds-meta" data-token="--color-gold"></span>
+          <span class="ds-meta">Figma 194:1368</span>
+          <span class="ds-meta is-muted">акцент на темному, hero-кнопка</span>
+        </div>
+      </div>
+      <div class="swatch swatch--light">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-light</span>
+          <span class="ds-meta" data-token="--color-light"></span>
+          <span class="ds-meta">Figma 194:1366</span>
+          <span class="ds-meta is-muted">hero bg, світла кнопка, текст на зеленому</span>
+        </div>
+      </div>
+      <div class="swatch swatch--beige">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-beige</span>
+          <span class="ds-meta" data-token="--color-beige"></span>
+          <span class="ds-meta">Figma 194:1343</span>
+          <span class="ds-meta is-muted">основний світлий фон сторінок, картка</span>
+        </div>
+      </div>
+      <div class="swatch swatch--brown">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-brown</span>
+          <span class="ds-meta" data-token="--color-brown"></span>
+          <span class="ds-meta">Figma 194:1274</span>
+          <span class="ds-meta is-muted">секція «Коротко про нас»</span>
+        </div>
+      </div>
+      <div class="swatch swatch--nav-text">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-nav-text</span>
+          <span class="ds-meta" data-token="--color-nav-text"></span>
+          <span class="ds-meta">Figma 194:1376</span>
+          <span class="ds-meta is-muted">текст навігації хедера</span>
+        </div>
+      </div>
+      <div class="swatch swatch--green-alt">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-green-alt</span>
+          <span class="ds-meta" data-token="--color-green-alt"></span>
+          <span class="ds-meta">Figma 194:1388</span>
+          <span class="ds-meta is-muted">рамка товарної панелі (майже green)</span>
+        </div>
+      </div>
+      <div class="swatch swatch--black">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-black</span>
+          <span class="ds-meta" data-token="--color-black"></span>
+          <span class="ds-meta">Figma 194:1330</span>
+          <span class="ds-meta is-muted">текст картки на main page</span>
+        </div>
+      </div>
+      <div class="swatch swatch--line">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-line</span>
+          <span class="ds-meta" data-token="--color-line"></span>
+          <span class="ds-meta">Figma 194:1326</span>
+          <span class="ds-meta is-muted">лінії товарної картки</span>
+        </div>
+      </div>
+      <div class="swatch swatch--line-strong">
+        <div class="swatch__chip"></div>
+        <div class="swatch__info">
+          <span class="t-kicker">--color-line-strong</span>
+          <span class="ds-meta" data-token="--color-line-strong"></span>
+          <span class="ds-meta">Figma 194:1402</span>
+          <span class="ds-meta is-muted">лінія акордеона товару</span>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="type">
+      <h2 class="t-h2 ds-section__title">Типографіка</h2>
+      <p class="ds-note t-body">Значення в лівій колонці зчитуються з браузера (обчислені), на 1920 px збігаються з Figma.</p>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-hero</div>
+          <div class="ds-meta" data-spec="#spec-hero"></div>
+          <div class="ds-meta is-muted">Figma 194:1370</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-hero" class="t-hero">Від першого зерна до останньої краплі</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-h2</div>
+          <div class="ds-meta" data-spec="#spec-h2"></div>
+          <div class="ds-meta is-muted">Figma 194:1278</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-h2" class="t-h2">Коротко про нас</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-stat</div>
+          <div class="ds-meta" data-spec="#spec-stat"></div>
+          <div class="ds-meta is-muted">Figma 194:1282</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-stat" class="t-stat">2</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-stat-label</div>
+          <div class="ds-meta" data-spec="#spec-stat-label"></div>
+          <div class="ds-meta is-muted">Figma 194:1283</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-stat-label" class="t-stat-label">Бренди під одним дахом</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-kicker</div>
+          <div class="ds-meta" data-spec="#spec-kicker"></div>
+          <div class="ds-meta is-muted">Figma 194:1369</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-kicker" class="t-kicker">Усе в одному місці, усе нашими руками</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-lead</div>
+          <div class="ds-meta" data-spec="#spec-lead"></div>
+          <div class="ds-meta is-muted">Figma 194:1350</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-lead" class="t-lead">Український whisky house, де смак формується витримкою</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-chip</div>
+          <div class="ds-meta" data-spec="#spec-chip"></div>
+          <div class="ds-meta is-muted">Figma 194:1299</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-chip" class="t-chip">подарунок, колекція, дегустація</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-body</div>
+          <div class="ds-meta" data-spec="#spec-body"></div>
+          <div class="ds-meta is-muted">Figma 194:1279</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-body" class="t-body">Нам було цікаво експериментувати, і цей інтерес привів нас до власної дистилерії</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-text</div>
+          <div class="ds-meta" data-spec="#spec-text"></div>
+          <div class="ds-meta is-muted">Figma 224:3657 (Manrope Medium 16, ls 3%, без uppercase; Figma ls 0.8px → --ls-wide)</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-text" class="t-text">Нам було цікаво експериментувати, і цей інтерес привів нас до власної дистилерії в Ясногородці.</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-desc</div>
+          <div class="ds-meta" data-spec="#spec-desc"></div>
+          <div class="ds-meta is-muted">Figma 224:3812 (EB Garamond Medium 20 / 1.2, ls 1px = calc(1 * var(--u)): текст YC набраний у 3 рядки)</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-desc" class="t-desc">Український whisky house, де смак формується витримкою, бочкою й точністю.</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-nav</div>
+          <div class="ds-meta" data-spec="#spec-nav"></div>
+          <div class="ds-meta is-muted">Figma 194:1376</div>
+        </div>
+        <div class="type-row__sample type-row__sample--dark"><span id="spec-nav" class="t-nav">Головна каталог про дім</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-nav-head</div>
+          <div class="ds-meta" data-spec="#spec-nav-head"></div>
+          <div class="ds-meta is-muted">Figma 206:2498 (header 2)</div>
+        </div>
+        <div class="type-row__sample type-row__sample--dark"><span id="spec-nav-head" class="t-nav-head">Головна каталог про дім</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-spec</div>
+          <div class="ds-meta" data-spec="#spec-spec"></div>
+          <div class="ds-meta is-muted">Figma 205:2442</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-spec" class="t-spec">500 мл &nbsp; 40% alc</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-btn</div>
+          <div class="ds-meta" data-spec="#spec-btn"></div>
+          <div class="ds-meta is-muted">Figma 194:1373</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-btn" class="t-btn">Вивчити асортимент</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-btn + .t-btn--alt</div>
+          <div class="ds-meta" data-spec="#spec-btn-alt"></div>
+          <div class="ds-meta is-muted">Figma 194:1341</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-btn-alt" class="t-btn t-btn--alt">Вивчити увесь асортимент</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-price</div>
+          <div class="ds-meta" data-spec="#spec-price"></div>
+          <div class="ds-meta is-muted">Figma 194:1332</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-price" class="t-price">1 250 ₴</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-product-name</div>
+          <div class="ds-meta" data-spec="#spec-product-name"></div>
+          <div class="ds-meta is-muted">Figma 194:1331</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-product-name" class="t-product-name">Джин Бочковий</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-caption</div>
+          <div class="ds-meta" data-spec="#spec-caption"></div>
+          <div class="ds-meta is-muted">Figma 194:1396</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-caption" class="t-caption">0.5 л</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-breadcrumb</div>
+          <div class="ds-meta" data-spec="#spec-breadcrumb"></div>
+          <div class="ds-meta is-muted">Figma 194:1424</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-breadcrumb" class="t-breadcrumb">каталог / yasnocraft / джин / ясногородський</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-faq</div>
+          <div class="ds-meta" data-spec="#spec-faq"></div>
+          <div class="ds-meta is-muted">Figma 194:1189</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-faq" class="t-faq">Усе в одному місці, усе нашими руками</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-acc</div>
+          <div class="ds-meta" data-spec="#spec-acc"></div>
+          <div class="ds-meta is-muted">Figma 194:1403</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-acc" class="t-acc">Колір, смак, аромат</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-footer-head</div>
+          <div class="ds-meta" data-spec="#spec-footer-head"></div>
+          <div class="ds-meta is-muted">Figma 194:1238</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-footer-head" class="t-footer-head">Каталог</span></div>
+      </div>
+      <div class="type-row">
+        <div>
+          <div class="t-kicker">.t-wordmark</div>
+          <div class="ds-meta" data-spec="#spec-wordmark"></div>
+          <div class="ds-meta is-muted">Figma 194:1236</div>
+        </div>
+        <div class="type-row__sample"><span id="spec-wordmark" class="t-wordmark">yasnocraft</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="space">
+      <h2 class="t-h2 ds-section__title">Відступи та контейнери</h2>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-1 · 194:1371 (рамка)</span><span class="space-row__bar space-bar--1"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-5 · 194:1371</span><span class="space-row__bar space-bar--5"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-10 · 194:1281</span><span class="space-row__bar space-bar--10"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-15 · 194:1402</span><span class="space-row__bar space-bar--15"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-20 · 194:1352</span><span class="space-row__bar space-bar--20"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-26 · 194:1327</span><span class="space-row__bar space-bar--26"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-30 · 194:1368</span><span class="space-row__bar space-bar--30"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-37 · 194:1375</span><span class="space-row__bar space-bar--37"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-40 · 194:1329</span><span class="space-row__bar space-bar--40"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-46 · 194:1237</span><span class="space-row__bar space-bar--46"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-50 · 194:1275</span><span class="space-row__bar space-bar--50"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--space-70 · 194:1388</span><span class="space-row__bar space-bar--70"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--gutter (47) · 194:1375</span><span class="space-row__bar space-bar--gutter"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--container-text (712) · 194:1277</span><span class="space-row__bar space-bar--container-text"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--container-wide (1508) · 194:1275</span><span class="space-row__bar space-bar--container-wide"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta">--container-full (1826) · 194:1295</span><span class="space-row__bar space-bar--container-full"></span></div>
+    </section>
+
+    <section class="ds-section" id="radius">
+      <h2 class="t-h2 ds-section__title">Радіуси та рамки</h2>
+      <div class="radius-demo">
+        <div><div class="radius-demo__box radius-demo__box--none"></div><p class="ds-meta demo-label">--radius-none · картки, FAQ, зовнішня рамка кнопки</p></div>
+        <div><div class="radius-demo__box radius-demo__box--btn"></div><p class="ds-meta demo-label">--radius-btn 5px · 194:1372</p></div>
+        <div><div class="radius-demo__box radius-demo__box--pill"></div><p class="ds-meta demo-label">--radius-pill 45px · 194:1333</p></div>
+        <div><div class="radius-demo__box radius-demo__box--frame"></div><p class="ds-meta demo-label">--border-frame 5px · 194:1388</p></div>
+      </div>
+      <p class="ds-note ds-meta demo-label">Тіней у макетах немає.</p>
+    </section>
+
+    <section class="ds-section" id="components">
+      <h2 class="t-h2 ds-section__title">Компоненти</h2>
+
+      <p class="demo-label t-kicker">Кнопка: .btn > .btn__inner (Frame 80 / Frame 45, 194:1371)</p>
+      <div class="demo-panel theme-brown">
+        <!--@include components/btn variant="btn--light" href="#" text="Вивчити увесь асортимент" text-class=" t-btn--alt" arrow="arrow-up-right"-->
+      </div>
+      <div class="demo-panel theme-beige">
+        <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
+        <!--@include components/btn variant="btn--teal" href="#" text="додати в кошик" price="1 250 ₴"-->
+      </div>
+
+      <p class="demo-label t-kicker">Навігація header 2 (206:2495): пункт-комірка 150×42 (.nav-cell), «Кошик» — контурна кнопка 150×44, «підказати?» — залита 150×44 (радіус 5); hover/focus: колір тексту (пункти, без підкреслення), заливка (кнопки)</p>
+      <div class="demo-panel theme-green">
+        <a class="nav-link nav-cell t-nav-head" href="#">Головна</a>
+        <a class="nav-link nav-cell t-nav-head" href="#">каталог</a>
+        <a class="nav-cell nav-cell--outline t-nav-head" href="#">Кошик ( 0 )</a>
+        <a class="nav-cell nav-cell--fill t-nav-head" href="#">підказати?</a>
+      </div>
+      <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline) і «підказати?» (.nav-cell--fill) — beige (--color-beige) незалежно від предка; логотипи в хедері: hover — opacity 1 → --opacity-logo-hover (0.8), --duration-fast; футер: колонки мають запас --footer-ring-room під кільце посилань</p>
+      <p class="demo-label t-kicker">Навігація футера (.nav-link--on-light .t-nav, 194:1240); підкреслення на hover/focus — лише тут (демо-футер, .site-footer)</p>
+      <div class="demo-panel theme-beige site-footer">
+        <a class="nav-link nav-link--on-light t-nav" href="#">Головна</a>
+        <a class="nav-link nav-link--on-light t-nav" href="#">каталог</a>
+      </div>
+
+      <p class="demo-label t-kicker">Картка товару (каталог 194:1449 · головна 194:1331)</p>
+      <div class="demo-panel demo-panel--card theme-beige">
+        <div class="demo-variant">
+          <p class="ds-meta">каталог</p>
+          <!--@include components/product-card mod="" slug="gin-barrel" name="Джин<br>Бочковий" price="1 250 ₴" image="/assets/img/product-card-sample.png" brand="yasnocraft"-->
+        </div>
+        <div class="demo-variant">
+          <p class="ds-meta">головна</p>
+          <!--@include components/product-card mod=" product-card--main" slug="gin-barrel" name="Джин<br>Бочковий" price="1 250 ₴" image="/assets/img/product-card-sample.png" brand="yasnocraft"-->
+        </div>
+      </div>
+
+      <p class="ds-note t-body">Hover/focus-visible картки: «рідина» — шар <span class="ds-meta">.product-card__liquid</span> (aria-hidden) заливає картку знизу вгору кольором <span class="ds-meta">--color-liquid</span> (= --color-teal, глибокий темно-синій Bazylsprings) за <span class="ds-meta">--duration-liquid</span> з <span class="ds-meta">--ease-liquid</span> до рівня <span class="ds-meta">--liquid-fill-level</span> (60% висоти від низу; верх тіла заливки на 40% від верху, хвиля над ним); верхній край — хвиля (маска <span class="ds-meta">public/assets/img/liquid-wave.svg</span>, висота <span class="ds-meta">--liquid-wave-h</span>, два шари, задній з прозорістю <span class="ds-meta">--opacity-liquid-back</span>) дрейфує за <span class="ds-meta">--duration-wave</span>, поки картка в hover. Порядок: фон → рідина → фото → текст; текст міняє колір на <span class="ds-meta">--color-text-on-dark</span> із затримкою <span class="ds-meta">--liquid-text-in / --liquid-text-out</span>. Лише (hover: hover) і :focus-visible; prefers-reduced-motion — без руху, заливка одразу на <span class="ds-meta">--liquid-fill-level</span> через opacity. Геометрія картки не змінюється.</p>
+
+      <p class="demo-label t-kicker">Акордеон товару .acc--product (194:1402). FAQ-рядок .acc--faq — partial faq-item у #partials. Hover рядка товару (лише hover: hover): фон --color-hover-acc-product (#E4E3D8, теплий світлий беж), --duration-fast; без підкреслень. Крихти .product-crumbs a: hover/focus — opacity --opacity-crumb-hover (0.6), без підкреслення</p>
+      <div class="demo-panel theme-beige">
+        <div class="acc-list">
+          <!--@include components/acc-item q="Про напій"-->
+          <!--@include components/acc-item q="Колір, смак, аромат"-->
+          <!--@include components/acc-item q="Особливості (Bazylsprings)" mod=" acc--teal"-->
+          <!--@include components/acc-item q="Як подавати"-->
+          <!--@include components/acc-item q="Характеристики"-->
+          <!--@include components/acc-item q="Доставка й оплата"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Чіп-подія (194:1296). Стрілки слайдера — у #partials</p>
+      <div class="demo-panel theme-teal">
+        <!-- виняток: чіп-подія є спаном, а partial chip рендерить button -->
+        <span class="chip"><span class="chip__ornament"></span><span class="t-chip">подарунок</span><span class="chip__ornament"></span></span>
+      </div>
+
+      <p class="demo-label t-kicker">Лід-блок .lead (hero 194:1368, спліт 194:1267): кікер + заголовок + кнопка. Тут tag="p"; у #partials tag="h2"</p>
+      <div class="demo-panel theme-brown">
+        <!--@include components/lead tag="p" kicker="Усе в одному місці, усе нашими руками" title="Від першого зерна<br>до останньої краплі в пляшці" href="#" btn="Вивчити асортимент"-->
+      </div>
+
+      <p class="demo-label t-kicker">Половина бренд-секції .brand-half (224:3597 YasnoCraft / 224:3604 Bazylsprings, 960×974): partial components/brand-half (brand, name, photo, logo, text, btn, href); секція — partials/sections/brands.html</p>
+      <p class="ds-note ds-meta">Фото-фон (cover, уже обрізане під 960×974; hover — zoom --scale-zoom) + бежева картка 912/914×934 (радіус 10, маска-«Subtract» з вирізом-пляшкою, public/assets/img/home-brand-card-*.svg; колір — --color-beige) + логотип у боксі 172, опис .t-desc (gap 28), кнопка від верху картки на 786. Колір тексту: YasnoCraft — --color-text-on-light, Bazylsprings — --color-teal (у Figma обидва teal — нормалізовано до брендових). Кнопки btn--green / btn--teal з btn--serif (EB Garamond Bold, Figma 224:3815).</p>
+      <!--@include sections/brands-->
+
+      <p class="demo-label t-kicker">Фон-візерунок каталогу .pattern-catalog (лише сторінка каталогу; клас-демо для design-system)</p>
+      <p class="ds-note ds-meta">Та сама геометрія, що в tours: плитка 131×131u (--size-pattern-catalog-tile = --size-pattern-tile, ціле px), три тони як у tours: світлий ромб = колір сторінки (34,53,32), середній — основа чорний 8% ≈(31,49,29), темний — перекриття допоміжних ромбів ≈(29,45,27); тон-в-тон на --color-green; --color-pattern-catalog; catalog-pattern-diamond.svg; background-attachment scroll.</p>
+      <div class="pattern-catalog ds-pattern-demo"></div>
+
+      <p class="demo-label t-kicker">Панель .tour-card (224:3688 / 224:3691, 1836×629): partial components/tour-card (kicker, title, text, btn, href, photo, alt; мод. tour-card--photo-first); секція — partials/sections/tours.html</p>
+      <p class="ds-note ds-meta">Бежевий фон + візерунок — вертикальні ромби ◇ (без нахилу) великого масштабу за pattern-заливкою Figma 224:3961: плитка 131×131u (--size-pattern-tile, ціле px) з одним світлим ромбом 63×80 (беж), одним великим темним 68×88 і одним малим темним 40×52 (темні = 2 шари #223520 2%, фон = 1 шар); три тони 220/217/213 збігаються з Figma; home-pattern-diamond.svg, радіус --radius-panel, padding --space-tour-pad (80), текст: .t-kicker / .t-hero / .t-text (517, ls 0.8 = --ls-intro-body) / btn--teal; фото 757; коричнева рамка --border-tour-frame (5, ціле px) кольору --color-brown лише з внутрішнього боку (між фото й бежевою колонкою), зовнішні краї — фото впритул до краю панелі, як у бежевої колонки (hover — zoom). Фон лише під текстовою колонкою; висота --size-tour-card-h, поля --space-tour-edge-l / -r (43 / 41, як у Figma), фото-колонка --size-tour-photo-box-w = рамка + фото 757 (шви рамки на 1117 / 800 при 1920), проміжок --space-tour-gap — цілі px (round), щоб краї лягали на пікселі пристрою.</p>
+      <!--@include sections/tours-->
+
+      <p class="demo-label t-kicker">Вступ .intro (224:3639): лічильники stat--compact ( 2 ) · ( 8 ) · ( 1 ), заголовок .t-hero (1194), абзац .t-text (658), кнопка btn--beige</p>
+      <!--@include sections/intro-->
+
+      <p class="demo-label t-kicker">Кнопка btn--beige (224:4015): бежева заливка + коричневий текст для коричневих секцій; hover — --color-hover-btn-beige</p>
+      <div class="demo-panel theme-brown">
+        <!--@include components/btn variant="btn--beige" href="#" text="дізнайтесь більше про нас" arrow="arrow-up-right"-->
+      </div>
+
+      <p class="demo-label t-kicker">Чіпи-перемикачі .chip-row > button.chip (aria-pressed / .is-active). Звичайний стан — у #partials</p>
+      <div class="demo-panel theme-teal">
+        <!-- контейнер, вміст — через include/виняток: partial chip не має стану active -->
+        <div class="chip-row" data-chips>
+          <!-- виняток: partial chip не має стану active (.is-active / aria-pressed="true") -->
+          <button class="chip is-active" type="button" aria-pressed="true"><span class="chip__ornament"></span><span class="t-chip">колекція</span><span class="chip__ornament"></span></button>
+          <!--@include components/chip label="дегустація"-->
+        </div>
+      </div>
+      <p class="ds-note ds-meta">Стан active у Figma не намальований (усі чіпи gold) — акцентний стан = колір --color-light (припущення). Слайдер: див. секцію .picker на головній, стрілки [data-slider-prev|next], слайди .slider__slide.</p>
+
+      <p class="demo-label t-kicker">Іконки</p>
+      <div class="demo-panel theme-beige icon-demo">
+        <img src="/assets/icons/arrow.svg" alt="Vector 1 (стрілка)">
+        <img src="/assets/icons/plus.svg" alt="Union (плюс)">
+        <img src="/assets/icons/chevron-down.svg" alt="Vector 2 (шеврон вниз, фільтр catalog)">
+        <span class="theme-green"><img src="/assets/icons/chevron-down-light.svg" alt="Vector 2 (шеврон вниз, світлий, фільтр catalog 204:2337)"></span>
+      </div>
+
+      <p class="demo-label t-kicker">Брендові іконки (stroke 1.5, закруглені кінці; джерело photo/generative/site/icons). Підключення — CSS-маска .icon (src/styles/components/icon.css): колір = currentColor, розмір --icon-size (+ --icon-ratio для пляшок), aria-hidden="true". Файли у public/assets/icons/.</p>
+      <div class="demo-panel theme-beige icon-demo">
+        <span class="icon icon--arrow-up-right" aria-hidden="true"></span>
+        <span class="icon icon--basket" aria-hidden="true"></span>
+        <span class="icon icon--headset" aria-hidden="true"></span>
+        <span class="icon icon--bottle-0-5" aria-hidden="true"></span>
+        <span class="icon icon--bottle-0-7" aria-hidden="true"></span>
+        <span class="icon icon--bottle-1" aria-hidden="true"></span>
+      </div>
+      <p class="ds-note ds-meta">arrow-up-right (24x24): прості кнопки .btn (бокс-розкладка 11.948, знак ≈ 12u; --size-icon-arrow-glyph 24u) · basket (24x24): кнопка «Кошик» у хедері, 22u · headset (24x24): кнопка «підказати?» у хедері, 22u · bottle-0-5 (24x40) / bottle-0-7 (24x50) / bottle-1 (24x64): поруч з об'ємом на сторінці товару (500 / 700 мл / 1 л), ширина 16.8u (0,5 л — висота 28u), рядок об'єму не змінює висоту (компенсація margin).</p>
+    </section>
+
+    <section class="ds-section" id="hit-area">
+      <h2 class="t-h2 ds-section__title">Область реакції</h2>
+      <p class="demo-label t-kicker">Правило: клікабельна й ховерабельна вся видима область контролу (фон, рамка, плитка, відступи, іконка), а не лише текст. Фон/рамку/padding має нести сам &lt;button&gt;/&lt;a&gt;; якщо плитка — обгортка (лейбл + кнопка), кнопка отримує клас .hit-area (::after inset:0 від позиціонованої плитки). Не клікабельні: заголовки, підписи. Hover/focus-стан — на всю плитку (:has()). Focus-кільце: глобальне :focus-visible (base.css: --border-hairline, currentColor, --focus-offset); для плитки з .hit-area кільце на ::after кнопки з радіусом плитки (--radius-select), контраст beige/green ≈ 9.4:1 (≥ 3:1). Перевірка: elementFromPoint по сітці всередині видимого прямокутника.</p>
+    </section>
+
+    <section class="ds-section" id="motion">
+      <h2 class="t-h2 ds-section__title">Рух і стани</h2>
+      <p class="ds-note t-body">Плавний, «дорогий» темп: усі переходи й появи повільні та м’які (ease-in-out, без різких стартів). Усе через токени руху (семантичні, вузлів Figma немає) — тривалості не пишемо літералами. Анімуються лише opacity, transform / translate, колір і фон (та висота акордеона) — розкладка в стані спокою не змінюється. Hover — тільки для pointer: fine; фокус клавіатури (:focus-visible) реагує швидко (--duration-focus) і лишається видимим. prefers-reduced-motion: reduce — усе миттєво. Підкреслень при hover немає, крім футера: у хедері hover/focus — лише зміна кольору тексту.</p>
+      <div class="ds-grid">
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-fast</span><span class="ds-meta" data-token="--duration-fast"></span>
+          <span class="ds-meta is-muted">колір і фон: кнопки, чіпи, nav, стрілки, пункти select; згасання старої картки слайдера (було 0.2s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-base</span><span class="ds-meta" data-token="--duration-base"></span>
+          <span class="ds-meta is-muted">hover: масштаб, opacity; поява нової картки; cross-fade фото товару (було 0.4s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-reveal</span><span class="ds-meta" data-token="--duration-reveal"></span>
+          <span class="ds-meta is-muted">поява елемента (було 0.7s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-bg</span><span class="ds-meta" data-token="--duration-bg"></span>
+          <span class="ds-meta is-muted">кросфейд фону секції підбору (було 0.9s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-liquid</span><span class="ds-meta" data-token="--duration-liquid"></span>
+          <span class="ds-meta is-muted">підйом/спад «рідини» в картці (було 0.9s); текст змінює колір на 0.3 / 0.4 цієї тривалості</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-wave</span><span class="ds-meta" data-token="--duration-wave"></span>
+          <span class="ds-meta is-muted">період дрейфу хвилі «рідини» (було 2.4s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-focus</span><span class="ds-meta" data-token="--duration-focus"></span>
+          <span class="ds-meta is-muted">перехід при :focus-visible (клавіатура); новий</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-accordion</span><span class="ds-meta" data-token="--duration-accordion"></span>
+          <span class="ds-meta is-muted">відкриття/закриття акордеона: висота, opacity тіла, «+» ↔ «−»; новий</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--ease-accordion</span><span class="ds-meta" data-token="--ease-accordion"></span>
+          <span class="ds-meta is-muted">м’яка ease-in-out крива акордеона; новий</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--ease-out</span><span class="ds-meta" data-token="--ease-out"></span>
+          <span class="ds-meta is-muted">єдине м’яке згладжування (було cubic-bezier(0.2, 0.7, 0.2, 1))</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--reveal-shift</span><span class="ds-meta" data-token="--reveal-shift"></span>
+          <span class="ds-meta is-muted">зсув по Y при появі (16 px макета)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--reveal-stagger</span><span class="ds-meta" data-token="--reveal-stagger"></span>
+          <span class="ds-meta is-muted">затримка між сусідніми елементами (було 0.08s)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--hover-nudge</span><span class="ds-meta" data-token="--hover-nudge"></span>
+          <span class="ds-meta is-muted">зсув стрілки кнопки на hover</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--scale-zoom</span><span class="ds-meta" data-token="--scale-zoom"></span>
+          <span class="ds-meta is-muted">zoom фото (бренд-блок, картка)</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--parallax-range</span><span class="ds-meta" data-token="--parallax-range"></span>
+          <span class="ds-meta is-muted">паралакс фото: макс. односторонній зсув вниз від нейтралі, частка висоти контейнера (0…5%); новий</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--parallax-range-soft</span><span class="ds-meta" data-token="--parallax-range-soft"></span>
+          <span class="ds-meta is-muted">те саме для data-parallax="soft" (hero, фон picker); новий</span></div></div>
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--parallax-lerp</span><span class="ds-meta" data-token="--parallax-lerp"></span>
+          <span class="ds-meta is-muted">інерція паралакса: частка догонки цілі за кадр; новий</span></div></div>
+        <p class="ds-note ds-meta">Фото hero (<code>home-hero-bg.webp</code>): експорт Figma 224:4011 з уже застосованою обробкою зображення (темніше за сирий растр ≈×0.67); CSS-оверлея нема.</p>
+      </div>
+      <p class="ds-note t-body">Reveal: атрибут data-reveal="rise" (opacity 0→1 + зсув на --reveal-shift) або data-reveal="fade" (лише opacity); спрацьовує один раз, коли елемент входить у в'юпорт (src/js/reveal.js, IntersectionObserver). Групи, що з'являються разом, йдуть із stagger (--reveal-stagger). Hero (секція з data-reveal-load) з'являється при завантаженні. Приховування вмикає лише JS (клас .js-reveal на html); без JS, при prefers-reduced-motion: reduce та при друці контент видно одразу. Header 3 — пілюля без анімації; випадне меню: opacity + зсув на --header3-menu-shift за --duration-base / --ease-out (reduced-motion — миттєво).</p>
+
+      <p class="ds-note t-body">Паралакс фото (лише головна, src/js/parallax.js): атрибут data-parallax на контейнері з обрізанням (hero, brand-half, фото tour-card, фон picker), data-parallax="soft" — менший зсув для великих фонів. Фото — прямий нащадок img, розміром з контейнер: у нейтральній точці (контейнер по центру в’юпорта; hero — scroll=0) зсув 0 і масштаб 1, тож кадр збігається з макетом і ?parallax=off. Далі фото зсувається вниз через translate на 0…--parallax-range від висоти контейнера, а scale 1 + y/h від нижнього краю (transform-origin) закриває верхній край — порожніх країв нема; інерція --parallax-lerp, rAF лише для видимих блоків. Не конфліктує з hover-zoom (transform) і reveal (opacity). Вимкнення: ?parallax=off (автоматизовані перевірки, як ?reveal=off) і prefers-reduced-motion: reduce — статична позиція без зсуву. Кнопки в секціях tours і intro (Figma 224:3688/224:3691/224:3639) — btn--serif (EB Garamond Bold), як «додати в кошик».</p>
+
+      <p class="demo-label t-kicker">Hover/focus: кнопки (4 варіанти; стрілка зсувається, розмір не змінюється)</p>
+      <div class="demo-panel theme-beige">
+        <!--@include components/btn variant="btn--green" href="catalog.html" text="Додати в кошик" arrow="arrow-up-right"-->
+        <!--@include components/btn variant="btn--teal" href="catalog.html" text="Додати в кошик" arrow="arrow-up-right"-->
+        <!--@include components/btn variant="btn--gold" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
+        <!--@include components/btn variant="btn--light" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
+      </div>
+
+      <p class="ds-note t-body">Акордеон (details.acc: FAQ .acc--faq і сторінка товару .acc--product / .acc--teal): відкриття й закриття плавні — src/js/accordion.js анімує висоту <code>details</code> і opacity тіла через Web Animations API за --duration-accordion і --ease-accordion; іконка «+» → «−» — вертикальна риска згортається (background-size), у FAQ іконка ще й піднімається з центру першого рядка до верху, тими ж токенами. Повторний клік під час анімації розвертає її з поточної висоти (без стрибка), aria-expanded оновлюється одразу, Enter/Space на summary працюють. Висота й положення в стані спокою не змінюються (закритий FAQ-рядок 90, відкритий ≈187; рядок товару 51, крок 56). Без JS — нативний details (миттєво); prefers-reduced-motion — миттєво.</p>
+
+      <p class="demo-label t-kicker">Акордеон: плавне відкриття (клік / Enter / Space)</p>
+      <div class="demo-panel theme-beige">
+        <div class="ds-partial-box">
+          <!--@include components/faq-item q="Чи можна відвідати дистилерію?" a="Ми відкриті до гостей: екскурсія біля мідних кубів і дегустація (18+). Напишіть, щоб домовитися про візит."-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Hover/focus: чіпи, стрілки слайдера, рядок FAQ</p>
+      <div class="demo-panel theme-teal">
+        <!--@include components/chip label="подарунок"-->
+        <!--@include components/chip label="колекція"-->
+        <!--@include components/arrow-btn mod=" arrow-btn--prev" label="Попередній товар" attr="data-slider-prev"-->
+        <!--@include components/arrow-btn label="Наступний товар" attr="data-slider-next"-->
+      </div>
+      <div class="demo-panel theme-beige">
+        <div class="ds-partial-box">
+          <!--@include components/faq-item q="Усе в одному місці, усе нашими руками" a="Нам було цікаво експериментувати, і цей інтерес привів нас до власної дистилерії."-->
+        </div>
+      </div>
+
+      <p class="ds-note ds-meta">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
+    </section>
+
+    <section class="ds-section" id="partials">
+      <h2 class="t-h2 ds-section__title">Partial-компоненти</h2>
+      <p class="ds-note t-body">Живі приклади підключено через include з partials/components. Параметри такі самі, як у partials/sections (головна).</p>
+
+      <p class="demo-label t-kicker">btn: варіанти без стрілки та зі стрілкою (partials/sections/hero, brands, picker)</p>
+      <div class="demo-panel theme-brown">
+        <!--@include components/btn variant="btn--gold" href="catalog.html" text="Вивчити асортимент"-->
+        <!--@include components/btn variant="btn--light" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
+      </div>
+      <div class="demo-panel theme-beige">
+        <div class="ds-partial-box">
+          <!--@include components/btn variant="btn--light btn--block" href="catalog.html" text="Вивчити увесь асортимент" text-class=" t-btn--alt" arrow="arrow-up-right"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">lead: кікер + заголовок + кнопка (partials/sections/hero, split)</p>
+      <div class="demo-panel theme-brown">
+        <!--@include components/lead tag="h2" kicker="Усе в одному місці, усе нашими руками" title="Від першого зерна<br>до останньої краплі в пляшці" href="catalog.html" btn="Вивчити асортимент"-->
+      </div>
+
+      <p class="demo-label t-kicker">faq-item: закритий і відкритий (partials/sections/faq)</p>
+      <div class="demo-panel theme-beige">
+        <div class="ds-grid ds-grid--3">
+          <!--@include components/faq-item q="Усе в одному місці, усе нашими руками" a="Нам було цікаво експериментувати, і цей інтерес привів нас до власної дистилерії в Ясногородці, де кожен новий дистилят починається з простого питання: а що, як спробувати інакше?"-->
+          <!--@include components/faq-item q="Усе в одному місці, усе нашими руками" a="Нам було цікаво експериментувати, і цей інтерес привів нас до власної дистилерії в Ясногородці, де кожен новий дистилят починається з простого питання: а що, як спробувати інакше?" open=" open" expanded="true"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">chip (partials/sections/picker)</p>
+      <div class="demo-panel theme-teal">
+        <!--@include components/chip label="подарунок"-->
+        <!--@include components/chip label="колекція"-->
+      </div>
+
+      <p class="demo-label t-kicker">stat (partials/sections/about-brief) і stat--compact (224:3643, partials/sections/intro: «( 2 )» Regular 67, gap 40)</p>
+      <div class="demo-panel theme-brown">
+        <!-- контейнер, вміст — через include/виняток: stat-блоки з partials/components/stat -->
+        <div class="stats">
+          <!--@include components/stat num="2" label="Бренди<br>під одним дахом"-->
+          <!--@include components/stat num="8" label="Етапів<br>до результату"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">arrow-btn: prev і next (partials/sections/picker)</p>
+      <div class="demo-panel theme-teal">
+        <!--@include components/arrow-btn mod=" arrow-btn--prev" label="Попередній товар" attr="data-slider-prev"-->
+        <!--@include components/arrow-btn label="Наступний товар" attr="data-slider-next"-->
+      </div>
+    </section>
+
+    <section class="ds-section" id="under-construction">
+      <h2 class="t-h2 ds-section__title">Сторінка в розробці / 404</h2>
+      <p class="ds-note t-body">Заглушка для ще не створених сторінок і для 404.html: одна секція partials/sections/under-construction (CSS src/styles/under-construction.css). Параметри: page (необов'язковий кікер з назвою сторінки), title (типово «Упс.. Сторінка в розробці»), text; дві кнопки btn--green «На головну» (index.html) і «До каталогу» (catalog.html). Сторінка = header + main.under-construction-page + footer (тло main — beige, зона header 103u зелена, як у стані «Товар не знайдено»); секція по центру, min-height = 100svh − зона header, футер нижче. Без data-reveal. Окремі HTML у корені: about, faq, cart, offer; 404.html — той самий partial з title «Упс.. Сторінка не знайдена» і &lt;base href="%BASE_URL%"&gt; (шляхи працюють з будь-якої глибини URL). Після створення справжньої сторінки заглушку замінити (див. README).</p>
+      <div class="demo-panel theme-beige ds-uc-demo">
+        <!--@include sections/under-construction page="Про дім"-->
+      </div>
+    </section>
+
+    <section class="ds-section" id="catalog-components">
+      <h2 class="t-h2 ds-section__title">Каталог (194:1443)</h2>
+      <p class="ds-note t-body">Нові компоненти сторінки каталогу: картка каталогу, випадний список фільтра, заголовок-навігація категорій. Рендер карток із даних — src/data/products.js + src/js/catalog.js (див. README).</p>
+
+      <p class="demo-label t-kicker">product-card--catalog (204:2223, 426.25×547.67): partial components/product-card, мод. product-card--catalog; фон #B7BAAC (--color-card-bg-catalog), арка 204:2230 (один ::before), радіус зовнішніх кутів --radius-card-catalog 10px (арка концентрично 4px; слайдер підбору на головній — без закруглення), hover — світла «рідина» --color-liquid-catalog (#DCDBCF), текст лишається --color-green</p>
+      <div class="demo-panel demo-panel--card theme-green">
+        <div class="demo-variant ds-catalog-card">
+          <!--@include components/product-card mod=" product-card--catalog" slug="gin-barrel" name="Джин<br>Ясногородський" price="850 ₴" image="/assets/img/products/gin-yasnyi.webp" brand="yasnocraft"-->
+        </div>
+        <div class="demo-variant ds-catalog-card">
+          <!--@include components/product-card mod=" product-card--catalog" slug="gin-barrel" name="Джин<br>Бочковий" price="1 250 ₴" image="/assets/img/products/gin-barrel.webp" brand="yasnocraft"-->
+        </div>
+        <div class="demo-variant ds-catalog-card">
+          <!--@include components/product-card mod=" product-card--catalog" slug="whiskey-white" name="White<br>Whiskey" price="1 690 ₴" image="/assets/img/products/whiskey-white.webp" brand="bazylsprings"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">select: поле фільтра (204:2333: підпис + значення 200 u + шеврон 12×6, фон rgba(220,219,207,.05), радіус 5); клавіатура: Enter/Space/стрілки, Esc, літера. Клікабельна вся плитка (лейбл, значення, шеврон, відступи): кнопка з .hit-area, hover/focus/відкрито — фон --color-select-bg-hover на всю плитку</p>
+      <div class="demo-panel theme-green">
+        <!--@include components/select id="ds-select-brand" name="ds-brand" label="Бренд" options="all:Усі|yasnocraft:YasnoCraft|bazylsprings:Bazylsprings"-->
+      </div>
+
+      <p class="demo-label t-kicker">Заголовок-навігація (204:2351): .catalog-nav > .catalog-nav__item (активний `.is-active` — opacity 1; неактивний — `--opacity-catalog-nav-muted` 0.43, контраст ≥3:1 на фоні каталогу; hover і :focus-visible — opacity 1 за `--duration-base` / `--duration-focus`; клікабельна вся висота рядка)</p>
+      <div class="demo-panel theme-green">
+        <nav class="catalog-nav t-hero ds-catalog-nav" aria-label="Приклад">
+          <a class="catalog-nav__item is-active" href="#catalog-components">Весь каталог,</a>
+          <a class="catalog-nav__item" href="#catalog-components">Джин,</a>
+          <a class="catalog-nav__item" href="#catalog-components">Кальвадос</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="ds-section" id="product-components">
+      <h2 class="t-h2 ds-section__title">Сторінка товару</h2>
+      <p class="ds-note t-body">Product page YasnoCraft — новий макет 205:2430 (фото 905×(100svh − 123u) з мініатюрами-накладками 126×167, арочна шапка панелі, рядок «500 мл · 40% alc», акордеони 3×51 + нові, рамка панелі 5) / Bazylsprings 194:1520: спільна розкладка з YC (зелене тло, контент впритул до header, зазор фото–панель 5, радіус 10, gap блоків 100, pb 70, кнопка EB Garamond), відмінності BS — шапка-бейдж з лого BS на всю ширину панелі (896u = 910 − 2×7, висота за пропорцією SVG 813/313, відступ збоку = зверху від зовнішнього краю панелі = --space-product-head-bs-inset 7u), без синьої обводки панелі (рамка = beige; ширини фото 905 / панелі 910 і мініатюри-накладки — як у YC): один шаблон (product.html), тема бренду через data-brand на main.product (YasnoCraft — green, Bazylsprings — teal). Дані: src/data/products.js (+ hero/gallery), тексти акордеонів: src/data/product-texts.js, рендер: src/js/product.js, стилі: src/styles/product.css.</p>
+      <p class="ds-note t-body">Фото товарів: нові пляшки з generative/newbottles імпортуються за процедурою README («Нові фото пляшок»): hero 900:968 (webp q85, 1800×1936) + прозорий виріз 800×1060 для каталогу й слайдера (поле image); поле catalogImage не використовується.</p>
+      <p class="demo-label t-kicker">acc-item (partial components/acc-item, CSS components/acc-product.css): закритий і відкритий рядок; «+» → «−»; для Bazylsprings додається .acc--teal</p>
+      <div class="demo-panel theme-beige">
+        <div class="acc-list">
+          <!--@include components/acc-item q="Про напій"-->
+          <!--@include components/acc-item q="Колір, смак, аромат" mod=" acc--teal"-->
+          <!-- виняток: partial acc-item не має параметра open; відкритий стан («−») — рукописний рядок -->
+          <details class="acc acc--product" open><summary class="t-acc" aria-expanded="true">Особливості</summary><div class="acc__body t-body"><ul><li>Три перегонки на власній дистилерії</li><li>Основні ноти: ялівець, цитрус, трави</li></ul></div></details>
+        </div>
+      </div>
+      <p class="demo-label t-kicker">Фрейм фото (.product-media): sticky під хедером, висота = 100svh − зона header (обидва бренди: токен --size-product-frame-h, зона header 103u + відступ --space-product-top 20u = 123u) — низ фрейму лежить на низу вікна; мінімум --size-product-frame-min-h (700u), нижче сторінка скролиться. Ширина фрейму 905u однакова для обох брендів. Фото заповнює фрейм (object-fit: cover, object-position: --position-product-photo); вирізи без студійного фото (.is-cutout) лишаються contain. Мініатюри — накладки всередині фрейму (126×167, відступ 15, крок 7) однаково для обох брендів.</p>
+      <p class="demo-label t-kicker">Кнопка «додати в кошик» (btn з price): YasnoCraft — btn--green + btn--serif (EB Garamond: ціна Medium 20, текст Bold 16; Figma 205:2443; перша кнопка — звичайна Manrope для порівняння), Bazylsprings — btn--teal + btn--serif (на сторінці товару однаково з YC за рішенням замовника; у Figma 194:1533 Manrope); усі активні</p>
+      <div class="demo-panel theme-beige">
+        <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
+        <!--@include components/btn variant="btn--teal btn--serif" href="#" text="додати в кошик" price="1 690 ₴"-->
+        <!--@include components/btn variant="btn--green btn--serif" href="#" text="додати в кошик" price="1 250 ₴"-->
+      </div>
+      <p class="demo-label t-kicker">Перемикач об'єму (.product-volumes > .product-volume, активний aria-pressed="true", неактивний --opacity-muted; hover/focus-visible: м'яка плашка ::before кольору тексту --opacity-volume-hover 0.1 за --duration-fast, неактивна 0.4→1, без підкреслення, розмір не змінюється); YasnoCraft: .t-spec «500 мл», «43% alc» (gap 20 `--space-product-volumes-gap`, спільний для обох брендів, Figma 205:2441), мініатюри-накладки .product-thumb 126×167 (активна — рамка 1px; повторний клік повертає головне фото); Bazylsprings: .t-caption «0,5 л»; розкладка і мініатюри-накладки однакові для обох брендів (поле 50 + фото 905 + зазор 5 + панель 910 + поле 50; накладки 126×167 у куті фрейму, відступ 15, крок 7; .product-media sticky разом з фото; слайди — public/assets/img/slider/bs-whisky-*, YC — yc-gin-*)</p>
+      <div class="demo-panel theme-beige">
+        <div class="product-volumes t-caption"><button class="product-volume" type="button" aria-pressed="true">0,5 л</button><button class="product-volume" type="button">0,7 л</button></div>
+        <div class="product-volumes t-spec"><button class="product-volume" type="button" aria-pressed="true">500 мл</button><button class="product-volume" type="button">700 мл</button><span>43% alc</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="picker-events">
+      <h2 class="t-h2 ds-section__title">Підбір за подією (194:1290)</h2>
+      <p class="ds-note t-body">Секція «не знаєте з чого почати?» на головній (<span class="ds-meta">partials/sections/picker</span>, логіка <span class="ds-meta">src/js/picker.js</span>, дані <span class="ds-meta">src/data/occasions.js</span>). Чіпи — події; вибір події підтягує добірку з products.js (лише status available) і змінює фон секції. Слайдер показує одну позицію (картка product-card--catalog 426.25×547.67 — Figma 224:3790; стрілки на відстані --space-30, по вертикалі — за макетом (224:3775: y 818, тобто 258u від верху картки, --offset-picker-arrow-top; не по центру картки); кнопки «Вивчити увесь асортимент» під слайдером у новому макеті 224:3732 немає), стрілки й ←/→ перемикають; aria-live на треку; з однією позицією стрілки aria-disabled. Повторний клік на активний чіп знімає вибір → «Хіти» і фон intro. Фон: шари <span class="ds-meta">.picker__bg</span> (.is-active / .is-prev), кросфейд opacity за <span class="ds-meta">--duration-bg</span>; картка — opacity + translate (<span class="ds-meta">--reveal-shift</span>, <span class="ds-meta">--duration-base</span>). Без JS — статичний стан (Хіти, intro, Джин Бочковий). Відхилення від макета: у Figma 224:3737 лише 4 чіпи; залишено 5-й «відкрити крафт» (подія intro) — питання до замовника. Колір чіпів і тексту секції — --color-beige (було gold), активний/hover чіп — --color-gold.</p>
+      <div class="ds-grid">
+        <div class="swatch"><div class="swatch__info">
+          <span class="ds-meta">--duration-bg</span><span class="ds-meta" data-token="--duration-bg"></span>
+          <span class="ds-meta is-muted">кросфейд фону секції підбору</span></div></div>
+      </div>
+      <p class="demo-label t-kicker">Події → добірка (slugs) → фон. Початковий стан і стан після повторного кліку на активний чіп («Хіти», фон intro.webp — не чіп; чіпів рівно 4, Figma 224:3737): gin-barrel, gin-yasnyi, calvados-5, schnapps-plum, fruit-watermelon</p>
+      <div class="demo-panel theme-beige">
+        <table class="t-caption">
+          <tr><th>чіп</th><th>id</th><th>slugs (порядок у слайдері)</th><th>фон</th></tr>
+          <tr><td>подарунок</td><td>gift</td><td>gin-yasnyi, calvados-5, fruit-watermelon</td><td>occasions/gift.webp</td></tr>
+          <tr><td>колекція</td><td>collection</td><td>fruit-watermelon, whiskey-white, gin-barrel</td><td>occasions/collection.webp</td></tr>
+          <tr><td>дегустація</td><td>tasting</td><td>calvados-5, calvados-3, whiskey-white</td><td>occasions/tasting.webp</td></tr>
+          <tr><td>бар/ресторан</td><td>bar</td><td>gin-yasnyi, gin-garden, gin-barrel</td><td>occasions/bar.webp</td></tr>
+        </table>
+      </div>
+      <p class="demo-label t-kicker">Секція (partial sections/picker, статичний стан без JS)</p>
+      <!--@include sections/picker-->
+    </section>
+
+    <section class="ds-section" id="header-footer">
+      <h2 class="t-h2 ds-section__title">Header / Footer</h2>
+      <p class="ds-note t-body">Єдині partials: header 3 (214:2902, плаваюча пілюля 1216.67×73 по центру, відступ зверху 30; ліворуч «меню» 150×44 (контур + іконка-бургер 11.47×13) і «каталог» 150×42, по центру два лого, праворуч «Кошик ( 0 )» (контур 150×44) і «підказати?» (заливка 150×44); фон rgba(0,0,0,0.1) + blur 25, радіус 10, бічний padding --header3-pad-x = 15 (у Figma 10, +5 за рішенням замовника; ширина 1216.67 фіксована)), footer 194:1235 (856). Підключаються на кожній сторінці через include. Пілюля position: fixed; зона header у потоці = 103 (30 + 73).</p>
+      <p class="ds-note t-body">Варіанти розташування хедера: (1) стандартний — зона в потоці <code>.site-header</code> висотою <code>--size-header-h</code> (103u, зелена) + пілюля fixed (каталог, товар, ці демо); (2) головна — <code>&lt;body class="page-home"&gt;</code>: зона в потоці = 0 (<code>--size-header-zone-h: 0px</code>), hero починається з y=0, пілюля fixed висить поверх нього. Розмітка partial однакова, токен <code>--size-header-h</code> не змінюється.</p>
+      <p class="demo-label t-kicker">Header 3: закритий стан (інтерактивний: «меню» відкриває список)</p>
+      <div class="ds-header-demo">
+        <!--@include header-->
+      </div>
+      <p class="demo-label t-kicker">Header 3: випадне меню відкрите (оверлей під пілюлею: Головна, про дім, Faq, Контакти + дві кнопки дії «замовити екскурсію» / «замовити бочку» — хедерна контурна кнопка .nav-cell--outline з модифікатором .nav-cell--block на всю ширину, hover/focus як у «Кошик», focus-кільце на пілюлі — --color-beige (контраст ≈ 8:1), якорі index.html#tour / #barrel, після кліку меню закривається; відкривається і по ховері (лише hover: hover + pointer: fine): миттєво, лишається відкритим поки курсор над кнопкою або меню, «місток» над панеллю без діри, закриття через --header3-menu-close-delay 0.25s; клік по кнопці після ховер-відкриття закріплює меню, наступний клік закриває; поява opacity + зсув за --duration-base / --ease-out, Esc / клік поза / Tab поза меню закривають, ↑ ↓ Home End між пунктами)</p>
+      <div class="ds-header-demo ds-header-demo--open">
+        <!--@include header menu-id="site-menu-demo"-->
+      </div>
+      <!--@include footer-->
+    </section>
+
+    <section class="ds-section" id="logos">
+      <h2 class="t-h2 ds-section__title">Логотипи</h2>
+      <div class="logo-grid">
+        <div class="logo-cell logo-cell--dark"><img src="/assets/img/yasnocraft-logo-no-mountains.png" alt=""><span class="ds-meta">YasnoCraft_logo_no_mountains · 194:1384</span></div>
+        <div class="logo-cell logo-cell--dark"><img src="/assets/img/bazylsprings-logo.png" alt=""><span class="ds-meta">Bazylsprings · 194:1386</span></div>
+        <div class="logo-cell logo-cell--light"><img src="/assets/img/yasnocraft-logo-round-colour.png" alt=""><span class="ds-meta">round colour · 194:1393</span></div>
+        <div class="logo-cell logo-cell--dark"><img src="/assets/img/yasnocraft-logo-vector.svg" alt=""><span class="ds-meta">YasnoCraft_logo_vector · 194:1347</span></div>
+        <div class="logo-cell logo-cell--teal"><img src="/assets/img/bazylsprings-logo-vector.svg" alt=""><span class="ds-meta">Bazylsprings_logo_vector · 194:1358</span></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+/* Header 3 (214:2902, 1216.67×73): плаваюча пілюля по центру 1920 на відстані 30 від верху; три групи по 1/3 (ліва 214:2903, лого 214:2912, права 214:2917).
+   .site-header — зона в потоці висотою --size-header-h (30 + 73, зелена, як тло макета); пілюля .site-header__bar — position: fixed (завжди на місці при скролі), поверх контенту. */
+.site-header { position: relative; height: var(--size-header-zone-h, var(--size-header-h)); background: var(--color-green); }
+/* Головна (body.page-home): зони в потоці нема — hero починається з y=0, пілюля fixed висить поверх нього. Токен --size-header-h не змінено (каталог/товар/sticky/scroll-padding). */
+.page-home .site-header { --size-header-zone-h: 0px; }
+.site-header__bar { position: fixed; top: var(--header3-top); left: 0; right: 0; z-index: var(--z-header); box-sizing: border-box; width: var(--header3-w); height: var(--header3-h); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; padding: var(--header3-pad-y) var(--header3-pad-x); border-radius: var(--header3-radius); background: linear-gradient(var(--color-header3-bg), var(--color-header3-bg)), var(--color-header3-underlay); -webkit-backdrop-filter: blur(var(--header3-blur)); backdrop-filter: blur(var(--header3-blur)); }
+.site-header__bar :focus-visible { outline-color: var(--color-beige); } /* фокус-кільце на темній пілюлі (і в випадному меню всередині неї): світле (beige), а не currentColor — на фоні пілюлі видно ≥3:1 для всіх контролів хедера */
+.site-header__side { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: var(--header3-group-gap); }
+.site-header__side--end { justify-content: flex-end; }
+.site-header__logos { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; }
+/* кнопка «МЕНЮ» (214:2904): іконка-бургер (маска public/assets/icons/menu.svg; колір — заливка Figma, на hover/відкритому = колір тексту) + текст */
+.site-header__menu-btn { gap: var(--header3-group-gap); cursor: pointer; }
+.site-header__burger { flex: none; width: var(--header3-burger-w); height: var(--header3-burger-h); background-color: var(--color-header3-burger); -webkit-mask: url('/assets/icons/menu.svg') center / 100% 100% no-repeat; mask: url('/assets/icons/menu.svg') center / 100% 100% no-repeat; transition: background-color var(--duration-fast) var(--ease-out); }
+.site-header__menu-btn:focus-visible .site-header__burger, .site-header__menu-btn[aria-expanded="true"] .site-header__burger { background-color: currentColor; }
+.site-header__menu-btn:focus-visible .site-header__burger { transition-duration: var(--duration-focus); }
+@media (hover: hover) { .site-header__menu-btn:hover .site-header__burger { background-color: currentColor; } }
+/* випадне меню: оверлей під пілюлею (потік не змінює), той самий напівпрозорий фон; рішення дизайну — у Figma стану немає */
+.site-header__menu { position: absolute; top: calc(100% + var(--header3-menu-gap)); left: 0; z-index: 1; box-sizing: border-box; width: var(--header3-menu-w); display: flex; flex-direction: column; padding: var(--header3-menu-pad); border-radius: var(--header3-radius); background: linear-gradient(var(--color-header3-bg), var(--color-header3-bg)), var(--color-header3-underlay); -webkit-backdrop-filter: blur(var(--header3-blur)); backdrop-filter: blur(var(--header3-blur)); opacity: 0; visibility: hidden; transform: translateY(calc(-1 * var(--header3-menu-shift))); pointer-events: none; transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out), visibility 0s linear var(--duration-base); }
+.site-header__menu.is-open { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition-delay: 0s; }
+/* «місток» ховеру: невидима смуга над панеллю до пілюлі — курсор переходить з кнопки на меню без «діри» */
+.site-header__menu::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--header3-menu-gap); }
+/* дві кнопки дії внизу меню: хедерна контурна кнопка (як «Кошик», .nav-cell--outline) з модифікатором на всю ширину панелі */
+.site-header__menu-actions { display: flex; flex-direction: column; gap: var(--header3-menu-pad); margin-top: var(--header3-menu-pad); }
+.nav-cell--menu { justify-content: flex-start; width: auto; padding-inline: var(--header3-menu-item-px); }
+@media (prefers-reduced-motion: reduce) { .site-header__menu, .site-header__burger { transition: none; } }
+/* Логотипи в хедері: кожен у комірці 220.37x63 (206:2504 / 206:2506) */
+.site-header__logo { position: relative; flex: none; width: var(--header-logo-cell-w); height: var(--header-logo-cell-h); overflow: hidden; display: block; }
+.site-header__logo img { position: absolute; max-width: none; object-fit: cover; }
+.site-header__logo--yc img { left: var(--header-logo-yc-x); top: var(--header-logo-yc-y); width: var(--header-logo-yc-w); height: var(--header-logo-yc-h); } /* 194:1384 */
+.site-header__logo--bs img { left: var(--header-logo-bs-x); top: var(--header-logo-bs-y); width: var(--header-logo-bs-w); height: var(--header-logo-bs-h); } /* 194:1386 */
+/* hover логотипів: м'яке згасання зображення (opacity 1 → --opacity-logo-hover), без підкреслення й зміни розміру; focus-visible — звичайне кільце (на нього opacity не діє) */
+.site-header__logo img { transition: opacity var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .site-header__logo:hover img { opacity: var(--opacity-logo-hover); } }
+@media (prefers-reduced-motion: reduce) { .site-header__logo img { transition: none; } }

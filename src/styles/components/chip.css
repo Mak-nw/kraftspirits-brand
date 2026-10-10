@@ -1,0 +1,18 @@
+/* Чіп «подія» з ромбами-орнаментами (194:1296). Кнопка-перемикач: .is-active / aria-pressed="true" */
+.chip { --chip-fg: var(--color-gold); --chip-fg-on: var(--color-light); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-20); color: var(--chip-fg); cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
+.chip.is-active, .chip[aria-pressed="true"], .chip:focus-visible { color: var(--chip-fg-on); }
+.chip:focus-visible { transition-duration: var(--duration-focus); }
+@media (hover: hover) { .chip:hover { color: var(--chip-fg-on); } }
+.chip__ornament { position: relative; width: var(--size-chip-ornament); height: var(--size-chip-ornament); flex: none; display: grid; place-items: center; }
+.chip__ornament::before {
+  content: ''; width: var(--size-chip-diamond); height: var(--size-chip-diamond);
+  border: var(--border-hairline) solid currentColor;
+  background: linear-gradient(currentColor, currentColor) center / var(--size-chip-diamond-core) var(--size-chip-diamond-core) no-repeat;
+  transform: rotate(var(--angle-chip-diamond));
+}
+/* Рядок чіпів: п'ять рівних колонок (194:1295) */
+.chip-row { display: flex; align-items: center; width: var(--container-full); }
+.chip-row .chip { flex: 1 1 0; min-width: 0; }
+.chip .t-chip { white-space: nowrap; } /* підпис чіпа в один рядок (висота ряду 25 не змінюється) */
+/* на секції підбору (224:3737): чіпи --color-beige, активний/hover — --color-gold */
+.picker .chip { --chip-fg: var(--color-beige); --chip-fg-on: var(--color-gold); }

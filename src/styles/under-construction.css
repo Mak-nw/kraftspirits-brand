@@ -1,0 +1,12 @@
+/* Заглушка «Сторінка в розробці» / 404 (partials/sections/under-construction): по центру області під зоною header, футер знизу; без reveal.
+   Тло main = beige (як стан «Товар не знайдено»), зона header — зелена (103u, як на каталозі/товарі). */
+.under-construction-page { background: var(--color-bg-page); color: var(--color-green); }
+.under-construction {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  gap: var(--space-50);
+  min-height: calc(100svh - var(--size-header-h));
+  padding: var(--space-85) var(--gutter);
+}
+.under-construction__title { max-width: 100%; text-wrap: balance; }
+.under-construction__text { max-width: calc(600 * var(--u)); }
+.under-construction__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-30); }

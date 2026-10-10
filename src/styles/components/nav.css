@@ -1,0 +1,45 @@
+/* Посилання навігації (194:1376) і смуга хедера (194:1374) */
+.nav-link {
+  color: var(--color-nav-text); display: inline-block; white-space: nowrap;
+  /* у хедері підкреслень немає: hover/focus змінює лише колір тексту (--color-hover-nav) */
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.nav-link--on-light { color: var(--color-green); } /* футер 194:1240 */
+
+/* підкреслення — лише у футері (.site-footer): прозоре за замовчуванням, на hover/focus стає currentColor; розміри не змінюються */
+.site-footer .nav-link {
+  text-decoration: underline; text-decoration-color: transparent;
+  text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--hover-nudge);
+  transition: color var(--duration-fast) var(--ease-out), text-decoration-color var(--duration-fast) var(--ease-out);
+}
+
+/* hover/focus: лише для pointer: fine; фокус клавіатури — завжди */
+a.nav-link:focus-visible { color: var(--color-hover-nav); transition-duration: var(--duration-focus); }
+a.nav-link--on-light:focus-visible { color: var(--color-hover-nav-light); }
+.site-footer a.nav-link:focus-visible { text-decoration-color: currentColor; }
+@media (hover: hover) {
+  a.nav-link:hover { color: var(--color-hover-nav); }
+  a.nav-link--on-light:hover { color: var(--color-hover-nav-light); }
+  .site-footer a.nav-link:hover { text-decoration-color: currentColor; }
+}
+
+/* Header 3 (214:2902; раніше Header 2 206:2495): комірка-пункт 150×42 по центру; кнопки «Кошик» (контур, 206:2511) і «підказати?» (заливка, 206:2513) */
+.nav-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: var(--header2-cell-w); height: var(--header2-cell-h); white-space: nowrap; color: var(--color-nav-text); }
+.nav-cell--outline, .nav-cell--fill {
+  border-radius: var(--radius-btn); /* 214:2904 / 214:2920 радіус 5 */
+  border: var(--border-hairline) solid var(--color-header-btn-border);
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.nav-cell--icon { gap: var(--header3-icon-gap); } /* кнопки хедера з брендовою іконкою (basket / headset): ширина 150 і висота не змінюються */
+.nav-cell--icon .icon { --icon-size: var(--header3-icon-size); }
+.nav-cell--block { width: 100%; } /* кнопка на всю ширину контейнера (дії у випадному меню) */
+.nav-cell--outline { height: var(--header2-btn-outline-h); }
+.nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--color-header-btn-fill); color: var(--color-header-btn-fill-text); }
+/* hover/focus кнопок: лише колір/фон (рамка стала, розміри не змінюються) */
+a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible, button.nav-cell--outline[aria-expanded="true"] { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
+a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { outline-color: var(--color-beige); transition-duration: var(--duration-focus); } /* кільце світле (beige): у фокусі колір тексту темніє, currentColor на зеленому тлі невидимий; діє і поза .site-header__bar (демо дизайн-системи) */ /* короткий перехід лише для клавіатурного фокусу; відкрите меню (aria-expanded) лишається на плавному --duration-fast */
+a.nav-cell--fill:focus-visible { outline-color: var(--color-beige); background: var(--color-hover-header-fill-bg); transition-duration: var(--duration-focus); }
+@media (hover: hover) {
+  a.nav-cell--outline:hover, button.nav-cell--outline:hover { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
+  a.nav-cell--fill:hover { background: var(--color-hover-header-fill-bg); }
+}

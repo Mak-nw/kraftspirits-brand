@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--@include head-icons-->
+  <!--@include head-fonts-->
+  <title>Каталог — YasnoCraft × Bazylsprings</title>
+  <meta name="description" content="Каталог дистилерії в Ясногородці: джин, кальвадос, фруктові шнапси, настоянки, віскі та колекційні пляшки YasnoCraft і Bazylsprings.">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script type="module" src="/src/js/viewport.js"></script>
+  <script type="module" src="/src/js/header-menu.js"></script>
+</head>
+<body>
+  <!--@include header-->
+  <main class="catalog-page">
+    <h1 class="visually-hidden">Каталог</h1>
+    <nav class="catalog-nav t-hero" aria-label="Категорії каталогу" data-reveal="rise">
+      <a class="catalog-nav__item" data-cat="all" href="#all">Весь каталог,</a>
+      <a class="catalog-nav__item" data-cat="gin" href="#gin">Джин,</a>
+      <a class="catalog-nav__item" data-cat="calvados" href="#calvados">Кальвадос,</a>
+      <a class="catalog-nav__item" data-cat="schnapps" href="#schnapps">Фруктові шнапси,</a>
+      <a class="catalog-nav__item" data-cat="tinctures" href="#tinctures">Настоянки,</a>
+      <a class="catalog-nav__item" data-cat="fruit-in-bottle" href="#fruit-in-bottle">Фрукт у пляшці</a>
+    </nav>
+
+    <div class="catalog-bar" role="group" aria-label="Фільтри та сортування" data-reveal="fade">
+      <div class="catalog-bar__group catalog-bar__group--filters">
+        <!--@include components/select id="filter-brand" name="brand" label="Бренд"-->
+        <!--@include components/select id="filter-category" name="category" label="Категорія"-->
+      </div>
+      <div class="catalog-bar__group">
+        <!--@include components/select id="filter-sort" name="sort" label="Сортування" value="за замовчуванням"-->
+        <p class="visually-hidden" data-catalog-count aria-live="polite">14 позицій</p>
+      </div>
+    </div>
+
+    <div class="catalog-grid" data-catalog-grid data-pending></div>
+    <div class="catalog-empty" data-catalog-empty hidden>
+      <p class="t-lead">Нічого не знайдено</p>
+      <!--@include components/btn variant="btn--light" href="#all" text="Скинути"-->
+    </div>
+
+    <template id="product-card-template"><!--@include components/product-card mod=" product-card--catalog" slug="" name="" price="" image="data:," brand=""--></template>
+
+    <noscript>
+      <ul class="catalog-noscript t-caption">
+        <li><a href="product.html?id=gin-yasnyi">Джин Ясногородський</a></li>
+        <li><a href="product.html?id=gin-garden">Джин Садовий</a></li>
+        <li><a href="product.html?id=gin-barrel">Джин Бочковий</a></li>
+        <li><a href="product.html?id=calvados-3">Кальвадос 3 роки</a></li>
+        <li><a href="product.html?id=calvados-5">Кальвадос 5 років</a></li>
+        <li><a href="product.html?id=schnapps-plum">Шнапс сливовий</a></li>
+        <li><a href="product.html?id=schnapps-pear">Шнапс грушевий</a></li>
+        <li><a href="product.html?id=schnapps-cherry">Шнапс вишневий</a></li>
+        <li><a href="product.html?id=tincture-herbal">Настоянка трав'яна</a></li>
+        <li><a href="product.html?id=tincture-rowan">Настоянка горобинова</a></li>
+        <li><a href="product.html?id=fruit-watermelon">Фрукт у пляшці · Кавун</a></li>
+        <li><a href="product.html?id=whiskey-white">White Whiskey</a></li>
+        <li><a href="product.html?id=barley-spirit">Barley Spirit</a></li>
+        <li><a href="product.html?id=oak-notes">Oak Notes</a></li>
+      </ul>
+    </noscript>
+  </main>
+  <!--@include footer-->
+  <script type="module" src="/src/js/catalog.js"></script>
+</body>
+</html>

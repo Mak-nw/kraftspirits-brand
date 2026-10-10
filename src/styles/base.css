@@ -1,0 +1,57 @@
+/* Reset + базові стилі + типографічні ролі (.t-*). Лише токени з tokens.css. */
+*, *::before, *::after { box-sizing: border-box; }
+/* страховка від горизонтального скролу (clip, не hidden — не ламає position: sticky); причина виправлена в --u/--vw (viewport.js) */
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; scroll-padding-top: var(--size-header-h); scroll-behavior: smooth; } /* якорі не ховаються під sticky-хедер; плавний скрол (вимикається в reveal.css для reduced-motion) */
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-text-on-light);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-text);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4, p, ul, ol, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: var(--border-hairline) solid currentColor; outline-offset: var(--focus-offset); }
+/* Утиліта «клікабельна вся видима область контролу»: кнопка/посилання без position розтягується ::after на найближчого позиціонованого предка (плитку-контрол) */
+.hit-area::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+
+/* ---- Типографічні ролі ---- */
+.t-hero { font: var(--type-hero-weight) var(--type-hero-size)/var(--type-hero-lh) var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; } /* 194:1370 */
+.t-h2 { font: var(--type-h2-weight) var(--type-h2-size)/var(--type-h2-lh) var(--type-h2-font); letter-spacing: var(--type-h2-ls); text-transform: uppercase; } /* 194:1278 */
+.t-stat { font: var(--type-stat-weight) var(--type-stat-size)/var(--type-stat-lh) var(--type-stat-font); letter-spacing: var(--type-stat-ls); text-transform: uppercase; } /* 194:1282 */
+.t-stat-label { font: var(--type-stat-label-weight) var(--type-stat-label-size)/var(--type-stat-label-lh) var(--type-stat-label-font); letter-spacing: var(--type-stat-label-ls); } /* 194:1283 */
+.t-kicker { font: var(--type-kicker-weight) var(--type-kicker-size)/var(--type-kicker-lh) var(--type-kicker-font); letter-spacing: var(--type-kicker-ls); } /* 194:1369 */
+.t-lead { font: var(--type-lead-weight) var(--type-lead-size)/var(--type-lead-lh) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: uppercase; } /* 194:1350 */
+.t-chip { font: var(--type-chip-weight) var(--type-chip-size)/var(--type-chip-lh) var(--type-chip-font); letter-spacing: var(--type-chip-ls); text-transform: uppercase; } /* 194:1299 */
+.t-body { font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--type-body-font); letter-spacing: var(--type-body-ls); text-transform: uppercase; } /* 194:1279 */
+.t-nav { font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--type-nav-font); letter-spacing: var(--type-nav-ls); text-transform: uppercase; } /* 194:1376 */
+.t-nav-head { font: var(--type-nav-head-weight) var(--type-nav-head-size)/var(--type-nav-head-lh) var(--type-nav-head-font); letter-spacing: var(--type-nav-head-ls); text-transform: uppercase; } /* 206:2498 header 2 */
+.t-spec { font: var(--type-spec-weight) var(--type-spec-size)/var(--type-spec-lh) var(--type-spec-font); letter-spacing: var(--type-spec-ls); } /* 205:2442 об'єм / міцність */
+.t-btn { font: var(--type-btn-weight) var(--type-btn-size)/var(--type-btn-lh) var(--type-btn-font); letter-spacing: var(--type-btn-ls); text-transform: uppercase; } /* 194:1373 */
+.t-btn--alt { font-weight: var(--type-btn-alt-weight); } /* 194:1341 */
+.t-price { font: var(--type-price-weight) var(--type-price-size)/var(--type-price-lh) var(--type-price-font); letter-spacing: var(--type-price-ls); text-transform: uppercase; } /* 194:1332 */
+.t-product-name { font: var(--type-product-name-weight) var(--type-product-name-size)/var(--type-product-name-lh) var(--type-product-name-font); letter-spacing: var(--type-product-name-ls); text-transform: uppercase; } /* 194:1331 */
+.t-caption { font: var(--type-caption-weight) var(--type-caption-size)/var(--type-caption-lh) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: uppercase; } /* 194:1396 */
+.t-breadcrumb { font: var(--type-breadcrumb-weight) var(--type-breadcrumb-size)/var(--type-breadcrumb-lh) var(--type-breadcrumb-font); letter-spacing: var(--type-breadcrumb-ls); text-transform: uppercase; } /* 194:1424 */
+.t-faq { font: var(--type-faq-weight) var(--type-faq-size)/var(--type-faq-lh) var(--type-faq-font); letter-spacing: var(--type-faq-ls); } /* 194:1189 */
+.t-acc { font: var(--type-faq-weight) var(--type-faq-size)/var(--type-acc-lh) var(--type-faq-font); letter-spacing: var(--type-acc-ls); } /* 194:1403 */
+.t-footer-head { font: var(--type-footer-head-weight) var(--type-footer-head-size)/var(--type-footer-head-lh) var(--type-footer-head-font); letter-spacing: var(--type-footer-head-ls); } /* 194:1238 */
+.t-wordmark { font: var(--type-wordmark-weight) var(--type-wordmark-size)/var(--type-wordmark-lh) var(--type-wordmark-font); letter-spacing: var(--type-wordmark-ls); text-transform: uppercase; } /* 194:1236 */
+
+/* 224:3973 абзац у sentence-case (Manrope Medium 16 / 1.4, ls 3%) — як t-body, але без uppercase; 224:3812 опис бренду (EB Garamond Medium 20) */
+.t-text { font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--type-body-font); letter-spacing: var(--type-body-ls); }
+.t-desc { font: var(--type-desc-weight) var(--type-desc-size)/var(--type-desc-lh) var(--type-desc-font); letter-spacing: var(--type-desc-ls); }
+
+/* ---- Утиліти колірних тем секцій ---- */
+.theme-green { background: var(--color-green); color: var(--color-text-on-dark); }
+.theme-teal { background: var(--color-teal); color: var(--color-gold); }
+.theme-brown { background: var(--color-brown); color: var(--color-gold); }
+.theme-beige { background: var(--color-beige); color: var(--color-green); }
+.theme-light { background: var(--color-light); color: var(--color-green); }
+.is-muted { opacity: var(--opacity-muted); }

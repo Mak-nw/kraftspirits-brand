@@ -1,0 +1,108 @@
+/* Сторінка товару (YasnoCraft — новий макет 205:2430, Bazylsprings 194:1520).
+   Один шаблон, тема бренду — data-brand на <main class="product">. Усі значення — токени.
+   Розкладка ОДНАКОВА для обох брендів (рішення замовника): поле 50 + фото 905 з мініатюрами-накладками + зазор 5 + панель 910 + поле 50 = 1920;
+   усе — в базових правилах нижче. Бренд-модифікатори (data-brand) додають лише відмінності: YC — арка-шапка і рамка панелі beige,
+   BS — шапка-бейдж на всю ширину панелі (відступ збоку = зверху) і верхній відступ панелі. */
+.product {
+  --accent: var(--color-product-accent);
+  --accent-line: var(--color-product-accent-line);
+  display: grid;
+  grid-template-columns: var(--size-product-stage-w) minmax(0, var(--size-product-panel-w));
+  column-gap: var(--space-product-col-gap);
+  align-items: start;
+  width: 100%;
+  max-width: var(--size-product-page-w);
+  margin-inline: auto;
+  padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
+  color: var(--accent);
+}
+.product[data-brand] {
+  background: var(--color-green); /* тло сторінки обох брендів: як зона header, панель з рамкою і фото з радіусом читаються на ньому */
+  box-shadow: 0 0 0 100vmax var(--color-green); clip-path: inset(0 -100vmax); /* тло на всю ширину вікна, якщо воно ширше за макет */
+}
+.product[data-brand="bazylsprings"] { --accent: var(--color-product-accent-bs); --accent-line: var(--color-product-accent-bs); }
+
+/* обгортка фото+мініатюр (обидва бренди): одна sticky-комірка 905×(100svh − 123u); мініатюри — накладки всередині фрейму фото */
+/* резерв до рендера JS (атрибут data-pending у product.html, знімається в product.js): зелене тло і висота = фрейм + верхній/нижній відступи, щоб футер не стрибав. Без JS (noscript) резерв не потрібен — але атрибут статичний, тому для <noscript>-стану див. product.html (вміст noscript короткий, мінімум висоти безпечний). */
+.product[data-pending] { min-height: calc(var(--size-product-frame-h) + var(--space-product-top) + var(--space-product-page-bottom)); background: var(--color-green); box-shadow: 0 0 0 100vmax var(--color-green); clip-path: inset(0 -100vmax); }
+.product-media { position: sticky; top: var(--offset-product-stage-sticky); grid-area: 1 / 1; align-self: start; width: var(--size-product-stage-w); height: var(--size-product-frame-h); }
+.product-panel { grid-area: 1 / 2; }
+
+/* мініатюри-накладки (206:2521 / 194:1420): у лівому верхньому куті фрейму, відступ 15, крок 7 */
+.product-thumbs { position: absolute; top: var(--space-product-thumb-inset); left: var(--space-product-thumb-inset); z-index: 1; display: flex; flex-direction: column; gap: var(--space-product-thumb-gap); margin: 0; }
+.product-thumbs[hidden] { display: none; }
+.product-thumb {
+  display: block; width: var(--size-product-thumb-w); height: var(--size-product-thumb-h); padding: 0; overflow: hidden;
+  border: var(--size-product-focus) solid transparent; border-radius: var(--radius-product-thumb);
+}
+.product-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-base) var(--ease-out); }
+.product-thumb { transition: border-color var(--duration-fast) var(--ease-out); }
+.product-thumb[aria-pressed="true"] { border-color: var(--accent); }
+@media (hover: hover) { .product-thumb:hover img { transform: scale(var(--scale-zoom)); } }
+
+/* велике фото (206:2493): заповнює фрейм обох брендів */
+.product-stage { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--radius-product-frame); }
+.product-stage__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--position-product-photo); opacity: 1; transition: opacity var(--duration-base) var(--ease-out); }
+.product-stage__img.is-cutout { object-fit: contain; } /* виріз пляшки (YC-товари без студійного фото) по центру поля */
+/* cross-fade при зміні фото (product.js): нове фото з'являється поверх, старе (за потреби) гаситься */
+.product-stage__img.is-photo-enter, .product-stage__img.is-photo-leave { opacity: 0; }
+.product-stage__img[hidden] { display: none; }
+
+/* права панель (194:1388 / 194:1523) */
+.product-panel {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  width: 100%; padding: 0 var(--space-70) var(--space-product-panel-pb);
+  background: var(--color-beige); border: var(--border-frame) solid var(--accent); border-radius: var(--radius-product-frame); overflow: clip;
+}
+.product[data-brand="bazylsprings"] .product-panel { padding-top: var(--space-product-panel-pt-bs); border-color: var(--color-beige); } /* BS: без синьої обводки (рамка = колір тла панелі, як у YC); геометрія 5u лишається */
+.product[data-brand="bazylsprings"] .product-buy { margin-top: var(--space-70); } /* шапка-бейдж BS (194:1578) → заголовок: gap 70 за макетом; у YC арка впритул (gap 0) */
+.product-acc, .product-crumbs { margin-top: var(--space-product-section-gap); }
+/* шапка бренду: ширше за колонку контенту (900 / 813), центрується з виходом за поля */
+.product-head { position: relative; flex: none; }
+.product-head--bs { width: var(--size-product-head-bs-w); aspect-ratio: var(--ratio-product-head-bs); margin-inline: calc(-1 * (var(--space-70) - var(--space-product-head-bs-inset) + var(--border-frame))); } /* на всю ширину панелі: відступ збоку = зверху (7u від зовнішнього краю панелі), висота за пропорцією SVG */
+.product-head__frame { display: block; width: 100%; height: auto; max-width: none; }
+
+/* заголовок, об'єм, кнопка (Frame 64 194:1392) */
+.product-buy { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--size-product-body-w); }
+.product-title { width: 100%; text-align: center; }
+.product-title span { display: block; }
+.product-volumes { display: flex; gap: var(--space-product-volumes-gap); justify-content: center; }
+.product-volumes > * { display: inline-flex; align-items: center; gap: var(--space-volume-icon-gap); }
+.product-volumes .icon { --icon-size: var(--size-volume-icon-w); margin-block: calc((1em - var(--icon-size) * var(--icon-ratio, 1)) / 2); } /* пляшка вища за рядок (1em): компенсуємо margin, висота рядка й розкладка не змінюються */
+.product-volume { position: relative; font: inherit; letter-spacing: inherit; text-transform: inherit; opacity: var(--opacity-muted); transition: opacity var(--duration-fast) var(--ease-out); }
+.product-volume::before { content: ''; position: absolute; inset: calc(-1 * var(--space-volume-hover-pad)); border-radius: var(--radius-btn); background: currentColor; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); } /* м'яка плашка hover: колір тексту × --opacity-volume-hover; не змінює розміри (абсолютна), без підкреслення */
+.product-volume[aria-pressed="true"] { opacity: 1; }
+@media (hover: hover) { .product-volume:hover { opacity: 1; } .product-volume:hover::before { opacity: var(--opacity-volume-hover); } }
+.product-volume:focus-visible::before { opacity: var(--opacity-volume-hover); transition-duration: var(--duration-focus); }
+.product .btn { --btn-hover: var(--color-hover-btn-green); }
+.product[data-brand="bazylsprings"] .btn { --btn-hover: var(--color-hover-btn-teal); }
+.btn[aria-disabled="true"] { opacity: var(--opacity-muted); cursor: default; }
+.btn[aria-disabled="true"]:hover .btn__inner { background: var(--btn-accent); }
+
+/* акордеони й крихти */
+.product-acc { width: var(--size-product-body-w); color: var(--accent); }
+.product-acc .acc { color: var(--accent); border-bottom-color: var(--accent-line); }
+.product-crumbs { display: flex; gap: var(--space-30); color: var(--accent); }
+.product-crumbs a { text-decoration: none; transition: opacity var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .product-crumbs a:hover { opacity: var(--opacity-crumb-hover); } } /* hover крихт: лише прозорість (токен), без підкреслення */
+.product-crumbs a:focus-visible { opacity: var(--opacity-crumb-hover); transition-duration: var(--duration-focus); }
+
+/* стан «не знайдено» / noscript */
+.product-notfound { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: var(--space-50); padding: var(--space-70) 0; text-align: center; }
+.product-notfound__link { text-decoration: underline; text-underline-offset: var(--hover-nudge); }
+
+/* «Характеристики»: пари підпис — значення */
+.product-specs { display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-30); row-gap: var(--space-5); }
+.product-specs dt { font-weight: var(--fw-bold); }
+.product-specs dd { margin: 0; }
+
+/* ======================================================================
+   YasnoCraft: лише відмінності від спільної розкладки — рамка панелі beige (BS — teal), арка-шапка 900×359.93 з круглим лого,
+   фон фрейму для вирізів (резервна гілка .is-cutout).
+   ====================================================================== */
+.product[data-brand="yasnocraft"] .product-stage { background: var(--color-ycp-stage-bg); }
+.product[data-brand="yasnocraft"] .product-panel { border-color: var(--color-beige); } /* 205:2433: «рамка» 5 того ж кольору, що фон панелі */
+.product-head__logo { position: absolute; max-width: none; object-fit: cover; }
+.product-head--yc { width: var(--size-ycp-head-w); height: var(--size-ycp-head-h); margin-inline: calc(-1 * var(--space-70)); }
+.product-head--yc .product-head__frame { position: absolute; left: 50%; top: 0; width: var(--size-ycp-arch-w); transform: translateX(-50%); } /* арка 217:3168 на всю ширину панелі (900), виходить за колонку контенту */
+.product-head--yc .product-head__logo { left: 50%; top: 50%; width: var(--size-ycp-logo-w); height: var(--size-ycp-logo-h); transform: translate(-50%, -50%); } /* 205:2438 */

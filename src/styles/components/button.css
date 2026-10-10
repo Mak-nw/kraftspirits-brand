@@ -1,0 +1,47 @@
+/* Кнопка: зовнішня рамка (--border-hairline) + padding --space-5 (Frame 80 194:1371) і внутрішня заливка (Frame 45 194:1372). */
+.btn {
+  --btn-accent: var(--color-gold);
+  --btn-fg: var(--color-green);
+  --btn-hover: var(--color-hover-btn-gold);
+  display: inline-flex;
+  padding: var(--space-5);
+  border: var(--border-hairline) solid var(--btn-accent);
+  border-radius: var(--radius-none);
+  cursor: pointer;
+}
+.btn__inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-20);
+  height: var(--size-btn-h);
+  padding: var(--space-20) var(--space-30);
+  background: var(--btn-accent);
+  color: var(--btn-fg);
+  border-radius: var(--radius-btn);
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.btn__inner:has(> .btn__arrow) { padding-right: var(--space-btn-pr-arrow); } /* кнопка зі стрілкою: padding 30/25 */
+.btn--gold { --btn-accent: var(--color-gold); --btn-fg: var(--color-green); --btn-hover: var(--color-hover-btn-gold); }    /* 194:1371 hero */
+.btn--light { --btn-accent: var(--color-light); --btn-fg: var(--color-green); --btn-hover: var(--color-hover-btn-light); }  /* 194:1351 */
+.btn--beige { --btn-accent: var(--color-beige); --btn-fg: var(--color-brown); --btn-hover: var(--color-hover-btn-beige); } /* 224:4015 вступ на коричневому */
+.btn--green { --btn-accent: var(--color-green); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-green); }  /* 194:1397 product YasnoCraft */
+.btn--teal { --btn-accent: var(--color-teal); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-teal); }    /* 194:1532 product Bazylsprings */
+/* 205:2443: кнопка з засічним шрифтом (EB Garamond): ціна Medium, текст Bold (YasnoCraft product page) */
+.btn--serif .btn__inner { font-family: var(--type-btn-serif-font); }
+.btn--serif .t-price { font-family: var(--type-btn-serif-font); font-weight: var(--type-price-serif-weight); }
+.btn--block { display: flex; width: 100%; }
+.btn--block .btn__inner { width: 100%; }
+
+/* стрілка ↗ всередині кнопки: бокс-розкладка 11.948 (194:1354) не змінюється; сама іконка — брендова arrow-up-right.svg (маска, колір = колір тексту кнопки), центрована в боксі, видимий знак ≈ 12u */
+.btn__arrow { position: relative; flex: none; transition: transform var(--duration-base) var(--ease-out); width: var(--size-icon-arrow); height: var(--size-icon-arrow); }
+.btn__arrow .icon { --icon-size: var(--size-icon-arrow-glyph); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* hover/focus: заливка змінюється, стрілка зсувається (transform не впливає на розмір кнопки) */
+.btn:focus-visible .btn__inner { background: var(--btn-hover); transition-duration: var(--duration-focus); } /* клавіатура: короткий перехід */
+.btn:focus-visible .btn__arrow { transform: translateX(var(--hover-nudge)); transition-duration: var(--duration-focus); }
+@media (hover: hover) {
+  .btn:hover .btn__inner { background: var(--btn-hover); }
+  .btn:hover .btn__arrow { transform: translateX(var(--hover-nudge)); }
+}

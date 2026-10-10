@@ -1,0 +1,66 @@
+/* Секції головної (main page 194:1514). Висоти — min-height з Figma; усе з токенів. */
+
+/* Hero 224:3617 (1920×1086): фонове фото на всю секцію, два великі логотипи по центру (Group 1 224:3658). Зони header у потоці нема (page-home), пілюля fixed поверх. */
+.hero { position: relative; overflow: hidden; height: var(--size-sec-hero); background: var(--color-brown); }
+.hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; max-width: none; }
+.hero__logos { position: absolute; top: var(--offset-hero-logos-top); left: 0; right: 0; width: var(--size-hero-logos-w); height: var(--size-hero-logos-h); margin-inline: auto; } /* 224:3658; у макеті група зсунута на −10.5 від центру — нормалізовано до центру сторінки */
+.hero__logo { position: absolute; left: 0; right: 0; margin-inline: auto; display: block; overflow: hidden; }
+.hero__logo img { position: absolute; max-width: none; }
+.hero__logo--yc { top: 0; width: var(--size-hero-logo-yc-w); height: var(--size-hero-logo-yc-h); }
+.hero__logo--yc img { left: var(--crop-hero-logo-yc-x); top: 0; width: var(--crop-hero-logo-yc-w); height: var(--crop-hero-logo-yc-h); }
+.hero__logo--bs { top: var(--offset-hero-logo-bs-top); width: var(--size-hero-logo-bs-w); height: var(--size-hero-logo-bs-h); }
+.hero__logo--bs img { left: 0; top: var(--crop-hero-logo-bs-y); width: 100%; height: var(--crop-hero-logo-bs-h); }
+
+/* Коротко про нас 194:1274 (h921) */
+.about-brief { min-height: var(--size-sec-about); padding-top: var(--space-208); }
+.about-brief__inner { display: flex; flex-direction: column; align-items: center; gap: var(--space-50); width: var(--container-wide); margin: 0 auto; text-align: center; }
+.about-brief__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: 100%; }
+.about-brief__kicker, .about-brief__text { width: var(--container-text); }
+
+/* Бренди 224:3596 (1920×974): дві половини 960 — .brand-half (components/brand-half.css) */
+.brands { display: grid; grid-template-columns: 1fr 1fr; height: var(--size-sec-brands); background: var(--color-beige); }
+
+/* Вступ 224:3639 (1920×984): лічильники, великий заголовок, абзац, кнопка — колонкою по центру, py 70, gap 100 */
+.intro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-100); min-height: var(--size-sec-intro); padding: var(--space-intro-pad-y) var(--space-50); background: var(--color-brown); color: var(--color-beige); text-align: center; }
+.intro__text { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); width: 100%; }
+.intro__title { width: var(--container-intro-title); }
+.intro__body { width: var(--container-intro-text); letter-spacing: var(--ls-intro-body); }
+
+/* Екскурсії / бочка 224:3586 (1920×1303): дві панелі .tour-card (components/tour-card.css), поля 20 / gap 5 */
+.tours { display: flex; flex-direction: column; align-items: stretch; gap: var(--space-tour-gap); min-height: var(--size-sec-tours); padding: var(--space-20) var(--space-tour-edge-r) var(--space-20) var(--space-tour-edge-l); background: var(--color-brown); }
+
+/* «Не знаєте з чого почати?» 194:1290 (h1281) */
+.picker { position: relative; min-height: var(--size-sec-picker); padding-top: var(--space-197); background: var(--color-teal); color: var(--color-beige); } /* 224:3732: текст і чіпи --color-beige (раніше gold) */
+/* Фон секції: шари-кросфейд (по одному <img> на подію). Порядок накладання — data-rank (JS; вузли в DOM не переставляються, бо переміщення скидає transition).
+   Поява: opacity 0 → 1 за --duration-bg. Повністю непрозорий шар, що втрачає is-active, утримує opacity 1 протягом --duration-bg, потім миттєво 0
+   (його накриває новий шар). Частково видимий шар (is-out) гаснить плавно з поточного значення за --duration-bg. */
+.picker__bgs { position: absolute; z-index: 0; left: 0; bottom: 0; width: 100%; height: var(--size-picker-bg-h); overflow: hidden; }
+.picker__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; max-width: none; opacity: 0; transition: opacity 0s linear var(--duration-bg); }
+.picker__bg.is-active { opacity: 1; transition: opacity var(--duration-bg) var(--ease-out); }
+.picker__bg.is-out { transition: opacity var(--duration-bg) var(--ease-out); }
+.picker__bg[data-rank="1"] { z-index: 1; }
+.picker__bg[data-rank="2"] { z-index: 2; }
+.picker__bg[data-rank="3"] { z-index: 3; }
+.picker__bg[data-rank="4"] { z-index: 4; }
+.picker__bg[data-rank="5"] { z-index: 5; }
+.picker__bg[data-rank="6"] { z-index: 6; }
+.picker__content { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.picker__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-heading); height: var(--size-picker-head-h); }
+.picker__title { width: var(--container-picker-title); }
+.picker__text { width: var(--container-picker-text); }
+.picker .chip-row { margin-top: var(--space-70); } /* 224:3737 y 475 − низ заголовка 405 */
+.picker .slider { margin-top: var(--space-60); } /* 224:3790 y 560 − низ чіпів 500 */
+.picker .slider .arrow-btn { align-self: flex-start; margin-top: var(--offset-picker-arrow-top); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
+.picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
+
+/* Спліт 194:1266 (h941): текст зліва по центру, фото справа */
+.split { position: relative; display: flex; align-items: center; min-height: var(--size-sec-split); padding-left: var(--gutter); }
+.split__photo { position: absolute; top: 0; right: 0; bottom: 0; width: var(--size-split-photo-w); height: 100%; object-fit: cover; max-width: none; }
+
+/* FAQ 194:1184 (h996): 3 колонки, кожна розкривається незалежно */
+.faq { min-height: var(--size-sec-faq); padding-top: var(--space-177); }
+.faq__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-wide); height: var(--size-faq-head-h); margin: 0 auto; text-align: center; }
+.faq__title { width: var(--container-heading-narrow); }
+.faq__text { width: var(--container-text); }
+.faq__grid { display: flex; align-items: flex-start; gap: var(--space-10); width: var(--container-full); margin: 0 auto; }
+.faq__col { display: flex; flex-direction: column; gap: var(--space-10); flex: 1 1 0; min-width: 0; }

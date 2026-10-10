@@ -1,0 +1,37 @@
+/* Акордеон/FAQ. Іконка «+» (Union 194:1190) = горизонтальна риска (minus.svg) + вертикальна (plus-bar.svg); при відкритті вертикальна згортається
+   (background-size 100% → 0% по висоті), тож «+» плавно стає «−» за --duration-accordion. Стан іконки читає [open], але не під час закриття (.is-closing),
+   щоб «−» → «+» починалось одразу при кліку. Висоту й opacity тіла анімує src/js/accordion.js (WAAPI), токени --duration-accordion / --ease-accordion. */
+.acc { color: var(--color-green); }
+.acc > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-30);
+  list-style: none; cursor: pointer;
+}
+.acc > summary::-webkit-details-marker { display: none; }
+.acc > summary::after {
+  content: ''; flex: none;
+  width: var(--size-icon-plus); height: var(--size-icon-plus);
+  background-image: url('/assets/icons/plus-bar.svg'), url('/assets/icons/minus.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--acc-icon-bar) 100%, 100% 100%;
+  transition: background-size var(--duration-accordion) var(--ease-accordion), translate var(--duration-accordion) var(--ease-accordion);
+}
+.acc[open]:not(.is-closing) > summary::after { background-size: var(--acc-icon-bar) 0%, 100% 100%; }
+.acc.is-animating { overflow: clip; } /* лише поки триває анімація висоти */
+.acc__body { margin-top: var(--space-30); max-width: var(--container-faq-body); text-transform: none; } /* 194:1216: відповідь без uppercase */
+
+/* FAQ-рядок (194:1188): рамка (--border-hairline), padding --space-30 */
+.acc--faq { padding: var(--space-30); border: var(--border-hairline) solid var(--color-green); transition: background-color var(--duration-base) var(--ease-out); }
+/* іконка завжди зверху (flex-start); у закритому рядку опущена до центру першого рядка питання (--acc-faq-icon-drop) і плавно піднімається при відкритті (194:1188) */
+.acc--faq > summary { align-items: flex-start; }
+.acc--faq > summary::after { translate: 0 var(--acc-faq-icon-drop); }
+.acc--faq[open]:not(.is-closing) > summary::after { translate: none; }
+
+/* рядок сторінки товару (194:1402): лише нижня лінія, px 20 py 15 */
+.acc--product { padding: var(--space-15) var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-strong); transition: background-color var(--duration-fast) var(--ease-out); }
+.acc--teal { color: var(--color-teal); border-bottom-color: var(--color-teal); } /* 194:1537 */
+.acc--teal > summary::after { background-image: url('/assets/icons/plus-bar-bazyl.svg'), url('/assets/icons/minus-bazyl.svg'); }
+.acc-list { display: flex; flex-direction: column; gap: var(--space-5); } /* 194:1401 */
+/* hover рядка FAQ: лише фон (іконка «+» у Figma не змінюється) */
+@media (hover: hover) { .acc--faq:hover { background-color: var(--color-hover-faq); } } /* FAQ: фон --color-hover-faq (--duration-base у .acc--faq) */
+@media (hover: hover) { .acc--product:hover { background-color: var(--color-hover-acc-product); } } /* рядок акордеона товару: теплий світлий беж (не білий), --duration-fast, без підкреслень */

@@ -1,0 +1,17 @@
+/* Поява елементів (reveal). Прогресивне покращення: ховаємо ТІЛЬКИ коли reveal.js додав .js-reveal на <html>
+   і лише елементи, що ще не з'явилися. Без JS / prefers-reduced-motion / друк — усе видно одразу.
+   Тільки opacity і translate (не впливають на layout). Токени: --duration-reveal, --ease-out, --reveal-shift, --reveal-stagger. */
+.js-reveal [data-reveal]:not(.is-in) { opacity: 0; }
+.js-reveal [data-reveal="rise"]:not(.is-in) { translate: 0 var(--reveal-shift); }
+.js-reveal [data-reveal]:not(.is-done) {
+  transition:
+    opacity var(--duration-reveal) var(--ease-out) calc(var(--i, 0) * var(--reveal-stagger)),
+    translate var(--duration-reveal) var(--ease-out) calc(var(--i, 0) * var(--reveal-stagger));
+}
+@media (prefers-reduced-motion: reduce), print {
+  .js-reveal [data-reveal] { opacity: 1; translate: none; transition: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+}

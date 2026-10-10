@@ -1,0 +1,11 @@
+/* Паралакс фото всередині контейнера (parallax.js). Активний лише з .js-parallax на <html> (немає ?parallax=off і prefers-reduced-motion):
+   інакше фото лишається у вихідній позиції. Нейтральна точка (--parallax-y: 0, --parallax-s: 1) = кадр макета, фото не збільшене й не зсунуте.
+   Рух односторонній: фото зсувається вниз на 0…--parallax-range (px, ставить JS), а масштаб 1 + y/h від нижнього краю (transform-origin) рівно
+   закриває відкритий верхній край — порожніх країв нема. `translate`/`scale` окремі від transform hover-zoom і від opacity reveal.
+   Контейнер [data-parallax] обрізає. [data-parallax-bleed] (панелі tours): окремий горизонтальний масштаб --parallax-sx ≥ 1 + 2/ширина — запас по 1px з боків. Токени: --parallax-range, --parallax-range-soft, --parallax-lerp. */
+.js-parallax [data-parallax] { overflow: hidden; }
+.js-parallax [data-parallax="soft"] { --parallax-range: var(--parallax-range-soft); }
+.js-parallax [data-parallax] > img {
+  transform-origin: 50% 100%;
+  translate: 0 var(--parallax-y, 0px); scale: var(--parallax-sx, var(--parallax-s, 1)) var(--parallax-s, 1); will-change: translate, scale;
+}

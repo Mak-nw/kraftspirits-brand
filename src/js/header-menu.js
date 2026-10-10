@@ -1,0 +1,90 @@
+// Випадне меню header 3: кнопка «меню» (aria-expanded/aria-controls) відкриває панель під пілюлею.
+// Клавіатура: Enter/Space (нативно), ArrowDown на кнопці — відкрити й на перший пункт, Esc — закрити (фокус на кнопку),
+// ArrowUp/ArrowDown/Home/End між пунктами; клік поза панеллю, вихід фокусу за межі кнопки й панелі (а не всієї групи .site-header__side) або клік по пункту — закривають.
+// Ховер (лише мишка/тачпад: (hover: hover) and (pointer: fine)): pointerenter на кнопці відкриває меню без затримки; воно лишається відкритим,
+// поки курсор над кнопкою або над панеллю (+ «місток» ::before у CSS); після виходу з обох закривається через --header3-menu-close-delay (0.25s).
+// Клік по кнопці, коли меню відкрите ховером, «закріплює» його (нічого не закриває, без мигання); наступний клік, Esc, клік поза або перехід за пунктом закривають.
+// Анімацію (opacity/transform) веде CSS (--duration-base, --ease-out; reduced-motion — миттєво).
+function init(header) {
+  const btn = header.querySelector('.site-header__menu-btn');
+  const menu = header.querySelector('.site-header__menu');
+  if (!btn || !menu) return;
+  const items = [...menu.querySelectorAll('a')];
+
+  const setOpen = (open, focusBtn = false) => {
+    if (!open) { hoverOpened = false; pinned = false; cancelClose(); }
+    menu.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
+    if (focusBtn) btn.focus();
+  };
+  const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
+
+  // ховер-відкриття
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  let timer = 0;
+  let hoverOpened = false; // відкрито ховером і ще не закріплено кліком
+  let pinned = false;
+  const closeDelay = () => {
+    const v = getComputedStyle(header).getPropertyValue('--header3-menu-close-delay').trim();
+    return v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000 || 250;
+  };
+  const cancelClose = () => { clearTimeout(timer); timer = 0; };
+  const scheduleClose = () => {
+    cancelClose();
+    if (!isOpen() || pinned || !hoverOpened) return;
+    timer = setTimeout(() => {
+      timer = 0;
+      if (!pinned && !menu.contains(document.activeElement)) { hoverOpened = false; setOpen(false); }
+    }, closeDelay());
+  };
+  const hoverIn = (e) => {
+    if (e.pointerType !== 'mouse' || !fine.matches) return;
+    cancelClose();
+    if (!isOpen()) { hoverOpened = true; pinned = false; setOpen(true); }
+  };
+  const hoverOut = (e) => { if (e.pointerType === 'mouse' && fine.matches) scheduleClose(); };
+  btn.addEventListener('pointerenter', hoverIn);
+  menu.addEventListener('pointerenter', hoverIn);
+  btn.addEventListener('pointerleave', hoverOut);
+  menu.addEventListener('pointerleave', hoverOut);
+
+  btn.addEventListener('click', () => {
+    cancelClose();
+    if (isOpen() && hoverOpened) { hoverOpened = false; pinned = true; return; } // відкрито ховером: клік закріплює, не закриває
+    pinned = false;
+    setOpen(!isOpen());
+  });
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); items[0]?.focus(); }
+  });
+  menu.addEventListener('keydown', (e) => {
+    const i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); (i > 0 ? items[i - 1] : btn).focus(); }
+    else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
+    else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
+  });
+  menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+  header.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) { e.preventDefault(); setOpen(false, true); } });
+  document.addEventListener('pointerdown', (e) => { if (isOpen() && !e.target.closest('.site-header__side, .site-header__menu')) setOpen(false); });
+  // Tab/Shift+Tab за межі кнопки+панелі (навіть до сусіднього «каталог») закриває меню.
+  // relatedTarget === null (Shift+Tab з першого елемента, у браузерний інтерфейс або по колу): дивимось, де фокус після тіку; на body лишаємо відкритим лише якщо курсор над кнопкою/панеллю (клік по полях меню).
+  const inside = (n) => !!n && (btn.contains(n) || menu.contains(n));
+  header.addEventListener('focusout', (e) => {
+    if (!isOpen()) return;
+    if (e.relatedTarget) { if (!inside(e.relatedTarget)) setOpen(false); return; }
+    setTimeout(() => {
+      if (!isOpen()) return;
+      const a = document.activeElement;
+      if (inside(a)) return;
+      if ((a && a !== document.body) || !(btn.matches(':hover') || menu.matches(':hover'))) setOpen(false);
+    }, 0);
+  });
+
+  // поточна сторінка: aria-current для посилання на неї (візуального стану в Figma немає)
+  const here = location.pathname.split('/').pop() || 'index.html';
+  header.querySelectorAll('a[href$=".html"]').forEach((a) => { if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page'); });
+}
+
+document.querySelectorAll('.site-header').forEach(init);

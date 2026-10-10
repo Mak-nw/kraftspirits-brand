@@ -1,0 +1,16 @@
+/* Слайдер-картка: стрілки (--space-30 від картки, 224:3778) по боках, центровані по висоті картки (194:1333 / 194:1336) */
+.slider { display: flex; align-items: center; justify-content: center; gap: var(--space-30); }
+.slider__slide[hidden] { display: none; }
+/* Одна позиція за раз: нова картка накладається на стару в тій самій комірці (геометрія не змінюється).
+   Поява: opacity + зсув по X (напрям — data-dir трека), токени руху; reduced-motion вимикає перехід глобально (reveal.css) */
+.slider__track { display: grid; }
+.slider__slide { grid-area: 1 / 1; transition: opacity var(--duration-base) var(--ease-out), translate var(--duration-base) var(--ease-out); }
+.slider__slide.is-enter { opacity: 0; translate: var(--reveal-shift) 0; }
+.slider__track[data-dir="prev"] .slider__slide.is-enter { translate: calc(-1 * var(--reveal-shift)) 0; }
+/* заміна: стара картка гаситься за --duration-fast (без зсуву; pointer-events вимкнено, щоб клік не потрапляв у згасаючу картку); нова стартує з затримкою --duration-fast,
+   тож на екрані в кожен момент видно не більше однієї картки з текстом */
+.slider__slide.is-leave { opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) var(--ease-out), translate var(--duration-fast) var(--ease-out); } /* translate — щоб незавершений reveal-зсув першої картки не «стрибав» */
+.slider__slide.is-delay { transition-delay: var(--duration-fast); }
+/* одна позиція в добірці: стрілки неактивні */
+.slider .arrow-btn[aria-disabled="true"] { opacity: var(--opacity-muted); cursor: default; background-color: transparent; }
+.slider .arrow-btn[aria-disabled="true"] img { filter: none; }

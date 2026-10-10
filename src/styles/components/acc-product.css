@@ -1,0 +1,8 @@
+/* Рядок акордеона сторінки товару (partial components/acc-item): розширює .acc--product (194:1402 / 194:1537).
+   Відкритий стан: «+» → «−» (як у FAQ, плавно: див. accordion.css), aria-expanded синхронізує accordion.js. */
+.acc--product > summary { min-height: var(--size-icon-plus); }
+.acc--product .acc__body { max-width: none; margin-top: var(--space-20); }
+.acc--product .acc__body > * + * { margin-top: var(--space-15); }
+.acc--product .acc__body strong { font-weight: var(--fw-bold); }
+.acc--product .acc__body ul { padding-inline-start: var(--space-20); list-style: disc; }
+.acc--product .acc__body li + li { margin-top: var(--space-5); }

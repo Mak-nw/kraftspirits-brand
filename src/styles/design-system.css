@@ -1,0 +1,76 @@
+/* Лише для design-system.html (документація). Усе з токенів. */
+.ds { max-width: var(--container-wide); margin: 0 auto; padding: var(--space-50) 0 calc(var(--space-50) * 2); }
+.ds-section { margin-top: calc(var(--space-50) * 2); }
+.ds-section__title { margin-bottom: var(--space-30); padding-bottom: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-green); }
+.ds-note { margin-bottom: var(--space-20); max-width: var(--container-text); opacity: var(--opacity-muted); }
+.ds-pattern-demo { height: calc(360 * var(--u)); margin-bottom: var(--space-30); }
+.ds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-30); }
+.ds-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.ds-meta { font: var(--fw-regular) var(--font-size-small)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+
+.swatch { border: var(--border-hairline) solid var(--color-line); }
+.swatch__chip { height: var(--ds-swatch-chip-h); border-bottom: var(--border-hairline) solid var(--color-line); }
+.swatch__info { padding: var(--space-15); display: flex; flex-direction: column; gap: var(--space-5); }
+.swatch--green .swatch__chip { background: var(--color-green); }
+.swatch--teal .swatch__chip { background: var(--color-teal); }
+.swatch--gold .swatch__chip { background: var(--color-gold); }
+.swatch--light .swatch__chip { background: var(--color-light); }
+.swatch--beige .swatch__chip { background: var(--color-beige); }
+.swatch--brown .swatch__chip { background: var(--color-brown); }
+.swatch--nav-text .swatch__chip { background: var(--color-nav-text); }
+.swatch--green-alt .swatch__chip { background: var(--color-green-alt); }
+.swatch--black .swatch__chip { background: var(--color-black); }
+.swatch--line .swatch__chip { background: var(--color-line); }
+.swatch--line-strong .swatch__chip { background: var(--color-line-strong); }
+
+.type-row { display: grid; grid-template-columns: var(--ds-type-label-w) 1fr; gap: var(--space-30); align-items: center; padding: var(--space-20) 0; border-bottom: var(--border-hairline) solid var(--color-line); }
+.type-row__sample { min-width: 0; }
+.type-row__sample--dark { background: var(--color-green); color: var(--color-nav-text); padding: var(--space-20); }
+.type-row__sample--teal { background: var(--color-teal); color: var(--color-gold); padding: var(--space-20); }
+
+.space-row { display: flex; align-items: center; gap: var(--space-20); padding: var(--space-5) 0; }
+.space-row__label { width: var(--ds-space-label-w); }
+.space-row__bar { height: var(--space-10); background: var(--color-green); }
+.space-bar--1 { width: var(--space-1); } .space-bar--5 { width: var(--space-5); } .space-bar--10 { width: var(--space-10); }
+.space-bar--15 { width: var(--space-15); } .space-bar--20 { width: var(--space-20); } .space-bar--26 { width: var(--space-26); }
+.space-bar--30 { width: var(--space-30); } .space-bar--37 { width: var(--space-37); } .space-bar--40 { width: var(--space-40); }
+.space-bar--46 { width: var(--space-46); } .space-bar--50 { width: var(--space-50); } .space-bar--70 { width: var(--space-70); }
+.space-bar--gutter { width: var(--gutter); } .space-bar--container-text { width: var(--container-text); }
+.space-bar--container-wide { width: var(--container-wide); } .space-bar--container-full { width: var(--container-full); }
+
+.radius-demo { display: flex; gap: var(--space-30); align-items: flex-end; }
+.radius-demo__box { width: var(--ds-radius-box-w); height: var(--ds-radius-box-h); background: var(--color-green); }
+.radius-demo__box--btn { border-radius: var(--radius-btn); }
+.radius-demo__box--pill { border-radius: var(--radius-pill); }
+.radius-demo__box--none { border-radius: var(--radius-none); }
+.radius-demo__box--frame { background: none; border: var(--border-frame) solid var(--color-green-alt); }
+
+.demo-panel { padding: var(--space-30); display: flex; flex-wrap: wrap; gap: var(--space-30); align-items: center; }
+.demo-panel > * { min-width: 0; }
+.demo-panel--card { align-items: flex-start; }
+.demo-label { margin: var(--space-30) 0 var(--space-15); }
+.ds-partial-box { width: var(--container-text); max-width: 100%; }
+.logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-30); }
+.logo-cell { padding: var(--space-30); display: flex; flex-direction: column; gap: var(--space-15); align-items: flex-start; }
+.logo-cell img { height: var(--ds-logo-h); width: auto; max-width: 100%; object-fit: contain; }
+.logo-cell--dark { background: var(--color-green); color: var(--color-nav-text); }
+.logo-cell--teal { background: var(--color-teal); color: var(--color-gold); }
+.logo-cell--light { background: var(--color-light); }
+.icon-demo { display: flex; gap: var(--space-30); align-items: center; }
+.icon-demo img { width: auto; height: auto; }
+
+.demo-variant { display: flex; flex-direction: column; gap: var(--space-10); }
+
+/* Демо каталогу: картка каталогу займає колонку шириною з Figma (479.75), заголовок без верхнього відступу сторінки */
+.ds-catalog-card { width: var(--size-card-cat2-w); }
+.ds-catalog-nav { padding-top: 0; width: 100%; margin: 0; }
+
+/* Header 3 в design-system: contain: layout робить контейнер containing block для fixed-пілюлі, тож приклад не «прилипає» до верху вікна */
+.ds-header-demo { contain: layout; background: var(--color-green); }
+/* Відкрите по hover меню першого демо виходить за межі демо вниз (оверлей під пілюлею): без власного шару його перекривали пілюля й зона другого демо (елемент під курсором — .site-header__bar).
+   Закрите демо стоїть вище за наступні: меню лишається клікабельним, вигляд демо не змінюється */
+.ds-header-demo:not(.ds-header-demo--open) { position: relative; z-index: var(--z-dropdown); }
+.ds-header-demo--open { padding-bottom: calc(4 * var(--header2-cell-h) + 2 * var(--header2-btn-outline-h) + 4 * var(--header3-menu-pad) + var(--header3-menu-gap)); }
+.ds-header-demo--open .site-header__menu { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+.ds-uc-demo { display: block; padding: 0; }
+.ds-uc-demo .under-construction { min-height: 0; }

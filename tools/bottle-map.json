@@ -1,0 +1,27 @@
+{
+  "synonyms": {
+    "bochkovyi": "gin-barrel",
+    "frukt-kavun": "fruit-watermelon",
+    "kalvados-3": "calvados-3",
+    "kalvados-5": "calvados-5",
+    "nastoyanka-gorobynova": "tincture-rowan",
+    "nastoyanka-travyana": "tincture-herbal",
+    "sadovyi": "gin-garden",
+    "shnaps-hrushevyi": "schnapps-pear",
+    "shnaps-slyvovyi": "schnapps-plum",
+    "shnaps-vyshnevyi": "schnapps-cherry",
+    "whisky-barley-spirit": "barley-spirit",
+    "whisky-oak-notes": "oak-notes",
+    "whisky-white-whiskey": "whiskey-white",
+    "yasnyi": "gin-yasnyi"
+  },
+  "heroNames": {
+    "gin-yasnyi": "yasnyi"
+  },
+  "heroRatio": {
+    "bazylsprings": [
+      866,
+      875
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+/* Кругла кнопка-шеврон слайдера: рамка (--border-hairline) + padding --space-5 + chevron.svg 52x54 (194:1333) */
+.arrow-btn {
+  display: inline-flex; padding: var(--space-5);
+  border: var(--border-hairline) solid var(--color-light);
+  border-radius: var(--radius-pill);
+  width: var(--size-arrow-btn-w); height: var(--size-arrow-btn-h);
+  box-sizing: border-box;
+  background-color: transparent; cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.arrow-btn img { width: 100%; height: 100%; transition: filter var(--duration-fast) var(--ease-out); }
+.arrow-btn--prev { transform: scaleX(var(--flip-x)); } /* 194:1336 */
+/* hover/focus: світла заливка, іконка (світла) інвертується в темну */
+.arrow-btn:focus-visible { background-color: var(--color-hover-arrow-btn); transition-duration: var(--duration-focus); }
+.arrow-btn:focus-visible img { filter: invert(1); transition-duration: var(--duration-focus); }
+@media (hover: hover) {
+  .arrow-btn:hover { background-color: var(--color-hover-arrow-btn); }
+  .arrow-btn:hover img { filter: invert(1); }
+}

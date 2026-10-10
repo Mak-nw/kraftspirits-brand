@@ -1,0 +1,21 @@
+/* Панель «екскурсія / бочка» (224:3688 / 224:3691): 1836×629, radius 10, бежевий фон + візерунок-ромби (pattern-заливка 224:3961: вертикальні ромби, світлі = беж, темні = 2 шари #223520 2%, фон = 1 шар; період 131),
+   текстова колонка (padding 80) + фото 757; коричнева рамка --border-tour-frame лише з внутрішнього боку (зовнішні краї: фото впритул до краю панелі, висота = бежевій колонці). Модифікатор --photo-first ставить фото ліворуч. */
+.tour-card {
+  display: flex; flex: none; height: var(--size-tour-card-h); /* ширина — на всю секцію між полями --space-tour-edge-l/-r */
+  overflow: clip; border-radius: var(--radius-panel); color: var(--color-brown);
+  contain: paint; /* власний шар малювання: паралакс/hover-zoom фото не виходять за прямокутник панелі */
+}
+.tour-card--photo-first { flex-direction: row-reverse; }
+.tour-card__text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: var(--space-tour-pad);
+  /* фон (бежевий + візерунок) лише під текстовою колонкою: під фото-рамкою його немає, тому на заокругленому куті панелі не буває подвійного згладжування («хвостика») */
+  background: url('/assets/img/home-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat, var(--color-beige);
+}
+.tour-card__head { display: flex; flex-direction: column; gap: var(--space-30); width: var(--size-tour-text-w); }
+.tour-card .tour-card__body { width: var(--container-tour-text); letter-spacing: var(--ls-intro-body); } /* 224:3973: tracking 0.8px (як абзац intro), не 3% */
+.tour-card__photo { flex: none; width: var(--size-tour-photo-box-w); /* рамка + фото 757 */ border: 0 solid var(--color-brown); border-left-width: var(--border-tour-frame); overflow: hidden; /* рамка лише з внутрішнього боку (до бежевої колонки); зовнішні краї — фото впритул до краю панелі */ }
+.tour-card--photo-first .tour-card__text { padding-left: calc(var(--space-tour-pad) - var(--border-tour-frame)); } /* 224:3985: текст картки 2 стартує на x=837 від краю панелі (= фото 757 + 80); рамка 5 входить у фото-колонку, тож відступ на 5 менший */
+.tour-card--photo-first .tour-card__photo { border-left-width: 0; border-right-width: var(--border-tour-frame); }
+.tour-card__photo img { width: 100%; height: 100%; object-fit: cover; max-width: none; transition: transform var(--duration-base) var(--ease-out); }
+@media (hover: hover) {
+  .tour-card:hover .tour-card__photo img { transform: scale(var(--scale-zoom)); }
+}

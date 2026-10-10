@@ -1,0 +1,45 @@
+/* Поле фільтра (catalog 204:2333 «Frame 72»): підпис (EB Garamond SemiBold 16) + значення (Manrope 14, caps) + шеврон 12×6;
+   фон rgba(220,219,207,.05), радіус 5, padding 10/15, gap 30; значення 200 u. Для темної сторінки каталогу. */
+.select {
+  position: relative; display: flex; align-items: center; gap: var(--space-30);
+  padding: var(--space-select-py) var(--space-select-px);
+  background: var(--color-select-bg); border-radius: var(--radius-select);
+  color: var(--color-beige);
+}
+.select__label {
+  white-space: nowrap;
+  font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide);
+}
+.select__field { width: var(--size-select-w); } /* не position: relative — containing block для .select__button::after і списку = вся плитка .select */
+.select__button {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-10); width: 100%; text-align: left;
+  color: var(--color-beige);
+  font: var(--type-caption-weight) var(--font-size-nav)/var(--lh-none) var(--type-caption-font); letter-spacing: var(--ls-wide); text-transform: uppercase;
+  text-decoration: none; cursor: pointer;
+}
+/* Клікабельна вся плитка: .hit-area (base.css) розтягує кнопку на весь .select (лейбл, значення, шеврон, внутрішні відступи); кнопка без position, тож inset:0 рахується від .select */
+.select__button:focus-visible { outline: none; }
+.select__button:focus-visible::after { border-radius: var(--radius-select); outline: var(--border-hairline) solid currentColor; outline-offset: var(--focus-offset); }
+.select { transition: background-color var(--duration-fast) var(--ease-out); }
+.select:has(.select__button:focus-visible), .select.is-open { background: var(--color-select-bg-hover); }
+@media (hover: hover) { .select:has(.select__button:hover) { background: var(--color-select-bg-hover); } }
+.select__value { white-space: nowrap; }
+.select__chevron { flex: none; width: var(--size-chevron-w); height: var(--size-chevron-h); max-width: none; transition: transform var(--duration-base) var(--ease-out); }
+.select.is-open .select__chevron { transform: rotate(var(--angle-flip)); }
+
+.select__list {
+  position: absolute; top: calc(100% + var(--space-5)); z-index: var(--z-dropdown); /* top від низу плитки; left auto = лівий край поля (статична позиція) */
+  width: max-content; min-width: var(--size-select-w); padding: var(--space-10) 0;
+  background: var(--color-beige); color: var(--color-green); border: var(--border-hairline) solid var(--color-green);
+  visibility: hidden; opacity: 0; translate: 0 calc(-1 * var(--hover-nudge));
+  transition: opacity var(--duration-fast) var(--ease-out), translate var(--duration-fast) var(--ease-out), visibility 0s linear var(--duration-fast);
+}
+.select.is-open .select__list { visibility: visible; opacity: 1; translate: none; transition-delay: 0s; }
+.select__option {
+  padding: var(--space-10) var(--space-15); cursor: pointer; white-space: nowrap;
+  font: var(--type-caption-weight) var(--font-size-nav)/var(--type-caption-lh) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: uppercase;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.select__option[aria-selected="true"] { font-weight: var(--fw-semibold); }
+.select__option.is-active { background: var(--color-hover-faq); }
+@media (hover: hover) { .select__option:hover { background: var(--color-hover-faq); } }

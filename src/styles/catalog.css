@@ -1,0 +1,36 @@
+/* Сторінка каталогу (catalog 204:2221): тло --color-green; заголовок-навігація 204:2351, панель фільтрів 204:2331, сітка 204:2222. */
+/* Фон-візерунок (та сама геометрія 131u, що в tours; колір тон-в-тон): вертикальні ромби на зеленому, фон сторінки (scroll, не fixed) — картки й текст лежать зверху; колір фігур --color-pattern-catalog, плитка --size-pattern-catalog-tile (ціле px) */
+.catalog-page, .pattern-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.catalog-page { color: var(--color-beige); }
+.catalog-nav {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center;
+  gap: var(--space-catalog-title-row) var(--space-catalog-title-col);
+  width: var(--size-catalog-title-w2); margin: 0 auto; padding-top: var(--space-catalog-title-top2);
+  text-align: center;
+}
+.catalog-nav__item {
+  white-space: nowrap; opacity: var(--opacity-catalog-nav-muted);
+  overflow: clip; /* область реакції = рядок line-height: текстовий бокс шрифта вищий за line-height і накладався б на сусідній рядок */
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+.catalog-nav__item.is-active { opacity: 1; }
+.catalog-nav__item:focus-visible { opacity: 1; transition-duration: var(--duration-focus); }
+@media (hover: hover) { .catalog-nav__item:hover { opacity: 1; } }
+
+.catalog-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  width: var(--size-catalog-grid-w); margin: var(--space-catalog-bar-top) auto 0; padding: var(--space-catalog-bar-y) 0;
+}
+.catalog-bar__group { display: flex; align-items: center; }
+.catalog-bar__group--filters { gap: var(--space-select-gap); }
+
+.catalog-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: var(--size-card-cat2-h); gap: var(--space-catalog-grid-gap);
+  width: var(--size-catalog-grid-w); margin: 0 auto; padding-bottom: var(--space-catalog-bottom);
+}
+/* Резерв висоти до рендеру карток (їх малює catalog.js): повна сітка за замовчуванням (--catalog-grid-reserve-rows рядків), щоб footer не стрибав (CLS) */
+.catalog-grid[data-pending] { min-height: calc(var(--catalog-grid-reserve-rows) * (var(--size-card-cat2-h) + var(--space-catalog-grid-gap)) - var(--space-catalog-grid-gap)); }
+.catalog-grid[hidden], .catalog-empty[hidden] { display: none; }
+.catalog-empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); padding: var(--space-85) 0; text-align: center; }
+.catalog-noscript { display: flex; flex-wrap: wrap; gap: var(--space-20) var(--space-30); padding: var(--space-30) var(--gutter); }
+.visually-hidden { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }

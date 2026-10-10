@@ -1,0 +1,440 @@
+/* =====================================================================
+   TOKENS — єдине джерело значень дизайну (знято з Figma, файл JO2rsMY0AhFutzAQwfl0WV,
+   сторінка des_brand 194:1183). Коментар біля токена = Figma-вузол-джерело.
+   Хардкод кольорів/розмірів поза цим файлом заборонений.
+
+   Масштаб: макет 1920 px. --u = 1 px макета. На 1920+ дорівнює 1px (точно як у Figma),
+   на 1200 = 0.625px (пропорційно). Нижче 1200 і вище 1920 масштаб "заморожується".
+   Усі розміри нижче = calc(N * var(--u)), де N — значення у Figma (px при 1920).
+   ===================================================================== */
+:root {
+  --u: calc(clamp(1185px, var(--vw, 100vw), 1920px) / 1920);  /* семантичний аліас, вузла немає (службова змінна масштабу) */
+
+  /* ---------- Кольори ---------- */
+  --color-green: #223520;          /* 194:1374 header bg; текст/рамки на світлому; кнопка YasnoCraft */
+  --color-teal: #041e27;           /* 194:1355 / 194:1290 / 194:1263 bg Bazylsprings; текст/рамки на BS-сторінці 194:1523 */
+  --color-gold: #cbaf86;           /* 194:1368 hero-текст, 194:1372 hero-кнопка; текст на темному (194:1275, 194:1292) */
+  --color-light: #eae9e8;          /* 194:1366 hero bg; 194:1352 кнопка, 194:1333 рамка стрілок; текст на зеленому (194:1350) */
+  --color-beige: #dcdbcf;          /* 194:1343 / 194:1184 / 194:1235 / 194:1387 / 194:1443 основний світлий фон; 194:1326 картка */
+  --color-brown: #21170e;          /* 194:1274 секція "Коротко про нас" */
+  --color-nav-text: #ceccc5;       /* 194:1376 текст навігації хедера */
+  --color-green-alt: #223521;      /* 194:1388 рамка товарної панелі YC; 194:1424 крихти. Майже = --color-green (розбіжність у Figma, 1 одиниця) */
+  --color-black: #000000;          /* 194:1330 назва/ціна картки на main page (у catalog 194:1449 — green, розбіжність) */
+  --color-line: rgba(34, 53, 32, 0.1);   /* 194:1326 / 194:1445 бордери товарної картки (top/bottom/left) */
+  --color-line-soft: rgba(34, 53, 32, 0.2);  /* 205:2448 нижня лінія акордеона нового макета YC product page */
+  --color-line-strong: rgba(34, 53, 32, 0.92); /* 194:1402 нижня лінія акордеона на YC product page */
+  --opacity-muted: 0.4;            /* 194:1476 підписи фільтрів, 194:1495 неактивні категорії */
+
+  /* семантичні псевдоніми */
+  --color-bg-page: var(--color-beige);  /* семантичний аліас, вузла немає (= --color-beige, 194:1343) */
+  --color-text-on-light: var(--color-green);  /* семантичний аліас, вузла немає (= --color-green) */
+  --color-text-on-dark: var(--color-light);  /* семантичний аліас, вузла немає (= --color-light) */
+  --color-accent: var(--color-gold);  /* семантичний аліас, вузла немає (= --color-gold) */
+
+  /* ---------- Шрифти ---------- */
+  --font-family-serif: 'EB Garamond', Georgia, serif;     /* заголовки, ціни-назви, акордеон: 194:1369, 194:1370, 194:1278 */
+  --font-family-sans: 'Manrope', system-ui, sans-serif;   /* навігація, кнопки, текст, ціна: 194:1376, 194:1373, 194:1279 */
+  --font-family-display: 'Cormorant', Georgia, serif;     /* футер-wordmark: 194:1236 (Cormorant SemiBold) */
+
+  --fw-regular: 400;   /* 194:1282 (stat number), 194:1332 (price) */
+  --fw-medium: 500;    /* 194:1279 (body), 194:1350 (split text) */
+  --fw-semibold: 600;  /* 194:1376 (nav), 194:1370 (hero) */
+  --fw-bold: 700;      /* 194:1373 (button) */
+
+  /* розміри (px макета 1920) */
+  --font-size-wordmark: calc(137 * var(--u));  /* 194:1236 */
+  --font-size-stat: calc(163 * var(--u));      /* 194:1282 */
+  --font-size-h2: calc(67 * var(--u));         /* 194:1278 / 1293 / 1186 */
+  --font-size-hero: calc(55 * var(--u));       /* 194:1370; 194:1394 (product title); 194:1493 (catalog title) */
+  --font-size-lead: calc(40 * var(--u));       /* 194:1350 */
+  --font-size-chip: calc(25 * var(--u));       /* 194:1299 */
+  --font-size-title: calc(20 * var(--u));      /* 194:1369 kicker; 194:1283; 194:1331; 194:1189; 194:1399 price in btn */
+  --font-size-text: calc(16 * var(--u));       /* 194:1376 nav; 194:1373 btn; 194:1279 body */
+  --font-size-small: calc(12 * var(--u));      /* 194:1424 breadcrumbs */
+  --font-size-nav: calc(14 * var(--u));        /* 194:1376 nav (header + footer посилання). розмір зменшено за рішенням замовника (Figma: 16) */
+
+  --lh-none: 1;        /* 194:1370 leading-none */
+  --lh-tight: 1.2;     /* 194:1331 product card name */
+  --lh-normal: 1.4;    /* 194:1369 kicker, 194:1279 body, 194:1189 FAQ question, 194:1424 */
+  --nav-box-h: calc(16 * var(--u));  /* висота рядка навігації = 16 (як було при 16px макета, Figma 194:1376); не залежить від розміру шрифту nav */
+
+  --ls-none: 0;  /* семантичний аліас, вузла немає (letter-spacing 0 у всіх текстових стилях Figma) */
+  --ls-wide: 0.03em;   /* 194:1376: 0.48px/16 ; 194:1369: 0.6px/20 ; 194:1424: 0.36px/12 — завжди 3% */
+
+  /* ---------- Типографічні ролі (шрифт / weight / розмір / lh / ls) ---------- */
+  /* hero-заголовок: 194:1370 */
+  --type-hero-font: var(--font-family-serif); --type-hero-weight: var(--fw-semibold); --type-hero-size: var(--font-size-hero); --type-hero-lh: var(--lh-none); --type-hero-ls: var(--ls-none);
+  /* H2 секцій: 194:1278 */
+  --type-h2-font: var(--font-family-serif); --type-h2-weight: var(--fw-semibold); --type-h2-size: var(--font-size-h2); --type-h2-lh: var(--lh-none); --type-h2-ls: var(--ls-none);
+  /* велике число статистики: 194:1282 (Regular!) */
+  --type-stat-font: var(--font-family-serif); --type-stat-weight: var(--fw-regular); --type-stat-size: var(--font-size-stat); --type-stat-lh: var(--lh-none); --type-stat-ls: var(--ls-none);
+  /* підпис статистики: 194:1283 */
+  --type-stat-label-font: var(--font-family-serif); --type-stat-label-weight: var(--fw-semibold); --type-stat-label-size: var(--font-size-title); --type-stat-label-lh: var(--lh-none); --type-stat-label-ls: var(--ls-none);
+  /* кікер/надзаголовок: 194:1369 */
+  --type-kicker-font: var(--font-family-serif); --type-kicker-weight: var(--fw-semibold); --type-kicker-size: var(--font-size-title); --type-kicker-lh: var(--lh-normal); --type-kicker-ls: var(--ls-wide);
+  /* лід-текст у спліт-секції: 194:1350 */
+  --type-lead-font: var(--font-family-serif); --type-lead-weight: var(--fw-medium); --type-lead-size: var(--font-size-lead); --type-lead-lh: var(--lh-none); --type-lead-ls: var(--ls-none);
+  /* чіп/категорія: 194:1299 */
+  --type-chip-font: var(--font-family-serif); --type-chip-weight: var(--fw-medium); --type-chip-size: var(--font-size-chip); --type-chip-lh: var(--lh-none); --type-chip-ls: var(--ls-none);
+  /* основний текст: 194:1279 */
+  --type-body-font: var(--font-family-sans); --type-body-weight: var(--fw-medium); --type-body-size: var(--font-size-text); --type-body-lh: var(--lh-normal); --type-body-ls: var(--ls-wide);
+  /* навігація: 194:1376 */
+  /* розмір зменшено за рішенням замовника (Figma: 16). Висота рядка навігації зафіксована --nav-box-h, щоб геометрія хедера/футера не змінилась */
+  --type-nav-font: var(--font-family-sans); --type-nav-weight: var(--fw-semibold); --type-nav-size: var(--font-size-nav); --type-nav-lh: var(--nav-box-h); --type-nav-ls: var(--ls-wide);
+  /* кнопка (основна, Bold): 194:1373; (вторинна SemiBold): 194:1341 */
+  --type-btn-font: var(--font-family-sans); --type-btn-weight: var(--fw-bold); --type-btn-size: var(--font-size-text); --type-btn-lh: var(--lh-none); --type-btn-ls: var(--ls-wide);
+  --type-btn-alt-weight: var(--fw-semibold);
+  /* кнопка «додати в кошик» YasnoCraft product page (205:2445 / 205:2446): EB Garamond замість Manrope — ціна Medium 20, текст Bold 16 */
+  --type-btn-serif-font: var(--font-family-serif); --type-price-serif-weight: var(--fw-medium);
+  /* ціна (в картці): 194:1332 */
+  --type-price-font: var(--font-family-sans); --type-price-weight: var(--fw-regular); --type-price-size: var(--font-size-title); --type-price-lh: var(--lh-none); --type-price-ls: var(--ls-wide);
+  /* назва товару в картці: 194:1331 */
+  --type-product-name-font: var(--font-family-serif); --type-product-name-weight: var(--fw-semibold); --type-product-name-size: var(--font-size-title); --type-product-name-lh: var(--lh-tight); --type-product-name-ls: var(--ls-none);
+  /* підпис/обʼєм: 194:1396 */
+  --type-caption-font: var(--font-family-sans); --type-caption-weight: var(--fw-regular); --type-caption-size: var(--font-size-text); --type-caption-lh: var(--lh-none); --type-caption-ls: var(--ls-wide);
+  /* крихти: 194:1424 */
+  --type-breadcrumb-font: var(--font-family-sans); --type-breadcrumb-weight: var(--fw-medium); --type-breadcrumb-size: var(--font-size-small); --type-breadcrumb-lh: var(--lh-normal); --type-breadcrumb-ls: var(--ls-wide);
+  /* питання FAQ: 194:1189; рядок акордеона товару (lh 1, без ls): 194:1403 */
+  --type-faq-font: var(--font-family-serif); --type-faq-weight: var(--fw-semibold); --type-faq-size: var(--font-size-title); --type-faq-lh: var(--lh-normal); --type-faq-ls: var(--ls-wide);
+  --type-acc-lh: var(--lh-none); --type-acc-ls: var(--ls-none);
+  /* заголовок колонки футера: 194:1238; посилання футера = nav; */
+  --type-footer-head-font: var(--font-family-serif); --type-footer-head-weight: var(--fw-semibold); --type-footer-head-size: var(--font-size-title); --type-footer-head-lh: var(--lh-none); --type-footer-head-ls: var(--ls-none);
+  /* футер-wordmark: 194:1236 / 194:1264 */
+  --type-wordmark-font: var(--font-family-display); --type-wordmark-weight: var(--fw-semibold); --type-wordmark-size: var(--font-size-wordmark); --type-wordmark-lh: var(--lh-none); --type-wordmark-ls: var(--ls-none);
+
+  /* ---------- Відступи ---------- */
+  --space-1: calc(1 * var(--u));     /* товщина рамки 194:1371 */
+  --space-5: calc(5 * var(--u));     /* 194:1371 padding рамки кнопки; 194:1401 gap акордеона */
+  --space-10: calc(10 * var(--u));   /* 194:1281 gap число/підпис */
+  --space-15: calc(15 * var(--u));   /* 194:1402 py рядка акордеона; 194:1239 gap меню футера */
+  --space-20: calc(20 * var(--u));   /* 194:1352 gap/py кнопки; 194:1402 px акордеона; 194:1473 py фільтрів */
+  --space-26: calc(26 * var(--u));   /* 194:1327 вертикальний padding фото картки */
+  --space-30: calc(30 * var(--u));   /* 194:1368 gap; 194:1188 padding FAQ; px кнопки; 194:1280 gap */
+  --space-40: calc(40 * var(--u));   /* 194:1329 нижній padding картки */
+  --space-46: calc(46 * var(--u));   /* 194:1237 gap заголовок→меню футера */
+  --space-50: calc(50 * var(--u));   /* 194:1275 gap блоків */
+  --space-70: calc(70 * var(--u));   /* 194:1388 gap/padding товарної панелі */
+  --space-37: calc(37 * var(--u));   /* 194:1375 gap між пунктами навігації */
+  --gutter: calc(47 * var(--u));     /* 194:1375 лівий відступ хедера/футера; 194:1295 (FAQ-сітка 48 — розбіжність 1px) */
+
+  /* ---------- Радіуси / рамки ---------- */
+  --radius-btn: calc(5 * var(--u));      /* 194:1372 внутрішня кнопка */
+  --radius-pill: calc(45 * var(--u));    /* 194:1333 кнопки-стрілки слайдера */
+  --radius-none: 0;                      /* 194:1371 зовнішня рамка кнопки, картки, FAQ — прямі кути */
+  --border-hairline: 1px;                /* всі 1px рамки у Figma (194:1371, 194:1188, 194:1326) */
+  --border-frame: calc(5 * var(--u));    /* 194:1388 товарна панель, 5px */
+  /* тіней у макетах немає (перевірено у всіх фреймах) */
+
+  /* ---------- Контейнери / розміри блоків ---------- */
+  --container-gutter: var(--gutter);  /* 194:1375 x=47 (відступ контейнера = --gutter) */
+  --container-full: calc(1826 * var(--u));     /* 194:1295 (1920 − 2×47) */
+  --container-wide: calc(1508 * var(--u));     /* 194:1275 / 194:1185 (1920 − 2×206) */
+  --container-heading: calc(1162 * var(--u));  /* 194:1292 блок заголовка методу підбору */
+  --container-heading-narrow: calc(1006 * var(--u)); /* 194:1186, 194:1236 */
+  --container-hero-text: calc(807 * var(--u)); /* 194:1368 */
+  --container-text: calc(712 * var(--u));      /* 194:1277 / 194:1279 текстова колонка */
+  --container-faq-item: calc(601 * var(--u));  /* 194:1188 колонка FAQ (3 колонки) */
+  --size-header-h: calc(var(--header3-top) + var(--header3-h)); /* 214:2902 Header 3: 30 відступ зверху + 73 пілюля = 103u зона header у потоці (раніше 206:2495 = 73, 194:1374 = 64) */
+  --z-header: 100;                             /* семантичний токен, вузла Figma немає: шар фіксованої пілюлі header над секціями */
+  --size-card-w: calc(384 * var(--u));         /* 194:1326 */
+  --size-card-h: calc(509 * var(--u));         /* 194:1326 */
+  --size-btn-h: calc(56 * var(--u));           /* 194:1372 висота внутрішньої кнопки */
+  --space-btn-pr-arrow: calc(25 * var(--u));  /* 224:3963 / 224:3814 / 224:3992 / 224:4016: у кнопках зі стрілкою padding-right 25 (pl 30); без стрілки 30/30 (224:4162) */
+  --size-arrow-btn-w: calc(64 * var(--u));     /* 194:1333 */
+  --size-arrow-btn-h: calc(66 * var(--u));     /* 194:1333 */
+  --size-icon-plus: calc(9 * var(--u));        /* 194:1190 */
+  --size-icon-arrow: calc(11.948 * var(--u));  /* 194:1354 */
+  --size-icon-arrow-glyph: calc(24 * var(--u)); /* рішення замовника: брендова іконка arrow-up-right.svg (24x24, штрих 1.5) замість стрілки Figma; боксом-розкладкою лишається --size-icon-arrow (кнопка не змінює розмір), видимий знак ≈ 12u */
+  --header3-icon-size: calc(22 * var(--u));     /* рішення замовника: брендові іконки basket/headset у кнопках хедера (24x24 viewBox) */
+  --header3-icon-gap: calc(8 * var(--u));       /* рішення дизайну: gap іконка → текст у кнопках хедера (ширина кнопки 150 фіксована) */
+  --size-volume-icon-w: calc(16.8 * var(--u));  /* рішення замовника: пляшка поруч з об'ємом; ширина 16.8 = bottle-0-5.svg (24x40) висотою 28u; 0,7 л і 1 л — той самий масштаб (24x50 / 24x64) */
+  --space-volume-icon-gap: calc(8 * var(--u));  /* рішення дизайну: gap пляшка → текст об'єму */
+  --container-faq-body: calc(531 * var(--u));  /* 194:1214 ширина відповіді FAQ у відкритому рядку */
+  --size-select-w: calc(200 * var(--u));       /* 194:1477 селект фільтра */
+
+  /* ---------- Чіп «подія» з ромбами (194:1296, Frame 93/94; розміри 194:1298) ---------- */
+  --size-chip-ornament: calc(21.5 * var(--u));        /* 194:1298 бокс орнаменту (ромба), квадрат */
+  --size-chip-diamond: calc(15.203 * var(--u));       /* 194:1298 ромб-рамка (повернута на -45°) */
+  --size-chip-diamond-core: calc(8.485 * var(--u));   /* 194:1298 внутрішній квадрат-заливка ромба */
+
+  /* ---------- Демо-блоки design-system.html (розмір демо-блока design-system, вузла Figma немає) ---------- */
+  --ds-swatch-chip-h: calc(120 * var(--u));     /* висота кольорового полотна зразка */
+  --ds-type-label-w: calc(380 * var(--u));      /* ширина колонки зразка типографіки */
+  --ds-space-label-w: calc(240 * var(--u));     /* ширина підпису рядка відступів */
+  --ds-radius-box-w: calc(120 * var(--u));      /* ширина демо-квадрата радіусів */
+  --ds-radius-box-h: calc(80 * var(--u));       /* висота демо-квадрата радіусів */
+  --ds-logo-h: calc(120 * var(--u));            /* висота логотипа в демо-комірці */
+
+  /* ---------- Доступність (вузла Figma немає) ---------- */
+  --focus-offset: calc(3 * var(--u));           /* відступ фокус-рамки :focus-visible від елемента */
+  --footer-ring-room: calc(var(--focus-offset) + var(--border-hairline)); /* семантичний токен, вузла Figma немає: запас під focus-кільце посилань футера (offset + товщина) всередині меж колонки */
+
+  /* ---------- Рух і орнаменти (вузла Figma немає, семантичні токени) ---------- */
+  --duration-fast: 0.45s;           /* семантичний токен, вузла Figma немає: плавний перехід кольору/фону (кнопки, чіпи, nav, стрілки, пункти select, згасання старої картки слайдера) */
+  --duration-base: 0.7s;            /* семантичний токен, вузла Figma немає: стандартний плавний hover-перехід (масштаб, підкреслення, opacity, поява нової картки слайдера, cross-fade фото товару) */
+  --duration-reveal: 1.1s;          /* семантичний токен, вузла Figma немає: тривалість появи елемента (reveal) */
+  --duration-bg: 1.4s;              /* семантичний токен, вузла Figma немає: кросфейд фону секції підбору при зміні події */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);  /* семантичний токен, вузла Figma немає: єдине м'яке згладжування переходів (повільніший старт і довге затухання) */
+  --duration-focus: 0.15s;          /* семантичний токен, вузла Figma немає: короткий перехід при :focus-visible (клавіатура не «тягнеться») */
+  --duration-accordion: 0.85s;      /* семантичний токен, вузла Figma немає: відкриття/закриття акордеона (висота, opacity тіла, «+» ↔ «−») */
+  --ease-accordion: cubic-bezier(0.45, 0, 0.25, 1);  /* семантичний токен, вузла Figma немає: м'яка ease-in-out крива акордеона (без різкого старту й стопу) */
+  --acc-icon-bar: 21.85%;           /* семантичний токен, вузла Figma немає: ширина вертикальної риски «+» (1,966 з 9 у Union 194:1190); при відкритті висота риски 100% → 0% */
+  --acc-faq-icon-drop: calc((var(--type-faq-size) * var(--lh-normal) - var(--size-icon-plus)) / 2);  /* семантичний токен: зсув іконки в закритому FAQ-рядку (центр першого рядка питання); при відкритті → 0 (іконка зверху, 194:1188) */
+  --reveal-shift: calc(16 * var(--u));   /* семантичний токен, вузла Figma немає: зсув по Y на початку появи (лише translate) */
+  --reveal-stagger: 0.12s;          /* семантичний токен, вузла Figma немає: затримка між сусідніми елементами при появі */
+  --hover-nudge: calc(4 * var(--u));     /* семантичний токен, вузла Figma немає: зсув стрілки кнопки вправо на hover; відступ підкреслення */
+  --scale-zoom: 1.03;               /* семантичний токен, вузла Figma немає: легкий zoom фото (бренд-блок, картка) на hover */
+  --parallax-range: 0.05;           /* семантичний токен, вузла Figma немає: паралакс фото всередині контейнера — максимальний зсув (односторонній, вниз від нейтралі) у частках висоти контейнера (0…5%; масштаб росте до 1+range; ефективна швидкість ≈ 0.06 від скролу, < 0.2) */
+  --parallax-range-soft: 0.035;     /* семантичний токен: те саме для data-parallax="soft" (великі фони: hero, фон picker) */
+  --parallax-lerp: 0.08;            /* семантичний токен: інерція паралакса — частка догонки цілі за кадр (60 fps); менше = повільніше й плавніше */
+  --color-liquid: var(--color-teal);   /* рішення замовника: «рідина» hover-картки = глибокий темно-синій Bazylsprings (брендбук: темно-синій; у Figma/tokens це #041e27 = --color-teal, окремого hex у брендбуці немає) */
+  --duration-liquid: 1.4s;          /* семантичний токен, вузла Figma немає: підйом/спад «рідини» в картці товару на hover */
+  --ease-liquid: cubic-bezier(0.4, 0.1, 0.25, 1);  /* семантичний токен, вузла Figma немає: м'якший (менш різкий старт) підйом/спад «рідини»; --ease-out для неї надто різкий */
+  --duration-wave: 4s;            /* семантичний токен, вузла Figma немає: період дрейфу хвилі «рідини» (нескінченний цикл, поки hover) */
+  --liquid-wave-h: calc(24 * var(--u));  /* семантичний токен, вузла Figma немає: висота хвилястого краю «рідини» (маска public/assets/img/liquid-wave.svg) */
+  --opacity-liquid-back: 0.45;      /* семантичний токен, вузла Figma немає: прозорість заднього шару хвилі */
+  --liquid-fill-level: 60%;         /* семантичний токен, вузла Figma немає (рішення замовника): рівень «рідини» на hover — заливка займає 60% висоти картки знизу (верх тіла заливки на 40% від верху; хвиля над ним на --liquid-wave-h) */
+  --liquid-text-in: calc(var(--duration-liquid) * 0.3);   /* семантичний токен: затримка зміни кольору тексту при підйомі — момент, коли рідина досягає назви (вимірювання, допуск ±60 мс) */
+  --liquid-text-out: calc(var(--duration-liquid) * 0.4); /* семантичний токен: затримка повернення кольору тексту при спаді — момент, коли рідина опускається нижче назви (вимірювання: ≈360 мс) */
+
+  /* ---------- Hover-стани (у Figma не намальовані; рішення дизайну: найближчий колір палітри) ---------- */
+  --color-hover-nav: var(--color-light);        /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): навігація хедера nav-text -> light */
+  --color-hover-nav-light: var(--color-teal);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): посилання футера green -> teal */
+  --color-hover-btn-gold: var(--color-beige);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки gold */
+  --color-hover-btn-light: var(--color-beige);  /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки light */
+  --color-hover-btn-green: var(--color-teal);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки green */
+  --color-hover-btn-teal: var(--color-green);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки teal */
+  --color-hover-faq: var(--color-light);        /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): фон рядка FAQ */
+  --color-hover-acc-product: #E4E3D8;           /* hover-стан, у Figma не намальований (рішення замовника: «не таким білим, світлий, але не настільки білий»): фон рядка акордеона товару (.acc--product) на hover/відкритому; теплий світлий беж, +8/+9 до --color-beige (#DCDBCF), контраст --color-green ≈10.2:1 */
+  --color-hover-arrow-btn: var(--color-light);  /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка стрілки слайдера (іконка інвертується) */
+  --angle-chip-diamond: -45deg;     /* семантичний токен, вузла Figma немає; ромб чіпа 194:1296 (повернутий на -45°) */
+  --flip-x: -1;                     /* семантичний токен, вузла Figma немає; дзеркало по X для стрілки prev (scaleX) */
+
+  /* ---------- Header (194:1374) ---------- */
+  --header-logo-cell-w: calc(220.37 * var(--u));  /* 194:1383 / 194:1385 комірка логотипа (блок 194:1382), ширина */
+  --header-logo-cell-h: calc(63 * var(--u));      /* 194:1383 / 194:1385 комірка логотипа, висота */
+  --header-logo-yc-x: calc(9.33 * var(--u));      /* 194:1384 YasnoCraft-зображення в комірці: left */
+  --header-logo-yc-y: calc(18.41 * var(--u));     /* 194:1384 top */
+  --header-logo-yc-w: calc(201.763 * var(--u));   /* 194:1384 width */
+  --header-logo-yc-h: calc(29.547 * var(--u));    /* 194:1384 height */
+  --header-logo-bs-x: calc(20.74 * var(--u));     /* 194:1386 Bazylsprings-зображення в комірці: left */
+  --header-logo-bs-y: calc(1.81 * var(--u));      /* 194:1386 top */
+  --header-logo-bs-w: calc(178.889 * var(--u));   /* 194:1386 width */
+  --header-logo-bs-h: calc(59.63 * var(--u));     /* 194:1386 height */
+
+  /* ---------- Footer (194:1235) ---------- */
+  --footer-h-top: calc(659 * var(--u));           /* 194:1237 бежева частина футера (856 = 659 + 197) */
+  --footer-h-bottom: calc(197 * var(--u));        /* 194:1263 бірюзовий нижній блок */
+  --footer-pad-top: calc(55 * var(--u));          /* 194:1237 відступ зверху до колонок (top 55) */
+  --footer-col-menu-w: calc(471 * var(--u));      /* 194:1237 ширина колонки «Меню» (старт x=47) */
+  --footer-col-catalog-w: calc(442 * var(--u));   /* 194:1244 ширина колонки «Каталог» (старт x=518) */
+  --footer-menu-x: calc(49 * var(--u));           /* 194:1237 x колонки «Меню» у макеті (gutter 47 + 2) */
+
+  /* ---------- Головна сторінка (main page 194:1514) ---------- */
+  --space-8: calc(8 * var(--u));      /* 194:1347 padding клітинки логотипа бренд-блока */
+  --space-85: calc(85 * var(--u));    /* 194:1326 top 596 − низ рядка чіпів 511: відступ чіпи → картка */
+  --space-177: calc(177 * var(--u));  /* 194:1185 top заголовка FAQ */
+  --space-208: calc(208 * var(--u));  /* 194:1275 / 194:1292 top заголовка секцій */
+  --size-sec-about: calc(921 * var(--u));   /* 194:1274 */
+  --size-sec-picker: calc(1281 * var(--u)); /* 194:1290 */
+  --size-sec-split: calc(941 * var(--u));   /* 194:1266 */
+  --size-sec-faq: calc(996 * var(--u));     /* 194:1184 */
+  --size-stat-w: calc(250 * var(--u));      /* 194:1281 колонка лічильника */
+  --size-picker-head-h: calc(208 * var(--u));   /* 224:3734 Frame 51: 134 (заголовок) + 30 + 44 (текст) */
+  --size-picker-bg-h: calc(683 * var(--u));     /* 224:3733 image 43, 1920×683 від низу секції */
+  --container-picker-title: calc(562 * var(--u)); /* 194:1293 */
+  --container-picker-text: calc(500 * var(--u)); /* 194:1294: у Figma 492 з опечаткою «допомже»; з виправленим «допоможе» перший рядок на ~12px ширший — 500, щоб переноси збігались (…ЗРОБИТИ / ВИБІР…) */
+  --size-split-photo-w: calc(944 * var(--u));   /* 194:1273 */
+  --size-faq-head-h: calc(300 * var(--u));      /* 194:1188 top 477 − 194:1185 top 177 */
+  /* ---------- Каталог (catalog 194:1443) ---------- */
+  --size-catalog-w: calc(1919 * var(--u));          /* 194:1444 / 194:1473: ширина сітки й панелі фільтрів (x=1, правий край 1920) */
+  --size-catalog-title-w: calc(1138 * var(--u));    /* 194:1493 ширина заголовка-навігації */
+  --space-catalog-title-top: calc(151 * var(--u));  /* 194:1493 y=215 − висота хедера 64 */
+  --space-catalog-title-gap: calc(30 * var(--u));   /* 194:1473 y=410 − низ заголовка (215+165=380) */
+  --space-catalog-title-col: calc(21 * var(--u));   /* 194:1493 column-gap між пунктами заголовка */
+  --space-catalog-filter-gap: calc(47 * var(--u));  /* 194:1474 gap між групами «Бренд» і «категорія» */
+  --size-card-catalog-w: calc(479.75 * var(--u));   /* 194:1445 ширина картки каталогу (колонка 1/4 від 1919) */
+  --size-card-catalog-h: calc(570 * var(--u));      /* 194:1445 висота картки каталогу (ширина 479.75 = колонка з 4) */
+  --size-chevron-w: calc(12 * var(--u));            /* 194:1479 шеврон селекта */
+  --size-chevron-h: calc(6 * var(--u));             /* 194:1479 */
+  --z-dropdown: 50;                                 /* семантичний токен, вузла Figma немає: шар списку селекта (нижче хедера) */
+  --angle-flip: 180deg;                             /* семантичний токен, вузла Figma немає: поворот шеврона відкритого селекта */
+  --offset-select-menu: calc(15 * var(--u));        /* семантичний токен, вузла Figma немає: відступ списку під селектом */
+
+  /* ---------- Каталог 2 (catalog 204:2221, 1920×949) ---------- */
+  --color-card-bg-catalog: #B7BAAC;   /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (Figma 206:2543: #b7baac — збігається; інші картки макета: #dcdbcf / rgba(220,219,207,.8)) */
+  --color-liquid-catalog: #DCDBCF;    /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (у Figma заливки «рідини» немає; значення = --color-beige) */
+  --color-select-bg-hover: rgba(220, 219, 207, 0.1);   /* hover-стан, у Figma не намальований (рішення дизайну): плитка фільтра на hover/focus/відкрито, +5% beige */
+  --color-select-bg: rgba(220, 219, 207, 0.05);   /* 204:2333 / 206:2522 / 206:2532 фон поля фільтра */
+  --opacity-catalog-nav-muted: 0.43;  /* неактивні категорії заголовка каталогу; Figma 204:2353 = .61 (контраст ≈4.5:1), замовник: приглушити колір. Мінімум за WCAG 3:1 (великий текст) на #223520: 0.42 → 2.95:1 (не проходить), 0.43 → 3.02:1; на ромбі фону (≈#20321E) 3.08:1. 0.40 дало б 2.81:1 */
+  --opacity-crumb-hover: 0.6;         /* семантичний токен, вузла Figma немає (рішення дизайну): hover/focus крихт на сторінці товару — посилання тьмяніє, без підкреслення */
+  --opacity-logo-hover: 0.8;          /* семантичний токен, вузла Figma немає (рішення оркестратора): hover логотипів YasnoCraft/Bazylsprings у хедері — зображення тьмяніє 1 → 0.8 за --duration-fast, без підкреслення й зміни розміру */
+  --size-catalog-grid-w: calc(1825 * var(--u));   /* 204:2222 сітка; 204:2331 панель фільтрів */
+  --space-catalog-title-top2: calc(83 * var(--u));/* 204:2351 y=156 − висота хедера 73 */
+  --space-catalog-title-row: calc(6 * var(--u));  /* 204:2351 row-gap між рядками заголовка */
+  --size-catalog-title-w2: calc(1132 * var(--u)); /* 204:2351 ширина заголовка-навігації */
+  --space-catalog-bar-top: calc(43 * var(--u));   /* 204:2331 y=376 − низ заголовка (156+177=333) */
+  --space-catalog-bar-y: calc(30 * var(--u));     /* 204:2331 py панелі */
+  --space-catalog-grid-gap: calc(40 * var(--u));  /* 204:2222 gap сітки */
+  --catalog-grid-reserve-rows: 4;                 /* семантичний токен, вузла Figma немає: рядків сітки (14 позицій / 4 колонки), що резервуються до рендеру карток (проти CLS) */
+  --space-catalog-bottom: calc(48 * var(--u));    /* семантичний токен, вузла Figma немає: відступ сітка → футер (= бокове поле 48) */
+  --size-card-cat2-w: calc(426.25 * var(--u));    /* 204:2223 ширина картки (демо в design-system; у сітці — колонка 1fr) */
+  --size-card-cat2-h: calc(547.667 * var(--u));   /* 204:2223 висота картки (ширина 426.25 = колонка) */
+  --space-card-cat2-photo-top: calc(50 * var(--u)); /* 204:2224 зсув фото вниз (pt 50), зона фото 426.25×329.67 */
+  --radius-card-catalog: calc(10 * var(--u));     /* рішення замовника: закруглення зовнішніх кутів картки каталогу (клип картки); арка-маска закруглюється концентрично: --radius-card-catalog − --offset-arch */
+  --offset-arch: calc(6 * var(--u));              /* 204:2230 left/top арки */
+  --size-arch-w: calc(414 * var(--u));            /* 204:2230 арка = один SVG-маска product-card-arch-full.svg (рамка 2.476 + кути 204:2231) */
+  --size-arch-h: calc(535 * var(--u));            /* 204:2230 */
+  --space-select-px: calc(15 * var(--u));         /* 204:2333 px поля фільтра */
+  --space-select-py: calc(10 * var(--u));         /* 204:2333 py поля фільтра */
+  --radius-select: calc(5 * var(--u));            /* 204:2333 радіус поля фільтра */
+  --space-select-gap: calc(10 * var(--u));        /* 204:2332 gap між полями «Бренд» і «Категорія» */
+
+  /* ---------- Сторінка товару (product page YasnoCraft 194:1387 / Bazylsprings 194:1520) ---------- */
+  /* Спільні для обох брендів (YasnoCraft 205:2430 + Bazylsprings 194:1520, оновлення замовника): значення задаються один раз, бренд лише додає свою геометрію */
+  --space-product-top: calc(20 * var(--u));         /* ЄДИНЕ місце відступу від зони header до фото/панелі (замовник: було 0). Враховують: sticky-top фото (--offset-product-stage-sticky), висота фрейму (--size-product-frame-h), верх панелі й мініатюр BS */
+  --space-product-col-gap: calc(5 * var(--u));      /* зазор фото — права панель (YC 205:2433 x=960 − (50+905)); у BS 194:1523 було 0 */
+  --radius-product-frame: calc(10 * var(--u));      /* радіус фото-фрейму й правої панелі (YC 206:2493 / 205:2433) */
+  --radius-product-thumb: calc(5 * var(--u));       /* радіус мініатюри (YC 206:2521) */
+  --space-product-panel-pb: calc(70 * var(--u));    /* нижній відступ панелі (YC 205:2433; у BS 194:1523 pb теж 70, раніше було 9u за виміром) */
+  --space-product-section-gap: calc(100 * var(--u)); /* gap між buy-блоком, акордеонами, крихтами (YC 205:2490) */
+  --opacity-volume-hover: 0.1;       /* семантичний токен, вузла Figma немає (рішення дизайну): hover/focus кнопки об'єму — плашка кольору тексту 10% (вибраний стан лишається opacity 1) */
+  --space-volume-hover-pad: calc(8 * var(--u)); /* рішення дизайну: виліт плашки hover кнопки об'єму за текст (gap між кнопками 20) */
+  --space-product-volumes-gap: calc(20 * var(--u)); /* gap «500 мл» / «40% alc» (YC 205:2441) */
+  --offset-product-stage-sticky: calc(var(--size-header-h) + var(--space-product-top)); /* 123u: sticky-top фото обох брендів = зона header (103u) + --space-product-top (20) */
+  --size-product-frame-min-h: calc(700 * var(--u)); /* мінімум висоти фрейму фото (рішення дизайну): на низьких вікнах фрейм не стискається нижче 700u, а сторінка скролиться */
+  --size-product-frame-h: max(var(--size-product-frame-min-h), calc(100svh - var(--offset-product-stage-sticky))); /* обидва бренди: висота фрейму фото = 100svh − (зона header 103u + --space-product-top 20u) = 100svh − 123u, низ фрейму = низ вікна; замінює фіксовану 1081u (YC) (рішення замовника) */
+  --position-product-photo: 50% 50%;                /* object-position фото у фреймі (fill = cover): фокус по центру, пляшка займає ~10–90% висоти студійного кадру */
+  --size-product-page-w: calc(1920 * var(--u));     /* ширина макета сторінки обох брендів: 50 + 905 + 5 + 910 + 50 = 1920 */
+  --space-product-head-bs-inset: calc(7 * var(--u)); /* відступ шапки BS від ЗОВНІШНЬОГО краю панелі: зверху = збоку = 7 (рішення замовника; еталон — видима смуга бежевого над шапкою до правки = 5 рамка + 7 pad-top, 194:1523). Рамка 5 входить у відстань */
+  --size-product-head-bs-w: calc(var(--size-product-panel-w) - 2 * var(--space-product-head-bs-inset)); /* шапка BS на всю ширину панелі за вирахуванням відступів: 910 − 14 = 896 (було 886 при 12u, 813 при старій розкладці, 194:1578) */
+  --ratio-product-head-bs: 813 / 313;               /* 194:1578 пропорція SVG product-frame-bazyl.svg; висота шапки = ширина / ratio (896 → ≈345u), без спотворення */
+  --space-product-panel-pt-bs: calc(var(--space-product-head-bs-inset) - round(down, var(--border-frame), 1px)); /* pt панелі BS: відступ шапки 7 мінус рамка 5 (у BS вона beige, як тло) = 2 при 1920; рамка у браузері округлюється до цілих px вниз (3.75 → 3), тому віднімаємо округлену: верхній відступ від зовнішнього краю = 7u на 1200–1920 (DPR 1); відмінність BS від YC (там арка впритул) */
+  --size-product-btn-w: calc(308 * var(--u));       /* 194:1397 кнопка «додати в кошик» (рамка + padding + 296) */
+  --color-product-accent: var(--color-green-alt);   /* тема YasnoCraft: рамка панелі 194:1388, текст, кнопка */
+  --color-product-accent-line: var(--color-line-soft); /* лінії акордеона YasnoCraft 205:2448 (new design; раніше --color-line-strong 194:1402) */
+  --color-product-accent-bs: var(--color-teal);     /* тема Bazylsprings: рамка панелі 194:1523, текст, лінії, кнопка */
+  --size-product-focus: var(--border-hairline);     /* рамка активної мініатюри 1px (рішення дизайну: у Figma не намальована) */
+  
+  /* ---------- Header 2 (206:2495, 1920×73): єдиний header усіх сторінок ---------- */
+  --header2-pad-x: calc(50 * var(--u));         /* 206:2495 padding-x */
+  --header2-gap: calc(20 * var(--u));           /* 206:2496 / 206:2508 gap між комірками */
+  --header2-cell-w: calc(150 * var(--u));       /* 206:2497 ширина комірки/кнопки (усі 6) */
+  --header2-cell-h: calc(42 * var(--u));        /* 206:2497 висота комірки-пункту (15.5 від верху/низу header) */
+  --header2-btn-outline-h: calc(44 * var(--u)); /* 206:2511 «Кошик ( 0 )»: контурна кнопка (рамка 1px --color-beige) */
+  --header2-btn-fill-h: calc(44 * var(--u));    /* 214:2920 «підказати?»: залита кнопка (--color-beige), у Header 3 висота 44 (була 38 у 206:2513) */
+  --color-header-btn-border: var(--color-beige);   /* 206:2511 / 206:2513 рамка кнопок */
+  --color-header-btn-fill: var(--color-beige);     /* 206:2513 заливка «підказати?» */
+  --color-header-btn-fill-text: var(--color-green);/* 206:2514 текст «підказати?» */
+  --color-hover-header-outline-bg: var(--color-beige);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): контурна кнопка заливається */
+  --color-hover-header-outline-text: var(--color-green); /* hover-стан, у Figma не намальований: текст на заливці */
+  --color-hover-header-fill-bg: var(--color-light);      /* hover-стан, у Figma не намальований: залита кнопка світлішає */
+  --type-nav-head-font: var(--font-family-serif); --type-nav-head-weight: var(--fw-semibold); --type-nav-head-size: var(--font-size-text); --type-nav-head-lh: var(--lh-normal); --type-nav-head-ls: var(--ls-wide); /* 206:2498 EB Garamond SemiBold 16 / 1.4 / 0.48px, uppercase */
+
+  /* ---------- Header 3 (214:2902 «Frame 125», 1216.67×73): плаваюча «пілюля» по центру 1920, x=352 y=30 ---------- */
+  --header3-top: calc(30 * var(--u));           /* 214:2902 y=30: відступ пілюлі від верху сторінки (так само 209:2874 y=30 у hero 202:1820) */
+  --header3-w: calc(1216.67 * var(--u));        /* 214:2902 ширина пілюлі (x=352 → центр 960) */
+  --header3-h: calc(73 * var(--u));             /* 214:2902 висота пілюлі = 5 + лого 63 + 5 */
+  --header3-pad-x: calc(15 * var(--u));         /* 214:2902 padding-x у Figma 10; за рішенням замовника +5 (15): відступ крайніх кнопок «меню»/«підказати?» від краю пілюлі; ширина пілюлі 1216.67 фіксована */
+  --header3-pad-y: calc(5 * var(--u));          /* 214:2902 padding-y */
+  --header3-radius: calc(10 * var(--u));        /* 214:2902 радіус пілюлі */
+  --header3-blur: calc(25 * var(--u));          /* 214:2902 backdrop-blur 25 */
+  --color-header3-bg: rgba(0, 0, 0, 0.1);       /* 214:2902 заливка пілюлі: чорний 10% */
+  --color-header3-underlay: rgba(34, 53, 32, 0.9); /* рішення дизайну, у Figma немає: підкладка під 10% чорного (= --color-green 90%), щоб пілюля читалась над бежевими секціями при скролі; на зеленому тлі (як у Figma) збігається з макетом */
+  --header3-group-gap: calc(10 * var(--u));     /* 214:2903 / 214:2917 gap між кнопками групи */
+  --header3-burger-w: calc(11.47 * var(--u));   /* 214:2905 іконка «бургер» (public/assets/icons/menu.svg) */
+  --header3-burger-h: calc(13 * var(--u));      /* 214:2905 */
+  --color-header3-burger: #D9D9D9;              /* 214:2905 заливка іконки Union */
+  --header3-menu-gap: calc(10 * var(--u));      /* рішення дизайну, у Figma немає: відстань панелі випадного меню від пілюлі */
+  --header3-menu-w: calc(310 * var(--u));       /* рішення дизайну, у Figma немає: ширина панелі меню = дві кнопки лівої групи (150 + 10 + 150) */
+  --header3-menu-pad: calc(10 * var(--u));      /* рішення дизайну, у Figma немає: внутрішній відступ панелі (10, незалежно від padding-x пілюлі) */
+  --header3-menu-item-px: calc(15 * var(--u));  /* рішення дизайну, у Figma немає: px пункту меню = px кнопок (214:2904) */
+  --header3-menu-close-delay: 0.25s;            /* рішення дизайну, у Figma немає: затримка закриття меню після виходу курсора з кнопки/меню (читається header-menu.js; дає перейти з кнопки на пункти) */
+  --header3-menu-shift: calc(8 * var(--u));     /* рішення дизайну, у Figma немає: зсув появи панелі меню знизу вгору */
+
+  /* ---------- Сторінка товару YasnoCraft, оновлений макет (205:2430; фото y=103, пілюля Header 3 214:2902 / 215:2945) ---------- */
+  --space-product-page-x: calc(50 * var(--u));       /* СПІЛЬНЕ YC+BS: ліве й праве поле сторінки (206:2493 x фото; 205:2433 1920 − (960 + 910)) */
+  --space-product-page-bottom: calc(50 * var(--u));      /* СПІЛЬНЕ YC+BS: семантичний токен, вузла Figma немає: = бічним полям (низ макета обрізано, фото закінчується на y=1184) */
+  --size-product-stage-w: calc(905 * var(--u));     /* СПІЛЬНЕ YC+BS: 206:2493 велике фото */
+  --size-product-panel-w: calc(910 * var(--u));     /* СПІЛЬНЕ YC+BS: 205:2433 права панель (x=960) */
+  --size-ycp-arch-w: calc(900 * var(--u));      /* 217:3168 Subtract (арка 900×359.93, верхні кути 5) */
+  --size-ycp-head-w: calc(900 * var(--u));      /* 205:2434 */
+  --size-ycp-head-h: calc(359.93 * var(--u));   /* 205:2434 */
+  --size-ycp-logo-w: calc(212 * var(--u));      /* 205:2438 круглий логотип, по центру шапки */
+  --size-ycp-logo-h: calc(181 * var(--u));      /* 205:2438 */
+  --size-product-body-w: calc(760 * var(--u));      /* СПІЛЬНЕ YC+BS: 205:2490 колонка контенту (900 − 2×70) */
+  --size-product-thumb-w: calc(126 * var(--u));     /* СПІЛЬНЕ YC+BS: 206:2521 мініатюра-накладка */
+  --size-product-thumb-h: calc(167 * var(--u));     /* СПІЛЬНЕ YC+BS: 206:2521 */
+  --space-product-thumb-inset: calc(15 * var(--u)); /* СПІЛЬНЕ YC+BS: 206:2521 x=65 − 50, y=118 − 103 */
+  --space-product-thumb-gap: calc(7 * var(--u));    /* СПІЛЬНЕ YC+BS: 194:1420 y=292 − (118 + 167) */
+  --color-ycp-stage-bg: #dad5c9;                /* середнє по краях hero-фото gin-yasnyi (щоб бокові/верхні поля не мали шва; у Figma 206:2493 заливка #cecbbf, але растр там інший); також поле для вирізів інших товарів */
+  --type-spec-font: var(--font-family-serif); --type-spec-weight: var(--fw-semibold); --type-spec-size: var(--font-size-title); --type-spec-lh: var(--lh-none); --type-spec-ls: var(--ls-wide); /* 205:2442 «500 мл» / «40% alc»: EB Garamond SemiBold 20, 0.6px, без uppercase */
+
+  /* ---------- Головна, новий макет (224:3966, 1920×6484): hero 224:3617 · бренди 224:3596 · вступ 224:3639 · екскурсії 224:3586 · підбір 224:3732 · футер 224:3700 ---------- */
+  --size-sec-hero: calc(1086 * var(--u));         /* 224:3617 */
+  --offset-hero-logos-top: calc(158 * var(--u));  /* 224:3658 Group 1: top 158 */
+  --size-hero-logos-w: calc(983 * var(--u));      /* 224:3658 */
+  --size-hero-logos-h: calc(185.103 * var(--u));  /* 224:3658 */
+  --size-hero-logo-yc-w: calc(860.269 * var(--u)); /* 224:3659 */
+  --size-hero-logo-yc-h: calc(98.3 * var(--u));    /* 224:3659 */
+  --size-hero-logo-bs-w: calc(983 * var(--u));     /* 224:3660 */
+  --size-hero-logo-bs-h: calc(102.611 * var(--u)); /* 224:3660 */
+  --offset-hero-logo-bs-top: calc(82.491 * var(--u)); /* 224:3660 top 240.491 − 158 (YasnoCraft і Bazylsprings накладаються на 15.8) */
+  --crop-hero-logo-yc-x: -12.93%;  /* 224:3659 кадрування PNG yasnocraft-logo-no-mountains у боксі (left) */
+  --crop-hero-logo-yc-w: 127.76%;  /* 224:3659 */
+  --crop-hero-logo-yc-h: 163.74%;  /* 224:3659 */
+  --crop-hero-logo-bs-y: -92.95%;  /* 224:3660 кадрування PNG bazylsprings-logo (top) */
+  --crop-hero-logo-bs-h: 318.94%;  /* 224:3660 */
+
+  --size-sec-brands: calc(974 * var(--u));        /* 224:3596 */
+  --size-brand-card-h: calc(934 * var(--u));      /* 224:3806 / 224:3606 картка-«Subtract» */
+  --size-brand-card-yc-w: calc(912 * var(--u));   /* 224:3806 */
+  --size-brand-card-bs-w: calc(914 * var(--u));   /* 224:3606 */
+  --offset-brand-card-top: calc(20 * var(--u));   /* 224:3806 y 242 − (−222) */
+  --offset-brand-card-yc-x: calc(43 * var(--u));  /* 224:3806 */
+  --offset-brand-card-bs-x: calc(5 * var(--u));   /* 224:3606 */
+  --offset-brand-content-top: calc(80 * var(--u)); /* 224:3809 y 322 − 242: колонка логотип+текст */
+  --size-brand-content-w: calc(482 * var(--u));   /* 224:3809 */
+  --size-brand-logo-box-h: calc(172 * var(--u));  /* 224:3810 / 224:3802 (вектор + padding 10) */
+  --space-28: calc(28 * var(--u));                /* 224:3809 gap логотип → текст */
+  --size-brand-logo-yc-w: calc(402 * var(--u));   /* 224:3817 */
+  --size-brand-logo-yc-h: calc(106 * var(--u));   /* 224:3817 */
+  --size-brand-logo-bs-w: calc(263 * var(--u));   /* 224:3609 */
+  --size-brand-logo-bs-h: calc(152 * var(--u));   /* 224:3609 */
+  --offset-brand-cta-top: calc(786 * var(--u));   /* 224:3813 y 1028 − 242: кнопка від верху картки */
+
+  --size-sec-intro: calc(984 * var(--u));         /* 224:3639 */
+  --space-100: calc(100 * var(--u));              /* 224:3639 gap блоків; 224:3586 */
+  --container-intro-title: calc(1194 * var(--u)); /* 224:3653 */
+  --container-intro-text: calc(658 * var(--u));   /* 224:3657 */
+  --ls-intro-body: calc(0.8 * var(--u));          /* 224:3657: tracking 0.8px (5%), у Figma ширше за 3% */
+  --space-intro-pad-y: calc(70 * var(--u));       /* 224:3639 py */
+
+  --size-sec-tours: calc(1303 * var(--u));        /* 224:3586 */
+  /* Панелі екскурсій: геометрія — цілі CSS-px (round), щоб краї, рамка фото і стик «текст/фото» лягали на пікселі пристрою
+     (дробові ширини дають рамку 7/6 device-px зліва/справа, 1-px шви й різні зазори на 1200–1920, DPR 1 і 2). Різниця з Figma < 0.5 px. */
+  --size-tour-card-h: round(calc(629 * var(--u)), 1px);   /* 224:3688 / 224:3691 (ширина = секція − 2 поля) */
+  --space-tour-edge-l: round(calc(43 * var(--u)), 1px);   /* 224:3688 / 224:3691: x=43 — ліве поле секції (Figma 43/41, не симетричне: 1920 − 43 − 1836 = 41) */
+  --space-tour-edge-r: round(calc(41 * var(--u)), 1px);   /* 224:3688 / 224:3691: праве поле секції 41 */
+  --space-tour-gap: round(calc(5 * var(--u)), 1px);       /* 224:3586: проміжок між панелями (= --space-5, ціле px) */
+  --size-tour-photo-w: round(calc(757 * var(--u)), 1px);  /* 224:3595 / 224:3698: фото 757 (сама картинка, без рамки; у Figma рамка 5 зовнішня — outside stroke) */
+  --border-tour-frame: round(calc(5 * var(--u)), 1px);    /* 224:3595 / 224:3698: рамка фото 5 (= --border-frame, ціле px); лежить ПОЗА фото, з боку бежевої колонки */
+  --size-tour-photo-box-w: calc(var(--size-tour-photo-w) + var(--border-tour-frame)); /* фото-колонка = рамка + фото (762 при 1920): шви рамки на x=1117 (картка 1) / 800 (картка 2), як у Figma */
+  --size-tour-text-w: calc(613 * var(--u));       /* 224:3974 */
+  --space-tour-pad: calc(80 * var(--u));          /* 224:3974: x 78/80, y 80 (нормалізовано до 80) */
+  --container-tour-text: calc(517 * var(--u));    /* 224:3973 (512) / 224:3989 (517) → єдина 517: при ls 0.8px рядок «…дегустація в нашій» у Figma ≈512.4 і в 512 не вміщується */
+  --size-pattern-tile: round(calc(131 * var(--u)), 1px);  /* 224:3688 pattern-заливка (джерело 224:3961, scale 0.4, spacing −0.4): у рендері Figma плитки перекриваються, виходить решітка з періодом 131×131 (виміряно); ціле px — інакше шви на стиках */
+  --size-pattern-catalog-tile: var(--size-pattern-tile);  /* фон каталогу: та сама геометрія й плитка 131u (ціле px), що в tours (home-pattern-diamond.svg): великий ромб + 4 допоміжні (wrap через краї) = решітка з накладанням; колір окремо в --color-pattern-catalog */
+  --color-pattern-catalog: rgba(0, 0, 0, 0.08);   /* три тони як у tours (SVG не бере CSS-змінні — значення вручну в catalog-pattern-diamond.svg): світлий ромб = колір сторінки #223520 (34,53,32), основа = 1 шар чорного 8% ≈(31,49,29), перекриття допоміжних = 2 шари ≈(29,45,27) */
+  --radius-panel: calc(10 * var(--u));            /* 224:3688 радіус панелі */
+
+  --space-197: calc(197 * var(--u));              /* 224:3734 top заголовка секції підбору */
+  --space-60: calc(60 * var(--u));                /* 224:3790 top 560 − низ рядка чіпів 500: відступ чіпи → картка */
+  --offset-picker-arrow-top: calc(258 * var(--u)); /* 224:3775 / 224:3778 стрілки y 818 − верх картки 560 (не по центру картки: центр 833.8, стрілки 851) */
+  --size-picker-card-w: var(--size-card-cat2-w);  /* 224:3790 картка 426.25 (= catalog 204:2223) */
+
+  /* типографіка нових ролей */
+  --type-desc-font: var(--font-family-serif); --type-desc-weight: var(--fw-medium); --type-desc-size: var(--font-size-title); --type-desc-lh: var(--lh-tight); --type-desc-ls: calc(1 * var(--u)); /* 224:3812: опис бренду, EB Garamond Medium 20 / 1.2, letter-spacing 1px (масштабується з --u; у Figma текст YC набраний у 3 рядки) */
+  --type-stat-compact-font: var(--font-family-serif); --type-stat-compact-weight: var(--fw-regular); --type-stat-compact-size: calc(65 * var(--u)); --type-stat-compact-lh: var(--lh-none); --type-stat-compact-ls: var(--ls-none); /* 224:3644: «( 2 )» Regular, розмір 65 як у Figma (висота стовпця 145) */
+  --color-hover-btn-beige: var(--color-light);    /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки beige на коричневому */
+}

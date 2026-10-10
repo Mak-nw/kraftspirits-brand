@@ -1,0 +1,17 @@
+/* Брендові іконки (stroke 1.5, закруглені кінці; у файлах колір #223420 жорстко) — підключені як CSS-маска, тож колір = currentColor
+   (колір тексту кнопки в усіх станах). Розмір — --icon-size (ширина), висота = ширина × --icon-ratio (за замовчуванням 1). Декоративні: aria-hidden="true". */
+.icon {
+  display: inline-block; flex: none;
+  width: var(--icon-size, 1em); height: calc(var(--icon-size, 1em) * var(--icon-ratio, 1));
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.icon--arrow-up-right { -webkit-mask-image: url('/assets/icons/arrow-up-right.svg'); mask-image: url('/assets/icons/arrow-up-right.svg'); } /* прості кнопки (.btn__arrow) */
+.icon--basket { -webkit-mask-image: url('/assets/icons/basket.svg'); mask-image: url('/assets/icons/basket.svg'); }                         /* кнопка «Кошик» у хедері */
+.icon--headset { -webkit-mask-image: url('/assets/icons/headset.svg'); mask-image: url('/assets/icons/headset.svg'); }                     /* кнопка «підказати?» у хедері */
+.icon--bottle-0-5 { --icon-ratio: calc(40 / 24); -webkit-mask-image: url('/assets/icons/bottle-0-5.svg'); mask-image: url('/assets/icons/bottle-0-5.svg'); } /* 0,5 л, 24x40 */
+.icon--bottle-0-7 { --icon-ratio: calc(50 / 24); -webkit-mask-image: url('/assets/icons/bottle-0-7.svg'); mask-image: url('/assets/icons/bottle-0-7.svg'); } /* 0,7 л, 24x50 */
+.icon--bottle-1 { --icon-ratio: calc(64 / 24); -webkit-mask-image: url('/assets/icons/bottle-1.svg'); mask-image: url('/assets/icons/bottle-1.svg'); }     /* 1 л, 24x64 */

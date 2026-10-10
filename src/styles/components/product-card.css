@@ -1,0 +1,73 @@
+/* Картка товару 384x509 (194:1326 / catalog 194:1445) */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  align-items: center;
+  width: var(--size-card-w);
+  height: var(--size-card-h);
+  background: var(--color-beige);
+  border: var(--border-hairline) solid var(--color-line);
+  border-right: 0;
+}
+.product-card__media { flex: 1 1 0; min-height: 0; width: 100%; padding: var(--space-26) 0; overflow: hidden; }
+.product-card__media img { width: 100%; height: 100%; object-fit: contain; max-width: none; transition: transform var(--duration-base) var(--ease-out); }
+.product-card__body {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-30);
+  width: 100%; padding: var(--space-30) 0 var(--space-40);
+  text-align: center; color: var(--color-green);
+}
+.product-card--main .product-card__body { color: var(--color-black); }
+/* назва: без підкреслення ні в стані спокою, ні на hover (підкреслень при hover немає, крім футера) */
+.product-card__body h3 { text-decoration: none; }
+@media (hover: hover) {
+  .product-card:hover .product-card__media img { transform: scale(var(--scale-zoom)); }
+}
+
+/* ---------- «Рідина» на hover/focus-visible: заливка знизу вгору темно-синім (--color-liquid) ----------
+   Шар під фото й текстом (z-order: фон → рідина → фото → текст). Хвиля — маска public/assets/img/liquid-wave.svg (один файл для всіх карток),
+   тіло — фон currentColor. Лише transform/opacity. Геометрія картки не змінюється (шар absolute в межах рамки, overflow hidden). */
+.product-card { position: relative; }
+.product-card__media, .product-card__body { position: relative; z-index: 1; }
+.product-card__liquid { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; color: var(--color-liquid); }
+.product-card__liquid-fill {
+  position: absolute; inset: 0;
+  background-color: currentColor;
+  transform: translateY(calc(100% + var(--liquid-wave-h)));
+  transition: transform var(--duration-liquid) var(--ease-liquid);
+  will-change: transform;
+}
+.product-card__wave {
+  position: absolute; left: 0; width: 200%; height: var(--liquid-wave-h);
+  top: calc(var(--border-hairline) - var(--liquid-wave-h));
+  background-color: currentColor;
+  -webkit-mask: url('/assets/img/liquid-wave.svg') 0 0 / 100% 100% no-repeat;
+  mask: url('/assets/img/liquid-wave.svg') 0 0 / 100% 100% no-repeat;
+  animation: liquid-drift var(--duration-wave) linear infinite;
+  animation-play-state: paused;
+}
+.product-card__wave--back { opacity: var(--opacity-liquid-back); animation-direction: reverse; animation-duration: calc(var(--duration-wave) * 1.5); translate: 0 -20%; }
+@keyframes liquid-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.product-card__body { transition: color var(--duration-fast) var(--ease-out) var(--liquid-text-out); }
+.product-card:focus-visible .product-card__media img { transform: scale(var(--scale-zoom)); }
+.product-card:focus-visible .product-card__liquid-fill { transform: translateY(calc(100% - var(--liquid-fill-level))); }
+.product-card:focus-visible .product-card__wave { animation-play-state: running; }
+.product-card:focus-visible .product-card__body,
+.product-card--main:focus-visible .product-card__body { color: var(--color-text-on-dark); transition-delay: var(--liquid-text-in); }
+@media (hover: hover) {
+  .product-card:hover .product-card__liquid-fill { transform: translateY(calc(100% - var(--liquid-fill-level))); }
+  .product-card:hover .product-card__wave { animation-play-state: running; }
+  .product-card:hover .product-card__body,
+  .product-card--main:hover .product-card__body { color: var(--color-text-on-dark); transition-delay: var(--liquid-text-in); }
+}
+/* reduced-motion: без підйому й хвилі — заливка одразу на --liquid-fill-level, з'являється через opacity */
+@media (prefers-reduced-motion: reduce) {
+  .product-card__liquid { opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+  .product-card__liquid-fill { transform: translateY(calc(100% - var(--liquid-fill-level))); transition: none; }
+  .product-card__wave { display: none; }
+  .product-card:focus-visible .product-card__liquid { opacity: 1; }
+  .product-card__body { transition-delay: 0s; }
+}
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .product-card:hover .product-card__liquid { opacity: 1; }
+}

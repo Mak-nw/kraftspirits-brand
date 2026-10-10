@@ -1,0 +1,25 @@
+/* Footer (194:1235): висота і геометрія — токени --footer-* (tokens.css) */
+.site-footer { background: var(--color-beige); color: var(--color-green); }
+.site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) var(--gutter) 0; } /* 194:1237 top 55 */
+/* колонки: старти x=47 / 518 / 960 (194:1237 / 1244 / 1254), остання — праворуч (194:1262) */
+.site-footer__cols { display: grid; grid-template-columns: var(--footer-col-menu-w) var(--footer-col-catalog-w) 1fr auto; align-items: start; }
+.site-footer__col { display: flex; flex-direction: column; gap: var(--space-46); }
+/* «Меню» (194:1237): x=49 у макеті, а колонка стартує з gutter 47 — зсув на різницю */
+/* запас під focus-кільце посилань: бокс колонки розширено на --footer-ring-room в обидва боки (від'ємний margin), padding повертає текст на місце — кільце лишається в межах колонки, позиції тексту не змінюються */
+.site-footer__col { margin-inline: calc(-1 * var(--footer-ring-room)); padding-inline: var(--footer-ring-room); }
+.site-footer__col--menu { padding-left: calc(var(--footer-menu-x) - var(--gutter) + var(--footer-ring-room)); }
+.site-footer__col--end { align-self: start; }
+/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap); line-height фіксований, інакше li успадкує 1.4 */
+.site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); line-height: var(--nav-box-h); }
+.site-footer__list li { line-height: var(--nav-box-h); }
+.site-footer__list .t-nav { text-transform: none; } /* 224:3705…3724: пункти меню/каталогу/контактів без uppercase (© і «Публічна оферта» — uppercase) */
+.site-footer__list a { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом, а не на всю колонку (кільце не заходить у сусідню колонку) */
+/* рядок: © / wordmark по центру / оферта; 194:1260 top 623 → 20 до низу бежевої частини */
+.site-footer__legal { display: grid; grid-template-columns: 1fr var(--container-heading-narrow) 1fr; align-items: end; padding-bottom: var(--space-20); position: relative; }
+.site-footer__legal .site-footer__wordmark { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
+.site-footer__copy { justify-self: start; }
+.site-footer__offer { grid-column: 3; justify-self: end; }
+.site-footer__wordmark { display: flex; justify-content: center; width: var(--container-heading-narrow); white-space: nowrap; }
+/* нижній блок (194:1263) */
+.site-footer__bottom { display: flex; flex-direction: column; align-items: center; gap: var(--space-5); height: var(--footer-h-bottom); overflow: clip; background: var(--color-teal); color: var(--color-gold); }
+.site-footer__age { text-align: center; white-space: nowrap; }
