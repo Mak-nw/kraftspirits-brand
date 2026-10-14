@@ -80,15 +80,12 @@
   /* навігація: 194:1376 */
   /* розмір зменшено за рішенням замовника (Figma: 16). Висота рядка навігації зафіксована --nav-box-h, щоб геометрія хедера/футера не змінилась */
   --type-nav-font: var(--font-family-sans); --type-nav-weight: var(--fw-semibold); --type-nav-size: var(--font-size-nav); --type-nav-lh: var(--nav-box-h); --type-nav-ls: var(--ls-wide);
-  /* кнопка (основна, Bold): 194:1373; (вторинна SemiBold): 194:1341 */
-  --type-btn-font: var(--font-family-sans); --type-btn-weight: var(--fw-bold); --type-btn-size: var(--font-size-text); --type-btn-lh: var(--lh-none); --type-btn-ls: var(--ls-wide);
-  --type-btn-alt-weight: var(--fw-semibold);
-  /* кнопка «додати в кошик» YasnoCraft product page (205:2445 / 205:2446): EB Garamond замість Manrope — ціна Medium 20, текст Bold 16 */
-  --type-btn-serif-font: var(--font-family-serif); --type-price-serif-weight: var(--fw-medium);
+  /* ТЕКСТ УСІХ КНОПОК (рішення замовника): єдиний набір для .btn і .nav-cell (клас .t-btn) — EB Garamond SemiBold 16 / 1.4 / 0.48px, uppercase (206:2498). Розмір кнопки задає --size-btn-h / u-масштаб */
+  --type-btn-font: var(--font-family-serif); --type-btn-weight: var(--fw-semibold); --type-btn-size: var(--font-size-text); --type-btn-lh: var(--lh-normal); --type-btn-ls: var(--ls-wide);
   /* ціна (в картці): 194:1332 */
   --type-price-font: var(--font-family-sans); --type-price-weight: var(--fw-regular); --type-price-size: var(--font-size-title); --type-price-lh: var(--lh-none); --type-price-ls: var(--ls-wide);
   /* ціна на ітемі (картка товару: каталог і слайдер підбору): сімейство = EB Garamond (той самий токен, що заголовки/назви); вага/розмір/ls/lh/регістр — як у --type-price-* */
-  --type-price-card-font: var(--font-family-serif); --type-price-card-weight: var(--fw-medium); /* Medium 500 (як ціна в btn--serif): EB Garamond Regular на 12.5–20u читається слабо */
+  --type-price-card-font: var(--font-family-serif); --type-price-card-weight: var(--fw-medium); /* Medium 500 (як ціна в кнопці «додати в кошик»): EB Garamond Regular на 12.5–20u читається слабо */
   /* назва товару в картці: 194:1331 */
   --type-product-name-font: var(--font-family-serif); --type-product-name-weight: var(--fw-semibold); --type-product-name-size: var(--font-size-title); --type-product-name-lh: var(--lh-tight); --type-product-name-ls: var(--ls-none);
   /* підпис/обʼєм: 194:1396 */
@@ -594,7 +591,6 @@
   --color-hover-header-outline-bg: var(--color-beige);   /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): контурна кнопка заливається */
   --color-hover-header-outline-text: var(--color-green); /* hover-стан, у Figma не намальований: текст на заливці */
   --color-hover-header-fill-bg: var(--color-light);      /* hover-стан, у Figma не намальований: залита кнопка світлішає */
-  --type-nav-head-font: var(--font-family-serif); --type-nav-head-weight: var(--fw-semibold); --type-nav-head-size: var(--font-size-text); --type-nav-head-lh: var(--lh-normal); --type-nav-head-ls: var(--ls-wide); /* 206:2498 EB Garamond SemiBold 16 / 1.4 / 0.48px, uppercase */
 
   /* ---------- Header 3 (214:2902 «Frame 125», 1216.67×73): плаваюча «пілюля» по центру 1920, x=352 y=30 ---------- */
   --header3-top: calc(30 * var(--u));           /* 214:2902 y=30: відступ пілюлі від верху сторінки (так само 209:2874 y=30 у hero 202:1820) */

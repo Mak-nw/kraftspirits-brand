@@ -32,10 +32,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .t-chip { font: var(--type-chip-weight) var(--type-chip-size)/var(--type-chip-lh) var(--type-chip-font); letter-spacing: var(--type-chip-ls); text-transform: uppercase; } /* 194:1299 */
 .t-body { font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--type-body-font); letter-spacing: var(--type-body-ls); text-transform: uppercase; } /* 194:1279 */
 .t-nav { font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--type-nav-font); letter-spacing: var(--type-nav-ls); text-transform: uppercase; } /* 194:1376 */
-.t-nav-head { font: var(--type-nav-head-weight) var(--type-nav-head-size)/var(--type-nav-head-lh) var(--type-nav-head-font); letter-spacing: var(--type-nav-head-ls); text-transform: uppercase; } /* 206:2498 header 2 */
 .t-spec { font: var(--type-spec-weight) var(--type-spec-size)/var(--type-spec-lh) var(--type-spec-font); letter-spacing: var(--type-spec-ls); } /* 205:2442 об'єм / міцність */
 .t-btn { font: var(--type-btn-weight) var(--type-btn-size)/var(--type-btn-lh) var(--type-btn-font); letter-spacing: var(--type-btn-ls); text-transform: uppercase; } /* 194:1373 */
-.t-btn--alt { font-weight: var(--type-btn-alt-weight); } /* 194:1341 */
 .t-price { font: var(--type-price-weight) var(--type-price-size)/var(--type-price-lh) var(--type-price-font); letter-spacing: var(--type-price-ls); text-transform: uppercase; } /* 194:1332 */
 .t-product-name { font: var(--type-product-name-weight) var(--type-product-name-size)/var(--type-product-name-lh) var(--type-product-name-font); letter-spacing: var(--type-product-name-ls); text-transform: uppercase; } /* 194:1331 */
 .t-caption { font: var(--type-caption-weight) var(--type-caption-size)/var(--type-caption-lh) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: uppercase; } /* 194:1396 */

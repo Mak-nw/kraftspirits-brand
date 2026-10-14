@@ -54,9 +54,8 @@
   --btn-text: var(--btn-outline-text-default); --btn-text-hover: var(--btn-outline-text-hover); --btn-text-focus: var(--btn-outline-text-focus); --btn-text-active: var(--btn-outline-text-active); --btn-text-disabled: var(--btn-outline-text-disabled);
   --btn-border: var(--btn-outline-border-default); --btn-border-hover: var(--btn-outline-border-hover); --btn-border-focus: var(--btn-outline-border-focus); --btn-border-active: var(--btn-outline-border-active); --btn-border-disabled: var(--btn-outline-border-disabled);
 }
-/* 205:2443: кнопка з засічним шрифтом (EB Garamond): ціна Medium, текст Bold (YasnoCraft product page); шрифтовий модифікатор, станів не має */
-.btn--serif .btn__inner { font-family: var(--type-btn-serif-font); }
-.btn--serif .t-price { font-family: var(--type-btn-serif-font); font-weight: var(--type-price-serif-weight); }
+/* ціна всередині кнопки («додати в кошик»): EB Garamond Medium — ті ж токени, що ціна картки товару; текст кнопки — єдиний .t-btn */
+.btn .t-price { font-family: var(--type-price-card-font); font-weight: var(--type-price-card-weight); }
 .btn--block { display: flex; width: 100%; }
 .btn--block .btn__inner { width: 100%; }
 

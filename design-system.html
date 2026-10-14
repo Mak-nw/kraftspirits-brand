@@ -217,14 +217,6 @@
       </div>
       <div class="type-row">
         <div>
-          <div class="t-kicker">.t-nav-head</div>
-          <div class="ds-meta" data-spec="#spec-nav-head"></div>
-          <div class="ds-meta is-muted">Figma 206:2498 (header 2)</div>
-        </div>
-        <div class="type-row__sample type-row__sample--dark"><span id="spec-nav-head" class="t-nav-head">Головна каталог про дім</span></div>
-      </div>
-      <div class="type-row">
-        <div>
           <div class="t-kicker">.t-spec</div>
           <div class="ds-meta" data-spec="#spec-spec"></div>
           <div class="ds-meta is-muted">Figma 205:2442</div>
@@ -233,19 +225,11 @@
       </div>
       <div class="type-row">
         <div>
-          <div class="t-kicker">.t-btn</div>
+          <div class="t-kicker">.t-btn (текст УСІХ кнопок: .btn, .nav-cell)</div>
           <div class="ds-meta" data-spec="#spec-btn"></div>
-          <div class="ds-meta is-muted">Figma 194:1373</div>
+          <div class="ds-meta is-muted">EB Garamond SemiBold 16, uppercase (206:2498); рішення замовника: єдиний шрифт кнопок</div>
         </div>
         <div class="type-row__sample"><span id="spec-btn" class="t-btn">Вивчити асортимент</span></div>
-      </div>
-      <div class="type-row">
-        <div>
-          <div class="t-kicker">.t-btn + .t-btn--alt</div>
-          <div class="ds-meta" data-spec="#spec-btn-alt"></div>
-          <div class="ds-meta is-muted">Figma 194:1341</div>
-        </div>
-        <div class="type-row__sample"><span id="spec-btn-alt" class="t-btn t-btn--alt">Вивчити увесь асортимент</span></div>
       </div>
       <div class="type-row">
         <div>
@@ -349,7 +333,7 @@
 
       <p class="demo-label t-kicker">Кнопка: .btn > .btn__inner (Frame 80 / Frame 45, 194:1371)</p>
       <div class="demo-panel theme-brown">
-        <!--@include components/btn variant="btn--light" href="#" text="Вивчити увесь асортимент" text-class=" t-btn--alt" arrow="arrow-up-right"-->
+        <!--@include components/btn variant="btn--light" href="#" text="Вивчити увесь асортимент" arrow="arrow-up-right"-->
       </div>
       <div class="demo-panel theme-beige">
         <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
@@ -358,10 +342,10 @@
 
       <p class="demo-label t-kicker">Навігація header 3 (214:2902): пункт-комірка 150×42 (.nav-cell), «Кошик» — контурна кнопка 150×44, «підказати?» — залита 150×44 (радіус 5); hover/focus: колір тексту (пункти, без підкреслення), заливка (кнопки); «каталог» (.nav-cell--ghost) — без рамки у спокої, на hover/focus та ж світла заливка, що в «Кошик» (радіус 5, темний текст і іконка)</p>
       <div class="demo-panel theme-green">
-        <a class="nav-link nav-cell t-nav-head" href="#">Головна</a>
-        <a class="nav-link nav-cell nav-cell--icon nav-cell--ghost t-nav-head" href="#"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a>
-        <a class="nav-cell nav-cell--outline t-nav-head" href="#">Кошик ( 0 )</a>
-        <a class="nav-cell nav-cell--fill t-nav-head" href="#">підказати?</a>
+        <a class="nav-link nav-cell t-btn" href="#">Головна</a>
+        <a class="nav-link nav-cell nav-cell--icon nav-cell--ghost t-btn" href="#"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a>
+        <a class="nav-cell nav-cell--outline t-btn" href="#">Кошик ( 0 )</a>
+        <a class="nav-cell nav-cell--fill t-btn" href="#">підказати?</a>
       </div>
       <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline) і «підказати?» (.nav-cell--fill) — beige (--color-beige) незалежно від предка; логотипи в хедері: спільний hover пари (група .site-header__logos) — обидва opacity 1 → --opacity-logo-hover (0.8) разом, --duration-fast; футер: колонки мають запас --footer-ring-room під кільце посилань</p>
       <p class="demo-label t-kicker">Навігація футера (.nav-link--on-light .t-nav, 194:1240); підкреслення на hover/focus — лише тут (демо-футер, .site-footer)</p>
@@ -408,7 +392,7 @@
       </div>
 
       <p class="demo-label t-kicker">Половина бренд-секції .brand-half (224:3597 YasnoCraft / 224:3604 Bazylsprings, 960×974): partial components/brand-half (brand, name, photo, logo, text, btn, href); секція — partials/sections/brands.html</p>
-      <p class="ds-note ds-meta">Фото-фон (cover, уже обрізане під 960×974; hover — zoom --scale-zoom) + бежева картка 912/914×934 (радіус 10, маска-«Subtract» з вирізом-пляшкою, public/assets/img/home-brand-card-*.svg; колір — --color-beige) + логотип у боксі 172, опис .t-desc (gap 28), кнопка від верху картки на 786. Колір тексту: YasnoCraft — --color-text-on-light, Bazylsprings — --color-teal (у Figma обидва teal — нормалізовано до брендових). Кнопки btn--green / btn--teal з btn--serif (EB Garamond Bold, Figma 224:3815).</p>
+      <p class="ds-note ds-meta">Фото-фон (cover, уже обрізане під 960×974; hover — zoom --scale-zoom) + бежева картка 912/914×934 (радіус 10, маска-«Subtract» з вирізом-пляшкою, public/assets/img/home-brand-card-*.svg; колір — --color-beige) + логотип у боксі 172, опис .t-desc (gap 28), кнопка від верху картки на 786. Колір тексту: YasnoCraft — --color-text-on-light, Bazylsprings — --color-teal (у Figma обидва teal — нормалізовано до брендових). Кнопки btn--green / btn--teal з (EB Garamond Bold, Figma 224:3815).</p>
       <!--@include sections/brands-->
 
       <p class="demo-label t-kicker">Фон-візерунок каталогу .pattern-catalog (лише сторінка каталогу; клас-демо для design-system)</p>
@@ -480,15 +464,15 @@
       </div>
       <p class="demo-label t-kicker">aria-disabled="true" на посиланні (клікабельне, приглушене; без hover-змін) — і зі стрілкою</p>
       <div class="demo-panel theme-beige">
-        <!--@include components/btn variant="btn--green btn--serif" href="#" text="додати в кошик" price="1 250 ₴" aria-disabled="1"-->
+        <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴" aria-disabled="1"-->
         <!--@include components/btn variant="btn--teal" href="#" text="Кнопка" arrow="arrow-up-right" aria-disabled="1"-->
       </div>
       <p class="demo-label t-kicker">Матриця: кнопки хедера .nav-cell--outline («меню», «Кошик»; selected = відкрите меню, aria-expanded) · --fill («підказати?») · --ghost («каталог»)</p>
       <div class="state-matrix">
       <div class="state-row state-row--head state-row--6 ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>active</span><span>selected</span><span>disabled</span></div>
-      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--outline</span><a href="#" class="nav-cell nav-cell--outline t-nav-head">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-hover">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-focus">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-active">меню</a><button type="button" class="nav-cell nav-cell--outline t-nav-head is-selected" aria-expanded="true">меню</button><button type="button" class="nav-cell nav-cell--outline t-nav-head" disabled>меню</button></div>
-      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--fill</span><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-hover"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-focus"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-active"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head" disabled><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></button></div>
-      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--ghost</span><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-hover"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-focus"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-active"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head" disabled><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></button></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--outline</span><a href="#" class="nav-cell nav-cell--outline t-btn">меню</a><a href="#" class="nav-cell nav-cell--outline t-btn is-hover">меню</a><a href="#" class="nav-cell nav-cell--outline t-btn is-focus">меню</a><a href="#" class="nav-cell nav-cell--outline t-btn is-active">меню</a><button type="button" class="nav-cell nav-cell--outline t-btn is-selected" aria-expanded="true">меню</button><button type="button" class="nav-cell nav-cell--outline t-btn" disabled>меню</button></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--fill</span><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-btn"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-btn is-hover"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-btn is-focus"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-btn is-active"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--fill nav-cell--icon t-btn" disabled><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></button></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--ghost</span><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-btn"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-btn is-hover"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-btn is-focus"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-btn is-active"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--ghost nav-cell--icon t-btn" disabled><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></button></div>
       </div>
       <p class="demo-label t-kicker">Матриця: стрілки слайдера .arrow-btn (на hover/focus/active — світла заливка, іконка інвертується; disabled = одна позиція в добірці)</p>
       <div class="state-matrix">
@@ -509,8 +493,7 @@
       <table class="ds-table"><thead><tr><th>Компонент</th><th>default</th><th>hover</th><th>focus-visible</th><th>active (:active)</th><th>selected / disabled</th><th>тривалість</th></tr></thead><tbody>
         <tr><td>btn--gold / --light / --beige / --green / --teal</td><td>заливка = колір варіанта, текст контрастний, рамка (зовнішня 1px) = заливка</td><td>заливка → --color-hover-btn-&lt;v&gt;; текст і рамка ті ж; стрілка зсувається на --hover-nudge (4u, 0.7s)</td><td>те саме, що hover; перехід 0.15s; кільце 1px, offset 3u, currentColor</td><td>заливка hover ×0.92 + scale(.985), 0.15s (нове)</td><td>opacity 0.4 (було), cursor not-allowed (було default), без hover-змін</td><td>0.45s ease-out (focus/active 0.15s)</td></tr>
         <tr><td>btn--outline (age-gate «Ні»)</td><td>заливка прозора, рамка і текст green</td><td>заливка → beige</td><td>= hover; 0.15s; кільце</td><td>заливка beige ×0.92 + scale(.985) (нове)</td><td>opacity 0.4; без hover</td><td>0.45s</td></tr>
-        <tr><td>btn--serif</td><td>модифікатор шрифту (EB Garamond) — станів не має</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-        <tr><td>«додати в кошик» (btn--green / --teal, product)</td><td>колір бренду: green (YC) / teal (BS)</td><td>заливка green → teal; teal → green (раніше задавалося в product.css, тепер у токенах варіанта)</td><td>= hover</td><td>як btn</td><td>aria-disabled: opacity 0.4, без hover (раніше cursor default)</td><td>0.45s</td></tr>
+                <tr><td>«додати в кошик» (btn--green / --teal, product)</td><td>колір бренду: green (YC) / teal (BS)</td><td>заливка green → teal; teal → green (раніше задавалося в product.css, тепер у токенах варіанта)</td><td>= hover</td><td>як btn</td><td>aria-disabled: opacity 0.4, без hover (раніше cursor default)</td><td>0.45s</td></tr>
         <tr><td>nav-cell--outline («меню», «Кошик»)</td><td>прозора заливка, рамка beige, текст nav-text</td><td>заливка → beige, текст → green</td><td>= hover; 0.15s; кільце beige (токен on-dark)</td><td>заливка beige ×0.92 (нове)</td><td>selected (aria-expanded): = hover; disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
         <tr><td>nav-cell--fill («підказати?»)</td><td>заливка beige, текст green, рамка beige</td><td>заливка → light</td><td>= hover; 0.15s; кільце beige</td><td>заливка light ×0.92 (нове)</td><td>disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
         <tr><td>nav-cell--ghost («каталог»)</td><td>без заливки й рамки; текст і іконка nav-text</td><td>заливка → beige, текст/іконка → green</td><td>= hover; 0.15s</td><td>заливка beige ×0.92 (нове)</td><td>disabled — нове</td><td>0.45s</td></tr>
@@ -864,7 +847,7 @@
       </div>
       <p class="ds-note t-body">Reveal: атрибут data-reveal="rise" (opacity 0→1 + зсув на --reveal-shift) або data-reveal="fade" (лише opacity); спрацьовує один раз, коли елемент входить у в'юпорт (src/js/reveal.js, IntersectionObserver). Групи, що з'являються разом, йдуть із stagger (--reveal-stagger). Hero (секція з data-reveal-load) з'являється при завантаженні. Приховування вмикає лише JS (клас .js-reveal на html); без JS, при prefers-reduced-motion: reduce та при друці контент видно одразу. Header 3 — пілюля без анімації; випадне меню: opacity + зсув на --header3-menu-shift за --duration-base / --ease-out (reduced-motion — миттєво). Блюр панелі меню — --header3-menu-blur (16u); демо відкритого меню показує великий текст позаду панелі.</p>
 
-      <p class="ds-note t-body">Паралакс фото (лише головна, src/js/parallax.js): атрибут data-parallax на контейнері з обрізанням (hero, brand-half, фото tour-card, фон picker), data-parallax="soft" — менший зсув для великих фонів. Фото — прямий нащадок img, розміром з контейнер: у нейтральній точці (контейнер по центру в’юпорта; hero — scroll=0) зсув 0 і масштаб 1, тож кадр збігається з макетом і ?parallax=off. Далі фото зсувається вниз через translate на 0…--parallax-range від висоти контейнера, а scale 1 + y/h від нижнього краю (transform-origin) закриває верхній край — порожніх країв нема; інерція --parallax-lerp, rAF лише для видимих блоків. Не конфліктує з hover-zoom (transform) і reveal (opacity). Вимкнення: ?parallax=off (автоматизовані перевірки, як ?reveal=off) і prefers-reduced-motion: reduce — статична позиція без зсуву. Кнопки в секціях tours і intro (Figma 224:3688/224:3691/224:3639) — btn--serif (EB Garamond Bold), як «додати в кошик».</p>
+      <p class="ds-note t-body">Паралакс фото (лише головна, src/js/parallax.js): атрибут data-parallax на контейнері з обрізанням (hero, brand-half, фото tour-card, фон picker), data-parallax="soft" — менший зсув для великих фонів. Фото — прямий нащадок img, розміром з контейнер: у нейтральній точці (контейнер по центру в’юпорта; hero — scroll=0) зсув 0 і масштаб 1, тож кадр збігається з макетом і ?parallax=off. Далі фото зсувається вниз через translate на 0…--parallax-range від висоти контейнера, а scale 1 + y/h від нижнього краю (transform-origin) закриває верхній край — порожніх країв нема; інерція --parallax-lerp, rAF лише для видимих блоків. Не конфліктує з hover-zoom (transform) і reveal (opacity). Вимкнення: ?parallax=off (автоматизовані перевірки, як ?reveal=off) і prefers-reduced-motion: reduce — статична позиція без зсуву. Кнопки в секціях tours і intro (Figma 224:3688/224:3691/224:3639) — (EB Garamond Bold), як «додати в кошик».</p>
 
       <p class="demo-label t-kicker">Hover/focus: кнопки (4 варіанти; стрілка зсувається, розмір не змінюється)</p>
       <div class="demo-panel theme-beige">
@@ -910,7 +893,7 @@
       </div>
       <div class="demo-panel theme-beige">
         <div class="ds-partial-box">
-          <!--@include components/btn variant="btn--light btn--block" href="catalog.html" text="Вивчити увесь асортимент" text-class=" t-btn--alt" arrow="arrow-up-right"-->
+          <!--@include components/btn variant="btn--light btn--block" href="catalog.html" text="Вивчити увесь асортимент" arrow="arrow-up-right"-->
         </div>
       </div>
 
@@ -1003,11 +986,11 @@
         </div>
       </div>
       <p class="demo-label t-kicker">Фрейм фото (.product-media): sticky під хедером, висота = 100svh − зона header (обидва бренди: токен --size-product-frame-h, зона header 103u + відступ --space-product-top 20u = 123u) — низ фрейму лежить на низу вікна; мінімум --size-product-frame-min-h (700u), нижче сторінка скролиться. Ширина фрейму 905u однакова для обох брендів. Фото заповнює фрейм (object-fit: cover, object-position: --position-product-photo); вирізи без студійного фото (.is-cutout) лишаються contain. Мініатюри — накладки всередині фрейму (126×167, відступ 15, крок 7) однаково для обох брендів.</p>
-      <p class="demo-label t-kicker">Кнопка «додати в кошик» (btn з price): YasnoCraft — btn--green + btn--serif (EB Garamond: ціна Medium 20, текст Bold 16; Figma 205:2443; перша кнопка — звичайна Manrope для порівняння), Bazylsprings — btn--teal + btn--serif (на сторінці товару однаково з YC за рішенням замовника; у Figma 194:1533 Manrope); усі активні</p>
+      <p class="demo-label t-kicker">Кнопка «додати в кошик» (btn з price): YasnoCraft — btn--green, Bazylsprings — btn--teal; текст — єдиний .t-btn (EB Garamond SemiBold), ціна .t-price усередині кнопки — EB Garamond Medium (токени --type-price-card-*); усі активні</p>
       <div class="demo-panel theme-beige">
         <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
-        <!--@include components/btn variant="btn--teal btn--serif" href="#" text="додати в кошик" price="1 690 ₴"-->
-        <!--@include components/btn variant="btn--green btn--serif" href="#" text="додати в кошик" price="1 250 ₴"-->
+        <!--@include components/btn variant="btn--teal" href="#" text="додати в кошик" price="1 690 ₴"-->
+        <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
       </div>
       <p class="demo-label t-kicker">Перемикач об'єму (.product-volumes > .product-volume, активний aria-pressed="true", неактивний --opacity-muted; hover/focus-visible: м'яка плашка ::before кольору тексту --opacity-volume-hover 0.1 за --duration-fast, неактивна 0.4→1, без підкреслення, розмір не змінюється); YasnoCraft: .t-spec «500 мл», «43% alc» (gap 20 `--space-product-volumes-gap`, спільний для обох брендів, Figma 205:2441), мініатюри-накладки .product-thumb 126×167 (активна — рамка 1px; повторний клік повертає головне фото); Bazylsprings: .t-caption «0,5 л»; розкладка і мініатюри-накладки однакові для обох брендів (поле 50 + фото 905 + зазор 5 + панель 910 + поле 50; накладки 126×167 у куті фрейму, відступ 15, крок 7; .product-media sticky разом з фото; слайди — public/assets/img/slider/bs-whisky-*, YC — yc-gin-*)</p>
       <div class="demo-panel theme-beige">
