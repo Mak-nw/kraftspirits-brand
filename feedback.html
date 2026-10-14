@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--@include head-icons-->
+  <!--@include head-fonts-->
+  <!--@include head-age-->
+  <title>Зворотний зв'язок — YasnoCraft × Bazylsprings</title>
+  <meta name="description" content="Зворотний зв'язок з дистилерією YasnoCraft × Bazylsprings: оберіть тему — екскурсії, бочкова торгівля, замовлення та доставка, співпраця, консультація — залиште контакти й напишіть нам.">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script type="module" src="/src/js/viewport.js"></script>
+  <script type="module" src="/src/js/header-menu.js"></script>
+</head>
+<body class="page-feedback">
+  <!--@include components/age-gate-->
+  <!--@include header-->
+  <main class="feedback">
+    <section class="feedback-window" id="form" aria-labelledby="form-title">
+      <div class="feedback-stack">
+        <form class="feedback-form" id="contact-form" novalidate aria-labelledby="form-title">
+          <div class="feedback-col feedback-col--aside">
+            <div class="feedback-head">
+              <h1 class="t-hero" id="form-title">Зворотний зв'язок</h1>
+              <p class="t-text">Оберіть тему звернення та залиште контакти, ми відповімо найближчим часом</p>
+            </div>
+            <div class="field" data-field="topic">
+              <span class="field__label" id="contact-topic-label">Тип звернення</span>
+              <div class="topic-group" id="contact-topic" role="radiogroup" aria-labelledby="contact-topic-label" aria-describedby="contact-topic-error" aria-required="true">
+            %contacts.topicTilesHtml%
+              </div>
+              <input type="hidden" name="topic" value="">
+              <p class="field__error" id="contact-topic-error" role="alert"><span></span></p>
+            </div>
+            <div class="feedback-block" role="group" aria-labelledby="contact-data-label">
+              <span class="field__label" id="contact-data-label">Контактні дані</span>
+              <div class="field" data-field="name">
+                <label class="field__label" for="contact-name">Ім'я</label>
+                <input class="field__control" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" aria-describedby="contact-name-error">
+                <p class="field__error" id="contact-name-error" role="alert"><span></span></p>
+              </div>
+              <div class="feedback-pair">
+              <div class="field" data-field="phone">
+                <label class="field__label" for="contact-phone">Телефон</label>
+                <input class="field__control" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" aria-describedby="contact-phone-error">
+                <p class="field__error" id="contact-phone-error" role="alert"><span></span></p>
+              </div>
+              <div class="field" data-field="email">
+                <label class="field__label" for="contact-email">E-mail</label>
+                <input class="field__control" id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" aria-describedby="contact-email-error">
+                <p class="field__error" id="contact-email-error" role="alert"><span></span></p>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feedback-col feedback-col--main">
+            <div class="field feedback-message" data-field="message">
+              <label class="field__label" for="contact-message">Ваше повідомлення</label>
+              <textarea class="field__control" id="contact-message" name="message" rows="8" placeholder="Розкажіть, чим можемо допомогти" aria-describedby="contact-message-error"></textarea>
+              <p class="field__error" id="contact-message-error" role="alert"><span></span></p>
+            </div>
+            <div class="field visually-hidden" aria-hidden="true">
+              <label for="contact-website">Не заповнюйте це поле</label>
+              <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <p class="contact-form__alert t-text" role="alert" hidden data-form-alert></p>
+            <div class="feedback-foot">
+              <div class="check-field" data-field="consent">
+                <label class="check">
+                  <input class="check__input" type="checkbox" name="consent" autocomplete="off" aria-describedby="contact-consent-error">
+                  <span class="check__box" aria-hidden="true"></span>
+                  <span class="check__label t-text">Погоджуюсь на обробку персональних даних та з <a href="offer.html#rules" target="_blank" rel="noopener">правилами користування</a> сайтом</span>
+                </label>
+                <p class="field__error" id="contact-consent-error" role="alert"><span></span></p>
+              </div>
+              <button class="btn btn--green feedback-foot__submit" type="submit" data-submit><span class="btn__inner t-btn" data-submit-label>Надіслати</span></button>
+            </div>
+          </div>
+        </form>
+
+        <div class="contact-success" data-success inert aria-hidden="true">
+          <h2 class="contact-success__title t-hero" tabindex="-1" data-success-title>Дякуємо!</h2>
+          <p class="t-text" data-success-text>Ми отримали ваше звернення.</p>
+          <button class="btn btn--green" type="button" data-reset><span class="btn__inner t-btn">Надіслати ще одне</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!--@include footer-->
+  <script type="module" src="/src/js/contact-form.js"></script>
+</body>
+</html>

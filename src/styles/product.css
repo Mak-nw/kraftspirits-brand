@@ -4,8 +4,8 @@
    усе — в базових правилах нижче. Бренд-модифікатори (data-brand) додають лише відмінності: YC — арка-шапка і рамка панелі beige,
    BS — шапка-бейдж на всю ширину панелі (відступ збоку = зверху) і верхній відступ панелі.
    Фон сторінки — той самий візерунок ромбів, що на каталозі (класс page-product на body, як page-catalog; те саме правило на .page-contacts — контакти): плитка від y=0 через зону header до футера; зона header прозора. */
-.page-product, .page-contacts { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
-.page-product .site-header, .page-contacts .site-header { background: transparent; }
+.page-product, .page-contacts, .page-feedback { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.page-product .site-header, .page-contacts .site-header, .page-feedback .site-header { background: transparent; }
 .product {
   --accent: var(--color-product-accent);
   --accent-line: var(--color-product-accent-line);

@@ -238,7 +238,7 @@
   --btn-focus-ring-offset:             var(--focus-ring-offset); /* відступ фокус-кільця від кнопки (= глобальне :focus-visible) */
   --btn-focus-ring-color-auto:         var(--focus-ring-color); /* колір кільця за замовчуванням = колір тексту контексту (currentColor): так працюють .btn на будь-якому фоні */
   --btn-focus-ring-color-on-dark:      var(--color-beige); /* кільце на ТЕМНОМУ тлі (пілюля хедера та її контроли): beige, бо currentColor темнішає в фокусі */
-  --btn-focus-ring-color-on-light:     var(--color-green); /* кільце на СВІТЛОМУ тлі (перемикач age-check): green */
+  --btn-focus-ring-color-on-light:     var(--color-green); /* кільце на СВІТЛОМУ тлі (перемикач check): green */
 
   /* btn--gold (hero, 194:1371) */
   --btn-gold-bg-default:         var(--color-gold);
@@ -450,7 +450,7 @@
   --btn-select-field-border-selected:  var(--btn-select-field-border-hover);
   --btn-select-field-option-bg-hover:  var(--color-field-bg-hover);
 
-  /* age-check (перемикач-чекбокс «запам'ятати» / згода): індикатор; selected = :checked */
+  /* check (перемикач-чекбокс «запам'ятати» / згода): індикатор; selected = :checked */
   --btn-check-bg-default:              var(--color-age-card);
   --btn-check-bg-selected:             var(--color-green);
   --btn-check-border-default:          var(--color-age-border);
@@ -736,22 +736,22 @@
 }
 
 /* ===================================================================
-   Контакти (contacts.html): ліва частина 8 колонок (карта + контактні дані), права 4 колонки (форма зворотного зв'язку).
+   Контакти (contacts.html): ліва частина 5 колонок (контактна інформація), права 7 колонок (мапа). Форма зворотного зв'язку — окрема сторінка feedback.html (блок «Зворотний зв'язок» нижче).
    Вузлів Figma немає — усе рішення дизайну, значення з палітри/масштабу. Дані (адреса, координати, теми) — src/data/contacts.js.
    Компоненти: src/styles/contacts.css (сторінка), components/field.css (поля форми), select--light у components/select.css.
    =================================================================== */
 :root {
   --columns-contacts: 12;                                       /* сітка сторінки: 12 колонок у контейнері (поля 50u, як на товарі) */
-  --span-contacts-main: 8;                                      /* ліва частина (карта + дані) ≈ 2/3 */
-  --span-contacts-aside: 4;                                     /* права частина (форма) ≈ 1/3 */
+  --span-contacts-main: 5;                                      /* ліва частина (контактна інформація) ≈ 5/12 */
+  --span-contacts-aside: 7;                                     /* права частина (мапа) ≈ 7/12 */
   --space-contacts-gap: var(--space-product-col-gap);           /* зазор між колонками/частинами 5u, як між фото й панеллю товару */
   --space-contacts-pad: var(--space-50);                        /* внутрішній відступ панелей і проміжок між блоками всередині */
   --size-contacts-panel-min-h: var(--size-product-frame-h);     /* мінімум висоти панелей = фрейм фото товару (100svh − 123u, не менше 700u): панелі заповнюють екран, на низьких вікнах сторінка скролиться */
-  --size-contacts-map-min-h: calc(360 * var(--u));              /* мінімум висоти карти; решту висоти лівої панелі (≈55–60%) бере карта (рядок 1fr) */
+  --size-contacts-map-min-h: calc(360 * var(--u));              /* мінімум висоти карти; карта розтягується на висоту рядка (панелі однакової висоти) */
   --filter-contacts-map: grayscale(0.85) sepia(0.5) hue-rotate(40deg) saturate(0.8) contrast(0.95); /* фільтр iframe мапи OSM під палітру сайту (зеленувато-бежевий тон) */
-  --columns-contacts-data: 6;                                   /* сітка контактних даних: 6 доріжок; рядок 1 — три колонки по 2, рядок 2 — дві по 3 */
-  --span-contacts-item: 2;                                      /* колонка рядка 1 (Адреса, Телефон, E-mail) */
-  --span-contacts-item-wide: 3;                                 /* колонка рядка 2 (Екскурсії, Бочкова торгівля) */
+  --columns-contacts-data: 2;                                   /* сітка контактних даних у лівій панелі: 2 колонки */
+  --span-contacts-item: 1;                                      /* звичайний блок (Телефон, E-mail, Екскурсії, Бочкова торгівля) */
+  --span-contacts-item-wide: 2;                                 /* блок на всю ширину (Адреса) */
   --space-contacts-item-gap: var(--space-30);                   /* проміжок між колонками/рядками контактних даних */
   --color-field-bg: var(--color-light);                         /* поле форми на бежевій панелі: світліше за панель */
   --color-field-bg-hover: var(--color-hover-acc-product);       /* hover/focus/відкрито: теплий беж (#E4E3D8), темніший за поле, світліший за панель */
@@ -763,6 +763,40 @@
   --color-contacts-highlight: var(--color-light);               /* м'який спалах фону форми при переході з ?topic=… (1 раз, --duration-bg) */
   --space-field-gap: var(--space-20);                           /* проміжок між полями форми */
   --space-field-label-gap: var(--space-10);                     /* підпис → поле */
+}
+
+/* ===================================================================
+   Зворотний зв'язок (feedback.html): ЄДИНЕ вікно (одна beige-панель) із двома стовпцями: ліворуч 5/12 — заголовок, тип звернення (radiogroup плиток),
+   контактні дані; праворуч 7/12 — повідомлення, згода й «Надіслати» внизу праворуч. Роздільник — тонка вертикальна лінія посередині зазору.
+   Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу. Стилі: src/styles/feedback.css, components/topic-tile.css, components/field.css, components/check.css.
+   =================================================================== */
+:root {
+  --columns-feedback: 12;                                       /* сітка вікна: 12 колонок */
+  --span-feedback-aside: 5;                                     /* лівий стовпець (тип звернення + контакти) ≈ 5/12 */
+  --span-feedback-main: 7;                                      /* правий стовпець (повідомлення) ≈ 7/12 */
+  --space-feedback-pad: var(--space-contacts-pad);              /* внутрішній відступ вікна 50u */
+  --space-feedback-col-gap: var(--space-50);                    /* зазор між стовпцями; лінія-роздільник — по центру зазору */
+  --size-feedback-window-min-h: var(--size-contacts-panel-min-h); /* мінімум висоти вікна = фрейм екрана (як панелі контактів) */
+  --size-feedback-message-min-h: calc(260 * var(--u));          /* мінімум висоти поля «Ваше повідомлення» */
+  --space-feedback-block-gap: var(--space-30);                  /* проміжок між блоками стовпця («Тип звернення», «Контактні дані») */
+  --space-topic-gap: var(--space-10);                           /* проміжок між плитками теми */
+  --size-topic-tile-min-h: var(--size-btn-h);                   /* мінімальна висота плитки теми = висота кнопки */
+
+  /* плитка-радіо «тип звернення» (.topic-tile): стани за системою select--field (default/hover/focus) та .btn--green (selected); нових кольорів немає */
+  --btn-choice-bg-default:             var(--btn-select-field-bg-default);
+  --btn-choice-bg-hover:               var(--btn-select-field-bg-hover);
+  --btn-choice-bg-focus:               var(--btn-select-field-bg-focus);
+  --btn-choice-bg-active:              color-mix(in srgb, var(--btn-choice-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-choice-bg-selected:            var(--btn-green-bg-default);
+  --btn-choice-bg-selected-hover:      var(--btn-green-bg-hover);
+  --btn-choice-bg-selected-active:     var(--btn-green-bg-active);
+  --btn-choice-text-default:           var(--color-green);
+  --btn-choice-text-selected:          var(--btn-green-text-default);
+  --btn-choice-border-default:         var(--btn-select-field-border-default);
+  --btn-choice-border-hover:           var(--btn-select-field-border-hover);
+  --btn-choice-border-focus:           var(--btn-select-field-border-focus);
+  --btn-choice-border-selected:        var(--btn-green-border-default);
+  --btn-choice-ring-color:             var(--btn-focus-ring-color-on-light);
 }
 
 /* ===================================================================

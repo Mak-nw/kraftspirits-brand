@@ -18,6 +18,8 @@
 @import './components/stat.css';
 @import './components/brand-half.css';
 @import './components/tour-card.css';
+@import './components/check.css';
+@import './components/topic-tile.css';
 @import './components/age-gate.css';
 @import './components/slider.css';
 @import './reveal.css';
@@ -26,6 +28,7 @@
 @import './catalog.css';
 @import './product.css';
 @import './contacts.css';
+@import './feedback.css';
 @import './barrels.css';
 @import './under-construction.css';
 @import './design-system.css';

@@ -129,5 +129,5 @@
 .select.is-focus { background: var(--btn-select-bg-focus); }
 .select.is-selected { background: var(--btn-select-bg-selected); }
 .select.is-focus .select__button::after { border-radius: var(--radius-select); outline: var(--btn-focus-ring-width) solid currentColor; outline-offset: var(--btn-focus-ring-offset); }
-.age-check.is-hover .age-check__box { border-color: var(--btn-check-border-hover); }
-.age-check.is-focus .age-check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }
+.check.is-hover .check__box { border-color: var(--btn-check-border-hover); }
+.check.is-focus .check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }

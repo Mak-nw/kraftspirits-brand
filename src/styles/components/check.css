@@ -1,0 +1,22 @@
+/* Компонент «Згода / перемикач» (.check): спільний для вікових воріт («Запам'ятати мій вибір») і форми зворотного зв'язку (згода на обробку даних).
+   Розмітка: <label class="check"><input class="check__input" type="checkbox"><span class="check__box" aria-hidden="true"></span><span class="check__label t-text">…</span></label>.
+   Стани — токени --btn-check-* (tokens.css): default / hover / focus-visible (кільце) / checked; розміри --size-age-check*, --border-age-check*. Обгортка форми (.check-field + помилка) — components/field.css. */
+.check { position: relative; display: inline-flex; align-items: center; gap: var(--space-15); padding: var(--space-10) var(--space-20); cursor: pointer; }
+.check__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.check__box {
+  position: relative; flex: none; width: var(--size-age-check); height: var(--size-age-check);
+  border: var(--border-age-check) solid var(--btn-check-border-default); border-radius: var(--radius-btn);
+  background: var(--btn-check-bg-default);
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease);
+}
+.check__box::after {
+  content: ''; position: absolute; left: 50%; top: 46%;
+  width: var(--size-age-check-tick-w); height: var(--size-age-check-tick-h);
+  border: solid var(--btn-check-tick); border-width: 0 var(--border-age-check-tick) var(--border-age-check-tick) 0;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
+  transition: transform var(--btn-transition-duration) var(--btn-transition-ease);
+}
+.check__input:checked + .check__box { background: var(--btn-check-bg-selected); border-color: var(--btn-check-border-selected); }
+.check__input:checked + .check__box::after { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+.check__input:focus-visible + .check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }
+@media (hover: hover) { .check:hover .check__box { border-color: var(--btn-check-border-hover); } }

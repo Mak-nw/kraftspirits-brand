@@ -1,0 +1,20 @@
+/* Плитка-радіо «Тип звернення» (.topic-tile) у контейнері .topic-group[role="radiogroup"] (feedback.html).
+   Розмітка: <div class="topic-group" role="radiogroup"> <button class="topic-tile" type="button" role="radio" aria-checked="false"><span class="topic-tile__label">…</span></button> … </div>.
+   Стани — токени --btn-choice-* (tokens.css): default / hover / focus-visible (кільце) / active / selected (aria-checked="true": заливка green, текст beige). Disabled не передбачено (тема завжди доступна).
+   Клавіатура (JS, contact-form.js): Tab заходить у групу на вибрану плитку (або першу), стрілки рухають і вибирають, Space/Enter вибирають, Home/End — перша/остання. */
+.topic-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-topic-gap); }
+.topic-tile {
+  display: flex; align-items: center; justify-content: flex-start; min-height: var(--size-topic-tile-min-h); margin: 0; padding: var(--space-10) var(--space-20);
+  background: var(--btn-choice-bg-default); color: var(--btn-choice-text-default);
+  border: var(--border-hairline) solid var(--btn-choice-border-default); border-radius: var(--radius-select);
+  font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-align: left;
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease);
+}
+.topic-tile:focus-visible { outline: var(--btn-focus-ring-width) solid var(--btn-choice-ring-color); outline-offset: var(--btn-focus-ring-offset); background: var(--btn-choice-bg-focus); border-color: var(--btn-choice-border-focus); transition-duration: var(--btn-transition-duration-focus); }
+@media (hover: hover) { .topic-tile:hover { background: var(--btn-choice-bg-hover); border-color: var(--btn-choice-border-hover); } }
+.topic-tile:active { background: var(--btn-choice-bg-active); transition-duration: var(--btn-transition-duration-focus); }
+.topic-tile[aria-checked="true"], .topic-tile[aria-checked="true"]:focus-visible { background: var(--btn-choice-bg-selected); color: var(--btn-choice-text-selected); border-color: var(--btn-choice-border-selected); }
+@media (hover: hover) { .topic-tile[aria-checked="true"]:hover { background: var(--btn-choice-bg-selected-hover); } }
+.topic-tile[aria-checked="true"]:active { background: var(--btn-choice-bg-selected-active); }
+.field.is-invalid .topic-tile[aria-checked="false"] { border-color: var(--color-field-error); }

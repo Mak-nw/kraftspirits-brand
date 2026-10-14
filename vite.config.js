@@ -20,7 +20,7 @@ const BUILD_BASE = normalizeBase(process.env.BASE_PATH);
 // %contacts.<ключ>% у HTML -> значення з src/data/contacts.js (адреса, координати, телефон, e-mail, посилання мапи, теми) з екрануванням для атрибутів/тексту
 const CONTACTS = contactsView(contacts);
 const escapeHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? escapeHtml(CONTACTS[key]) : m));
+const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? (key.endsWith('Html') ? CONTACTS[key] : escapeHtml(CONTACTS[key])) : m)); // ключі *Html — готова розмітка (екранування в contacts.js)
 
 // %barrels.<ключ>% у HTML -> значення з src/data/barrels.js (ціни, кількість пляшок, дрібний текст) для barrels.html
 const BARRELS = barrelsView(barrels);

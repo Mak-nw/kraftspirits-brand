@@ -1,9 +1,8 @@
-// Сторінка «Контакти»: форма зворотного зв'язку (валідація, відправка, успіх) і передвибір теми з ?topic=… (#form).
+// Сторінка «Зворотний зв'язок» (feedback.html): форма (вибір теми — radiogroup плиток, валідація, відправка, успіх) і передвибір теми з ?topic=… (+ ?size= для бочок).
 // Дані (теми, e-mail) — src/data/contacts.js. Бекенду на статичному хостингу немає, тому канал відправки один і конфігурований:
 //  • VITE_FORM_ENDPOINT задано (змінна середовища збірки) → POST JSON на цей URL (Formspree/Getform/власний/Telegram-проксі), очікується 2xx;
 //  • не задано (зараз) → чесний запасний канал: відкривається поштовий клієнт із готовим листом (mailto: на e-mail із contacts.js).
 // Дані форми не зберігаються й не логуються.
-import { initSelect } from './select.js';
 import { contacts } from '../data/contacts.js';
 
 const ENDPOINT = (import.meta.env.VITE_FORM_ENDPOINT || '').trim();
@@ -13,28 +12,57 @@ const form = document.getElementById('contact-form');
 if (form) init();
 
 function init() {
-  const aside = document.getElementById('form');
+  const aside = document.getElementById('form'); // вікно (якір #form)
   const success = aside.querySelector('[data-success]');
   const successTitle = success.querySelector('[data-success-title]');
   const successText = success.querySelector('[data-success-text]');
   const submitBtn = form.querySelector('[data-submit]');
   const submitLabel = form.querySelector('[data-submit-label]');
   const alertEl = form.querySelector('[data-form-alert]');
-  const selectEl = form.querySelector('[data-select="topic"]');
-  const topicBtn = selectEl.querySelector('.select__button');
-  const select = initSelect(selectEl);
   const el = (name) => form.elements[name];
+  const messageEl = el('message');
+  const defaultPlaceholder = messageEl.getAttribute('placeholder');
+
+  // ---------- тема: radiogroup плиток (role="radio", aria-checked, roving tabindex), значення — у прихованому полі topic ----------
+  const groupEl = form.querySelector('[role="radiogroup"]');
+  const tiles = [...groupEl.querySelectorAll('[role="radio"]')];
+  const topicInput = el('topic');
+  const select = {
+    get value() { return topicInput.value; },
+    set(value) {
+      const idx = tiles.findIndex((t) => t.dataset.value === value);
+      topicInput.value = idx < 0 ? '' : value;
+      tiles.forEach((t, i) => {
+        t.setAttribute('aria-checked', String(i === idx));
+        t.tabIndex = idx < 0 ? (i === 0 ? 0 : -1) : (i === idx ? 0 : -1); // одна плитка в Tab-порядку: вибрана або перша
+      });
+      const hint = contacts.topics.find((t) => t.value === value)?.hint;
+      messageEl.placeholder = hint || defaultPlaceholder;
+      groupEl.dispatchEvent(new CustomEvent('topic-change', { bubbles: true, detail: { value: topicInput.value } }));
+    },
+  };
+  const pick = (i) => { const n = (i + tiles.length) % tiles.length; select.set(tiles[n].dataset.value); tiles[n].focus(); };
+  tiles.forEach((t, i) => t.addEventListener('click', () => select.set(t.dataset.value)));
+  groupEl.addEventListener('keydown', (e) => {
+    const i = tiles.indexOf(document.activeElement);
+    if (i < 0) return;
+    const next = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: tiles.length - 1 }[e.key];
+    if (next !== undefined) { e.preventDefault(); pick(next); return; }
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); select.set(tiles[i].dataset.value); }
+  });
+  const topicFocusTarget = () => tiles.find((t) => t.tabIndex === 0) || tiles[0];
+
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let submitted = false;
 
-  topicBtn.setAttribute('aria-describedby', 'contact-topic-error');
   const topicLabel = (value) => contacts.topics.find((t) => t.value === value)?.label || '';
 
   // ---------- валідація ----------
   const PHONE_RE = /^[\d\s()+\-.]+$/;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const digits = (s) => s.replace(/\D/g, '');
-  const controlOf = (name) => (name === 'topic' ? topicBtn : name === 'consent' ? el('consent') : el(name));
+  const controlOf = (name) => (name === 'topic' ? groupEl : el(name));
+  const focusOf = (name) => (name === 'topic' ? topicFocusTarget() : el(name)).focus();
   const wrapOf = (name) => form.querySelector(`[data-field="${name}"]`);
   const errorOf = (name) => wrapOf(name).querySelector('.field__error > span');
 
@@ -74,7 +102,7 @@ function init() {
   const revalidate = () => { if (submitted) paintAll(check()); };
 
   form.addEventListener('input', revalidate);
-  selectEl.addEventListener('select-change', revalidate);
+  groupEl.addEventListener('topic-change', revalidate);
   form.addEventListener('change', revalidate);
 
   // ---------- відправка ----------
@@ -144,7 +172,7 @@ function init() {
     success.setAttribute('aria-hidden', 'true');
     form.inert = false;
     form.removeAttribute('aria-hidden');
-    topicBtn.focus();
+    topicFocusTarget().focus();
   };
 
   form.addEventListener('submit', async (e) => {
@@ -154,7 +182,7 @@ function init() {
     const errors = check();
     paintAll(errors);
     const firstBad = ORDER.find((n) => errors[n]);
-    if (firstBad) { controlOf(firstBad).focus(); return; }
+    if (firstBad) { focusOf(firstBad); return; }
     if (el('website').value) { showSuccess('sent'); return; } // медова пастка: бот заповнив приховане поле — «успіх» без відправки
     const d = payload();
     setLoading(true);
@@ -207,11 +235,4 @@ function init() {
   const size = BARREL_SIZES[params.get('size')];
   if (size && initial === 'barrel' && !el('message').value.trim()) el('message').value = `Цікавить бочка ${size}`;
   if (initial) applyTopic(initial);
-
-  // посилання «Замовити …» на цій самій сторінці: без перезавантаження
-  document.querySelectorAll('[data-topic-link]').forEach((a) => a.addEventListener('click', (e) => {
-    e.preventDefault();
-    history.replaceState(null, '', a.getAttribute('href'));
-    if (!form.inert) applyTopic(a.dataset.topicLink); else { showForm(); applyTopic(a.dataset.topicLink); }
-  }));
 }

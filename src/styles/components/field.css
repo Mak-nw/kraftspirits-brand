@@ -25,10 +25,10 @@ textarea.field__control { resize: vertical; min-height: calc(var(--size-btn-h) *
 .field__error > span::before { content: ''; display: inline-block; width: var(--size-field-error-mark); height: var(--size-field-error-mark); margin-right: var(--space-10); background: currentColor; rotate: var(--angle-chip-diamond); } /* ромб-маркер: помилка читається не лише кольором */
 .field.is-invalid .field__control, .field.is-invalid .select__field { border-color: var(--color-field-error); box-shadow: 0 0 0 var(--border-hairline) var(--color-field-error); }
 
-/* згода (чекбокс): розмітка й індикатор — компонент .age-check (age-gate.css); тут лише відмінності форми: без бокових відступів, посилання над невидимим чекбоксом */
+/* згода (чекбокс): розмітка й індикатор — компонент .check (age-gate.css); тут лише відмінності форми: без бокових відступів, посилання над невидимим чекбоксом */
 .check-field { display: flex; flex-direction: column; gap: var(--space-field-label-gap); color: var(--color-green); }
-.check-field .age-check { align-items: flex-start; padding: var(--space-10) 0; }
-.check-field .age-check__box { margin-top: var(--space-5); }
-.check-field .age-check__label a { position: relative; z-index: 1; color: var(--color-green); text-decoration: underline; text-underline-offset: 0.2em; transition: color var(--duration-fast) var(--ease-out); } /* юридичне посилання підкреслене (як в age-gate: виняток із правила «без підкреслень») */
-@media (hover: hover) { .check-field .age-check__label a:hover { color: var(--color-teal); } }
-.check-field.is-invalid .age-check__box { border-color: var(--color-field-error); }
+.check-field .check { align-items: flex-start; padding: var(--space-10) 0; }
+.check-field .check__box { margin-top: var(--space-5); }
+.check-field .check__label a { position: relative; z-index: 1; color: var(--color-green); text-decoration: underline; text-underline-offset: 0.2em; transition: color var(--duration-fast) var(--ease-out); } /* юридичне посилання підкреслене (як в age-gate: виняток із правила «без підкреслень») */
+@media (hover: hover) { .check-field .check__label a:hover { color: var(--color-teal); } }
+.check-field.is-invalid .check__box { border-color: var(--color-field-error); }
