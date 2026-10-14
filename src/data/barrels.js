@@ -9,9 +9,16 @@ export const barrels = {
   // ціни (формат «€ 6 000»)
   price200: `€${NB}6${NB}000`,
   price50: `€${NB}2${NB}000`,
-  // скільки пляшок 0,7 л і вартість вмісту однієї пляшки
+  // скільки пляшок 0,7 л і вартість вмісту однієї пляшки (+ форма слова за числом: 383 пляшки, 96 пляшок)
   bottles200: 383,
   bottles50: 96,
+  bottles200Word: 'пляшки',
+  bottles50Word: 'пляшок',
+  // що входить у ціну (рішення замовника 15.10: «власність, сертифікат»). Інших пунктів НЕ вигадувати.
+  includeOwnership: 'Бочка у вашій власності',
+  includeCertificate: 'Сертифікат на бочку',
+  // СЛОТ: нейтральний рядок, доки замовник не дасть умов (зберігання, візити, розлив, терміни). Замінити на конкретні пункти тут.
+  includeMore: 'Інші умови обговоримо під час замовлення',
   cost200: `€${NB}15,66`,
   cost50: `€${NB}20,83`,
   // міцність: у бочку / питна
@@ -36,6 +43,11 @@ export function barrelsView(b) {
     price50: b.price50,
     bottles200: b.bottles200,
     bottles50: b.bottles50,
+    bottles200Word: b.bottles200Word,
+    bottles50Word: b.bottles50Word,
+    includeOwnership: b.includeOwnership,
+    includeCertificate: b.includeCertificate,
+    includeMore: b.includeMore,
     cost200: b.cost200,
     cost50: b.cost50,
     abvIn: b.abvIn,

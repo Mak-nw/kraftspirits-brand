@@ -2,7 +2,6 @@
    Секції: hero (фото + паралакс, як на головній) → переваги → «від бочки до пляшки» (sticky-сцена зліва, кроки справа) → вигода → подальша витримка → ціна.
    SVG-ілюстрації: stroke/fill лише currentColor, штрих --svg-stroke, без градієнтів; анімації — transform / opacity / stroke-dashoffset. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
-.t-note { font: var(--type-note-weight) var(--type-note-size)/var(--type-note-lh) var(--type-note-font); letter-spacing: var(--type-note-ls); }
 
 /* ---------- «Світло в погребі»: кімнати, візерунок, зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
    Кімната = секція з власним тлом (wood / cellar / paper). Світле — лише текст, лінії та одна «паперова» кімната.
@@ -122,7 +121,7 @@
 .bx-chapter__text { margin-top: var(--space-barrels-chapter-text); max-width: var(--container-barrels-copy); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
 
 /* демо S3 у design-system.html */
-.ds-barrels-how { align-items: stretch; gap: var(--space-barrels-col-gap); padding: var(--space-50); }
+.demo-panel.ds-barrels-how { align-items: stretch; gap: var(--space-barrels-col-gap); padding: var(--space-50); }
 .ds-barrels-stage { flex: none; width: var(--size-barrels-demo-stage-w); height: var(--size-barrels-demo-stage-h); }
 .ds-barrels-stage .bx-arch { --bx-rise: calc(var(--size-barrels-demo-stage-w) * var(--ratio-barrels-arch-rise)); }
 .ds-barrels-how .bx-chapter { flex: 1; min-height: 0; }
@@ -166,12 +165,54 @@
 .bx-head__orn { stroke: var(--barrel-tone); }
 .barrel-card__name { color: var(--color-green); }
 
-/* ---------- Ціна ---------- */
-.barrels-price { padding: var(--space-barrels-section-y) var(--space-product-page-x); color: var(--color-light); }
-.barrels-route { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); width: var(--size-barrels-route-w); max-width: 100%; color: var(--color-gold); }
-.bx-route__line { stroke-dasharray: 0.01 12; stroke-width: calc(var(--svg-stroke) * 2); }
-.bx-route__dot { fill: none; }
-.price-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-barrels-grid-gap); width: 100%; max-width: var(--container-wide); margin-inline: auto; }
-.price-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); padding: var(--space-70) var(--space-50); border-radius: var(--radius-panel); background: var(--color-beige); color: var(--color-green); text-align: center; }
-.price-card__price { font: var(--type-stat-weight) var(--font-size-barrels-price)/var(--lh-none) var(--type-stat-font); white-space: nowrap; }
-.barrels-note { max-width: var(--container-barrels-note); margin: var(--space-50) auto 0; text-align: center; opacity: var(--opacity-barrels-note); }
+/* ---------- S6 «Ціна»: кімната cellar, сертифікати + маршрут + фото в арці ----------
+   Одна сітка секції: [50 L][200 L][фото]. Сертифікати — subgrid на 5 спільних рядків (назва, ціна, факти, «що входить», кнопка):
+   однакова структура, рядки обох сертифікатів на одних лініях за будь-якої довжини тексту. 50 L — першим, ширшим (--fr-barrels-cert-accent),
+   з яскравішою рамкою й золотою кнопкою (рішення замовника). Подвійна рамка: зовнішня border + внутрішня ::after, ромби — центр = кут
+   внутрішньої рамки. Маркери списку — ромб, центр = середина висоти великих літер першого рядка (базова лінія + --font-cap-height-sans). */
+.bx-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
+.barrels-price { padding-block: var(--space-barrels-section-y); }
+.barrels-price__grid { display: grid; grid-template-columns: minmax(0, var(--fr-barrels-cert-accent)) minmax(0, 1fr) calc(var(--size-barrels-price-photo-w) + var(--space-barrels-price-photo-gap)); grid-template-rows: repeat(9, auto); column-gap: var(--space-barrels-cert-gap); width: var(--container-barrels); margin-inline: auto; }
+.barrels-price__title { grid-column: 1 / 3; grid-row: 1; margin-top: var(--shift-barrels-cap-top); }
+.bx-route { grid-column: 1 / 3; grid-row: 2; display: flex; align-items: center; gap: var(--space-barrels-route-gap); margin-block: var(--space-barrels-stack) var(--space-50); color: var(--color-barrels-ink); }
+.bx-route__label { font: var(--fw-semibold) var(--font-size-barrels-caption)/1 var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-muted); }
+.bx-route__point { font: var(--fw-semibold) var(--font-size-title)/1 var(--font-family-serif); letter-spacing: var(--ls-wide); white-space: nowrap; }
+.bx-route__line { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: var(--size-barrels-corner); color: var(--color-barrels-accent); background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)) 0 50% / 100% var(--border-hairline) no-repeat; }
+.bx-route__line::before, .bx-route__line::after { content: ''; position: absolute; top: 50%; translate: 0 -50%; width: var(--size-barrels-corner); aspect-ratio: 1; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-route__line::before { left: 0; }
+.bx-route__line::after { right: 0; }
+.bx-route__wave { position: relative; z-index: 1; width: var(--size-barrels-route-wave); padding-inline: var(--space-10); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; background: var(--color-barrels-room-cellar); }
+
+.bx-cert { position: relative; grid-row: 3 / span 6; display: grid; grid-template-rows: subgrid; align-items: start; padding: var(--space-barrels-cert-pad); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); background: var(--color-barrels-cert-bg); }
+.bx-cert::after { content: ''; position: absolute; inset: var(--space-barrels-frame-gap); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); pointer-events: none; }
+.bx-cert--accent { border-color: var(--color-barrels-hairline); background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--color-barrels-lightpool), transparent), var(--color-barrels-cert-bg); }
+.bx-cert--accent::after { border-color: var(--color-barrels-hairline); }
+.bx-cert__corner { position: absolute; width: var(--size-barrels-corner); aspect-ratio: 1; translate: -50% -50%; background: var(--color-barrels-hairline-soft); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-cert--accent .bx-cert__corner { background: var(--color-barrels-accent); }
+.bx-cert__corner--tl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
+.bx-cert__corner--tr { left: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
+.bx-cert__corner--bl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); }
+.bx-cert__corner--br { left: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); top: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); }
+.bx-cert__title { margin-bottom: var(--space-barrels-stack); font: var(--fw-semibold) var(--font-size-barrels-title)/1.1 var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-cert__price { margin-bottom: var(--space-barrels-cert-row); margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); color: var(--color-barrels-accent); white-space: nowrap; }
+.bx-cert__facts { display: contents; } /* рядки фактів — прямі рядки subgrid: лінії між ними збігаються в обох сертифікатах за будь-якого переносу підпису */
+.bx-cert__fact { align-self: stretch; display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-barrels-hairline-soft); }
+.bx-cert__fact:first-child { border-top: var(--border-hairline) solid var(--color-barrels-hairline-soft); }
+.bx-cert__fact:last-child { margin-bottom: var(--space-barrels-cert-row); }
+.bx-cert__fact dt { font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
+.bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/1 var(--font-family-serif); font-variant-numeric: tabular-nums; color: var(--color-barrels-ink); white-space: nowrap; }
+.bx-cert__list { display: flex; flex-direction: column; gap: var(--space-10); margin-bottom: var(--space-barrels-cert-row); }
+.bx-cert__item { padding-left: calc(var(--size-barrels-bullet) + var(--space-barrels-bullet-gap)); text-indent: calc(-1 * (var(--size-barrels-bullet) + var(--space-barrels-bullet-gap))); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink); }
+.bx-cert__item::before { content: ''; display: inline-block; width: var(--size-barrels-bullet); aspect-ratio: 1; margin-right: var(--space-barrels-bullet-gap); vertical-align: baseline; translate: 0 calc((var(--font-cap-height-sans) * 1em - var(--size-barrels-bullet)) / -2); background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-cert__item--slot { color: var(--color-barrels-ink-muted); }
+.bx-cert__item--slot::before { background: var(--color-barrels-hairline-soft); }
+.bx-cert .btn { justify-self: start; }
+.barrels-price__note { grid-column: 1 / 3; grid-row: 9; max-width: var(--container-barrels-note); margin-top: var(--space-50); font: var(--fw-medium) var(--font-size-barrels-note)/1.5 var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
+.barrels-price__photo { grid-column: 3; grid-row: 1 / -1; justify-self: end; width: var(--size-barrels-price-photo-w); margin: 0; --bx-rise: calc(var(--size-barrels-price-photo-w) * var(--ratio-barrels-arch-rise)); }
+.bx-arch--photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bx-arch--photo::after { z-index: 1; }
+
+/* демо S6 у design-system.html */
+.demo-panel.ds-barrels-price { flex-direction: column; align-items: stretch; padding: var(--space-50); }
+.ds-barrels-certs { display: grid; grid-template-columns: minmax(0, var(--fr-barrels-cert-accent)) minmax(0, 1fr); grid-template-rows: repeat(6, auto); column-gap: var(--space-barrels-cert-gap); }
+.ds-barrels-certs .bx-cert { grid-row: 1 / span 6; }

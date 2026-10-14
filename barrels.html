@@ -80,19 +80,19 @@
       </div>
     </section>
 
-    <section class="barrels-price pattern-catalog" id="price" aria-labelledby="price-title">
-      <div class="barrels-head">
-        <h2 class="t-h2" id="price-title" data-reveal="rise">Ціна</h2>
-        <div class="barrels-route" data-reveal="rise">
-          <!--@include components/illustration-route-->
-          <p class="barrels-route__text t-kicker">Маршрут: %barrels.routeFrom% → %barrels.routeTo%</p>
-        </div>
+    <!-- Кімната «погріб» (teal): два «сертифікати» зі спільною сіткою рядків (subgrid), 50 L першим і з акцентом (рішення замовника),
+         праворуч — реальне фото днищ із крейдяними номерами в арці (СЛОТ: можна замінити на нову зйомку) -->
+    <section class="barrels-price bx-room bx-room--cellar" id="price" aria-labelledby="price-title">
+      <div class="barrels-price__grid">
+        <h2 class="barrels-price__title t-h2" id="price-title" data-reveal="rise">Ціна</h2>
+        <!--@include components/barrels-route-->
+        <!--@include components/barrels-cert size="50 L" mod=" bx-cert--accent" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50" btn="btn--gold"-->
+        <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200" btn="btn--beige"-->
+        <p class="barrels-price__note">%barrels.disclaimer%</p>
+        <figure class="barrels-price__photo bx-arch bx-arch--photo" data-parallax="soft" data-slot="Фото: реальний кадр дистилерії (photo/…/Обладнання/IMG_2222) — за потреби замінити на нову зйомку бочок">
+          <img src="/assets/img/barrels-heads-chalk.webp" width="1080" height="1620" alt="Днища дубових бочок із крейдяними номерами на складі дистилерії" loading="lazy" decoding="async">
+        </figure>
       </div>
-      <div class="price-grid">
-        <!--@include components/price-card size="200 L" price="%barrels.price200%" param="200"-->
-        <!--@include components/price-card size="50 L" price="%barrels.price50%" param="50"-->
-      </div>
-      <p class="barrels-note t-note" data-reveal="rise">%barrels.disclaimer%</p>
     </section>
   </main>
   <!--@include footer-->

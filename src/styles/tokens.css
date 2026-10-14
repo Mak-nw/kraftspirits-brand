@@ -860,13 +860,6 @@
   --color-barrel-port: var(--color-teal);
   --color-barrel-sherry: var(--color-green);
 
-  /* Ціна */
-  --font-size-barrels-price: calc(120 * var(--u));    /* «€ 6 000» */
-  --size-barrels-route-w: calc(760 * var(--u));       /* лінія маршруту */
-  --container-barrels-note: calc(900 * var(--u));     /* дрібний текст під цінами */
-  --opacity-barrels-note: 0.75;                       /* приглушений колір дрібного тексту (контраст light на green ≥ 7:1 і при 0.75) */
-  --type-note-font: var(--font-family-sans); --type-note-weight: var(--fw-medium); --type-note-size: var(--font-size-small); --type-note-lh: 1.5; --type-note-ls: var(--ls-wide); /* дрібний юридичний/довідковий текст 12u */
-
   /* ---------- «Світло в погребі» (редизайн 15.10, рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
      Кожна секція — «кімната» зі своїм тлом; світле — лише текст, тонкі лінії та одна «паперова» секція. Нових відтінків немає: лише аліаси й color-mix палітри.
      Документація з живими зразками — design-system.html, розділ «Ф'ючерсні бочки». */
@@ -936,4 +929,22 @@
   --shift-barrels-cap-top: -0.18em;                   /* оптика: верх чорнила капітелі EB Garamond (lh 1) = верх бокса; виміряно 0.17–0.19em на 1200–1920 */
   --size-barrels-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
   --size-barrels-demo-stage-h: calc(600 * var(--u));
+
+  /* S6 «Ціна»: сертифікати (спільна сітка рядків — subgrid), маршрут, фото в арці */
+  --fr-barrels-cert-accent: 1.14fr;                   /* 50 L ширший за 200 L (рішення замовника: першим просуваємо 50 L) */
+  --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами */
+  --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле сертифіката (від зовнішньої рамки) */
+  --space-barrels-cert-row: var(--space-30);          /* вертикальний крок між рядками сертифіката */
+  --color-barrels-cert-bg: color-mix(in srgb, var(--color-teal) 92%, var(--color-light)); /* «папір» сертифіката: на півтону світліший за кімнату */
+  --size-barrels-corner: calc(9 * var(--u));          /* ромб у кутах внутрішньої рамки (центр = кут рамки) */
+  --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» ≈ 3em має вміститися у вужчий (200 L) сертифікат із запасом */
+  --shift-barrels-price-ink: 0.026em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — оптична поправка */
+  --font-size-barrels-fact: calc(26 * var(--u));      /* значення у рядках «пляшок / вартість вмісту» (EB Garamond, tabular) */
+  --size-barrels-bullet: calc(7 * var(--u));          /* ромб-маркер пункту списку: центр = середина висоти великих літер першого рядка */
+  --space-barrels-bullet-gap: calc(14 * var(--u));
+  --size-barrels-price-photo-w: calc(380 * var(--u)); /* фото в арці праворуч */
+  --space-barrels-price-photo-gap: calc(70 * var(--u)); /* додатковий відступ фото від сертифікатів (понад --space-barrels-cert-gap) */
+  --space-barrels-route-gap: var(--space-20);
+  --size-barrels-route-wave: calc(48 * var(--u));
+  --container-barrels-note: calc(900 * var(--u));
 }

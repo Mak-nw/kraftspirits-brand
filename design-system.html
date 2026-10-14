@@ -1102,11 +1102,15 @@
         </div>
       </div>
 
-      <p class="demo-label t-kicker">price-card (size, price, param → ?topic=barrel&amp;size=…): ціна EB Garamond --font-size-barrels-price, кнопка btn--green; дрібний текст .t-note (12u) під цінами</p>
-      <div class="demo-panel theme-green">
-        <!--@include components/price-card size="200 L" price="€&nbsp;6&nbsp;000" param="200"-->
+      <p class="demo-label t-kicker">S6 «Ціна» (кімната cellar): barrels-cert (size, mod: bx-cert--accent, price, bottles, cost, param → ?topic=barrel&amp;size=…, btn) — сертифікати в одній сітці секції; кожен — subgrid на 6 СПІЛЬНИХ рядків (назва, ціна, 2 рядки фактів, «що входить», кнопка): однакова структура, базові лінії й лінії фактів обох сертифікатів збігаються за будь-якого переносу (виміряно Δ0 на 1200–1920). 50 L — першим, ширшим (--fr-barrels-cert-accent), золота рамка/ромби/кнопка btn--gold, «світло» зверху (рішення замовника: першим просуваємо 50 L); 200 L — м'яка рамка, btn--beige. Подвійна рамка: border + ::after (зазор --space-barrels-frame-gap), ромби — центр = кут внутрішньої рамки (±0.4px). Пункти «що входить»: власність і сертифікат (рішення замовника) + нейтральний СЛОТ-рядок (data-slot; текст — src/data/barrels.js includeMore). Маркер — ромб, центр = середина капітелі першого рядка (базова лінія + --font-cap-height-sans, ±0.5px). Ліва вісь назви/ціни/фактів/маркерів/кнопки спільна (−0.3…+1px; «€» — поправка --shift-barrels-price-ink). barrels-route — маршрут: лінія = середина капітелі назв (≤0.75px), ромби на кінцях лінії.</p>
+      <div class="demo-panel bx-room bx-room--cellar ds-barrels-price">
+        <!--@include components/barrels-route-->
+        <div class="ds-barrels-certs">
+          <!--@include components/barrels-cert size="50 L" mod=" bx-cert--accent" price="€&nbsp;2&nbsp;000" bottles="96" cost="€&nbsp;20,83" param="50" btn="btn--gold"-->
+          <!--@include components/barrels-cert size="200 L" price="€&nbsp;6&nbsp;000" bottles="383" cost="€&nbsp;15,66" param="200" btn="btn--beige"-->
+        </div>
       </div>
-      <p class="ds-note ds-meta">Маршрут — illustration-route. Анімації сторінки: лише transform / opacity / stroke-dashoffset; нескінченні цикли — на паузі поза в'юпортом, при prefers-reduced-motion вимкнені.</p>
+      <p class="ds-note ds-meta">Анімації сторінки: лише transform / opacity / stroke-dashoffset; нескінченні цикли — на паузі поза в'юпортом, при prefers-reduced-motion вимкнені.</p>
     </section>
 
     <section class="ds-section" id="picker-events">
