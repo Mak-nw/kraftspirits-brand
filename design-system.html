@@ -1081,11 +1081,10 @@
         </div>
       </div>
 
-      <p class="demo-label t-kicker">process-step (ill: pour | evap | fill, title, value, text, mod): власна зациклена анімація (--duration-loop-fast 2s краплі, --duration-loop-mid 4s пара, --duration-loop 8s наповнення пляшки); пауза поза екраном (.is-playing на [data-loop], barrels.js); reduced-motion — статичні кадри</p>
-      <div class="demo-panel theme-beige" data-loop>
-        <!--@include components/process-step ill="pour" title="1 · Заливка" value="63%" text="У бочку заливається дистилят міцністю близько 63%"-->
-        <!--@include components/process-step ill="evap" title="2 · Витримка" value="«частка ангелів»" mod=" process-step__value--word" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
-        <!--@include components/process-step ill="fill" title="3 · Розлив" value="40%" text="Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л"-->
+      <p class="demo-label t-kicker">S3 «Від бочки до пляшки» (кімната cellar + ромб): barrels-chapter (step: pour | angels | bottle, n, value, note, title, text). Однакова внутрішня сітка всіх розділів: лінія з ромбом → цифра-гігант 240u (+ підпис «орієнтовно» на ТІЙ САМІЙ базовій лінії) → назва → пояснення; ліва вісь чорнила ромба, цифри, назви й тексту спільна (поправки бокових полів цифр --shift-barrels-numeral-*, виміряно по чорнилу ≤1.4px на 1200–1920). barrels-scene — гравюра у sticky-арці .bx-arch--stage (подвійна золота рамка, лампа, «світло в погребі»): data-step секції (barrels.js) — активна частина на повну силу, решта --opacity-barrels-dim; рівень рідини в бочці/пляшці — стан розділу (--shift-barrels-cask-*), не прив'язка до скролу; цикли (струмінь, пара, трубка) — лише активного розділу й лише у в'юпорті. Демо: стан «2 · Витримка».</p>
+      <div class="demo-panel bx-room bx-room--cellar bx-room--pattern ds-barrels-how" data-steps data-step="2">
+        <div class="ds-barrels-stage"><div class="bx-arch bx-arch--stage"><svg class="bx-lamp" viewBox="0 0 60 84" aria-hidden="true" focusable="false"><path d="M30 0 V40 M16 40 H44 L52 58 H8 Z M24 58 Q30 68 36 58"/></svg><!--@include components/barrels-scene--></div></div>
+        <!--@include components/barrels-chapter step="angels" n="2" value="≈15%" note="орієнтовно" title="Витримка" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
       </div>
 
       <p class="demo-label t-kicker">profit-panel (size, count, cost, mod: profit-panel--lg | --sm) + illustration-barrel: лічильник data-count-to 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; у DOM — фінальне значення; на barrels.html до старту число приховане opacity 0 (без мигання), reduced-motion — одразу фінальне); ряд пляшок — декоративний (bottle-0-7, 10 шт. + «+ ще»)</p>
@@ -1107,7 +1106,7 @@
       <div class="demo-panel theme-green">
         <!--@include components/price-card size="200 L" price="€&nbsp;6&nbsp;000" param="200"-->
       </div>
-      <p class="ds-note ds-meta">Сцена «від бочки до пляшки» — illustration-process (viewBox 800×440, цикл --duration-loop-slow 12s: заливка → «частка ангелів» → розлив; ліва колонка sticky як .product-media), маршрут — illustration-route. Анімації: transform / opacity / stroke-dashoffset.</p>
+      <p class="ds-note ds-meta">Маршрут — illustration-route. Анімації сторінки: лише transform / opacity / stroke-dashoffset; нескінченні цикли — на паузі поза в'юпортом, при prefers-reduced-motion вимкнені.</p>
     </section>
 
     <section class="ds-section" id="picker-events">

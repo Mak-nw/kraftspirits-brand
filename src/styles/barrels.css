@@ -60,68 +60,72 @@
   .advantage-card:hover .bx-sparks { transform: translateY(var(--shift-barrels-spark)); }
 }
 
-/* ---------- Як це працює ---------- */
-.barrels-how { padding: var(--space-barrels-how-pad-y) var(--space-product-page-x) var(--space-product-page-bottom); }
-.barrels-how__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-product-col-gap); align-items: start; max-width: var(--size-product-page-w); margin-inline: auto; }
-.barrels-stage { position: sticky; top: var(--offset-product-stage-sticky); align-self: start; display: flex; flex-direction: column; gap: var(--space-20); height: var(--size-product-frame-h); padding: var(--space-50); border-radius: var(--radius-product-frame); background: var(--color-beige); color: var(--color-green); overflow: hidden; }
-.barrels-stage__title { flex: none; }
-.barrels-stage__scene { flex: 1; min-height: 0; }
-.barrels-steps { display: flex; flex-direction: column; gap: var(--space-product-col-gap); }
-.process-step { display: flex; flex-direction: column; justify-content: center; gap: var(--space-30); min-height: var(--size-barrels-step-min-h); padding: var(--space-barrels-step-pad-y) var(--space-50); border-radius: var(--radius-product-frame); background: var(--color-beige); color: var(--color-green); }
-.process-step__row { display: flex; align-items: center; gap: var(--space-50); }
-.process-step__art { flex: none; width: var(--size-barrels-step-art); aspect-ratio: 4 / 3; }
-.process-step__value { font: var(--type-stat-weight) var(--font-size-stat)/var(--lh-none) var(--type-stat-font); }
-.process-step__value--word { font: var(--type-hero-weight) var(--font-size-hero)/var(--lh-tight) var(--type-hero-font); text-transform: uppercase; }
-.process-step__text { font: var(--fw-medium) var(--type-barrels-step-text-size)/var(--lh-normal) var(--font-family-serif); }
+/* ---------- S3 «Від бочки до пляшки»: кімната cellar, sticky-арка з гравюрою + три розділи-цифри ----------
+   Внутрішня сітка розділу однакова в усіх трьох: лінія з ромбом → цифра (+ підпис «орієнтовно») → назва → пояснення. Ліві краї чорнила
+   ромба, цифри, назви й пояснення — одна вісь (оптичні поправки цифр — токени --shift-barrels-numeral-*, виміряні по чорнилу).
+   Гравюра: активний розділ (data-step на секції, barrels.js) — його частина на повну силу, решта приглушена; рівень рідини в бочці
+   й пляшці — СТАН розділу (transition), а не прив'язка до скролу. Нескінченні цикли (струмінь, пара, трубка) — лише в активному
+   розділі й лише поки секція у в'юпорті (.is-playing). Без JS — уся сцена видима, бочка й пляшка повні. */
+.barrels-how { padding-block: var(--space-barrels-section-y); }
+.barrels-how__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-barrels-col-gap); align-items: start; width: var(--container-barrels); margin-inline: auto; }
+.barrels-how__stage { position: sticky; top: var(--offset-barrels-stage-top); height: var(--size-barrels-stage-h); }
+.barrels-how__title { margin-top: var(--shift-barrels-cap-top); text-wrap: balance; } /* верх капітелі H2 = верх (склепіння) арки */
 
-/* SVG-сцена і мініатюри кроків: зациклені анімації; паузa поза екраном (barrels.js ставить .is-playing на секцію; без JS грають завжди) */
-.bx-scene { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
-.bx-scene text { fill: currentColor; stroke: none; }
-.bx-num { font: var(--fw-semibold) calc(var(--svg-text-lg) * 1px)/1 var(--font-family-serif); }
-.bx-cap { font: var(--fw-medium) calc(var(--svg-text-sm) * 1px)/1 var(--font-family-sans); letter-spacing: var(--ls-wide); }
-.bx-ground { opacity: var(--opacity-barrels-track); }
-.bx-liquid-fill { fill: currentColor; stroke: none; opacity: var(--opacity-barrels-liquid); }
-.bx-liquid--barrel { transform: translateY(45px); }
-.bx-liquid--bottle, .bx-liquid--step { transform: translateY(18px); }
-.bx-pipe-track { opacity: var(--opacity-barrels-track); }
-.bx-pipe-flow, .bx-stream { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
-.bx-stream--in { opacity: 1; }
-.bx-vapor-line { opacity: 0.8; }
-.bx-vapor, .bx-ripple { opacity: 1; }
-.bx-ripple { transform-box: fill-box; transform-origin: center; opacity: 0; }
-.bx-drop { transform-box: fill-box; }
-.bx-step .bx-drop--sm { opacity: 0.9; }
-.bx-step .bx-ripple { opacity: 0.5; }
+/* арка-вікно: подвійна золота рамка (зовнішня + внутрішня через ::after, концентричні: 50% по горизонталі, «підйом» − зазор по вертикалі) */
+.bx-arch { --bx-rise: var(--size-barrels-stage-rise); position: relative; overflow: hidden; border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50% 50% 0 0 / var(--bx-rise) var(--bx-rise) 0 0; }
+.bx-arch::after { content: ''; position: absolute; inset: var(--space-barrels-frame-gap); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); border-radius: 50% 50% 0 0 / calc(var(--bx-rise) - var(--space-barrels-frame-gap)) calc(var(--bx-rise) - var(--space-barrels-frame-gap)) 0 0; pointer-events: none; }
+.bx-arch--stage { height: 100%; color: var(--color-barrels-accent); background: radial-gradient(ellipse 72% 58% at 50% 0%, var(--color-barrels-lightpool), transparent), var(--color-barrels-room-cellar); }
+.bx-lamp { position: absolute; top: 0; left: 50%; translate: -50% 0; width: var(--size-barrels-lamp-w); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
 
-@keyframes bx-fill-barrel { 0% { transform: translateY(150px); } 22% { transform: translateY(40px); } 52% { transform: translateY(40px); } 62% { transform: translateY(48px); } 70% { transform: translateY(48px); } 88% { transform: translateY(100px); } 100% { transform: translateY(100px); } }
-@keyframes bx-fill-bottle { 0%, 66% { transform: translateY(40px); } 90%, 100% { transform: translateY(14px); } }
-@keyframes bx-fill-step { 0% { transform: translateY(40px); } 80%, 100% { transform: translateY(14px); } }
-@keyframes bx-cycle-fade { 0% { opacity: 0; } 4% { opacity: 1; } 94% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes bx-window-in { 0% { opacity: 0; } 2% { opacity: 1; } 20% { opacity: 1; } 24%, 100% { opacity: 0; } }
-@keyframes bx-window-vapor { 0%, 20% { opacity: 0; } 28%, 62% { opacity: 1; } 72%, 100% { opacity: 0; } }
-@keyframes bx-window-pipe { 0%, 64% { opacity: 0; } 70%, 88% { opacity: 1; } 94%, 100% { opacity: 0; } }
-@keyframes bx-flow { to { stroke-dashoffset: calc((var(--size-barrels-dash) + var(--size-barrels-gap)) * -1); } }
-@keyframes bx-rise { 0% { transform: translateY(8px); opacity: 0; } 25% { opacity: 0.9; } 100% { transform: translateY(-14px); opacity: 0; } }
-@keyframes bx-drop { 0% { transform: translateY(-6px); opacity: 0; } 15% { opacity: 1; } 70% { transform: translateY(22px); opacity: 1; } 100% { transform: translateY(26px); opacity: 0; } }
-@keyframes bx-ripple { 0%, 60% { transform: scale(0.3); opacity: 0; } 70% { opacity: 0.9; } 100% { transform: scale(1.3); opacity: 0; } }
-@keyframes bx-fade-step { 0% { opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
-
-.bx-scene .bx-liquid--barrel { animation: bx-fill-barrel var(--duration-loop-slow) var(--ease-loop) infinite; }
-.bx-scene .bx-liquid--bottle { animation: bx-fill-bottle var(--duration-loop-slow) var(--ease-loop) infinite; }
-.bx-scene .bx-cycle { animation: bx-cycle-fade var(--duration-loop-slow) linear infinite; }
-.bx-scene .bx-stream--in { animation: bx-flow var(--duration-flow) linear infinite, bx-window-in var(--duration-loop-slow) linear infinite; }
-.bx-scene .bx-pipe-flow { animation: bx-flow var(--duration-flow) linear infinite, bx-window-pipe var(--duration-loop-slow) linear infinite; }
-.bx-scene .bx-vapor { animation: bx-window-vapor var(--duration-loop-slow) linear infinite; }
-.bx-scene .bx-vapor-line { animation: bx-rise var(--duration-loop-mid) var(--ease-loop) infinite; }
-.bx-vapor-line--2 { animation-delay: calc(var(--duration-loop-mid) / -3); }
-.bx-vapor-line--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }
-.bx-step .bx-drop { animation: bx-drop var(--duration-loop-fast) var(--ease-loop) infinite; }
-.bx-step .bx-ripple { animation: bx-ripple var(--duration-loop-fast) var(--ease-loop) infinite; }
-.bx-step .bx-vapor-line { animation: bx-rise var(--duration-loop-mid) var(--ease-loop) infinite; }
-.bx-step .bx-liquid--step { animation: bx-fill-step var(--duration-loop) var(--ease-loop) infinite; }
-.bx-step .bx-cycle { animation: bx-fade-step var(--duration-loop) linear infinite; }
+/* сцена: SVG 600×700, притиснута донизу (xMidYMax meet) всередині внутрішньої рамки; над нею — склепіння з лампою */
+.bx-scene2 { position: absolute; inset: var(--space-barrels-scene-inset); width: calc(100% - 2 * var(--space-barrels-scene-inset)); height: calc(100% - 2 * var(--space-barrels-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.bx-sc-hair { stroke-width: var(--svg-stroke-hair); }
+.bx-sc-soft { stroke: var(--color-barrels-hairline-soft); }
+.bx-sc-liquid { fill: var(--color-barrels-amber); stroke: none; }
+.bx-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
+.bx-sc-spark { fill: currentColor; stroke: none; }
+.bx-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
+.bx-sc-wisp, .bx-sc-spark { transform-box: fill-box; }
+.bx-sc-part { transition: opacity var(--duration-barrels-step) var(--ease-out); }
+.bx-sc-level { transition: transform var(--duration-barrels-step) var(--ease-out); }
+.js [data-steps] .bx-sc-part { opacity: var(--opacity-barrels-dim); }
+.js [data-steps][data-step="1"] .bx-sc-part--pour,
+.js [data-steps][data-step="2"] .bx-sc-part--angels,
+.js [data-steps][data-step="3"] .bx-sc-part--bottle { opacity: 1; }
+.js [data-steps][data-step="0"] .bx-sc-level--cask { transform: translateY(var(--shift-barrels-cask-empty)); }
+.js [data-steps][data-step="2"] .bx-sc-level--cask { transform: translateY(var(--shift-barrels-cask-angels)); }
+.js [data-steps][data-step="3"] .bx-sc-level--cask { transform: translateY(var(--shift-barrels-cask-bottled)); }
+.js [data-steps]:not([data-step="3"]) .bx-sc-level--bottle { transform: translateY(var(--shift-barrels-bottle-empty)); }
+@keyframes bx-sc-flow { to { stroke-dashoffset: calc((var(--size-barrels-dash) + var(--size-barrels-gap)) * -1); } }
+@keyframes bx-sc-rise { 0% { transform: translateY(var(--shift-barrels-wisp-from)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(var(--shift-barrels-wisp-to)); opacity: 0; } }
+.js [data-steps].is-playing[data-step="1"] .bx-sc-stream,
+.js [data-steps].is-playing[data-step="3"] .bx-sc-pipe { animation: bx-sc-flow var(--duration-flow) linear infinite; }
+.js [data-steps].is-playing[data-step="2"] .bx-sc-wisp { animation: bx-sc-rise var(--duration-loop-mid) var(--ease-loop) infinite; }
+.bx-sc-wisp--2 { animation-delay: calc(var(--duration-loop-mid) / -3); }
+.bx-sc-wisp--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }
 .js [data-loop]:not(.is-playing) *, .js [data-loop]:not(.is-playing) *::before { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .bx-scene *, .bx-step * { animation: none !important; } .bx-vapor-line { opacity: 0.8; } }
+
+/* розділ */
+.barrels-how__chapters { display: flex; flex-direction: column; }
+.bx-chapter { display: flex; flex-direction: column; justify-content: center; min-height: var(--size-barrels-chapter-h); }
+.bx-chapter--pour { --bx-num-shift: var(--shift-barrels-numeral-pour); }
+.bx-chapter--angels { --bx-num-shift: var(--shift-barrels-numeral-angels); }
+.bx-chapter--bottle { --bx-num-shift: var(--shift-barrels-numeral-bottle); }
+.bx-chapter__rule { display: flex; align-items: center; gap: var(--space-barrels-rule-gap); margin-bottom: var(--space-barrels-chapter-rule); }
+.bx-chapter__rule::before { content: ''; flex: none; width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-chapter__rule::after { content: ''; flex: 1; height: var(--border-hairline); background: var(--color-barrels-hairline); }
+.bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-barrels-accent); }
+.bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); font: var(--fw-regular) var(--font-size-barrels-numeral)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
+.bx-chapter__note { font: var(--fw-semibold) var(--font-size-barrels-caption)/1 var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+.bx-chapter__note:empty { display: none; }
+.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); font: var(--fw-semibold) var(--font-size-barrels-title)/1.1 var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-chapter__text { margin-top: var(--space-barrels-chapter-text); max-width: var(--container-barrels-copy); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+
+/* демо S3 у design-system.html */
+.ds-barrels-how { align-items: stretch; gap: var(--space-barrels-col-gap); padding: var(--space-50); }
+.ds-barrels-stage { flex: none; width: var(--size-barrels-demo-stage-w); height: var(--size-barrels-demo-stage-h); }
+.ds-barrels-stage .bx-arch { --bx-rise: calc(var(--size-barrels-demo-stage-w) * var(--ratio-barrels-arch-rise)); }
+.ds-barrels-how .bx-chapter { flex: 1; min-height: 0; }
 
 /* ---------- Вигода ---------- */
 .barrels-profit { background: var(--color-beige); }

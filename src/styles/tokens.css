@@ -837,10 +837,6 @@
 
   /* SVG-ілюстрації: геометрія в одиницях viewBox (штрих 1.5 як в іконках; масштабується разом з малюнком) */
   --svg-stroke: 1.5;
-  --svg-text-lg: 30;                                  /* позначки 63% / 40% у сцені (одиниці viewBox 800×440) */
-  --svg-text-sm: 15;                                  /* підписи у сцені */
-  --opacity-barrels-liquid: 0.22;                     /* заливка рідини в бочці/пляшці (єдине місце заливки в ілюстраціях) */
-  --opacity-barrels-track: 0.35;                      /* статична «колія» труби під біжучими штрихами */
   --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
   --size-barrels-gap: 8;                              /* проміжок між штрихами */
 
@@ -848,13 +844,6 @@
   --size-barrels-art: calc(260 * var(--u));           /* ілюстрація переваги (ромб-рамка), квадрат */
   --space-barrels-card-pad: var(--space-30);
   --space-barrels-grid-gap: var(--space-20);
-
-  /* Як це працює */
-  --space-barrels-how-pad-y: var(--space-product-top);   /* сцена + кроки: відступ секції зверху/знизу (як на товарі) */
-  --size-barrels-step-min-h: calc(var(--size-product-frame-h) * 0.8); /* висота кроку: 80% фрейму сцени, права колонка скролиться, поки ліва стоїть */
-  --size-barrels-step-art: calc(300 * var(--u));      /* ілюстрація кроку, співвідношення 4:3 */
-  --space-barrels-step-pad-y: var(--space-70);
-  --type-barrels-step-text-size: var(--font-size-chip);  /* текст кроку: EB Garamond Medium 25 */
 
   /* Вигода */
   --font-size-barrels-profit-num: calc(120 * var(--u));  /* «≈ 383» */
@@ -892,7 +881,8 @@
   --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, внутрішня рамка) */
   --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* лінії на «папері» */
   --color-barrels-depth: color-mix(in srgb, var(--color-brown) 55%, var(--color-teal));   /* глибина «вікна» (арки) на коричневій кімнаті: темніша за кімнату */
-  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 14%, transparent);      /* «світло в погребі»: тепла пляма зверху арки/кімнати */
+  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 18%, transparent);      /* «світло в погребі»: тепла пляма зверху арки/кімнати */
+  --color-barrels-amber: color-mix(in srgb, var(--color-gold) 58%, var(--color-brown));  /* бурштин рідини в гравюрах (бочка, пляшка): НЕпрозорий, бо золото поверх teal дає оливковий сірий */
   --color-barrels-pattern: color-mix(in srgb, var(--color-light) 3%, transparent);        /* ромб тон-у-тон на темних кімнатах (маска barrels-pattern-diamond.svg) */
   --opacity-barrels-grain: 0.11;                      /* зерно плівки поверх сторінки (barrels-grain.svg, fixed-шар без анімації) */
   --size-barrels-grain-tile: 240px;                   /* фізичний розмір плитки зерна (не масштабується з --u: зерно — властивість «плівки», а не макета) */
@@ -911,4 +901,39 @@
   --container-barrels: var(--container-wide);         /* ширина вмісту кімнат (1508u) */
   --space-barrels-col-gap: calc(100 * var(--u));      /* проміжок між великими колонками кімнати */
   --space-barrels-stack: var(--space-20);              /* вертикальний ритм усередині блоків (кікер → заголовок → лід) */
+
+  /* арка-вікно (спільна для кімнат): подвійна золота рамка, склепіння — вертикальний радіус від ширини */
+  --space-barrels-frame-gap: calc(8 * var(--u));      /* зазор між зовнішньою і внутрішньою лініями рамки */
+  --ratio-barrels-arch-rise: 0.42;                    /* висота склепіння = 0.42 ширини арки (як арка панелі YC, 352/900 ≈ 0.39, трохи вища) */
+
+  /* S3 «Від бочки до пляшки»: sticky-арка зі сценою + три розділи-цифри */
+  --offset-barrels-stage-top: var(--offset-product-stage-sticky);                    /* sticky-верх арки: під пілюлею header (як фото товару) */
+  --size-barrels-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки: екран − пілюля − повітря знизу */
+  --size-barrels-stage-w: calc((var(--container-barrels) - var(--space-barrels-col-gap)) / 2);
+  --size-barrels-stage-rise: calc(var(--size-barrels-stage-w) * var(--ratio-barrels-arch-rise));
+  --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині внутрішньої рамки */
+  --size-barrels-lamp-w: calc(56 * var(--u));         /* лампа під склепінням — джерело «світла в погребі» */
+  --size-barrels-chapter-h: calc(var(--size-barrels-stage-h) * 0.78); /* висота розділу: одна цифра на екран */
+  --size-barrels-rule-marker: calc(10 * var(--u));    /* ромб-маркер на початку лінії розділу (лівий кут = ліва вісь тексту) */
+  --space-barrels-rule-gap: calc(14 * var(--u));      /* ромб → лінія */
+  --space-barrels-chapter-rule: var(--space-40);      /* лінія → цифра */
+  --space-barrels-chapter-title: var(--space-30);     /* цифра → назва (з запасом під нижні виносні old-style цифр) */
+  --space-barrels-chapter-text: var(--space-15);      /* назва → пояснення */
+  --space-barrels-note-gap: var(--space-20);          /* цифра → підпис «орієнтовно» (одна базова лінія) */
+  --container-barrels-copy: calc(560 * var(--u));     /* ширина пояснення */
+  --shift-barrels-numeral-pour: -0.044em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до осі ромба/тексту (виміряно по чорнилу, DPR 3, 1920: */
+  --shift-barrels-numeral-angels: -0.0715em;          /* бокові поля гліфів EB Garamond 240u: «6» +11px, «≈» +17.7px, «4» +4.3px; поправка в em — тримається на всіх ширинах) */
+  --shift-barrels-numeral-bottle: -0.016em;
+  --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між розділами */
+  --opacity-barrels-dim: 0.32;                        /* неактивні частини гравюри */
+  --shift-barrels-cask-empty: 200px;                  /* рівень рідини в бочці (одиниці viewBox 600×700): порожня — нижче дна */
+  --shift-barrels-cask-angels: 32px;                  /* після витримки (≈15% умовних втрат) */
+  --shift-barrels-cask-bottled: 118px;                /* під час розливу */
+  --shift-barrels-bottle-empty: 104px;                /* пляшка порожня до кроку «Розлив» */
+  --shift-barrels-wisp-from: 10px;                    /* пара «частки ангелів»: підйом вгору й згасання */
+  --shift-barrels-wisp-to: -22px;
+  --svg-stroke-hair: 0.9;                             /* гравюрні тонкі лінії (клепки, штрихування, меніск), одиниці viewBox */
+  --shift-barrels-cap-top: -0.18em;                   /* оптика: верх чорнила капітелі EB Garamond (lh 1) = верх бокса; виміряно 0.17–0.19em на 1200–1920 */
+  --size-barrels-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
+  --size-barrels-demo-stage-h: calc(600 * var(--u));
 }

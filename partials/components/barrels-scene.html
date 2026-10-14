@@ -1,0 +1,38 @@
+<svg class="bx-scene2" viewBox="60 150 520 550" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="bx-sc-cask-in"><path d="M96 392 C150 368 370 368 424 392 Q432 480 424 568 C370 592 150 592 96 568 Q88 480 96 392 Z"/></clipPath>
+    <clipPath id="bx-sc-bottle-in"><path d="M515 478 V516 C515 528 494 530 494 546 V642 Q494 650 502 650 H542 Q550 650 550 642 V546 C550 530 529 528 529 516 V478 Z"/></clipPath>
+  </defs>
+  <!-- підлога й тінь під бочкою (гравюрне штрихування) -->
+  <path class="bx-sc-soft" d="M64 652 H576"/>
+  <path class="bx-sc-soft" d="M204 612 H316 M212 620 H308 M222 628 H298 M232 636 H288 M244 644 H276"/>
+  <!-- бочка: рідина (рівень за станом кроку), контур, клепки, обручі, днища, підставки, бунг -->
+  <g clip-path="url(#bx-sc-cask-in)"><g class="bx-sc-level bx-sc-level--cask"><rect class="bx-sc-liquid" x="88" y="392" width="344" height="220"/><path class="bx-sc-meniscus" d="M88 392 H432"/></g></g>
+  <path d="M96 392 C150 368 370 368 424 392 Q432 480 424 568 C370 592 150 592 96 568 Q88 480 96 392 Z"/>
+  <path class="bx-sc-hair" d="M96 427.2 Q260 405.6 424 427.2 M96 462.4 Q260 455.2 424 462.4 M96 497.6 Q260 504.8 424 497.6 M96 532.8 Q260 554.4 424 532.8"/>
+  <path class="bx-sc-hair" d="M104 396 Q97 480 104 564 M416 396 Q423 480 416 564"/>
+  <path d="M120 384.8V575.2 M128 383.2V576.8 M196 375.8V584.2 M202 375.5V584.5 M318 375.5V584.5 M324 375.8V584.2 M392 383.2V576.8 M400 384.8V575.2"/>
+  <path d="M142 579 L130 652 M190 583.8 L202 652 M330 583.8 L318 652 M378 579 L390 652 M134 622 H198 M322 622 H386"/>
+  <path d="M221 375 V369 H235 V375"/>
+  <!-- крок 1: заливка (лійка + струмінь у бунг) -->
+  <g class="bx-sc-part bx-sc-part--pour">
+    <path d="M196 296 H260 L235 336 V346 H221 V336 Z"/>
+    <path class="bx-sc-hair" d="M204 304 H252"/>
+    <path class="bx-sc-flow bx-sc-stream" d="M228 348 V368"/>
+  </g>
+  <!-- крок 2: «частка ангелів» — пара крізь дерево вгору, у склепіння -->
+  <g class="bx-sc-part bx-sc-part--angels">
+    <path class="bx-sc-wisp bx-sc-wisp--1" d="M290 366.4 c-9 -14 -9 -26 0 -40 s9 -26 0 -40 s-9 -26 0 -40 s9 -26 0 -40"/>
+    <path class="bx-sc-wisp bx-sc-wisp--2" d="M322 367.7 c-9 -14 -9 -26 0 -40 s9 -26 0 -40 s-9 -26 0 -40 s9 -26 0 -40 s-9 -26 0 -40"/>
+    <path class="bx-sc-wisp bx-sc-wisp--3" d="M354 370.1 c-9 -14 -9 -26 0 -40 s9 -26 0 -40 s-9 -26 0 -40 s9 -26 0 -40"/>
+    <path class="bx-sc-spark" d="M290 196 l4 6 l-4 6 l-4 -6 Z M322 156 l4 6 l-4 6 l-4 -6 Z M354 200 l4 6 l-4 6 l-4 -6 Z"/>
+  </g>
+  <!-- крок 3: розлив (кран → трубка → пляшка 0,7 л) -->
+  <g class="bx-sc-part bx-sc-part--bottle">
+    <path d="M430 540 H444 M444 533 V547"/>
+    <path class="bx-sc-flow bx-sc-pipe" d="M444 540 H476 Q492 540 492 524 V466 Q492 450 508 450 H514 Q522 450 522 458 V474"/>
+    <g clip-path="url(#bx-sc-bottle-in)"><g class="bx-sc-level bx-sc-level--bottle"><rect class="bx-sc-liquid" x="490" y="554" width="64" height="100"/><path class="bx-sc-meniscus" d="M490 554 H554"/></g></g>
+    <path d="M515 478 V516 C515 528 494 530 494 546 V642 Q494 650 502 650 H542 Q550 650 550 642 V546 C550 530 529 528 529 516 V478 Z"/>
+    <path class="bx-sc-hair" d="M504 596 H540 M504 604 H540"/>
+  </g>
+</svg>

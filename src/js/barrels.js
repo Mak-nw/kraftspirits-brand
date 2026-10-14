@@ -1,6 +1,6 @@
 // Сторінка «Ф'ючерсні бочки»: (1) зациклені SVG-анімації грають лише поки секція [data-loop] у в'юпорті (клас .is-playing; CSS ставить animation-play-state: paused поза екраном);
 // (2) лічильники [data-count-to] 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; без reduced-motion; значення в DOM — фінальне для SEO/без JS; до старту число приховане, без мигання);
-// (3) reveal і паралакс hero — спільні модулі сайту.
+// (3) reveal і паралакс hero — спільні модулі сайту; (4) розділи «від бочки до пляшки» перемикають стан гравюри (data-step).
 import { cssTimeMs } from './duration.js';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -10,6 +10,17 @@ if ('IntersectionObserver' in window) {
     entries.forEach((e) => e.target.classList.toggle('is-playing', e.isIntersecting));
   });
   document.querySelectorAll('[data-loop]').forEach((el) => loops.observe(el));
+
+  // (4) «Від бочки до пляшки»: активний розділ = той, що перетинає середню смугу в'юпорта; data-step на секції [data-steps]
+  //     керує гравюрою (CSS: підсвічена частина, рівень рідини). До першого розділу — "0" (бочка порожня). Це стан, не скрол-анімація;
+  //     при reduced-motion стан теж перемикається, лише без переходів (reveal.css гасить transition/animation).
+  document.querySelectorAll('[data-steps]').forEach((sec) => {
+    sec.dataset.step = '0';
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) sec.dataset.step = e.target.dataset.step; });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    sec.querySelectorAll('[data-step]').forEach((ch) => io.observe(ch));
+  });
 
   // (2) лічильники: до старту число приховане CSS (barrels.css: html.js .page-barrels [data-count-to]:not([data-count]) { opacity: 0 }), тож 383 → 0 → … не мигає;
   //     у DOM воно завжди фінальне (SEO/без JS: html.js немає — видно одразу). data-count: "run" (рахує) → "done" (фінал). reduced-motion — одразу "done".
