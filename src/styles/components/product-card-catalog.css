@@ -19,6 +19,7 @@
   left: var(--offset-arch); top: var(--offset-arch);
   width: var(--size-arch-w); height: var(--size-arch-h);
   background: var(--color-green);
+  will-change: transform; /* окремий композитний шар: арка растеризується в цілих device-пікселях незалежно від дробового x/y картки (47.5, зсув 6u тощо) — без цього растеризатор округлює дробові межі маски і тонка рамка 2.476u на деяких картках зникає/стоншується (права, інколи нижня сторона) */
   border-radius: var(--radius-card-arch); /* клип зовнішніх кутів арки/блоку; внутрішні кути рамки — дуги в самому SVG-маскі (--radius-card-arch-inner) */
   -webkit-mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
   mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
