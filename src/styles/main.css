@@ -9,6 +9,7 @@
 @import './components/product-card.css';
 @import './components/product-card-catalog.css';
 @import './components/select.css';
+@import './components/field.css';
 @import './components/accordion.css';
 @import './components/acc-product.css';
 @import './components/arrow-button.css';
@@ -17,11 +18,14 @@
 @import './components/stat.css';
 @import './components/brand-half.css';
 @import './components/tour-card.css';
+@import './components/age-gate.css';
 @import './components/slider.css';
 @import './reveal.css';
 @import './parallax.css';
 @import './sections.css';
 @import './catalog.css';
 @import './product.css';
+@import './contacts.css';
+@import './barrels.css';
 @import './under-construction.css';
 @import './design-system.css';

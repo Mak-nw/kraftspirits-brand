@@ -1,0 +1,18 @@
+<script>
+/* Вікова верифікація: до першого paint ставимо html.js та (якщо вік уже підтверджено) html.age-ok, щоб оверлей не миготів.
+   Ключ сховища і термін (днів) — єдине місце; age-gate.js читає window.ksAge. ?age=ok — службовий параметр для тестів (лише сесія, не безпека). */
+(function () {
+  var d = document.documentElement, cfg = window.ksAge = { key: 'ks_age_ok', days: 30 };
+  d.classList.add('js');
+  try {
+    if (/[?&]age=ok(&|$)/.test(location.search)) sessionStorage.setItem(cfg.key, JSON.stringify({ ok: true, ts: Date.now() }));
+  } catch (e) {}
+  try {
+    var ok = false, l = localStorage.getItem(cfg.key), o = l && JSON.parse(l);
+    if (o && o.ok === true && Date.now() - o.ts < cfg.days * 864e5) ok = true;
+    if (!ok) { var s = sessionStorage.getItem(cfg.key); if (s && JSON.parse(s).ok === true) ok = true; }
+    if (ok) d.classList.add('age-ok');
+  } catch (e) {}
+})();
+</script>
+<script type="module" src="/src/js/age-gate.js"></script>

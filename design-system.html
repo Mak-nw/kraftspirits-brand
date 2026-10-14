@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!--@include head-icons-->
   <!--@include head-fonts-->
+  <!--@include head-age-->
   <title>Дизайн-система</title>
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
@@ -12,6 +13,7 @@
   <script type="module" src="/src/js/design-system.js"></script>
 </head>
 <body>
+  <!--@include components/age-gate-->
   <main class="ds">
     <h1 class="t-hero">Дизайн-система</h1>
     <p class="ds-note t-body">Джерело: Figma JO2rsMY0AhFutzAQwfl0WV, des_brand 194:1183. Масштаб: <span data-u></span></p>
@@ -673,6 +675,72 @@
       </div>
     </section>
 
+    <section class="ds-section" id="contacts-components">
+      <h2 class="t-h2 ds-section__title">Контакти</h2>
+      <p class="ds-note t-body">Сторінка <span class="ds-meta">contacts.html</span>: сітка 12 колонок у контейнері товару (поля 50u, відступ 20u, зона header 103u); ліва частина — 8 колонок (карта OSM-iframe з фільтром <span class="ds-meta">--filter-contacts-map</span>, лінійка «Відкрити на мапі» + «Прокласти маршрут», контактні дані 3+2 колонки), права — 4 колонки (форма), зазор 5u; панелі beige, радіус 10u. Фон — візерунок ромбів (<span class="ds-meta">.page-contacts</span>, правило спільне з <span class="ds-meta">.page-product</span>). Дані — <span class="ds-meta">src/data/contacts.js</span>, форма — <span class="ds-meta">src/js/contact-form.js</span>. Передвибір теми: <span class="ds-meta">contacts.html?topic=excursion#form</span> (excursion, barrel, order, horeca, other).</p>
+      <p class="demo-label t-kicker">Поле форми (.field > .field__label + .field__control + .field__error): спокій, значення, помилка (.is-invalid: колір --color-field-error + ромб-маркер, aria-invalid)</p>
+      <div class="demo-panel theme-beige">
+        <div class="field"><label class="field__label" for="ds-f1">Ім'я</label><input class="field__control" id="ds-f1" type="text" placeholder="Як до вас звертатись"><p class="field__error"><span></span></p></div>
+        <div class="field is-invalid"><label class="field__label" for="ds-f2">E-mail</label><input class="field__control" id="ds-f2" type="email" value="name@" aria-invalid="true"><p class="field__error"><span>Перевірте адресу e-mail</span></p></div>
+      </div>
+      <p class="demo-label t-kicker">Select для світлої панелі: .select.select--light.select--field (+ data-placeholder); каталожний .select не змінюється</p>
+      <div class="demo-panel theme-beige">
+        <div class="field"><!--@include components/select id="ds-topic" name="ds-topic" label="Тема звернення" options="excursion:Екскурсії|barrel:Бочкова торгівля|other:Інше" value="Оберіть тему" placeholder="Оберіть тему" mod=" select--light select--field"--></div>
+      </div>
+      <p class="demo-label t-kicker">Згода (.check-field > .age-check) і кнопка відправки (btn--green btn--block; disabled — opacity --opacity-muted)</p>
+      <div class="demo-panel theme-beige">
+        <div class="check-field"><label class="age-check"><input class="age-check__input" type="checkbox" autocomplete="off"><span class="age-check__box" aria-hidden="true"></span><span class="age-check__label t-text">Погоджуюсь на обробку персональних даних</span></label></div>
+        <button class="btn btn--green btn--block" type="button" disabled><span class="btn__inner t-btn">Надсилаємо…</span></button>
+      </div>
+      <p class="demo-label t-kicker">Контактна колонка (.contacts-item: заголовок t-footer-head, значення t-text; клікабельна вся колонка, hover — колір без підкреслення)</p>
+      <div class="demo-panel theme-beige">
+        <div class="contacts-item"><h3 class="contacts-item__head t-footer-head">Телефон</h3><p class="contacts-item__value t-text"><a class="contacts-link" href="#contacts-components">+380 44 000 00 00</a></p></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="barrels-components">
+      <h2 class="t-h2 ds-section__title">Ф'ючерсні бочки</h2>
+      <p class="ds-note t-body">Сторінка barrels.html (body.page-barrels: зони header у потоці нема, hero з y=0). Токени — блок «Ф'ючерсні бочки» в tokens.css; стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js (%barrels.ключ% у HTML). Ілюстрації — інлайн-SVG partials/components/illustration-*: stroke/fill лише currentColor, штрих --svg-stroke (1.5 у viewBox), round caps/joins, без градієнтів (єдина заливка — рідина в бочці/пляшці, opacity --opacity-barrels-liquid).</p>
+
+      <p class="demo-label t-kicker">advantage-card (ill, title, text): ромб-рамка + ілюстрація 260u; поява — малювання ліній (stroke-dashoffset, --duration-reveal); hover — «дихання» ядра (--scale-barrels-breathe) і зсув іскор (--shift-barrels-spark), --duration-fast</p>
+      <div class="demo-panel theme-beige">
+        <div class="ds-grid">
+          <!--@include components/advantage-card ill="fire" title="Сильний обпал" text="Формує глибину та структуру"-->
+          <!--@include components/advantage-card ill="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
+          <!--@include components/advantage-card ill="aroma" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
+          <!--@include components/advantage-card ill="phenol" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">process-step (ill: pour | evap | fill, title, value, text, mod): власна зациклена анімація (--duration-loop-fast 2s краплі, --duration-loop-mid 4s пара, --duration-loop 8s наповнення пляшки); пауза поза екраном (.is-playing на [data-loop], barrels.js); reduced-motion — статичні кадри</p>
+      <div class="demo-panel theme-beige" data-loop>
+        <!--@include components/process-step ill="pour" title="1 · Заливка" value="63%" text="У бочку заливається дистилят міцністю близько 63%"-->
+        <!--@include components/process-step ill="evap" title="2 · Витримка" value="«частка ангелів»" mod=" process-step__value--word" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
+        <!--@include components/process-step ill="fill" title="3 · Розлив" value="40%" text="Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л"-->
+      </div>
+
+      <p class="demo-label t-kicker">profit-panel (size, count, cost, mod: profit-panel--lg | --sm) + illustration-barrel: лічильник data-count-to 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; значення в DOM стартово); ряд пляшок — декоративний (bottle-0-7, 10 шт. + «+ ще»)</p>
+      <div class="demo-panel theme-beige">
+        <!--@include components/profit-panel size="200 L" mod=" profit-panel--lg" count="383" cost="€ 15,66"-->
+      </div>
+
+      <p class="demo-label t-kicker">barrel-card (orn: marsala | madeira | port | sherry, name): днище бочки (illustration-barrel-head), відтінок --color-barrel-* лише з палітри, hover — нахил --angle-barrel-tilt</p>
+      <div class="demo-panel theme-beige">
+        <div class="ds-grid">
+          <!--@include components/barrel-card orn="marsala" name="Marsala"-->
+          <!--@include components/barrel-card orn="madeira" name="Madeira"-->
+          <!--@include components/barrel-card orn="port" name="Port"-->
+          <!--@include components/barrel-card orn="sherry" name="Sherry"-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">price-card (size, price, param → ?topic=barrel&amp;size=…): ціна EB Garamond --font-size-barrels-price, кнопка btn--green; дрібний текст .t-note (12u) під цінами</p>
+      <div class="demo-panel theme-green">
+        <!--@include components/price-card size="200 L" price="€&nbsp;6&nbsp;000" param="200"-->
+      </div>
+      <p class="ds-note ds-meta">Сцена «від бочки до пляшки» — illustration-process (viewBox 800×440, цикл --duration-loop-slow 12s: заливка → «частка ангелів» → розлив; ліва колонка sticky як .product-media), маршрут — illustration-route. Анімації: transform / opacity / stroke-dashoffset.</p>
+    </section>
+
     <section class="ds-section" id="picker-events">
       <h2 class="t-h2 ds-section__title">Підбір за подією (194:1290)</h2>
       <p class="ds-note t-body">Секція «не знаєте з чого почати?» на головній (<span class="ds-meta">partials/sections/picker</span>, логіка <span class="ds-meta">src/js/picker.js</span>, дані <span class="ds-meta">src/data/occasions.js</span>). Чіпи — події; вибір події підтягує добірку з products.js (лише status available) і змінює фон секції. Слайдер показує одну позицію (картка product-card--catalog 426.25×547.67 — Figma 224:3790; стрілки на відстані --space-30, по вертикалі — за макетом (224:3775: y 818, тобто 258u від верху картки, --offset-picker-arrow-top; не по центру картки); кнопки «Вивчити увесь асортимент» під слайдером у новому макеті 224:3732 немає), стрілки й ←/→ перемикають; aria-live на треку; з однією позицією стрілки aria-disabled. Повторний клік на активний чіп знімає вибір → «Хіти» і фон intro. Фон: шари <span class="ds-meta">.picker__bg</span> (.is-active / .is-prev), кросфейд opacity за <span class="ds-meta">--duration-bg</span>; картка — opacity + translate (<span class="ds-meta">--reveal-shift</span>, <span class="ds-meta">--duration-base</span>). Без JS — статичний стан (Хіти, intro, Джин Бочковий). Відхилення від макета: у Figma 224:3737 лише 4 чіпи; залишено 5-й «відкрити крафт» (подія intro) — питання до замовника. Колір чіпів і тексту секції — --color-beige (було gold), активний/hover чіп — --color-gold.</p>
@@ -709,6 +777,19 @@
         <!--@include header menu-id="site-menu-demo"-->
       </div>
       <!--@include footer-->
+    </section>
+
+    <section class="ds-section" id="age-verification">
+      <h2 class="t-h2 ds-section__title">Вікова верифікація</h2>
+      <p class="ds-note t-body">Єдиний partial <code>components/age-gate</code> (оверлей + діалог) підключений на кожній сторінці одним include одразу після <code>&lt;body&gt;</code>; картка — <code>components/age-gate-card</code> (параметри <code>id</code>, <code>ask-off</code>, <code>deny-off</code>), кнопки — <code>components/btn-button</code> (btn як &lt;button&gt;). У &lt;head&gt; — <code>head-age</code> (inline-скрипт до першого paint + age-gate.js). Нижче — статичні приклади картки (без fixed); справжній оверлей на цій сторінці теж працює (<code>?age=ok</code> — пропустити).</p>
+      <p class="demo-label t-kicker">Стан «питання»</p>
+      <div class="ds-age-demo"><!--@include components/age-gate-card id="age-demo" deny-off="1"--></div>
+      <p class="demo-label t-kicker">Стан «відмова» (лише в пам'яті сторінки, не зберігається)</p>
+      <div class="ds-age-demo"><!--@include components/age-gate-card id="age-demo-deny" ask-off="1"--></div>
+      <p class="ds-note t-body">Дизайн: світлий повноекранний оверлей (<code>--color-age-overlay</code> = beige + ромби як у tours), картка <code>--color-age-card</code> (light), рамка <code>--color-age-border</code> 1px, радіус <code>--radius-panel</code>; пара ТЕМНИХ логотипів (home-brand-logo-yc/bs.svg); заголовок t-hero у 2 рядки; пояснення t-text; кнопки btn--green «Так, мені є 18 років» і btn--outline «Ні, мені ще немає 18» (нова контурна варіація btn, hover — заливка беж) однакової ширини; перемикач «Запам'ятати мій вибір на цьому пристрої» (нативний checkbox на весь рядок, індикатор 26u, рамка 1.5u, заливка green при checked, за замовчуванням вимкнено); юридичний текст 12u (<code>--font-size-age-legal</code>), колір <code>--color-age-legal</code> (контраст ≈5.3:1), макс. ширина 560u. z-index: <code>--z-age-gate</code> 1000 (вище хедера 100).</p>
+      <p class="ds-note t-body"><strong>Виняток із правила «підкреслень немає, крім футера»:</strong> два посилання в юридичному тексті («правилами користування сайтом» → offer.html#rules, «умовами публічної оферти» → offer.html) підкреслені, колір green, hover teal; відкриваються в тій самій вкладці й доступні з клавіатури під час показу оверлея.</p>
+      <p class="ds-note t-body">Поведінка: показується при вході, якщо вік не підтверджено. «Так» → збереження за перемикачем, плавне згасання (<code>--duration-base</code>; reduced-motion — миттєво), зняття inert/aria-hidden зі сторінки, повернення скролу і фокусу. «Ні» → в тій самій картці «Доступ обмежено» + «Змінити відповідь», без перенаправлень. Діалог: role=dialog, aria-modal, aria-labelledby/describedby (перемикаються разом зі станом), фокус на заголовку при відкритті, фокус-пастка Tab/Shift+Tab, Esc не закриває, сторінка під ним inert + aria-hidden, скрол заблоковано (<code>overflow: hidden; scrollbar-gutter: stable</code>, ширина/хедер не зсуваються; viewport.js міряє ширину html, а не clientWidth). Без JS — повідомлення «Для перегляду сайту ввімкніть JavaScript» (ворота лишаються).</p>
+      <p class="ds-note t-body">Сховище: ключ <code>ks_age_ok</code> = <code>{ok:true, ts}</code>. «Запам'ятати» увімкнено → localStorage, термін 30 днів (константа <code>days</code> у partials/head-age.html), далі питаємо знову. Вимкнено → sessionStorage (вкладка/сесія: між сторінками тієї ж вкладки не перепитує, нова вкладка питає). Доступ до storage в try/catch (приватний режим → ворота на кожній сторінці). <code>?age=ok</code> — службовий параметр для тестів і скриншотів (sessionStorage + без анімації; не безпека). <code>navigator.webdriver</code> ворота не обходить.</p>
     </section>
 
     <section class="ds-section" id="logos">

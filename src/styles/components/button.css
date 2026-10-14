@@ -28,6 +28,9 @@
 .btn--beige { --btn-accent: var(--color-beige); --btn-fg: var(--color-brown); --btn-hover: var(--color-hover-btn-beige); } /* 224:4015 вступ на коричневому */
 .btn--green { --btn-accent: var(--color-green); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-green); }  /* 194:1397 product YasnoCraft */
 .btn--teal { --btn-accent: var(--color-teal); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-teal); }    /* 194:1532 product Bazylsprings */
+/* контурна: зелена рамка, прозора заливка; hover — заливка беж (вікова верифікація «Ні», вторинні дії на світлому) */
+.btn--outline { --btn-accent: var(--color-green); --btn-fg: var(--color-green); --btn-hover: var(--color-beige); }
+.btn--outline .btn__inner { background: transparent; }
 /* 205:2443: кнопка з засічним шрифтом (EB Garamond): ціна Medium, текст Bold (YasnoCraft product page) */
 .btn--serif .btn__inner { font-family: var(--type-btn-serif-font); }
 .btn--serif .t-price { font-family: var(--type-btn-serif-font); font-weight: var(--type-price-serif-weight); }

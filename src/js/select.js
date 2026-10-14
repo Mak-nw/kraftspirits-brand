@@ -1,6 +1,7 @@
 // Доступний випадний список (button + listbox). Розмітка — partials/components/select.html.
 // Варіанти: initSelect(el, { options: [{ value, label }], value }) або атрибут data-options="v1:Підпис 1|v2:Підпис 2".
 // Клавіатура: Enter/Space/↓/↑ відкривають; ↑↓ Home End рухають; Enter/Space обирають; Esc закриває; Tab закриває; літера — перехід до пункту.
+// Плейсхолдер: атрибут data-placeholder="Оберіть…" — значення не вибране (value = ''), у полі показується підпис плейсхолдера (клас .is-placeholder на .select), перший пункт НЕ вибирається автоматично.
 // Подія 'select-change' (bubbles) з detail { value, label }.
 export function initSelect(el, config = {}) {
   const button = el.querySelector('.select__button');
@@ -10,7 +11,8 @@ export function initSelect(el, config = {}) {
   if (!options.length && el.dataset.options) {
     options = el.dataset.options.split('|').map((o) => { const i = o.indexOf(':'); return { value: o.slice(0, i), label: o.slice(i + 1) }; });
   }
-  let value = config.value ?? options[0]?.value;
+  const placeholder = el.dataset.placeholder;
+  let value = config.value ?? (placeholder !== undefined ? '' : options[0]?.value);
   let active = -1;
   const id = button.id;
 
@@ -29,6 +31,8 @@ export function initSelect(el, config = {}) {
     items.forEach((li, i) => { li.setAttribute('aria-selected', String(options[i].value === value)); });
     const cur = options.find((o) => o.value === value);
     if (cur) valueEl.textContent = cur.label;
+    else if (placeholder !== undefined) valueEl.textContent = placeholder;
+    el.classList.toggle('is-placeholder', !cur && placeholder !== undefined);
   };
   const setActive = (i) => {
     active = Math.max(0, Math.min(items.length - 1, i));
@@ -85,7 +89,7 @@ export function initSelect(el, config = {}) {
   paint();
   return {
     get value() { return value; },
-    set(v) { if (options.some((o) => o.value === v)) { value = v; paint(); } },
+    set(v) { if (options.some((o) => o.value === v) || (v === '' && placeholder !== undefined)) { value = v; paint(); } },
   };
 }
 

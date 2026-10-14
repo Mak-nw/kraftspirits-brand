@@ -43,3 +43,28 @@
 .select__option[aria-selected="true"] { font-weight: var(--fw-semibold); }
 .select__option.is-active { background: var(--color-hover-faq); }
 @media (hover: hover) { .select__option:hover { background: var(--color-hover-faq); } }
+
+/* Світлий варіант для бежевих панелей (форма контактів): .select--light + .select--field.
+   Не змінює каталожний .select: усі правила — лише за модифікаторами. Підпис над полем (як у інших полів форми, components/field.css),
+   поле — світла плитка з рамкою; значення Manrope Medium 16 (sentence-case); плейсхолдер — .is-placeholder (data-placeholder у partial). */
+.select--light, .select--light:has(.select__button:focus-visible), .select--light.is-open { background: none; color: var(--color-green); }
+.select--field { flex-direction: column; align-items: stretch; gap: var(--space-field-label-gap); padding: 0; border-radius: 0; }
+.select--field .select__label { font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide); }
+.select--field .select__field {
+  position: relative; /* containing block для кнопки (.hit-area) і списку: клікабельне все поле */
+  width: 100%; padding: var(--space-15) var(--space-20);
+  background: var(--color-field-bg); border: var(--border-hairline) solid var(--color-field-border); border-radius: var(--radius-select);
+  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.select--light .select__button { color: var(--color-green); font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
+.select--light .select__value { white-space: normal; }
+.select--light.is-placeholder .select__value { color: var(--color-field-placeholder); }
+.select--light .select__chevron { content: url('/assets/icons/chevron-down.svg'); } /* темний шеврон (#223520) замість світлого каталожного */
+.select--field:has(.select__button:focus-visible) .select__field, .select--field.is-open .select__field { background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); }
+@media (hover: hover) { .select--field:has(.select__button:hover) .select__field { background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); } }
+.select--light .select__button:focus-visible::after { border-radius: var(--radius-select); }
+.select--field .select__list { top: calc(100% + var(--space-5)); left: 0; right: 0; width: auto; min-width: 0; background: var(--color-field-bg); border-color: var(--color-field-border-hover); border-radius: var(--radius-select); }
+.select--light .select__option { white-space: normal; font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
+.select--light .select__option[aria-selected="true"] { font-weight: var(--fw-bold); }
+.select--light .select__option.is-active { background: var(--color-field-bg-hover); }
+@media (hover: hover) { .select--light .select__option:hover { background: var(--color-field-bg-hover); } }

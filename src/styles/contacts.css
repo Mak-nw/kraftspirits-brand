@@ -1,0 +1,68 @@
+/* Сторінка «Контакти» (contacts.html). Решітка 12 колонок у контейнері сторінки (поля 50u, зона header 103u в потоці, відступ 20u — як на товарі):
+   ліва частина = 8 колонок (карта + контактні дані), права = 4 колонки (форма). Зазор між частинами 5u (як фото ↔ панель товару).
+   Фон сторінки — візерунок ромбів (правило .page-contacts у product.css поруч із .page-product / catalog.css). Усі значення — токени блоку «Контакти». */
+.contacts {
+  display: grid; grid-template-columns: repeat(var(--columns-contacts), minmax(0, 1fr)); column-gap: var(--space-contacts-gap); align-items: stretch;
+  width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
+  padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
+}
+.contacts-panel {
+  display: flex; flex-direction: column; gap: var(--space-contacts-pad);
+  min-height: var(--size-contacts-panel-min-h); padding: var(--space-contacts-pad);
+  background: var(--color-beige); color: var(--color-green);
+  border: var(--border-frame) solid var(--color-beige); border-radius: var(--radius-panel); /* рамка = колір панелі (як YC на товарі): геометрія 5u + 10u радіус */
+}
+.contacts-info { grid-column: span var(--span-contacts-main); display: grid; grid-template-rows: minmax(var(--size-contacts-map-min-h), 1fr) auto auto; } /* карта бере вільну висоту ≈55–60% */
+.contacts-aside { grid-column: span var(--span-contacts-aside); } /* під пілюлею: відступ дає html scroll-padding-top (= зона header) */
+
+/* карта: вбудований OpenStreetMap без ключа; фільтр під палітру; рамка 10u; висота — рядок 1fr (CLS 0: розмір задано до завантаження iframe) */
+.contacts-map { position: relative; min-height: 0; overflow: hidden; border-radius: var(--radius-panel); background: var(--color-field-bg-hover); }
+.contacts-map__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: var(--filter-contacts-map); }
+/* лінійка під картою: «Відкрити на мапі» (2 посилання) + кнопка «Прокласти маршрут» */
+.contacts-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-30); flex-wrap: wrap; }
+.contacts-actions__open { display: flex; align-items: center; gap: var(--space-30); }
+.contacts-actions__label { margin: 0; }
+
+/* посилання без підкреслень: hover/focus — колір (як у футері) */
+.contacts-link { transition: color var(--duration-fast) var(--ease-out); }
+a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-duration: var(--duration-focus); }
+@media (hover: hover) { a.contacts-link:hover { color: var(--color-hover-nav-light); } }
+.contacts-actions .contacts-link { position: relative; }
+
+/* контактні дані: 6 доріжок, рядок 1 — 3 колонки (по 2), рядок 2 — 2 колонки (по 3) */
+.contacts-data { display: grid; grid-template-columns: repeat(var(--columns-contacts-data), minmax(0, 1fr)); gap: var(--space-contacts-item-gap); margin: 0; padding: 0; }
+.contacts-item { position: relative; grid-column: span var(--span-contacts-item); display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; }
+.contacts-item--wide { grid-column: span var(--span-contacts-item-wide); }
+.contacts-item__head { margin: 0; }
+.contacts-item__value { margin: 0; overflow-wrap: anywhere; }
+.contacts-item__cta { display: inline-flex; align-items: center; gap: var(--space-10); }
+.contacts-item__cta .icon { --icon-size: var(--size-icon-arrow-glyph); transition: transform var(--duration-base) var(--ease-out); }
+@media (hover: hover) { .contacts-item:hover .contacts-item__cta .icon { transform: translateX(var(--hover-nudge)); } }
+.contacts-item .contacts-link::after { content: ''; position: absolute; inset: 0; } /* клікабельна вся колонка (hit-area) */
+.contacts-item:focus-within .contacts-item__cta .icon { transform: translateX(var(--hover-nudge)); }
+.contacts-item:has(a:focus-visible) a:focus-visible { outline: none; }
+.contacts-item:has(a:focus-visible)::before { content: ''; position: absolute; inset: calc(-1 * var(--space-10)); border: var(--border-hairline) solid currentColor; border-radius: var(--radius-btn); pointer-events: none; }
+@media (hover: hover) { .contacts-item:has(a:hover) .contacts-item__value { color: var(--color-hover-nav-light); } }
+.contacts-item .contacts-item__value { transition: color var(--duration-fast) var(--ease-out); }
+
+/* права частина: два стани в одній клітинці (форма ↔ успіх), панель тримає висоту вищого; перемикання — плавний fade */
+.contacts-stack { display: grid; flex: 1; }
+.contacts-stack > * { grid-area: 1 / 1; transition: opacity var(--duration-base) var(--ease-out), visibility 0s linear 0s; }
+.contacts-stack > [inert] { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity var(--duration-base) var(--ease-out), visibility 0s linear var(--duration-base); }
+.contact-form { display: flex; flex-direction: column; gap: var(--space-field-gap); }
+.contact-form__head { display: flex; flex-direction: column; gap: var(--space-15); margin-bottom: var(--space-10); }
+.contact-form__head p { margin: 0; }
+.contact-form .btn { margin-top: var(--space-10); }
+.contact-form .btn:disabled { opacity: var(--opacity-muted); cursor: default; }
+.contact-form .btn:disabled .btn__inner, .contact-form .btn:disabled:hover .btn__inner { background: var(--btn-accent); }
+.contact-form__alert { margin: 0; padding: var(--space-15) var(--space-20); border: var(--border-hairline) solid var(--color-field-error); border-radius: var(--radius-select); color: var(--color-field-error); }
+.contact-form__alert[hidden] { display: none; }
+.contact-form__alert a { text-decoration: underline; text-underline-offset: 0.2em; } /* юридичний/аварійний рядок: посилання підкреслене, щоб відрізнялось від тексту */
+.contact-success { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-30); }
+.contact-success__title:focus { outline: none; }
+.contact-success p { margin: 0; }
+.contact-success a { text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* перехід із ?topic=… : один м'який спалах фону форми (--duration-bg); reduced-motion вимикає анімації глобально (reveal.css) */
+@keyframes contacts-highlight { from { background-color: var(--color-contacts-highlight); } to { background-color: var(--color-beige); } }
+.contacts-aside.is-highlight { animation: contacts-highlight var(--duration-bg) var(--ease-out) 1; }

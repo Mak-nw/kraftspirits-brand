@@ -1,0 +1,34 @@
+/* Поля форми на бежевій панелі (контакти): підпис над полем (EB Garamond SemiBold 16), світле поле з рамкою, помилка під полем.
+   Компонент «Поле» (.field): <div class="field"> <label class="field__label"> + <input|textarea class="field__control"> + <p class="field__error">.
+   Для селекта — .select--light.select--field (components/select.css) у тій самій обгортці .field.
+   Помилка: .field.is-invalid (JS ставить aria-invalid + aria-describedby); колір --color-field-error + ромб-маркер, поява плавна (grid 0fr → 1fr). */
+.field { display: flex; flex-direction: column; gap: var(--space-field-label-gap); color: var(--color-green); }
+.field__label { font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide); }
+.field__control {
+  display: block; width: 100%; margin: 0; padding: var(--space-15) var(--space-20);
+  background: var(--color-field-bg); color: var(--color-green);
+  border: var(--border-hairline) solid var(--color-field-border); border-radius: var(--radius-select);
+  font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide);
+  appearance: none; -webkit-appearance: none;
+  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.field__control::placeholder { color: var(--color-field-placeholder); opacity: 1; }
+textarea.field__control { resize: vertical; min-height: calc(var(--size-btn-h) * 2); }
+.field__control:focus-visible { outline: var(--border-hairline) solid var(--color-field-border-hover); outline-offset: var(--focus-offset); background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); transition-duration: var(--duration-focus); }
+@media (hover: hover) { .field__control:hover { background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); } }
+
+/* помилка під полем: висота плавно 0 → авто (grid 0fr → 1fr), без стрибка розкладки */
+.field__error { display: grid; grid-template-rows: 0fr; margin: 0; color: var(--color-field-error); opacity: 0; transition: grid-template-rows var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out); }
+.field__error > span { display: block; min-height: 0; overflow: hidden; font: var(--fw-semibold) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+.field.is-invalid .field__error, .check-field.is-invalid .field__error { grid-template-rows: 1fr; opacity: 1; }
+.field.is-invalid .field__error:has(> span:empty) { grid-template-rows: 0fr; opacity: 0; } /* e-mail ділить повідомлення з телефоном: власний рядок помилки порожній і схований */
+.field__error > span::before { content: ''; display: inline-block; width: var(--size-field-error-mark); height: var(--size-field-error-mark); margin-right: var(--space-10); background: currentColor; rotate: var(--angle-chip-diamond); } /* ромб-маркер: помилка читається не лише кольором */
+.field.is-invalid .field__control, .field.is-invalid .select__field { border-color: var(--color-field-error); box-shadow: 0 0 0 var(--border-hairline) var(--color-field-error); }
+
+/* згода (чекбокс): розмітка й індикатор — компонент .age-check (age-gate.css); тут лише відмінності форми: без бокових відступів, посилання над невидимим чекбоксом */
+.check-field { display: flex; flex-direction: column; gap: var(--space-field-label-gap); color: var(--color-green); }
+.check-field .age-check { align-items: flex-start; padding: var(--space-10) 0; }
+.check-field .age-check__box { margin-top: var(--space-5); }
+.check-field .age-check__label a { position: relative; z-index: 1; color: var(--color-green); text-decoration: underline; text-underline-offset: 0.2em; transition: color var(--duration-fast) var(--ease-out); } /* юридичне посилання підкреслене (як в age-gate: виняток із правила «без підкреслень») */
+@media (hover: hover) { .check-field .age-check__label a:hover { color: var(--color-teal); } }
+.check-field.is-invalid .age-check__box { border-color: var(--color-field-error); }

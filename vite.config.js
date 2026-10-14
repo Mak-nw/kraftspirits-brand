@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { contacts, contactsView } from './src/data/contacts.js';
+import { barrels, barrelsView } from './src/data/barrels.js';
 
 const root = import.meta.dirname;
 
@@ -14,6 +16,15 @@ function normalizeBase(raw) {
   return p;
 }
 const BUILD_BASE = normalizeBase(process.env.BASE_PATH);
+
+// %contacts.<ключ>% у HTML -> значення з src/data/contacts.js (адреса, координати, телефон, e-mail, посилання мапи, теми) з екрануванням для атрибутів/тексту
+const CONTACTS = contactsView(contacts);
+const escapeHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? escapeHtml(CONTACTS[key]) : m));
+
+// %barrels.<ключ>% у HTML -> значення з src/data/barrels.js (ціни, кількість пляшок, дрібний текст) для barrels.html
+const BARRELS = barrelsView(barrels);
+const fillBarrels = (html) => html.replace(/%barrels\.(\w+)%/g, (m, key) => (key in BARRELS ? escapeHtml(BARRELS[key]) : m));
 
 // <!--@include name--> -> partials/name.html (вкладені include підтримуються).
 // Параметри: <!--@include cta title="Текст"--> -> у partial {{title}} замінюється значенням;
@@ -37,7 +48,7 @@ function htmlPartials() {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
     // %BASE_URL% (404.html: <base href>) підставляємо самі, щоб dev і build/preview давали однаковий результат
-    transformIndexHtml: { order: 'pre', handler: (html) => render(html).replaceAll('%BASE_URL%', base) },
+    transformIndexHtml: { order: 'pre', handler: (html) => fillBarrels(fillContacts(render(html))).replaceAll('%BASE_URL%', base) },
     handleHotUpdate({ file, server }) {
       if (file.includes('/partials/')) server.ws.send({ type: 'full-reload' });
     },

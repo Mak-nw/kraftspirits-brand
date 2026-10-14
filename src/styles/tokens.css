@@ -433,3 +433,137 @@
   --type-stat-compact-font: var(--font-family-serif); --type-stat-compact-weight: var(--fw-regular); --type-stat-compact-size: calc(65 * var(--u)); --type-stat-compact-lh: var(--lh-none); --type-stat-compact-ls: var(--ls-none); /* 224:3644: «( 2 )» Regular, розмір 65 як у Figma (висота стовпця 145) */
   --color-hover-btn-beige: var(--color-light);    /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки beige на коричневому */
 }
+
+/* ===================================================================
+   Вікова верифікація (age-gate): повноекранний світлий оверлей з карткою 18+.
+   Вузлів Figma немає — усе рішення дизайну (світлий мокап за проханням замовника), значення з палітри/масштабу.
+   Компонент: partials/components/age-gate.html (+ age-gate-card.html), стилі src/styles/components/age-gate.css, логіка src/js/age-gate.js.
+   Ключ сховища `ks_age_ok`, термін 30 днів — у partials/head-age.html (inline-скрипт; CSS-токена для часу немає).
+   =================================================================== */
+:root {
+  --z-age-gate: 1000;                                           /* шар оверлея: вище хедера (--z-header 100) і будь-якого dropdown */
+  --color-age-overlay: var(--color-beige);                      /* фон оверлея (світлий, без темного скрима) */
+  --color-age-card: var(--color-light);                         /* картка світліша за фон оверлея */
+  --color-age-border: color-mix(in srgb, var(--color-green) 35%, var(--color-beige)); /* тонка зелена рамка картки та індикатора: темніший беж */
+  --color-age-legal: color-mix(in srgb, var(--color-green) 75%, var(--color-light));  /* приглушений юридичний текст; контраст на --color-light ≈ 5.2:1 */
+  --size-age-card-w: calc(860 * var(--u));                      /* ширина картки (2 рядки заголовка hero 55 + ряд з двох кнопок) */
+  --space-age-card-pad-y: var(--space-70);                      /* вертикальний padding картки */
+  --space-age-card-pad-x: var(--space-70);                      /* горизонтальний padding картки */
+  --size-age-logo-yc-w: calc(241 * var(--u));                   /* home-brand-logo-yc.svg 402×106 × 0.6 */
+  --size-age-logo-yc-h: calc(64 * var(--u));
+  --size-age-logo-bs-w: calc(158 * var(--u));                   /* home-brand-logo-bs.svg 263×152 × 0.6 */
+  --size-age-logo-bs-h: calc(91 * var(--u));
+  --size-age-logo-sep-h: calc(70 * var(--u));                   /* вертикальна риска між логотипами */
+  --size-age-subtitle-w: calc(620 * var(--u));                  /* ширина пояснення під заголовком */
+  --size-age-legal-w: calc(560 * var(--u));                     /* ширина юридичного тексту */
+  --font-size-age-legal: var(--font-size-small);                /* 12u: юридичний текст малим кеглем (caption/small) */
+  --lh-age-legal: 1.5;
+  --size-age-check: round(calc(26 * var(--u)), 1px);            /* квадрат індикатора «запам'ятати» (ціле px — чіткі краї) */
+  --border-age-check: round(calc(1.5 * var(--u)), 1px);        /* рамка індикатора 1.5u (ціле px) */
+  --size-age-check-tick-w: round(calc(7 * var(--u)), 1px);      /* галочка: ширина/висота кута */
+  --size-age-check-tick-h: round(calc(13 * var(--u)), 1px);
+  --border-age-check-tick: round(calc(2 * var(--u)), 1px);
+}
+
+/* ===================================================================
+   Контакти (contacts.html): ліва частина 8 колонок (карта + контактні дані), права 4 колонки (форма зворотного зв'язку).
+   Вузлів Figma немає — усе рішення дизайну, значення з палітри/масштабу. Дані (адреса, координати, теми) — src/data/contacts.js.
+   Компоненти: src/styles/contacts.css (сторінка), components/field.css (поля форми), select--light у components/select.css.
+   =================================================================== */
+:root {
+  --columns-contacts: 12;                                       /* сітка сторінки: 12 колонок у контейнері (поля 50u, як на товарі) */
+  --span-contacts-main: 8;                                      /* ліва частина (карта + дані) ≈ 2/3 */
+  --span-contacts-aside: 4;                                     /* права частина (форма) ≈ 1/3 */
+  --space-contacts-gap: var(--space-product-col-gap);           /* зазор між колонками/частинами 5u, як між фото й панеллю товару */
+  --space-contacts-pad: var(--space-50);                        /* внутрішній відступ панелей і проміжок між блоками всередині */
+  --size-contacts-panel-min-h: var(--size-product-frame-h);     /* мінімум висоти панелей = фрейм фото товару (100svh − 123u, не менше 700u): панелі заповнюють екран, на низьких вікнах сторінка скролиться */
+  --size-contacts-map-min-h: calc(360 * var(--u));              /* мінімум висоти карти; решту висоти лівої панелі (≈55–60%) бере карта (рядок 1fr) */
+  --filter-contacts-map: grayscale(0.85) sepia(0.5) hue-rotate(40deg) saturate(0.8) contrast(0.95); /* фільтр iframe мапи OSM під палітру сайту (зеленувато-бежевий тон) */
+  --columns-contacts-data: 6;                                   /* сітка контактних даних: 6 доріжок; рядок 1 — три колонки по 2, рядок 2 — дві по 3 */
+  --span-contacts-item: 2;                                      /* колонка рядка 1 (Адреса, Телефон, E-mail) */
+  --span-contacts-item-wide: 3;                                 /* колонка рядка 2 (Екскурсії, Бочкова торгівля) */
+  --space-contacts-item-gap: var(--space-30);                   /* проміжок між колонками/рядками контактних даних */
+  --color-field-bg: var(--color-light);                         /* поле форми на бежевій панелі: світліше за панель */
+  --color-field-bg-hover: var(--color-hover-acc-product);       /* hover/focus/відкрито: теплий беж (#E4E3D8), темніший за поле, світліший за панель */
+  --color-field-border: color-mix(in srgb, var(--color-green) 60%, var(--color-light)); /* рамка поля: контраст ≥3:1 до поля (WCAG 1.4.11) */
+  --color-field-border-hover: var(--color-green);               /* hover/focus рамки */
+  --color-field-placeholder: color-mix(in srgb, var(--color-green) 75%, var(--color-light)); /* плейсхолдер: контраст ≥4.5:1 на --color-field-bg */
+  --color-field-error: var(--color-teal);                       /* помилка валідації: глибокий синій з палітри (не «червоний з нуля») + ромб-маркер */
+  --size-field-error-mark: var(--size-chip-diamond-core);       /* ромб-маркер перед текстом помилки (орнамент чіпа) */
+  --color-contacts-highlight: var(--color-light);               /* м'який спалах фону форми при переході з ?topic=… (1 раз, --duration-bg) */
+  --space-field-gap: var(--space-20);                           /* проміжок між полями форми */
+  --space-field-label-gap: var(--space-10);                     /* підпис → поле */
+}
+
+/* ===================================================================
+   Ф'ючерсні бочки (barrels.html): hero з фото, переваги, «від бочки до пляшки» (sticky-сцена + кроки), вигода, подальша витримка, ціна.
+   Вузлів Figma немає — рішення дизайну за ТЗ замовника (банер 27.webp), значення з палітри/масштабу.
+   Компоненти: advantage-card, process-step, profit-panel, barrel-card, price-card, illustration-* (partials/components); стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js.
+   =================================================================== */
+:root {
+  --font-size-barrels-hero: calc(88 * var(--u));      /* H1 hero (більший за --font-size-hero 55: п'ять слів у два рядки по центру фото) */
+  --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
+  --container-barrels-hero-title: calc(1100 * var(--u)); /* ширина H1 hero (два рядки) */
+  --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
+  --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → субхедер → кнопка */
+  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 78%, transparent);    /* затемнення hero зверху: світле небо кадру інакше з'їдає світлий текст */
+  --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 45%, transparent);    /* середина градієнта hero */
+  --color-barrels-shade-bottom: color-mix(in srgb, var(--color-teal) 25%, transparent); /* низ градієнта hero */
+  --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
+  --space-barrels-head-mb: var(--space-70);           /* заголовок секції → контент */
+  --container-barrels-head: calc(1100 * var(--u));    /* ширина підзаголовка секції */
+
+  /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
+  --duration-loop: 8s;                                /* зациклена анімація кроку/ілюстрації */
+  --duration-loop-slow: 12s;                          /* зациклена загальна сцена «від бочки до пляшки» */
+  --duration-loop-mid: calc(var(--duration-loop-slow) / 3);  /* 4s: пара/хвилі, підцикл сцени */
+  --duration-loop-fast: calc(var(--duration-loop) / 4);      /* 2s: крапля */
+  --duration-flow: 1.2s;                              /* біг штрихів струменя/труби */
+  --ease-loop: cubic-bezier(0.45, 0, 0.25, 1);        /* ease-in-out для циклів (= --ease-accordion) */
+  --scale-barrels-breathe: 1.04;                      /* hover переваги: «дихання» ядра ілюстрації */
+  --shift-barrels-spark: calc(-4 * var(--u));         /* hover переваги: зсув іскор/аромату вгору */
+  --angle-barrel-tilt: -4deg;                         /* hover бочки подальшої витримки: легкий нахил */
+
+  /* SVG-ілюстрації: геометрія в одиницях viewBox (штрих 1.5 як в іконках; масштабується разом з малюнком) */
+  --svg-stroke: 1.5;
+  --svg-text-lg: 30;                                  /* позначки 63% / 40% у сцені (одиниці viewBox 800×440) */
+  --svg-text-sm: 15;                                  /* підписи у сцені */
+  --opacity-barrels-liquid: 0.22;                     /* заливка рідини в бочці/пляшці (єдине місце заливки в ілюстраціях) */
+  --opacity-barrels-track: 0.35;                      /* статична «колія» труби під біжучими штрихами */
+  --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
+  --size-barrels-gap: 8;                              /* проміжок між штрихами */
+
+  /* Переваги */
+  --size-barrels-art: calc(260 * var(--u));           /* ілюстрація переваги (ромб-рамка), квадрат */
+  --space-barrels-card-pad: var(--space-30);
+  --space-barrels-grid-gap: var(--space-20);
+
+  /* Як це працює */
+  --space-barrels-how-pad-y: var(--space-product-top);   /* сцена + кроки: відступ секції зверху/знизу (як на товарі) */
+  --size-barrels-step-min-h: calc(var(--size-product-frame-h) * 0.8); /* висота кроку: 80% фрейму сцени, права колонка скролиться, поки ліва стоїть */
+  --size-barrels-step-art: calc(300 * var(--u));      /* ілюстрація кроку, співвідношення 4:3 */
+  --space-barrels-step-pad-y: var(--space-70);
+  --type-barrels-step-text-size: var(--font-size-chip);  /* текст кроку: EB Garamond Medium 25 */
+
+  /* Вигода */
+  --font-size-barrels-profit-num: calc(120 * var(--u));  /* «≈ 383» */
+  --size-barrels-profit-barrel-lg: calc(280 * var(--u)); /* бочка 200 L */
+  --size-barrels-profit-barrel-sm: calc(170 * var(--u)); /* бочка 50 L (масштаб відповідає різниці об'єму) */
+  --size-barrels-bottle-icon: calc(18 * var(--u));       /* декоративні пляшки bottle-0-7: ширина (висота = ×50/24) */
+  --space-barrels-bottle-gap: calc(6 * var(--u));
+  --color-barrels-plate: color-mix(in srgb, var(--color-light) 8%, transparent); /* плашка «≈ € 15,66» на зеленій панелі */
+
+  /* Подальша витримка */
+  --size-barrels-head-art: calc(300 * var(--u));      /* днище бочки (круг) */
+  --color-barrel-marsala: var(--color-brown);         /* відтінки днищ — лише з палітри */
+  --color-barrel-madeira: var(--color-gold);
+  --color-barrel-port: var(--color-teal);
+  --color-barrel-sherry: var(--color-green);
+
+  /* Ціна */
+  --font-size-barrels-price: calc(120 * var(--u));    /* «€ 6 000» */
+  --size-barrels-route-w: calc(760 * var(--u));       /* лінія маршруту */
+  --container-barrels-note: calc(900 * var(--u));     /* дрібний текст під цінами */
+  --opacity-barrels-note: 0.75;                       /* приглушений колір дрібного тексту (контраст light на green ≥ 7:1 і при 0.75) */
+  --type-note-font: var(--font-family-sans); --type-note-weight: var(--fw-medium); --type-note-size: var(--font-size-small); --type-note-lh: 1.5; --type-note-ls: var(--ls-wide); /* дрібний юридичний/довідковий текст 12u */
+}

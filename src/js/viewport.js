@@ -4,7 +4,8 @@
 const root = document.documentElement;
 let last = 0;
 const sync = () => {
-  const w = root.clientWidth;
+  // ширина html (box), а не clientWidth: при html { overflow: hidden; scrollbar-gutter: stable } (вікова верифікація) clientWidth включає порожній gutter, а box — ні
+  const w = Math.round(root.getBoundingClientRect().width);
   if (w && w !== last) { last = w; root.style.setProperty('--vw', `${w}px`); }
 };
 sync();
