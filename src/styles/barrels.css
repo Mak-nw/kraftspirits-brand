@@ -1,6 +1,7 @@
-/* Сторінка «Ф'ючерсні бочки Bazylsprings» (barrels.html). Усі значення — токени (блок «Ф'ючерсні бочки» в tokens.css).
-   Секції: hero (фото + паралакс, як на головній) → переваги → «від бочки до пляшки» (sticky-сцена зліва, кроки справа) → вигода → подальша витримка → ціна.
-   SVG-ілюстрації: stroke/fill лише currentColor, штрих --svg-stroke, без градієнтів; анімації — transform / opacity / stroke-dashoffset. */
+/* Сторінка «Ф'ючерсні бочки Bazylsprings» (barrels.html), редизайн «Світло в погребі». Усі значення — токени (блок «Ф'ючерсні бочки» в tokens.css).
+   Кімнати: hero (фото) → S2 анатомія (wood) → S3 від бочки до пляшки (cellar) → S4 арифметика (paper, єдина світла) → S5 подальша витримка (wood)
+   → S6 ціна (cellar). Однотипні плашки — subgrid зі спільними рядками; оптичні поправки — лише токени в em. Гравюри: stroke currentColor, тонкі
+   лінії --svg-stroke-hair, заливки лише токенами; анімації — transform / opacity / stroke-dashoffset, без скрол-анімацій. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 .page-barrels { --color-header3-underlay: var(--color-barrels-header-underlay); } /* пілюля header на цій сторінці — teal (лише токен, розмітка спільного partial та сама) */
 
@@ -212,7 +213,7 @@
    однакова структура, рядки обох сертифікатів на одних лініях за будь-якої довжини тексту. 50 L — першим, ширшим (--fr-barrels-cert-accent),
    з яскравішою рамкою й золотою кнопкою (рішення замовника). Подвійна рамка: зовнішня border + внутрішня ::after, ромби — центр = кут
    внутрішньої рамки. Маркери списку — ромб, центр = середина висоти великих літер першого рядка (базова лінія + --font-cap-height-sans). */
-.bx-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
+.bx-sr { position: absolute; width: var(--size-barrels-sr); height: var(--size-barrels-sr); margin: calc(-1 * var(--size-barrels-sr)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
 .barrels-price { padding-block: var(--space-barrels-section-y); }
 .barrels-price__grid { display: grid; grid-template-columns: minmax(0, var(--fr-barrels-cert-accent)) minmax(0, 1fr) calc(var(--size-barrels-price-photo-w) + var(--space-barrels-price-photo-gap)); grid-template-rows: repeat(9, auto); column-gap: var(--space-barrels-cert-gap); width: var(--container-barrels); margin-inline: auto; }
 .barrels-price__title { grid-column: 1 / 3; grid-row: 1; margin-top: var(--shift-barrels-cap-top); }
