@@ -2,6 +2,7 @@
    Секції: hero (фото + паралакс, як на головній) → переваги → «від бочки до пляшки» (sticky-сцена зліва, кроки справа) → вигода → подальша витримка → ціна.
    SVG-ілюстрації: stroke/fill лише currentColor, штрих --svg-stroke, без градієнтів; анімації — transform / opacity / stroke-dashoffset. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
+.page-barrels { --color-header3-underlay: var(--color-barrels-header-underlay); } /* пілюля header на цій сторінці — teal (лише токен, розмітка спільного partial та сама) */
 
 /* ---------- «Світло в погребі»: кімнати, візерунок, зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
    Кімната = секція з власним тлом (wood / cellar / paper). Світле — лише текст, лінії та одна «паперова» кімната.
@@ -12,6 +13,10 @@
 .bx-room--cellar { background: var(--color-barrels-room-cellar); }
 .bx-room--paper { background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
 .bx-room--pattern::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--color-barrels-pattern); mask: url('/assets/img/barrels-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat; }
+
+/* ?slots=on (barrels.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
+.show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-barrels-accent); outline-offset: calc(-1 * var(--space-10)); }
+.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: 60vh; overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-cert-bg); color: var(--color-barrels-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
 
 /* зразки похідних кольорів у design-system.html (розділ «Ф'ючерсні бочки») */
 .swatch--bx-wood .swatch__chip { background: var(--color-barrels-room-wood); }
@@ -25,10 +30,12 @@
 
 /* ---------- Hero ---------- */
 .hero--barrels { color: var(--color-light); }
-.hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top) 0%, var(--color-barrels-shade-mid) 40%, transparent 65%, var(--color-barrels-shade-bottom) 100%); }
+.hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top) 0%, var(--color-barrels-shade-mid) 38%, transparent 62%), linear-gradient(to top, var(--color-barrels-shade-bottom) 0%, transparent 34%); }
 .hero__content { position: absolute; z-index: 2; top: var(--offset-barrels-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-hero-gap); text-align: center; }
 .hero__title { max-width: var(--container-barrels-hero-title); font: var(--type-hero-weight) var(--font-size-barrels-hero)/1.05 var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; text-wrap: balance; }
-.hero__subtitle { max-width: var(--container-barrels-hero-sub); text-wrap: balance; }
+.hero__rule { position: relative; display: block; width: var(--size-barrels-hero-rule-w); height: var(--size-barrels-rule-marker); color: var(--color-barrels-accent); background: linear-gradient(currentColor, currentColor) 0 50% / 100% var(--border-hairline) no-repeat; }
+.hero__rule::before { content: ''; position: absolute; left: 50%; top: 0; translate: -50% 0; width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); box-shadow: 0 0 0 var(--space-10) transparent; }
+.hero__subtitle { max-width: var(--container-barrels-hero-sub); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); text-wrap: balance; }
 .hero--barrels .btn { margin-top: var(--space-10); }
 
 /* ---------- S2 «Анатомія бочки»: кімната wood, реальне фото в арці + схема зрізу клепки з виносками ----------

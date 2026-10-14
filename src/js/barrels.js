@@ -51,5 +51,21 @@ if ('IntersectionObserver' in window) {
 }
 else document.querySelectorAll('[data-count-to]').forEach((el) => { el.dataset.count = 'done'; });
 
+// (5) ?slots=on — режим огляду для замовника: обводить місця під майбутні фото/тексти ([data-slot]) і показує їхній перелік.
+//     На звичайній сторінці нічого не змінюється (атрибути data-slot невидимі).
+if (/[?&]slots=on/.test(location.search)) {
+  document.documentElement.classList.add('show-slots');
+  const list = document.createElement('ol');
+  list.className = 'bx-slots';
+  list.setAttribute('aria-label', 'Місця під фото й тексти');
+  document.querySelectorAll('[data-slot]').forEach((el, i) => {
+    el.dataset.slotN = String(i + 1);
+    const li = document.createElement('li');
+    li.textContent = `${i + 1}. ${el.dataset.slot}`;
+    list.append(li);
+  });
+  document.body.append(list);
+}
+
 await import('./reveal.js');
 await import('./parallax.js');

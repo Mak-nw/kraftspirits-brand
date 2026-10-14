@@ -816,10 +816,13 @@
   --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
   --container-barrels-hero-title: calc(1100 * var(--u)); /* ширина H1 hero (два рядки) */
   --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
-  --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → субхедер → кнопка */
-  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 78%, transparent);    /* затемнення hero зверху: світле небо кадру інакше з'їдає світлий текст */
-  --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 45%, transparent);    /* середина градієнта hero */
-  --color-barrels-shade-bottom: color-mix(in srgb, var(--color-teal) 25%, transparent); /* низ градієнта hero */
+  --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → лінія → лід → кнопка */
+  --size-barrels-hero-rule-w: calc(220 * var(--u));   /* брендова лінія з ромбом між заголовком і лідом */
+  --size-barrels-slot-outline: 2px;                   /* ?slots=on: пунктир навколо місць під фото/тексти (лише режим огляду) */
+  --container-barrels-slots: calc(560 * var(--u));    /* ?slots=on: ширина переліку місць */
+  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 82%, transparent);    /* затемнення hero зверху (читабельність тексту й пілюлі); виміряно пікселями: контраст заголовка ≥ 4.5:1 у медіані */
+  --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 58%, transparent);    /* середина верхнього затемнення (під заголовком) */
+  --color-barrels-shade-bottom: color-mix(in srgb, var(--color-brown) 72%, transparent); /* теплий перехід знизу в кімнату «дерево» наступної секції */
   --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
 
   /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
@@ -853,6 +856,7 @@
   --opacity-barrels-grain: 0.11;                      /* зерно плівки поверх сторінки (barrels-grain.svg, fixed-шар без анімації) */
   --size-barrels-grain-tile: 240px;                   /* фізичний розмір плитки зерна (не масштабується з --u: зерно — властивість «плівки», а не макета) */
   --z-barrels-grain: calc(var(--z-header) - 1);       /* шар зерна: над секціями, під пілюлею header */
+  --color-barrels-header-underlay: color-mix(in srgb, var(--color-teal) 90%, transparent); /* підкладка пілюлі header НА ЦІЙ сторінці: teal замість зеленого (рішення замовника «коричневий + синій»); partial header не змінюється */
 
   /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
   --font-size-barrels-numeral: calc(240 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» */
