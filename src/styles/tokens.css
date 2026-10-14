@@ -800,11 +800,11 @@
   --btn-choice-border-focus:           var(--btn-green-border-focus);
   --btn-choice-border-selected:        var(--btn-green-border-active);
   --btn-choice-ring-color:             var(--btn-focus-ring-color-on-light);
-}
   --btn-choice-ring-width-selected:    var(--btn-focus-ring-width);   /* ПОСТІЙНА обводка вибраної плитки = те саме кільце, що в кнопок на :focus-visible (1px) */
   --btn-choice-ring-offset-selected:   var(--btn-focus-ring-offset);  /* відступ кільця вибраної плитки = --btn-focus-ring-offset (3u), outline не змінює розкладку */
   --btn-choice-ring-color-selected:    var(--btn-choice-ring-color);  /* колір = green (on-light): контраст до beige-панелі ≥3:1 */
   --btn-choice-ring-width-selected-focus: calc(2 * var(--btn-focus-ring-width)); /* вибрана + фокус: те саме кільце, удвічі товще — не зливається з просто вибраною */
+}
 
 /* ===================================================================
    Ф'ючерсні бочки (barrels.html): hero з фото, переваги, «від бочки до пляшки» (sticky-сцена + кроки), вигода, подальша витримка, ціна.
