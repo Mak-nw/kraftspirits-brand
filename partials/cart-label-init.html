@@ -1,0 +1,11 @@
+<script>
+/* Лічильник «Кошик ( N )» ще ДО першого paint (inline одразу після header): cart-counter.js — модуль і спрацьовує пізніше, тож непорожній кошик давав би зсув ширини напису (CLS).
+   Ключ сховища і формат тексту — ті самі, що в src/js/cart-counter.js (CART_KEY, renderCartCount): міняти разом. Без JS / порожній кошик — лишається розмітка «Кошик ( 0 )». */
+(function () {
+  try {
+    var n = 0, list = JSON.parse(localStorage.getItem('ks_cart') || '[]');
+    if (Array.isArray(list)) list.forEach(function (r) { n += Number(r && r.qty) || 0; });
+    if (n) document.querySelectorAll('.site-header a[href$="cart.html"] [data-cart-label]').forEach(function (el) { el.textContent = 'Кошик ( ' + n + ' )'; });
+  } catch (e) {}
+})();
+</script>

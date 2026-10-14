@@ -2,6 +2,10 @@
    Показ: html:not(.age-ok) — клас age-ok ставить inline-скрипт у <head> (partials/head-age.html) ДО першого paint, коли вік уже підтверджено (миготіння немає).
    Поки ворота показані, скрол сторінки заблоковано (overflow: hidden + scrollbar-gutter: stable — смуга не зникає, ширина/--u і хедер не зсуваються). */
 html:not(.age-ok) { overflow: hidden; scrollbar-gutter: stable; }
+/* Порожня смуга scrollbar-gutter (classic scrollbar, ≈15 px) — не частина viewport: fixed-оверлей її не фарбує, вона малюється лише кольором фону html (картинка в gutter не виводиться).
+   Тож поки ворота показані, html має колір, що збігається із середнім тоном візерунка воріт (--color-age-gutter, ±1/255): замість смуги кольору сторінки (зелений на каталозі/товарі) — шва не видно.
+   Із початку закриття (.age-closing, age-gate.js) колір знімається — смуга знову кольору сторінки, як було до воріт, без «залишку» воріт під час згасання. Без смуги (overlay scrollbars) ефекту немає. */
+html:not(.age-ok):not(.age-closing) { background-color: var(--color-age-gutter); }
 
 .age-gate {
   display: none;

@@ -22,7 +22,7 @@
 .select__button:focus-visible::after { border-radius: var(--radius-select); outline: var(--border-hairline) solid currentColor; outline-offset: var(--focus-offset); }
 /* стани плитки — токени --btn-select-bg-<default|hover|focus|selected> (selected = .is-open) */
 .select { transition: background-color var(--btn-transition-duration) var(--btn-transition-ease); }
-.select:has(.select__button:focus-visible) { background: var(--btn-select-bg-focus); }
+.select:has(.select__button:focus-visible) { background: var(--btn-select-bg-focus); transition-duration: var(--btn-transition-duration-focus); } /* фокус з клавіатури — короткий перехід (політика --btn-transition-duration-focus) */
 .select.is-open { background: var(--btn-select-bg-selected); }
 @media (hover: hover) { .select:has(.select__button:hover) { background: var(--btn-select-bg-hover); } }
 .select__value { white-space: nowrap; }
@@ -62,7 +62,7 @@
 .select--light .select__value { white-space: normal; }
 .select--light.is-placeholder .select__value { color: var(--color-field-placeholder); }
 .select--light .select__chevron { content: url('/assets/icons/chevron-down.svg'); } /* темний шеврон (#223520) замість світлого каталожного */
-.select--field:has(.select__button:focus-visible) .select__field { background: var(--btn-select-field-bg-focus); border-color: var(--btn-select-field-border-focus); }
+.select--field:has(.select__button:focus-visible) .select__field { background: var(--btn-select-field-bg-focus); border-color: var(--btn-select-field-border-focus); transition-duration: var(--btn-transition-duration-focus); }
 .select--field.is-open .select__field { background: var(--btn-select-field-bg-selected); border-color: var(--btn-select-field-border-selected); }
 @media (hover: hover) { .select--field:has(.select__button:hover) .select__field { background: var(--btn-select-field-bg-hover); border-color: var(--btn-select-field-border-hover); } }
 .select--light .select__button:focus-visible::after { border-radius: var(--radius-select); }

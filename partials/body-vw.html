@@ -1,0 +1,9 @@
+<script>
+/* --vw (ширина html без смуги прокрутки/gutter; tokens.css рахує --u від неї) — синхронно на початку <body> (інлайн-скрипт у body чекає всі таблиці стилів із head) і ДО першого paint. У head не можна: Vite переносить <link rel="stylesheet"> у кінець head, після скриптів.
+   Без цього fallback 100vw діє, доки не виконається модуль viewport.js; при html { overflow: hidden; scrollbar-gutter: stable } (вікові ворота) ширина html на 15 px вужча,
+   і після завантаження JS увесь макет зсувається на ≈1% (CLS). viewport.js далі лише слідкує за змінами (ResizeObserver, resize). */
+(function () {
+  var d = document.documentElement, w = Math.round(d.getBoundingClientRect().width);
+  if (w) d.style.setProperty('--vw', w + 'px');
+})();
+</script>

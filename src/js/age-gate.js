@@ -75,6 +75,7 @@ function init() {
     const ms = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : cssMs('--duration-base', gate);
     if (!ms) { finish(); return; }
     gate.classList.add('is-closing');
+    root.classList.add('age-closing'); // знімає фон html під воротами (смуга scrollbar-gutter знову кольору сторінки), див. age-gate.css
     setTimeout(finish, ms + 30);
   };
 

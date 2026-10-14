@@ -39,5 +39,5 @@
 /* спільний hover пари логотипів: курсор над будь-яким логотипом або над групою (.site-header__logos) — ОБИДВА зображення разом тьмяніють 1 → --opacity-logo-hover за --duration-fast; вихід — разом повертаються. Без підкреслення й зміни розміру. Окремого hover на кожному лого немає; focus-visible кільце кожного лого (beige) — звичайне, opacity на нього не діє */
 .site-header__logo img { transition: opacity var(--duration-fast) var(--ease-out); }
 @media (hover: hover) { .site-header__logos:hover img { opacity: var(--opacity-logo-hover); } }
-.site-header__logos:focus-within img { opacity: var(--opacity-logo-hover); }
+.site-header__logos:focus-within img { opacity: var(--opacity-logo-hover); transition-duration: var(--btn-transition-duration-focus); }
 @media (prefers-reduced-motion: reduce) { .site-header__logo img { transition: none; } }

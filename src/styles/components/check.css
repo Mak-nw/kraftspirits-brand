@@ -18,5 +18,6 @@
 }
 .check__input:checked + .check__box { background: var(--btn-check-bg-selected); border-color: var(--btn-check-border-selected); }
 .check__input:checked + .check__box::after { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
-.check__input:focus-visible + .check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }
+.check__input:focus-visible + .check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); transition-duration: var(--btn-transition-duration-focus); }
+.check__input:focus-visible + .check__box::after { transition-duration: var(--btn-transition-duration-focus); } /* фокус з клавіатури: галочка й рамка змінюються за --btn-transition-duration-focus */
 @media (hover: hover) { .check:hover .check__box { border-color: var(--btn-check-border-hover); } }

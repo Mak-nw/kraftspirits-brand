@@ -184,6 +184,24 @@ function renderProduct(p) {
   };
   // повторний клік по активній мініатюрі повертає головне фото
   thumbs.forEach((b, i) => b.addEventListener('click', () => show(active === i ? -1 : i)));
+  // Попереднє підвантаження великих кадрів (lg-webp): інакше перша заміна чекає мережу ≈1 с. Не на старті (LCP/пропускна здатність головного фото):
+  // (а) на pointerenter/focus мініатюри — саме її кадр; (б) решта — у простої після події load (requestIdleCallback; запасно setTimeout).
+  // Image + decode() кладе ресурс у пам'ять, тож наступний <img> з тим самим URL у setPhoto показується миттєво; кожен URL — один запит.
+  const warmed = new Map();
+  const warm = (s) => {
+    const url = base + s.large;
+    if (warmed.has(url)) return;
+    const im = new Image();
+    im.fetchPriority = 'low';
+    im.decoding = 'async';
+    im.src = url;
+    warmed.set(url, im); // тримаємо посилання, щоб завантаження не скасувалось
+    im.decode().catch(() => {});
+  };
+  thumbs.forEach((b, i) => { const w = () => warm(slides[i]); b.addEventListener('pointerenter', w); b.addEventListener('focus', w); });
+  const warmAll = () => slides.forEach(warm);
+  const whenIdle = () => ('requestIdleCallback' in window ? requestIdleCallback(warmAll, { timeout: 3000 }) : setTimeout(warmAll, 1500));
+  if (document.readyState === 'complete') whenIdle(); else addEventListener('load', whenIdle, { once: true });
   if (!slides.length) thumbsNav.hidden = true;
   show(-1);
 
@@ -197,7 +215,6 @@ function renderProduct(p) {
   btn.dataset.reveal = 'rise';
   btn.classList.remove('btn--green');
   btn.classList.add(p.brand === 'bazylsprings' ? 'btn--teal' : 'btn--green');
-  btn.classList.add('btn--serif'); // 205:2445: ціна й текст кнопки — EB Garamond (рішення замовника: однаково для YasnoCraft і Bazylsprings)
   let current = p.volumes[0];
   const renderBtn = () => {
     btn.dataset.add = p.slug;

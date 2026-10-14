@@ -1,5 +1,5 @@
 // Випадне меню header 3: кнопка «меню» (aria-expanded/aria-controls) відкриває панель під пілюлею.
-// Клавіатура: Enter/Space (нативно), ArrowDown на кнопці — відкрити й на перший пункт, Esc — закрити (фокус на кнопку),
+// Клавіатура: Enter/Space (нативно), ArrowDown на кнопці — відкрити й на перший пункт, Esc (слухач на document, з будь-яким фокусом; фокус повертається на кнопку, лише якщо був у меню/кнопці) — закрити,
 // ArrowUp/ArrowDown/Home/End між пунктами; клік поза панеллю, вихід фокусу за межі кнопки й панелі (а не всієї групи .site-header__side) або клік по пункту — закривають.
 // Ховер (лише мишка/тачпад: (hover: hover) and (pointer: fine)): pointerenter на кнопці відкриває меню без затримки; воно лишається відкритим,
 // поки курсор над кнопкою або над панеллю (+ «місток» ::before у CSS); після виходу з обох закривається через --header3-menu-close-delay (0.25s).
@@ -38,12 +38,13 @@ function init(header) {
       if (!pinned && !menu.contains(document.activeElement)) { hoverOpened = false; setOpen(false); }
     }, closeDelay());
   };
+  let escaped = false; // закрито Esc, поки курсор над кнопкою/панеллю: не відкривати знову, доки курсор не вийде з обох і не повернеться
   const hoverIn = (e) => {
-    if (e.pointerType !== 'mouse' || !fine.matches) return;
+    if (e.pointerType !== 'mouse' || !fine.matches || escaped) return;
     cancelClose();
     if (!isOpen()) { hoverOpened = true; pinned = false; setOpen(true); }
   };
-  const hoverOut = (e) => { if (e.pointerType === 'mouse' && fine.matches) scheduleClose(); };
+  const hoverOut = (e) => { if (e.pointerType === 'mouse' && fine.matches) { escaped = false; scheduleClose(); } };
   btn.addEventListener('pointerenter', hoverIn);
   menu.addEventListener('pointerenter', hoverIn);
   btn.addEventListener('pointerleave', hoverOut);
@@ -66,7 +67,15 @@ function init(header) {
     else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
   });
   menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
-  header.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) { e.preventDefault(); setOpen(false, true); } });
+  // Esc закриває меню з будь-яким фокусом (WCAG 1.4.13: контент по ховеру можна закрити без руху курсора): слухач на document, бо відкрите ховером меню лишає фокус на body.
+  // Фокус повертаємо на кнопку лише коли він був у кнопці/панелі (клавіатурний сценарій); якщо меню відкрито ховером, фокус не рухаємо.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || e.defaultPrevented || !isOpen()) return;
+    e.preventDefault();
+    const a = document.activeElement;
+    escaped = btn.matches(':hover') || menu.matches(':hover');
+    setOpen(false, btn.contains(a) || menu.contains(a));
+  });
   document.addEventListener('pointerdown', (e) => { if (isOpen() && !e.target.closest('.site-header__side, .site-header__menu')) setOpen(false); });
   // Tab/Shift+Tab за межі кнопки+панелі (навіть до сусіднього «каталог») закриває меню.
   // relatedTarget === null (Shift+Tab з першого елемента, у браузерний інтерфейс або по колу): дивимось, де фокус після тіку; на body лишаємо відкритим лише якщо курсор над кнопкою/панеллю (клік по полях меню).

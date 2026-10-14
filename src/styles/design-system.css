@@ -7,6 +7,9 @@
 .ds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-30); }
 .ds-grid--3 { grid-template-columns: repeat(3, 1fr); }
 .ds-meta { font: var(--fw-regular) var(--font-size-small)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+/* значення, які design-system.js підставляє після завантаження (data-token / data-spec / data-width / data-u): порожній рядок займає ту саму висоту (нульової ширини пробіл), тож підстановка не зсуває секції (CLS) */
+:is([data-token], [data-spec], [data-width], [data-u]):empty::before { content: '\200b'; }
+[data-u]:empty::before { content: '1 px макета = 0.0000 px (вікно 0000)'; visibility: hidden; } /* рядок масштабу в .ds-note: резерв довжини майбутнього тексту, щоб абзац не перенісся на 2 рядки після підстановки */
 
 .swatch { border: var(--border-hairline) solid var(--color-line); }
 .swatch__chip { height: var(--ds-swatch-chip-h); border-bottom: var(--border-hairline) solid var(--color-line); }
@@ -47,6 +50,7 @@
 .demo-panel { padding: var(--space-30); display: flex; flex-wrap: wrap; gap: var(--space-30); align-items: center; }
 .demo-panel > * { min-width: 0; }
 .demo-panel--card { align-items: flex-start; }
+.demo-panel--start { align-items: flex-start; } /* підписи демо-полів на одному рівні, навіть якщо в одного поля розкрита помилка */
 .demo-label { margin: var(--space-30) 0 var(--space-15); }
 .ds-partial-box { width: var(--container-text); max-width: 100%; }
 .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-30); }
@@ -131,3 +135,5 @@
 .select.is-focus .select__button::after { border-radius: var(--radius-select); outline: var(--btn-focus-ring-width) solid currentColor; outline-offset: var(--btn-focus-ring-offset); }
 .check.is-hover .check__box { border-color: var(--btn-check-border-hover); }
 .check.is-focus .check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }
+/* імітатор focus — та сама тривалість переходу, що й у справжнього :focus-visible (політика --btn-transition-duration-focus) */
+:is(.btn, .nav-cell, .arrow-btn, .chip, .product-volume, .select, .check).is-focus, .btn.is-focus :is(.btn__inner, .btn__arrow), .arrow-btn.is-focus img, .product-volume.is-focus::before, .select.is-focus .select__field, .check.is-focus .check__box, .check.is-focus .check__box::after { transition-duration: var(--btn-transition-duration-focus); }

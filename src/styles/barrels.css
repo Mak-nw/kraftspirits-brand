@@ -113,6 +113,10 @@
 .profit-panel__size { position: absolute; left: 50%; top: 45%; translate: -50% -50%; padding: var(--space-5) var(--space-15); border: var(--border-hairline) solid currentColor; border-radius: var(--radius-btn); background: var(--color-green); color: var(--color-light); white-space: nowrap; }
 .profit-panel__count { display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; color: var(--color-light); }
 .profit-panel__num { font: var(--type-stat-weight) var(--font-size-barrels-profit-num)/var(--lh-none) var(--type-stat-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється (opacity).
+   Страховка: якщо модуль не відпрацював, через --duration-count-failsafe число з'являється саме. Без JS (html.js немає) і reduced-motion — видно фінальне значення одразу. */
+.js .page-barrels [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
+@keyframes count-failsafe { to { opacity: 1; } }
 .profit-panel__bottles { display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--space-barrels-bottle-gap); margin-top: var(--space-15); color: var(--color-gold); }
 .profit-panel__bottles .icon { --icon-size: var(--size-barrels-bottle-icon); }
 .profit-panel__more { align-self: center; }

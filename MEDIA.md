@@ -73,7 +73,7 @@
 |---|---|---|---|
 | 206:2493 «magnific__studio-product-photograph-of-the-bottle-from-image__20078 1» | 900×968 (cover) | `img/product-hero-gin-yasnogorodskyi.webp` (1800×1936, webp q85) | Figma-растр 2048×2048 PNG без альфи; центрально обрізаний до пропорції слота 900:968 і приведений до 2× слота. Студійне фото пляшки «джин Ясногородський». Використано як `hero` gin-yasnyi |
 | 205:2435 «Subtract» | 914×352 | `img/product-frame-yc-arch.svg` | Арка шапки панелі (зелений прямокутник з арковим вирізом), вектор з Figma без змін |
-| 205:2438 «YasnoCraft_logo_round_colour 1» | 182×156 | `img/yasnocraft-logo-round-colour.png` (вже було) | md5 збігається з Figma-растром (2400×2050) |
+| 205:2438 «YasnoCraft_logo_round_colour 1» | 182×156 | `img/yasnocraft-logo-round-colour.webp` (PNG-оригінал лишено в `public/assets/img/` як джерело) | md5 PNG збігається з Figma-растром (2400×2050); webp = `cwebp -lossless -exact -z 9` (пікселі й альфа ідентичні PNG; 245 → 73 КБ) |
 | 206:2505 / 206:2507 логотипи header | 201.8×29.5 / 178.9×59.6 | `img/yasnocraft-logo-no-mountains.webp`, `img/bazylsprings-logo.webp` (у розмітці: header, hero, design-system) | md5 PNG-оригіналів збігається з Figma-растрами; PNG лишено в `public/assets/img/` як джерело. webp = `cwebp -lossless -exact -z 9` (пікселі й альфа ідентичні PNG; 128 → 25 КБ і 204 → 53 КБ) |
 | 206:2521 «image 39» і 194:1420 «image 40» | 126×167 (cover) | `img/gallery-gin-yasnyi-2.webp`, `img/gallery-gin-yasnyi-3.webp` (320×424; великі — `-2-lg`, `-3-lg`) | Figma-растри 896×1200 візуально збігаються з уже наявними gallery-gin-yasnyi-2/3 — нових файлів немає |
 
