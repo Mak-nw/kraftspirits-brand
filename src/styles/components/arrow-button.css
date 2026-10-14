@@ -1,19 +1,34 @@
-/* Кругла кнопка-шеврон слайдера: рамка (--border-hairline) + padding --space-5 + chevron.svg 52x54 (194:1333) */
+/* Кругла кнопка-шеврон слайдера: рамка (--border-hairline) + padding --space-5 + chevron.svg 52x54 (194:1333).
+   Стани — токени --btn-arrow-<bg|border|icon-filter>-<стан> (tokens.css); контекстні змінні --btn-bg / --btn-border / --btn-icon-filter читають правила нижче. */
 .arrow-btn {
+  --btn-bg: var(--btn-arrow-bg-default); --btn-bg-hover: var(--btn-arrow-bg-hover); --btn-bg-focus: var(--btn-arrow-bg-focus); --btn-bg-active: var(--btn-arrow-bg-active); --btn-bg-disabled: var(--btn-arrow-bg-disabled);
+  --btn-border: var(--btn-arrow-border-default); --btn-border-hover: var(--btn-arrow-border-hover); --btn-border-focus: var(--btn-arrow-border-focus); --btn-border-active: var(--btn-arrow-border-active); --btn-border-disabled: var(--btn-arrow-border-disabled);
+  --btn-icon-filter: var(--btn-arrow-icon-filter-default); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-focus); --btn-icon-filter-active: var(--btn-arrow-icon-filter-active); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-disabled);
   display: inline-flex; padding: var(--space-5);
-  border: var(--border-hairline) solid var(--color-light);
+  border: var(--border-hairline) solid var(--btn-border);
   border-radius: var(--radius-pill);
   width: var(--size-arrow-btn-w); height: var(--size-arrow-btn-h);
   box-sizing: border-box;
-  background-color: transparent; cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  background-color: var(--btn-bg); cursor: pointer;
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease);
 }
-.arrow-btn img { width: 100%; height: 100%; transition: filter var(--duration-fast) var(--ease-out); }
+.arrow-btn img { width: 100%; height: 100%; filter: var(--btn-icon-filter); transition: filter var(--btn-transition-duration) var(--btn-transition-ease); }
 .arrow-btn--prev { transform: scaleX(var(--flip-x)); } /* 194:1336 */
 /* hover/focus: світла заливка, іконка (світла) інвертується в темну */
-.arrow-btn:focus-visible { background-color: var(--color-hover-arrow-btn); transition-duration: var(--duration-focus); }
-.arrow-btn:focus-visible img { filter: invert(1); transition-duration: var(--duration-focus); }
+.arrow-btn:focus-visible { background-color: var(--btn-bg-focus); border-color: var(--btn-border-focus); transition-duration: var(--btn-transition-duration-focus); }
+.arrow-btn:focus-visible img { filter: var(--btn-icon-filter-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
-  .arrow-btn:hover { background-color: var(--color-hover-arrow-btn); }
-  .arrow-btn:hover img { filter: invert(1); }
+  .arrow-btn:hover { background-color: var(--btn-bg-hover); border-color: var(--btn-border-hover); }
+  .arrow-btn:hover img { filter: var(--btn-icon-filter-hover); }
 }
+/* active (натиснуто): заливка hover на 8% темніша (--btn-active-mix); перехід короткий; без scale (на .arrow-btn--prev уже є scaleX) */
+.arrow-btn:active { background-color: var(--btn-bg-active); border-color: var(--btn-border-active); transition-duration: var(--btn-transition-duration-focus); }
+.arrow-btn:active img { filter: var(--btn-icon-filter-active); transition-duration: var(--btn-transition-duration-focus); }
+/* disabled / aria-disabled (слайдер з однією позицією): приглушення, курсор, стани hover/focus/active = default; нативний :disabled без pointer-events */
+.arrow-btn:is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--btn-disabled-opacity); cursor: var(--btn-disabled-cursor);
+  --btn-bg: var(--btn-bg-disabled); --btn-bg-hover: var(--btn-bg-disabled); --btn-bg-focus: var(--btn-bg-disabled); --btn-bg-active: var(--btn-bg-disabled);
+  --btn-border: var(--btn-border-disabled); --btn-border-hover: var(--btn-border-disabled); --btn-border-focus: var(--btn-border-disabled); --btn-border-active: var(--btn-border-disabled);
+  --btn-icon-filter: var(--btn-icon-filter-disabled); --btn-icon-filter-hover: var(--btn-icon-filter-disabled); --btn-icon-filter-focus: var(--btn-icon-filter-disabled); --btn-icon-filter-active: var(--btn-icon-filter-disabled);
+}
+.arrow-btn:disabled { pointer-events: none; }

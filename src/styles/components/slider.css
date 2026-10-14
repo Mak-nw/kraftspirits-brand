@@ -11,6 +11,4 @@
    тож на екрані в кожен момент видно не більше однієї картки з текстом */
 .slider__slide.is-leave { opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) var(--ease-out), translate var(--duration-fast) var(--ease-out); } /* translate — щоб незавершений reveal-зсув першої картки не «стрибав» */
 .slider__slide.is-delay { transition-delay: var(--duration-fast); }
-/* одна позиція в добірці: стрілки неактивні */
-.slider .arrow-btn[aria-disabled="true"] { opacity: var(--opacity-muted); cursor: default; background-color: transparent; }
-.slider .arrow-btn[aria-disabled="true"] img { filter: none; }
+/* одна позиція в добірці: стрілки неактивні (aria-disabled="true") — вигляд задає спільне правило .arrow-btn:is(:disabled, [aria-disabled]) (arrow-button.css, токени --btn-disabled-*) */

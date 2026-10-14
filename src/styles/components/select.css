@@ -3,8 +3,8 @@
 .select {
   position: relative; display: flex; align-items: center; gap: var(--space-30);
   padding: var(--space-select-py) var(--space-select-px);
-  background: var(--color-select-bg); border-radius: var(--radius-select);
-  color: var(--color-beige);
+  background: var(--btn-select-bg-default); border-radius: var(--radius-select);
+  color: var(--btn-select-text-default);
 }
 .select__label {
   white-space: nowrap;
@@ -13,16 +13,18 @@
 .select__field { width: var(--size-select-w); } /* не position: relative — containing block для .select__button::after і списку = вся плитка .select */
 .select__button {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-10); width: 100%; text-align: left;
-  color: var(--color-beige);
+  color: var(--btn-select-text-default);
   font: var(--type-caption-weight) var(--font-size-nav)/var(--lh-none) var(--type-caption-font); letter-spacing: var(--ls-wide); text-transform: uppercase;
   text-decoration: none; cursor: pointer;
 }
 /* Клікабельна вся плитка: .hit-area (base.css) розтягує кнопку на весь .select (лейбл, значення, шеврон, внутрішні відступи); кнопка без position, тож inset:0 рахується від .select */
 .select__button:focus-visible { outline: none; }
 .select__button:focus-visible::after { border-radius: var(--radius-select); outline: var(--border-hairline) solid currentColor; outline-offset: var(--focus-offset); }
-.select { transition: background-color var(--duration-fast) var(--ease-out); }
-.select:has(.select__button:focus-visible), .select.is-open { background: var(--color-select-bg-hover); }
-@media (hover: hover) { .select:has(.select__button:hover) { background: var(--color-select-bg-hover); } }
+/* стани плитки — токени --btn-select-bg-<default|hover|focus|selected> (selected = .is-open) */
+.select { transition: background-color var(--btn-transition-duration) var(--btn-transition-ease); }
+.select:has(.select__button:focus-visible) { background: var(--btn-select-bg-focus); }
+.select.is-open { background: var(--btn-select-bg-selected); }
+@media (hover: hover) { .select:has(.select__button:hover) { background: var(--btn-select-bg-hover); } }
 .select__value { white-space: nowrap; }
 .select__chevron { flex: none; width: var(--size-chevron-w); height: var(--size-chevron-h); max-width: none; transition: transform var(--duration-base) var(--ease-out); }
 .select.is-open .select__chevron { transform: rotate(var(--angle-flip)); }
@@ -41,8 +43,8 @@
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 .select__option[aria-selected="true"] { font-weight: var(--fw-semibold); }
-.select__option.is-active { background: var(--color-hover-faq); }
-@media (hover: hover) { .select__option:hover { background: var(--color-hover-faq); } }
+.select__option.is-active { background: var(--btn-select-option-bg-hover); }
+@media (hover: hover) { .select__option:hover { background: var(--btn-select-option-bg-hover); } }
 
 /* Світлий варіант для бежевих панелей (форма контактів): .select--light + .select--field.
    Не змінює каталожний .select: усі правила — лише за модифікаторами. Підпис над полем (як у інших полів форми, components/field.css),
@@ -53,18 +55,19 @@
 .select--field .select__field {
   position: relative; /* containing block для кнопки (.hit-area) і списку: клікабельне все поле */
   width: 100%; padding: var(--space-15) var(--space-20);
-  background: var(--color-field-bg); border: var(--border-hairline) solid var(--color-field-border); border-radius: var(--radius-select);
-  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  background: var(--btn-select-field-bg-default); border: var(--border-hairline) solid var(--btn-select-field-border-default); border-radius: var(--radius-select);
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease);
 }
 .select--light .select__button { color: var(--color-green); font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
 .select--light .select__value { white-space: normal; }
 .select--light.is-placeholder .select__value { color: var(--color-field-placeholder); }
 .select--light .select__chevron { content: url('/assets/icons/chevron-down.svg'); } /* темний шеврон (#223520) замість світлого каталожного */
-.select--field:has(.select__button:focus-visible) .select__field, .select--field.is-open .select__field { background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); }
-@media (hover: hover) { .select--field:has(.select__button:hover) .select__field { background: var(--color-field-bg-hover); border-color: var(--color-field-border-hover); } }
+.select--field:has(.select__button:focus-visible) .select__field { background: var(--btn-select-field-bg-focus); border-color: var(--btn-select-field-border-focus); }
+.select--field.is-open .select__field { background: var(--btn-select-field-bg-selected); border-color: var(--btn-select-field-border-selected); }
+@media (hover: hover) { .select--field:has(.select__button:hover) .select__field { background: var(--btn-select-field-bg-hover); border-color: var(--btn-select-field-border-hover); } }
 .select--light .select__button:focus-visible::after { border-radius: var(--radius-select); }
 .select--field .select__list { top: calc(100% + var(--space-5)); left: 0; right: 0; width: auto; min-width: 0; background: var(--color-field-bg); border-color: var(--color-field-border-hover); border-radius: var(--radius-select); }
 .select--light .select__option { white-space: normal; font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
 .select--light .select__option[aria-selected="true"] { font-weight: var(--fw-bold); }
-.select--light .select__option.is-active { background: var(--color-field-bg-hover); }
-@media (hover: hover) { .select--light .select__option:hover { background: var(--color-field-bg-hover); } }
+.select--light .select__option.is-active { background: var(--btn-select-field-option-bg-hover); }
+@media (hover: hover) { .select--light .select__option:hover { background: var(--btn-select-field-option-bg-hover); } }

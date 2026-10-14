@@ -12,13 +12,13 @@
   text-align: center;
 }
 .catalog-nav__item {
-  white-space: nowrap; opacity: var(--opacity-catalog-nav-muted);
+  white-space: nowrap; opacity: var(--btn-catnav-opacity-default);
   overflow: clip; /* область реакції = рядок line-height: текстовий бокс шрифта вищий за line-height і накладався б на сусідній рядок */
   transition: opacity var(--duration-base) var(--ease-out);
 }
-.catalog-nav__item.is-active { opacity: 1; }
-.catalog-nav__item:focus-visible { opacity: 1; transition-duration: var(--duration-focus); }
-@media (hover: hover) { .catalog-nav__item:hover { opacity: 1; } }
+.catalog-nav__item.is-active { opacity: var(--btn-catnav-opacity-selected); }
+.catalog-nav__item:focus-visible { opacity: var(--btn-catnav-opacity-focus); transition-duration: var(--btn-transition-duration-focus); }
+@media (hover: hover) { .catalog-nav__item:hover { opacity: var(--btn-catnav-opacity-hover); } }
 
 .catalog-bar {
   display: flex; align-items: center; justify-content: space-between;

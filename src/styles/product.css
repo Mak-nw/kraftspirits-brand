@@ -32,12 +32,12 @@
 .product-thumbs[hidden] { display: none; }
 .product-thumb {
   display: block; width: var(--size-product-thumb-w); height: var(--size-product-thumb-h); padding: 0; overflow: hidden;
-  border: var(--size-product-focus) solid transparent; border-radius: var(--radius-product-thumb);
+  border: var(--size-product-focus) solid var(--btn-thumb-border-default); border-radius: var(--radius-product-thumb);
 }
-.product-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-base) var(--ease-out); }
-.product-thumb { transition: border-color var(--duration-fast) var(--ease-out); }
+.product-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--btn-transition-duration-base) var(--btn-transition-ease); }
+.product-thumb { transition: border-color var(--btn-transition-duration) var(--btn-transition-ease); }
 .product-thumb[aria-pressed="true"] { border-color: var(--accent); }
-@media (hover: hover) { .product-thumb:hover img { transform: scale(var(--scale-zoom)); } }
+@media (hover: hover) { .product-thumb:hover img { transform: scale(var(--btn-thumb-zoom-hover)); } } /* selected: рамка = --accent бренду (контекст сторінки; токен не може посилатись на --accent) */
 
 /* велике фото (206:2493): заповнює фрейм обох брендів */
 .product-stage { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--radius-product-frame); }
@@ -68,11 +68,13 @@
 .product-volumes { display: flex; gap: var(--space-product-volumes-gap); justify-content: center; }
 .product-volumes > * { display: inline-flex; align-items: center; gap: var(--space-volume-icon-gap); }
 .product-volumes .icon { --icon-size: var(--size-volume-icon-w); margin-block: calc((1em - var(--icon-size) * var(--icon-ratio, 1)) / 2); } /* пляшка вища за рядок (1em): компенсуємо margin, висота рядка й розкладка не змінюються */
-.product-volume { position: relative; font: inherit; letter-spacing: inherit; text-transform: inherit; opacity: var(--opacity-muted); transition: opacity var(--duration-fast) var(--ease-out); }
-.product-volume::before { content: ''; position: absolute; inset: calc(-1 * var(--space-volume-hover-pad)); border-radius: var(--radius-btn); background: currentColor; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); } /* м'яка плашка hover: колір тексту × --opacity-volume-hover; не змінює розміри (абсолютна), без підкреслення */
-.product-volume[aria-pressed="true"] { opacity: 1; }
-@media (hover: hover) { .product-volume:hover { opacity: 1; } .product-volume:hover::before { opacity: var(--opacity-volume-hover); } }
-.product-volume:focus-visible::before { opacity: var(--opacity-volume-hover); transition-duration: var(--duration-focus); }
+/* кнопки об'єму: opacity тексту й плашки — токени --btn-volume-<opacity|plate-opacity>-<стан> */
+.product-volume { position: relative; font: inherit; letter-spacing: inherit; text-transform: inherit; opacity: var(--btn-volume-opacity-default); transition: opacity var(--btn-transition-duration) var(--btn-transition-ease); }
+.product-volume::before { content: ''; position: absolute; inset: calc(-1 * var(--space-volume-hover-pad)); border-radius: var(--radius-btn); background: currentColor; opacity: var(--btn-volume-plate-opacity-default); transition: opacity var(--btn-transition-duration) var(--btn-transition-ease); } /* м'яка плашка hover: колір тексту × --opacity-volume-hover; не змінює розміри (абсолютна), без підкреслення */
+.product-volume:focus-visible { opacity: var(--btn-volume-opacity-focus); }
+.product-volume[aria-pressed="true"] { opacity: var(--btn-volume-opacity-selected); }
+@media (hover: hover) { .product-volume:hover { opacity: var(--btn-volume-opacity-hover); } .product-volume:hover::before { opacity: var(--btn-volume-plate-opacity-hover); } }
+.product-volume:focus-visible::before { opacity: var(--btn-volume-plate-opacity-focus); transition-duration: var(--btn-transition-duration-focus); }
 /* кнопка «додати в кошик»: колір бренду дає варіант (btn--green / btn--teal: JS product.js), стани — токени --btn-*; disabled/aria-disabled — спільне правило button.css */
 
 /* акордеони й крихти */
