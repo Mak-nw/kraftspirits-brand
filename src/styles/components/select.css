@@ -54,7 +54,7 @@
 .select--field .select__label { font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide); }
 .select--field .select__field {
   position: relative; /* containing block для кнопки (.hit-area) і списку: клікабельне все поле */
-  width: 100%; padding: var(--space-15) var(--space-20);
+  width: 100%; min-height: var(--size-control-h); padding: var(--space-15) var(--space-20);
   background: var(--btn-select-field-bg-default); border: var(--border-hairline) solid var(--btn-select-field-border-default); border-radius: var(--radius-select);
   transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease);
 }

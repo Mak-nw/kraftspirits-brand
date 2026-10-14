@@ -780,8 +780,9 @@
   --size-feedback-window-min-h: var(--size-contacts-panel-min-h); /* мінімум висоти вікна = фрейм екрана (як панелі контактів) */
   --size-feedback-message-min-h: calc(260 * var(--u));          /* мінімум висоти поля «Ваше повідомлення» */
   --space-feedback-block-gap: var(--space-30);                  /* проміжок між блоками стовпця («Тип звернення», «Контактні дані») */
-  --space-topic-gap: var(--space-10);                           /* проміжок між плитками теми */
-  --size-topic-tile-min-h: var(--size-btn-h);                   /* мінімальна висота плитки теми = висота кнопки */
+  --space-topic-gap: var(--space-field-gap);                    /* проміжок між плитками теми = проміжок між полями: ліві краї 2-х колонок плиток і пари полів збігаються */
+  --size-control-h: var(--size-btn-h);                          /* єдина висота контролів форми (поле, плитка теми) = висота кнопки */
+  --size-topic-tile-min-h: var(--size-control-h);               /* мінімальна висота плитки теми */
 
   /* плитка-радіо «тип звернення» (.topic-tile): кольори = токени темнозеленої кнопки (.btn--green): default = bg-default, hover = bg-hover, selected = bg-active (темніший за hover, відрізняється від default); текст/рамка — відповідні --btn-green-* */
   --btn-choice-bg-default:             var(--btn-green-bg-default);

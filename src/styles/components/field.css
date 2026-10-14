@@ -5,7 +5,7 @@
 .field { display: flex; flex-direction: column; gap: var(--space-field-label-gap); color: var(--color-green); }
 .field__label { font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide); }
 .field__control {
-  display: block; width: 100%; margin: 0; padding: var(--space-15) var(--space-20);
+  display: block; width: 100%; min-height: var(--size-control-h); margin: 0; padding: var(--space-15) var(--space-20);
   background: var(--color-field-bg); color: var(--color-green);
   border: var(--border-hairline) solid var(--color-field-border); border-radius: var(--radius-select);
   font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide);

@@ -16,7 +16,7 @@
 .contacts-info { grid-column: span var(--span-contacts-main); }
 .contacts-map-panel { grid-column: span var(--span-contacts-aside); padding: 0; border: 0; background: none; } /* карта = сам блок: без відступів і рамки */
 .contacts-info h1 { margin: 0; }
-.contacts-cta { display: flex; align-items: center; gap: var(--space-20); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
+.contacts-cta { display: flex; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
 .contacts-cta .btn { flex: 1 1 0; min-width: 0; }
 
 /* карта: вбудований OpenStreetMap без ключа; світла (сіра) з приглушеним зеленим відтінком-накладкою (--color-contacts-map-tint); радіус панелі 10u; розтягується на висоту панелі (CLS 0: розмір задано до завантаження iframe) */
