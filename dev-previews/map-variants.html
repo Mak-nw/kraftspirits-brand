@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Варіанти стилізації карти (dev-прев'ю)</title>
+  <link rel="stylesheet" href="/src/styles/fonts.css">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css">
+  <link rel="stylesheet" href="./map-variants.css">
+</head>
+<body>
+  <main class="mv">
+    <header class="mv-head">
+      <h1>Варіанти стилізації карти</h1>
+      <p>Dev-прев'ю для вибору замовником: не частина сайту й не потрапляє в збірку. Координати — з <code>src/data/contacts.js</code> (плейсхолдер, точну адресу ще не підтверджено). Карти інтерактивні (крім №4).</p>
+    </header>
+
+    <section class="mv-grid">
+      <figure class="mv-card">
+        <div class="mv-map mv-map--osm" id="map1">
+          <iframe class="mv-map__frame" id="osm-frame" title="OpenStreetMap" loading="lazy"></iframe>
+        </div>
+        <figcaption>
+          <h2><span>1</span> Тепла накладка на OSM</h2>
+          <ul>
+            <li>+ Нульова вага й залежностей, ключ не потрібен, мапа інтерактивна; найближчий до поточного рішення.</li>
+            <li>− Фільтр лише «вмикає» тепло, а не перемальовує: дороги/вода лишаються з OSM-палітри; ліцензія ODbL, атрибуція вже в iframe; embed OSM — не для великого трафіку.</li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="mv-card">
+        <div class="mv-map mv-map--leaflet" id="map2"></div>
+        <figcaption>
+          <h2><span>2</span> Світлі плитки (Esri Light Gray) + Leaflet + тепла накладка</h2>
+          <ul>
+            <li>+ Чисті світлі растрові плитки, Leaflet ≈ 42 КБ, штифт нашою іконкою; тепла накладка уніфікує колір. Важливо: CARTO Voyager/Positron тепер віддають лише заглушку «API KEY REQUIRED» без ключа, тому тут Esri Light Gray.</li>
+            <li>− Плитки лише тонуються, палітру сайту точно не передати; Esri: безкоштовно за умов атрибуції, для комерційного продакшну варто звірити умови (або ключ CARTO/Stadia/MapTiler); сіра основа бідна на деталі.</li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="mv-card">
+        <div class="mv-map mv-map--vector" id="map3"></div>
+        <figcaption>
+          <h2><span>3</span> Векторна MapLibre + OpenFreeMap у палітрі сайту <em>рекомендовано</em></h2>
+          <ul>
+            <li>+ Кожен шар (земля, вода, парки, дороги, текст) фарбується токенами сайту; безкоштовно без ключа й без ліміту; чіткий векторний рендер, плавний зум; ліцензія OpenMapTiles/ODbL, атрибуція в кутку.</li>
+            <li>− Найважче (MapLibre ≈ 220 КБ gzip + потрібен WebGL); залежить від хмарного сервісу OpenFreeMap (за потреби можна самохостити).</li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="mv-card">
+        <div class="mv-map mv-map--static" id="map4">
+          <svg class="mv-schema" viewBox="0 0 940 720" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Умовна схема вулиць навколо маркера" id="schema"></svg>
+          <span class="mv-note">умовна схема</span>
+          <a class="mv-open" id="open-osm" target="_blank" rel="noopener">Відкрити в мапах</a>
+        </div>
+        <figcaption>
+          <h2><span>4</span> Статична карта-ілюстрація</h2>
+          <ul>
+            <li>+ Повний контроль над виглядом, вага кілька КБ, жодних сторонніх запитів і ліцензійних питань; ідеально в палітрі.</li>
+            <li>− Не реальна карта (декор): клієнт не бачить справжніх вулиць, схему треба підтримувати вручну; лишається кнопка переходу в OSM/Google.</li>
+          </ul>
+        </figcaption>
+      </figure>
+    </section>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+  <script type="module" src="./map-variants.js"></script>
+</body>
+</html>

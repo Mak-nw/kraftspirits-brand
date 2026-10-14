@@ -1,0 +1,48 @@
+/* DEV-ПРЕВ'Ю: стилі лише для dev-previews/map-variants.html; у продакшн не підключаються. Кольори — токени з src/styles/tokens.css. */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-beige); color: var(--color-green); font-family: var(--font-family-sans); }
+.mv { max-width: 1500px; margin: 0 auto; padding: 40px 50px 80px; }
+.mv-head h1 { margin: 0 0 12px; font-family: var(--font-family-serif); font-weight: 500; font-size: 48px; }
+.mv-head p { margin: 0 0 32px; max-width: 80ch; line-height: 1.5; }
+.mv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 24px; }
+.mv-card { margin: 0; }
+.mv-map { position: relative; aspect-ratio: 940 / 720; overflow: hidden; border-radius: var(--radius-panel); background: var(--color-light); isolation: isolate; }
+.mv-card h2 { margin: 16px 0 8px; font-family: var(--font-family-serif); font-weight: 500; font-size: 26px; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.mv-card h2 span { display: inline-grid; place-items: center; min-width: 32px; height: 32px; border-radius: 50%; background: var(--color-green); color: var(--color-light); font: 500 16px var(--font-family-sans); }
+.mv-card h2 em { font: 500 13px var(--font-family-sans); font-style: normal; padding: 4px 10px; border-radius: 99px; background: var(--color-gold); }
+.mv-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; line-height: 1.45; }
+
+/* 1: поточний підхід + тепла накладка */
+.mv-map__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(0.85) contrast(0.8) brightness(1.2); }
+.mv-map--osm::after, .mv-map--leaflet .leaflet-tile-pane::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.mv-map--osm::after { background: color-mix(in srgb, var(--color-beige) 92%, transparent); mix-blend-mode: multiply; }
+.mv-map--osm::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: color-mix(in srgb, var(--color-gold) 30%, transparent); mix-blend-mode: soft-light; }
+
+/* 2: Leaflet */
+.mv-map--leaflet .leaflet-container { width: 100%; height: 100%; background: var(--color-light); font-family: var(--font-family-sans); }
+.mv-map--leaflet .leaflet-tile-pane { filter: contrast(0.95); }
+.mv-map--leaflet .mv-tint { position: absolute; inset: 0; z-index: 450; pointer-events: none; background: color-mix(in srgb, var(--color-beige) 95%, transparent); mix-blend-mode: multiply; }
+.mv-map--leaflet .mv-tint-gold { position: absolute; inset: 0; z-index: 451; pointer-events: none; background: color-mix(in srgb, var(--color-gold) 20%, transparent); mix-blend-mode: soft-light; }
+.leaflet-container .leaflet-control-attribution { background: color-mix(in srgb, var(--color-light) 80%, transparent); color: var(--color-green); }
+.leaflet-container .leaflet-control-attribution a { color: var(--color-green); }
+.mv-pin-img { width: 44px; height: 44px; }
+.mv-pin-img img { width: 100%; height: 100%; display: block; }
+
+/* 3: MapLibre */
+.mv-map--vector .maplibregl-ctrl-attrib { background: color-mix(in srgb, var(--color-light) 80%, transparent); color: var(--color-green); }
+.mv-map--vector .maplibregl-ctrl-attrib a { color: var(--color-green); }
+.mv-marker { width: 52px; height: 52px; border-radius: 50%; background: var(--color-light); border: 2px solid var(--color-green); display: grid; place-items: center; box-shadow: 0 4px 12px color-mix(in srgb, var(--color-green) 30%, transparent); }
+.mv-marker i { width: 32px; height: 32px; display: block; background: var(--color-green); -webkit-mask: url('/assets/icons/pin.svg') center / contain no-repeat; mask: url('/assets/icons/pin.svg') center / contain no-repeat; }
+
+/* 4: статична схема */
+.mv-schema { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mv-schema .land { fill: var(--color-beige); }
+.mv-schema .park { fill: color-mix(in srgb, var(--color-green) 16%, var(--color-beige)); }
+.mv-schema .water { fill: color-mix(in srgb, var(--color-teal) 18%, var(--color-beige)); }
+.mv-schema .block { fill: color-mix(in srgb, var(--color-green) 7%, var(--color-beige)); }
+.mv-schema .road-c { stroke: color-mix(in srgb, var(--color-gold) 55%, var(--color-beige)); fill: none; stroke-linecap: round; }
+.mv-schema .road { stroke: var(--color-light); fill: none; stroke-linecap: round; }
+.mv-note { position: absolute; left: 20px; bottom: 16px; padding: 4px 12px; border-radius: 99px; background: color-mix(in srgb, var(--color-light) 85%, transparent); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+.mv-open { position: absolute; right: 20px; bottom: 16px; padding: 12px 22px; border-radius: 99px; background: var(--color-green); color: var(--color-light); text-decoration: none; font: 500 15px var(--font-family-sans); }
+.mv-pin4 { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; transform: translate(-50%, -100%); }
+.mv-pin4 i { display: block; width: 100%; height: 100%; background: var(--color-green); -webkit-mask: url('/assets/icons/pin.svg') center / contain no-repeat; mask: url('/assets/icons/pin.svg') center / contain no-repeat; }
