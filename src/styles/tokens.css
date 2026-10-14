@@ -29,7 +29,6 @@
   --color-bg-page: var(--color-beige);  /* семантичний аліас, вузла немає (= --color-beige, 194:1343) */
   --color-text-on-light: var(--color-green);  /* семантичний аліас, вузла немає (= --color-green) */
   --color-text-on-dark: var(--color-light);  /* семантичний аліас, вузла немає (= --color-light) */
-  --color-accent: var(--color-gold);  /* семантичний аліас, вузла немає (= --color-gold) */
 
   /* ---------- Шрифти ---------- */
   --font-family-serif: 'EB Garamond', Georgia, serif;     /* заголовки, ціни-назви, акордеон: 194:1369, 194:1370, 194:1278 */
@@ -128,14 +127,12 @@
   /* тіней у макетах немає (перевірено у всіх фреймах) */
 
   /* ---------- Контейнери / розміри блоків ---------- */
-  --container-gutter: var(--gutter);  /* 194:1375 x=47 (відступ контейнера = --gutter) */
   --container-full: calc(1826 * var(--u));     /* 194:1295 (1920 − 2×47) */
   --container-wide: calc(1508 * var(--u));     /* 194:1275 / 194:1185 (1920 − 2×206) */
   --container-heading: calc(1162 * var(--u));  /* 194:1292 блок заголовка методу підбору */
   --container-heading-narrow: calc(1006 * var(--u)); /* 194:1186, 194:1236 */
   --container-hero-text: calc(807 * var(--u)); /* 194:1368 */
   --container-text: calc(712 * var(--u));      /* 194:1277 / 194:1279 текстова колонка */
-  --container-faq-item: calc(601 * var(--u));  /* 194:1188 колонка FAQ (3 колонки) */
   --size-header-h: calc(var(--header3-top) + var(--header3-h)); /* 214:2902 Header 3: 30 відступ зверху + 73 пілюля = 103u зона header у потоці (раніше 206:2495 = 73, 194:1374 = 64) */
   --z-header: 100;                             /* семантичний токен, вузла Figma немає: шар фіксованої пілюлі header над секціями */
   --size-card-w: calc(384 * var(--u));         /* 194:1326 */
@@ -239,7 +236,6 @@
   --footer-menu-x: calc(49 * var(--u));           /* 194:1237 x колонки «Меню» у макеті (gutter 47 + 2) */
 
   /* ---------- Головна сторінка (main page 194:1514) ---------- */
-  --space-8: calc(8 * var(--u));      /* 194:1347 padding клітинки логотипа бренд-блока */
   --space-85: calc(85 * var(--u));    /* 194:1326 top 596 − низ рядка чіпів 511: відступ чіпи → картка */
   --space-177: calc(177 * var(--u));  /* 194:1185 top заголовка FAQ */
   --space-208: calc(208 * var(--u));  /* 194:1275 / 194:1292 top заголовка секцій */
@@ -255,19 +251,11 @@
   --size-split-photo-w: calc(944 * var(--u));   /* 194:1273 */
   --size-faq-head-h: calc(300 * var(--u));      /* 194:1188 top 477 − 194:1185 top 177 */
   /* ---------- Каталог (catalog 194:1443) ---------- */
-  --size-catalog-w: calc(1919 * var(--u));          /* 194:1444 / 194:1473: ширина сітки й панелі фільтрів (x=1, правий край 1920) */
-  --size-catalog-title-w: calc(1138 * var(--u));    /* 194:1493 ширина заголовка-навігації */
-  --space-catalog-title-top: calc(151 * var(--u));  /* 194:1493 y=215 − висота хедера 64 */
-  --space-catalog-title-gap: calc(30 * var(--u));   /* 194:1473 y=410 − низ заголовка (215+165=380) */
   --space-catalog-title-col: calc(21 * var(--u));   /* 194:1493 column-gap між пунктами заголовка */
-  --space-catalog-filter-gap: calc(47 * var(--u));  /* 194:1474 gap між групами «Бренд» і «категорія» */
-  --size-card-catalog-w: calc(479.75 * var(--u));   /* 194:1445 ширина картки каталогу (колонка 1/4 від 1919) */
-  --size-card-catalog-h: calc(570 * var(--u));      /* 194:1445 висота картки каталогу (ширина 479.75 = колонка з 4) */
   --size-chevron-w: calc(12 * var(--u));            /* 194:1479 шеврон селекта */
   --size-chevron-h: calc(6 * var(--u));             /* 194:1479 */
   --z-dropdown: 50;                                 /* семантичний токен, вузла Figma немає: шар списку селекта (нижче хедера) */
   --angle-flip: 180deg;                             /* семантичний токен, вузла Figma немає: поворот шеврона відкритого селекта */
-  --offset-select-menu: calc(15 * var(--u));        /* семантичний токен, вузла Figma немає: відступ списку під селектом */
 
   /* ---------- Каталог 2 (catalog 204:2221, 1920×949) ---------- */
   --color-card-bg-catalog: #B7BAAC;   /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (Figma 206:2543: #b7baac — збігається; інші картки макета: #dcdbcf / rgba(220,219,207,.8)) */
@@ -291,7 +279,6 @@
   --space-card-cat2-photo-top: calc(50 * var(--u)); /* 204:2224 зсув фото вниз (pt 50), зона фото 426.25×329.67 */
   --radius-card-catalog: calc(10 * var(--u));     /* рішення замовника: закруглення зовнішніх кутів картки каталогу (клип картки); арка-маска закруглюється концентрично: --radius-card-catalog − --offset-arch */
   --radius-card-arch: calc(5 * var(--u));         /* зовнішній контур арки/рамки (клип ::before): концентричний до --radius-card-catalog (10u) з відступом --offset-arch 6u; 5 (не 4) — щоб внутрішній контур не став майже прямим; смуга 6u на діагоналі +0.4u */
-  --radius-card-arch-inner: calc(2.524 * var(--u)); /* внутрішній контур рамки = --radius-card-arch − 2.476u (товщина рамки); геометрію (дуги A2.524) зашито в product-card-arch-full.svg — міняти разом із ним */
   --offset-arch: calc(6 * var(--u));              /* 204:2230 left/top арки */
   --size-arch-w: calc(414 * var(--u));            /* 204:2230 арка = один SVG-маска product-card-arch-full.svg (рамка 2.476 + кути 204:2231) */
   --size-arch-h: calc(535 * var(--u));            /* 204:2230 */
@@ -320,15 +307,12 @@
   --size-product-head-bs-w: calc(var(--size-product-panel-w) - 2 * var(--space-product-head-bs-inset)); /* шапка BS на всю ширину панелі за вирахуванням відступів: 910 − 14 = 896 (було 886 при 12u, 813 при старій розкладці, 194:1578) */
   --ratio-product-head-bs: 813 / 313;               /* 194:1578 пропорція SVG product-frame-bazyl.svg; висота шапки = ширина / ratio (896 → ≈345u), без спотворення */
   --space-product-panel-pt-bs: calc(var(--space-product-head-bs-inset) - round(down, var(--border-frame), 1px)); /* pt панелі BS: відступ шапки 7 мінус рамка 5 (у BS вона beige, як тло) = 2 при 1920; рамка у браузері округлюється до цілих px вниз (3.75 → 3), тому віднімаємо округлену: верхній відступ від зовнішнього краю = 7u на 1200–1920 (DPR 1); відмінність BS від YC (там арка впритул) */
-  --size-product-btn-w: calc(308 * var(--u));       /* 194:1397 кнопка «додати в кошик» (рамка + padding + 296) */
   --color-product-accent: var(--color-green-alt);   /* тема YasnoCraft: рамка панелі 194:1388, текст, кнопка */
   --color-product-accent-line: var(--color-line-soft); /* лінії акордеона YasnoCraft 205:2448 (new design; раніше --color-line-strong 194:1402) */
   --color-product-accent-bs: var(--color-teal);     /* тема Bazylsprings: рамка панелі 194:1523, текст, лінії, кнопка */
   --size-product-focus: var(--border-hairline);     /* рамка активної мініатюри 1px (рішення дизайну: у Figma не намальована) */
   
   /* ---------- Header 2 (206:2495, 1920×73): єдиний header усіх сторінок ---------- */
-  --header2-pad-x: calc(50 * var(--u));         /* 206:2495 padding-x */
-  --header2-gap: calc(20 * var(--u));           /* 206:2496 / 206:2508 gap між комірками */
   --header2-cell-w: calc(150 * var(--u));       /* 206:2497 ширина комірки/кнопки (усі 6) */
   --header2-cell-h: calc(42 * var(--u));        /* 206:2497 висота комірки-пункту (15.5 від верху/низу header) */
   --header2-btn-outline-h: calc(44 * var(--u)); /* 206:2511 «Кошик ( 0 )»: контурна кнопка (рамка 1px --color-beige) */
@@ -436,8 +420,7 @@
   --space-tour-pad: calc(80 * var(--u));          /* 224:3974: x 78/80, y 80 (нормалізовано до 80) */
   --container-tour-text: calc(517 * var(--u));    /* 224:3973 (512) / 224:3989 (517) → єдина 517: при ls 0.8px рядок «…дегустація в нашій» у Figma ≈512.4 і в 512 не вміщується */
   --size-pattern-tile: round(calc(131 * var(--u)), 1px);  /* 224:3688 pattern-заливка (джерело 224:3961, scale 0.4, spacing −0.4): у рендері Figma плитки перекриваються, виходить решітка з періодом 131×131 (виміряно); ціле px — інакше шви на стиках */
-  --size-pattern-catalog-tile: var(--size-pattern-tile);  /* фон каталогу: та сама геометрія й плитка 131u (ціле px), що в tours (home-pattern-diamond.svg): великий ромб + 4 допоміжні (wrap через краї) = решітка з накладанням; колір окремо в --color-pattern-catalog */
-  --color-pattern-catalog: rgba(0, 0, 0, 0.08);   /* три тони як у tours (SVG не бере CSS-змінні — значення вручну в catalog-pattern-diamond.svg): світлий ромб = колір сторінки #223520 (34,53,32), основа = 1 шар чорного 8% ≈(31,49,29), перекриття допоміжних = 2 шари ≈(29,45,27) */
+  --size-pattern-catalog-tile: var(--size-pattern-tile);  /* фон каталогу: та сама геометрія й плитка 131u (ціле px), що в tours (home-pattern-diamond.svg): великий ромб + 4 допоміжні (wrap через краї) = решітка з накладанням; кольори тонів — лише в SVG */
   --radius-panel: calc(10 * var(--u));            /* 224:3688 радіус панелі */
 
   --space-197: calc(197 * var(--u));              /* 224:3734 top заголовка секції підбору */

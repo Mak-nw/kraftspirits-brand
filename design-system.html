@@ -409,7 +409,7 @@
       <!--@include sections/brands-->
 
       <p class="demo-label t-kicker">Фон-візерунок каталогу .pattern-catalog (лише сторінка каталогу; клас-демо для design-system)</p>
-      <p class="ds-note ds-meta">Та сама геометрія, що в tours: плитка 131×131u (--size-pattern-catalog-tile = --size-pattern-tile, ціле px), три тони як у tours: світлий ромб = колір сторінки (34,53,32), середній — основа чорний 8% ≈(31,49,29), темний — перекриття допоміжних ромбів ≈(29,45,27); тон-в-тон на --color-green; --color-pattern-catalog; catalog-pattern-diamond.svg; background-attachment scroll.</p>
+      <p class="ds-note ds-meta">Та сама геометрія, що в tours: плитка 131×131u (--size-pattern-catalog-tile = --size-pattern-tile, ціле px), три тони як у tours: світлий ромб = колір сторінки (34,53,32), середній — основа чорний 8% ≈(31,49,29), темний — перекриття допоміжних ромбів ≈(29,45,27); тон-в-тон на --color-green; catalog-pattern-diamond.svg; background-attachment scroll.</p>
       <div class="pattern-catalog ds-pattern-demo"></div>
 
       <p class="demo-label t-kicker">Панель .tour-card (224:3688 / 224:3691, 1836×629): partial components/tour-card (kicker, title, text, btn, href, photo, alt; мод. tour-card--photo-first); секція — partials/sections/tours.html</p>
@@ -618,7 +618,7 @@
       <h2 class="t-h2 ds-section__title">Каталог (194:1443)</h2>
       <p class="ds-note t-body">Нові компоненти сторінки каталогу: картка каталогу, випадний список фільтра, заголовок-навігація категорій. Рендер карток із даних — src/data/products.js + src/js/catalog.js (див. README). Перехід при зміні фільтра/сортування — плавний (src/js/catalog-motion.js): картки, що відпали, гаснуть на місці (--duration-fast, scale 0.98), решта переїжджає на нові місця FLIP-ом (--duration-base, --ease-out, легкий stagger --catalog-move-stagger), нові з'являються (opacity + --reveal-shift, stagger --reveal-stagger), футер плавно їде на нове місце (transform), порожній стан з'являється fade; prefers-reduced-motion і ?reveal=off — миттєво. Розкладка після переходу ідентична попередній.</p>
 
-      <p class="demo-label t-kicker">product-card--catalog (204:2223, 426.25×547.67): partial components/product-card, мод. product-card--catalog; фон #B7BAAC (--color-card-bg-catalog), арка 204:2230 (один ::before), радіус зовнішніх кутів --radius-card-catalog 10px (арка/зелений блок --radius-card-arch 5px, внутрішній контур рамки --radius-card-arch-inner 2.524px (в SVG); слайдер підбору на головній — без закруглення), hover — світла «рідина» --color-liquid-catalog (#DCDBCF), текст лишається --color-green</p>
+      <p class="demo-label t-kicker">product-card--catalog (204:2223, 426.25×547.67): partial components/product-card, мод. product-card--catalog; фон #B7BAAC (--color-card-bg-catalog), арка 204:2230 (один ::before), радіус зовнішніх кутів --radius-card-catalog 10px (арка/зелений блок --radius-card-arch 5px, внутрішній контур рамки 2.524px (лише в SVG, токена нема); слайдер підбору на головній — без закруглення), hover — світла «рідина» --color-liquid-catalog (#DCDBCF), текст лишається --color-green</p>
       <div class="demo-panel demo-panel--card theme-green">
         <div class="demo-variant ds-catalog-card">
           <!--@include components/product-card mod=" product-card--catalog" slug="gin-barrel" name="Джин<br>Ясногородський" price="850 ₴" image="/assets/img/products/gin-yasnyi.webp" brand="yasnocraft"-->

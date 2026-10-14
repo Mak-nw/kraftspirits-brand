@@ -1,5 +1,5 @@
 /* Сторінка каталогу (catalog 204:2221): тло --color-green; заголовок-навігація 204:2351, панель фільтрів 204:2331, сітка 204:2222. */
-/* Фон-візерунок (та сама геометрія 131u, що в tours; колір тон-в-тон): вертикальні ромби на зеленому, фон сторінки (scroll, не fixed) — картки й текст лежать зверху; колір фігур --color-pattern-catalog, плитка --size-pattern-catalog-tile (ціле px) */
+/* Фон-візерунок (та сама геометрія 131u, що в tours; колір тон-в-тон): вертикальні ромби на зеленому, фон сторінки (scroll, не fixed) — картки й текст лежать зверху; кольори фігур — у catalog-pattern-diamond.svg, плитка --size-pattern-catalog-tile (ціле px) */
 .pattern-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
 /* Каталог: візерунок на body (початок плитки = y=0 документа), щоб сітка йшла суцільно від верху через зону хедера до main і футера без шва; зона .site-header на каталозі прозора (тло — тло body); .catalog-page без власного фону */
 .page-catalog { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
