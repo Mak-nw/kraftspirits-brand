@@ -1071,14 +1071,14 @@
         <div class="swatch swatch--bx-pattern"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-barrels-pattern</span><span class="ds-meta" data-token="--color-barrels-pattern"></span><span class="ds-meta is-muted">light 3% через маску ромба: візерунок на будь-якій темній кімнаті</span></div></div>
       </div>
 
-      <p class="demo-label t-kicker">advantage-card (ill, title, text): ромб-рамка + ілюстрація 260u; поява — малювання ліній (stroke-dashoffset, --duration-reveal); hover — «дихання» ядра (--scale-barrels-breathe) і зсув іскор (--shift-barrels-spark), --duration-fast</p>
-      <div class="demo-panel theme-beige">
-        <div class="ds-grid">
-          <!--@include components/advantage-card ill="fire" title="Сильний обпал" text="Формує глибину та структуру"-->
-          <!--@include components/advantage-card ill="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
-          <!--@include components/advantage-card ill="aroma" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
-          <!--@include components/advantage-card ill="phenol" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
-        </div>
+      <p class="demo-label t-kicker">S2 «Анатомія бочки» (кімната wood): barrels-note (layer: char | caramel | toast | oak, title, text) у списку .bx-strata. Схема зрізу клепки: 4 шари зсередини назовні (кольори — суміші палітри --color-barrels-char|caramel|toast|oak, фактури — маски barrels-tex-*.svg). Список і кожен пункт — subgrid: шар лежить у колонці «шари», пояснення — у колонці «пояснення» того самого рядка; назва стоїть так, що середина капітелі = середина шару (виміряно ≤0.5px), виноска й ромб — на цій висоті (≤1px), ромб — на краю шару (≤0.75px). Hover — виноска золотіє. Поруч на сторінці — реальне фото складу в арці (СЛОТ під макро обпаленої клепки).</p>
+      <div class="demo-panel bx-room bx-room--wood ds-barrels-strata">
+        <ol class="bx-strata">
+          <!--@include components/barrels-note layer="char" title="Сильний обпал" text="Формує глибину та структуру"-->
+          <!--@include components/barrels-note layer="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
+          <!--@include components/barrels-note layer="toast" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
+          <!--@include components/barrels-note layer="oak" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+        </ol>
       </div>
 
       <p class="demo-label t-kicker">S3 «Від бочки до пляшки» (кімната cellar + ромб): barrels-chapter (step: pour | angels | bottle, n, value, note, title, text). Однакова внутрішня сітка всіх розділів: лінія з ромбом → цифра-гігант 240u (+ підпис «орієнтовно» на ТІЙ САМІЙ базовій лінії) → назва → пояснення; ліва вісь чорнила ромба, цифри, назви й тексту спільна (поправки бокових полів цифр --shift-barrels-numeral-*, виміряно по чорнилу ≤1.4px на 1200–1920). barrels-scene — гравюра у sticky-арці .bx-arch--stage (подвійна золота рамка, лампа, «світло в погребі»): data-step секції (barrels.js) — активна частина на повну силу, решта --opacity-barrels-dim; рівень рідини в бочці/пляшці — стан розділу (--shift-barrels-cask-*), не прив'язка до скролу; цикли (струмінь, пара, трубка) — лише активного розділу й лише у в'юпорті. Демо: стан «2 · Витримка».</p>

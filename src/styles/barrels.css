@@ -47,17 +47,39 @@
 .bx-k { stroke-width: calc(var(--svg-stroke) / var(--k, 1)); }
 .bx-k08 { --k: 0.8; } .bx-k15 { --k: 1.5; } .bx-k14 { --k: 1.4; } .bx-k28 { --k: 2.8; } .bx-k42 { --k: 4.2; }
 
-/* ---------- Переваги ---------- */
-.barrels-benefits { background: var(--color-beige); }
-.advantage-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-barrels-grid-gap); width: 100%; max-width: var(--container-wide); margin-inline: auto; }
-.advantage-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding: var(--space-barrels-card-pad); border-radius: var(--radius-panel); background: var(--color-green); color: var(--color-gold); text-align: center; }
-.advantage-card__art { width: var(--size-barrels-art); aspect-ratio: 1; }
-.advantage-card__title { min-height: 2em; color: var(--color-light); } /* 2 рядки: описи в колонках стартують на одній лінії */
-.advantage-card__text { color: var(--color-nav-text); max-width: 100%; }
+/* ---------- S2 «Анатомія бочки»: кімната wood, реальне фото в арці + схема зрізу клепки з виносками ----------
+   Сітка: [фото][повітря][шари][виноска][пояснення] × [заголовок][«всередині»][4 рядки][«зовні»]. Список .bx-strata — subgrid по
+   колонках і рядках; кожен пункт — ще один subgrid по колонках: його шар лежить у колонці «шари», текст — у колонці «пояснення»
+   ТОГО САМОГО рядка. Назва стоїть так, що середина її капітелі = середина рядка = середина шару; виноска й ромб — на цій висоті. */
+.barrels-benefits { padding-block: var(--space-barrels-section-y); }
+.barrels-benefits__grid { display: grid; grid-template-columns: var(--size-barrels-anatomy-photo-w) var(--space-barrels-anatomy-gap) var(--size-barrels-strata-w) var(--space-barrels-leader) minmax(0, 1fr); grid-template-rows: auto auto repeat(4, var(--size-barrels-strata-row)) auto; width: var(--container-barrels); margin-inline: auto; }
+.barrels-benefits__photo { grid-column: 1; grid-row: 1 / -1; margin: 0; --bx-rise: calc(var(--size-barrels-anatomy-photo-w) * var(--ratio-barrels-arch-rise)); }
+.barrels-benefits__head { grid-column: 3 / -1; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
+.barrels-benefits__kicker { margin-top: var(--shift-barrels-kicker-cap-top); color: var(--color-barrels-accent); }
+.bx-strata__edge { grid-column: 3 / -1; font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
+.bx-strata__edge--in { grid-row: 2; margin-bottom: var(--space-15); }
+.bx-strata__edge--out { grid-row: 7; margin-top: var(--space-15); }
+.bx-strata { grid-column: 3 / -1; grid-row: 3 / span 4; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+.bx-note { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.bx-note__band { grid-column: 1; position: relative; display: block; border: var(--border-hairline) solid var(--color-barrels-hairline-soft); border-top-width: 0; background: var(--bx-band); }
+.bx-note:first-child .bx-note__band { border-top-width: var(--border-hairline); border-color: var(--color-barrels-hairline-soft); }
+.bx-note__band::after { content: ''; position: absolute; inset: 0; background: var(--bx-tex-color); mask: var(--bx-tex) 0 0 / var(--bx-tex-size) repeat; }
+.bx-note--char { --bx-band: var(--color-barrels-char); --bx-tex: url('/assets/img/barrels-tex-char.svg'); --bx-tex-size: var(--size-barrels-tex-char); --bx-tex-color: var(--color-barrels-tex-char); }
+.bx-note--caramel { --bx-band: var(--color-barrels-caramel); --bx-tex: url('/assets/img/barrels-tex-caramel.svg'); --bx-tex-size: var(--size-barrels-tex-caramel); --bx-tex-color: var(--color-barrels-tex-wood); }
+.bx-note--toast { --bx-band: var(--color-barrels-toast); --bx-tex: url('/assets/img/barrels-tex-toast.svg'); --bx-tex-size: var(--size-barrels-tex-toast); --bx-tex-color: var(--color-barrels-tex-wood); }
+.bx-note--oak { --bx-band: var(--color-barrels-oak); --bx-tex: url('/assets/img/barrels-tex-oak.svg'); --bx-tex-size: var(--size-barrels-tex-oak); --bx-tex-color: var(--color-barrels-tex-wood); }
+.bx-note__body { grid-column: 3; }
+.bx-note__title { position: relative; margin-top: calc(var(--size-barrels-strata-row) / 2 - var(--shift-barrels-title-capmid)); font: var(--fw-semibold) var(--font-size-barrels-note-title)/1.1 var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-note__title::before { content: ''; position: absolute; top: calc(var(--shift-barrels-title-capmid) - var(--border-hairline) / 2); right: calc(100% + var(--space-barrels-leader-pad)); width: calc(var(--space-barrels-leader) - var(--space-barrels-leader-pad)); height: var(--border-hairline); background: var(--color-barrels-hairline); }
+.bx-note__title::after { content: ''; position: absolute; top: calc(var(--shift-barrels-title-capmid) - var(--size-barrels-rule-marker) / 2); left: calc(-1 * var(--space-barrels-leader) - var(--size-barrels-rule-marker) / 2); width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-note__text { margin-top: var(--space-10); max-width: var(--container-barrels-note-text); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
 @media (hover: hover) {
-  .advantage-card:hover .bx-core { transform: scale(var(--scale-barrels-breathe)); }
-  .advantage-card:hover .bx-sparks { transform: translateY(var(--shift-barrels-spark)); }
+  .bx-note:hover .bx-note__title::before { background: var(--color-barrels-accent); }
+  .bx-note__title::before { transition: background-color var(--duration-fast) var(--ease-out); }
 }
+/* демо S2 у design-system.html */
+.demo-panel.ds-barrels-strata { display: grid; grid-template-columns: var(--size-barrels-strata-w) var(--space-barrels-leader) minmax(0, 1fr); grid-template-rows: repeat(4, var(--size-barrels-strata-row)); gap: 0; padding: var(--space-50); }
+.ds-barrels-strata .bx-strata { grid-column: 1 / -1; grid-row: 1 / -1; }
 
 /* ---------- S3 «Від бочки до пляшки»: кімната cellar, sticky-арка з гравюрою + три розділи-цифри ----------
    Внутрішня сітка розділу однакова в усіх трьох: лінія з ромбом → цифра (+ підпис «орієнтовно») → назва → пояснення. Ліві краї чорнила

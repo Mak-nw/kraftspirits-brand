@@ -26,16 +26,25 @@
       </div>
     </section>
 
-    <section class="barrels-section barrels-benefits" id="benefits" aria-labelledby="benefits-title">
-      <div class="barrels-head">
-        <p class="t-kicker" data-reveal="rise">Переваги бочок</p>
-        <h2 class="t-h2" id="benefits-title" data-reveal="rise">Що дає бочка</h2>
-      </div>
-      <div class="advantage-grid">
-        <!--@include components/advantage-card ill="fire" title="Сильний обпал" text="Формує глибину та структуру"-->
-        <!--@include components/advantage-card ill="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
-        <!--@include components/advantage-card ill="aroma" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
-        <!--@include components/advantage-card ill="phenol" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+    <!-- Кімната «дерево» (brown): реальне фото бочок в арці ліворуч; схема зрізу клепки — 4 шари зсередини назовні, кожен шар у ТОМУ Ж
+         рядку сітки, що й пояснення (вкладений subgrid); виноска йде від шару до середини капітелі назви -->
+    <section class="barrels-benefits bx-room bx-room--wood" id="benefits" aria-labelledby="benefits-title">
+      <div class="barrels-benefits__grid">
+        <figure class="barrels-benefits__photo bx-arch bx-arch--photo" data-parallax="soft" data-slot="Фото: реальний кадр складу (photo/…/Обладнання/IMG_2230); за потреби замінити на макро обпаленої клепки (ТЗ IMG-2) або нову зйомку">
+          <img src="/assets/img/barrels-staves.webp" width="1080" height="1620" alt="Дубові бочки з металевими обручами на складі дистилерії" loading="lazy" decoding="async">
+        </figure>
+        <div class="barrels-benefits__head">
+          <p class="barrels-benefits__kicker t-kicker" data-reveal="rise">Переваги бочок</p>
+          <h2 class="t-h2" id="benefits-title" data-reveal="rise">Що дає бочка</h2>
+        </div>
+        <p class="bx-strata__edge bx-strata__edge--in" aria-hidden="true">всередині бочки</p>
+        <ol class="bx-strata">
+          <!--@include components/barrels-note layer="char" title="Сильний обпал" text="Формує глибину та структуру"-->
+          <!--@include components/barrels-note layer="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
+          <!--@include components/barrels-note layer="toast" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
+          <!--@include components/barrels-note layer="oak" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+        </ol>
+        <p class="bx-strata__edge bx-strata__edge--out" aria-hidden="true">зовні · схема шарів клепки</p>
       </div>
     </section>
 

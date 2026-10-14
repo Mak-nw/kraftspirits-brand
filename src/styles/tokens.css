@@ -831,19 +831,12 @@
   --duration-loop-fast: calc(var(--duration-loop) / 4);      /* 2s: крапля */
   --duration-flow: 1.2s;                              /* біг штрихів струменя/труби */
   --ease-loop: cubic-bezier(0.45, 0, 0.25, 1);        /* ease-in-out для циклів (= --ease-accordion) */
-  --scale-barrels-breathe: 1.04;                      /* hover переваги: «дихання» ядра ілюстрації */
-  --shift-barrels-spark: calc(-4 * var(--u));         /* hover переваги: зсув іскор/аромату вгору */
   --angle-barrel-tilt: -4deg;                         /* hover бочки подальшої витримки: легкий нахил */
 
   /* SVG-ілюстрації: геометрія в одиницях viewBox (штрих 1.5 як в іконках; масштабується разом з малюнком) */
   --svg-stroke: 1.5;
   --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
   --size-barrels-gap: 8;                              /* проміжок між штрихами */
-
-  /* Переваги */
-  --size-barrels-art: calc(260 * var(--u));           /* ілюстрація переваги (ромб-рамка), квадрат */
-  --space-barrels-card-pad: var(--space-30);
-  --space-barrels-grid-gap: var(--space-20);
 
   /* Подальша витримка */
   --size-barrels-head-art: calc(300 * var(--u));      /* днище бочки (круг) */
@@ -955,4 +948,26 @@
   --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
   --count-barrels-wall-sm-cols: 16; --count-barrels-wall-sm-rows: 6; --count-barrels-wall-sm-top: 0;    /* 50 L: 96 = 16 × 6 */
   --count-barrels-wall-lg-cols: 32; --count-barrels-wall-lg-rows: 11; --count-barrels-wall-lg-top: 31;  /* 200 L: 383 = 31 + 32 × 11 (верхній ряд на одну пляшку коротший) */
+
+  /* S2 «Анатомія бочки»: фото в арці + схема зрізу клепки (4 шари) з виносками; шар і пояснення — в одному рядку сітки */
+  --size-barrels-anatomy-photo-w: calc(440 * var(--u));   /* фото в арці ліворуч */
+  --space-barrels-anatomy-gap: calc(110 * var(--u));      /* фото → схема */
+  --size-barrels-strata-w: calc(150 * var(--u));          /* ширина «зразка» клепки */
+  --size-barrels-strata-row: calc(150 * var(--u));        /* висота шару = висота рядка пояснення */
+  --space-barrels-leader: calc(90 * var(--u));            /* довжина виноски: від краю шару до назви */
+  --space-barrels-leader-pad: var(--space-15);            /* повітря між кінцем виноски й назвою */
+  --font-size-barrels-note-title: calc(26 * var(--u));    /* назви шарів (EB Garamond 600, caps) */
+  --shift-barrels-title-capmid: 0.53em;                   /* середина капітелі від верху рядка (EB Garamond, lh 1.1; виміряно чорнилом на 1200–1920): виноска й ромб — на цій висоті */
+  --shift-barrels-kicker-cap-top: -0.38em;                /* верх капітелі кікера (lh 1.4) = верх фото-арки */
+  --container-barrels-note-text: calc(520 * var(--u));
+  --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* шари клепки — лише суміші палітри: обпал (вугілля) */
+  --color-barrels-caramel: color-mix(in srgb, var(--color-gold) 28%, var(--color-brown)); /* карамелізований шар */
+  --color-barrels-toast: color-mix(in srgb, var(--color-gold) 64%, var(--color-brown));   /* підсмажений дуб */
+  --color-barrels-oak: color-mix(in srgb, var(--color-gold) 82%, var(--color-light));     /* дуб */
+  --color-barrels-tex-char: color-mix(in srgb, var(--color-gold) 34%, transparent);       /* «тріщини» вугілля (маска barrels-tex-char.svg) */
+  --color-barrels-tex-wood: color-mix(in srgb, var(--color-brown) 32%, transparent);      /* волокна дерева (маски tex-caramel/toast/oak) */
+  --size-barrels-tex-char: calc(64 * var(--u)) calc(40 * var(--u));     /* розміри плиток фактур (як viewBox масок) */
+  --size-barrels-tex-caramel: calc(80 * var(--u)) calc(16 * var(--u));
+  --size-barrels-tex-toast: calc(90 * var(--u)) calc(18 * var(--u));
+  --size-barrels-tex-oak: calc(100 * var(--u)) calc(20 * var(--u));
 }
