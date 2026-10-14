@@ -1,11 +1,16 @@
-/* Кнопка: зовнішня рамка (--border-hairline) + padding --space-5 (Frame 80 194:1371) і внутрішня заливка (Frame 45 194:1372). */
+/* Кнопка: зовнішня рамка (--border-hairline) + padding --space-5 (Frame 80 194:1371) і внутрішня заливка (Frame 45 194:1372).
+   Стани кнопки задають ТОКЕНИ --btn-<варіант>-<властивість>-<стан> (tokens.css, блок «Кнопки: стани»). Варіант (.btn--green …) лише виставляє
+   КОНТЕКСТНІ змінні --btn-bg / --btn-text / --btn-border (+ -hover / -focus / -active / -disabled); база .btn читає тільки їх.
+   Новий варіант = токени в tokens.css + один блок контекстних змінних нижче (див. README, «Токени кнопок»). */
+.btn, .btn--gold {
+  --btn-bg: var(--btn-gold-bg-default); --btn-bg-hover: var(--btn-gold-bg-hover); --btn-bg-focus: var(--btn-gold-bg-focus); --btn-bg-active: var(--btn-gold-bg-active); --btn-bg-disabled: var(--btn-gold-bg-disabled);
+  --btn-text: var(--btn-gold-text-default); --btn-text-hover: var(--btn-gold-text-hover); --btn-text-focus: var(--btn-gold-text-focus); --btn-text-active: var(--btn-gold-text-active); --btn-text-disabled: var(--btn-gold-text-disabled);
+  --btn-border: var(--btn-gold-border-default); --btn-border-hover: var(--btn-gold-border-hover); --btn-border-focus: var(--btn-gold-border-focus); --btn-border-active: var(--btn-gold-border-active); --btn-border-disabled: var(--btn-gold-border-disabled);
+}
 .btn {
-  --btn-accent: var(--color-gold);
-  --btn-fg: var(--color-green);
-  --btn-hover: var(--color-hover-btn-gold);
   display: inline-flex;
   padding: var(--space-5);
-  border: var(--border-hairline) solid var(--btn-accent);
+  border: var(--border-hairline) solid var(--btn-border);
   border-radius: var(--radius-none);
   cursor: pointer;
 }
@@ -16,35 +21,73 @@
   gap: var(--space-20);
   height: var(--size-btn-h);
   padding: var(--space-20) var(--space-30);
-  background: var(--btn-accent);
-  color: var(--btn-fg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   border-radius: var(--radius-btn);
   white-space: nowrap;
-  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease);
 }
 .btn__inner:has(> .btn__arrow) { padding-right: var(--space-btn-pr-arrow); } /* кнопка зі стрілкою: padding 30/25 */
-.btn--gold { --btn-accent: var(--color-gold); --btn-fg: var(--color-green); --btn-hover: var(--color-hover-btn-gold); }    /* 194:1371 hero */
-.btn--light { --btn-accent: var(--color-light); --btn-fg: var(--color-green); --btn-hover: var(--color-hover-btn-light); }  /* 194:1351 */
-.btn--beige { --btn-accent: var(--color-beige); --btn-fg: var(--color-brown); --btn-hover: var(--color-hover-btn-beige); } /* 224:4015 вступ на коричневому */
-.btn--green { --btn-accent: var(--color-green); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-green); }  /* 194:1397 product YasnoCraft */
-.btn--teal { --btn-accent: var(--color-teal); --btn-fg: var(--color-beige); --btn-hover: var(--color-hover-btn-teal); }    /* 194:1532 product Bazylsprings */
+.btn--light {
+  --btn-bg: var(--btn-light-bg-default); --btn-bg-hover: var(--btn-light-bg-hover); --btn-bg-focus: var(--btn-light-bg-focus); --btn-bg-active: var(--btn-light-bg-active); --btn-bg-disabled: var(--btn-light-bg-disabled);
+  --btn-text: var(--btn-light-text-default); --btn-text-hover: var(--btn-light-text-hover); --btn-text-focus: var(--btn-light-text-focus); --btn-text-active: var(--btn-light-text-active); --btn-text-disabled: var(--btn-light-text-disabled);
+  --btn-border: var(--btn-light-border-default); --btn-border-hover: var(--btn-light-border-hover); --btn-border-focus: var(--btn-light-border-focus); --btn-border-active: var(--btn-light-border-active); --btn-border-disabled: var(--btn-light-border-disabled);
+} /* 194:1351 */
+.btn--beige {
+  --btn-bg: var(--btn-beige-bg-default); --btn-bg-hover: var(--btn-beige-bg-hover); --btn-bg-focus: var(--btn-beige-bg-focus); --btn-bg-active: var(--btn-beige-bg-active); --btn-bg-disabled: var(--btn-beige-bg-disabled);
+  --btn-text: var(--btn-beige-text-default); --btn-text-hover: var(--btn-beige-text-hover); --btn-text-focus: var(--btn-beige-text-focus); --btn-text-active: var(--btn-beige-text-active); --btn-text-disabled: var(--btn-beige-text-disabled);
+  --btn-border: var(--btn-beige-border-default); --btn-border-hover: var(--btn-beige-border-hover); --btn-border-focus: var(--btn-beige-border-focus); --btn-border-active: var(--btn-beige-border-active); --btn-border-disabled: var(--btn-beige-border-disabled);
+} /* 224:4015 вступ на коричневому */
+.btn--green {
+  --btn-bg: var(--btn-green-bg-default); --btn-bg-hover: var(--btn-green-bg-hover); --btn-bg-focus: var(--btn-green-bg-focus); --btn-bg-active: var(--btn-green-bg-active); --btn-bg-disabled: var(--btn-green-bg-disabled);
+  --btn-text: var(--btn-green-text-default); --btn-text-hover: var(--btn-green-text-hover); --btn-text-focus: var(--btn-green-text-focus); --btn-text-active: var(--btn-green-text-active); --btn-text-disabled: var(--btn-green-text-disabled);
+  --btn-border: var(--btn-green-border-default); --btn-border-hover: var(--btn-green-border-hover); --btn-border-focus: var(--btn-green-border-focus); --btn-border-active: var(--btn-green-border-active); --btn-border-disabled: var(--btn-green-border-disabled);
+} /* 194:1397 product YasnoCraft */
+.btn--teal {
+  --btn-bg: var(--btn-teal-bg-default); --btn-bg-hover: var(--btn-teal-bg-hover); --btn-bg-focus: var(--btn-teal-bg-focus); --btn-bg-active: var(--btn-teal-bg-active); --btn-bg-disabled: var(--btn-teal-bg-disabled);
+  --btn-text: var(--btn-teal-text-default); --btn-text-hover: var(--btn-teal-text-hover); --btn-text-focus: var(--btn-teal-text-focus); --btn-text-active: var(--btn-teal-text-active); --btn-text-disabled: var(--btn-teal-text-disabled);
+  --btn-border: var(--btn-teal-border-default); --btn-border-hover: var(--btn-teal-border-hover); --btn-border-focus: var(--btn-teal-border-focus); --btn-border-active: var(--btn-teal-border-active); --btn-border-disabled: var(--btn-teal-border-disabled);
+} /* 194:1532 product Bazylsprings */
 /* контурна: зелена рамка, прозора заливка; hover — заливка беж (вікова верифікація «Ні», вторинні дії на світлому) */
-.btn--outline { --btn-accent: var(--color-green); --btn-fg: var(--color-green); --btn-hover: var(--color-beige); }
-.btn--outline .btn__inner { background: transparent; }
-/* 205:2443: кнопка з засічним шрифтом (EB Garamond): ціна Medium, текст Bold (YasnoCraft product page) */
+.btn--outline {
+  --btn-bg: var(--btn-outline-bg-default); --btn-bg-hover: var(--btn-outline-bg-hover); --btn-bg-focus: var(--btn-outline-bg-focus); --btn-bg-active: var(--btn-outline-bg-active); --btn-bg-disabled: var(--btn-outline-bg-disabled);
+  --btn-text: var(--btn-outline-text-default); --btn-text-hover: var(--btn-outline-text-hover); --btn-text-focus: var(--btn-outline-text-focus); --btn-text-active: var(--btn-outline-text-active); --btn-text-disabled: var(--btn-outline-text-disabled);
+  --btn-border: var(--btn-outline-border-default); --btn-border-hover: var(--btn-outline-border-hover); --btn-border-focus: var(--btn-outline-border-focus); --btn-border-active: var(--btn-outline-border-active); --btn-border-disabled: var(--btn-outline-border-disabled);
+}
+/* 205:2443: кнопка з засічним шрифтом (EB Garamond): ціна Medium, текст Bold (YasnoCraft product page); шрифтовий модифікатор, станів не має */
 .btn--serif .btn__inner { font-family: var(--type-btn-serif-font); }
 .btn--serif .t-price { font-family: var(--type-btn-serif-font); font-weight: var(--type-price-serif-weight); }
 .btn--block { display: flex; width: 100%; }
 .btn--block .btn__inner { width: 100%; }
 
 /* стрілка ↗ всередині кнопки: бокс-розкладка 11.948 (194:1354) не змінюється; сама іконка — брендова arrow-up-right.svg (маска, колір = колір тексту кнопки), центрована в боксі, видимий знак ≈ 12u */
-.btn__arrow { position: relative; flex: none; transition: transform var(--duration-base) var(--ease-out); width: var(--size-icon-arrow); height: var(--size-icon-arrow); }
-.btn__arrow .icon { --icon-size: var(--size-icon-arrow-glyph); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.btn__arrow { position: relative; flex: none; transition: transform var(--btn-transition-duration-base) var(--btn-transition-ease); width: var(--size-icon-arrow); height: var(--size-icon-arrow); }
+.btn__arrow .icon { --icon-size: var(--size-icon-arrow-glyph); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--btn-icon-color); }
 
-/* hover/focus: заливка змінюється, стрілка зсувається (transform не впливає на розмір кнопки) */
-.btn:focus-visible .btn__inner { background: var(--btn-hover); transition-duration: var(--duration-focus); } /* клавіатура: короткий перехід */
-.btn:focus-visible .btn__arrow { transform: translateX(var(--hover-nudge)); transition-duration: var(--duration-focus); }
+/* hover/focus: заливка змінюється, стрілка зсувається (transform не впливає на розмір кнопки). Фокус-кільце — глобальне :focus-visible (base.css) з токенами --focus-ring-*; колір = currentColor контексту (--btn-focus-ring-color-auto) */
+.btn:focus-visible { border-color: var(--btn-border-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
+.btn:focus-visible .btn__inner { background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); } /* клавіатура: короткий перехід */
+.btn:focus-visible .btn__arrow { transform: translateX(var(--btn-icon-nudge-hover)); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
-  .btn:hover .btn__inner { background: var(--btn-hover); }
-  .btn:hover .btn__arrow { transform: translateX(var(--hover-nudge)); }
+  .btn:hover { border-color: var(--btn-border-hover); }
+  .btn:hover .btn__inner { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
+  .btn:hover .btn__arrow { transform: translateX(var(--btn-icon-nudge-hover)); }
 }
+/* active (натиснуто): тон hover ще на 8% темніший (--btn-active-mix), заливка трохи «втискається»; перехід короткий (--btn-transition-duration-focus). Відпускання повертається плавно за правилами hover/default */
+.btn:active { border-color: var(--btn-border-active); }
+.btn:active .btn__inner {
+  background: var(--btn-bg-active); color: var(--btn-text-active); transform: scale(var(--btn-active-scale));
+  transition: background-color var(--btn-transition-duration-focus) var(--btn-transition-ease), color var(--btn-transition-duration-focus) var(--btn-transition-ease), transform var(--btn-transition-duration-focus) var(--btn-transition-ease);
+}
+
+/* disabled: нативний :disabled і aria-disabled="true". Приглушення, курсор, hover/focus/active повертаються до disabled-значень (= default); стрілка не зсувається, заливка не втискається.
+   Нативний :disabled додатково без pointer-events (aria-disabled лишається клікабельним: tooltip/фокус); focus-кільця для нативного disabled немає — елемент не фокусується. */
+.btn:is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--btn-disabled-opacity); cursor: var(--btn-disabled-cursor);
+  --btn-bg: var(--btn-bg-disabled); --btn-text: var(--btn-text-disabled); --btn-border: var(--btn-border-disabled);
+  --btn-bg-hover: var(--btn-bg-disabled); --btn-bg-focus: var(--btn-bg-disabled); --btn-bg-active: var(--btn-bg-disabled);
+  --btn-text-hover: var(--btn-text-disabled); --btn-text-focus: var(--btn-text-disabled); --btn-text-active: var(--btn-text-disabled);
+  --btn-border-hover: var(--btn-border-disabled); --btn-border-focus: var(--btn-border-disabled); --btn-border-active: var(--btn-border-disabled);
+  --btn-icon-nudge-hover: var(--btn-disabled-icon-nudge); --btn-active-scale: var(--btn-disabled-active-scale);
+}
+.btn:disabled { pointer-events: none; }

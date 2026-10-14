@@ -1,53 +1,84 @@
 /* Посилання навігації (194:1376) і смуга хедера (194:1374) */
 .nav-link {
-  color: var(--color-nav-text); display: inline-block; white-space: nowrap;
-  /* у хедері підкреслень немає: hover/focus змінює лише колір тексту (--color-hover-nav) */
-  transition: color var(--duration-fast) var(--ease-out);
+  color: var(--btn-navlink-text-default); display: inline-block; white-space: nowrap;
+  /* у хедері підкреслень немає: hover/focus змінює лише колір тексту (--btn-navlink-text-hover) */
+  transition: color var(--btn-transition-duration) var(--btn-transition-ease);
 }
-.nav-link--on-light { color: var(--color-green); } /* футер 194:1240 */
+.nav-link--on-light { color: var(--btn-navlink-light-text-default); } /* футер 194:1240 */
 
 /* підкреслення — лише у футері (.site-footer): прозоре за замовчуванням, на hover/focus стає currentColor; розміри не змінюються */
 .site-footer .nav-link {
   text-decoration: underline; text-decoration-color: transparent;
   text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--hover-nudge);
-  transition: color var(--duration-fast) var(--ease-out), text-decoration-color var(--duration-fast) var(--ease-out);
+  transition: color var(--btn-transition-duration) var(--btn-transition-ease), text-decoration-color var(--btn-transition-duration) var(--btn-transition-ease);
 }
 
 /* hover/focus: лише для pointer: fine; фокус клавіатури — завжди */
-a.nav-link:focus-visible { color: var(--color-hover-nav); transition-duration: var(--duration-focus); }
-a.nav-link--on-light:focus-visible { color: var(--color-hover-nav-light); }
+a.nav-link:focus-visible { color: var(--btn-navlink-text-focus); transition-duration: var(--btn-transition-duration-focus); }
+a.nav-link--on-light:focus-visible { color: var(--btn-navlink-light-text-focus); }
 .site-footer a.nav-link:focus-visible { text-decoration-color: currentColor; }
 @media (hover: hover) {
-  a.nav-link:hover { color: var(--color-hover-nav); }
-  a.nav-link--on-light:hover { color: var(--color-hover-nav-light); }
+  a.nav-link:hover { color: var(--btn-navlink-text-hover); }
+  a.nav-link--on-light:hover { color: var(--btn-navlink-light-text-hover); }
   .site-footer a.nav-link:hover { text-decoration-color: currentColor; }
 }
 
-/* Header 3 (214:2902; раніше Header 2 206:2495): комірка-пункт 150×42 по центру; кнопки «Кошик» (контур, 206:2511) і «підказати?» (заливка, 206:2513) */
-.nav-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: var(--header2-cell-w); height: var(--header2-cell-h); white-space: nowrap; color: var(--color-nav-text); }
+/* Header 3 (214:2902; раніше Header 2 206:2495): комірка-пункт 150×42 по центру; кнопки «Кошик» (контур, 206:2511) і «підказати?» (заливка, 206:2513).
+   Кольори станів — токени --btn-nav-<outline|fill|ghost>-<bg|text|border>-<стан> (tokens.css); варіант виставляє контекстні --btn-bg / --btn-text / --btn-border (+ -hover/-focus/-active/-disabled/-selected), правила станів читають лише їх. */
+.nav-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: var(--header2-cell-w); height: var(--header2-cell-h); white-space: nowrap; color: var(--btn-navlink-text-default); }
+.nav-cell--outline {
+  --btn-bg: var(--btn-nav-outline-bg-default); --btn-bg-hover: var(--btn-nav-outline-bg-hover); --btn-bg-focus: var(--btn-nav-outline-bg-focus); --btn-bg-active: var(--btn-nav-outline-bg-active); --btn-bg-disabled: var(--btn-nav-outline-bg-disabled); --btn-bg-selected: var(--btn-nav-outline-bg-selected);
+  --btn-text: var(--btn-nav-outline-text-default); --btn-text-hover: var(--btn-nav-outline-text-hover); --btn-text-focus: var(--btn-nav-outline-text-focus); --btn-text-active: var(--btn-nav-outline-text-active); --btn-text-disabled: var(--btn-nav-outline-text-disabled); --btn-text-selected: var(--btn-nav-outline-text-selected);
+  --btn-border: var(--btn-nav-outline-border-default); --btn-border-hover: var(--btn-nav-outline-border-hover); --btn-border-focus: var(--btn-nav-outline-border-focus); --btn-border-active: var(--btn-nav-outline-border-active); --btn-border-disabled: var(--btn-nav-outline-border-disabled); --btn-border-selected: var(--btn-nav-outline-border-selected);
+}
+.nav-cell--fill {
+  --btn-bg: var(--btn-nav-fill-bg-default); --btn-bg-hover: var(--btn-nav-fill-bg-hover); --btn-bg-focus: var(--btn-nav-fill-bg-focus); --btn-bg-active: var(--btn-nav-fill-bg-active); --btn-bg-disabled: var(--btn-nav-fill-bg-disabled);
+  --btn-text: var(--btn-nav-fill-text-default); --btn-text-hover: var(--btn-nav-fill-text-hover); --btn-text-focus: var(--btn-nav-fill-text-focus); --btn-text-active: var(--btn-nav-fill-text-active); --btn-text-disabled: var(--btn-nav-fill-text-disabled);
+  --btn-border: var(--btn-nav-fill-border-default); --btn-border-hover: var(--btn-nav-fill-border-hover); --btn-border-focus: var(--btn-nav-fill-border-focus); --btn-border-active: var(--btn-nav-fill-border-active); --btn-border-disabled: var(--btn-nav-fill-border-disabled);
+}
+.nav-cell--ghost {
+  --btn-bg: var(--btn-nav-ghost-bg-default); --btn-bg-hover: var(--btn-nav-ghost-bg-hover); --btn-bg-focus: var(--btn-nav-ghost-bg-focus); --btn-bg-active: var(--btn-nav-ghost-bg-active); --btn-bg-disabled: var(--btn-nav-ghost-bg-disabled);
+  --btn-text: var(--btn-nav-ghost-text-default); --btn-text-hover: var(--btn-nav-ghost-text-hover); --btn-text-focus: var(--btn-nav-ghost-text-focus); --btn-text-active: var(--btn-nav-ghost-text-active); --btn-text-disabled: var(--btn-nav-ghost-text-disabled);
+}
 .nav-cell--outline, .nav-cell--fill {
   border-radius: var(--radius-btn); /* 214:2904 / 214:2920 радіус 5 */
-  border: var(--border-hairline) solid var(--color-header-btn-border);
-  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  border: var(--border-hairline) solid var(--btn-border);
+  transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease);
 }
 .nav-cell--icon { gap: var(--header3-icon-gap); } /* кнопки хедера з брендовою іконкою (basket / headset): ширина 150 і висота не змінюються */
 .nav-cell--icon .icon { --icon-size: var(--header3-icon-size); }
 .nav-cell--block { width: 100%; } /* кнопка на всю ширину контейнера (дії у випадному меню) */
-.nav-cell--outline { height: var(--header2-btn-outline-h); }
-.nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--color-header-btn-fill); color: var(--color-header-btn-fill-text); }
+.nav-cell--outline { height: var(--header2-btn-outline-h); background: var(--btn-bg); color: var(--btn-text); }
+.nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--btn-bg); color: var(--btn-text); }
 /* hover/focus кнопок: лише колір/фон (рамка стала, розміри не змінюються) */
-a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible, button.nav-cell--outline[aria-expanded="true"] { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
-a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { outline-color: var(--color-beige); transition-duration: var(--duration-focus); } /* кільце світле (beige): у фокусі колір тексту темніє, currentColor на зеленому тлі невидимий; діє і поза .site-header__bar (демо дизайн-системи) */ /* короткий перехід лише для клавіатурного фокусу; відкрите меню (aria-expanded) лишається на плавному --duration-fast */
-a.nav-cell--fill:focus-visible { outline-color: var(--color-beige); background: var(--color-hover-header-fill-bg); transition-duration: var(--duration-focus); }
+a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); border-color: var(--btn-border-focus); }
+button.nav-cell--outline[aria-expanded="true"] { background: var(--btn-bg-selected); color: var(--btn-text-selected); border-color: var(--btn-border-selected); } /* відкрите меню (selected) */
+a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); transition-duration: var(--btn-transition-duration-focus); } /* кільце світле (beige): у фокусі колір тексту темніє, currentColor на зеленому тлі невидимий; діє і поза .site-header__bar (демо дизайн-системи) */ /* короткий перехід лише для клавіатурного фокусу; відкрите меню (aria-expanded) лишається на плавному --btn-transition-duration */
+a.nav-cell--fill:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); background: var(--btn-bg-focus); color: var(--btn-text-focus); border-color: var(--btn-border-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
-  a.nav-cell--outline:hover, button.nav-cell--outline:hover { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
-  a.nav-cell--fill:hover { background: var(--color-hover-header-fill-bg); }
+  a.nav-cell--outline:hover, button.nav-cell--outline:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); border-color: var(--btn-border-hover); }
+  a.nav-cell--fill:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); border-color: var(--btn-border-hover); }
 }
 
-/* «каталог» (пункт-комірка 150×42, 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик»: --color-hover-header-outline-bg, темний текст і іконка (currentColor) --color-hover-header-outline-text; радіус --radius-btn; перехід --duration-fast (focus — --duration-focus). Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
-.nav-cell--ghost { border-radius: var(--radius-btn); transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
-a.nav-cell--ghost:focus-visible { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); transition-duration: var(--duration-focus); }
+/* «каталог» (пункт-комірка 150×42, 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
+.nav-cell--ghost { border-radius: var(--radius-btn); background: var(--btn-bg); color: var(--btn-text); transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
+a.nav-cell--ghost:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
-  a.nav-cell--ghost:hover { background: var(--color-hover-header-outline-bg); color: var(--color-hover-header-outline-text); }
+  a.nav-cell--ghost:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
 }
 @media (prefers-reduced-motion: reduce) { .nav-cell--ghost { transition: none; } }
+
+/* active (натиснуто): заливка hover на 8% темніша (--btn-active-mix); перехід короткий. Масштабування не застосовується (комірка фіксованого розміру) */
+a.nav-cell--outline:active, button.nav-cell--outline:active, a.nav-cell--fill:active, a.nav-cell--ghost:active { background: var(--btn-bg-active); color: var(--btn-text-active); transition-duration: var(--btn-transition-duration-focus); }
+a.nav-cell--outline:active, button.nav-cell--outline:active, a.nav-cell--fill:active { border-color: var(--btn-border-active); }
+
+/* disabled / aria-disabled: приглушення, курсор, стани hover/focus/active = disabled (default); нативний :disabled без pointer-events */
+:is(.nav-cell--outline, .nav-cell--fill, .nav-cell--ghost):is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--btn-disabled-opacity); cursor: var(--btn-disabled-cursor);
+  --btn-bg: var(--btn-bg-disabled); --btn-text: var(--btn-text-disabled);
+  --btn-bg-hover: var(--btn-bg-disabled); --btn-bg-focus: var(--btn-bg-disabled); --btn-bg-active: var(--btn-bg-disabled); --btn-bg-selected: var(--btn-bg-disabled);
+  --btn-text-hover: var(--btn-text-disabled); --btn-text-focus: var(--btn-text-disabled); --btn-text-active: var(--btn-text-disabled); --btn-text-selected: var(--btn-text-disabled);
+  --btn-border: var(--btn-border-disabled);
+  --btn-border-hover: var(--btn-border-disabled); --btn-border-focus: var(--btn-border-disabled); --btn-border-active: var(--btn-border-disabled); --btn-border-selected: var(--btn-border-disabled);
+}
+:is(.nav-cell--outline, .nav-cell--fill, .nav-cell--ghost):disabled { pointer-events: none; }

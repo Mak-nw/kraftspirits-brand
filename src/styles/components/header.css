@@ -6,7 +6,7 @@
 .site-header__bar { position: fixed; top: var(--header3-top); left: 0; right: 0; z-index: var(--z-header); box-sizing: border-box; width: var(--header3-w); height: var(--header3-h); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; padding: var(--header3-pad-y) var(--header3-pad-x); border-radius: var(--header3-radius); }
 /* фон і блюр пілюлі — у псевдоелементі, а не на .site-header__bar: backdrop-filter предка робить його «backdrop root», і випадне меню (нащадок пілюлі) тоді розмиває лише пілюлю, а не контент сторінки під панеллю */
 .site-header__bar::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--header3-radius); background: linear-gradient(var(--color-header3-bg), var(--color-header3-bg)), var(--color-header3-underlay); -webkit-backdrop-filter: blur(var(--header3-blur)); backdrop-filter: blur(var(--header3-blur)); }
-.site-header__bar :focus-visible { outline-color: var(--color-beige); } /* фокус-кільце на темній пілюлі (і в випадному меню всередині неї): світле (beige), а не currentColor — на фоні пілюлі видно ≥3:1 для всіх контролів хедера */
+.site-header__bar :focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); } /* фокус-кільце на темній пілюлі (і в випадному меню всередині неї): світле (beige), а не currentColor — на фоні пілюлі видно ≥3:1 для всіх контролів хедера */
 .site-header__side { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: var(--header3-group-gap); }
 .site-header__side--end { justify-content: flex-end; }
 .site-header__logos { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; }

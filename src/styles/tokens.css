@@ -231,6 +231,8 @@
   --btn-active-scale:                  0.985; /* :active — легке «втискання» заливки кнопки .btn (лише .btn__inner; більше scale(.985) не дозволено) */
   --btn-disabled-opacity:              var(--opacity-muted); /* disabled / aria-disabled: приглушення всієї кнопки (= існуючі 0.4; було в product.css/contacts.css/slider.css); hover/focus/active — без змін */
   --btn-disabled-cursor:               not-allowed; /* курсор вимкненої кнопки; pointer-events: none — лише для нативного :disabled (aria-disabled лишається клікабельним для tooltip/фокусу) */
+  --btn-disabled-icon-nudge:           0px; /* disabled: стрілка не зсувається на hover/focus (замість --btn-icon-nudge-hover) */
+  --btn-disabled-active-scale:         1; /* disabled: заливка не «втискається» (замість --btn-active-scale) */
   --btn-focus-ring-width:              var(--focus-ring-width); /* товщина фокус-кільця (= глобальне :focus-visible у base.css) */
   --btn-focus-ring-offset:             var(--focus-ring-offset); /* відступ фокус-кільця від кнопки (= глобальне :focus-visible) */
   --btn-focus-ring-color-auto:         var(--focus-ring-color); /* колір кільця за замовчуванням = колір тексту контексту (currentColor): так працюють .btn на будь-якому фоні */

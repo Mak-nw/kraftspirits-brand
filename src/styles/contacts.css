@@ -53,8 +53,7 @@ a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-
 .contact-form__head { display: flex; flex-direction: column; gap: var(--space-15); margin-bottom: var(--space-10); }
 .contact-form__head p { margin: 0; }
 .contact-form .btn { margin-top: var(--space-10); }
-.contact-form .btn:disabled { opacity: var(--opacity-muted); cursor: default; }
-.contact-form .btn:disabled .btn__inner, .contact-form .btn:disabled:hover .btn__inner { background: var(--btn-accent); }
+/* «Надіслати» вимкнена на час відправки: стан :disabled — спільне правило button.css (токени --btn-disabled-*) */
 .contact-form__alert { margin: 0; padding: var(--space-15) var(--space-20); border: var(--border-hairline) solid var(--color-field-error); border-radius: var(--radius-select); color: var(--color-field-error); }
 .contact-form__alert[hidden] { display: none; }
 .contact-form__alert a { text-decoration: underline; text-underline-offset: 0.2em; } /* юридичний/аварійний рядок: посилання підкреслене, щоб відрізнялось від тексту */

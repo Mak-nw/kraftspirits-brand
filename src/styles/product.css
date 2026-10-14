@@ -73,10 +73,7 @@
 .product-volume[aria-pressed="true"] { opacity: 1; }
 @media (hover: hover) { .product-volume:hover { opacity: 1; } .product-volume:hover::before { opacity: var(--opacity-volume-hover); } }
 .product-volume:focus-visible::before { opacity: var(--opacity-volume-hover); transition-duration: var(--duration-focus); }
-.product .btn { --btn-hover: var(--color-hover-btn-green); }
-.product[data-brand="bazylsprings"] .btn { --btn-hover: var(--color-hover-btn-teal); }
-.btn[aria-disabled="true"] { opacity: var(--opacity-muted); cursor: default; }
-.btn[aria-disabled="true"]:hover .btn__inner { background: var(--btn-accent); }
+/* кнопка «додати в кошик»: колір бренду дає варіант (btn--green / btn--teal: JS product.js), стани — токени --btn-*; disabled/aria-disabled — спільне правило button.css */
 
 /* акордеони й крихти */
 .product-acc { width: var(--size-product-body-w); color: var(--accent); }
