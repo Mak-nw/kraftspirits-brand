@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="131" height="131" viewBox="0 0 131 131" fill="none" overflow="hidden">
+<!-- МАСКА (не картинка): геометрія 1:1 з catalog/home-pattern-diamond.svg (решітка ромбів 131u, великий ромб + 4 допоміжні через краї).
+     Колір задає CSS (mask-image + background-color токена color-barrels-pattern), тож візерунок працює на будь-якій кімнаті barrels.html
+     (teal / brown) без кольорів у файлі. Два тони як в оригіналі: великий ромб на повну силу маски, допоміжні на половину. -->
+<path fill="#000" fill-opacity="0.45" d="M74.0 44L108.5 0L143.0 44L108.5 88ZM-57.0 44L-22.5 0L12.0 44L-22.5 88ZM24 110L44 84L64 110L44 136ZM24 -21L44 -47L64 -21L44 5Z"/>
+<path fill="#000" d="M13.0 43L44.5 3L76.0 43L44.5 83Z"/>
+</svg>

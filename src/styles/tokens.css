@@ -877,4 +877,38 @@
   --container-barrels-note: calc(900 * var(--u));     /* дрібний текст під цінами */
   --opacity-barrels-note: 0.75;                       /* приглушений колір дрібного тексту (контраст light на green ≥ 7:1 і при 0.75) */
   --type-note-font: var(--font-family-sans); --type-note-weight: var(--fw-medium); --type-note-size: var(--font-size-small); --type-note-lh: 1.5; --type-note-ls: var(--ls-wide); /* дрібний юридичний/довідковий текст 12u */
+
+  /* ---------- «Світло в погребі» (редизайн 15.10, рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
+     Кожна секція — «кімната» зі своїм тлом; світле — лише текст, тонкі лінії та одна «паперова» секція. Нових відтінків немає: лише аліаси й color-mix палітри.
+     Документація з живими зразками — design-system.html, розділ «Ф'ючерсні бочки». */
+  --color-barrels-room-wood: var(--color-brown);      /* кімната «дерево»: анатомія бочки, подальша витримка */
+  --color-barrels-room-cellar: var(--color-teal);     /* кімната «погріб»: від бочки до пляшки, ціна (Bazylsprings) */
+  --color-barrels-room-paper: var(--color-beige);     /* єдина світла кімната: арифметика бочки */
+  --color-barrels-ink: var(--color-light);            /* основний текст на темних кімнатах */
+  --color-barrels-ink-muted: var(--color-nav-text);   /* підписи й пояснення на темних кімнатах (контраст на teal/brown ≥ 10:1) */
+  --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» */
+  --color-barrels-accent: var(--color-gold);          /* цифри-гіганти, гравюри, лінії (лише на темному) */
+  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* золоті тонкі лінії й рамки */
+  --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, внутрішня рамка) */
+  --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* лінії на «папері» */
+  --color-barrels-depth: color-mix(in srgb, var(--color-brown) 55%, var(--color-teal));   /* глибина «вікна» (арки) на коричневій кімнаті: темніша за кімнату */
+  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 14%, transparent);      /* «світло в погребі»: тепла пляма зверху арки/кімнати */
+  --color-barrels-pattern: color-mix(in srgb, var(--color-light) 3%, transparent);        /* ромб тон-у-тон на темних кімнатах (маска barrels-pattern-diamond.svg) */
+  --opacity-barrels-grain: 0.11;                      /* зерно плівки поверх сторінки (barrels-grain.svg, fixed-шар без анімації) */
+  --size-barrels-grain-tile: 240px;                   /* фізичний розмір плитки зерна (не масштабується з --u: зерно — властивість «плівки», а не макета) */
+  --z-barrels-grain: calc(var(--z-header) - 1);       /* шар зерна: над секціями, під пілюлею header */
+
+  /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
+  --font-size-barrels-numeral: calc(240 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» */
+  --lh-barrels-numeral: 0.86;
+  --font-size-barrels-lead: calc(30 * var(--u));      /* лід у sentence case замість caps-ліда 40u */
+  --lh-barrels-lead: 1.25;
+  --font-size-barrels-title: calc(30 * var(--u));     /* назви рядків/розділів (EB Garamond 600, caps) */
+  --font-size-barrels-copy: max(calc(18 * var(--u)), 13px);    /* пояснення (Manrope 500) */
+  --lh-barrels-copy: 1.45;
+  --font-size-barrels-caption: max(calc(15 * var(--u)), 12px); /* підписи до схем і орнаментів */
+  --font-size-barrels-note: max(calc(14 * var(--u)), 12px);    /* дрібний довідковий текст (застереження до цін) */
+  --container-barrels: var(--container-wide);         /* ширина вмісту кімнат (1508u) */
+  --space-barrels-col-gap: calc(100 * var(--u));      /* проміжок між великими колонками кімнати */
+  --space-barrels-stack: var(--space-20);              /* вертикальний ритм усередині блоків (кікер → заголовок → лід) */
 }

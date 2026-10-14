@@ -4,6 +4,26 @@
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 .t-note { font: var(--type-note-weight) var(--type-note-size)/var(--type-note-lh) var(--type-note-font); letter-spacing: var(--type-note-ls); }
 
+/* ---------- «Світло в погребі»: кімнати, візерунок, зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
+   Кімната = секція з власним тлом (wood / cellar / paper). Світле — лише текст, лінії та одна «паперова» кімната.
+   Зерно — один fixed-шар на всю сторінку (без анімації, pointer-events: none), під пілюлею header. */
+.page-barrels::after { content: ''; position: fixed; inset: 0; z-index: var(--z-barrels-grain); pointer-events: none; background: url('/assets/img/barrels-grain.svg') 0 0 / var(--size-barrels-grain-tile) var(--size-barrels-grain-tile) repeat; opacity: var(--opacity-barrels-grain); }
+.bx-room { position: relative; isolation: isolate; color: var(--color-barrels-ink); }
+.bx-room--wood { background: var(--color-barrels-room-wood); }
+.bx-room--cellar { background: var(--color-barrels-room-cellar); }
+.bx-room--paper { background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
+.bx-room--pattern::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--color-barrels-pattern); mask: url('/assets/img/barrels-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat; }
+
+/* зразки похідних кольорів у design-system.html (розділ «Ф'ючерсні бочки») */
+.swatch--bx-wood .swatch__chip { background: var(--color-barrels-room-wood); }
+.swatch--bx-cellar .swatch__chip { background: var(--color-barrels-room-cellar); }
+.swatch--bx-paper .swatch__chip { background: var(--color-barrels-room-paper); }
+.swatch--bx-depth .swatch__chip { background: var(--color-barrels-depth); }
+.swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-barrels-room-cellar); }
+.swatch--bx-lightpool .swatch__chip { background: radial-gradient(ellipse at 50% 0%, var(--color-barrels-lightpool), transparent 70%), var(--color-barrels-room-wood); }
+.swatch--bx-pattern .swatch__chip { position: relative; isolation: isolate; background: var(--color-barrels-room-cellar); }
+.swatch--bx-pattern .swatch__chip::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--color-barrels-pattern); mask: url('/assets/img/barrels-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat; }
+
 /* ---------- Hero ---------- */
 .hero--barrels { color: var(--color-light); }
 .hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top) 0%, var(--color-barrels-shade-mid) 40%, transparent 65%, var(--color-barrels-shade-bottom) 100%); }
