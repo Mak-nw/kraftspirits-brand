@@ -126,25 +126,45 @@
 .ds-barrels-stage .bx-arch { --bx-rise: calc(var(--size-barrels-demo-stage-w) * var(--ratio-barrels-arch-rise)); }
 .ds-barrels-how .bx-chapter { flex: 1; min-height: 0; }
 
-/* ---------- Вигода ---------- */
-.barrels-profit { background: var(--color-beige); }
-.profit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-barrels-grid-gap); width: 100%; max-width: var(--container-wide); margin-inline: auto; }
-.profit-panel { display: flex; flex-direction: column; gap: var(--space-30); padding: var(--space-50); border-radius: var(--radius-panel); background: var(--color-green); color: var(--color-gold); }
-.profit-panel__top { display: flex; align-items: flex-end; gap: var(--space-40); flex: 1; }
-.profit-panel__barrel { position: relative; flex: none; width: var(--size-barrels-profit-barrel-lg); }
-.profit-panel--sm .profit-panel__barrel { width: var(--size-barrels-profit-barrel-sm); }
-.profit-panel__size { position: absolute; left: 50%; top: 45%; translate: -50% -50%; padding: var(--space-5) var(--space-15); border: var(--border-hairline) solid currentColor; border-radius: var(--radius-btn); background: var(--color-green); color: var(--color-light); white-space: nowrap; }
-.profit-panel__count { display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; color: var(--color-light); }
-.profit-panel__num { font: var(--type-stat-weight) var(--font-size-barrels-profit-num)/var(--lh-none) var(--type-stat-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
-/* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється (opacity).
-   Страховка: якщо модуль не відпрацював, через --duration-count-failsafe число з'являється саме. Без JS (html.js немає) і reduced-motion — видно фінальне значення одразу. */
+/* ---------- S4 «Арифметика бочки»: єдина світла кімната («папір»), колонки-гросбухи + «стіна пляшок» ----------
+   Сітка секції: [заголовок][50 L][200 L]; кожна колонка — subgrid на 6 спільних рядків (назва, число, одиниця, стіна, полиця, вартість):
+   однакова структура, базові лінії однотипних рядків збігаються. Стіна пляшок — РІВНО стільки силуетів, скільки пляшок (маска-плитка
+   barrels-bottle-tile.svg, 2 елементи на колонку), стіни стоять на спільній «полиці» (align-self: end). 50 L — першим і з акцентом. */
+.bx-room--paper.bx-room--pattern::before { background: var(--color-barrels-pattern-paper); }
+.barrels-profit { padding-block: var(--space-barrels-section-y); }
+.barrels-profit__grid { display: grid; grid-template-columns: var(--size-barrels-profit-head-w) auto auto; grid-template-rows: repeat(6, auto); column-gap: var(--space-barrels-ledger-gap); justify-content: space-between; width: var(--container-barrels); margin-inline: auto; }
+.barrels-profit__title { grid-column: 1; grid-row: 1 / span 6; align-self: start; margin-top: var(--shift-barrels-cap-top); text-wrap: balance; }
+.bx-ledger { grid-row: 1 / span 6; display: grid; grid-template-rows: subgrid; justify-items: start; }
+.barrels-profit__grid > .bx-ledger:nth-of-type(1) { grid-column: 2; } /* явні колонки: «полиця» в рядку 5 інакше виштовхує колонки авто-розміщенням */
+.barrels-profit__grid > .bx-ledger:nth-of-type(2) { grid-column: 3; }
+.bx-ledger__size { padding: var(--space-5) var(--space-15); border: var(--border-hairline) solid var(--color-barrels-ink-paper); border-radius: var(--radius-btn); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+.bx-ledger--accent .bx-ledger__size { background: var(--color-barrels-ink-paper); color: var(--color-barrels-room-paper); }
+.bx-ledger__num { margin-top: var(--space-barrels-ledger-row); font: var(--fw-regular) var(--font-size-barrels-ledger-num)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bx-ledger__approx { position: relative; top: var(--shift-barrels-ledger-approx); margin-left: var(--shift-barrels-approx-ink); margin-right: 0.08em; font-size: var(--font-size-barrels-ledger-approx); } /* «≈» піднято до середини висоти цифр (old-style) */
+.bx-ledger__unit { margin-top: var(--space-15); margin-bottom: var(--space-30); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-wall { align-self: end; display: flex; flex-direction: column; align-items: flex-start; }
+.bx-wall__part { display: block; height: var(--size-barrels-wall-cell-h); background: var(--color-barrels-ink-paper); mask: url('/assets/img/barrels-bottle-tile.svg') 0 0 / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) repeat; }
+.bx-wall__part--top { width: calc(var(--bx-wall-top) * var(--size-barrels-wall-cell-w)); height: calc(min(var(--bx-wall-top), 1) * var(--size-barrels-wall-cell-h)); }
+.bx-wall__part--body { width: calc(var(--bx-wall-cols) * var(--size-barrels-wall-cell-w)); height: calc(var(--bx-wall-rows) * var(--size-barrels-wall-cell-h)); }
+.bx-wall--sm { --bx-wall-cols: var(--count-barrels-wall-sm-cols); --bx-wall-rows: var(--count-barrels-wall-sm-rows); --bx-wall-top: var(--count-barrels-wall-sm-top); }
+.bx-wall--lg { --bx-wall-cols: var(--count-barrels-wall-lg-cols); --bx-wall-rows: var(--count-barrels-wall-lg-rows); --bx-wall-top: var(--count-barrels-wall-lg-top); }
+/* поява: стіна «наповнюється» знизу вгору разом із reveal колонки (один раз; без JS / reduced-motion — одразу повна) */
+.js-reveal .bx-ledger[data-reveal] .bx-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
+.js-reveal .bx-ledger[data-reveal].is-in .bx-wall { clip-path: inset(0); }
+.barrels-profit__shelf { grid-column: 2 / -1; grid-row: 5; align-self: start; height: var(--border-hairline); margin-bottom: var(--space-barrels-ledger-row); background: var(--color-barrels-rule-paper); }
+.bx-ledger__cost { grid-row: 6; display: flex; flex-direction: column; gap: var(--space-5); }
+.bx-ledger__cost-num { margin-left: var(--shift-barrels-approx-ink); font: var(--fw-medium) var(--font-size-barrels-ledger-cost)/1 var(--font-family-serif); white-space: nowrap; }
+.bx-ledger__cost-label { font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+/* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється.
+   Страховка: через --duration-count-failsafe число з'являється саме. Без JS і з reduced-motion — фінальне значення одразу. */
 .js .page-barrels [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
 @keyframes count-failsafe { to { opacity: 1; } }
-.profit-panel__bottles { display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--space-barrels-bottle-gap); margin-top: var(--space-15); color: var(--color-gold); }
-.profit-panel__bottles .icon { --icon-size: var(--size-barrels-bottle-icon); }
-.profit-panel__more { align-self: center; }
-.profit-panel__cost { display: flex; align-items: center; gap: var(--space-20); padding: var(--space-20) var(--space-30); border: var(--border-hairline) solid var(--color-gold); border-radius: var(--radius-btn); background: var(--color-barrels-plate); color: var(--color-light); }
-.profit-panel__cost-num { font: var(--type-stat-weight) var(--font-size-lead)/var(--lh-none) var(--type-stat-font); white-space: nowrap; }
+/* демо S4 у design-system.html */
+.demo-panel.ds-barrels-ledgers { display: grid; grid-template-columns: auto auto; grid-template-rows: repeat(6, auto); row-gap: 0; column-gap: var(--space-barrels-ledger-gap); justify-content: start; align-items: stretch; padding: var(--space-50); }
+.ds-barrels-ledgers .bx-ledger { grid-row: 1 / span 6; }
+.ds-barrels-ledgers .bx-ledger:nth-of-type(1) { grid-column: 1; }
+.ds-barrels-ledgers .bx-ledger:nth-of-type(2) { grid-column: 2; }
+.ds-barrels-ledgers .barrels-profit__shelf { grid-column: 1 / -1; }
 
 /* ---------- Подальша витримка ---------- */
 .barrels-next { background: var(--color-light); }

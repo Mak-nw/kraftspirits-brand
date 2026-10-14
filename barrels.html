@@ -57,13 +57,14 @@
       </div>
     </section>
 
-    <section class="barrels-section barrels-profit" id="profit" aria-labelledby="profit-title">
-      <div class="barrels-head">
-        <h2 class="t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
-      </div>
-      <div class="profit-grid">
-        <!--@include components/profit-panel size="200 L" mod=" profit-panel--lg" count="%barrels.bottles200%" cost="%barrels.cost200%"-->
-        <!--@include components/profit-panel size="50 L" mod=" profit-panel--sm" count="%barrels.bottles50%" cost="%barrels.cost50%"-->
+    <!-- Єдина світла кімната «папір»: арифметика бочки — заголовок ліворуч, дві колонки-«гросбухи» зі спільною сіткою рядків (subgrid);
+         «стіна пляшок» = рівно стільки силуетів, скільки пляшок (96 / 383), стоїть на спільній «полиці»; 50 L — першим і з акцентом -->
+    <section class="barrels-profit bx-room bx-room--paper bx-room--pattern" id="profit" aria-labelledby="profit-title">
+      <div class="barrels-profit__grid">
+        <h2 class="barrels-profit__title t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
+        <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent" count="%barrels.bottles50%" word="%barrels.bottles50Word%" cost="%barrels.cost50%" wall="sm"-->
+        <!--@include components/barrels-ledger size="200 L" count="%barrels.bottles200%" word="%barrels.bottles200Word%" cost="%barrels.cost200%" wall="lg"-->
+        <span class="barrels-profit__shelf" aria-hidden="true"></span>
       </div>
     </section>
 

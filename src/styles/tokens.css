@@ -845,14 +845,6 @@
   --space-barrels-card-pad: var(--space-30);
   --space-barrels-grid-gap: var(--space-20);
 
-  /* Вигода */
-  --font-size-barrels-profit-num: calc(120 * var(--u));  /* «≈ 383» */
-  --size-barrels-profit-barrel-lg: calc(280 * var(--u)); /* бочка 200 L */
-  --size-barrels-profit-barrel-sm: calc(170 * var(--u)); /* бочка 50 L (масштаб відповідає різниці об'єму) */
-  --size-barrels-bottle-icon: calc(18 * var(--u));       /* декоративні пляшки bottle-0-7: ширина (висота = ×50/24) */
-  --space-barrels-bottle-gap: calc(6 * var(--u));
-  --color-barrels-plate: color-mix(in srgb, var(--color-light) 8%, transparent); /* плашка «≈ € 15,66» на зеленій панелі */
-
   /* Подальша витримка */
   --size-barrels-head-art: calc(300 * var(--u));      /* днище бочки (круг) */
   --color-barrel-marsala: var(--color-brown);         /* відтінки днищ — лише з палітри */
@@ -947,4 +939,20 @@
   --space-barrels-route-gap: var(--space-20);
   --size-barrels-route-wave: calc(48 * var(--u));
   --container-barrels-note: calc(900 * var(--u));
+
+  /* S4 «Арифметика бочки»: єдина світла кімната, колонки-гросбухи зі спільною сіткою рядків (subgrid), «стіна пляшок» */
+  --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* підписи на «папері»: контраст на beige ≈ 5.5:1 */
+  --color-barrels-pattern-paper: color-mix(in srgb, var(--color-teal) 3%, transparent);           /* ромб тон-у-тон на «папері» */
+  --size-barrels-profit-head-w: calc(470 * var(--u));   /* колонка заголовка ліворуч */
+  --space-barrels-ledger-gap: calc(110 * var(--u));     /* між колонками */
+  --font-size-barrels-ledger-num: calc(170 * var(--u)); /* «96» / «383» */
+  --font-size-barrels-ledger-approx: 0.42em;            /* «≈» перед числом: менший, щоб не змагався з числом */
+  --shift-barrels-ledger-approx: -0.3em;                /* «≈» вгору до середини висоти old-style цифр (у власних em знака) */
+  --shift-barrels-approx-ink: -0.068em;                 /* бокове поле гліфа «≈» EB Garamond: чорнило на 0.068em правіше осі колонки (виміряно) */
+  --font-size-barrels-ledger-cost: calc(34 * var(--u)); /* «≈ € 20,83» */
+  --space-barrels-ledger-row: var(--space-20);          /* вертикальний крок рядків колонки */
+  --size-barrels-wall-cell-w: round(calc(14 * var(--u)), 1px);                     /* комірка стіни: ціле px — маска не «пливе» */
+  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
+  --count-barrels-wall-sm-cols: 16; --count-barrels-wall-sm-rows: 6; --count-barrels-wall-sm-top: 0;    /* 50 L: 96 = 16 × 6 */
+  --count-barrels-wall-lg-cols: 32; --count-barrels-wall-lg-rows: 11; --count-barrels-wall-lg-top: 31;  /* 200 L: 383 = 31 + 32 × 11 (верхній ряд на одну пляшку коротший) */
 }

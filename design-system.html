@@ -1087,9 +1087,11 @@
         <!--@include components/barrels-chapter step="angels" n="2" value="≈15%" note="орієнтовно" title="Витримка" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
       </div>
 
-      <p class="demo-label t-kicker">profit-panel (size, count, cost, mod: profit-panel--lg | --sm) + illustration-barrel: лічильник data-count-to 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; у DOM — фінальне значення; на barrels.html до старту число приховане opacity 0 (без мигання), reduced-motion — одразу фінальне); ряд пляшок — декоративний (bottle-0-7, 10 шт. + «+ ще»)</p>
-      <div class="demo-panel theme-beige">
-        <!--@include components/profit-panel size="200 L" mod=" profit-panel--lg" count="383" cost="€ 15,66"-->
+      <p class="demo-label t-kicker">S4 «Арифметика бочки» — ЄДИНА світла кімната (.bx-room--paper, чорнило teal): barrels-ledger (size, mod: bx-ledger--accent, count, word — форма слова за числом, cost, wall: sm | lg). Колонки — subgrid на 6 спільних рядків (ярлик, число, одиниця, стіна, полиця, вартість): базові лінії однотипних рядків обох колонок збігаються (виміряно Δ0), ліва вісь колонки спільна (−0.3…+1.3px; «≈» — поправка --shift-barrels-approx-ink). «Стіна пляшок» — рівно стільки силуетів, скільки пляшок (маска barrels-bottle-tile.svg; 96 = 16×6, 383 = 31 + 32×11, комірка — ціле px), стоїть на спільній «полиці» (Δ0); поява — стіна наповнюється знизу (clip-path, один раз). Лічильник data-count-to: до старту число приховане, reduced-motion — одразу фінальне. 50 L — першим, ярлик залитий (рішення замовника).</p>
+      <div class="demo-panel bx-room bx-room--paper ds-barrels-ledgers">
+        <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent" count="96" word="пляшок" cost="€&nbsp;20,83" wall="sm"-->
+        <!--@include components/barrels-ledger size="200 L" count="383" word="пляшки" cost="€&nbsp;15,66" wall="lg"-->
+        <span class="barrels-profit__shelf" aria-hidden="true"></span>
       </div>
 
       <p class="demo-label t-kicker">barrel-card (orn: marsala | madeira | port | sherry, name): днище бочки (illustration-barrel-head), відтінок --color-barrel-* лише з палітри, hover — нахил --angle-barrel-tilt</p>
