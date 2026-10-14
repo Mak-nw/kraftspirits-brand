@@ -77,16 +77,18 @@
       </div>
     </section>
 
-    <section class="barrels-section barrels-next" id="next" aria-labelledby="next-title">
-      <div class="barrels-head">
-        <h2 class="t-h2" id="next-title" data-reveal="rise">Подальша витримка</h2>
-        <p class="barrels-head__sub t-lead" data-reveal="rise">Бочки з-під марсали, мадери, портвейну, хересу — кожна додає свій унікальний відтінок смаку</p>
-      </div>
-      <div class="barrel-grid">
-        <!--@include components/barrel-card orn="marsala" name="Marsala"-->
-        <!--@include components/barrel-card orn="madeira" name="Madeira"-->
-        <!--@include components/barrel-card orn="port" name="Port"-->
-        <!--@include components/barrel-card orn="sherry" name="Sherry"-->
+    <!-- Кімната «дерево» (brown): заголовок і лід ліворуч; чотири однакові арки-«вікна в погріб» зі спільною сіткою рядків (subgrid: арка, назва,
+         регіон). У арках — тимчасові гравюри днищ (СЛОТИ під фото бочок з-під вин: зйомка або AI, ТЗ IMG-4) -->
+    <section class="barrels-next bx-room bx-room--wood bx-room--pattern" id="next" aria-labelledby="next-title">
+      <div class="barrels-next__grid">
+        <div class="barrels-next__head">
+          <h2 class="t-h2" id="next-title" data-reveal="rise">Подальша витримка</h2>
+          <p class="barrels-next__lead" data-reveal="rise">Бочки з-під марсали, мадери, портвейну, хересу — кожна додає свій унікальний відтінок смаку</p>
+        </div>
+        <!--@include components/barrels-finish orn="marsala" wine="марсали" name="Marsala" origin="Сицилія, Італія"-->
+        <!--@include components/barrels-finish orn="madeira" wine="мадери" name="Madeira" origin="Мадейра, Португалія"-->
+        <!--@include components/barrels-finish orn="port" wine="портвейну" name="Port" origin="Долина Дору, Португалія"-->
+        <!--@include components/barrels-finish orn="sherry" wine="хересу" name="Sherry" origin="Херес, Іспанія"-->
       </div>
     </section>
 

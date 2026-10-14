@@ -821,29 +821,17 @@
   --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 45%, transparent);    /* середина градієнта hero */
   --color-barrels-shade-bottom: color-mix(in srgb, var(--color-teal) 25%, transparent); /* низ градієнта hero */
   --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
-  --space-barrels-head-mb: var(--space-70);           /* заголовок секції → контент */
-  --container-barrels-head: calc(1100 * var(--u));    /* ширина підзаголовка секції */
 
   /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
-  --duration-loop: 8s;                                /* зациклена анімація кроку/ілюстрації */
   --duration-loop-slow: 12s;                          /* зациклена загальна сцена «від бочки до пляшки» */
   --duration-loop-mid: calc(var(--duration-loop-slow) / 3);  /* 4s: пара/хвилі, підцикл сцени */
-  --duration-loop-fast: calc(var(--duration-loop) / 4);      /* 2s: крапля */
   --duration-flow: 1.2s;                              /* біг штрихів струменя/труби */
   --ease-loop: cubic-bezier(0.45, 0, 0.25, 1);        /* ease-in-out для циклів (= --ease-accordion) */
-  --angle-barrel-tilt: -4deg;                         /* hover бочки подальшої витримки: легкий нахил */
 
   /* SVG-ілюстрації: геометрія в одиницях viewBox (штрих 1.5 як в іконках; масштабується разом з малюнком) */
   --svg-stroke: 1.5;
   --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
   --size-barrels-gap: 8;                              /* проміжок між штрихами */
-
-  /* Подальша витримка */
-  --size-barrels-head-art: calc(300 * var(--u));      /* днище бочки (круг) */
-  --color-barrel-marsala: var(--color-brown);         /* відтінки днищ — лише з палітри */
-  --color-barrel-madeira: var(--color-gold);
-  --color-barrel-port: var(--color-teal);
-  --color-barrel-sherry: var(--color-green);
 
   /* ---------- «Світло в погребі» (редизайн 15.10, рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
      Кожна секція — «кімната» зі своїм тлом; світле — лише текст, тонкі лінії та одна «паперова» секція. Нових відтінків немає: лише аліаси й color-mix палітри.
@@ -970,4 +958,14 @@
   --size-barrels-tex-caramel: calc(80 * var(--u)) calc(16 * var(--u));
   --size-barrels-tex-toast: calc(90 * var(--u)) calc(18 * var(--u));
   --size-barrels-tex-oak: calc(100 * var(--u)) calc(20 * var(--u));
+
+  /* S5 «Подальша витримка»: чотири арки-«вікна» зі спільною сіткою рядків (subgrid: арка, назва, регіон) */
+  --space-barrels-finish-gap: var(--space-40);
+  --size-barrels-finish-w: calc((var(--container-barrels) - 3 * var(--space-barrels-finish-gap)) / 4); /* ширина арки = колонка */
+  --ratio-barrels-finish: 347 / 470;                     /* пропорція вікна (ширина / висота) */
+  --size-barrels-finish-head: 78%;                       /* гравюра днища — частка ширини арки */
+  --space-barrels-finish-head-bottom: 14%;               /* днище нижче центру вікна: над ним — склепіння зі «світлом» */
+  --font-size-barrels-finish-name: calc(28 * var(--u));
+  --container-barrels-next-lead: calc(820 * var(--u));
+  --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається, світло під склепінням яскравішає */
 }

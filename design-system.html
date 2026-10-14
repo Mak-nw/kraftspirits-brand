@@ -1094,14 +1094,12 @@
         <span class="barrels-profit__shelf" aria-hidden="true"></span>
       </div>
 
-      <p class="demo-label t-kicker">barrel-card (orn: marsala | madeira | port | sherry, name): днище бочки (illustration-barrel-head), відтінок --color-barrel-* лише з палітри, hover — нахил --angle-barrel-tilt</p>
-      <div class="demo-panel theme-beige">
-        <div class="ds-grid">
-          <!--@include components/barrel-card orn="marsala" name="Marsala"-->
-          <!--@include components/barrel-card orn="madeira" name="Madeira"-->
-          <!--@include components/barrel-card orn="port" name="Port"-->
-          <!--@include components/barrel-card orn="sherry" name="Sherry"-->
-        </div>
+      <p class="demo-label t-kicker">S5 «Подальша витримка» (кімната wood + ромб): barrels-finish (orn: marsala | madeira | port | sherry, wine — родовий відмінок для підпису слота, name, origin) + barrels-head (гравюра днища). Чотири однакові арки-«вікна» — кожна .bx-finish є subgrid на 3 спільні рядки (арка, назва, регіон): базові лінії назв і регіонів збігаються (розкид 0px), арки однакові (0px). Гравюра: днище по центру арки (0px), нижче центру вікна; над ним склепіння зі «світлом» (--color-barrels-lightpool); орнамент вина в табличці — центр чорнила = центр таблички (≤0.55px; Marsala й Madeira вирівняні translate у partial). Hover: світло під склепінням яскравішає, гравюра наближається (--scale-barrels-finish-hover). Гравюри — ТИМЧАСОВІ: data-slot на кожній картці — місце під фото бочки з-під вина (зйомка або AI, ТЗ IMG-4) і смакові ноти від замовника.</p>
+      <div class="demo-panel bx-room bx-room--wood ds-barrels-finish">
+        <!--@include components/barrels-finish orn="marsala" wine="марсали" name="Marsala" origin="Сицилія, Італія"-->
+        <!--@include components/barrels-finish orn="madeira" wine="мадери" name="Madeira" origin="Мадейра, Португалія"-->
+        <!--@include components/barrels-finish orn="port" wine="портвейну" name="Port" origin="Долина Дору, Португалія"-->
+        <!--@include components/barrels-finish orn="sherry" wine="хересу" name="Sherry" origin="Херес, Іспанія"-->
       </div>
 
       <p class="demo-label t-kicker">S6 «Ціна» (кімната cellar): barrels-cert (size, mod: bx-cert--accent, price, bottles, cost, param → ?topic=barrel&amp;size=…, btn) — сертифікати в одній сітці секції; кожен — subgrid на 6 СПІЛЬНИХ рядків (назва, ціна, 2 рядки фактів, «що входить», кнопка): однакова структура, базові лінії й лінії фактів обох сертифікатів збігаються за будь-якого переносу (виміряно Δ0 на 1200–1920). 50 L — першим, ширшим (--fr-barrels-cert-accent), золота рамка/ромби/кнопка btn--gold, «світло» зверху (рішення замовника: першим просуваємо 50 L); 200 L — м'яка рамка, btn--beige. Подвійна рамка: border + ::after (зазор --space-barrels-frame-gap), ромби — центр = кут внутрішньої рамки (±0.4px). Пункти «що входить»: власність і сертифікат (рішення замовника) + нейтральний СЛОТ-рядок (data-slot; текст — src/data/barrels.js includeMore). Маркер — ромб, центр = середина капітелі першого рядка (базова лінія + --font-cap-height-sans, ±0.5px). Ліва вісь назви/ціни/фактів/маркерів/кнопки спільна (−0.3…+1px; «€» — поправка --shift-barrels-price-ink). barrels-route — маршрут: лінія = середина капітелі назв (≤0.75px), ромби на кінцях лінії.</p>

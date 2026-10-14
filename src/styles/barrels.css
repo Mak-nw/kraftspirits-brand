@@ -31,22 +31,6 @@
 .hero__subtitle { max-width: var(--container-barrels-hero-sub); text-wrap: balance; }
 .hero--barrels .btn { margin-top: var(--space-10); }
 
-/* ---------- Спільне: секція і заголовок ---------- */
-.barrels-section { padding: var(--space-barrels-section-y) var(--space-product-page-x); }
-.barrels-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); margin-bottom: var(--space-barrels-head-mb); text-align: center; }
-.barrels-head__sub { max-width: var(--container-barrels-head); text-wrap: balance; }
-.bx-ill { width: 100%; height: auto; fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
-
-/* поява: ліній малюються (stroke-dashoffset) при reveal батьківського [data-reveal]; без JS / reduced-motion — одразу видно */
-.js-reveal [data-reveal] .bx-draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--duration-reveal) var(--ease-out); }
-.js-reveal [data-reveal].is-in .bx-draw { stroke-dashoffset: 0; }
-.js-reveal [data-reveal] .bx-spark { opacity: 0; transition: opacity var(--duration-reveal) var(--ease-out) var(--duration-fast); }
-.js-reveal [data-reveal].is-in .bx-spark { opacity: 1; }
-.bx-spark { stroke-width: calc(var(--svg-stroke) * 2.4); }
-.bx-core, .bx-sparks { transform-box: fill-box; transform-origin: center; transition: transform var(--duration-fast) var(--ease-out); }
-.bx-k { stroke-width: calc(var(--svg-stroke) / var(--k, 1)); }
-.bx-k08 { --k: 0.8; } .bx-k15 { --k: 1.5; } .bx-k14 { --k: 1.4; } .bx-k28 { --k: 2.8; } .bx-k42 { --k: 4.2; }
-
 /* ---------- S2 «Анатомія бочки»: кімната wood, реальне фото в арці + схема зрізу клепки з виносками ----------
    Сітка: [фото][повітря][шари][виноска][пояснення] × [заголовок][«всередині»][4 рядки][«зовні»]. Список .bx-strata — subgrid по
    колонках і рядках; кожен пункт — ще один subgrid по колонках: його шар лежить у колонці «шари», текст — у колонці «пояснення»
@@ -188,24 +172,33 @@
 .ds-barrels-ledgers .bx-ledger:nth-of-type(2) { grid-column: 2; }
 .ds-barrels-ledgers .barrels-profit__shelf { grid-column: 1 / -1; }
 
-/* ---------- Подальша витримка ---------- */
-.barrels-next { background: var(--color-light); }
-.barrel-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-40); width: 100%; max-width: var(--container-wide); margin-inline: auto; }
-.barrel-card { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); margin: 0; }
-.barrel-card--marsala { --barrel-tone: var(--color-barrel-marsala); --barrel-line: var(--color-beige); }
-.barrel-card--madeira { --barrel-tone: var(--color-barrel-madeira); --barrel-line: var(--color-green); }
-.barrel-card--port { --barrel-tone: var(--color-barrel-port); --barrel-line: var(--color-gold); }
-.barrel-card--sherry { --barrel-tone: var(--color-barrel-sherry); --barrel-line: var(--color-beige); }
-.barrel-card__art { width: var(--size-barrels-head-art); aspect-ratio: 1; transition: rotate var(--duration-base) var(--ease-out), scale var(--duration-base) var(--ease-out); }
-@media (hover: hover) { .barrel-card:hover .barrel-card__art { rotate: var(--angle-barrel-tilt); scale: var(--scale-zoom); } }
-.bx-head__hoop { fill: var(--barrel-tone); stroke: var(--color-green); }
-.bx-head__face { fill: var(--barrel-tone); stroke: var(--barrel-line); }
-.bx-head__line { stroke: var(--barrel-line); }
-.bx-head__staves { opacity: 0.6; }
-.bx-head--sherry .bx-head__staves, .bx-head--madeira .bx-head__staves { stroke-dasharray: 4 6; }
-.bx-head__label { fill: var(--color-light); stroke: var(--barrel-line); }
-.bx-head__orn { stroke: var(--barrel-tone); }
-.barrel-card__name { color: var(--color-green); }
+/* ---------- S5 «Подальша витримка»: кімната wood + ромб, чотири арки-«вікна» ----------
+   Сітка: заголовок + лід на всю ширину, нижче 4 колонки. Кожна .bx-finish — subgrid на 3 спільні рядки (арка, назва, регіон;
+   figcaption — display: contents), тож назви й регіони всіх чотирьох — на одних базових лініях. У вікні — тимчасова гравюра днища
+   (СЛОТ під фото бочки з-під вина): днище нижче центру, над ним склепіння зі «світлом»; орнамент — центр = центр таблички. */
+.barrels-next { padding-block: var(--space-barrels-section-y); }
+.barrels-next__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); column-gap: var(--space-barrels-finish-gap); width: var(--container-barrels); margin-inline: auto; }
+.barrels-next__head { grid-column: 1 / -1; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
+.barrels-next__head .t-h2 { margin-top: var(--shift-barrels-cap-top); }
+.barrels-next__lead { max-width: var(--container-barrels-next-lead); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+.bx-finish { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; margin: 0; }
+.bx-finish__caption { display: contents; }
+.bx-finish__arch { --bx-rise: calc(var(--size-barrels-finish-w) * var(--ratio-barrels-arch-rise)); display: grid; place-items: end center; padding-bottom: var(--space-barrels-finish-head-bottom); aspect-ratio: var(--ratio-barrels-finish); color: var(--color-barrels-accent); background: radial-gradient(ellipse 75% 55% at 50% 0%, var(--color-barrels-lightpool), transparent), var(--color-barrels-depth); }
+.bx-finish__arch::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 85% 65% at 50% 0%, var(--color-barrels-lightpool), transparent); opacity: 0; transition: opacity var(--duration-base) var(--ease-out); }
+.bx-head2 { position: relative; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
+.bx-head2__hair, .bx-head2__shade, .bx-head2__boards { stroke-width: var(--svg-stroke-hair); }
+.bx-head2__boards { opacity: 0.45; }
+.bx-head2__shade { opacity: 0.6; }
+.bx-head2__plate { fill: var(--color-barrels-depth); stroke-width: var(--svg-stroke-hair); }
+@media (hover: hover) {
+  .bx-finish:hover .bx-finish__arch::before { opacity: 1; }
+  .bx-finish:hover .bx-head2 { scale: var(--scale-barrels-finish-hover); }
+}
+.bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/1.1 var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
+/* демо S5 у design-system.html */
+.demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); gap: 0 var(--space-barrels-finish-gap); align-items: stretch; padding: var(--space-50); }
+.ds-barrels-finish .bx-finish { grid-row: 1 / span 3; }
 
 /* ---------- S6 «Ціна»: кімната cellar, сертифікати + маршрут + фото в арці ----------
    Одна сітка секції: [50 L][200 L][фото]. Сертифікати — subgrid на 5 спільних рядків (назва, ціна, факти, «що входить», кнопка):
