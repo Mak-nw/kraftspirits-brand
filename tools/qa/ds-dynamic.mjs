@@ -10,7 +10,7 @@ function COLLECT(cfg) {
   const inTemplate = (el) => !!el.closest('template');
   const all = [...document.body.querySelectorAll('*')].filter((el) => !inTemplate(el) && !el.closest('[id^="__"]'));
   const uVal = Math.min(Math.max(parseFloat(document.documentElement.style.getPropertyValue('--vw')) || document.documentElement.getBoundingClientRect().width, 1185), 1920) / 1920;
-  const out = { u: uVal, roles: [], comps: [], headings: [], a11y: [], text: [] };
+  const out = { u: uVal, roles: [], comps: [], headings: [], a11y: [], text: [], align: [] };
 
   // ---- D1: ролі .t-*
   for (const el of all) {
@@ -29,6 +29,36 @@ function COLLECT(cfg) {
       const base = sel.replace(/^\./, '');
       const mods = clsOf(el).filter((c) => c.startsWith(`${base}--`)).sort().join(' ');
       out.comps.push({ sel, mods, el: nameOf(el), h: el.getBoundingClientRect().height, w: el.getBoundingClientRect().width });
+    }
+  }
+
+
+  // ---- D11: центрування контролів з підписом — (а) бокс чекбокса/радіо vs ПЕРШИЙ рядок підпису, (б) іконка vs текст у .btn__inner / .nav-cell
+  {
+    const firstLineCenter = (lab) => {
+      const cs = getComputedStyle(lab); const r = lab.getBoundingClientRect();
+      const top = r.top + parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop);
+      const lh = cs.lineHeight === 'normal' ? parseFloat(cs.fontSize) * 1.2 : parseFloat(cs.lineHeight);
+      return { c: top + lh / 2, lh, lines: Math.round((r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)) / lh) };
+    };
+    const seenLab = new Set();
+    for (const inp of document.body.querySelectorAll('input[type="checkbox"], input[type="radio"]')) {
+      const wrap = inp.closest('label') || (inp.id && document.querySelector(`label[for="${CSS.escape(inp.id)}"]`)); if (!wrap || inTemplate(wrap) || !vis(wrap) || seenLab.has(wrap)) continue; seenLab.add(wrap);
+      const box = wrap.querySelector('.check__box, [class*="__box"], [class*="__mark"]') || (getComputedStyle(inp).opacity !== '0' ? inp : null);
+      const lab = wrap.querySelector('.check__label, [class*="__label"]') || [...wrap.children].find((c) => c !== box && c !== inp && (c.textContent || '').trim());
+      if (!box || !lab || !vis(box) || !vis(lab)) continue;
+      const br = box.getBoundingClientRect(); const fl = firstLineCenter(lab);
+      out.align.push({ kind: 'check', el: nameOf(wrap), boxC: br.top + br.height / 2, textC: fl.c, lines: fl.lines, boxH: br.height, text: (lab.textContent || '').trim().slice(0, 30) });
+    }
+    for (const el of document.body.querySelectorAll('.btn__inner, .nav-cell')) {
+      if (inTemplate(el) || !vis(el) || el.closest('.state-matrix')) continue;
+      const icon = [...el.querySelectorAll('.icon, .btn__arrow, svg, img')].find((i) => vis(i));
+      if (!icon) continue; const topIcon = icon.closest('.btn__arrow') || icon;
+      const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let top = Infinity, bot = -Infinity, txt = '';
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) { if (!n.textContent.trim() || topIcon.contains(n)) continue; const rg = document.createRange(); rg.selectNodeContents(n); const rs = [...rg.getClientRects()].filter((q) => q.width > 0); if (!rs.length) continue; const f = rs[0]; top = Math.min(top, f.top); bot = Math.max(bot, f.bottom); txt += n.textContent.trim(); }
+      if (!isFinite(top)) continue;
+      const ir = topIcon.getBoundingClientRect(); if (ir.width < 1) continue;
+      out.align.push({ kind: 'icon', el: nameOf(el), boxC: ir.top + ir.height / 2, textC: (top + bot) / 2, lines: 1, boxH: ir.height, text: txt.slice(0, 30) });
     }
   }
 
@@ -213,6 +243,7 @@ export async function runDynamic(opts, allow, rep) {
         if (want('D10') && combo === combos[0]) {
           const gp = await openPage(L.browser, pageUrl(opts.url, spec, 'gate'), { width: combo.width, height: opts.height, dpr: 1, settle: false });
           await waitStable(gp);
+          if (want('D11')) { const gd = await gp.evaluate(COLLECT, cfg); collect.push({ label: `${label}/ворота`, spec, width: combo.width, sb: combo.scrollbar, data: { ...gd, roles: [], comps: [], headings: [], a11y: [], text: [] } }); }
           const g = await gp.evaluate(() => { const el = document.querySelector('[data-age-gate]'); if (!el) return { exists: false }; const cs = getComputedStyle(el); return { exists: true, visible: el.checkVisibility?.({ checkVisibilityCSS: true, checkOpacity: true }) !== false && cs.display !== 'none', ageOk: document.documentElement.classList.contains('age-ok'), role: el.getAttribute('role'), modal: el.getAttribute('aria-modal') }; });
           if (spec.name !== '404' || g.exists) { if (!g.exists) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM' }); else if (!g.visible || g.ageOk) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: JSON.stringify(g), msg: 'ворота не показуються без ?age=ok' }); }
           else addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM (404)' });
@@ -279,5 +310,15 @@ export async function runDynamic(opts, allow, rep) {
   }
   // D9: alt/aria
   if (want('D9')) for (const c of collect) for (const a of c.data.a11y) addV({ rule: 'D9', page: c.label, selector: a.el, value: a.src || a.href || '', msg: a.kind });
+  // D11: центрування бокс/іконка ↔ текст
+  if (want('D11')) {
+    const tolC = A.alignCheckTolerancePx ?? 0.5, tolI = A.alignIconTolerancePx ?? 1;
+    stats.alignSamples = 0;
+    for (const c of collect) for (const a of c.data.align) {
+      stats.alignSamples++;
+      const d = a.boxC - a.textC, tol = a.kind === 'check' ? tolC : tolI;
+      if (Math.abs(d) > tol) addV({ rule: 'D11', page: c.label, selector: a.el, value: `${a.kind === 'check' ? 'бокс' : 'іконка'} ${d > 0 ? 'нижче' : 'вище'} на ${Math.abs(d).toFixed(2)}px (допуск ${tol}); рядків ${a.lines}; «${a.text}»`, msg: a.kind === 'check' ? 'центр боксу ≠ центр першого рядка підпису' : 'центр іконки ≠ центр тексту' });
+    }
+  }
   return rep;
 }

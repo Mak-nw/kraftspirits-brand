@@ -6,7 +6,15 @@
   "scripts": {
     "dev": "vite --port 5190",
     "build": "vite build",
-    "preview": "vite preview --port 5190"
+    "preview": "vite preview --port 5190",
+    "qa": "node tools/qa/run.mjs",
+    "qa:full": "node tools/qa/run.mjs --full",
+    "qa:check-ds": "node tools/qa/check-ds.mjs",
+    "qa:links": "node tools/qa/links.mjs",
+    "qa:states": "node tools/qa/states.mjs",
+    "qa:arch": "node tools/qa/arch.mjs",
+    "qa:cls": "node tools/qa/cls.mjs",
+    "qa:hscroll": "node tools/qa/hscroll.mjs"
   },
   "devDependencies": {
     "html2canvas": "^1.4.1",

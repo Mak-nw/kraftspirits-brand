@@ -10,7 +10,7 @@
 |---|---|
 | `npm run qa` | швидкий smoke: check-ds (static) + links + hscroll (1200/1440/1920) + states, ширина 1920 |
 | `npm run qa:full` | повний: ширини 1200,1440,1920 × dpr 1,2 × смуга classic+none; check-ds static+dynamic, links, hscroll, states, arch, cls |
-| `npm run qa:check-ds` | check-ds (S1–S9 статика + D1–D10 у браузері); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` |
+| `npm run qa:check-ds` | check-ds (S1–S9 статика + D1–D11 у браузері); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` |
 | `npm run qa:links` | усі внутрішні `<a href>` і якорі; `-- --matrix` друкує «звідки → куди» |
 | `npm run qa:states` | стани кнопок проти токенів `--btn-*` + транзиції + фокус-кільце |
 | `npm run qa:arch` | товщина контуру арки 14 карток каталогу, 8 ширин × dpr 1,2 × classic/none |
@@ -40,7 +40,7 @@
 **D2** висоти `.btn .chip .nav-cell .select .product-card--catalog` однакові між сторінками · **D3** hscroll · **D4** консоль/4xx/failed · **D5** підкреслення (default/hover/focus-visible
 через CDP `forcePseudoState`) поза футером/воротами · **D6** Tab-walker: кільце focus-visible ≥3:1 (спершу за ланцюжком фонів, при сумнівах — за пікселями скриншота) ·
 **D7** рівно один h1, без пропусків рівнів · **D8** контраст ролей `.t-*` ≥4.5:1 (≥3:1 великий; disabled не рахується; сумнівні міряються піксельно) · **D9** alt/імена кнопок і полів ·
-**D10** вікові ворота показуються без `?age=ok`.
+**D10** вікові ворота показуються без `?age=ok` · **D11** центрування контролів з підписом: центр боксу чекбокса/радіо = центр ПЕРШОГО рядка підпису (допуск 0.5px, `alignCheckTolerancePx`), центр іконки = центр тексту в `.btn__inner`/`.nav-cell` (допуск 1px, `alignIconTolerancePx`).
 
 Звіт: `правило  файл:рядок / селектор / сторінка@ширина  = значення — повідомлення`. Однакові повідомлення групуються.
 

@@ -1,10 +1,13 @@
 /* Компонент «Згода / перемикач» (.check): спільний для вікових воріт («Запам'ятати мій вибір») і форми зворотного зв'язку (згода на обробку даних).
    Розмітка: <label class="check"><input class="check__input" type="checkbox"><span class="check__box" aria-hidden="true"></span><span class="check__label t-text">…</span></label>.
    Стани — токени --btn-check-* (tokens.css): default / hover / focus-visible (кільце) / checked; розміри --size-age-check*, --border-age-check*. Обгортка форми (.check-field + помилка) — components/field.css. */
-.check { position: relative; display: inline-flex; align-items: center; gap: var(--space-15); padding: var(--space-10) var(--space-20); cursor: pointer; }
+/* Вирівнювання: бокс і ПЕРШИЙ рядок підпису мають спільний центр за будь-якої кількості рядків. align-items: flex-start; різницю між висотою рядка підпису (--check-line = розмір × інтерліньяж ролі .t-text)
+   і боксом компенсує відступ з того боку, де елемент нижчий: max(0, (різниця)/2) — бокс зсувається вниз (margin) або підпис (padding), якщо вищий бокс. Жодних px-корекцій. */
+.check { --check-line: calc(var(--type-body-size) * var(--type-body-lh)); position: relative; display: inline-flex; align-items: flex-start; gap: var(--space-15); padding: var(--space-10) var(--space-20); cursor: pointer; }
+.check__label { padding-block: max(0px, calc((var(--size-age-check) - var(--check-line)) / 2)); }
 .check__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .check__box {
-  position: relative; flex: none; width: var(--size-age-check); height: var(--size-age-check);
+  position: relative; flex: none; margin-block-start: max(0px, calc((var(--check-line) - var(--size-age-check)) / 2)); width: var(--size-age-check); height: var(--size-age-check);
   border: var(--border-age-check) solid var(--btn-check-border-default); border-radius: var(--radius-btn);
   background: var(--btn-check-bg-default);
   transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease);
