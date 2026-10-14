@@ -26,7 +26,6 @@
 .type-row { display: grid; grid-template-columns: var(--ds-type-label-w) 1fr; gap: var(--space-30); align-items: center; padding: var(--space-20) 0; border-bottom: var(--border-hairline) solid var(--color-line); }
 .type-row__sample { min-width: 0; }
 .type-row__sample--dark { background: var(--color-green); color: var(--color-nav-text); padding: var(--space-20); }
-.type-row__sample--teal { background: var(--color-teal); color: var(--color-gold); padding: var(--space-20); }
 
 .space-row { display: flex; align-items: center; gap: var(--space-20); padding: var(--space-5) 0; }
 .space-row__label { width: var(--ds-space-label-w); }
