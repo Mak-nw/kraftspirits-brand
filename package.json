@@ -14,7 +14,8 @@
     "qa:states": "node tools/qa/states.mjs",
     "qa:arch": "node tools/qa/arch.mjs",
     "qa:cls": "node tools/qa/cls.mjs",
-    "qa:hscroll": "node tools/qa/hscroll.mjs"
+    "qa:hscroll": "node tools/qa/hscroll.mjs",
+    "qa:ink": "node tools/qa/ink-align.mjs"
   },
   "devDependencies": {
     "html2canvas": "^1.4.1",

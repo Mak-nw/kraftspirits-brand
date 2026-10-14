@@ -33,6 +33,7 @@
   /* ---------- Шрифти ---------- */
   --font-family-serif: 'EB Garamond', 'EB Garamond Fallback', Georgia, serif;     /* заголовки, ціни-назви, акордеон: 194:1369, 194:1370, 194:1278 */
   --font-family-sans: 'Manrope', 'Manrope Fallback', system-ui, sans-serif;   /* навігація, кнопки, текст, ціна: 194:1376, 194:1373, 194:1279 */
+  --font-cap-height-sans: 0.72;   /* метрика Manrope (OS/2 capHeight 1440/2000 em): частка em, що займають великі літери — для оптичного вирівнювання контролів з підписом (components/check.css) */
   --font-family-display: 'Cormorant', 'Cormorant Fallback', Georgia, serif;     /* футер-wordmark: 194:1236 (Cormorant SemiBold) */
 
   --fw-regular: 400;   /* 194:1282 (stat number), 194:1332 (price) */
