@@ -1,6 +1,6 @@
 /* Плитка-радіо «Тип звернення» (.topic-tile) у контейнері .topic-group[role="radiogroup"] (feedback.html).
    Розмітка: <div class="topic-group" role="radiogroup"> <button class="topic-tile" type="button" role="radio" aria-checked="false"><span class="topic-tile__label">…</span></button> … </div>.
-   Стани — токени --btn-choice-* (tokens.css): default / hover / focus-visible (кільце) / active / selected (aria-checked="true": заливка green, текст beige). Disabled не передбачено (тема завжди доступна).
+   Стани — токени --btn-choice-* (tokens.css): default / hover / focus-visible (кільце) / active / selected (aria-checked="true": заливка green, текст beige + постійне кільце outline, як у кнопок на focus; selected+focus — кільце вдвічі товще). Disabled не передбачено (тема завжди доступна).
    Клавіатура (JS, contact-form.js): Tab заходить у групу на вибрану плитку (або першу), стрілки рухають і вибирають, Space/Enter вибирають, Home/End — перша/остання. */
 .topic-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-topic-gap); }
 .topic-tile {
@@ -15,6 +15,8 @@
 @media (hover: hover) { .topic-tile:hover { background: var(--btn-choice-bg-hover); border-color: var(--btn-choice-border-hover); } }
 .topic-tile:active { background: var(--btn-choice-bg-active); transition-duration: var(--btn-transition-duration-focus); }
 .topic-tile[aria-checked="true"], .topic-tile[aria-checked="true"]:focus-visible { background: var(--btn-choice-bg-selected); color: var(--btn-choice-text-selected); border-color: var(--btn-choice-border-selected); }
+.topic-tile[aria-checked="true"] { outline: var(--btn-choice-ring-width-selected) solid var(--btn-choice-ring-color-selected); outline-offset: var(--btn-choice-ring-offset-selected); }
+.topic-tile[aria-checked="true"]:focus-visible { outline-width: var(--btn-choice-ring-width-selected-focus); }
 @media (hover: hover) { .topic-tile[aria-checked="true"]:hover { background: var(--btn-choice-bg-selected-hover); } }
 .topic-tile[aria-checked="true"]:active { background: var(--btn-choice-bg-selected-active); }
 .field.is-invalid .topic-tile[aria-checked="false"] { border-color: var(--color-field-error); }
