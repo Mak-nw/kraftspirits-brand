@@ -749,7 +749,7 @@
   --filter-contacts-map: grayscale(1) contrast(0.75) brightness(1.25);  /* iframe мапи OSM: світла нейтральна сіра (без жовто-зеленого sepia/hue-rotate) */
   --color-contacts-map-tint: color-mix(in srgb, var(--color-green) 18%, transparent); /* приглушений зелений відтінок поверх мапи (multiply) */
   --columns-contacts-data: 2;                                   /* сітка контактних даних у лівій панелі: 2 колонки */
-  --span-contacts-item: 1;                                      /* звичайний блок (Телефон, E-mail, Екскурсії, Бочкова торгівля) */
+  --span-contacts-item: 1;                                      /* звичайний блок (Телефон, E-mail) */
   --span-contacts-item-wide: 2;                                 /* блок на всю ширину (Адреса) */
   --size-contacts-icon: calc(24 * var(--u));                     /* іконка перед заголовком контактного рядка (адреса/телефон/e-mail) */
   --space-contacts-icon-gap: var(--space-10);                   /* іконка → заголовок */

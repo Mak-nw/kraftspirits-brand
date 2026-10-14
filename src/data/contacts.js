@@ -21,7 +21,6 @@ export const contacts = {
   zoom: 14,
   phone: { display: '+380 44 000 00 00', tel: '+380440000000' },
   email: 'shop@yasnobazyl.com',
-  barrels: 'Бочкова торгівля — за запитом',
   // Теми звернення (value — у ?topic=…, label — плитка вибору й тема листа, hint — підказка в полі повідомлення). Порядок = порядок плиток; «Інше» — завжди останнє.
   topics: [
     { value: 'excursion', label: 'Екскурсії', hint: 'Бажана дата, кількість гостей, побажання до екскурсії' },
@@ -63,7 +62,6 @@ export function contactsView(c = contacts) {
     phoneHref: `tel:${c.phone.tel}`,
     email: c.email,
     emailHref: `mailto:${c.email}`,
-    barrels: c.barrels,
     lat: String(lat),
     lng: String(lng),
     osmEmbed: `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox(c))}&layer=mapnik&marker=${lat}%2C${lng}`,
