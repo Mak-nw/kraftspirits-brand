@@ -1,0 +1,68 @@
+{
+  "_comment": "Дозволені винятки check-ds. Кожен запис: rule (S1…S9, D1…D10 або *), необов'язкові file (підрядок шляху), selector (підрядок), value (RegExp на значення), page (підрядок), та ОБОВ'ЯЗКОВІ reason (чому), date, decision (id рішення замовника або 'проєктне правило'). Без reason запис ігнорується. Коментарі CSS/HTML вже ігноруються автоматично й записів не потребують.",
+  "allow": [
+    {
+      "rule": "S2",
+      "value": "^(0|0px|0rem)$",
+      "reason": "нуль без одиниць/з одиницею — не хардкод розміру",
+      "date": "2026-10-14",
+      "decision": "проєктне правило"
+    },
+    {
+      "rule": "S2",
+      "prop": "^(width|height|min-width|min-height|max-width|max-height)$",
+      "value": "^1px$",
+      "reason": "hairline 1px (лінії, візуально-приховані елементи): товщина лінії = --border-hairline, але 1px-бокс як технічний прийом (.visually-hidden, hit-area) дозволений",
+      "date": "2026-10-14",
+      "decision": "проєктне правило"
+    }
+  ],
+  "dynamic": {
+    "underlineAllowClosest": [
+      ".site-footer",
+      ".age-card__legal"
+    ],
+    "underlineReason": "правило проєкту: підкреслень при hover/focus немає, крім футера (.site-footer .nav-link) і юридичного тексту воріт (.age-card__legal a)",
+    "hscrollTolerancePx": 1,
+    "roleTolerancePx": 0.5,
+    "heightTolerancePx": 0.5,
+    "ringMinContrast": 3,
+    "textMinContrast": 4.5,
+    "largeTextMinContrast": 3
+  },
+  "static": {
+    "colorProps": "^(color|background(-color)?|border(-[a-z]+)?(-color)?|outline(-color)?|fill|stroke|text-decoration-color|caret-color|accent-color|column-rule-color|box-shadow|text-shadow|--.*)$",
+    "namedColors": [
+      "white",
+      "black",
+      "red",
+      "green",
+      "blue",
+      "yellow",
+      "orange",
+      "purple",
+      "pink",
+      "gray",
+      "grey",
+      "silver",
+      "gold",
+      "brown",
+      "beige",
+      "teal",
+      "navy",
+      "maroon",
+      "olive",
+      "lime",
+      "aqua",
+      "cyan",
+      "magenta",
+      "ivory",
+      "tan"
+    ],
+    "sizeProps": "^(font-size|line-height|letter-spacing|padding(-(top|right|bottom|left|inline|block)(-(start|end))?)?|margin(-(top|right|bottom|left|inline|block)(-(start|end))?)?|gap|row-gap|column-gap|width|height|min-width|min-height|max-width|max-height)$",
+    "underlineAllowSelectors": [
+      "\\.site-footer",
+      "\\.age-card__legal"
+    ]
+  }
+}
