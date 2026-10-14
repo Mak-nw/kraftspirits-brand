@@ -84,7 +84,7 @@ function init() {
     if (!el('consent').checked) errors.consent = 'Потрібна ваша згода, щоб надіслати звернення';
     return errors;
   };
-  const ORDER = ['topic', 'name', 'phone', 'email', 'message', 'consent'];
+  const ORDER = ['topic', 'name', 'phone', 'email', 'consent', 'message'];
   const paint = (name, msg) => {
     const wrap = wrapOf(name);
     const ctl = controlOf(name);
