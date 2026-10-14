@@ -459,6 +459,343 @@
       <p class="ds-note ds-meta">arrow-up-right (24x24): прості кнопки .btn (бокс-розкладка 11.948, знак ≈ 12u; --size-icon-arrow-glyph 24u) · basket (24x24): кнопка «Кошик» у хедері, 22u · headset (24x24): кнопка «підказати?» у хедері, 22u · catalog (24x24): пункт «каталог» у хедері, 22u, gap 8u · strength (24x24): поруч з «42% alc» у шапці продукту YC (24u) і в рядку «Міцність» акордеона «Характеристики» (18u), компонент .strength (margin-компенсація, висота рядка не змінюється) · bottle-0-5 (24x40) / bottle-0-7 (24x50) / bottle-1 (24x64): поруч з об'ємом на сторінці товару (500 / 700 мл / 1 л), ширина 16.8u (0,5 л — висота 28u), рядок об'єму не змінює висоту (компенсація margin). Компонент «об'єм з пляшкою» <span class="ds-meta">.vol</span> (icon.css): <span class="ds-meta">.vol--inline</span> (0.5×, --scale-volume-inline) — рядки акордеонів сторінки товару («Характеристики», «Особливості» тощо). Картка каталогу (лише фото, назва, ціна), слайдер підбору й картка головної об'єм не показують — пляшок там немає.</p>
     </section>
 
+    <section class="ds-section" id="button-states">
+      <h2 class="t-h2 ds-section__title">Стани кнопок</h2>
+      <p class="ds-note t-body">Єдина система токенів станів кнопок — блок «Кнопки: стани» у <code>src/styles/tokens.css</code>. Схема імені: <code>--btn-&lt;варіант&gt;-&lt;властивість&gt;-&lt;стан&gt;</code>; властивість: <code>bg</code> (заливка) · <code>text</code> · <code>border</code> · <code>icon-filter</code> (стрілки слайдера) · <code>opacity</code> (об’єм, каталог-nav); стан: <code>default</code> · <code>hover</code> · <code>focus</code> (:focus-visible) · <code>active</code> (:active, натиснуто) · <code>disabled</code> (:disabled / aria-disabled="true") + <code>selected</code> лише для перемикачів (aria-expanded, aria-pressed / .is-active, .is-open, :checked). Значення — тільки посилання на наявні токени палітри та <code>--color-hover-*</code>; нових кольорів немає.</p>
+      <p class="ds-note t-body">Прив’язка: варіант (<code>.btn--green</code>, <code>.nav-cell--outline</code>, <code>.arrow-btn</code>, <code>.chip</code> …) виставляє КОНТЕКСТНІ змінні <code>--btn-bg</code> / <code>--btn-text</code> / <code>--btn-border</code> (+ <code>-hover</code>, <code>-focus</code>, <code>-active</code>, <code>-disabled</code>, <code>-selected</code>); база компонента в станах читає лише їх. Тривалості: <code>--btn-transition-duration</code> (0.45s, default ↔ hover), <code>--btn-transition-duration-focus</code> (0.15s, :focus-visible і :active), <code>--btn-transition-duration-base</code> (0.7s, зсув стрілки, zoom мініатюри), крива <code>--btn-transition-ease</code>.</p>
+      <p class="ds-note t-body">Правила станів: <b>focus = hover</b> (клавіатура показує той самий вигляд; відрізняється коротшим переходом і кільцем); <b>active</b> = hover, затемнений на 8% (<code>color-mix(... var(--btn-active-mix) ..., var(--color-black))</code>; для <code>.btn</code> додатково scale(<code>--btn-active-scale</code> = 0.985), перехід 0.15s); <b>disabled</b> = default × <code>--btn-disabled-opacity</code> (нині 0.4 = існуюче значення проєкту), <code>cursor: not-allowed</code>, hover/focus/active без змін, стрілка не зсувається; нативний <code>:disabled</code> додатково <code>pointer-events: none</code> і не фокусується (кільця немає), <code>aria-disabled</code> лишається клікабельним. Іконка кнопки (arrow-up-right) = <code>currentColor</code> = <code>--btn-&lt;варіант&gt;-text-&lt;стан&gt;</code>. Фокус-кільце: <code>--btn-focus-ring-width</code> / <code>-offset</code> (= глобальне <code>:focus-visible</code>, <code>--focus-ring-*</code>); колір — <code>-color-auto</code> (currentColor контексту), <code>-color-on-dark</code> (beige: пілюля хедера), <code>-color-on-light</code> (green: перемикач age-check).</p>
+      <p class="demo-label t-kicker">Матриця «варіант × стан» — кнопки .btn (реальні інстанси; hover / focus / active змушено класами-імітаторами .is-hover / .is-focus / .is-active — вони читають ті самі контекстні змінні, що й справжні псевдокласи; disabled — реальний атрибут)</p>
+      <div class="state-matrix">
+      <div class="state-row state-row--head ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>active</span><span>disabled</span></div>
+      <div class="state-row theme-brown"><span class="ds-meta">btn--gold</span><!--@include components/btn variant="btn--gold" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--gold" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-brown"><span class="ds-meta">btn--light</span><!--@include components/btn variant="btn--light" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--light" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-brown"><span class="ds-meta">btn--beige</span><!--@include components/btn variant="btn--beige" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--beige" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-beige"><span class="ds-meta">btn--green</span><!--@include components/btn variant="btn--green" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--green" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-beige"><span class="ds-meta">btn--teal</span><!--@include components/btn variant="btn--teal" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--teal is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--teal is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--teal is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--teal" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-light"><span class="ds-meta">btn--outline</span><!--@include components/btn variant="btn--outline" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--outline is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--outline is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--outline is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--outline" action="demo" text="Кнопка" disabled="1"--></div>
+      </div>
+      <p class="demo-label t-kicker">aria-disabled="true" на посиланні (клікабельне, приглушене; без hover-змін) — і зі стрілкою</p>
+      <div class="demo-panel theme-beige">
+        <!--@include components/btn variant="btn--green btn--serif" href="#" text="додати в кошик" price="1 250 ₴" aria-disabled="1"-->
+        <!--@include components/btn variant="btn--teal" href="#" text="Кнопка" arrow="arrow-up-right" aria-disabled="1"-->
+      </div>
+      <p class="demo-label t-kicker">Матриця: кнопки хедера .nav-cell--outline («меню», «Кошик»; selected = відкрите меню, aria-expanded) · --fill («підказати?») · --ghost («каталог»)</p>
+      <div class="state-matrix">
+      <div class="state-row state-row--head state-row--6 ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>active</span><span>selected</span><span>disabled</span></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--outline</span><a href="#" class="nav-cell nav-cell--outline t-nav-head">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-hover">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-focus">меню</a><a href="#" class="nav-cell nav-cell--outline t-nav-head is-active">меню</a><button type="button" class="nav-cell nav-cell--outline t-nav-head is-selected" aria-expanded="true">меню</button><button type="button" class="nav-cell nav-cell--outline t-nav-head" disabled>меню</button></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--fill</span><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-hover"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-focus"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><a href="#" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head is-active"><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--fill nav-cell--icon t-nav-head" disabled><span class="icon icon--headset" aria-hidden="true"></span><span class="nav-cell__label">підказати?</span></button></div>
+      <div class="state-row state-row--6 theme-green"><span class="ds-meta">nav-cell--ghost</span><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-hover"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-focus"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><a href="#" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head is-active"><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></a><span class="ds-meta is-muted">—</span><button type="button" class="nav-cell nav-cell--ghost nav-cell--icon t-nav-head" disabled><span class="icon icon--catalog" aria-hidden="true"></span><span class="nav-cell__label">каталог</span></button></div>
+      </div>
+      <p class="demo-label t-kicker">Матриця: стрілки слайдера .arrow-btn (на hover/focus/active — світла заливка, іконка інвертується; disabled = одна позиція в добірці)</p>
+      <div class="state-matrix">
+      <div class="state-row state-row--head ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>active</span><span>disabled</span></div>
+      <div class="state-row theme-teal"><span class="ds-meta">arrow-btn</span><button class="arrow-btn" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn is-hover" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn is-focus" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn is-active" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn" type="button" aria-label="Стрілка" disabled><img src="/assets/icons/chevron.svg" alt=""></button></div>
+      <div class="state-row theme-teal"><span class="ds-meta">arrow-btn--prev</span><button class="arrow-btn arrow-btn--prev" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn arrow-btn--prev is-hover" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn arrow-btn--prev is-focus" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn arrow-btn--prev is-active" type="button" aria-label="Стрілка"><img src="/assets/icons/chevron.svg" alt=""></button><button class="arrow-btn arrow-btn--prev" type="button" aria-label="Стрілка" disabled><img src="/assets/icons/chevron.svg" alt=""></button></div>
+      </div>
+      <p class="demo-label t-kicker">Матриця: перемикачі й вибір (default · hover · focus · selected · disabled/активний натиск окремо не визначено — active = hover)</p>
+      <div class="state-matrix">
+      <div class="state-row state-row--head ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>selected</span><span>disabled</span></div>
+      <div class="state-row theme-teal"><span class="ds-meta">chip (чіп-подія)</span><button class="chip" type="button"><span class="chip__ornament"></span><span class="t-chip">колекція</span><span class="chip__ornament"></span></button><button class="chip is-hover" type="button"><span class="chip__ornament"></span><span class="t-chip">колекція</span><span class="chip__ornament"></span></button><button class="chip is-focus" type="button"><span class="chip__ornament"></span><span class="t-chip">колекція</span><span class="chip__ornament"></span></button><button class="chip is-active" type="button"><span class="chip__ornament"></span><span class="t-chip">колекція</span><span class="chip__ornament"></span></button><span class="ds-meta is-muted">—</span></div>
+      <div class="state-row theme-beige"><span class="ds-meta">product-volume</span><button class="product-volume" type="button" aria-pressed="false">0,5 л</button><button class="product-volume is-hover" type="button" aria-pressed="false">0,5 л</button><button class="product-volume is-focus" type="button" aria-pressed="false">0,5 л</button><button class="product-volume" type="button" aria-pressed="true">0,5 л</button><span class="ds-meta is-muted">—</span></div>
+      <div class="state-row theme-green"><span class="ds-meta">select (каталог)</span><div class="select"><div class="select__field"><button class="select__button hit-area t-caption" type="button" tabindex="-1"><span class="select__value">Усі</span><img class="select__chevron" src="/assets/icons/chevron-down-light.svg" alt=""></button></div></div><div class="select is-hover"><div class="select__field"><button class="select__button hit-area t-caption" type="button" tabindex="-1"><span class="select__value">Усі</span><img class="select__chevron" src="/assets/icons/chevron-down-light.svg" alt=""></button></div></div><div class="select is-focus"><div class="select__field"><button class="select__button hit-area t-caption" type="button" tabindex="-1"><span class="select__value">Усі</span><img class="select__chevron" src="/assets/icons/chevron-down-light.svg" alt=""></button></div></div><div class="select is-selected"><div class="select__field"><button class="select__button hit-area t-caption" type="button" tabindex="-1"><span class="select__value">Усі</span><img class="select__chevron" src="/assets/icons/chevron-down-light.svg" alt=""></button></div></div><span class="ds-meta is-muted">—</span></div>
+      <div class="state-row theme-light"><span class="ds-meta">age-check</span><label class="age-check"><input class="age-check__input" type="checkbox" tabindex="-1"><span class="age-check__box"></span><span class="t-caption">запам’ятати</span></label><label class="age-check is-hover"><input class="age-check__input" type="checkbox" tabindex="-1"><span class="age-check__box"></span><span class="t-caption">запам’ятати</span></label><label class="age-check is-focus"><input class="age-check__input" type="checkbox" tabindex="-1"><span class="age-check__box"></span><span class="t-caption">запам’ятати</span></label><label class="age-check"><input class="age-check__input" type="checkbox" checked tabindex="-1"><span class="age-check__box"></span><span class="t-caption">запам’ятати</span></label><span class="ds-meta is-muted">—</span></div>
+      </div>
+      <p class="ds-note ds-meta">Вимкнені чіп / об’єм / select / чекбокс у проєкті не використовуються: токенів disabled для них немає (формула: --btn-disabled-opacity + cursor, як у кнопок; додати разом із реальним випадком). Посилання (.nav-link, .contacts-link, крихти), рядки акордеона (.acc--faq / .acc--product), категорії каталогу (.catalog-nav__item) і мініатюри (.product-thumb) мають лише hover/focus — токени --btn-navlink-*, --btn-row-*, --btn-catnav-*, --btn-thumb-*.</p>
+      <p class="demo-label t-kicker">Інвентар: компонент × стан → що змінюється (фон, текст, рамка, іконка, opacity, transform), тривалість / ease (--ease-out)</p>
+      <table class="ds-table"><thead><tr><th>Компонент</th><th>default</th><th>hover</th><th>focus-visible</th><th>active (:active)</th><th>selected / disabled</th><th>тривалість</th></tr></thead><tbody>
+        <tr><td>btn--gold / --light / --beige / --green / --teal</td><td>заливка = колір варіанта, текст контрастний, рамка (зовнішня 1px) = заливка</td><td>заливка → --color-hover-btn-&lt;v&gt;; текст і рамка ті ж; стрілка зсувається на --hover-nudge (4u, 0.7s)</td><td>те саме, що hover; перехід 0.15s; кільце 1px, offset 3u, currentColor</td><td>заливка hover ×0.92 + scale(.985), 0.15s (нове)</td><td>opacity 0.4 (було), cursor not-allowed (було default), без hover-змін</td><td>0.45s ease-out (focus/active 0.15s)</td></tr>
+        <tr><td>btn--outline (age-gate «Ні»)</td><td>заливка прозора, рамка і текст green</td><td>заливка → beige</td><td>= hover; 0.15s; кільце</td><td>заливка beige ×0.92 + scale(.985) (нове)</td><td>opacity 0.4; без hover</td><td>0.45s</td></tr>
+        <tr><td>btn--serif</td><td>модифікатор шрифту (EB Garamond) — станів не має</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>«додати в кошик» (btn--green / --teal, product)</td><td>колір бренду: green (YC) / teal (BS)</td><td>заливка green → teal; teal → green (раніше задавалося в product.css, тепер у токенах варіанта)</td><td>= hover</td><td>як btn</td><td>aria-disabled: opacity 0.4, без hover (раніше cursor default)</td><td>0.45s</td></tr>
+        <tr><td>nav-cell--outline («меню», «Кошик»)</td><td>прозора заливка, рамка beige, текст nav-text</td><td>заливка → beige, текст → green</td><td>= hover; 0.15s; кільце beige (токен on-dark)</td><td>заливка beige ×0.92 (нове)</td><td>selected (aria-expanded): = hover; disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
+        <tr><td>nav-cell--fill («підказати?»)</td><td>заливка beige, текст green, рамка beige</td><td>заливка → light</td><td>= hover; 0.15s; кільце beige</td><td>заливка light ×0.92 (нове)</td><td>disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
+        <tr><td>nav-cell--ghost («каталог»)</td><td>без заливки й рамки; текст і іконка nav-text</td><td>заливка → beige, текст/іконка → green</td><td>= hover; 0.15s</td><td>заливка beige ×0.92 (нове)</td><td>disabled — нове</td><td>0.45s</td></tr>
+        <tr><td>nav-link (меню, футер)</td><td>текст nav-text (на світлому — green)</td><td>текст → light (на світлому → teal); у футері підкреслення з’являється</td><td>= hover; 0.15s</td><td>—</td><td>—</td><td>0.45s</td></tr>
+        <tr><td>arrow-btn (стрілки слайдера)</td><td>прозора заливка, рамка light, іконка світла</td><td>заливка → light, іконка invert(1)</td><td>= hover; 0.15s; кільце currentColor</td><td>заливка light ×0.92 (нове)</td><td>aria-disabled: opacity 0.4, прозора, іконка без інверсії (було)</td><td>0.45s</td></tr>
+        <tr><td>chip (подія)</td><td>текст/ромби gold (picker: beige)</td><td>текст → light (picker: gold)</td><td>= hover; 0.15s</td><td>—</td><td>selected (.is-active / aria-pressed) = hover</td><td>0.45s</td></tr>
+        <tr><td>product-volume (об’єм)</td><td>opacity 0.4, плашка 0</td><td>opacity 1, плашка currentColor 10%</td><td>плашка 10% (opacity лишається), 0.15s</td><td>—</td><td>selected (aria-pressed): opacity 1</td><td>0.45s</td></tr>
+        <tr><td>product-thumb (мініатюра)</td><td>рамка прозора</td><td>zoom фото scale(1.03), 0.7s</td><td>кільце</td><td>—</td><td>selected: рамка = акцент бренду</td><td>0.7s / 0.45s</td></tr>
+        <tr><td>select (каталог / поле форми)</td><td>плитка --color-select-bg (поле: --color-field-bg + рамка)</td><td>плитка → --color-select-bg-hover (поле: bg-hover + рамка green)</td><td>= hover + кільце на всій плитці</td><td>—</td><td>selected (.is-open) = hover</td><td>0.45s</td></tr>
+        <tr><td>age-check / згода (чекбокс-перемикач)</td><td>рамка age-border, заливка age-card</td><td>рамка → green</td><td>кільце green (токен on-light), offset 3u</td><td>—</td><td>selected (:checked): заливка й рамка green, галочка</td><td>0.45s</td></tr>
+        <tr><td>рядок акордеона (.acc--faq / --product)</td><td>прозорий</td><td>фон → --color-hover-faq (FAQ, 0.7s) / --color-hover-acc-product (товар, 0.45s)</td><td>—</td><td>—</td><td>—</td><td>0.7s / 0.45s</td></tr>
+        <tr><td>catalog-nav item</td><td>opacity 0.4</td><td>opacity 1</td><td>opacity 1; 0.15s</td><td>—</td><td>selected (.is-active): opacity 1</td><td>0.7s</td></tr>
+      </tbody></table>
+      <p class="demo-label t-kicker">Токени станів — 218 шт. (значення = посилання на наявні токени; «розв’язано» — підсумковий колір)</p>
+      <details class="ds-token-group"><summary class="ds-meta">Спільні (час, крива, active, disabled, фокус-кільце) (17)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-transition-duration</code></td><td><code>var(--duration-fast)</code></td><td>0.45s</td></tr>
+          <tr><td><code>--btn-transition-duration-base</code></td><td><code>var(--duration-base)</code></td><td>0.7s</td></tr>
+          <tr><td><code>--btn-transition-duration-focus</code></td><td><code>var(--duration-focus)</code></td><td>0.15s</td></tr>
+          <tr><td><code>--btn-transition-ease</code></td><td><code>var(--ease-out)</code></td><td>cubic-bezier(0.22, 0.61, 0.36, 1)</td></tr>
+          <tr><td><code>--btn-icon-nudge-hover</code></td><td><code>var(--hover-nudge)</code></td><td>(залежить від --u)</td></tr>
+          <tr><td><code>--btn-icon-color</code></td><td><code>currentColor</code></td><td>currentColor</td></tr>
+          <tr><td><code>--btn-active-mix</code></td><td><code>92%</code></td><td>92%</td></tr>
+          <tr><td><code>--btn-active-scale</code></td><td><code>0.985</code></td><td>0.985</td></tr>
+          <tr><td><code>--btn-disabled-opacity</code></td><td><code>var(--opacity-muted)</code></td><td>0.4</td></tr>
+          <tr><td><code>--btn-disabled-cursor</code></td><td><code>not-allowed</code></td><td>not-allowed</td></tr>
+          <tr><td><code>--btn-disabled-icon-nudge</code></td><td><code>0px</code></td><td>0px</td></tr>
+          <tr><td><code>--btn-disabled-active-scale</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-focus-ring-width</code></td><td><code>var(--focus-ring-width)</code></td><td>1px</td></tr>
+          <tr><td><code>--btn-focus-ring-offset</code></td><td><code>var(--focus-ring-offset)</code></td><td>(залежить від --u)</td></tr>
+          <tr><td><code>--btn-focus-ring-color-auto</code></td><td><code>var(--focus-ring-color)</code></td><td>currentColor</td></tr>
+          <tr><td><code>--btn-focus-ring-color-on-dark</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-focus-ring-color-on-light</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--gold (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-gold-bg-default</code></td><td><code>var(--color-gold)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-bg-hover</code></td><td><code>var(--color-hover-btn-gold)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-gold-bg-focus</code></td><td><code>var(--btn-gold-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-gold-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-gold-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#cac9be</td></tr>
+          <tr><td><code>--btn-gold-bg-disabled</code></td><td><code>var(--btn-gold-bg-default)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-text-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-gold-text-hover</code></td><td><code>var(--btn-gold-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-gold-text-focus</code></td><td><code>var(--btn-gold-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-gold-text-active</code></td><td><code>var(--btn-gold-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-gold-text-disabled</code></td><td><code>var(--btn-gold-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-gold-border-default</code></td><td><code>var(--btn-gold-bg-default)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-border-hover</code></td><td><code>var(--btn-gold-border-default)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-border-focus</code></td><td><code>var(--btn-gold-border-hover)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-border-active</code></td><td><code>var(--btn-gold-border-hover)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-gold-border-disabled</code></td><td><code>var(--btn-gold-border-default)</code></td><td>#cbaf86</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--light (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-light-bg-default</code></td><td><code>var(--color-light)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-bg-hover</code></td><td><code>var(--color-hover-btn-light)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-light-bg-focus</code></td><td><code>var(--btn-light-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-light-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-light-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#cac9be</td></tr>
+          <tr><td><code>--btn-light-bg-disabled</code></td><td><code>var(--btn-light-bg-default)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-text-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-light-text-hover</code></td><td><code>var(--btn-light-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-light-text-focus</code></td><td><code>var(--btn-light-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-light-text-active</code></td><td><code>var(--btn-light-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-light-text-disabled</code></td><td><code>var(--btn-light-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-light-border-default</code></td><td><code>var(--btn-light-bg-default)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-border-hover</code></td><td><code>var(--btn-light-border-default)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-border-focus</code></td><td><code>var(--btn-light-border-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-border-active</code></td><td><code>var(--btn-light-border-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-light-border-disabled</code></td><td><code>var(--btn-light-border-default)</code></td><td>#eae9e8</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--beige (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-beige-bg-default</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-bg-hover</code></td><td><code>var(--color-hover-btn-beige)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-beige-bg-focus</code></td><td><code>var(--btn-beige-bg-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-beige-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-beige-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#d7d6d5</td></tr>
+          <tr><td><code>--btn-beige-bg-disabled</code></td><td><code>var(--btn-beige-bg-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-text-default</code></td><td><code>var(--color-brown)</code></td><td>#21170e</td></tr>
+          <tr><td><code>--btn-beige-text-hover</code></td><td><code>var(--btn-beige-text-default)</code></td><td>#21170e</td></tr>
+          <tr><td><code>--btn-beige-text-focus</code></td><td><code>var(--btn-beige-text-hover)</code></td><td>#21170e</td></tr>
+          <tr><td><code>--btn-beige-text-active</code></td><td><code>var(--btn-beige-text-hover)</code></td><td>#21170e</td></tr>
+          <tr><td><code>--btn-beige-text-disabled</code></td><td><code>var(--btn-beige-text-default)</code></td><td>#21170e</td></tr>
+          <tr><td><code>--btn-beige-border-default</code></td><td><code>var(--btn-beige-bg-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-border-hover</code></td><td><code>var(--btn-beige-border-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-border-focus</code></td><td><code>var(--btn-beige-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-border-active</code></td><td><code>var(--btn-beige-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-beige-border-disabled</code></td><td><code>var(--btn-beige-border-default)</code></td><td>#dcdbcf</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--green (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-green-bg-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-bg-hover</code></td><td><code>var(--color-hover-btn-green)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-green-bg-focus</code></td><td><code>var(--btn-green-bg-hover)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-green-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-green-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#041c24</td></tr>
+          <tr><td><code>--btn-green-bg-disabled</code></td><td><code>var(--btn-green-bg-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-text-default</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-green-text-hover</code></td><td><code>var(--btn-green-text-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-green-text-focus</code></td><td><code>var(--btn-green-text-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-green-text-active</code></td><td><code>var(--btn-green-text-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-green-text-disabled</code></td><td><code>var(--btn-green-text-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-green-border-default</code></td><td><code>var(--btn-green-bg-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-border-hover</code></td><td><code>var(--btn-green-border-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-border-focus</code></td><td><code>var(--btn-green-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-border-active</code></td><td><code>var(--btn-green-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-green-border-disabled</code></td><td><code>var(--btn-green-border-default)</code></td><td>#223520</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--teal (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-teal-bg-default</code></td><td><code>var(--color-teal)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-bg-hover</code></td><td><code>var(--color-hover-btn-teal)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-teal-bg-focus</code></td><td><code>var(--btn-teal-bg-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-teal-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-teal-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#1f311d</td></tr>
+          <tr><td><code>--btn-teal-bg-disabled</code></td><td><code>var(--btn-teal-bg-default)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-text-default</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-teal-text-hover</code></td><td><code>var(--btn-teal-text-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-teal-text-focus</code></td><td><code>var(--btn-teal-text-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-teal-text-active</code></td><td><code>var(--btn-teal-text-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-teal-text-disabled</code></td><td><code>var(--btn-teal-text-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-teal-border-default</code></td><td><code>var(--btn-teal-bg-default)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-border-hover</code></td><td><code>var(--btn-teal-border-default)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-border-focus</code></td><td><code>var(--btn-teal-border-hover)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-border-active</code></td><td><code>var(--btn-teal-border-hover)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-teal-border-disabled</code></td><td><code>var(--btn-teal-border-default)</code></td><td>#041e27</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">btn--outline (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-outline-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-outline-bg-hover</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-outline-bg-focus</code></td><td><code>var(--btn-outline-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-outline-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-outline-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#cac9be</td></tr>
+          <tr><td><code>--btn-outline-bg-disabled</code></td><td><code>var(--btn-outline-bg-default)</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-outline-text-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-text-hover</code></td><td><code>var(--btn-outline-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-text-focus</code></td><td><code>var(--btn-outline-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-text-active</code></td><td><code>var(--btn-outline-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-text-disabled</code></td><td><code>var(--btn-outline-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-border-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-border-hover</code></td><td><code>var(--btn-outline-border-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-border-focus</code></td><td><code>var(--btn-outline-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-border-active</code></td><td><code>var(--btn-outline-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-outline-border-disabled</code></td><td><code>var(--btn-outline-border-default)</code></td><td>#223520</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">nav-cell--outline (18)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-nav-outline-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-nav-outline-bg-hover</code></td><td><code>var(--color-hover-header-outline-bg)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-bg-focus</code></td><td><code>var(--btn-nav-outline-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-nav-outline-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#cac9be</td></tr>
+          <tr><td><code>--btn-nav-outline-bg-selected</code></td><td><code>var(--btn-nav-outline-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-bg-disabled</code></td><td><code>var(--btn-nav-outline-bg-default)</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-nav-outline-text-default</code></td><td><code>var(--color-nav-text)</code></td><td>#ceccc5</td></tr>
+          <tr><td><code>--btn-nav-outline-text-hover</code></td><td><code>var(--color-hover-header-outline-text)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-outline-text-focus</code></td><td><code>var(--btn-nav-outline-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-outline-text-active</code></td><td><code>var(--btn-nav-outline-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-outline-text-selected</code></td><td><code>var(--btn-nav-outline-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-outline-text-disabled</code></td><td><code>var(--btn-nav-outline-text-default)</code></td><td>#ceccc5</td></tr>
+          <tr><td><code>--btn-nav-outline-border-default</code></td><td><code>var(--color-header-btn-border)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-border-hover</code></td><td><code>var(--btn-nav-outline-border-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-border-focus</code></td><td><code>var(--btn-nav-outline-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-border-active</code></td><td><code>var(--btn-nav-outline-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-border-selected</code></td><td><code>var(--btn-nav-outline-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-outline-border-disabled</code></td><td><code>var(--btn-nav-outline-border-default)</code></td><td>#dcdbcf</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">nav-cell--fill (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-nav-fill-bg-default</code></td><td><code>var(--color-header-btn-fill)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-bg-hover</code></td><td><code>var(--color-hover-header-fill-bg)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-nav-fill-bg-focus</code></td><td><code>var(--btn-nav-fill-bg-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-nav-fill-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-nav-fill-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#d7d6d5</td></tr>
+          <tr><td><code>--btn-nav-fill-bg-disabled</code></td><td><code>var(--btn-nav-fill-bg-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-text-default</code></td><td><code>var(--color-header-btn-fill-text)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-fill-text-hover</code></td><td><code>var(--btn-nav-fill-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-fill-text-focus</code></td><td><code>var(--btn-nav-fill-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-fill-text-active</code></td><td><code>var(--btn-nav-fill-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-fill-text-disabled</code></td><td><code>var(--btn-nav-fill-text-default)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-fill-border-default</code></td><td><code>var(--color-header-btn-border)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-border-hover</code></td><td><code>var(--btn-nav-fill-border-default)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-border-focus</code></td><td><code>var(--btn-nav-fill-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-border-active</code></td><td><code>var(--btn-nav-fill-border-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-fill-border-disabled</code></td><td><code>var(--btn-nav-fill-border-default)</code></td><td>#dcdbcf</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">nav-cell--ghost (10)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-nav-ghost-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-nav-ghost-bg-hover</code></td><td><code>var(--color-hover-header-outline-bg)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-ghost-bg-focus</code></td><td><code>var(--btn-nav-ghost-bg-hover)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-nav-ghost-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-nav-ghost-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#cac9be</td></tr>
+          <tr><td><code>--btn-nav-ghost-bg-disabled</code></td><td><code>var(--btn-nav-ghost-bg-default)</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-nav-ghost-text-default</code></td><td><code>var(--color-nav-text)</code></td><td>#ceccc5</td></tr>
+          <tr><td><code>--btn-nav-ghost-text-hover</code></td><td><code>var(--color-hover-header-outline-text)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-ghost-text-focus</code></td><td><code>var(--btn-nav-ghost-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-ghost-text-active</code></td><td><code>var(--btn-nav-ghost-text-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-nav-ghost-text-disabled</code></td><td><code>var(--btn-nav-ghost-text-default)</code></td><td>#ceccc5</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">arrow-btn (15)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-arrow-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-arrow-bg-hover</code></td><td><code>var(--color-hover-arrow-btn)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-bg-focus</code></td><td><code>var(--btn-arrow-bg-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-bg-active</code></td><td><code>color-mix(in srgb, var(--btn-arrow-bg-hover) var(--btn-active-mix), var(--color-black))</code></td><td>#d7d6d5</td></tr>
+          <tr><td><code>--btn-arrow-bg-disabled</code></td><td><code>var(--btn-arrow-bg-default)</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-arrow-border-default</code></td><td><code>var(--color-light)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-border-hover</code></td><td><code>var(--btn-arrow-border-default)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-border-focus</code></td><td><code>var(--btn-arrow-border-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-border-active</code></td><td><code>var(--btn-arrow-border-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-border-disabled</code></td><td><code>var(--btn-arrow-border-default)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-arrow-icon-filter-default</code></td><td><code>none</code></td><td>none</td></tr>
+          <tr><td><code>--btn-arrow-icon-filter-hover</code></td><td><code>invert(1)</code></td><td>invert(1)</td></tr>
+          <tr><td><code>--btn-arrow-icon-filter-focus</code></td><td><code>var(--btn-arrow-icon-filter-hover)</code></td><td>invert(1)</td></tr>
+          <tr><td><code>--btn-arrow-icon-filter-active</code></td><td><code>var(--btn-arrow-icon-filter-hover)</code></td><td>invert(1)</td></tr>
+          <tr><td><code>--btn-arrow-icon-filter-disabled</code></td><td><code>var(--btn-arrow-icon-filter-default)</code></td><td>none</td></tr>
+        </tbody></table></details>
+      <details class="ds-token-group"><summary class="ds-meta">chip · volume · select · check · рядки · catalog-nav · nav-link · thumb (53)</summary>
+        <table class="ds-table"><thead><tr><th>токен</th><th>значення</th><th>розв’язано</th></tr></thead><tbody>
+          <tr><td><code>--btn-chip-text-default</code></td><td><code>var(--color-gold)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-chip-text-hover</code></td><td><code>var(--color-light)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-chip-text-focus</code></td><td><code>var(--btn-chip-text-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-chip-text-selected</code></td><td><code>var(--btn-chip-text-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-chip-picker-text-default</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-chip-picker-text-hover</code></td><td><code>var(--color-gold)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-chip-picker-text-focus</code></td><td><code>var(--btn-chip-picker-text-hover)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-chip-picker-text-selected</code></td><td><code>var(--btn-chip-picker-text-hover)</code></td><td>#cbaf86</td></tr>
+          <tr><td><code>--btn-volume-opacity-default</code></td><td><code>var(--opacity-muted)</code></td><td>0.4</td></tr>
+          <tr><td><code>--btn-volume-opacity-hover</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-volume-opacity-focus</code></td><td><code>var(--btn-volume-opacity-default)</code></td><td>0.4</td></tr>
+          <tr><td><code>--btn-volume-opacity-selected</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-volume-plate-opacity-default</code></td><td><code>0</code></td><td>0</td></tr>
+          <tr><td><code>--btn-volume-plate-opacity-hover</code></td><td><code>var(--opacity-volume-hover)</code></td><td>0.1</td></tr>
+          <tr><td><code>--btn-volume-plate-opacity-focus</code></td><td><code>var(--btn-volume-plate-opacity-hover)</code></td><td>0.1</td></tr>
+          <tr><td><code>--btn-select-bg-default</code></td><td><code>var(--color-select-bg)</code></td><td>#354632</td></tr>
+          <tr><td><code>--btn-select-bg-hover</code></td><td><code>var(--color-select-bg-hover)</code></td><td>#364733</td></tr>
+          <tr><td><code>--btn-select-bg-focus</code></td><td><code>var(--btn-select-bg-hover)</code></td><td>#364733</td></tr>
+          <tr><td><code>--btn-select-bg-selected</code></td><td><code>var(--btn-select-bg-hover)</code></td><td>#364733</td></tr>
+          <tr><td><code>--btn-select-text-default</code></td><td><code>var(--color-beige)</code></td><td>#dcdbcf</td></tr>
+          <tr><td><code>--btn-select-option-bg-hover</code></td><td><code>var(--color-hover-faq)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-select-field-bg-default</code></td><td><code>var(--color-field-bg)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-select-field-bg-hover</code></td><td><code>var(--color-field-bg-hover)</code></td><td>#e4e3d8</td></tr>
+          <tr><td><code>--btn-select-field-bg-focus</code></td><td><code>var(--btn-select-field-bg-hover)</code></td><td>#e4e3d8</td></tr>
+          <tr><td><code>--btn-select-field-bg-selected</code></td><td><code>var(--btn-select-field-bg-hover)</code></td><td>#e4e3d8</td></tr>
+          <tr><td><code>--btn-select-field-border-default</code></td><td><code>var(--color-field-border)</code></td><td>#727d70</td></tr>
+          <tr><td><code>--btn-select-field-border-hover</code></td><td><code>var(--color-field-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-select-field-border-focus</code></td><td><code>var(--btn-select-field-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-select-field-border-selected</code></td><td><code>var(--btn-select-field-border-hover)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-select-field-option-bg-hover</code></td><td><code>var(--color-field-bg-hover)</code></td><td>#e4e3d8</td></tr>
+          <tr><td><code>--btn-check-bg-default</code></td><td><code>var(--color-age-card)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-check-bg-selected</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-check-border-default</code></td><td><code>var(--color-age-border)</code></td><td>#9ba192</td></tr>
+          <tr><td><code>--btn-check-border-hover</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-check-border-selected</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-check-tick</code></td><td><code>var(--color-age-card)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-check-ring-color</code></td><td><code>var(--btn-focus-ring-color-on-light)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-row-faq-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-row-faq-bg-hover</code></td><td><code>var(--color-hover-faq)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-row-product-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+          <tr><td><code>--btn-row-product-bg-hover</code></td><td><code>var(--color-hover-acc-product)</code></td><td>#e4e3d8</td></tr>
+          <tr><td><code>--btn-catnav-opacity-default</code></td><td><code>var(--opacity-catalog-nav-muted)</code></td><td>0.43</td></tr>
+          <tr><td><code>--btn-catnav-opacity-hover</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-catnav-opacity-focus</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-catnav-opacity-selected</code></td><td><code>1</code></td><td>1</td></tr>
+          <tr><td><code>--btn-navlink-text-default</code></td><td><code>var(--color-nav-text)</code></td><td>#ceccc5</td></tr>
+          <tr><td><code>--btn-navlink-text-hover</code></td><td><code>var(--color-hover-nav)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-navlink-text-focus</code></td><td><code>var(--btn-navlink-text-hover)</code></td><td>#eae9e8</td></tr>
+          <tr><td><code>--btn-navlink-light-text-default</code></td><td><code>var(--color-green)</code></td><td>#223520</td></tr>
+          <tr><td><code>--btn-navlink-light-text-hover</code></td><td><code>var(--color-hover-nav-light)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-navlink-light-text-focus</code></td><td><code>var(--btn-navlink-light-text-hover)</code></td><td>#041e27</td></tr>
+          <tr><td><code>--btn-thumb-zoom-hover</code></td><td><code>var(--scale-zoom)</code></td><td>1.03</td></tr>
+          <tr><td><code>--btn-thumb-border-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
+        </tbody></table></details>
+      <p class="demo-label t-kicker">Контраст тексту до заливки за WCAG 2.x (розраховано за палітрою; поріг 4.5:1 для тексту кнопок). Disabled — з урахуванням opacity на типовому тлі; для вимкнених елементів WCAG вимог не ставить, значення подано для довідки</p>
+      <table class="ds-table"><thead><tr><th>варіант</th><th>тло контексту</th><th>default</th><th>hover / focus</th><th>active</th><th>disabled (0.4)</th></tr></thead><tbody>
+        <tr><td>gold</td><td><code>--color-brown</code></td><td>6.27:1 <span class="ds-meta">#223520 / #cbaf86</span></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>7.93:1 <span class="ds-meta">#223520 / #cac9be</span></td><td class="is-exempt">2.19:1 <span class="ds-meta">#212315 / #65543e</span></td></tr>
+        <tr><td>light</td><td><code>--color-brown</code></td><td>10.84:1 <span class="ds-meta">#223520 / #eae9e8</span></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>7.93:1 <span class="ds-meta">#223520 / #cac9be</span></td><td class="is-exempt">3.04:1 <span class="ds-meta">#212315 / #716b65</span></td></tr>
+        <tr><td>beige</td><td><code>--color-brown</code></td><td>12.63:1 <span class="ds-meta">#21170e / #dcdbcf</span></td><td>14.51:1 <span class="ds-meta">#21170e / #eae9e8</span></td><td>12.16:1 <span class="ds-meta">#21170e / #d7d6d5</span></td><td class="is-exempt">3.07:1 <span class="ds-meta">#21170e / #6c655b</span></td></tr>
+        <tr><td>green</td><td><code>--color-beige</code></td><td>9.43:1 <span class="ds-meta">#dcdbcf / #223520</span></td><td>12.36:1 <span class="ds-meta">#dcdbcf / #041e27</span></td><td>12.64:1 <span class="ds-meta">#dcdbcf / #041c24</span></td><td class="is-exempt">2.12:1 <span class="ds-meta">#dcdbcf / #929989</span></td></tr>
+        <tr><td>teal</td><td><code>--color-beige</code></td><td>12.36:1 <span class="ds-meta">#dcdbcf / #041e27</span></td><td>9.43:1 <span class="ds-meta">#dcdbcf / #223520</span></td><td>9.97:1 <span class="ds-meta">#dcdbcf / #1f311d</span></td><td class="is-exempt">2.38:1 <span class="ds-meta">#dcdbcf / #868f8c</span></td></tr>
+        <tr><td>outline</td><td><code>--color-light</code></td><td>10.84:1 <span class="ds-meta">#223520 / #eae9e8 (тло)</span></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>7.93:1 <span class="ds-meta">#223520 / #cac9be</span></td><td class="is-exempt">2.19:1 <span class="ds-meta">#9aa198 / #eae9e8 (тло)</span></td></tr>
+        <tr><td>nav-outline</td><td><code>--color-green</code></td><td>8.18:1 <span class="ds-meta">#ceccc5 / #223520 (тло)</span></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>7.93:1 <span class="ds-meta">#223520 / #cac9be</span></td><td class="is-exempt">2.58:1 <span class="ds-meta">#677162 / #223520 (тло)</span></td></tr>
+        <tr><td>nav-fill</td><td><code>--color-green</code></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>10.84:1 <span class="ds-meta">#223520 / #eae9e8</span></td><td>9.08:1 <span class="ds-meta">#223520 / #d7d6d5</span></td><td class="is-exempt">2.81:1 <span class="ds-meta">#223520 / #6c7766</span></td></tr>
+        <tr><td>nav-ghost</td><td><code>--color-green</code></td><td>8.18:1 <span class="ds-meta">#ceccc5 / #223520 (тло)</span></td><td>9.43:1 <span class="ds-meta">#223520 / #dcdbcf</span></td><td>7.93:1 <span class="ds-meta">#223520 / #cac9be</span></td><td class="is-exempt">2.58:1 <span class="ds-meta">#677162 / #223520 (тло)</span></td></tr>
+      </tbody></table>
+      <p class="ds-note ds-meta">Іконка стрілки слайдера (non-text, поріг 3:1): hover #151617 на #eae9e8 — 14.94:1; active — 12.53:1 (default — світла на фоні секції підбору, залежить від фото). Чіп: gold на teal 8.21:1, hover (light) 14.19:1; на picker beige/teal 12.36:1, hover gold 8.21:1. Select-плитка: beige на #354632 — 7.27:1 (hover 7.16:1). Усі default / hover / focus / active ≥ 4.5:1; нижче порогу лише disabled-значення (колонка «disabled», виключена з вимог WCAG для вимкнених елементів).</p>
+      <p class="demo-label t-kicker">Як додати новий варіант кнопки</p>
+      <ol class="ds-note t-body ds-steps">
+        <li>У tokens.css, блок «Кнопки: стани», скопіюйте групу найближчого варіанта (наприклад <code>--btn-green-*</code>) і перейменуйте на <code>--btn-&lt;новий&gt;-bg|text|border-&lt;стан&gt;</code>: у default — посилання на кольори палітри (нових hex не вводити), у hover — токен <code>--color-hover-btn-&lt;новий&gt;</code> (додати у блок «Hover-стани»), focus/disabled — як у зразку, active — <code>color-mix</code> із <code>--btn-active-mix</code>.</li>
+        <li>У button.css додайте блок контекстних змінних <code>.btn--&lt;новий&gt; { --btn-bg: var(--btn-&lt;новий&gt;-bg-default); --btn-bg-hover: …; … }</code> за зразком <code>.btn--green</code> (15 змінних: bg / text / border × default, hover, focus, active, disabled). Правила станів <code>.btn</code> не чіпати.</li>
+        <li>Використайте клас у <code>partials/components/btn.html</code> через <code>variant="btn--&lt;новий&gt;"</code>, додайте рядок у матрицю вище (<code>variant</code> + <code>is-hover</code>/<code>is-focus</code>/<code>is-active</code>) і перевірте контраст тексту (≥ 4.5:1 для default, hover, active).</li>
+      </ol>
+    </section>
+
     <section class="ds-section" id="hit-area">
       <h2 class="t-h2 ds-section__title">Область реакції</h2>
       <p class="demo-label t-kicker">Правило: клікабельна й ховерабельна вся видима область контролу (фон, рамка, плитка, відступи, іконка), а не лише текст. Фон/рамку/padding має нести сам &lt;button&gt;/&lt;a&gt;; якщо плитка — обгортка (лейбл + кнопка), кнопка отримує клас .hit-area (::after inset:0 від позиціонованої плитки). Не клікабельні: заголовки, підписи. Hover/focus-стан — на всю плитку (:has()). Focus-кільце: глобальне :focus-visible (base.css: --border-hairline, currentColor, --focus-offset); для плитки з .hit-area кільце на ::after кнопки з радіусом плитки (--radius-select), контраст beige/green ≈ 9.4:1 (≥ 3:1). Перевірка: elementFromPoint по сітці всередині видимого прямокутника.</p>

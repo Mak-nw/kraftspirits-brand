@@ -79,3 +79,55 @@
 /* Вікова верифікація: статичні приклади картки (без fixed) на тлі оверлея */
 .ds-age-demo { display: flex; padding: var(--space-50); background: url('/assets/img/home-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat, var(--color-age-overlay); }
 .ds-age-demo .age-card { margin: auto; }
+
+/* ---- Стани кнопок (#button-states) ---- */
+.state-matrix { display: flex; flex-direction: column; gap: var(--space-10); }
+.state-row { display: grid; grid-template-columns: var(--ds-state-label-w) repeat(5, minmax(0, 1fr)); gap: var(--space-20); align-items: center; justify-items: start; padding: var(--space-20) var(--space-30); }
+.state-row.theme-light { background: var(--color-light); color: var(--color-green); } /* демо-тло контурної кнопки / чекбокса: картка age-gate */
+.state-row--6 { grid-template-columns: var(--ds-state-label-w) repeat(6, minmax(0, 1fr)); }
+.state-row--head { padding-block: 0; }
+.state-row > * { min-width: 0; }
+.ds-table { width: 100%; margin-bottom: var(--space-30); border-collapse: collapse; }
+.ds-table th, .ds-table td { padding: var(--space-10) var(--space-15); text-align: left; vertical-align: top; border-bottom: var(--border-hairline) solid var(--color-line); font: var(--fw-regular) var(--font-size-small)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+.ds-table th { font-weight: var(--fw-bold); }
+.ds-table code { overflow-wrap: anywhere; }
+.ds-table .is-exempt { opacity: var(--opacity-muted); }
+.ds-token-group { margin-bottom: var(--space-10); }
+.ds-token-group > summary { cursor: pointer; padding: var(--space-10) 0; }
+.ds-steps { padding-inline-start: var(--space-30); list-style: decimal; }
+.ds-steps li + li { margin-top: var(--space-10); }
+
+/* Імітатори станів — ЛИШЕ для демо: ті самі контекстні змінні (--btn-bg-hover, …), що читають справжні :hover / :focus-visible / :active у компонентах; власних значень немає */
+.btn.is-hover { border-color: var(--btn-border-hover); }
+.btn.is-hover .btn__inner { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
+.btn.is-hover .btn__arrow { transform: translateX(var(--btn-icon-nudge-hover)); }
+.btn.is-focus { border-color: var(--btn-border-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
+.btn.is-focus .btn__inner { background: var(--btn-bg-focus); color: var(--btn-text-focus); }
+.btn.is-focus .btn__arrow { transform: translateX(var(--btn-icon-nudge-hover)); }
+.btn.is-active { border-color: var(--btn-border-active); }
+.btn.is-active .btn__inner { background: var(--btn-bg-active); color: var(--btn-text-active); transform: scale(var(--btn-active-scale)); }
+:is(.nav-cell--outline, .nav-cell--fill, .nav-cell--ghost).is-hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
+:is(.nav-cell--outline, .nav-cell--fill).is-hover { border-color: var(--btn-border-hover); }
+:is(.nav-cell--outline, .nav-cell--fill, .nav-cell--ghost).is-focus { background: var(--btn-bg-focus); color: var(--btn-text-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-on-dark); outline-offset: var(--btn-focus-ring-offset); }
+:is(.nav-cell--outline, .nav-cell--fill).is-focus { border-color: var(--btn-border-focus); }
+:is(.nav-cell--outline, .nav-cell--fill, .nav-cell--ghost).is-active { background: var(--btn-bg-active); color: var(--btn-text-active); }
+:is(.nav-cell--outline, .nav-cell--fill).is-active { border-color: var(--btn-border-active); }
+.arrow-btn.is-hover { background-color: var(--btn-bg-hover); border-color: var(--btn-border-hover); }
+.arrow-btn.is-hover img { filter: var(--btn-icon-filter-hover); }
+.arrow-btn.is-focus { background-color: var(--btn-bg-focus); border-color: var(--btn-border-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
+.arrow-btn.is-focus img { filter: var(--btn-icon-filter-focus); }
+.arrow-btn.is-active { background-color: var(--btn-bg-active); border-color: var(--btn-border-active); }
+.arrow-btn.is-active img { filter: var(--btn-icon-filter-active); }
+.chip.is-hover { color: var(--btn-text-hover); }
+.chip.is-focus { color: var(--btn-text-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
+.product-volume.is-hover { opacity: var(--btn-volume-opacity-hover); }
+.product-volume.is-hover::before { opacity: var(--btn-volume-plate-opacity-hover); }
+.product-volume.is-focus { opacity: var(--btn-volume-opacity-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
+.product-volume.is-focus::before { opacity: var(--btn-volume-plate-opacity-focus); }
+.state-row .select__field { width: calc(var(--size-select-w) * 0.6); } /* демо-плитка без підпису: вміщується в колонку матриці */
+.select.is-hover { background: var(--btn-select-bg-hover); }
+.select.is-focus { background: var(--btn-select-bg-focus); }
+.select.is-selected { background: var(--btn-select-bg-selected); }
+.select.is-focus .select__button::after { border-radius: var(--radius-select); outline: var(--btn-focus-ring-width) solid currentColor; outline-offset: var(--btn-focus-ring-offset); }
+.age-check.is-hover .age-check__box { border-color: var(--btn-check-border-hover); }
+.age-check.is-focus .age-check__box { outline: var(--btn-focus-ring-width) solid var(--btn-check-ring-color); outline-offset: var(--btn-focus-ring-offset); }
