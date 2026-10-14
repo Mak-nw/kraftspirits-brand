@@ -169,6 +169,9 @@
 
   /* ---------- Доступність (вузла Figma немає) ---------- */
   --focus-offset: calc(3 * var(--u));           /* відступ фокус-рамки :focus-visible від елемента */
+  --focus-ring-width: var(--border-hairline);   /* семантичний токен, вузла Figma немає: товщина фокус-кільця (глобальне :focus-visible у base.css; кнопки — --btn-focus-ring-width) */
+  --focus-ring-offset: var(--focus-offset);     /* семантичний токен: відступ фокус-кільця (= --focus-offset) */
+  --focus-ring-color: currentColor;             /* семантичний токен: колір кільця за замовчуванням = колір тексту контексту; на темному/світлому тлі — --btn-focus-ring-color-on-dark / -on-light */
   --footer-ring-room: calc(var(--focus-offset) + var(--border-hairline)); /* семантичний токен, вузла Figma немає: запас під focus-кільце посилань футера (offset + товщина) всередині меж колонки */
 
   /* ---------- Рух і орнаменти (вузла Figma немає, семантичні токени) ---------- */
@@ -212,6 +215,270 @@
   --color-hover-faq: var(--color-light);        /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): фон рядка FAQ */
   --color-hover-acc-product: #E4E3D8;           /* hover-стан, у Figma не намальований (рішення замовника: «не таким білим, світлий, але не настільки білий»): фон рядка акордеона товару (.acc--product) на hover/відкритому; теплий світлий беж, +8/+9 до --color-beige (#DCDBCF), контраст --color-green ≈10.2:1 */
   --color-hover-arrow-btn: var(--color-light);  /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка стрілки слайдера (іконка інвертується) */
+
+  /* ---------- Кнопки: стани (єдина система) ----------
+     Схема імен: --btn-<варіант>-<властивість>-<стан>; властивість ∈ bg | text | border | icon-filter | opacity; стан ∈ default | hover | focus | active | disabled (+ selected — лише для перемикачів: меню aria-expanded, чіп/об'єм aria-pressed, відкритий select, checkbox:checked).
+     Значення лише посилаються на наявні токени палітри/hover (--color-*, --color-hover-*): нових кольорів немає. Компонент читає ці токени ЛИШЕ через контекстні змінні варіанта (--btn-bg, --btn-bg-hover, … див. button.css, nav.css, arrow-button.css), а не напряму.
+     Правила стану: focus = hover (клавіатурний фокус показує той самий вигляд, що й hover; відрізняється лише тривалістю й кільцем); active = hover, затемнений на (100% − --btn-active-mix); disabled = default (+ --btn-disabled-opacity, без hover-змін). Іконка кнопки (arrow-up-right) = currentColor, тобто --btn-<варіант>-text-<стан>; окремих значень немає. ---------- */
+  /* спільні (для всіх кнопок) */
+  --btn-transition-duration:           var(--duration-fast); /* плавний перехід кольору/фону (default ↔ hover); іконки/мініатюри — --duration-base (--btn-transition-duration-base) */
+  --btn-transition-duration-base:      var(--duration-base); /* перехід іконки/зсуву стрілки, zoom мініатюри */
+  --btn-transition-duration-focus:     var(--duration-focus); /* короткий перехід при :focus-visible та :active (клавіатура/натиск не «тягнуться») */
+  --btn-transition-ease:               var(--ease-out); /* єдина крива переходів кнопок */
+  --btn-icon-nudge-hover:              var(--hover-nudge); /* зсув стрілки (arrow-up-right) праворуч на hover/focus */
+  --btn-icon-color:                    currentColor; /* колір іконки кнопки = колір тексту поточного стану */
+  --btn-active-mix:                    92%; /* :active — частка кольору hover у суміші з --color-black (8% затемнення); єдине місце для підбору «глибини» натиску */
+  --btn-active-scale:                  0.985; /* :active — легке «втискання» заливки кнопки .btn (лише .btn__inner; більше scale(.985) не дозволено) */
+  --btn-disabled-opacity:              var(--opacity-muted); /* disabled / aria-disabled: приглушення всієї кнопки (= існуючі 0.4; було в product.css/contacts.css/slider.css); hover/focus/active — без змін */
+  --btn-disabled-cursor:               not-allowed; /* курсор вимкненої кнопки; pointer-events: none — лише для нативного :disabled (aria-disabled лишається клікабельним для tooltip/фокусу) */
+  --btn-focus-ring-width:              var(--focus-ring-width); /* товщина фокус-кільця (= глобальне :focus-visible у base.css) */
+  --btn-focus-ring-offset:             var(--focus-ring-offset); /* відступ фокус-кільця від кнопки (= глобальне :focus-visible) */
+  --btn-focus-ring-color-auto:         var(--focus-ring-color); /* колір кільця за замовчуванням = колір тексту контексту (currentColor): так працюють .btn на будь-якому фоні */
+  --btn-focus-ring-color-on-dark:      var(--color-beige); /* кільце на ТЕМНОМУ тлі (пілюля хедера та її контроли): beige, бо currentColor темнішає в фокусі */
+  --btn-focus-ring-color-on-light:     var(--color-green); /* кільце на СВІТЛОМУ тлі (перемикач age-check): green */
+
+  /* btn--gold (hero, 194:1371) */
+  --btn-gold-bg-default:         var(--color-gold);
+  --btn-gold-bg-hover:           var(--color-hover-btn-gold);
+  --btn-gold-bg-focus:           var(--btn-gold-bg-hover);
+  --btn-gold-bg-active:          color-mix(in srgb, var(--btn-gold-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-gold-bg-disabled:        var(--btn-gold-bg-default);
+  --btn-gold-text-default:       var(--color-green);
+  --btn-gold-text-hover:         var(--btn-gold-text-default);
+  --btn-gold-text-focus:         var(--btn-gold-text-hover);
+  --btn-gold-text-active:        var(--btn-gold-text-hover);
+  --btn-gold-text-disabled:      var(--btn-gold-text-default);
+  --btn-gold-border-default:     var(--btn-gold-bg-default);
+  --btn-gold-border-hover:       var(--btn-gold-border-default);
+  --btn-gold-border-focus:       var(--btn-gold-border-hover);
+  --btn-gold-border-active:      var(--btn-gold-border-hover);
+  --btn-gold-border-disabled:    var(--btn-gold-border-default);
+
+  /* btn--light (194:1351) */
+  --btn-light-bg-default:        var(--color-light);
+  --btn-light-bg-hover:          var(--color-hover-btn-light);
+  --btn-light-bg-focus:          var(--btn-light-bg-hover);
+  --btn-light-bg-active:         color-mix(in srgb, var(--btn-light-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-light-bg-disabled:       var(--btn-light-bg-default);
+  --btn-light-text-default:      var(--color-green);
+  --btn-light-text-hover:        var(--btn-light-text-default);
+  --btn-light-text-focus:        var(--btn-light-text-hover);
+  --btn-light-text-active:       var(--btn-light-text-hover);
+  --btn-light-text-disabled:     var(--btn-light-text-default);
+  --btn-light-border-default:    var(--btn-light-bg-default);
+  --btn-light-border-hover:      var(--btn-light-border-default);
+  --btn-light-border-focus:      var(--btn-light-border-hover);
+  --btn-light-border-active:     var(--btn-light-border-hover);
+  --btn-light-border-disabled:   var(--btn-light-border-default);
+
+  /* btn--beige (224:4015, на коричневому) */
+  --btn-beige-bg-default:        var(--color-beige);
+  --btn-beige-bg-hover:          var(--color-hover-btn-beige);
+  --btn-beige-bg-focus:          var(--btn-beige-bg-hover);
+  --btn-beige-bg-active:         color-mix(in srgb, var(--btn-beige-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-beige-bg-disabled:       var(--btn-beige-bg-default);
+  --btn-beige-text-default:      var(--color-brown);
+  --btn-beige-text-hover:        var(--btn-beige-text-default);
+  --btn-beige-text-focus:        var(--btn-beige-text-hover);
+  --btn-beige-text-active:       var(--btn-beige-text-hover);
+  --btn-beige-text-disabled:     var(--btn-beige-text-default);
+  --btn-beige-border-default:    var(--btn-beige-bg-default);
+  --btn-beige-border-hover:      var(--btn-beige-border-default);
+  --btn-beige-border-focus:      var(--btn-beige-border-hover);
+  --btn-beige-border-active:     var(--btn-beige-border-hover);
+  --btn-beige-border-disabled:   var(--btn-beige-border-default);
+
+  /* btn--green (YasnoCraft «додати в кошик», 194:1397) */
+  --btn-green-bg-default:        var(--color-green);
+  --btn-green-bg-hover:          var(--color-hover-btn-green);
+  --btn-green-bg-focus:          var(--btn-green-bg-hover);
+  --btn-green-bg-active:         color-mix(in srgb, var(--btn-green-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-green-bg-disabled:       var(--btn-green-bg-default);
+  --btn-green-text-default:      var(--color-beige);
+  --btn-green-text-hover:        var(--btn-green-text-default);
+  --btn-green-text-focus:        var(--btn-green-text-hover);
+  --btn-green-text-active:       var(--btn-green-text-hover);
+  --btn-green-text-disabled:     var(--btn-green-text-default);
+  --btn-green-border-default:    var(--btn-green-bg-default);
+  --btn-green-border-hover:      var(--btn-green-border-default);
+  --btn-green-border-focus:      var(--btn-green-border-hover);
+  --btn-green-border-active:     var(--btn-green-border-hover);
+  --btn-green-border-disabled:   var(--btn-green-border-default);
+
+  /* btn--teal (Bazylsprings «додати в кошик», 194:1532) */
+  --btn-teal-bg-default:         var(--color-teal);
+  --btn-teal-bg-hover:           var(--color-hover-btn-teal);
+  --btn-teal-bg-focus:           var(--btn-teal-bg-hover);
+  --btn-teal-bg-active:          color-mix(in srgb, var(--btn-teal-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-teal-bg-disabled:        var(--btn-teal-bg-default);
+  --btn-teal-text-default:       var(--color-beige);
+  --btn-teal-text-hover:         var(--btn-teal-text-default);
+  --btn-teal-text-focus:         var(--btn-teal-text-hover);
+  --btn-teal-text-active:        var(--btn-teal-text-hover);
+  --btn-teal-text-disabled:      var(--btn-teal-text-default);
+  --btn-teal-border-default:     var(--btn-teal-bg-default);
+  --btn-teal-border-hover:       var(--btn-teal-border-default);
+  --btn-teal-border-focus:       var(--btn-teal-border-hover);
+  --btn-teal-border-active:      var(--btn-teal-border-hover);
+  --btn-teal-border-disabled:    var(--btn-teal-border-default);
+
+  /* btn--outline (контурна: age-gate «Ні», вторинні дії на світлому) */
+  --btn-outline-bg-default:      transparent;
+  --btn-outline-bg-hover:        var(--color-beige);
+  --btn-outline-bg-focus:        var(--btn-outline-bg-hover);
+  --btn-outline-bg-active:       color-mix(in srgb, var(--btn-outline-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-outline-bg-disabled:     var(--btn-outline-bg-default);
+  --btn-outline-text-default:    var(--color-green);
+  --btn-outline-text-hover:      var(--btn-outline-text-default);
+  --btn-outline-text-focus:      var(--btn-outline-text-hover);
+  --btn-outline-text-active:     var(--btn-outline-text-hover);
+  --btn-outline-text-disabled:   var(--btn-outline-text-default);
+  --btn-outline-border-default:  var(--color-green);
+  --btn-outline-border-hover:    var(--btn-outline-border-default);
+  --btn-outline-border-focus:    var(--btn-outline-border-hover);
+  --btn-outline-border-active:   var(--btn-outline-border-hover);
+  --btn-outline-border-disabled: var(--btn-outline-border-default);
+
+  /* nav-cell--outline («меню», «Кошик», дії випадного меню; 206:2511) */
+  --btn-nav-outline-bg-default:  transparent;
+  --btn-nav-outline-bg-hover:    var(--color-hover-header-outline-bg);
+  --btn-nav-outline-bg-focus:    var(--btn-nav-outline-bg-hover);
+  --btn-nav-outline-bg-active:   color-mix(in srgb, var(--btn-nav-outline-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-nav-outline-bg-selected: var(--btn-nav-outline-bg-hover);
+  --btn-nav-outline-bg-disabled: var(--btn-nav-outline-bg-default);
+  --btn-nav-outline-text-default: var(--color-nav-text);
+  --btn-nav-outline-text-hover:  var(--color-hover-header-outline-text);
+  --btn-nav-outline-text-focus:  var(--btn-nav-outline-text-hover);
+  --btn-nav-outline-text-active: var(--btn-nav-outline-text-hover);
+  --btn-nav-outline-text-selected: var(--btn-nav-outline-text-hover);
+  --btn-nav-outline-text-disabled: var(--btn-nav-outline-text-default);
+  --btn-nav-outline-border-default: var(--color-header-btn-border);
+  --btn-nav-outline-border-hover: var(--btn-nav-outline-border-default);
+  --btn-nav-outline-border-focus: var(--btn-nav-outline-border-hover);
+  --btn-nav-outline-border-active: var(--btn-nav-outline-border-hover);
+  --btn-nav-outline-border-selected: var(--btn-nav-outline-border-hover);
+  --btn-nav-outline-border-disabled: var(--btn-nav-outline-border-default);
+
+  /* nav-cell--fill («підказати?»; 206:2513) */
+  --btn-nav-fill-bg-default:     var(--color-header-btn-fill);
+  --btn-nav-fill-bg-hover:       var(--color-hover-header-fill-bg);
+  --btn-nav-fill-bg-focus:       var(--btn-nav-fill-bg-hover);
+  --btn-nav-fill-bg-active:      color-mix(in srgb, var(--btn-nav-fill-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-nav-fill-bg-disabled:    var(--btn-nav-fill-bg-default);
+  --btn-nav-fill-text-default:   var(--color-header-btn-fill-text);
+  --btn-nav-fill-text-hover:     var(--btn-nav-fill-text-default);
+  --btn-nav-fill-text-focus:     var(--btn-nav-fill-text-hover);
+  --btn-nav-fill-text-active:    var(--btn-nav-fill-text-hover);
+  --btn-nav-fill-text-disabled:  var(--btn-nav-fill-text-default);
+  --btn-nav-fill-border-default: var(--color-header-btn-border);
+  --btn-nav-fill-border-hover:   var(--btn-nav-fill-border-default);
+  --btn-nav-fill-border-focus:   var(--btn-nav-fill-border-hover);
+  --btn-nav-fill-border-active:  var(--btn-nav-fill-border-hover);
+  --btn-nav-fill-border-disabled: var(--btn-nav-fill-border-default);
+
+  /* nav-cell--ghost («каталог», 214:2902): рамки немає */
+  --btn-nav-ghost-bg-default:    transparent;
+  --btn-nav-ghost-bg-hover:      var(--color-hover-header-outline-bg);
+  --btn-nav-ghost-bg-focus:      var(--btn-nav-ghost-bg-hover);
+  --btn-nav-ghost-bg-active:     color-mix(in srgb, var(--btn-nav-ghost-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-nav-ghost-bg-disabled:   var(--btn-nav-ghost-bg-default);
+  --btn-nav-ghost-text-default:  var(--color-nav-text);
+  --btn-nav-ghost-text-hover:    var(--color-hover-header-outline-text);
+  --btn-nav-ghost-text-focus:    var(--btn-nav-ghost-text-hover);
+  --btn-nav-ghost-text-active:   var(--btn-nav-ghost-text-hover);
+  --btn-nav-ghost-text-disabled: var(--btn-nav-ghost-text-default);
+
+  /* arrow-btn (стрілки слайдера, 194:1333) — іконка (img) світла, на hover/focus інвертується в темну (icon-filter) */
+  --btn-arrow-bg-default:        transparent;
+  --btn-arrow-bg-hover:          var(--color-hover-arrow-btn);
+  --btn-arrow-bg-focus:          var(--btn-arrow-bg-hover);
+  --btn-arrow-bg-active:         color-mix(in srgb, var(--btn-arrow-bg-hover) var(--btn-active-mix), var(--color-black));
+  --btn-arrow-bg-disabled:       var(--btn-arrow-bg-default);
+  --btn-arrow-border-default:    var(--color-light);
+  --btn-arrow-border-hover:      var(--btn-arrow-border-default);
+  --btn-arrow-border-focus:      var(--btn-arrow-border-hover);
+  --btn-arrow-border-active:     var(--btn-arrow-border-hover);
+  --btn-arrow-border-disabled:   var(--btn-arrow-border-default);
+
+  /* arrow-btn: іконка (img.filter) */
+  --btn-arrow-icon-filter-default:     none;
+  --btn-arrow-icon-filter-hover:       invert(1);
+  --btn-arrow-icon-filter-focus:       var(--btn-arrow-icon-filter-hover);
+  --btn-arrow-icon-filter-active:      var(--btn-arrow-icon-filter-hover);
+  --btn-arrow-icon-filter-disabled:    var(--btn-arrow-icon-filter-default);
+
+  /* chip (чіп-подія, 194:1296): колір тексту й ромбів; selected = .is-active / aria-pressed="true" */
+  --btn-chip-text-default:             var(--color-gold);
+  --btn-chip-text-hover:               var(--color-light);
+  --btn-chip-text-focus:               var(--btn-chip-text-hover);
+  --btn-chip-text-selected:            var(--btn-chip-text-hover);
+
+  /* chip на секції підбору (224:3737): beige, активний/hover — gold */
+  --btn-chip-picker-text-default:      var(--color-beige);
+  --btn-chip-picker-text-hover:        var(--color-gold);
+  --btn-chip-picker-text-focus:        var(--btn-chip-picker-text-hover);
+  --btn-chip-picker-text-selected:     var(--btn-chip-picker-text-hover);
+
+  /* product-volume (кнопки об'єму): opacity тексту + м'яка плашка кольору тексту (plate); selected = aria-pressed="true" */
+  --btn-volume-opacity-default:        var(--opacity-muted);
+  --btn-volume-opacity-hover:          1;
+  --btn-volume-opacity-focus:          var(--btn-volume-opacity-default);
+  --btn-volume-opacity-selected:       1;
+  --btn-volume-plate-opacity-default:  0;
+  --btn-volume-plate-opacity-hover:    var(--opacity-volume-hover);
+  --btn-volume-plate-opacity-focus:    var(--btn-volume-plate-opacity-hover);
+
+  /* select (каталожна плитка-фільтр, 204:2333): фон плитки; selected = .is-open */
+  --btn-select-bg-default:             var(--color-select-bg);
+  --btn-select-bg-hover:               var(--color-select-bg-hover);
+  --btn-select-bg-focus:               var(--btn-select-bg-hover);
+  --btn-select-bg-selected:            var(--btn-select-bg-hover);
+  --btn-select-text-default:           var(--color-beige);
+  --btn-select-option-bg-hover:        var(--color-hover-faq);
+
+  /* select--field (світле поле форми): фон і рамка поля */
+  --btn-select-field-bg-default:       var(--color-field-bg);
+  --btn-select-field-bg-hover:         var(--color-field-bg-hover);
+  --btn-select-field-bg-focus:         var(--btn-select-field-bg-hover);
+  --btn-select-field-bg-selected:      var(--btn-select-field-bg-hover);
+  --btn-select-field-border-default:   var(--color-field-border);
+  --btn-select-field-border-hover:     var(--color-field-border-hover);
+  --btn-select-field-border-focus:     var(--btn-select-field-border-hover);
+  --btn-select-field-border-selected:  var(--btn-select-field-border-hover);
+  --btn-select-field-option-bg-hover:  var(--color-field-bg-hover);
+
+  /* age-check (перемикач-чекбокс «запам'ятати» / згода): індикатор; selected = :checked */
+  --btn-check-bg-default:              var(--color-age-card);
+  --btn-check-bg-selected:             var(--color-green);
+  --btn-check-border-default:          var(--color-age-border);
+  --btn-check-border-hover:            var(--color-green);
+  --btn-check-border-selected:         var(--color-green);
+  --btn-check-tick:                    var(--color-age-card);
+  --btn-check-ring-color:              var(--btn-focus-ring-color-on-light);
+
+  /* рядки-акордеони (summary як кнопка-рядок): фон на hover; default = прозорий */
+  --btn-row-faq-bg-default:            transparent;
+  --btn-row-faq-bg-hover:              var(--color-hover-faq);
+  --btn-row-product-bg-default:        transparent;
+  --btn-row-product-bg-hover:          var(--color-hover-acc-product);
+
+  /* catalog-nav item (категорії каталогу): прозорість; selected = .is-active */
+  --btn-catnav-opacity-default:        var(--opacity-catalog-nav-muted);
+  --btn-catnav-opacity-hover:          1;
+  --btn-catnav-opacity-focus:          1;
+  --btn-catnav-opacity-selected:       1;
+
+  /* nav-link (посилання меню/футера): колір тексту; подвійний набір — на темному (хедер) і на світлому (футер) */
+  --btn-navlink-text-default:          var(--color-nav-text);
+  --btn-navlink-text-hover:            var(--color-hover-nav);
+  --btn-navlink-text-focus:            var(--btn-navlink-text-hover);
+  --btn-navlink-light-text-default:    var(--color-green);
+  --btn-navlink-light-text-hover:      var(--color-hover-nav-light);
+  --btn-navlink-light-text-focus:      var(--btn-navlink-light-text-hover);
+
+  /* product-thumb (мініатюра фото): zoom картинки на hover; рамка selected = акцент бренду (--accent, контекст сторінки товару) */
+  --btn-thumb-zoom-hover:              var(--scale-zoom);
+  --btn-thumb-border-default:          transparent;
   --angle-chip-diamond: -45deg;     /* семантичний токен, вузла Figma немає; ромб чіпа 194:1296 (повернутий на -45°) */
   --flip-x: -1;                     /* семантичний токен, вузла Figma немає; дзеркало по X для стрілки prev (scaleX) */
 
