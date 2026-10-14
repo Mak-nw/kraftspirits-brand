@@ -14,29 +14,26 @@
   border: var(--border-frame) solid var(--color-beige); border-radius: var(--radius-panel); /* рамка = колір панелі (як YC на товарі): геометрія 5u + 10u радіус */
 }
 .contacts-info { grid-column: span var(--span-contacts-main); }
-.contacts-map-panel { grid-column: span var(--span-contacts-aside); }
+.contacts-map-panel { grid-column: span var(--span-contacts-aside); padding: 0; border: 0; background: none; } /* карта = сам блок: без відступів і рамки */
 .contacts-info h1 { margin: 0; }
-.contacts-cta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-20); margin-top: auto; } /* кнопки внизу лівої панелі */
+.contacts-cta { display: flex; align-items: center; gap: var(--space-20); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
+.contacts-cta .btn { flex: 1 1 0; min-width: 0; }
 
-/* карта: вбудований OpenStreetMap без ключа; фільтр під палітру; рамка 10u; розтягується на висоту панелі (CLS 0: розмір задано до завантаження iframe) */
+/* карта: вбудований OpenStreetMap без ключа; світла (сіра) з приглушеним зеленим відтінком-накладкою (--color-contacts-map-tint); радіус панелі 10u; розтягується на висоту панелі (CLS 0: розмір задано до завантаження iframe) */
 .contacts-map { position: relative; flex: 1; min-height: var(--size-contacts-map-min-h); overflow: hidden; border-radius: var(--radius-panel); background: var(--color-field-bg-hover); }
+.contacts-map::after { content: ''; position: absolute; inset: 0; background: var(--color-contacts-map-tint); mix-blend-mode: multiply; pointer-events: none; } /* зелений відтінок поверх світлої мапи */
 .contacts-map__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: var(--filter-contacts-map); }
-/* лінійка під картою: «Відкрити на мапі» (2 посилання) + кнопка «Прокласти маршрут» */
-.contacts-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-30); flex-wrap: wrap; }
-.contacts-actions__open { display: flex; align-items: center; gap: var(--space-30); }
-.contacts-actions__label { margin: 0; }
-
 /* посилання без підкреслень: hover/focus — колір (як у футері) */
 .contacts-link { transition: color var(--duration-fast) var(--ease-out); }
 a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-duration: var(--duration-focus); }
 @media (hover: hover) { a.contacts-link:hover { color: var(--color-hover-nav-light); } }
-.contacts-actions .contacts-link { position: relative; }
 
 /* контактні дані: 2 колонки; «Адреса» — на всю ширину */
 .contacts-data { display: grid; grid-template-columns: repeat(var(--columns-contacts-data), minmax(0, 1fr)); gap: var(--space-contacts-item-gap); margin: 0; padding: 0; }
 .contacts-item { position: relative; grid-column: span var(--span-contacts-item); display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; }
 .contacts-item--wide { grid-column: span var(--span-contacts-item-wide); }
-.contacts-item__head { margin: 0; }
+.contacts-item__head { display: flex; align-items: center; gap: var(--space-contacts-icon-gap); margin: 0; }
+.contacts-item__head .icon { --icon-size: var(--size-contacts-icon); }
 .contacts-item__value { margin: 0; overflow-wrap: anywhere; }
 .contacts-item .contacts-link::after { content: ''; position: absolute; inset: 0; } /* клікабельна вся колонка (hit-area) */
 .contacts-item:has(a:focus-visible) a:focus-visible { outline: none; }

@@ -1,5 +1,5 @@
 /* Сторінка «Зворотний зв'язок» (feedback.html): ЄДИНЕ вікно-панель (beige, рамка/радіус як на контактах) у контейнері сторінки (поля 50u, зона header 103u, відступ 20u — як на товарі і контактах).
-   Усередині — форма з двома стовпцями на 12-колонковій решітці: ліворуч 5/12 (заголовок, «Тип звернення», «Контактні дані»), праворуч 7/12 («Ваше повідомлення», згода, «Надіслати» внизу праворуч); між ними тонка вертикальна лінія по центру зазору.
+   Усередині — форма з двома стовпцями на 12-колонковій решітці: ліворуч 6/12 (заголовок, «Тип звернення», «Контактні дані»), праворуч 6/12 («Ваше повідомлення», згода, «Надіслати» внизу праворуч); дві рівні половини, роздільника немає.
    Фон сторінки — візерунок ромбів (правило .page-feedback поруч із .page-product/.page-contacts у product.css). Значення — токени блоку «Зворотний зв'язок» (tokens.css). Поля — components/field.css, плитки теми — components/topic-tile.css, згода — components/check.css. */
 .feedback {
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
@@ -18,8 +18,7 @@
 .feedback-form { display: grid; grid-template-columns: repeat(var(--columns-feedback), minmax(0, 1fr)); column-gap: var(--space-feedback-col-gap); }
 .feedback-col { display: flex; flex-direction: column; gap: var(--space-feedback-block-gap); min-width: 0; }
 .feedback-col--aside { grid-column: span var(--span-feedback-aside); }
-.feedback-col--main { position: relative; grid-column: span var(--span-feedback-main); }
-.feedback-col--main::before { content: ''; position: absolute; top: 0; bottom: 0; left: calc(var(--space-feedback-col-gap) / -2); width: var(--border-hairline); background: var(--color-field-border); } /* роздільник по центру зазору */
+.feedback-col--main { grid-column: span var(--span-feedback-main); }
 
 .feedback-head { display: flex; flex-direction: column; gap: var(--space-15); }
 .feedback-head p { margin: 0; }
@@ -39,7 +38,6 @@
 .feedback-foot .check { grid-area: 1 / 1; justify-self: start; padding-left: 0; }
 .feedback-foot .field__error { grid-area: 2 / 1 / 3 / 3; }
 .feedback-foot__submit { grid-area: 1 / 2; justify-self: end; }
-.feedback-foot .btn[data-submit] { margin: 0; }
 
 .contact-success { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-30); }
 .contact-success__title:focus { outline: none; }

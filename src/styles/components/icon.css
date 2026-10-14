@@ -12,6 +12,9 @@
 .icon--arrow-up-right { -webkit-mask-image: url('/assets/icons/arrow-up-right.svg'); mask-image: url('/assets/icons/arrow-up-right.svg'); } /* прості кнопки (.btn__arrow) */
 .icon--basket { -webkit-mask-image: url('/assets/icons/basket.svg'); mask-image: url('/assets/icons/basket.svg'); }                         /* кнопка «Кошик» у хедері */
 .icon--headset { -webkit-mask-image: url('/assets/icons/headset.svg'); mask-image: url('/assets/icons/headset.svg'); }                     /* кнопка «підказати?» у хедері */
+.icon--pin { -webkit-mask-image: url('/assets/icons/pin.svg'); mask-image: url('/assets/icons/pin.svg'); }                                 /* контакти: адреса */
+.icon--phone { -webkit-mask-image: url('/assets/icons/phone.svg'); mask-image: url('/assets/icons/phone.svg'); }                         /* контакти: телефон */
+.icon--mail { -webkit-mask-image: url('/assets/icons/mail.svg'); mask-image: url('/assets/icons/mail.svg'); }                             /* контакти: e-mail */
 .icon--catalog { -webkit-mask-image: url('/assets/icons/catalog.svg'); mask-image: url('/assets/icons/catalog.svg'); }                   /* пункт «каталог» у хедері */
 .icon--strength { -webkit-mask-image: url('/assets/icons/strength.svg'); mask-image: url('/assets/icons/strength.svg'); }                /* міцність поруч з «42% alc» (товар YC) */
 .icon--bottle-0-5 { --icon-ratio: calc(40 / 24); -webkit-mask-image: url('/assets/icons/bottle-0-5.svg'); mask-image: url('/assets/icons/bottle-0-5.svg'); } /* 0,5 л, 24x40 */

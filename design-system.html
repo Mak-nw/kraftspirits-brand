@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!--@include head-icons-->
-  <!--@include head-fonts-->
+  <!--@include head-fonts price="1"-->
   <!--@include head-age-->
   <title>Дизайн-система</title>
   <link rel="stylesheet" href="/src/styles/main.css">
@@ -13,6 +13,7 @@
   <script type="module" src="/src/js/design-system.js"></script>
 </head>
 <body>
+  <!--@include body-vw-->
   <!--@include components/age-gate-->
   <main class="ds">
     <h1 class="t-hero">Дизайн-система</h1>
@@ -449,6 +450,9 @@
       <div class="demo-panel theme-beige icon-demo">
         <span class="icon icon--arrow-up-right" aria-hidden="true"></span>
         <span class="icon icon--basket" aria-hidden="true"></span>
+        <span class="icon icon--pin" aria-hidden="true"></span>
+        <span class="icon icon--phone" aria-hidden="true"></span>
+        <span class="icon icon--mail" aria-hidden="true"></span>
         <span class="icon icon--headset" aria-hidden="true"></span>
         <span class="icon icon--catalog" aria-hidden="true"></span>
         <span class="icon icon--strength" aria-hidden="true"></span>
@@ -462,7 +466,7 @@
     <section class="ds-section" id="button-states">
       <h2 class="t-h2 ds-section__title">Стани кнопок</h2>
       <p class="ds-note t-body">Єдина система токенів станів кнопок — блок «Кнопки: стани» у <code>src/styles/tokens.css</code>. Схема імені: <code>--btn-&lt;варіант&gt;-&lt;властивість&gt;-&lt;стан&gt;</code>; властивість: <code>bg</code> (заливка) · <code>text</code> · <code>border</code> · <code>icon-filter</code> (стрілки слайдера) · <code>opacity</code> (об’єм, каталог-nav); стан: <code>default</code> · <code>hover</code> · <code>focus</code> (:focus-visible) · <code>active</code> (:active, натиснуто) · <code>disabled</code> (:disabled / aria-disabled="true") + <code>selected</code> лише для перемикачів (aria-expanded, aria-pressed / .is-active, .is-open, :checked). Значення — тільки посилання на наявні токени палітри та <code>--color-hover-*</code>; нових кольорів немає.</p>
-      <p class="ds-note t-body">Прив’язка: варіант (<code>.btn--green</code>, <code>.nav-cell--outline</code>, <code>.arrow-btn</code>, <code>.chip</code> …) виставляє КОНТЕКСТНІ змінні <code>--btn-bg</code> / <code>--btn-text</code> / <code>--btn-border</code> (+ <code>-hover</code>, <code>-focus</code>, <code>-active</code>, <code>-disabled</code>, <code>-selected</code>); база компонента в станах читає лише їх. Тривалості: <code>--btn-transition-duration</code> (0.45s, default ↔ hover), <code>--btn-transition-duration-focus</code> (0.15s, :focus-visible і :active), <code>--btn-transition-duration-base</code> (0.7s, зсув стрілки, zoom мініатюри), крива <code>--btn-transition-ease</code>.</p>
+      <p class="ds-note t-body">Прив’язка: варіант (<code>.btn--green</code>, <code>.nav-cell--outline</code>, <code>.arrow-btn</code>, <code>.chip</code> …) виставляє КОНТЕКСТНІ змінні <code>--btn-bg</code> / <code>--btn-text</code> / <code>--btn-border</code> (+ <code>-hover</code>, <code>-focus</code>, <code>-active</code>, <code>-disabled</code>, <code>-selected</code>); база компонента в станах читає лише їх. Тривалості: <code>--btn-transition-duration</code> (0.45s, default ↔ hover), <code>--btn-transition-duration-focus</code> (0.15s, :focus-visible і :active), <code>--btn-transition-duration-base</code> (0.7s, зсув стрілки, zoom мініатюри), крива <code>--btn-transition-ease</code>. Політика переходів: hover/вихід — <code>--btn-transition-duration</code> (0.45s), <code>:focus-visible</code> і <code>:active</code> — <code>--btn-transition-duration-focus</code> (0.15s) для ВСІХ контролів, що змінюють вигляд у фокусі (select, product-thumb, product-volume, check, chip, arrow-btn, nav, логотипи хедера).</p>
       <p class="ds-note t-body">Правила станів: <b>focus = hover</b> (клавіатура показує той самий вигляд; відрізняється коротшим переходом і кільцем); <b>active</b> = hover, затемнений на 8% (<code>color-mix(... var(--btn-active-mix) ..., var(--color-black))</code>; для <code>.btn</code> додатково scale(<code>--btn-active-scale</code> = 0.985), перехід 0.15s); <b>disabled</b> = default × <code>--btn-disabled-opacity</code> (нині 0.4 = існуюче значення проєкту), <code>cursor: not-allowed</code>, hover/focus/active без змін, стрілка не зсувається; нативний <code>:disabled</code> додатково <code>pointer-events: none</code> і не фокусується (кільця немає), <code>aria-disabled</code> лишається клікабельним. Іконка кнопки (arrow-up-right) = <code>currentColor</code> = <code>--btn-&lt;варіант&gt;-text-&lt;стан&gt;</code>. Фокус-кільце: <code>--btn-focus-ring-width</code> / <code>-offset</code> (= глобальне <code>:focus-visible</code>, <code>--focus-ring-*</code>); колір — <code>-color-auto</code> (currentColor контексту), <code>-color-on-dark</code> (beige: пілюля хедера), <code>-color-on-light</code> (green: перемикач check).</p>
       <p class="demo-label t-kicker">Матриця «варіант × стан» — кнопки .btn (реальні інстанси; hover / focus / active змушено класами-імітаторами .is-hover / .is-focus / .is-active — вони читають ті самі контекстні змінні, що й справжні псевдокласи; disabled — реальний атрибут)</p>
       <div class="state-matrix">
@@ -947,7 +951,7 @@
 
     <section class="ds-section" id="under-construction">
       <h2 class="t-h2 ds-section__title">Сторінка в розробці / 404</h2>
-      <p class="ds-note t-body">Заглушка для ще не створених сторінок і для 404.html: одна секція partials/sections/under-construction (CSS src/styles/under-construction.css). Параметри: page (необов'язковий кікер з назвою сторінки), title (типово «Упс.. Сторінка в розробці»), text; дві кнопки btn--green «На головну» (index.html) і «До каталогу» (catalog.html). Сторінка = header + main.under-construction-page + footer (тло main — beige, зона header 103u зелена, як у стані «Товар не знайдено»); секція по центру, min-height = 100svh − зона header, футер нижче. Без data-reveal. Окремі HTML у корені: about, faq, cart, offer; 404.html — той самий partial з title «Упс.. Сторінка не знайдена» і &lt;base href="%BASE_URL%"&gt; (шляхи працюють з будь-якої глибини URL). Після створення справжньої сторінки заглушку замінити (див. README).</p>
+      <p class="ds-note t-body">Заглушка для ще не створених сторінок і для 404.html: одна секція partials/sections/under-construction (CSS src/styles/under-construction.css). Параметри: page (необов'язковий кікер з назвою сторінки), id (необов'язковий якір секції; offer.html: id="rules" → offer.html#rules), title (типово «Упс.. Сторінка в розробці»), text; дві кнопки btn--green «На головну» (index.html) і «До каталогу» (catalog.html). Сторінка = header + main.under-construction-page + footer (тло main — beige, зона header 103u зелена, як у стані «Товар не знайдено»); секція по центру, min-height = 100svh − зона header, футер нижче. Без data-reveal. Окремі HTML у корені: about, faq, cart, offer; 404.html — той самий partial з title «Упс.. Сторінка не знайдена» і &lt;base href="%BASE_URL%"&gt; (шляхи працюють з будь-якої глибини URL). Після створення справжньої сторінки заглушку замінити (див. README).</p>
       <div class="demo-panel theme-beige ds-uc-demo">
         <!--@include sections/under-construction page="Про дім"-->
       </div>
@@ -1014,9 +1018,9 @@
 
     <section class="ds-section" id="contacts-components">
       <h2 class="t-h2 ds-section__title">Контакти</h2>
-      <p class="ds-note t-body">Сторінка <span class="ds-meta">contacts.html</span> («Контакти»): сітка 12 колонок у контейнері товару (поля 50u, відступ 20u, зона header 103u), зазор 5u, панелі beige, радіус 10u, однакової висоти. Ліворуч 5 колонок — контактна інформація (Адреса на всю ширину; Телефон, E-mail, Екскурсії, Бочкова торгівля у 2 колонки; значення клікабельні tel:/mailto:/<span class="ds-meta">feedback.html?topic=…</span>) і внизу кнопки «Написати нам» (<span class="ds-meta">btn--green</span> → feedback.html) та «Замовити екскурсію» (<span class="ds-meta">btn--outline</span> → ?topic=excursion); праворуч 7 колонок — мапа (OSM-iframe з фільтром <span class="ds-meta">--filter-contacts-map</span>, розтягується на висоту панелі), під нею «Відкрити на мапі» + «Прокласти маршрут». Фон — візерунок ромбів (<span class="ds-meta">.page-contacts</span>, правило спільне з <span class="ds-meta">.page-product</span> і <span class="ds-meta">.page-feedback</span>). Дані — <span class="ds-meta">src/data/contacts.js</span>. Старі посилання <span class="ds-meta">contacts.html?topic=…#form</span> перенаправляються на feedback.html (inline-скрипт у head).</p>
+      <p class="ds-note t-body">Сторінка <span class="ds-meta">contacts.html</span> («Контакти»): сітка 12 колонок у контейнері товару (поля 50u, відступ 20u, зона header 103u), зазор 5u, панелі beige, радіус 10u, однакової висоти. Ліворуч 5 колонок — контактна інформація (Адреса на всю ширину; Телефон, E-mail, Бочкова торгівля у 2 колонки; перед заголовками Адреса/Телефон/E-mail — іконки <span class="ds-meta">icon--pin|phone|mail</span> (розмір <span class="ds-meta">--size-contacts-icon</span>); значення клікабельні tel:/mailto:/<span class="ds-meta">feedback.html?topic=…</span>) і внизу кнопки «Написати нам» (<span class="ds-meta">btn--green</span> → feedback.html) та «Замовити екскурсію» (<span class="ds-meta">btn--outline</span> → ?topic=excursion); праворуч 7 колонок — мапа без відступів і рамки (сама мапа = блок з радіусом панелі; OSM-iframe зі світлим фільтром <span class="ds-meta">--filter-contacts-map</span> і приглушеним зеленим відтінком <span class="ds-meta">--color-contacts-map-tint</span> (multiply), розтягується на висоту панелі); рядка посилань під мапою немає. Кнопки лівої панелі (<span class="ds-meta">btn--block</span>) ділять усю її ширину порівну. Фон — візерунок ромбів (<span class="ds-meta">.page-contacts</span>, правило спільне з <span class="ds-meta">.page-product</span> і <span class="ds-meta">.page-feedback</span>). Дані — <span class="ds-meta">src/data/contacts.js</span>. Старі посилання <span class="ds-meta">contacts.html?topic=…#form</span> перенаправляються на feedback.html (inline-скрипт у head).</p>
       <p class="demo-label t-kicker">Поле форми (.field > .field__label + .field__control + .field__error): спокій, значення, помилка (.is-invalid: колір --color-field-error + ромб-маркер, aria-invalid)</p>
-      <div class="demo-panel theme-beige">
+      <div class="demo-panel demo-panel--start theme-beige">
         <div class="field"><label class="field__label" for="ds-f1">Ім'я</label><input class="field__control" id="ds-f1" type="text" placeholder="Як до вас звертатись"><p class="field__error"><span></span></p></div>
         <div class="field is-invalid"><label class="field__label" for="ds-f2">E-mail</label><input class="field__control" id="ds-f2" type="email" value="name@" aria-invalid="true"><p class="field__error"><span>Перевірте адресу e-mail</span></p></div>
       </div>
@@ -1037,8 +1041,8 @@
 
     <section class="ds-section" id="feedback-components">
       <h2 class="t-h2 ds-section__title">Зворотний зв'язок</h2>
-      <p class="ds-note t-body">Сторінка <span class="ds-meta">feedback.html</span>: ЄДИНЕ вікно (<span class="ds-meta">.feedback-window#form</span>: beige, рамка 5u кольору панелі, радіус 10u, відступ 50u) із двома стовпцями на 12 колонках: ліворуч 5/12 — заголовок «Зворотний зв'язок», підзаголовок, «Тип звернення» (radiogroup плиток), «Контактні дані» (Ім'я; Телефон + E-mail); праворуч 7/12 — «Ваше повідомлення» (textarea на всю висоту, мін. <span class="ds-meta">--size-feedback-message-min-h</span> 260u), згода ліворуч і «Надіслати» (<span class="ds-meta">btn--green</span>) у правому нижньому куті вікна. Роздільник — вертикальна лінія по центру зазору 50u. Стан «успіх» — у тій самій клітинці сітки (fade), висота вікна не стрибає. Валідація: тема, ім'я, повідомлення, згода обов'язкові; телефон або e-mail — хоча б одне; помилки під полем (колір <span class="ds-meta">--color-field-error</span> + ромб-маркер, <span class="ds-meta">aria-invalid</span>), фокус на першому невалідному. Токени — блок «Зворотний зв'язок» у tokens.css; стилі <span class="ds-meta">feedback.css</span>; логіка <span class="ds-meta">contact-form.js</span>. Схема: <span class="ds-meta">feedback.html?topic=excursion|barrel|order|horeca|consult|other</span> (+ <span class="ds-meta">&amp;size=200|50</span> для barrel).</p>
-      <p class="demo-label t-kicker">Тип звернення: .topic-group[role="radiogroup"] > .topic-tile[role="radio"][aria-checked]. Стани: default, selected (заливка green, текст beige), hover/focus-visible/active — токени --btn-choice-*. Клавіатура: Tab — вибрана плитка (або перша), стрілки рухають і вибирають, Space/Enter вибирають, Home/End</p>
+      <p class="ds-note t-body">Сторінка <span class="ds-meta">feedback.html</span>: ЄДИНЕ вікно (<span class="ds-meta">.feedback-window#form</span>: beige, рамка 5u кольору панелі, радіус 10u, відступ 50u) із двома стовпцями на 12 колонках: ліворуч 6/12 — заголовок «Зворотний зв'язок», підзаголовок, «Тип звернення» (radiogroup плиток), «Контактні дані» (Ім'я; Телефон + E-mail); праворуч 6/12 — «Ваше повідомлення» (textarea на всю висоту, мін. <span class="ds-meta">--size-feedback-message-min-h</span> 260u), згода ліворуч і «Надіслати» (<span class="ds-meta">btn--green</span>) у правому нижньому куті вікна. Дві рівні половини, роздільника немає. Стан «успіх» — у тій самій клітинці сітки (fade), висота вікна не стрибає. Валідація: тема, ім'я, повідомлення, згода обов'язкові; телефон або e-mail — хоча б одне; помилки під полем (колір <span class="ds-meta">--color-field-error</span> + ромб-маркер, <span class="ds-meta">aria-invalid</span>), фокус на першому невалідному. Токени — блок «Зворотний зв'язок» у tokens.css; стилі <span class="ds-meta">feedback.css</span>; логіка <span class="ds-meta">contact-form.js</span>. Схема: <span class="ds-meta">feedback.html?topic=excursion|barrel|order|horeca|consult|other</span> (+ <span class="ds-meta">&amp;size=200|50</span> для barrel).</p>
+      <p class="demo-label t-kicker">Тип звернення: .topic-group[role="radiogroup"] > .topic-tile[role="radio"][aria-checked]. Стани: default (як .btn--green: --btn-green-bg-default, текст --btn-green-text-default), hover (--btn-green-bg-hover), selected (--btn-green-bg-active), hover/focus-visible/active — токени --btn-choice-*. Клавіатура: Tab — вибрана плитка (або перша), стрілки рухають і вибирають, Space/Enter вибирають, Home/End</p>
       <div class="demo-panel theme-beige">
         <div class="field">
           <span class="field__label" id="ds-topic-label">Тип звернення</span>
@@ -1090,7 +1094,7 @@
         <!--@include components/process-step ill="fill" title="3 · Розлив" value="40%" text="Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л"-->
       </div>
 
-      <p class="demo-label t-kicker">profit-panel (size, count, cost, mod: profit-panel--lg | --sm) + illustration-barrel: лічильник data-count-to 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; значення в DOM стартово); ряд пляшок — декоративний (bottle-0-7, 10 шт. + «+ ще»)</p>
+      <p class="demo-label t-kicker">profit-panel (size, count, cost, mod: profit-panel--lg | --sm) + illustration-barrel: лічильник data-count-to 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; у DOM — фінальне значення; на barrels.html до старту число приховане opacity 0 (без мигання), reduced-motion — одразу фінальне); ряд пляшок — декоративний (bottle-0-7, 10 шт. + «+ ще»)</p>
       <div class="demo-panel theme-beige">
         <!--@include components/profit-panel size="200 L" mod=" profit-panel--lg" count="383" cost="€ 15,66"-->
       </div>
@@ -1168,7 +1172,7 @@
       <div class="logo-grid">
         <div class="logo-cell logo-cell--dark"><img src="/assets/img/yasnocraft-logo-no-mountains.webp" alt=""><span class="ds-meta">YasnoCraft_logo_no_mountains · 194:1384</span></div>
         <div class="logo-cell logo-cell--dark"><img src="/assets/img/bazylsprings-logo.webp" alt=""><span class="ds-meta">Bazylsprings · 194:1386</span></div>
-        <div class="logo-cell logo-cell--light"><img src="/assets/img/yasnocraft-logo-round-colour.png" alt=""><span class="ds-meta">round colour · 194:1393</span></div>
+        <div class="logo-cell logo-cell--light"><img src="/assets/img/yasnocraft-logo-round-colour.webp" alt=""><span class="ds-meta">round colour · 194:1393</span></div>
         <div class="logo-cell logo-cell--dark"><img src="/assets/img/yasnocraft-logo-vector.svg" alt=""><span class="ds-meta">YasnoCraft_logo_vector · 194:1347</span></div>
         <div class="logo-cell logo-cell--teal"><img src="/assets/img/bazylsprings-logo-vector.svg" alt=""><span class="ds-meta">Bazylsprings_logo_vector · 194:1358</span></div>
       </div>

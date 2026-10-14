@@ -31,9 +31,9 @@
   --color-text-on-dark: var(--color-light);  /* семантичний аліас, вузла немає (= --color-light) */
 
   /* ---------- Шрифти ---------- */
-  --font-family-serif: 'EB Garamond', Georgia, serif;     /* заголовки, ціни-назви, акордеон: 194:1369, 194:1370, 194:1278 */
-  --font-family-sans: 'Manrope', system-ui, sans-serif;   /* навігація, кнопки, текст, ціна: 194:1376, 194:1373, 194:1279 */
-  --font-family-display: 'Cormorant', Georgia, serif;     /* футер-wordmark: 194:1236 (Cormorant SemiBold) */
+  --font-family-serif: 'EB Garamond', 'EB Garamond Fallback', Georgia, serif;     /* заголовки, ціни-назви, акордеон: 194:1369, 194:1370, 194:1278 */
+  --font-family-sans: 'Manrope', 'Manrope Fallback', system-ui, sans-serif;   /* навігація, кнопки, текст, ціна: 194:1376, 194:1373, 194:1279 */
+  --font-family-display: 'Cormorant', 'Cormorant Fallback', Georgia, serif;     /* футер-wordmark: 194:1236 (Cormorant SemiBold) */
 
   --fw-regular: 400;   /* 194:1282 (stat number), 194:1332 (price) */
   --fw-medium: 500;    /* 194:1279 (body), 194:1350 (split text) */
@@ -200,6 +200,7 @@
   --duration-liquid: 1.4s;          /* семантичний токен, вузла Figma немає: підйом/спад «рідини» в картці товару на hover */
   --ease-liquid: cubic-bezier(0.4, 0.1, 0.25, 1);  /* семантичний токен, вузла Figma немає: м'якший (менш різкий старт) підйом/спад «рідини»; --ease-out для неї надто різкий */
   --duration-wave: 4s;            /* семантичний токен, вузла Figma немає: період дрейфу хвилі «рідини» (нескінченний цикл, поки hover) */
+  --duration-count-failsafe: 4s;    /* семантичний токен, вузла Figma немає: страховка лічильників barrels — через стільки число з'являється саме, якщо JS не спрацював */
   --liquid-wave-h: calc(24 * var(--u));  /* семантичний токен, вузла Figma немає: висота хвилястого краю «рідини» (маска public/assets/img/liquid-wave.svg) */
   --opacity-liquid-back: 0.45;      /* семантичний токен, вузла Figma немає: прозорість заднього шару хвилі */
   --liquid-fill-level: 60%;         /* семантичний токен, вузла Figma немає (рішення замовника): рівень «рідини» на hover — заливка займає 60% висоти картки знизу (верх тіла заливки на 40% від верху; хвиля над ним на --liquid-wave-h) */
@@ -713,6 +714,7 @@
 :root {
   --z-age-gate: 1000;                                           /* шар оверлея: вище хедера (--z-header 100) і будь-якого dropdown */
   --color-age-overlay: var(--color-beige);                      /* фон оверлея (світлий, без темного скрима) */
+  --color-age-gutter: color-mix(in srgb, var(--color-age-overlay) 98%, var(--color-green)); /* семантичний токен, вузла Figma немає: колір порожньої смуги scrollbar-gutter під воротами (classic scrollbar) = середній тон візерунка воріт (beige + 2% green, як у home-pattern-diamond.svg; ±1/255); смуга не вміє малювати картинку, лише колір */
   --color-age-card: var(--color-light);                         /* картка світліша за фон оверлея */
   --color-age-border: color-mix(in srgb, var(--color-green) 35%, var(--color-beige)); /* тонка зелена рамка картки та індикатора: темніший беж */
   --color-age-legal: color-mix(in srgb, var(--color-green) 75%, var(--color-light));  /* приглушений юридичний текст; контраст на --color-light ≈ 5.2:1 */
@@ -748,13 +750,16 @@
   --space-contacts-pad: var(--space-50);                        /* внутрішній відступ панелей і проміжок між блоками всередині */
   --size-contacts-panel-min-h: var(--size-product-frame-h);     /* мінімум висоти панелей = фрейм фото товару (100svh − 123u, не менше 700u): панелі заповнюють екран, на низьких вікнах сторінка скролиться */
   --size-contacts-map-min-h: calc(360 * var(--u));              /* мінімум висоти карти; карта розтягується на висоту рядка (панелі однакової висоти) */
-  --filter-contacts-map: grayscale(0.85) sepia(0.5) hue-rotate(40deg) saturate(0.8) contrast(0.95); /* фільтр iframe мапи OSM під палітру сайту (зеленувато-бежевий тон) */
+  --filter-contacts-map: grayscale(1) contrast(0.75) brightness(1.25);  /* iframe мапи OSM: світла нейтральна сіра (без жовто-зеленого sepia/hue-rotate) */
+  --color-contacts-map-tint: color-mix(in srgb, var(--color-green) 18%, transparent); /* приглушений зелений відтінок поверх мапи (multiply) */
   --columns-contacts-data: 2;                                   /* сітка контактних даних у лівій панелі: 2 колонки */
   --span-contacts-item: 1;                                      /* звичайний блок (Телефон, E-mail, Екскурсії, Бочкова торгівля) */
   --span-contacts-item-wide: 2;                                 /* блок на всю ширину (Адреса) */
+  --size-contacts-icon: calc(24 * var(--u));                     /* іконка перед заголовком контактного рядка (адреса/телефон/e-mail) */
+  --space-contacts-icon-gap: var(--space-10);                   /* іконка → заголовок */
   --space-contacts-item-gap: var(--space-30);                   /* проміжок між колонками/рядками контактних даних */
-  --color-field-bg: var(--color-light);                         /* поле форми на бежевій панелі: світліше за панель */
-  --color-field-bg-hover: var(--color-hover-acc-product);       /* hover/focus/відкрито: теплий беж (#E4E3D8), темніший за поле, світліший за панель */
+  --color-field-bg: var(--color-hover-acc-product);              /* поле форми на бежевій панелі: трохи світліше за панель (#E4E3D8), менш біле, ніж раніше (#EAE9E8) */
+  --color-field-bg-hover: color-mix(in srgb, var(--color-hover-acc-product) 50%, var(--color-beige)); /* hover/focus/відкрито: на півкроку до панелі (≈#E0DFD3), темніший за поле */
   --color-field-border: color-mix(in srgb, var(--color-green) 60%, var(--color-light)); /* рамка поля: контраст ≥3:1 до поля (WCAG 1.4.11) */
   --color-field-border-hover: var(--color-green);               /* hover/focus рамки */
   --color-field-placeholder: color-mix(in srgb, var(--color-green) 75%, var(--color-light)); /* плейсхолдер: контраст ≥4.5:1 на --color-field-bg */
@@ -766,36 +771,36 @@
 }
 
 /* ===================================================================
-   Зворотний зв'язок (feedback.html): ЄДИНЕ вікно (одна beige-панель) із двома стовпцями: ліворуч 5/12 — заголовок, тип звернення (radiogroup плиток),
-   контактні дані; праворуч 7/12 — повідомлення, згода й «Надіслати» внизу праворуч. Роздільник — тонка вертикальна лінія посередині зазору.
+   Зворотний зв'язок (feedback.html): ЄДИНЕ вікно (одна beige-панель) із двома стовпцями: ліворуч 6/12 — заголовок, тип звернення (radiogroup плиток),
+   контактні дані; праворуч 6/12 — повідомлення, згода й «Надіслати» внизу праворуч (дві рівні половини, без роздільника).
    Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу. Стилі: src/styles/feedback.css, components/topic-tile.css, components/field.css, components/check.css.
    =================================================================== */
 :root {
   --columns-feedback: 12;                                       /* сітка вікна: 12 колонок */
-  --span-feedback-aside: 5;                                     /* лівий стовпець (тип звернення + контакти) ≈ 5/12 */
-  --span-feedback-main: 7;                                      /* правий стовпець (повідомлення) ≈ 7/12 */
+  --span-feedback-aside: 6;                                     /* лівий стовпець (тип звернення + контакти) = 6/12 */
+  --span-feedback-main: 6;                                      /* правий стовпець (повідомлення) = 6/12: дві рівні половини */
   --space-feedback-pad: var(--space-contacts-pad);              /* внутрішній відступ вікна 50u */
-  --space-feedback-col-gap: var(--space-50);                    /* зазор між стовпцями; лінія-роздільник — по центру зазору */
+  --space-feedback-col-gap: var(--space-50);                    /* зазор між стовпцями (роздільника немає) */
   --size-feedback-window-min-h: var(--size-contacts-panel-min-h); /* мінімум висоти вікна = фрейм екрана (як панелі контактів) */
   --size-feedback-message-min-h: calc(260 * var(--u));          /* мінімум висоти поля «Ваше повідомлення» */
   --space-feedback-block-gap: var(--space-30);                  /* проміжок між блоками стовпця («Тип звернення», «Контактні дані») */
   --space-topic-gap: var(--space-10);                           /* проміжок між плитками теми */
   --size-topic-tile-min-h: var(--size-btn-h);                   /* мінімальна висота плитки теми = висота кнопки */
 
-  /* плитка-радіо «тип звернення» (.topic-tile): стани за системою select--field (default/hover/focus) та .btn--green (selected); нових кольорів немає */
-  --btn-choice-bg-default:             var(--btn-select-field-bg-default);
-  --btn-choice-bg-hover:               var(--btn-select-field-bg-hover);
-  --btn-choice-bg-focus:               var(--btn-select-field-bg-focus);
-  --btn-choice-bg-active:              color-mix(in srgb, var(--btn-choice-bg-hover) var(--btn-active-mix), var(--color-black));
-  --btn-choice-bg-selected:            var(--btn-green-bg-default);
-  --btn-choice-bg-selected-hover:      var(--btn-green-bg-hover);
+  /* плитка-радіо «тип звернення» (.topic-tile): кольори = токени темнозеленої кнопки (.btn--green): default = bg-default, hover = bg-hover, selected = bg-active (темніший за hover, відрізняється від default); текст/рамка — відповідні --btn-green-* */
+  --btn-choice-bg-default:             var(--btn-green-bg-default);
+  --btn-choice-bg-hover:               var(--btn-green-bg-hover);
+  --btn-choice-bg-focus:               var(--btn-green-bg-focus);
+  --btn-choice-bg-active:              var(--btn-green-bg-active);
+  --btn-choice-bg-selected:            var(--btn-green-bg-active);
+  --btn-choice-bg-selected-hover:      var(--btn-green-bg-active);
   --btn-choice-bg-selected-active:     var(--btn-green-bg-active);
-  --btn-choice-text-default:           var(--color-green);
-  --btn-choice-text-selected:          var(--btn-green-text-default);
-  --btn-choice-border-default:         var(--btn-select-field-border-default);
-  --btn-choice-border-hover:           var(--btn-select-field-border-hover);
-  --btn-choice-border-focus:           var(--btn-select-field-border-focus);
-  --btn-choice-border-selected:        var(--btn-green-border-default);
+  --btn-choice-text-default:           var(--btn-green-text-default);
+  --btn-choice-text-selected:          var(--btn-green-text-active);
+  --btn-choice-border-default:         var(--btn-green-border-default);
+  --btn-choice-border-hover:           var(--btn-green-border-hover);
+  --btn-choice-border-focus:           var(--btn-green-border-focus);
+  --btn-choice-border-selected:        var(--btn-green-border-active);
   --btn-choice-ring-color:             var(--btn-focus-ring-color-on-light);
 }
 
