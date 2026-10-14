@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
 import { barrels, barrelsView } from './src/data/barrels.js';
 
@@ -65,6 +66,7 @@ const pages = Object.fromEntries(
 // base: BUILD_BASE лише для збірки й `vite preview` (GitHub Pages); dev — корінь
 export default defineConfig(({ command, isPreview }) => ({
   base: command === 'build' || isPreview ? BUILD_BASE : '/',
-  plugins: [htmlPartials()],
+  // reviewMode (design-machine, модуль 05) — ЛИШЕ dev-сервер: коментарі/сітка/інспектори; дані в ../review (поза репозиторієм). У збірці/preview плагіна немає.
+  plugins: [htmlPartials(), ...(command === 'serve' && !isPreview ? [reviewMode({ dir: resolve(root, '../review') })] : [])],
   build: { rollupOptions: { input: pages } },
 }));

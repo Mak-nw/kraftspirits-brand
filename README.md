@@ -181,3 +181,45 @@ npm run preview  # http://localhost:5190
 - **Ілюстрації:** `partials/components/illustration-*.html` (SVG: `currentColor`, штрих `--svg-stroke` 1.5, без градієнтів). Анімації лише `transform`/`opacity`/`stroke-dashoffset`; `prefers-reduced-motion` — статичні кадри; без JS анімації грають завжди.
 - **Заміна hero:** підмінити файл `public/assets/img/barrels-hero.webp` (відношення ≈16:9, текст по центру зверху — небо/верх кадру має бути вільним).
 - **Навігація:** лого Bazylsprings у хедері → `barrels.html` (YasnoCraft → `index.html`), пункти «Ф'ючерсні бочки», «Контакти» і «Зворотний зв'язок» у випадному меню (в футері — колонка «Меню»). «Замовити» → `feedback.html?topic=barrel&size=200|50` (`contact-form.js` підставляє «Цікавить бочка 200 L» у порожнє повідомлення).
+
+## Інструменти розробки (design-machine)
+
+Набір із `/Users/admin/Documents/design-machine/` (модулі 05 і 07; таскборд 06 уже був у старішій версії: `site_old/taskboard/`, порт 5180 — не чіпаємо, у новій версії коду нічого корисного, окрім назв ролей, яких у старій навіть більше). Усе нижче — **лише для розробки**: у `dist`/на GitHub Pages нічого з цього немає.
+
+| Що | Де лежить | Адреса / запуск |
+|---|---|---|
+| Сайт (dev) | `site_brand/` | http://localhost:5200 (порт задає оркестратор: `npx vite --port 5200`; скрипт `npm run dev` має 5190 — це порт чужого проєкту OSTA, не використовувати) |
+| Review-оверлей (модуль 05) | `dev-tools/review/*`, `vite-plugin-review.js`; підключено в `vite.config.js` лише для `command === 'serve'` | вмикається разом із dev-сервером, кнопки внизу праворуч |
+| CLI коментарів | `../review/rv.py`, `../review/watch.py` | `python3 ../review/rv.py list` |
+| Форма питань до замовника (модуль 07) | `../questions/` (server.py, qa.py, index.html) | http://localhost:5192 |
+| Таскборд | `../site_old/taskboard/` | http://localhost:5180 |
+
+### Review-оверлей: клавіші
+
+`C` коментар (тягни область або клікни елемент → текст → «Зберегти»; скриншот зберігається), `Esc` вихід, `G` сітка, `S` відступи (зелений padding, помаранчевий gap; margin не показується), `T` типографіка, `K` кольори. Клавіші не спрацьовують у полях введення (форма feedback), з Ctrl/Cmd/Alt і поки показані вікові ворота (оверлей до закриття воріт прихований).
+
+Адаптовано під цей проєкт:
+- **Сітка (G)** береться з реальної розкладки: масштаб `--u`, ширина сторінки `--size-product-page-w` (1920u по центру), поле `--space-product-page-x` (50u), зазор `--space-product-col-gap` (5u). На товарі (`.product`) і контактах (`.contacts`) малюються фактичні колонки з `grid-template-columns` (товар: 905u + 910u; контакти: 12), на інших сторінках 12 колонок за токенами. Підпис: колонка, зазор, поле і ширина сторінки в u і px.
+- **Текст (T)**: підпис `розмір/інтерліньяж px (u) · вага · трекінг · клас t-* · шрифт` (EB Garamond / Manrope / Cormorant); клас береться за шаблоном `t-*` з `base.css`.
+- **Колір (K)**: ім'я токена — базовий `--color-*` (green, teal, gold, light, beige…) → `--color-hover-*` → контекстні `--btn-*`; серед однакових береться перший за порядком у `tokens.css`.
+- `Esc` в режимі коментаря/поповера/списку перехоплюється оверлеєм (меню хедера не закривається випадково); поза цим Esc іде в сайт.
+- z-index оверлея 900: вище fixed-хедера (`--z-header` 100), нижче воріт (`--z-age-gate` 1000). Кнопки внизу праворуч приглушені (opacity .55), на наведення повні.
+- Скриншоти коментарів через `html2canvas` (devDependency; у збірку не потрапляє).
+
+### Дані й правила
+
+- Коментарі замовника: `../review/comments.json`, скриншоти `../review/shots/`. Папка поза git-репозиторієм сайту (`git status` у `site_brand` її не бачить), на GitHub не потрапляє. **Коментарі недоторканні:** видаляти дозволено лише власні тестові з маркером `TEMP-TEST` (`python3 ../review/rv.py rm <id>`); `done` лише після перевірки.
+- Питання до замовника — **лише через форму** (http://localhost:5192): `python3 ../questions/qa.py ask "Питання?" --header "Коротко" --option "Назва::Опис" --option "Інша::Опис" --recommend 1 --context "Чому питаю"`; відповіді: `python3 ../questions/qa.py answers [--open]`; дані `../questions/questions.json`, `../questions/answers.json`. Пишемо людською мовою, без жаргону, 2–4 варіанти з описом, нічого не вигадуємо. Відповіді на реальні питання не імітуємо (для тестів лише питання з `TEMP-TEST`, потім `qa.py rm <id>`). У чаті після змін у формі завжди рядок: «Питання в формі: N відкритих» (`qa.py list`, відкриті = без відповіді).
+- Порти: сайт 5200, форма питань 5192, таскборд 5180; **5190 (OSTA) і 5173 не чіпати**.
+
+### Запуск і зупинка (лише за PID, ніколи pkill/killall)
+
+```
+python3 questions/server.py &      # з папки kraftspirits; PID записаний у questions/server.pid
+kill $(cat questions/server.pid)   # зупинка форми питань
+cd site_brand && npx vite --port 5200 --strictPort   # dev із оверлеєм; зупинка: kill <PID> (lsof -nP -iTCP:5200 -sTCP:LISTEN)
+```
+
+### Перевірка «нуль байтів у збірці»
+
+`BASE_PATH=/kraftspirits-brand/ npx vite build` → `grep -ril "__review\|html2canvas\|dev-tools/review\|review-host" dist` має дати 0 файлів.
