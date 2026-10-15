@@ -68,6 +68,7 @@ export function initEdit(deps) {
 
   const S = { on: false, el: null, prop: 'padding-top', all: false, scopeAll: false, view: 'after', side: 'right', drag: null, editing: null, ops: [], ptr: 0, changes: new Map(), sent: 0, hover: null, hint: null };
   let handles = [];
+  const shadowActive = () => root.getRootNode().activeElement;
 
   // ---------- DOM ----------
   const wrap = mk('div', { class: 'ed', hidden: true });
@@ -699,11 +700,12 @@ export function initEdit(deps) {
     if (!commit || next === ed.orig.replace(/\s+/g, ' ').trim()) {
       n.textContent = ed.orig;
       if (m && m.cur.k === m.orig.k) dropRecord(m);
-      renderChanges(); draw(); return;
+      renderChanges(); draw(); persistSoon(); maybeRelease(); return;
     }
     n.textContent = next;
     const before = ed.orig;
     pushOp({ specs: [ed.spec], keys: [ed.spec.key], doIt() { n.textContent = next; }, undoIt() { n.textContent = before; } });
+    persistSoon(); maybeRelease();
   }
 
   // ---------- вибір, навігація ----------
@@ -850,7 +852,7 @@ export function initEdit(deps) {
       onWin('mouseup', () => {
         off.forEach((f) => f());
         document.body.style.userSelect = '';
-        const last = S.drag.last; S.drag = null; tip.style.display = 'none';
+        const last = S.drag.last; S.drag = null; tip.style.display = 'none'; setTimeout(maybeRelease, 0);
         if (last == null) { if (isSpan) dropIfNoop(spanSpec); else g.keys.forEach((k) => { const m = S.changes.get(k); if (m && m.cur.k === m.orig.k) dropRecord(m); }); return; }
         if (isSpan) { const cssv = `span ${last}`; pushOp({ specs: [spanSpec], keys: [spanSpec.key], css: cssv, doIt() { n.style.setProperty('grid-column-end', cssv); }, undoIt() { spanSpec.put(spanBefore); } }); return; }
         g.finish(last); checkEffect(n, h.prop, box0);
@@ -952,21 +954,45 @@ export function initEdit(deps) {
     return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button><button data-a="reset" title="Повернути вихідне">↺</button></div><div class="ed-val"><select data-a="pick" title="Вибрати токен зі шкали"><option value="">значення зі шкали (${sc.length})…</option>${sc.map((e) => `<option value="${esc(e.name)}">${esc(e.name)} · ${r1(e.px / unit())}u</option>`).join('')}</select></div>${dn ? `<div class="ed-meta warn">розподіл вільного місця (${esc(dn.jcProp)}: ${esc(dn.jc)}) — не gap. Фактична відстань між дітьми: ${fmtLen(dn.dist)} · ${fmtU(dn.dist)}; ${esc(dn.gapProp)} зараз ${fmtLen(dn.gap)} (мінімум)</div>` : ''}<div class="ed-meta">крок шкали ${i >= 0 ? i + 1 : '—'}/${sc.length}${i >= 0 && sc[i].aliases.length ? ' · також ' + esc(sc[i].aliases.slice(0, 2).join(', ')) : ''} · ↑/→ більше, ↓/← менше, Shift ×${CFG.shiftSteps}, Alt усі боки</div>`;
   }
   function renderInfo() {
-    const u = unit();
+    const u = unit(), keepTop = pInfo.scrollTop, ae = shadowActive(), aeKey = ae && /^(INPUT|SELECT)$/.test(ae.tagName) && pInfo.contains(ae) ? ['data-a', 'data-lay', 'data-p'].map((k) => [k, ae.getAttribute(k)]).find((x) => x[1] != null) : null;
     pHead.innerHTML = `<b>Едіт</b><span class="ed-sub">${innerWidth}px · 1u=${r2(u)}px${S.view === 'before' ? ' · ДО' : ''}</span><span class="ed-sp"></span><button data-a="flip" title="Панель ліворуч/праворуч">⇄</button><button data-a="close" title="Закрити (E)">×</button>`;
     const chips = GROUPS.map(([g, ps]) => `<div class="ed-grp"><em>${g}</em>${ps.map((p) => `<button class="ed-chip${S.prop === p ? ' on' : ''}" data-p="${p}"${S.el && !available(p) ? ' disabled' : ''}>${esc(PROPS[p].chip)}</button>`).join('')}</div>`).join('');
     const sc = S.el ? scopeFor(S.el, PROPS[S.prop].type, S.prop) : null;
     pInfo.innerHTML = `${crumbs()}${S.el ? `${hintHtml()}${chips}<div class="ed-tog"><label><input type="checkbox" data-a="all"${S.all ? ' checked' : ''}> усі боки <kbd>Alt</kbd></label><label><input type="checkbox" data-a="scope"${S.scopeAll ? ' checked' : ''}> на всі такого типу <kbd>A</kbd>${S.scopeAll && sc?.scope ? ` <i>${esc(sc.scope)} · ${sc.targets.length}</i>` : ''}</label></div>${readout()}${layoutRows(S.el)}<div class="ed-acts"><button data-a="text">Текст <kbd>Enter</kbd></button><button data-a="hide">Прибрати <kbd>Del</kbd></button><button data-a="undo">↶</button><button data-a="redo">↷</button></div>` : ''}`;
+    pInfo.scrollTop = keepTop;
+    if (aeKey) { const again = [...pInfo.querySelectorAll('[' + aeKey[0] + ']')].find((x) => x.getAttribute(aeKey[0]) === aeKey[1]); if (again && !again.disabled) again.focus({ preventScroll: true }); }
     renderFoot();
+    persistSoon();
   }
   function renderFoot() {
     const drafts = [...S.changes.values()].length;
     pFoot.innerHTML = `<button data-a="view" class="${S.view === 'before' ? 'on' : ''}">До/після <kbd>B</kbd></button><button data-a="reset-all">Скинути все</button><button data-a="copy">Копіювати ТЗ</button><button data-a="send" class="primary">Надіслати правки (${drafts})</button>`;
   }
+  // Список змін оновлюється точково (рядки за ключем): поле «Нотатка», яке зараз у фокусі, не перестворюється — інакше після кожної синхронізації
+  // (syncSoon -> renderChanges) фокус зникав і наступні літери ставали гарячими клавішами (c = Коментар закриває Едіт, e, a, b, g…).
   function renderChanges() {
     const ms = [...S.changes.values()];
-    pChg.innerHTML = `<div class="ed-ch-h">Зміни <span>${ms.length}</span>${S.sent ? `<span class="ed-sentn">надіслано: ${S.sent}</span>` : ''}</div>`
-      + (ms.length ? ms.map((m, i) => `<div class="ed-row"><div class="ed-rt"><b>${esc(typeRu[m.type] || m.type)}</b>${m.record ? (m.record.status === 'open' ? ' <em>надіслано</em>' : '') : ' <em>…</em>'} ${esc(descOf(m))}${m.scope ? ` <i>[${esc(m.scope)} · ${m.targets.length}]</i>` : ''}${m.record?.source ? ` <i>джерело: ${esc(m.record.source)}</i>` : ''}</div><input class="ed-note" data-note="${i}" placeholder="Нотатка до правки…" value="${esc(m.note)}"><button class="ed-x" data-del="${i}" title="Скасувати правку">×</button></div>`).join('') : '<div class="ed-hint">Поки що без правок.</div>');
+    let head = pChg.querySelector(':scope > .ed-ch-h'), rows = pChg.querySelector(':scope > .ed-rows');
+    if (!head || !rows) { pChg.innerHTML = '<div class="ed-ch-h"></div><div class="ed-rows"></div>'; head = pChg.firstChild; rows = pChg.lastChild; }
+    head.innerHTML = `Зміни <span>${ms.length}</span>${S.sent ? `<span class="ed-sentn">надіслано: ${S.sent}</span>` : ''}`;
+    const have = new Map([...rows.children].filter((r) => r.dataset.k != null).map((r) => [r.dataset.k, r]));
+    if (!ms.length) rows.innerHTML = '<div class="ed-hint">Поки що без правок.</div>';
+    else {
+      rows.querySelectorAll(':scope > .ed-hint').forEach((h) => h.remove());
+      const ae = shadowActive();
+      ms.forEach((m, i) => {
+        let row = have.get(m.key); have.delete(m.key);
+        if (!row) {
+          row = document.createElement('div'); row.className = 'ed-row'; row.dataset.k = m.key;
+          row.innerHTML = '<div class="ed-rt"></div><input class="ed-note" placeholder="Нотатка до правки…"><button class="ed-x" title="Скасувати правку">×</button>';
+        }
+        row.querySelector('.ed-rt').innerHTML = `<b>${esc(typeRu[m.type] || m.type)}</b>${m.record ? (m.record.status === 'open' ? ' <em>надіслано</em>' : '') : ' <em>…</em>'} ${esc(descOf(m))}${m.scope ? ` <i>[${esc(m.scope)} · ${m.targets.length}]</i>` : ''}${m.record?.source ? ` <i>джерело: ${esc(m.record.source)}</i>` : ''}`;
+        const inp = row.querySelector('.ed-note'); inp.dataset.note = i; row.querySelector('.ed-x').dataset.del = i;
+        if (inp !== ae && inp.value !== m.note) inp.value = m.note;
+        if (rows.children[i] !== row) rows.insertBefore(row, rows.children[i] || null);
+      });
+    }
+    for (const r of have.values()) r.remove();
     renderFoot();
   }
   panelEl.addEventListener('click', (e) => {
@@ -1006,8 +1032,8 @@ export function initEdit(deps) {
   });
   panelEl.addEventListener('input', (e) => {
     const t = e.target; if (t.dataset.note == null) return;
-    const m = [...S.changes.values()][+t.dataset.note]; if (!m) return;
-    m.note = t.value; syncSoon(m);
+    const m = S.changes.get(t.closest('.ed-row')?.dataset.k); if (!m) return;
+    m.note = t.value; syncSoon(m); persistSoon();
   });
 
   // ---------- надсилання / ТЗ ----------
@@ -1043,8 +1069,117 @@ export function initEdit(deps) {
     catch { const ta = document.createElement('textarea'); ta.value = text; document.body.append(ta); ta.select(); try { document.execCommand('copy'); say('ТЗ скопійовано'); } catch { say('Не вдалося скопіювати'); } ta.remove(); }
   }
 
-  // ---------- відновлення чернеток після перезавантаження ----------
+  // ---------- стан Едіт між перезавантаженнями (sessionStorage `__edit_state`) ----------
+  // Vite (плагін html-partials) робить full-reload при зміні будь-якого partials/*: сторінка перезавантажується, а панель, вибір, нотатка й текст у редагуванні зникали.
+  const SKEY = '__edit_state', STATE_TTL = 30 * 60 * 1000;
+  const ssGet = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || 'null'); } catch { return null; } };
+  const ssSet = (v) => { try { sessionStorage.setItem(SKEY, JSON.stringify(v)); } catch { /* ignore */ } };
+  let live = false, persistT = 0; // live=false, доки не завершено відновлення: ранні події не затирають збережений стан
+  const norm = (t) => (t || '').replace(/\s+/g, ' ').trim();
+  const textOf = (n) => norm(n.innerText || n.getAttribute?.('alt')).slice(0, 120);
+  function caretOf(n) {
+    const sel = getSelection();
+    if (!sel.rangeCount || !n.contains(sel.anchorNode)) return { c0: null, c1: null };
+    const r = sel.getRangeAt(0), pre = document.createRange();
+    pre.selectNodeContents(n); pre.setEnd(r.startContainer, r.startOffset);
+    const a = pre.toString().length;
+    return { c0: a, c1: a + r.toString().length };
+  }
+  function setCaret(n, c0, c1) {
+    const w = document.createTreeWalker(n, NodeFilter.SHOW_TEXT); let acc = 0, a = null, b = null, t;
+    while ((t = w.nextNode())) {
+      const len = t.data.length;
+      if (!a && c0 <= acc + len) a = [t, c0 - acc];
+      if (!b && c1 <= acc + len) { b = [t, c1 - acc]; break; }
+      acc += len;
+    }
+    const sel = getSelection(), rg = document.createRange();
+    if (!a) { rg.selectNodeContents(n); rg.collapse(false); } else { rg.setStart(...a); if (b) rg.setEnd(...b); else rg.collapse(true); }
+    sel.removeAllRanges(); sel.addRange(rg);
+  }
+  function snapshot() {
+    const ae = shadowActive(), ed = S.editing;
+    const st = { v: 1, url: PAGE(), ts: Date.now(), on: S.on, prop: S.prop, all: S.all, scopeAll: S.scopeAll, side: S.side, scrollX: scrollX, scrollY: scrollY,
+      sel: null, notes: {}, focus: null, editing: null, pane: { info: pInfo.scrollTop, chg: pChg.scrollTop } };
+    if (S.el && S.el.isConnected) st.sel = { selector: selFor(S.el), text: ed && ed.el === S.el ? norm(ed.orig).slice(0, 120) : textOf(S.el) };
+    for (const m of S.changes.values()) if (m.note) st.notes[m.key] = m.note;
+    if (ae && ae.classList?.contains('ed-note')) st.focus = { kind: 'note', key: ae.closest('.ed-row')?.dataset.k || null, start: ae.selectionStart, end: ae.selectionEnd };
+    if (ed && ed.el.isConnected) st.editing = { selector: selFor(ed.el), orig: ed.orig, text: ed.el.textContent, ...caretOf(ed.el) };
+    return st;
+  }
+  const persistNow = () => { clearTimeout(persistT); persistT = 0; if (live) ssSet(snapshot()); };
+  function persistSoon() { if (!live) return; clearTimeout(persistT); persistT = setTimeout(persistNow, 150); }
+  function findByText(sv) { // елемент за селектором + текстом; якщо селектор «поїхав» — той самий тег із таким самим текстом
+    let n = null; try { n = document.querySelector(sv.selector); } catch { /* */ }
+    if (n && (!sv.text || textOf(n) === sv.text)) return n;
+    if (!sv.text) return n;
+    const tag = n ? n.localName : sv.selector.split(/[\s>]+/).pop().replace(/[.#:[].*$/, '');
+    try { const c = [...document.querySelectorAll(tag || '*')].filter((x) => !host.contains(x) && textOf(x) === sv.text); if (c.length === 1) return c[0]; } catch { /* */ }
+    return null;
+  }
+  function restoreSession(sv) {
+    if (!sv || sv.v !== 1 || sv.url !== PAGE() || Date.now() - sv.ts > STATE_TTL) return;
+    if (sv.prop && PROPS[sv.prop]) S.prop = sv.prop;
+    S.all = !!sv.all; S.scopeAll = !!sv.scopeAll;
+    if (sv.side === 'left' || sv.side === 'right') { S.side = sv.side; panelEl.classList.toggle('left', S.side === 'left'); }
+    if (sv.on && !S.on) setOn(true);
+    if (!S.on) return;
+    for (const m of S.changes.values()) { const nt = sv.notes?.[m.key]; if (nt != null && nt !== m.note) { m.note = nt; syncSoon(m); } }
+    if (sv.sel) { const n = findByText(sv.sel); if (n) { select(n); if (!available(S.prop)) S.prop = 'padding-top'; } else say('Едіт: вибраний елемент після оновлення не знайдено'); }
+    renderInfo(); renderChanges();
+    const e = sv.editing;
+    if (e) {
+      const n = findByText({ selector: e.selector, text: sv.sel?.selector === e.selector ? sv.sel.text : '' }) || (() => { try { return document.querySelector(e.selector); } catch { return null; } })();
+      if (n) {
+        select(n); startText(n);
+        if (S.editing && S.editing.el === n) { n.textContent = e.text; if (e.c0 != null) setCaret(n, e.c0, e.c1 ?? e.c0); }
+      }
+    } else if (sv.focus?.kind === 'note' && sv.focus.key) {
+      const inp = [...pChg.querySelectorAll('.ed-row')].find((r) => r.dataset.k === sv.focus.key)?.querySelector('.ed-note');
+      if (inp) { inp.focus({ preventScroll: true }); try { inp.setSelectionRange(sv.focus.start ?? inp.value.length, sv.focus.end ?? inp.value.length); } catch { /* */ } }
+    }
+    if (sv.pane) { pInfo.scrollTop = sv.pane.info || 0; pChg.scrollTop = sv.pane.chg || 0; }
+    if (Math.abs(scrollY - (sv.scrollY || 0)) > 2 || Math.abs(scrollX - (sv.scrollX || 0)) > 2) scrollTo(sv.scrollX || 0, sv.scrollY || 0);
+  }
+
+  // ---------- відкладене оновлення сторінки (vite:beforeFullReload) ----------
+  // Vite чекає (await) на слухачів цієї події: поки користувач друкує, повертаємо проміс, який виконується після завершення вводу.
+  const pendEl = mk('div', { class: 'ed-pend', hidden: true });
+  pendEl.innerHTML = '<span>Оновлення сторінки відкладено (йде введення); застосується після Enter/збереження</span><button data-a="reload-now">Оновити зараз</button>';
+  panelEl.insertBefore(pendEl, pInfo);
+  let pend = null; // { p, done }
+  const typingInPanel = () => { const ae = shadowActive(); return !!ae && panelEl.contains(ae) && ae.matches?.('input[type=text], input:not([type]), textarea'); };
+  const busy = () => S.on && (!!S.editing || !!S.drag || typingInPanel());
+  async function releasePending(force) {
+    if (!pend || (!force && busy())) return;
+    const cur = pend; pend = null; pendEl.hidden = true;
+    try { await Promise.race([flush(), new Promise((ok) => setTimeout(ok, 1500))]); } catch { /* */ }
+    live && ssSet(snapshot()); cur.done();
+  }
+  function maybeRelease() { if (pend) setTimeout(() => releasePending(false), 0); }
+  if (import.meta.hot) {
+    import.meta.hot.on('vite:beforeFullReload', () => {
+      if (!busy()) { persistNow(); return undefined; }
+      if (!pend) { let done; const p = new Promise((ok) => { done = ok; }); pend = { p, done }; pendEl.hidden = false; persistNow(); }
+      return pend.p;
+    });
+  }
+  pendEl.addEventListener('click', (e) => { if (e.target.closest('[data-a=reload-now]')) releasePending(true); });
+  panelEl.addEventListener('focusout', maybeRelease);
+  panelEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.classList?.contains('ed-note')) { e.preventDefault(); e.target.blur(); } });
+  for (const t of ['focusin', 'keyup', 'mouseup']) panelEl.addEventListener(t, persistSoon);
+  window.addEventListener('input', persistSoon, true);
+  window.addEventListener('keyup', persistSoon, true);
+  addEventListener('pagehide', persistNow);
+  addEventListener('beforeunload', persistNow);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistNow(); });
+
+    // ---------- відновлення чернеток після перезавантаження ----------
   async function restoreDrafts() {
+    const sv = ssGet();
+    try { await restoreDraftsInner(); } finally { try { restoreSession(sv); } catch (e) { console.warn('[edit] restore skipped:', e.message); } live = true; persistSoon(); }
+  }
+  async function restoreDraftsInner() {
     let list = [];
     try { list = (await api('GET', '/edits')).edits; } catch { return; }
     S.sent = list.filter((x) => x.url === PAGE() && x.status === 'open').length;
@@ -1078,7 +1213,7 @@ export function initEdit(deps) {
   btn.addEventListener('click', () => setOn(!S.on));
   let raf = 0;
   const redraw = () => { if (!raf && S.on) raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
-  addEventListener('scroll', redraw, { passive: true, capture: true });
+  addEventListener('scroll', () => { redraw(); persistSoon(); }, { passive: true, capture: true });
   addEventListener('resize', () => { uAt = 0; redraw(); if (S.on) renderInfo(); });
   setInterval(() => { if (S.on && !S.drag && !S.editing) draw(); }, 400);
   // поки йде редагування тексту: клацання поза елементом застосовує зміну й не доходить до сайту; посилання всередині не спрацьовують
@@ -1086,6 +1221,8 @@ export function initEdit(deps) {
   window.addEventListener('click', (e) => { if (S.editing) e.preventDefault(); }, true);
   addEventListener('beforeunload', () => { if (S.changes.size) flush(); });
 
+  // панель відкриваємо одразу (не чекаючи 700 мс на відновлення чернеток), якщо перед перезавантаженням Едіт був увімкнений
+  { const sv0 = ssGet(); if (sv0 && sv0.v === 1 && sv0.on && sv0.url === PAGE() && Date.now() - sv0.ts <= STATE_TTL) { if (sv0.side === 'left') { S.side = 'left'; panelEl.classList.add('left'); } setOn(true); } }
   const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise((ok) => addEventListener('load', ok, { once: true }));
   loaded.then(() => setTimeout(restoreDrafts, 700));
 
