@@ -175,3 +175,10 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 - T4 дуб: `Extreme close-up macro photograph of raw untoasted American white oak, light honey-beige wood with fine straight grain and medullary rays, matte surface, top-down flat view, even soft daylight, texture fills the entire frame, sharp focus, no vignette, photorealistic, square 1:1`
 - Negative для всіх: `illustration, drawing, vector, 3d render, cgi, text, watermark, logo, people, hands, glass, bottle, liquid splash, vignette, blur, oversaturated`
 Кредити: Seedream 5 Pro 2k = 100 / кадр (simulate_cost: exact) → 4 текстури = 400; баланс 24 070 → 23 670. Інші генерації (днища IMG-4, hero IMG-1) — НЕ запускали, лише з окремого дозволу замовника.
+
+## Фото коктейлів (AI) — `img/cocktails/<slug>-1.webp`
+
+Статус: **AI-зображення, чернетка на затвердження замовником.** 15 кадрів 1120×1400 (4:5), WebP q80, 27–45 КБ. Мапінг slug → файл/alt/склянка/фон/вартість: `reports/cocktail-photos.json`; контактний лист: `reports/cocktail-photos-sheet.png`.
+- Пляшка на кожному кадрі — **РЕАЛЬНА** (прозорий виріз `img/products/<slug>.webp`, етикетка справжня), однакова висота (66 % кадру), позиція ліворуч (≈29 % ширини), спільна тінь і м’яке відображення додані в Pillow. Бокал із коктейлем **згенеровано AI** (модель z-image, Magnific, 5 кредитів/кадр, без тексту/логотипів/людей), однотонний пастельний фон під колір напою; бокал праворуч (≈69 %), лінія столу єдина (80 % висоти).
+- Витрати: 101 кредит (15 кадрів + 3 повтори + пілотне порівняння моделей: Classic Fast 1, Flux.2 Klein 10, z-image 5). Баланс до 23 670, після 23 569. Обрано z-image як найдешевшу модель із фотореалістичним результатом (Classic Fast — 1 кредит, але ігнорує композицію).
+- Примітки: «Джин-смеш з базиліком» — AI видав келих на ніжці замість рокс (ліміт повторів вичерпано); бокали «Джин-тонік» і «Трав’яний тонік» — обидва баллон; бокал у кадрі збільшено/зменшено в Pillow до реальних пропорцій відносно пляшки. Пляшка в кадрі лише для відповідності напою з `cocktails.js` (product).

@@ -1,0 +1,163 @@
+{
+  "meta": {
+    "status": "AI-зображення (бокал) + реальна пляшка; на затвердження замовнику",
+    "model": "z-image (Magnific), 5 кредитів/кадр",
+    "canvas": "1120x1400 (4:5) WebP q80",
+    "balance_before": 23670,
+    "balance_after": 23569,
+    "spent": 101,
+    "bottle_source": "public/assets/img/products/<slug>.webp (реальний прозорий виріз)"
+  },
+  "items": {
+    "gin-tonic": {
+      "src": "assets/img/cocktails/gin-tonic-1.webp",
+      "alt": "Коктейль «Джин-тонік»: пляшка «Джин Ясногородський» і бокал",
+      "product": "gin-yasnyi",
+      "glass": "келих-баллон",
+      "background": "світло-бірюзовий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "negroni": {
+      "src": "assets/img/cocktails/negroni-1.webp",
+      "alt": "Коктейль «Негроні»: пляшка «Джин Бочковий» і бокал",
+      "product": "gin-barrel",
+      "glass": "олд-фешн (рокс)",
+      "background": "світло-рожевий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "dry-martini": {
+      "src": "assets/img/cocktails/dry-martini-1.webp",
+      "alt": "Коктейль «Сухий мартіні»: пляшка «Джин Ясногородський» і бокал",
+      "product": "gin-yasnyi",
+      "glass": "мартіні",
+      "background": "фісташково-кремовий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "gimlet": {
+      "src": "assets/img/cocktails/gimlet-1.webp",
+      "alt": "Коктейль «Ґімлет»: пляшка «Джин Садовий» і бокал",
+      "product": "gin-garden",
+      "glass": "купе",
+      "background": "світло-лаймовий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "gin-basil-smash": {
+      "src": "assets/img/cocktails/gin-basil-smash-1.webp",
+      "alt": "Коктейль «Джин-смеш з базиліком»: пляшка «Джин Садовий» і бокал",
+      "product": "gin-garden",
+      "glass": "келих на ніжці (замість рокс — див. примітку)",
+      "background": "світлий шавлієвий",
+      "model": "z-image",
+      "credits": 10,
+      "ai": true
+    },
+    "tom-collins": {
+      "src": "assets/img/cocktails/tom-collins-1.webp",
+      "alt": "Коктейль «Том Коллінз»: пляшка «Джин Ясногородський» і бокал",
+      "product": "gin-yasnyi",
+      "glass": "коллінз",
+      "background": "світло-лимонний",
+      "model": "z-image",
+      "credits": 10,
+      "ai": true
+    },
+    "old-fashioned": {
+      "src": "assets/img/cocktails/old-fashioned-1.webp",
+      "alt": "Коктейль «Олд-фешн»: пляшка «Oak Notes» і бокал",
+      "product": "oak-notes",
+      "glass": "олд-фешн (рокс)",
+      "background": "світло-персиковий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "manhattan": {
+      "src": "assets/img/cocktails/manhattan-1.webp",
+      "alt": "Коктейль «Манхеттен»: пляшка «Oak Notes» і бокал",
+      "product": "oak-notes",
+      "glass": "купе",
+      "background": "світло-кораловий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "whiskey-sour": {
+      "src": "assets/img/cocktails/whiskey-sour-1.webp",
+      "alt": "Коктейль «Віскі-сауер»: пляшка «White Whiskey» і бокал",
+      "product": "whiskey-white",
+      "glass": "рокс",
+      "background": "абрикосово-кремовий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "whiskey-mule": {
+      "src": "assets/img/cocktails/whiskey-mule-1.webp",
+      "alt": "Коктейль «Віскі-мул»: пляшка «White Whiskey» і бокал",
+      "product": "whiskey-white",
+      "glass": "мідний кухоль",
+      "background": "світло-мідний беж",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "whisky-highball": {
+      "src": "assets/img/cocktails/whisky-highball-1.webp",
+      "alt": "Коктейль «Хайбол»: пляшка «Barley Spirit» і бокал",
+      "product": "barley-spirit",
+      "glass": "хайбол",
+      "background": "шампань",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "jack-rose": {
+      "src": "assets/img/cocktails/jack-rose-1.webp",
+      "alt": "Коктейль «Джек Роуз»: пляшка «Кальвадос 3 роки» і бокал",
+      "product": "calvados-3",
+      "glass": "купе",
+      "background": "світло-рожево-кораловий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "calvados-sidecar": {
+      "src": "assets/img/cocktails/calvados-sidecar-1.webp",
+      "alt": "Коктейль «Сайдкар з кальвадосом»: пляшка «Кальвадос 5 років» і бокал",
+      "product": "calvados-5",
+      "glass": "купе",
+      "background": "світло-мандариновий",
+      "model": "z-image",
+      "credits": 10,
+      "ai": true
+    },
+    "pear-highball": {
+      "src": "assets/img/cocktails/pear-highball-1.webp",
+      "alt": "Коктейль «Грушевий хайбол»: пляшка «Шнапс грушевий» і бокал",
+      "product": "schnapps-pear",
+      "glass": "хайбол",
+      "background": "світло-грушевий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    },
+    "herbal-tonic": {
+      "src": "assets/img/cocktails/herbal-tonic-1.webp",
+      "alt": "Коктейль «Трав’яний тонік»: пляшка «Настоянка трав'яна» і бокал",
+      "product": "tincture-herbal",
+      "glass": "келих-баллон",
+      "background": "світлий трав’яно-оливковий",
+      "model": "z-image",
+      "credits": 5,
+      "ai": true
+    }
+  }
+}
