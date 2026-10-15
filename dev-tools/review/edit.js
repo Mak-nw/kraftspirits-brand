@@ -693,7 +693,7 @@ export function initEdit(deps) {
     if (!SIZE_CSS.test(css)) return '';
     const c = sizeCause(n, css); if (!c) return '';
     const warn = c.kind === 'grow' || c.kind === 'stretch';
-    return `<div class="ed-meta${warn ? ' warn' : ''}">джерело розміру: <b>${esc(c.source)}</b>${warn ? ` — ${esc(c.text.split(':')[0])}` : ''}${c.acts.length ? `<div class="ed-hacts">${c.acts.map((a) => `<button data-a="${a.a}">${esc(a.label)}</button>`).join('')}</div>` : ''}${c.extra ? `<br><i>${esc(c.extra)}</i>` : ''}</div>`;
+    return `<div class="ed-meta${warn ? ' warn' : ''}">джерело розміру: <b>${esc(c.source)}</b>${warn ? ` — ${esc(c.text.split(' (')[0])}` : ''}${c.acts.length ? `<div class="ed-hacts">${c.acts.map((a) => `<button data-a="${a.a}">${esc(a.label)}</button>`).join('')}</div>` : ''}${c.extra ? `<br><i>${esc(c.extra)}</i>` : ''}</div>`;
   }
   function explain(n, p) {
     const P = PROPS[p], css = P.css[0], cs = getComputedStyle(n), r = [], acts = [];
