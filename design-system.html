@@ -513,7 +513,7 @@
           <tr><td><code>--btn-icon-color</code></td><td><code>currentColor</code></td><td>currentColor</td></tr>
           <tr><td><code>--btn-active-mix</code></td><td><code>92%</code></td><td>92%</td></tr>
           <tr><td><code>--btn-active-scale</code></td><td><code>0.985</code></td><td>0.985</td></tr>
-          <tr><td><code>--btn-disabled-opacity</code></td><td><code>var(--opacity-muted)</code></td><td>0.4</td></tr>
+          <tr><td><code>--btn-disabled-opacity</code></td><td><code>var(--opacity-disabled)</code></td><td>0.4</td></tr>
           <tr><td><code>--btn-disabled-cursor</code></td><td><code>not-allowed</code></td><td>not-allowed</td></tr>
           <tr><td><code>--btn-disabled-icon-nudge</code></td><td><code>0px</code></td><td>0px</td></tr>
           <tr><td><code>--btn-disabled-active-scale</code></td><td><code>1</code></td><td>1</td></tr>
@@ -711,7 +711,7 @@
           <tr><td><code>--btn-chip-picker-text-hover</code></td><td><code>var(--color-gold)</code></td><td>#cbaf86</td></tr>
           <tr><td><code>--btn-chip-picker-text-focus</code></td><td><code>var(--btn-chip-picker-text-hover)</code></td><td>#cbaf86</td></tr>
           <tr><td><code>--btn-chip-picker-text-selected</code></td><td><code>var(--btn-chip-picker-text-hover)</code></td><td>#cbaf86</td></tr>
-          <tr><td><code>--btn-volume-opacity-default</code></td><td><code>var(--opacity-muted)</code></td><td>0.4</td></tr>
+          <tr><td><code>--btn-volume-opacity-default</code></td><td><code>var(--opacity-disabled)</code></td><td>0.4</td></tr>
           <tr><td><code>--btn-volume-opacity-hover</code></td><td><code>1</code></td><td>1</td></tr>
           <tr><td><code>--btn-volume-opacity-focus</code></td><td><code>var(--btn-volume-opacity-default)</code></td><td>0.4</td></tr>
           <tr><td><code>--btn-volume-opacity-selected</code></td><td><code>1</code></td><td>1</td></tr>
@@ -744,7 +744,7 @@
           <tr><td><code>--btn-row-faq-bg-hover</code></td><td><code>var(--color-hover-faq)</code></td><td>#eae9e8</td></tr>
           <tr><td><code>--btn-row-product-bg-default</code></td><td><code>transparent</code></td><td>transparent</td></tr>
           <tr><td><code>--btn-row-product-bg-hover</code></td><td><code>var(--color-hover-acc-product)</code></td><td>#e4e3d8</td></tr>
-          <tr><td><code>--btn-catnav-opacity-default</code></td><td><code>var(--opacity-catalog-nav-muted)</code></td><td>0.43</td></tr>
+          <tr><td><code>--btn-catnav-opacity-default</code></td><td><code>var(--opacity-disabled)</code></td><td>0.4</td></tr>
           <tr><td><code>--btn-catnav-opacity-hover</code></td><td><code>1</code></td><td>1</td></tr>
           <tr><td><code>--btn-catnav-opacity-focus</code></td><td><code>1</code></td><td>1</td></tr>
           <tr><td><code>--btn-catnav-opacity-selected</code></td><td><code>1</code></td><td>1</td></tr>
@@ -950,7 +950,7 @@
         <!--@include components/select id="ds-select-brand" name="ds-brand" label="Бренд" options="all:Усі|yasnocraft:YasnoCraft|bazylsprings:Bazylsprings"-->
       </div>
 
-      <p class="demo-label t-kicker">Заголовок-навігація (204:2351): .catalog-nav > .catalog-nav__item (активний `.is-active` — opacity 1; неактивний — `--opacity-catalog-nav-muted` 0.43, контраст ≥3:1 на фоні каталогу; hover і :focus-visible — opacity 1 за `--duration-base` / `--duration-focus`; клікабельна вся висота рядка)</p>
+      <p class="demo-label t-kicker">Заголовок-навігація (204:2351): .catalog-nav > .catalog-nav__item (активний `.is-active` — opacity 1; неактивний — `--opacity-disabled` 0.4; hover і :focus-visible — opacity 1 за `--duration-base` / `--duration-focus`; клікабельна вся висота рядка)</p>
       <div class="demo-panel theme-green">
         <nav class="catalog-nav t-hero ds-catalog-nav" aria-label="Приклад">
           <a class="catalog-nav__item is-active" href="#catalog-components">Весь каталог,</a>
@@ -980,7 +980,7 @@
         <!--@include components/btn variant="btn--teal" href="#" text="додати в кошик" price="1 690 ₴"-->
         <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
       </div>
-      <p class="demo-label t-kicker">Перемикач об'єму (.product-volumes > .product-volume, активний aria-pressed="true", неактивний --opacity-muted; hover/focus-visible: м'яка плашка ::before кольору тексту --opacity-volume-hover 0.1 за --duration-fast, неактивна 0.4→1, без підкреслення, розмір не змінюється); YasnoCraft: .t-spec «500 мл», «43% alc» (gap 20 `--space-product-volumes-gap`, спільний для обох брендів, Figma 205:2441), мініатюри-накладки .product-thumb 126×167 (активна — рамка 1px; повторний клік повертає головне фото); Bazylsprings: .t-caption «0,5 л»; розкладка і мініатюри-накладки однакові для обох брендів (поле 50 + фото 905 + зазор 5 + панель 910 + поле 50; накладки 126×167 у куті фрейму, відступ 15, крок 7; .product-media sticky разом з фото; слайди — public/assets/img/slider/bs-whisky-*, YC — yc-gin-*)</p>
+      <p class="demo-label t-kicker">Перемикач об'єму (.product-volumes > .product-volume, активний aria-pressed="true", неактивний --opacity-disabled; hover/focus-visible: м'яка плашка ::before кольору тексту --opacity-volume-hover 0.1 за --duration-fast, неактивна 0.4→1, без підкреслення, розмір не змінюється); YasnoCraft: .t-spec «500 мл», «43% alc» (gap 20 `--space-product-volumes-gap`, спільний для обох брендів, Figma 205:2441), мініатюри-накладки .product-thumb 126×167 (активна — рамка 1px; повторний клік повертає головне фото); Bazylsprings: .t-caption «0,5 л»; розкладка і мініатюри-накладки однакові для обох брендів (поле 50 + фото 905 + зазор 5 + панель 910 + поле 50; накладки 126×167 у куті фрейму, відступ 15, крок 7; .product-media sticky разом з фото; слайди — public/assets/img/slider/bs-whisky-*, YC — yc-gin-*)</p>
       <div class="demo-panel theme-beige">
         <div class="product-volumes t-caption"><button class="product-volume" type="button" aria-pressed="true">0,5 л</button><button class="product-volume" type="button">0,7 л</button></div>
         <div class="product-volumes t-spec"><button class="product-volume" type="button" aria-pressed="true">500 мл</button><button class="product-volume" type="button">700 мл</button><span>43% alc</span></div>
@@ -999,7 +999,7 @@
       <div class="demo-panel theme-beige">
         <div class="field"><!--@include components/select id="ds-topic" name="ds-topic" label="Тема звернення" options="excursion:Екскурсії|barrel:Бочкова торгівля|other:Інше" value="Оберіть тему" placeholder="Оберіть тему" mod=" select--light select--field"--></div>
       </div>
-      <p class="demo-label t-kicker">Згода (.check-field > .check) і кнопка відправки (btn--green btn--block; disabled — opacity --opacity-muted)</p>
+      <p class="demo-label t-kicker">Згода (.check-field > .check) і кнопка відправки (btn--green btn--block; disabled — opacity --opacity-disabled)</p>
       <div class="demo-panel theme-beige">
         <div class="check-field"><label class="check"><input class="check__input" type="checkbox" autocomplete="off"><span class="check__box" aria-hidden="true"></span><span class="check__label t-text">Погоджуюсь на обробку персональних даних</span></label></div>
         <button class="btn btn--green btn--block" type="button" disabled><span class="btn__inner t-btn">Надсилаємо…</span></button>

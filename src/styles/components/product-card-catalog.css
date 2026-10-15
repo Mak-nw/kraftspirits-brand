@@ -39,4 +39,4 @@
 .product-card--catalog:focus-visible .product-card__body { color: var(--color-green); transition-delay: 0s; }
 
 /* без фото: нейтральний плейсхолдер з назвою */
-.product-card__ph { display: grid; place-items: center; width: 100%; height: 100%; text-align: center; opacity: var(--opacity-muted); }
+.product-card__ph { display: grid; place-items: center; width: 100%; height: 100%; text-align: center; opacity: var(--opacity-disabled); }
