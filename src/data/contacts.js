@@ -64,6 +64,7 @@ export function contactsView(c = contacts) {
     emailHref: `mailto:${c.email}`,
     lat: String(lat),
     lng: String(lng),
+    zoom: String(zoom),
     osmEmbed: `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox(c))}&layer=mapnik&marker=${lat}%2C${lng}`,
     osmView: `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=${zoom + 2}/${lat}/${lng}`,
     gmapsView: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,

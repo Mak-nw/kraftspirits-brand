@@ -19,10 +19,49 @@
 .contacts-cta { display: flex; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
 .contacts-cta .btn { flex: 1 1 0; min-width: 0; }
 
-/* карта: вбудований OpenStreetMap без ключа; світла (сіра) з приглушеним зеленим відтінком-накладкою (--color-contacts-map-tint); радіус панелі 10u; розтягується на висоту панелі (CLS 0: розмір задано до завантаження iframe) */
-.contacts-map { position: relative; flex: 1; min-height: var(--size-contacts-map-min-h); overflow: hidden; border-radius: var(--radius-panel); background: var(--color-field-bg-hover); }
-.contacts-map::after { content: ''; position: absolute; inset: 0; background: var(--color-contacts-map-tint); mix-blend-mode: multiply; pointer-events: none; } /* зелений відтінок поверх світлої мапи */
-.contacts-map__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: var(--filter-contacts-map); }
+/* карта: MapLibre GL + OpenFreeMap (src/js/contacts-map.js; без ключа), перефарбована в палітру сайту токенами --map-*; радіус панелі 10u; розтягується на висоту панелі
+   (CLS 0: розмір задано до завантаження). Без WebGL/мережі — статична заглушка .contacts-map__fallback (кнопка «Відкрити в OpenStreetMap»). */
+.contacts-map { position: relative; flex: 1; min-height: var(--size-contacts-map-min-h); overflow: hidden; border-radius: var(--radius-panel); background: var(--map-land); isolation: isolate; }
+.contacts-map .contacts-map__canvas { position: absolute; inset: 0; width: 100%; height: 100%; } /* два класи: сильніше за .maplibregl-map { position: relative } з CSS бібліотеки */
+.contacts-map .contacts-map__canvas[hidden] { display: none; }
+.contacts-map .maplibregl-canvas { outline-offset: calc(-1 * var(--focus-ring-width)); } /* фокус-кільце всередині карти (клавіатурне керування) */
+.contacts-map .maplibregl-canvas:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); }
+
+/* маркер: «крапля» (коло зверху, кінчик униз = координата); іконка pin компенсує поворот */
+.contacts-map__pin { position: relative; width: var(--size-map-pin); height: calc(var(--size-map-pin) * 1.2071); pointer-events: none; } /* 1.2071 = (1 + √2) / 2: коло + кінчик повернутого квадрата */
+.contacts-map__pin-shape { position: absolute; left: 0; top: 0; width: var(--size-map-pin); height: var(--size-map-pin); box-sizing: border-box; background: var(--map-pin-bg); border: var(--border-hairline) solid var(--map-pin-border); border-radius: 50% 50% 0 50%; transform: rotate(45deg); box-shadow: var(--map-pin-shadow); }
+.contacts-map__pin-icon { --icon-size: var(--size-map-pin-icon); position: absolute; left: calc((var(--size-map-pin) - var(--size-map-pin-icon)) / 2); top: calc((var(--size-map-pin) - var(--size-map-pin-icon)) / 2); color: var(--map-pin-border); }
+
+/* контроли зуму: світлі квадратні кнопки сайту (токени --btn-light-*), EB Garamond; кільце фокуса — глобальне :focus-visible */
+.contacts-map .maplibregl-ctrl-top-right { top: var(--space-map-edge); right: var(--space-map-edge); }
+.contacts-map .maplibregl-ctrl-top-right .contacts-map__zoom-group { display: flex; flex-direction: column; gap: var(--border-hairline); margin: 0; float: none; background: none; box-shadow: none; border-radius: 0; }
+.contacts-map .contacts-map__zoom-group .contacts-map__zoom { display: grid; place-items: center; width: var(--size-map-ctrl); height: var(--size-map-ctrl); margin: 0; padding: 0; border: 0; background: var(--map-ctrl-bg); color: var(--map-ctrl-text); font: var(--type-btn-weight) var(--size-map-ctrl-glyph)/1 var(--type-btn-font); cursor: pointer; transition: background-color var(--btn-transition-duration) var(--btn-transition-ease); }
+.contacts-map .contacts-map__zoom-group .contacts-map__zoom--plus { border-radius: var(--radius-btn) var(--radius-btn) 0 0; }
+.contacts-map .contacts-map__zoom-group .contacts-map__zoom--minus { border-radius: 0 0 var(--radius-btn) var(--radius-btn); }
+.contacts-map .contacts-map__zoom-group .contacts-map__zoom:focus-visible { background: var(--map-ctrl-bg-hover); outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); transition-duration: var(--btn-transition-duration-focus); }
+.contacts-map .contacts-map__zoom-group .contacts-map__zoom:disabled { cursor: default; opacity: var(--opacity-disabled); }
+@media (hover: hover) { .contacts-map .contacts-map__zoom-group .contacts-map__zoom:not(:disabled):hover { background: var(--map-ctrl-bg-hover); } }
+
+/* атрибуція OpenFreeMap / OpenMapTiles / OpenStreetMap (ліцензійна вимога): завжди видима, у нижньому правому куті */
+.contacts-map .maplibregl-ctrl-bottom-right { right: var(--space-map-edge); bottom: var(--space-map-edge); }
+.contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib { margin: 0; padding: var(--space-5) var(--space-10); background: var(--map-attr-bg); border-radius: var(--radius-btn); color: var(--map-text); font: var(--type-caption-weight) var(--font-size-nav)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+.contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib a { color: inherit; text-decoration: none; transition: color var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib a:hover { color: var(--color-hover-nav-light); text-decoration: none; } } /* без підкреслення при hover (правило проєкту); у бібліотеки hover підкреслює */
+.contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib a:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
+.contacts-map .maplibregl-ctrl-attrib-inner { display: inline; }
+
+/* підказка «Ctrl + прокрутка» (cooperative gestures) */
+.contacts-map .maplibregl-cooperative-gesture-screen { background: var(--map-overlay-bg); color: var(--map-overlay-text); font: var(--type-btn-weight) var(--font-size-title)/var(--lh-normal) var(--type-btn-font); transition-duration: var(--duration-fast); }
+
+/* заглушка без WebGL / при помилці мережі (і в <noscript>): палітра сайту, без битих елементів */
+.contacts-map__fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-map-fallback-gap); padding: var(--space-contacts-pad); text-align: center; background: var(--map-land); color: var(--map-text); }
+.contacts-map__fallback[hidden] { display: none; }
+.contacts-map__fallback-icon { --icon-size: var(--size-map-fallback-icon); }
+.contacts-map__fallback-text { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .contacts-map .contacts-map__zoom-group .contacts-map__zoom, .contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib a, .contacts-map .maplibregl-cooperative-gesture-screen { transition: none; }
+}
 /* посилання без підкреслень: hover/focus — колір (як у футері) */
 .contacts-link { transition: color var(--duration-fast) var(--ease-out); }
 a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-duration: var(--duration-focus); }

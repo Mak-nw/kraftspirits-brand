@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <script type="module" src="/src/js/contacts-map.js"></script>
 </head>
 <body class="page-contacts">
   <!--@include body-vw-->
@@ -41,9 +43,7 @@
     </section>
 
     <section class="contacts-panel contacts-map-panel" aria-label="Мапа">
-      <div class="contacts-map">
-        <iframe class="contacts-map__frame" src="%contacts.osmEmbed%" title="Мапа: дистилерія YasnoCraft × Bazylsprings, с. Ясногородка" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1" data-lat="%contacts.lat%" data-lng="%contacts.lng%"></iframe>
-      </div>
+      <!--@include components/contacts-map-->
     </section>
   </main>
   <!--@include footer-->

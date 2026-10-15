@@ -744,8 +744,39 @@
   --space-contacts-pad: var(--space-50);                        /* внутрішній відступ панелей і проміжок між блоками всередині */
   --size-contacts-panel-min-h: var(--size-product-frame-h);     /* мінімум висоти панелей = фрейм фото товару (100svh − 123u, не менше 700u): панелі заповнюють екран, на низьких вікнах сторінка скролиться */
   --size-contacts-map-min-h: calc(360 * var(--u));              /* мінімум висоти карти; карта розтягується на висоту рядка (панелі однакової висоти) */
-  --filter-contacts-map: grayscale(1) contrast(0.75) brightness(1.25);  /* iframe мапи OSM: світла нейтральна сіра (без жовто-зеленого sepia/hue-rotate) */
-  --color-contacts-map-tint: color-mix(in srgb, var(--color-green) 18%, transparent); /* приглушений зелений відтінок поверх мапи (multiply) */
+  /* карта контактів (MapLibre + OpenFreeMap, src/js/contacts-map.js): палітра сайту; JS читає ці токени з :root і фарбує шари стилю positron. Лише аліаси/суміші палітри */
+  --map-land: var(--color-beige);                                                  /* земля = колір панелей */
+  --map-landuse: color-mix(in srgb, var(--color-beige) 80%, var(--color-gold));    /* житлові/промислові зони, аеродроми */
+  --map-water: color-mix(in srgb, var(--color-teal) 28%, var(--color-beige));      /* вода: приглушена тепла */
+  --map-park: color-mix(in srgb, var(--color-green) 26%, var(--color-beige));      /* парки */
+  --map-wood: color-mix(in srgb, var(--color-green) 32%, var(--color-beige));      /* ліс/покрив */
+  --map-building: color-mix(in srgb, var(--color-gold) 35%, var(--color-beige));   /* будівлі: м'які */
+  --map-road: var(--color-light);                                                  /* дороги */
+  --map-road-major: color-mix(in srgb, var(--color-gold) 45%, var(--color-light)); /* магістралі/траси: золотисті */
+  --map-casing: color-mix(in srgb, var(--color-gold) 55%, var(--color-beige));     /* обвідка доріг, контур будівель */
+  --map-rail: color-mix(in srgb, var(--color-green) 25%, var(--color-beige));      /* залізниця */
+  --map-boundary: color-mix(in srgb, var(--color-gold) 70%, var(--color-beige));   /* кордони */
+  --map-text: var(--color-green);                                                  /* підписи: темно-зелений (контраст ≥ 4.5:1 до землі) */
+  --map-halo: var(--color-light);                                                  /* ореол підписів */
+  --map-halo-width: 1.4;                                                           /* ореол підписів, px у стилі MapLibre (число) */
+  --map-park-opacity: 0.85;                                                        /* прозорість заливки парків (число) */
+  --map-wood-opacity: 0.7;                                                         /* прозорість заливки лісу (число) */
+  --size-map-pin: calc(44 * var(--u));                                             /* маркер: діаметр круглої голівки; «хвостик» вниз до точки координат */
+  --size-map-pin-icon: calc(24 * var(--u));                                        /* іконка pin всередині маркера */
+  --map-pin-bg: var(--color-light);
+  --map-pin-border: var(--color-green);
+  --map-pin-shadow: 0 calc(4 * var(--u)) calc(12 * var(--u)) color-mix(in srgb, var(--color-green) 30%, transparent);
+  --size-map-ctrl: calc(40 * var(--u));                                            /* кнопки зуму: квадрат */
+  --size-map-ctrl-glyph: calc(26 * var(--u));                                      /* знак «+» / «−» (EB Garamond) */
+  --space-map-edge: calc(10 * var(--u));                                           /* відступ контролів і атрибуції від країв карти */
+  --map-ctrl-bg: var(--btn-light-bg-default);                                      /* кнопки зуму = світла кнопка сайту */
+  --map-ctrl-bg-hover: var(--btn-light-bg-hover);
+  --map-ctrl-text: var(--btn-light-text-default);
+  --map-attr-bg: color-mix(in srgb, var(--color-light) 85%, transparent);          /* атрибуція (ліцензійна вимога): завжди видима в кутку */
+  --map-overlay-bg: color-mix(in srgb, var(--color-green) 70%, transparent);       /* підказка «Ctrl + прокрутка» (cooperative gestures) */
+  --map-overlay-text: var(--color-light);
+  --size-map-fallback-icon: calc(40 * var(--u));                                   /* заглушка без WebGL/мережі: іконка pin */
+  --space-map-fallback-gap: var(--space-30);                                       /* заглушка: проміжок між іконкою, адресою й кнопкою */
   --columns-contacts-data: 2;                                   /* сітка контактних даних у лівій панелі: 2 колонки */
   --span-contacts-item: 1;                                      /* звичайний блок (Телефон, E-mail) */
   --span-contacts-item-wide: 2;                                 /* блок на всю ширину (Адреса) */

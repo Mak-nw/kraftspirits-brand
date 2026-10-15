@@ -65,8 +65,9 @@ const pages = Object.fromEntries(
 
 // base: BUILD_BASE лише для збірки й `vite preview` (GitHub Pages); dev — корінь
 export default defineConfig(({ command, isPreview }) => ({
+  optimizeDeps: { exclude: ['maplibre-gl'] }, // maplibre-gl 6 шукає воркер відносно свого файлу (import.meta.url) — у dev без прекомпіляції
   base: command === 'build' || isPreview ? BUILD_BASE : '/',
   // reviewMode (design-machine, модуль 05) — ЛИШЕ dev-сервер: коментарі/сітка/інспектори; дані в ../review (поза репозиторієм). У збірці/preview плагіна немає.
   plugins: [htmlPartials(), ...(command === 'serve' && !isPreview ? [reviewMode({ dir: resolve(root, '../review') })] : [])],
-  build: { rollupOptions: { input: pages } },
+  build: { rollupOptions: { input: pages }, chunkSizeWarningLimit: 1200 }, // maplibre-gl (~1 МБ, лише чанк сторінки контактів) перевищує типовий поріг 500 кБ
 }));
