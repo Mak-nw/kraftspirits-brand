@@ -70,3 +70,22 @@ function setup(d) {
 export function initAccordions(root = document) {
   root.querySelectorAll('details.acc').forEach(setup);
 }
+
+// Клавіатура між рядками (WAI-ARIA Accordion, опційно): у контейнері [data-acc-keys] ↑/↓ — фокус на попередній/наступний заголовок (summary),
+// Home/End — перший/останній; Enter/Space відкривають/закривають (нативно, див. click вище). Без циклу на краях. Використовує faq.html.
+export function initAccordionKeys(root = document) {
+  root.querySelectorAll('[data-acc-keys]').forEach((box) => {
+    if (box.dataset.accKeysReady !== undefined) return;
+    box.dataset.accKeysReady = '';
+    box.addEventListener('keydown', (e) => {
+      const s = e.target.closest?.('details.acc > summary');
+      if (!s || !box.contains(s) || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const all = [...box.querySelectorAll('details.acc > summary')];
+      const i = all.indexOf(s);
+      const to = { ArrowDown: Math.min(i + 1, all.length - 1), ArrowUp: Math.max(i - 1, 0), Home: 0, End: all.length - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      all[to].focus();
+    });
+  });
+}

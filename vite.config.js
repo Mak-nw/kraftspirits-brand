@@ -7,6 +7,8 @@ import { barrels, barrelsView } from './src/data/barrels.js';
 import { COCKTAILS } from './src/data/cocktails.js';
 import { PRODUCTS } from './src/data/products.js';
 import { cocktailsView } from './src/data/cocktails-view.js';
+import { FAQ } from './src/data/faq.js';
+import { faqView } from './src/data/faq-view.js';
 
 const root = import.meta.dirname;
 
@@ -41,6 +43,10 @@ const EACH_RE = /<!--@each ([\w]+) ([\w/-]+)\s*-->/g;
 // Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
 const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
 const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2) }; // cocktailsDemo — один блок для design-system.html
+// faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group--> і навігація <!--@each faq sections/faq-nav-->; faqDemo — два рядки для design-system.html
+const FAQ_VIEW = faqView(FAQ);
+LISTS.faq = FAQ_VIEW;
+LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? it : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev

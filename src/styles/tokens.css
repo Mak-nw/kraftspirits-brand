@@ -1083,4 +1083,5 @@
   --space-faq-nav-top: var(--space-50);                     /* рядок вступу → навігація розділами */
   --offset-faq-title-sticky: calc(var(--size-header-h) + var(--space-50)); /* sticky-заголовок групи: під пілюлею header (103u) + 50u */
   --space-faq-anchor: var(--space-50);                      /* якір групи (#slug): заголовок зупиняється на висоті sticky */
+  --shift-faq-title-ink: -0.03em;                           /* оптика: лівий бічний відступ гліфа EB Garamond (капітель .t-lead) — 0.013–0.05em за ink-заміром dpr 4 (З, П, Е, Ф, К); text-indent зсуває чорнило на лінію колонки 1, бокс лишається на сітці */
 }
