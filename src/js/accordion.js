@@ -65,6 +65,8 @@ function setup(d) {
     e.preventDefault(); // Enter/Space на summary теж генерують click
     run(!target);
   });
+  // padding рядка (FAQ 30px, товар 15/20) і проміжок над тілом належать <details>, не <summary>: клік там теж перемикає (b2cf1d56). Тіло відповіді не чіпаємо.
+  d.addEventListener('click', (e) => { if (e.target === d) run(!target); });
 }
 
 export function initAccordions(root = document) {
