@@ -13,8 +13,8 @@ const SELF = ':self';
 /** інвентар родин: sel — селектор кандидатів; match(el) — уточнення варіанта; props: бере computed з елемента (селектор усередині або :self) */
 const FAMILIES = [
   ...['gold', 'light', 'beige', 'green', 'teal', 'outline'].map((v) => ({
-    family: 'btn', variant: v, token: v, sel: v === 'gold' ? '.btn' : `.btn--${v}`,
-    match: v === 'gold' ? (el) => el.classList.contains('btn--gold') || !/\bbtn--(light|beige|green|teal|outline)\b/.test(el.className) : null,
+    family: 'btn', variant: v, token: v, sel: `.btn--${v}`,
+    match: null,
     props: { bg: { el: '.btn__inner', css: 'backgroundColor' }, text: { el: '.btn__inner', css: 'color' }, border: { el: SELF, css: 'borderTopColor' } },
     trans: '.btn__inner', ring: 'btn', states: ['default', 'hover', 'focus', 'active', 'disabled'],
   })),

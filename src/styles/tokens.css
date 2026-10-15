@@ -37,7 +37,7 @@
   --font-family-display: 'Cormorant', 'Cormorant Fallback', Georgia, serif;     /* футер-wordmark: 194:1236 (Cormorant SemiBold) */
 
   --fw-regular: 400;   /* 194:1282 (stat number), 194:1332 (price) */
-  --fw-medium: 500;    /* 194:1279 (body), 194:1350 (split text) */
+  --fw-medium: 500;    /* 194:1279 (body), 194:1350 (лід) */
   --fw-semibold: 600;  /* 194:1376 (nav), 194:1370 (hero) */
   --fw-bold: 700;      /* 194:1373 (button) */
 
@@ -129,7 +129,6 @@
   --container-wide: calc(1508 * var(--u));     /* 194:1275 / 194:1185 (1920 − 2×206) */
   --container-heading: calc(1162 * var(--u));  /* 194:1292 блок заголовка методу підбору */
   --container-heading-narrow: calc(1006 * var(--u)); /* 194:1186, 194:1236 */
-  --container-hero-text: calc(807 * var(--u)); /* 194:1368 */
   --container-text: calc(712 * var(--u));      /* 194:1277 / 194:1279 текстова колонка */
   --size-header-h: calc(var(--header3-top) + var(--header3-h)); /* 214:2902 Header 3: 30 відступ зверху + 73 пілюля = 103u зона header у потоці (раніше 206:2495 = 73, 194:1374 = 64) */
   --z-header: 100;                             /* семантичний токен, вузла Figma немає: шар фіксованої пілюлі header над секціями */
@@ -510,14 +509,12 @@
   --space-208: calc(208 * var(--u));  /* 194:1275 / 194:1292 top заголовка секцій */
   --size-sec-about: calc(921 * var(--u));   /* 194:1274 */
   --size-sec-picker: calc(1281 * var(--u)); /* 194:1290 */
-  --size-sec-split: calc(941 * var(--u));   /* 194:1266 */
   --size-sec-faq: calc(996 * var(--u));     /* 194:1184 */
   --size-stat-w: calc(250 * var(--u));      /* 194:1281 колонка лічильника */
   --size-picker-head-h: calc(208 * var(--u));   /* 224:3734 Frame 51: 134 (заголовок) + 30 + 44 (текст) */
   --size-picker-bg-h: calc(683 * var(--u));     /* 224:3733 image 43, 1920×683 від низу секції */
   --container-picker-title: calc(562 * var(--u)); /* 194:1293 */
   --container-picker-text: calc(500 * var(--u)); /* 194:1294: у Figma 492 з опечаткою «допомже»; з виправленим «допоможе» перший рядок на ~12px ширший — 500, щоб переноси збігались (…ЗРОБИТИ / ВИБІР…) */
-  --size-split-photo-w: calc(944 * var(--u));   /* 194:1273 */
   --size-faq-head-h: calc(300 * var(--u));      /* 194:1188 top 477 − 194:1185 top 177 */
   /* ---------- Каталог (catalog 194:1443) ---------- */
   --space-catalog-title-col: calc(21 * var(--u));   /* 194:1493 column-gap між пунктами заголовка */

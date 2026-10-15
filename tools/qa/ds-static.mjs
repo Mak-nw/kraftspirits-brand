@@ -85,7 +85,7 @@ export function buildDist(outDir, { reuse = false } = {}) {
 const stripUrl = (v) => v.replace(/url\([^)]*\)/g, 'url()');
 
 /**
- * Виконує S1–S9. Повертає { items:[{rule,file,line,selector,prop,value,msg}], infos:[…], stats }.
+ * Виконує S1–S10. Повертає { items:[{rule,file,line,selector,prop,value,msg}], infos:[…], stats }.
  * opts: { allow, dist (шлях до зібраного HTML), rules:Set|null }
  */
 export function runStatic({ allow, dist, rules = null, root = ROOT }) {
@@ -204,7 +204,7 @@ export function runStatic({ allow, dist, rules = null, root = ROOT }) {
   }
 
   /* --- S7/S9 на зібраному HTML --- */
-  if ((want('S7') || want('S9')) && dist && existsSync(dist)) {
+  if ((want('S7') || want('S9') || want('S10')) && dist && existsSync(dist)) {
     const built = readdirSync(dist).filter((f) => f.endsWith('.html'));
     stats.builtPages = built.length;
     for (const name of built) {
@@ -214,6 +214,12 @@ export function runStatic({ allow, dist, rules = null, root = ROOT }) {
         for (const m of raw.matchAll(/<[a-zA-Z][^>]*?\sid\s*=\s*"([^"]+)"/g)) ids.set(m[1], (ids.get(m[1]) || 0) + 1);
         // ідентифікатори всередині <template> клонуються в рантаймі, дубль у шаблоні — не дубль DOM, але ловимо повторення id між шаблоном і сторінкою
         for (const [id, c] of ids) if (c > 1) add({ rule: 'S7', file: name, selector: `#${id}`, value: `${c}×`, page: name.replace(/\.html$/, ''), msg: 'дубль id в одному HTML (після збірки partials)' });
+      }
+      if (want('S10')) { // кожен .btn має допустимий тон: голий .btn не має кольору (тон gold теж явний — btn--gold)
+        for (const m of raw.matchAll(/\sclass\s*=\s*"([^"]*)"/g)) {
+          const cls = m[1].split(/\s+/);
+          if (cls.includes('btn') && !cls.some((c) => /^btn--(gold|light|beige|green|teal|outline)$/.test(c))) add({ rule: 'S10', file: name, line: lineOf(raw, m.index), selector: `.${cls.join('.')}`, value: m[1], msg: '.btn без допустимого тону (btn--gold|light|beige|green|teal|outline)' });
+        }
       }
       if (want('S9')) {
         const baseM = raw.match(/<base\s[^>]*href\s*=\s*"([^"]*)"/i);
@@ -233,7 +239,7 @@ export function runStatic({ allow, dist, rules = null, root = ROOT }) {
         }
       }
     }
-  } else if (want('S7') || want('S9')) infos.push({ rule: 'S7/S9', msg: 'зібраного HTML немає (пропущено --no-build?): S7/S9 не виконано' });
+  } else if (want('S7') || want('S9') || want('S10')) infos.push({ rule: 'S7/S9/S10', msg: 'зібраного HTML немає (пропущено --no-build?): S7/S9/S10 не виконано' });
 
   /* --- S9b: шляхи зображень у src/data/*.js --- */
   if (want('S9')) {

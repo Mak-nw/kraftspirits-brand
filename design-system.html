@@ -386,11 +386,6 @@
         <span class="chip"><span class="chip__ornament"></span><span class="t-chip">подарунок</span><span class="chip__ornament"></span></span>
       </div>
 
-      <p class="demo-label t-kicker">Лід-блок .lead (hero 194:1368, спліт 194:1267): кікер + заголовок + кнопка. Тут tag="p"; у #partials tag="h2"</p>
-      <div class="demo-panel theme-brown">
-        <!--@include components/lead tag="p" kicker="Усе в одному місці, усе нашими руками" title="Від першого зерна<br>до останньої краплі в пляшці" href="#" btn="Вивчити асортимент"-->
-      </div>
-
       <p class="demo-label t-kicker">Половина бренд-секції .brand-half (224:3597 YasnoCraft / 224:3604 Bazylsprings, 960×974): partial components/brand-half (brand, name, photo, logo, text, btn, href); секція — partials/sections/brands.html</p>
       <p class="ds-note ds-meta">Фото-фон (cover, уже обрізане під 960×974; hover — zoom --scale-zoom) + бежева картка 912/914×934 (радіус 10, маска-«Subtract» з вирізом-пляшкою, public/assets/img/home-brand-card-*.svg; колір — --color-beige) + логотип у боксі 172, опис .t-desc (gap 28), кнопка від верху картки на 786. Колір тексту: YasnoCraft — --color-text-on-light, Bazylsprings — --color-teal (у Figma обидва teal — нормалізовано до брендових). Кнопки btn--green / btn--teal з (EB Garamond Bold, Figma 224:3815).</p>
       <!--@include sections/brands-->
@@ -455,7 +450,7 @@
       <p class="demo-label t-kicker">Матриця «варіант × стан» — кнопки .btn (реальні інстанси; hover / focus / active змушено класами-імітаторами .is-hover / .is-focus / .is-active — вони читають ті самі контекстні змінні, що й справжні псевдокласи; disabled — реальний атрибут)</p>
       <div class="state-matrix">
       <div class="state-row state-row--head ds-meta"><span>варіант</span><span>default</span><span>hover</span><span>focus</span><span>active</span><span>disabled</span></div>
-      <div class="state-row theme-brown"><span class="ds-meta">btn--gold</span><!--@include components/btn variant="btn--gold" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--gold" action="demo" text="Кнопка" disabled="1"--></div>
+      <div class="state-row theme-brown"><span class="ds-meta">btn--gold<br>(використовується: бочки)</span><!--@include components/btn variant="btn--gold" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--gold is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--gold" action="demo" text="Кнопка" disabled="1"--></div>
       <div class="state-row theme-brown"><span class="ds-meta">btn--light</span><!--@include components/btn variant="btn--light" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--light is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--light" action="demo" text="Кнопка" disabled="1"--></div>
       <div class="state-row theme-brown"><span class="ds-meta">btn--beige</span><!--@include components/btn variant="btn--beige" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--beige is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--beige" action="demo" text="Кнопка" disabled="1"--></div>
       <div class="state-row theme-beige"><span class="ds-meta">btn--green</span><!--@include components/btn variant="btn--green" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-hover" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-focus" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn variant="btn--green is-active" href="#" text="Кнопка" arrow="arrow-up-right"--><!--@include components/btn-button variant="btn--green" action="demo" text="Кнопка" disabled="1"--></div>
@@ -849,11 +844,10 @@
 
       <p class="ds-note t-body">Паралакс фото (лише головна, src/js/parallax.js): атрибут data-parallax на контейнері з обрізанням (hero, brand-half, фото tour-card, фон picker), data-parallax="soft" — менший зсув для великих фонів. Фото — прямий нащадок img, розміром з контейнер: у нейтральній точці (контейнер по центру в’юпорта; hero — scroll=0) зсув 0 і масштаб 1, тож кадр збігається з макетом і ?parallax=off. Далі фото зсувається вниз через translate на 0…--parallax-range від висоти контейнера, а scale 1 + y/h від нижнього краю (transform-origin) закриває верхній край — порожніх країв нема; інерція --parallax-lerp, rAF лише для видимих блоків. Не конфліктує з hover-zoom (transform) і reveal (opacity). Вимкнення: ?parallax=off (автоматизовані перевірки, як ?reveal=off) і prefers-reduced-motion: reduce — статична позиція без зсуву. Кнопки в секціях tours і intro (Figma 224:3688/224:3691/224:3639) — (EB Garamond Bold), як «додати в кошик».</p>
 
-      <p class="demo-label t-kicker">Hover/focus: кнопки (4 варіанти; стрілка зсувається, розмір не змінюється)</p>
+      <p class="demo-label t-kicker">Hover/focus: кнопки (3 варіанти; стрілка зсувається, розмір не змінюється)</p>
       <div class="demo-panel theme-beige">
         <!--@include components/btn variant="btn--green" href="catalog.html" text="Додати в кошик" arrow="arrow-up-right"-->
         <!--@include components/btn variant="btn--teal" href="catalog.html" text="Додати в кошик" arrow="arrow-up-right"-->
-        <!--@include components/btn variant="btn--gold" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
         <!--@include components/btn variant="btn--light" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
       </div>
 
@@ -888,18 +882,12 @@
 
       <p class="demo-label t-kicker">btn: варіанти без стрілки та зі стрілкою (partials/sections/hero, brands, picker)</p>
       <div class="demo-panel theme-brown">
-        <!--@include components/btn variant="btn--gold" href="catalog.html" text="Вивчити асортимент"-->
         <!--@include components/btn variant="btn--light" href="catalog.html" text="Вивчити асортимент" arrow="arrow-up-right"-->
       </div>
       <div class="demo-panel theme-beige">
         <div class="ds-partial-box">
           <!--@include components/btn variant="btn--light btn--block" href="catalog.html" text="Вивчити увесь асортимент" arrow="arrow-up-right"-->
         </div>
-      </div>
-
-      <p class="demo-label t-kicker">lead: кікер + заголовок + кнопка (partials/sections/hero, split)</p>
-      <div class="demo-panel theme-brown">
-        <!--@include components/lead tag="h2" kicker="Усе в одному місці, усе нашими руками" title="Від першого зерна<br>до останньої краплі в пляшці" href="catalog.html" btn="Вивчити асортимент"-->
       </div>
 
       <p class="demo-label t-kicker">faq-item: закритий і відкритий (partials/sections/faq)</p>

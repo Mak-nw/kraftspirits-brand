@@ -53,10 +53,6 @@
 .picker .slider .arrow-btn { align-self: flex-start; margin-top: var(--offset-picker-arrow-top); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
 .picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
 
-/* Спліт 194:1266 (h941): текст зліва по центру, фото справа */
-.split { position: relative; display: flex; align-items: center; min-height: var(--size-sec-split); padding-left: var(--gutter); }
-.split__photo { position: absolute; top: 0; right: 0; bottom: 0; width: var(--size-split-photo-w); height: 100%; object-fit: cover; max-width: none; }
-
 /* FAQ 194:1184 (h996): 3 колонки, кожна розкривається незалежно */
 .faq { min-height: var(--size-sec-faq); padding-top: var(--space-177); }
 .faq__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-wide); height: var(--size-faq-head-h); margin: 0 auto; text-align: center; }

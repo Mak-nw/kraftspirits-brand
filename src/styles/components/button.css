@@ -2,7 +2,7 @@
    Стани кнопки задають ТОКЕНИ --btn-<варіант>-<властивість>-<стан> (tokens.css, блок «Кнопки: стани»). Варіант (.btn--green …) лише виставляє
    КОНТЕКСТНІ змінні --btn-bg / --btn-text / --btn-border (+ -hover / -focus / -active / -disabled); база .btn читає тільки їх.
    Новий варіант = токени в tokens.css + один блок контекстних змінних нижче (див. README, «Токени кнопок»). */
-.btn, .btn--gold {
+.btn--gold { /* тон gold: використовується лише на барелс-сертифікаті 50 L. Голий .btn без тону НЕ має кольору (явно ламкий) — check-ds S10 вимагає тон */
   --btn-bg: var(--btn-gold-bg-default); --btn-bg-hover: var(--btn-gold-bg-hover); --btn-bg-focus: var(--btn-gold-bg-focus); --btn-bg-active: var(--btn-gold-bg-active); --btn-bg-disabled: var(--btn-gold-bg-disabled);
   --btn-text: var(--btn-gold-text-default); --btn-text-hover: var(--btn-gold-text-hover); --btn-text-focus: var(--btn-gold-text-focus); --btn-text-active: var(--btn-gold-text-active); --btn-text-disabled: var(--btn-gold-text-disabled);
   --btn-border: var(--btn-gold-border-default); --btn-border-hover: var(--btn-gold-border-hover); --btn-border-focus: var(--btn-gold-border-focus); --btn-border-active: var(--btn-gold-border-active); --btn-border-disabled: var(--btn-gold-border-disabled);

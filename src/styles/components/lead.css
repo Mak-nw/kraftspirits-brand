@@ -1,3 +1,0 @@
-/* Лід-блок: кікер + великий заголовок + кнопка (hero 194:1368 і спліт-секція 194:1267). Колонка по центру. */
-.lead { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-hero-text); text-align: center; color: var(--color-gold); }
-.lead__kicker { width: var(--container-text); }

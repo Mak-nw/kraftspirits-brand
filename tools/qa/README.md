@@ -10,7 +10,7 @@
 |---|---|
 | `npm run qa` | швидкий smoke: check-ds (static) + links + hscroll (1200/1440/1920) + states, ширина 1920 |
 | `npm run qa:full` | повний: ширини 1200,1440,1920 × dpr 1,2 × смуга classic+none; check-ds static+dynamic, links, hscroll, states, arch, cls |
-| `npm run qa:check-ds` | check-ds (S1–S9 статика + D1–D11 у браузері); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` |
+| `npm run qa:check-ds` | check-ds (S1–S10 статика + D1–D11 у браузері); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` |
 | `npm run qa:links` | усі внутрішні `<a href>` і якорі; `-- --matrix` друкує «звідки → куди» |
 | `npm run qa:states` | стани кнопок проти токенів `--btn-*` + транзиції + фокус-кільце |
 | `npm run qa:arch` | товщина контуру арки 14 карток каталогу, 8 ширин × dpr 1,2 × classic/none |
@@ -35,7 +35,7 @@
 Статичні (CSS/HTML/JS у `src/`, `partials/`, `*.html`; `tokens.css` — джерело, його не перевіряють): **S1** hex/rgb/hsl/іменований колір поза tokens.css (і в SVG-атрибутах HTML) ·
 **S2** px/rem у font-size/line-height/letter-spacing/padding/margin/gap/width/height (+min/max) · **S3** `style="` у HTML, partials і JS-шаблонах · **S4** `text-decoration: underline`
 поза футером і `.age-card__legal` · **S5** `var(--x)` на неіснуючий токен · **S6** невикористані токени (інформаційно) · **S7** дубль `id` в одному HTML (після `vite build` у `.out/dist`) ·
-**S8** `@import`/`url()` у CSS на неіснуючі файли · **S9** `href`/`src` на неіснуючі файли у збірці, незаповнені `%плейсхолдери%`, шляхи зображень у `src/data/*.js`.
+**S8** `@import`/`url()` у CSS на неіснуючі файли · **S9** `href`/`src` на неіснуючі файли у збірці, незаповнені `%плейсхолдери%`, шляхи зображень у `src/data/*.js` · **S10** кожен `.btn` у збірці має допустимий тон (`btn--gold|light|beige|green|teal|outline`; голий `.btn` без тону не має кольору).
 
 Динамічні (за ширинами/смугою): **D1** роль `.t-*` → однакові font-family/size/line-height/weight/letter-spacing на всіх сторінках для того самого контексту (допуск 0.5px) ·
 **D2** висоти `.btn .chip .nav-cell .select .product-card--catalog` однакові між сторінками · **D3** hscroll · **D4** консоль/4xx/failed · **D5** підкреслення (default/hover/focus-visible
