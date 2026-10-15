@@ -31,10 +31,10 @@
 .feedback-col--main > .feedback-foot { grid-row: 4; align-self: end; }
 .feedback-col--main > .contact-form__alert { grid-row: 5; } /* загальна помилка — окремий рядок під «Надіслати» (рядок існує лише поки вона показана) */
 
-.feedback-head { display: flex; flex-direction: column; gap: var(--space-15); }
+.feedback-head { display: flex; flex-direction: column; gap: var(--space-10); } /* заголовок → підзаголовок: було 15, на крок шкали менше (a161aa61) */
 .feedback-head p { margin: 0; }
-.feedback-block { display: flex; flex-direction: column; gap: var(--space-field-gap); }
-.feedback-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-field-gap); align-items: start; }
+.feedback-block { display: flex; flex-direction: column; gap: var(--space-15); } /* «Ім'я» → пара полів: було 20 (--space-field-gap), на крок менше (a161aa61) */
+.feedback-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); align-items: start; } /* «Телефон» ↔ «E-mail»: 5u (0cbf0b23) */
 
 /* повідомлення: поле розтягується на висоту рядків 1–3 (мін. --size-feedback-message-min-h); рядки помилок «Телефон/E-mail» і «повідомлення» виведені з потоку (absolute під контролом),
    щоб нижні краї textarea і E-mail збігались і за помилок валідації */
