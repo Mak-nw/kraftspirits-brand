@@ -1031,12 +1031,12 @@
    її ширина; арка картки задана в u). */
 :root {
   --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
-  --count-cocktail-cols: 12;
-  --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор колонок = зазор сітки каталогу */
-  --span-cocktail-media: 4;                                     /* фото-галерея */
-  --span-cocktail-body: 5;                                      /* заголовок, опис, таби */
-  --span-cocktail-item: 3;                                      /* картка каталогу (= 1 колонка сітки каталогу) */
-  /* МІНІМАЛЬНА висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
+  --count-cocktail-cols: 12;                                    /* колонки сітки сторінки (вступ) */
+  --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор доріжок усередині панелі = зазор сітки каталогу */
+  --grid-cocktail-block: minmax(0, 4fr) minmax(0, 5fr) var(--size-card-cat2-w); /* фото-галерея 4 : заголовок, опис, таби 5 : картка каталогу */
+  --span-cocktail-body: 5;                                      /* частки тіла (знаменник): списки «Інгредієнти»/«Подача» */
+  --span-cocktail-specs-value: 2;                               /* значення (кількість; келих, прикраса) — 2 частки з 5 праворуч, назва — 3 */
+  /* МІНІМАЛЬНА висота вмісту блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
   --size-cocktail-h: var(--size-card-cat2-h);
   --col-cocktails-intro: 4 / span 6;                           /* вступ: 6 середніх колонок — центр = центр екрана */
   /* метрики EB Garamond (частки em; hhea ascent/descent при wght 600): ascent/descent рядка; cap-height — висота капітелі за чорнилом великої «Н» (виміряно ink-знімком DPR 4 «з/без» тексту: 0.654 геометрична + 0.004 згладжування верхнього ряду пікселів) */
@@ -1050,9 +1050,11 @@
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
-  --color-cocktail-text: var(--color-beige);
-  --color-cocktail-line: color-mix(in srgb, var(--color-cocktail-text) 20%, transparent); /* розділювач рядків інгредієнтів/подачі = правило --color-line-soft (колір тексту 20%, лінії акордеона товару) для світлого тексту */
-  --color-cocktail-accent: var(--color-gold);                   /* єдиний акцент сторінки: оригінальна назва, кількості, номери кроків */
+  --color-cocktail-page-text: var(--color-beige);               /* вступ на зеленому тлі сторінки */
+  --color-cocktail-text: var(--color-green);                    /* текст у блоці-панелі (панель — світла, beige: існуюча .contacts-panel) */
+  --color-cocktail-line: var(--color-line-soft);                /* розділювач рядків = лінії акордеона товару (текст 20%) — на світлій панелі той самий токен, без похідних */
+  --color-cocktail-accent: var(--color-barrels-amber);          /* єдиний акцент: оригінальна назва, кількості, номери кроків. Золото #cbaf86 на beige — 1.6:1; золото 40% + brown (вже в палітрі, «Бочки») — 5.2:1 */
+  --size-cocktail-panel-h: calc(var(--size-cocktail-h) + 2 * (var(--space-contacts-pad) + var(--border-frame))); /* мін. висота блоку-панелі = картка каталогу + поле панелі (padding + рамка .contacts-panel) зверху й знизу */
   --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */
   --space-lightbox-pad: var(--space-50);
 }

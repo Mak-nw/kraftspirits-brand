@@ -1,4 +1,4 @@
-<article class="cocktail" id="{{slug}}" aria-labelledby="{{slug}}-title" data-cocktail{{#draft}} data-draft{{/draft}}>
+<article class="cocktail contacts-panel" id="{{slug}}" aria-labelledby="{{slug}}-title" data-cocktail{{#draft}} data-draft{{/draft}}>
   <div class="cocktail__media" data-gallery>
     <div class="product-stage cocktail__stage" data-stage data-reveal="fade" data-slot="Фото коктейлю «{{title}}»: 1–4 кадри 4:5, src/data/cocktails.js → photos">
       <img class="product-stage__img" src="{{photoSrc}}" alt="{{photoAlt}}" loading="{{loading}}" fetchpriority="{{fetchpriority}}" decoding="async">
@@ -20,7 +20,7 @@
       </div>
       <div class="tabs__panels">
         <div class="tabs__panel is-active" role="tabpanel" id="{{slug}}-panel-ingredients" aria-labelledby="{{slug}}-tab-ingredients" tabindex="0">
-          <dl class="product-specs cocktail__specs cocktail__specs--amounts t-text"><!--@each ingredients components/cocktail-ingredient--></dl>
+          <dl class="product-specs cocktail__specs t-text"><!--@each ingredients components/cocktail-ingredient--></dl>
         </div>
         <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-steps" aria-labelledby="{{slug}}-tab-steps" tabindex="0">
           <ol class="cocktail__steps t-text"><!--@each steps components/cocktail-step--></ol>

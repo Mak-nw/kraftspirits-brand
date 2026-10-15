@@ -1,30 +1,33 @@
 /* Сторінка «Коктейлі» (cocktails.html). Блок — partials/components/cocktail.html, дані — src/data/cocktails.js (опис — design-system.html#cocktails).
-   Тло — суцільний --color-green (як зона header на всіх сторінках; без візерунка ромбів). Блоки однакові: 12 колонок (фото 4 / текст 5 / товар 3),
-   мін. висота --size-cocktail-h (= картка каталогу), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
+   Тло сторінки — суцільний --color-green (як зона header на всіх сторінках; без візерунка ромбів); кожен блок — світла панель DS. Блоки однакові: фото 4 / текст 5 / картка товару,
+   мін. висота --size-cocktail-panel-h (= картка каталогу + поле панелі), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
    перемикач .product-volume (таби), .product-specs (інгредієнти, подача), картка каталогу (partial product-card + .product-card--catalog без змін). */
-.cocktails { width: var(--size-cocktails-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-cocktail-text); }
+.cocktails { width: var(--size-cocktails-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-cocktail-page-text); }
 /* CLS: partials/body-vw.html міряє ширину html на самому початку <body>, коли вмісту ще немає. Короткі сторінки Chrome малює після повного розбору (до того
    viewport.js уточнює --vw), а довгий HTML коктейлів (≈110 КБ) малює частинами — з --vw без смуги прокрутки, і поява смуги зсувала макет (CLS ≈0.01 на 1200).
    body одразу на 1px вищий за вікно: класична смуга є вже в момент заміру (у режимі без смуги — нічого не змінюється); на розкладку не впливає (сторінка й так ≈10 вікон) */
 .page-cocktails { min-height: calc(100svh + var(--border-hairline)); background: var(--color-green); }
 
 /* вступ: заголовок і рядок по центру екрана (коментар замовника 23941060) — 6 середніх колонок сітки (4–9), текст центрований; між вступом і блоками та між блоками — лише відступ */
-.cocktails__intro, .cocktail { display: grid; grid-template-columns: repeat(var(--count-cocktail-cols), minmax(0, 1fr)); column-gap: var(--space-cocktail-col-gap); }
+.cocktails__intro { display: grid; grid-template-columns: repeat(var(--count-cocktail-cols), minmax(0, 1fr)); column-gap: var(--space-cocktail-col-gap); }
 .cocktails__intro { row-gap: var(--space-30); text-align: center; }
 .cocktails__intro > * { grid-column: var(--col-cocktails-intro); }
 .cocktails__lead { text-wrap: balance; }
 .cocktails__list { display: grid; row-gap: var(--space-cocktail-block-gap); margin-top: var(--space-cocktail-block-gap); }
 
 /* блок коктейлю */
-.cocktail { min-height: var(--size-cocktail-h); } /* не нижчий за картку каталогу: короткі блоки однакові, довший текст (дані з адмінки) збільшує блок без накладань */
-.cocktail__media { --accent: var(--color-cocktail-text); grid-column: span var(--span-cocktail-media); position: relative; } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
+/* блок = ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель контактів), на зеленому тлі сторінки (коментар замовника dbc4983b).
+   .cocktail задає лише розкладку: зовнішні краї панелі — колонки 1–12 сітки; усередині три доріжки (фото 4 : текст 5 : картка). Мін. висота = картка каталогу + поле панелі: короткі блоки однакові, довший текст (дані з адмінки) збільшує блок без накладань */
+.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-col-gap); row-gap: 0; align-items: stretch; min-height: var(--size-cocktail-panel-h); }
+.cocktail__media { --accent: var(--color-cocktail-text); position: relative; } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
-.cocktail__body { grid-column: span var(--span-cocktail-body); display: flex; flex-direction: column; min-width: 0; }
+.cocktail__body { display: flex; flex-direction: column; min-width: 0; }
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = верх фото й картки (як --shift-barrels-cap-top) */
 .cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно; вільне місце лишається внизу блоку */
 .cocktail__original { margin-top: var(--space-10); color: var(--color-cocktail-accent); }
 .cocktail__desc { margin-top: var(--space-30); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
-.cocktail__item { grid-column: span var(--span-cocktail-item); display: grid; align-content: start; min-width: 0; } /* картка каталогу як є: ширина = 3 колонки = 426.25u (як колонка сітки каталогу), висота — її токен */
+.cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу як є: ширина 426.25u (доріжка), висота — її токен; арка (::before) зафарбована кольором панелі, не зеленим тлом сторінки */
+.cocktail__item .product-card--catalog::before { background: var(--color-beige); }
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
 .tabs__list { display: flex; gap: var(--space-product-volumes-gap); } /* як ряд об'ємів на товарі (той самий зазор, без лінії) */
@@ -33,19 +36,13 @@
 .js .tabs__panel { grid-area: 1 / 1; }
 .js .tabs__panel:not(.is-active) { visibility: hidden; }
 .tabs__panel:focus-visible { outline-offset: var(--space-5); }
-/* інгредієнти: назва ліворуч, кількість праворуч (акцент), як у барній карті; подача — пари «підпис — значення» (.product-specs як на товарі) */
-/* розділювачі рядків (коментар замовника b60b8cab) — той самий розділювач, що в рядках акордеона сторінки товару: нижня hairline-лінія кожного рядка,
-   включно з останнім, колір --accent-line (на товарі = колір тексту 20%: --color-line-soft; тут — те саме правило для світлого тексту на зеленому тлі).
-   Крок рядка не змінився: був рядок + проміжок 10u, тепер рядок + 2×5u + 1px; проміжок між колонками — padding замість column-gap, щоб лінія була суцільною */
-.cocktail__specs { --accent-line: var(--color-cocktail-line); column-gap: 0; row-gap: 0; } /* на всю ширину тіла (5 колонок) */
+/* «Інгредієнти» і «Подача» — ОДНА верстка (коментар замовника b1859f76): назва ліворуч, значення за правим краєм у 2 частках з 5 ширини тіла, під кожним рядком hairline-розділювач
+   (той самий, що в рядках акордеона товару, колір --accent-line; коментар b60b8cab), однаковий крок рядка; довге значення переноситься в межах своєї колонки,
+   висота панелей не змінюється (вони в одній комірці). Колонки без зазору: проміжок між ними — padding-left у dd (всередині комірки), тож лінія суцільна */
+.cocktail__specs { --accent-line: var(--color-cocktail-line); column-gap: 0; row-gap: 0; grid-template-columns: minmax(0, 1fr) calc(100% * var(--span-cocktail-specs-value) / var(--span-cocktail-body)); }
 .cocktail__specs > :is(dt, dd) { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--accent-line); }
-.cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); }
-/* колонки списку — на колонках сітки (D12): тіло = 5 колонок; підпис подачі — 1 колонка, значення — 4; назва інгредієнта — 4, кількість — 1 (зазор сітки = padding dd) */
-.cocktail__specs { --cocktail-col: calc((100% - (var(--span-cocktail-body) - 1) * var(--space-cocktail-col-gap)) / var(--span-cocktail-body)); grid-template-columns: var(--cocktail-col) minmax(0, 1fr); }
-.cocktail__specs--amounts { grid-template-columns: minmax(0, 1fr) calc(var(--cocktail-col) + var(--space-cocktail-col-gap)); }
-.cocktail__specs--amounts dt { font-weight: inherit; }
-.cocktail__specs--amounts dd { color: var(--color-cocktail-accent); text-align: right; }
-.cocktail__specs:not(.cocktail__specs--amounts) dt { color: var(--color-cocktail-accent); }
+.cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); color: var(--color-cocktail-accent); text-align: right; }
+.cocktail__specs > dt { font-weight: inherit; }
 .cocktail__steps { display: grid; row-gap: var(--space-10); }
 .cocktail__step { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-20); align-items: baseline; }
 .cocktail__step-n { color: var(--color-cocktail-accent); }
