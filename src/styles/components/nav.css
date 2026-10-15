@@ -49,6 +49,7 @@ a.nav-link--on-light:focus-visible { color: var(--btn-navlink-light-text-focus);
 .nav-cell--icon .icon { --icon-size: var(--header3-icon-size); }
 .nav-cell--block { width: 100%; } /* кнопка на всю ширину контейнера (дії у випадному меню) */
 .nav-cell--outline { height: var(--header2-btn-outline-h); background: var(--btn-bg); color: var(--btn-text); }
+.nav-cell--ghost { height: var(--header2-btn-ghost-h); }
 .nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--btn-bg); color: var(--btn-text); }
 /* hover/focus кнопок: лише колір/фон (рамка стала, розміри не змінюються) */
 a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); border-color: var(--btn-border-focus); }
@@ -60,7 +61,7 @@ a.nav-cell--fill:focus-visible { outline-color: var(--btn-focus-ring-color-on-da
   a.nav-cell--fill:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); border-color: var(--btn-border-hover); }
 }
 
-/* «каталог» (пункт-комірка 150×42, 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
+/* «каталог» (150×44, як «Кошик»/«підказати?», 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
 .nav-cell--ghost { border-radius: var(--radius-btn); background: var(--btn-bg); color: var(--btn-text); transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
 a.nav-cell--ghost:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
