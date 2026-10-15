@@ -152,7 +152,8 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 |---|---|
 | `img/barrels-grain.svg` | зерно плівки (процедурне feTurbulence), fixed-шар сторінки, сила `--opacity-barrels-grain` |
 | `img/barrels-pattern-diamond.svg` | маска ромба (геометрія 1:1 з `catalog/home-pattern-diamond.svg`) для будь-якої кімнати |
-| `img/barrels-bottle-tile.svg` | плитка «стіни пляшок» (силует 0,7 л) — арифметика бочки |
+| `img/barrels-bottle-tile.svg` | силует пляшки 0,7 л (маска 22×50) — ключ легенди арифметики бочки |
+| `img/barrels-bottle-block.svg` | маска-блок «стіни пляшок»: 12×8 = 96 силуетів (той самий контур) — 50 L = 1 блок, 200 L = 4 блоки − 1 |
 | `img/barrels-tex-char.svg`, `-caramel.svg`, `-toast.svg`, `-oak.svg` | фактури шарів схеми клепки |
 
 Слоти під майбутні фото (позначені `data-slot`, огляд — `barrels.html?slots=on`): hero (ТЗ IMG-1, зараз наявний AI-кадр `barrels-hero.webp`), макро клепки (IMG-2), 4 днища бочок з-під вин — марсала / мадера / портвейн / херес (IMG-4, зараз гравюри). Генерацію не запускали (лише з окремого дозволу замовника).
