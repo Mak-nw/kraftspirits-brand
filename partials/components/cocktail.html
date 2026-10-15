@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-  {{#hasProduct}}<div class="cocktail__item" data-slot="Товар для коктейлю: product «{{productSlug}}» у src/data/cocktails.js{{#productNote}} ({{productNote}}){{/productNote}}">
+  {{#hasProduct}}<div class="cocktail__item" data-name="{{productName}}" data-slot="Товар для коктейлю: product «{{productSlug}}» у src/data/cocktails.js{{#productNote}} ({{productNote}}){{/productNote}}">
     <!--@include components/product-card mod=" product-card--catalog" slug="{{productSlug}}" name="{{productNameHtml}}" price="{{productPrice}}" image="{{productImage}}" brand="{{productBrand}}"-->
   </div>{{/hasProduct}}
 </article>

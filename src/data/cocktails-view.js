@@ -3,6 +3,7 @@
 // списки (photos, ingredients, steps) — масиви для вкладених <!--@each … -->. Дані — src/data/cocktails.js.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
+export const LIMITS = { description: 320, ingredients: 7, steps: 6, photos: 3 };
 
 export function cocktailsView(cocktails, products) {
   const slugs = new Set();
@@ -10,6 +11,14 @@ export function cocktailsView(cocktails, products) {
     if (!c.slug || !/^[a-z0-9-]+$/.test(c.slug)) throw new Error(`cocktails.js: некоректний slug «${c.slug}» (латиниця, цифри, дефіс)`);
     if (slugs.has(c.slug)) throw new Error(`cocktails.js: slug «${c.slug}» повторюється`);
     slugs.add(c.slug);
+    // межі, за яких блок лишається висотою картки каталогу (довші дані — блок росте, але адмінка має попереджати раніше): помилка збірки з поясненням
+    const fail = (msg) => { throw new Error(`cocktails.js «${c.slug}»: ${msg}`); };
+    if (!c.title) fail('немає title');
+    if (!c.description) fail('немає description');
+    if (c.description.length > LIMITS.description) fail(`description ${c.description.length} символів — максимум ${LIMITS.description} (2–3 речення)`);
+    if (!c.ingredients?.length || c.ingredients.length > LIMITS.ingredients) fail(`ingredients: ${c.ingredients?.length || 0} — потрібно 1–${LIMITS.ingredients}`);
+    if (!c.steps?.length || c.steps.length > LIMITS.steps) fail(`steps: ${c.steps?.length || 0} — потрібно 1–${LIMITS.steps}`);
+    if (!c.photos?.length) fail('photos порожній — потрібно 1–3 фото');
     const photos = (c.photos || []).slice(0, 3); // 1–3: колонка мініатюр сторінки товару (3×167 + 2×7 + 2×15 = 545u) вміщується у висоту блоку = картка каталогу 547.67u
     if (!photos.length) throw new Error(`cocktails.js: «${c.slug}» без фото (потрібно 1–3)`);
     if ((c.photos || []).length > 3) console.warn(`[cocktails] «${c.slug}»: фото більше 3 — показуються перші 3`);

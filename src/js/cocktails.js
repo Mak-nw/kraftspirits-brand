@@ -34,10 +34,10 @@ document.querySelectorAll('[data-cocktail]').forEach((block) => {
   // таби
   block.querySelectorAll('[data-tabs]').forEach(initTabs);
 
-  // картка товару — як у каталозі (catalog.js ставить alt = назва товару)
-  const card = block.querySelector('.product-card');
-  const img = card?.querySelector('.product-card__media img');
-  if (img) img.alt = card.querySelector('h3').textContent.trim();
+  // картка товару — як у каталозі: catalog.js ставить alt = p.name (назва з products.js, а не текст h3 з <br>)
+  const item = block.querySelector('.cocktail__item');
+  const img = item?.querySelector('.product-card__media img');
+  if (img) img.alt = item.dataset.name;
 });
 
 // ?slots=on — огляд місць під фото/тексти замовника (як на бочках): обведення [data-slot] і перелік
