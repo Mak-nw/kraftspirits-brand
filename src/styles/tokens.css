@@ -840,7 +840,7 @@
    Словник — лише елементи design-system.html (CLAUDE.md п. 5б): кольори палітри, типографіка, hairline-лінії й рамки, панель beige + --radius-panel,
    кнопки DS. Без ромбів-маркерів, подвійних рамок, світіння, зерна. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12 для сторінки):
    поля 47.5u, зазор 40u, вміст 1825u. Шапки секцій — по центру. Значення — з палітри/масштабу.
-   Компоненти: barrels-layer (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
+   Компоненти: barrels-layer (+ іконки DS .icon--barrels-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
 :root {
@@ -925,7 +925,7 @@
   --span-barrels-layer: 3;
   --size-barrels-layer: calc(var(--span-barrels-layer) * var(--size-barrels-col) + (var(--span-barrels-layer) - 1) * var(--space-barrels-grid-gap)); /* діаметр кола = 3 колонки: текстура = накладка */
   --size-barrels-layer-overlap: calc(var(--size-barrels-layer) * 0.26);  /* накладка заходить на коло текстури на 26% діаметра («лінза») */
-  --size-barrels-layer-icon: calc(var(--size-barrels-layer) * 0.15);     /* іконка 64×64 (viewBox) у центрі «лінзи» */
+  --size-barrels-layer-icon: calc(var(--size-barrels-layer) * 0.12);     /* іконка DS (.icon--barrels-*, 24×24, лінія 1.5) у центрі «лінзи»: ≈51u на 1920 */
   --space-barrels-layer-pad: calc(var(--size-barrels-layer) * 0.11);     /* бокові й нижнє поле тексту накладки: рядки — у межах хорди кола */
 
   /* S4 «Арифметика бочки»: 50 L — колонки 1–3, 200 L — колонки 4–12; стіна пляшок в ОДНОМУ масштабі: 50 L = 1 блок 16 × 6 = 96, 200 L = 4 такі
@@ -1012,7 +1012,6 @@
   --space-barrels-layer-text-top: calc(56 * var(--u));    /* низ «лінзи» → поле назви (текст — із верхнього вирівнювання: однакова сітка в усіх чотирьох) */
   --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
   --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
-  --svg-stroke-icon: 2;                                   /* лінія іконок шарів, одиниці viewBox 64 */
   --color-barrels-layer-plate: color-mix(in srgb, color-mix(in srgb, var(--color-gold) 12%, var(--color-brown)) 88%, transparent); /* накладка: тон «дерева» на 12% світліший (коло видно без рамки), проста прозорість 88% — у «лінзі» ледь проступає текстура; без розмиття */
   /* тони шарів — лише суміші палітри; суцільне тло кола під фото-текстурою (видно, доки фото вантажиться, або якщо img не задано) */
   --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* обпал (вугілля) */
