@@ -3,12 +3,12 @@
    → S6 ціна (cellar). Однотипні плашки — subgrid зі спільними рядками; оптичні поправки — лише токени в em. Гравюри: stroke currentColor, тонкі
    лінії --svg-stroke-hair, заливки лише токенами; анімації — transform / opacity / stroke-dashoffset, без скрол-анімацій. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
-.page-barrels { --color-header3-underlay: var(--color-barrels-header-underlay); } /* пілюля header на цій сторінці — teal (лише токен, розмітка спільного partial та сама) */
 
 /* ---------- «Світло в погребі»: кімнати, візерунок, зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
-   Кімната = секція з власним тлом (wood / cellar / paper). Світле — лише текст, лінії та одна «паперова» кімната.
-   Зерно — один fixed-шар на всю сторінку (без анімації, pointer-events: none), під пілюлею header. */
-.page-barrels::after { content: ''; position: fixed; inset: 0; z-index: var(--z-barrels-grain); pointer-events: none; background: url('/assets/img/barrels-grain.svg') 0 0 / var(--size-barrels-grain-tile) var(--size-barrels-grain-tile) repeat; opacity: var(--opacity-barrels-grain); }
+   Кімната = секція з власним тлом (wood / cellar / paper). Header — як на всіх сторінках (рішення замовника: без власного тону пілюлі).
+   Зерно плівки — лише в темних кімнатах і hero (шар ::after поверх вмісту, без анімації, pointer-events: none); «паперова» кімната — чиста,
+   без зерна й візерунків (рішення замовника). */
+.hero--barrels::after, .bx-room--wood::after, .bx-room--cellar::after { content: ''; position: absolute; inset: 0; z-index: var(--z-barrels-grain); pointer-events: none; background: url('/assets/img/barrels-grain.svg') 0 0 / var(--size-barrels-grain-tile) var(--size-barrels-grain-tile) repeat; opacity: var(--opacity-barrels-grain); }
 .bx-room { position: relative; isolation: isolate; color: var(--color-barrels-ink); }
 .bx-room--wood { background: var(--color-barrels-room-wood); }
 .bx-room--cellar { background: var(--color-barrels-room-cellar); }
