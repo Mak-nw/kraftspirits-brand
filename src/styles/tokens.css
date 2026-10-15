@@ -1032,7 +1032,7 @@
   --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
   --count-cocktail-cols: 12;                                    /* колонки сітки сторінки (вступ) */
   --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор доріжок усередині панелі = зазор сітки каталогу */
-  --space-cocktail-tabs-gap: var(--space-15);                    /* проміжок між табами (згруповані зліва; одне значення на всі блоки — підбирається замовником, коментар 580810af) */
+  --space-cocktail-tabs-gap: var(--space-30);                    /* проміжок між табами (згруповані зліва; одне значення на всі блоки — підбирається замовником, коментар 580810af) */
   --size-cocktail-card-photo-h: calc(329.667 * var(--u));        /* висота фото в картці каталогу (як у каталозі): при розтягуванні картки пляшка не змінює розмір */
   --space-cocktail-plate-gap: var(--space-5);                    /* ОДНАКОВИЙ проміжок між трьома плашками: текстова панель | слайдер | картка (коментар c121e3bf «4,5» = 4.5px на вікні 1728 = 5u) */
   --size-cocktail-photo-w: calc((var(--size-cocktails-w) - (var(--count-cocktail-cols) - 1) * var(--space-cocktail-col-gap)) / var(--count-cocktail-cols) * 4 + 3 * var(--space-cocktail-col-gap)); /* слайдер зберігає ширину 4 колонок сітки каталогу (581.67u) */
