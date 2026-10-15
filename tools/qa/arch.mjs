@@ -10,6 +10,9 @@ export const ARCH_WIDTHS = '1200,1280,1366,1440,1536,1680,1800,1920';
 const THICK_U = 2.476; // товщина рамки арки (Figma 204:2230)
 
 export async function runArch(o) {
+  const pageName = String(o.page || 'catalog'); // --page cocktails: картки в блоках коктейлів, обхід усіх 3 вкладок (висота ряду, а отже й арки, залежить від активної вкладки)
+  const SEL = pageName === 'cocktails' ? '.cocktail__item .product-card--catalog' : '.product-card--catalog';
+  const TABS = pageName === 'cocktails' ? ['ingredients', 'steps', 'serve'] : [null];
   const rep = new Report('arch');
   const defects = []; let cards = 0;
   const wantedMin = 0.5, spreadMax = 0.5;
@@ -17,21 +20,23 @@ export async function runArch(o) {
     const L = await launch({ scrollbar: sb, chrome: o.chrome, out: o.out });
     try {
       for (const c of matrix(o).filter((x) => x.scrollbar === sb)) {
-        const page = await openPage(L.browser, pageUrl(o.url, 'catalog', 'static'), { width: c.width, height: 900, dpr: c.dpr, settle: false });
-        await waitStable(page, { selector: '.product-card--catalog' });
+        const page = await openPage(L.browser, pageUrl(o.url, pageName, 'static'), { width: c.width, height: 900, dpr: c.dpr, settle: false });
+        await waitStable(page, { selector: SEL });
         await sleep(300);
         const uu = await getU(page);
         const expectedDev = THICK_U * uu * c.dpr;
-        const tokens = await page.evaluate(() => { const cs = getComputedStyle(document.querySelector('.product-card--catalog')); const probe = document.createElement('i'); probe.style.color = 'var(--color-green)'; document.body.append(probe); const g = getComputedStyle(probe).color; probe.remove(); const cb = document.createElement('i'); cb.style.color = 'var(--color-card-bg-catalog)'; document.body.append(cb); const bg = getComputedStyle(cb).color; cb.remove(); return { arch: g, bg }; });
+        const tokens = await page.evaluate((SEL_) => { const cs = getComputedStyle(document.querySelector(SEL_)); const probe = document.createElement('i'); probe.style.color = 'var(--color-green)'; document.body.append(probe); const g = getComputedStyle(probe).color; probe.remove(); const cb = document.createElement('i'); cb.style.color = 'var(--color-card-bg-catalog)'; document.body.append(cb); const bg = getComputedStyle(cb).color; cb.remove(); return { arch: g, bg }; }, SEL);
         const rgb = (s) => s.match(/[\d.]+/g).slice(0, 3).map(Number);
         const A = rgb(tokens.arch), B = rgb(tokens.bg);
-        const n = await page.evaluate(() => document.querySelectorAll('.product-card--catalog').length);
+        for (const tab of TABS) {
+        if (tab) { await page.evaluate((t) => document.querySelectorAll('.cocktail').forEach((a) => document.getElementById(`${a.id}-tab-${t}`).click()), tab); await sleep(250); }
+        const n = await page.evaluate((S) => document.querySelectorAll(S).length, SEL);
         const sides = []; // по картці
         // не-hover: курсор у кутку, щоб рідина не змінила кольори
         await page.mouse.move(2, 2);
         for (let i = 0; i < n; i++) {
           // карточку в центр, кадр в'юпорта
-          const rect = await page.evaluate((idx) => { const el = document.querySelectorAll('.product-card--catalog')[idx]; const r0 = el.getBoundingClientRect(); scrollTo({ top: r0.top + scrollY - (innerHeight - r0.height) / 2, behavior: 'instant' }); const r = el.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; }, i);
+          const rect = await page.evaluate((idx, SEL_) => { const el = document.querySelectorAll(SEL_)[idx]; const r0 = el.getBoundingClientRect(); scrollTo({ top: r0.top + scrollY - (innerHeight - r0.height) / 2, behavior: 'instant' }); const r = el.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; }, i, SEL);
           await sleep(120);
           await page.mouse.move(2, 2);
           const shot = await page.screenshot({ encoding: 'base64' });
@@ -43,7 +48,7 @@ export async function runArch(o) {
             const dx = A2.map((v, k) => v - B2[k]); const den = dx.reduce((s, v) => s + v * v, 0);
             const cov = (x, y) => { const d = px(x, y); const p = [d[0] - B2[0], d[1] - B2[1], d[2] - B2[2]]; const t = (p[0] * dx[0] + p[1] * dx[1] + p[2] * dx[2]) / den; return Math.min(1, Math.max(0, t)); };
             // арка зміщена на --offset-arch = 6u від краю картки; ширина 414u, висота 535u
-            const ox = rc.x + 6 * uu2, oy = rc.y + 6 * uu2, aw = 414 * uu2, ah = 535 * uu2;
+            const ox = rc.x + 6 * uu2, oy = rc.y + 6 * uu2, aw = 414 * uu2, ah = 535 * uu2 + (rc.h - 547.667 * uu2); /* арка подовжується на різницю висоти картки (cocktails) */
             const band = Math.ceil(5 * uu2 * dpr) + 4; // зона пошуку від зовнішнього краю арки (товщина ~2.5u; 4 — запас на зсув)
             const sumLine = (fixed, from, dir, horiz) => { let s = 0; for (let k = 0; k < band; k++) { const a = Math.round(from * dpr) + dir * k; s += horiz ? cov(a, Math.round(fixed * dpr)) : cov(Math.round(fixed * dpr), a); } return s; };
             // відступ від краю в'юпорта: нижня сторона може бути поза кадром — картка по центру, тож усе в кадрі
@@ -62,15 +67,15 @@ export async function runArch(o) {
           const vals = sides.map((s) => s[side]); const mn = Math.min(...vals), mx = Math.max(...vals);
           const spread = mx - mn;
           const minOk = side === 'top' ? mn >= expectedDev * wantedMin : mn >= expectedDev * wantedMin;
-          const spreadBad = side !== 'top' && spread > spreadMax; // верх: у центрі арка «Subtract» ~10u (товща) — розкид не критерій
+          const spreadBad = side !== 'top' && spread > spreadMax + 0.01; // +0.01: суми покриття — кроки по 0.5 device px, float-похибка (0.5000x) не є порушенням; 0.53 і більше ловиться // верх: у центрі арка «Subtract» ~10u (товща) — розкид не критерій
           if (!minOk || spreadBad) {
             const bad = sides.filter((s) => s[side] < expectedDev * wantedMin || s[side] - mn > spreadMax && false).map((s) => s.i);
             defects.push({ w: c.width, dpr: c.dpr, sb, side, min: +mn.toFixed(2), max: +mx.toFixed(2), spread: +spread.toFixed(2), expected: +expectedDev.toFixed(2), badCards: bad });
-            rep.add({ rule: 'A1', page: `catalog@${c.width}/x${c.dpr}/${sb}`, selector: `.product-card--catalog::before ${side}`, value: `min ${mn.toFixed(2)} max ${mx.toFixed(2)} розкид ${spread.toFixed(2)} device px (очікувано ≈${expectedDev.toFixed(2)})`, msg: `${!minOk ? `мін. < ${wantedMin}× очікуваної` : ''}${!minOk && spreadBad ? '; ' : ''}${spreadBad ? `розкид > ${spreadMax}` : ''}${bad.length ? `; картки №${bad.map((x) => x + 1).join(',')}` : ''}` });
+            rep.add({ rule: 'A1', page: `${pageName}${tab ? '/' + tab : ''}@${c.width}/x${c.dpr}/${sb}`, selector: `.product-card--catalog::before ${side}`, value: `min ${mn.toFixed(2)} max ${mx.toFixed(2)} розкид ${spread.toFixed(2)} device px (очікувано ≈${expectedDev.toFixed(2)})`, msg: `${!minOk ? `мін. < ${wantedMin}× очікуваної` : ''}${!minOk && spreadBad ? '; ' : ''}${spreadBad ? `розкид > ${spreadMax}` : ''}${bad.length ? `; картки №${bad.map((x) => x + 1).join(',')}` : ''}` });
           }
         }
-        rep.stats[`${c.width}/x${c.dpr}/${sb}`] = { u: +uu.toFixed(4), expected: +expectedDev.toFixed(2), left: [Math.min(...sides.map((s) => s.left)), Math.max(...sides.map((s) => s.left))].map((v) => +v.toFixed(2)), bottom: [Math.min(...sides.map((s) => s.bottom)), Math.max(...sides.map((s) => s.bottom))].map((v) => +v.toFixed(2)) };
-        await page.close().catch(() => {});
+        rep.stats[`${tab ? tab + ':' : ''}${c.width}/x${c.dpr}/${sb}`] = { u: +uu.toFixed(4), expected: +expectedDev.toFixed(2), left: [Math.min(...sides.map((s) => s.left)), Math.max(...sides.map((s) => s.left))].map((v) => +v.toFixed(2)), bottom: [Math.min(...sides.map((s) => s.bottom)), Math.max(...sides.map((s) => s.bottom))].map((v) => +v.toFixed(2)) };
+        }        await page.close().catch(() => {});
       }
     } finally { await L.close(); }
   }

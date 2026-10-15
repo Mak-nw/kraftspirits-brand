@@ -36,7 +36,7 @@
    на ту саму різницю висоти (прямі сторони не змінюються, кути/дуга розтягуються на частки відсотка), пляшка лишається того ж розміру по центру зони фото, назва й ціна притиснуті до низу */
 .cocktail__item { align-self: stretch; align-content: stretch; }
 .cocktail__item .product-card--catalog { height: 100%; }
-.cocktail__item .product-card--catalog::before { height: calc(var(--size-arch-h) + 100% - var(--size-card-cat2-h)); }
+.cocktail__item .product-card--catalog::before { height: round(calc(var(--size-arch-h) + 100% - var(--size-card-cat2-h)), 1px); }
 .cocktail__item .product-card--catalog .product-card__media { display: flex; align-items: center; }
 .cocktail__item .product-card--catalog .product-card__media img { flex: none; height: var(--size-cocktail-card-photo-h); }
 

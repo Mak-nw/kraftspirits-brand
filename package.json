@@ -13,6 +13,7 @@
     "qa:links": "node tools/qa/links.mjs",
     "qa:states": "node tools/qa/states.mjs",
     "qa:arch": "node tools/qa/arch.mjs",
+    "qa:arch:cocktails": "node tools/qa/arch.mjs --page cocktails",
     "qa:cls": "node tools/qa/cls.mjs",
     "qa:hscroll": "node tools/qa/hscroll.mjs",
     "qa:ink": "node tools/qa/ink-align.mjs",
