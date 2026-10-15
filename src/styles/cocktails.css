@@ -1,6 +1,6 @@
 /* Сторінка «Коктейлі» (cocktails.html). Блок — partials/components/cocktail.html, дані — src/data/cocktails.js (опис — design-system.html#cocktails).
-   Тло сторінки — суцільний --color-green (як зона header на всіх сторінках; без візерунка ромбів); кожен блок — світла панель DS. Блоки однакові: фото 4 / текст 5 / картка товару,
-   мін. висота --size-cocktail-panel-h (= картка каталогу + поле панелі), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
+   Тло сторінки — суцільний --color-green (як зона header на всіх сторінках; без візерунка ромбів); світла панель DS — лише під текстовою частиною блоку. Блоки однакові: фото 4 / текст 5 / картка товару (колонки),
+   висота ряду = найвищий із трьох (фото 4:5), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
    перемикач .product-volume (таби), .product-specs (інгредієнти, подача), картка каталогу (partial product-card + .product-card--catalog без змін). */
 .cocktails { width: var(--size-cocktails-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-cocktail-page-text); }
 /* CLS: partials/body-vw.html міряє ширину html на самому початку <body>, коли вмісту ще немає. Короткі сторінки Chrome малює після повного розбору (до того
@@ -15,20 +15,21 @@
 .cocktails__lead { text-wrap: balance; }
 .cocktails__list { display: grid; row-gap: var(--space-cocktail-block-gap); margin-top: var(--space-cocktail-block-gap); }
 
-/* блок коктейлю */
-/* блок = ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель контактів), на зеленому тлі сторінки (коментар замовника dbc4983b).
-   .cocktail задає лише розкладку: зовнішні краї панелі — колонки 1–12 сітки; усередині три доріжки (фото 4 : текст 5 : картка). Мін. висота = картка каталогу + поле панелі: короткі блоки однакові, довший текст (дані з адмінки) збільшує блок без накладань */
-.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-col-gap); row-gap: 0; align-items: stretch; min-height: var(--size-cocktail-panel-h); }
-.cocktail__media { --accent: var(--color-cocktail-text); position: relative; } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
+/* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною). Сітка = 12 колонок каталогу, порядок зліва направо (коментар bb972de6):
+   ТЕКСТ (кол. 1–5) — ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель контактів): заголовок, опис, таби, списки;
+   СЛАЙДЕР-галерея (кол. 6–9) і картка каталогу (кол. 10–12) стоять прямо на зеленому. Усі три притиснуті до верху й НЕ розтягуються (align-items: start; коментар 897ea0d1): панель — за вмістом
+   (висота табів = найвища панель коктейлю), фото — 4:5 від ширини колонок, картка — своєї висоти; висота ряду = найвищий із трьох. Порядок у DOM = порядок Tab: текст → слайдер → картка.
+   Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
+.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-col-gap); row-gap: 0; align-items: start; }
+.cocktail__media { --accent: var(--color-cocktail-text); position: relative; grid-column: var(--col-cocktail-media); aspect-ratio: var(--ratio-cocktail-photo); } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
-.cocktail__body { display: flex; flex-direction: column; min-width: 0; }
-.cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = верх фото й картки (як --shift-barrels-cap-top) */
-.cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно; вільне місце лишається внизу блоку */
-.cocktail__original { margin-top: var(--space-10); color: var(--color-cocktail-accent); }
-.cocktail__desc { margin-top: var(--space-30); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
-.cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу як є: ширина 426.25u (доріжка), висота — її токен; арка (::before) зафарбована кольором панелі, не зеленим тлом сторінки */
-.cocktail__item .product-card--catalog::before { background: var(--color-beige); }
-.cocktail__item .product-card--catalog:focus-visible { outline-color: var(--color-green); } /* кільце фокуса — колір тексту панелі (beige-кільце каталогу розраховане на зелене тло: на світлій панелі його не видно) */
+/* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто. Правий край виходить у зазор до слайдера на --space-cocktail-panel-bleed (видимий проміжок = --space-cocktail-panel-gap; e4f93328), текст лишається на колонках (padding компенсує виліт); лівий край — на сітці */
+.cocktail__body { grid-column: var(--col-cocktail-body); min-height: 0; gap: 0; min-width: 0; margin-right: calc(-1 * var(--space-cocktail-panel-bleed)); padding-right: calc(var(--space-contacts-pad) + var(--space-cocktail-panel-bleed)); }
+.cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
+.cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
+.cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-cocktail-accent); }
+.cocktail__desc { margin-top: var(--space-cocktail-head-gap); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
+.cocktail__item { grid-column: var(--col-cocktail-item); display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
 .tabs__list { display: flex; gap: var(--space-product-volumes-gap); } /* як ряд об'ємів на товарі (той самий зазор, без лінії) */

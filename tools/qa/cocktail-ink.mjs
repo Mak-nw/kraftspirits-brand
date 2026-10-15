@@ -1,4 +1,5 @@
-// Ink-замір верху першого рядка заголовка блоку коктейлю (.cocktail__title) проти верху фото (.product-stage) і картки (.product-card) — dpr 4, різниця знімків «з/без» тексту.
+// Ink-замір верху першого рядка заголовка блоку коктейлю (.cocktail__title) — dpr 4, різниця знімків «з/без» тексту. Еталон (варіант «світла панель лише під текстом», коментар 3a227bc8):
+// верх чорнила = внутрішній верх панелі (верх .cocktail__body + рамка + поле) — те саме поле, що зліва від тексту; відстані до верху фото (.product-stage) і картки (.product-card) — лише довідково.
 // Верх = верх капітелі ПЕРШОЇ літери (рядок маски з покриттям ≥ 30% піку цього гліфа); гачок Ґ / риска Й / апостроф, що виходять над капітеллю, малим покриттям не рахуються.
 import { launch, openPage, pageUrl, runMain, Report, sleep } from './lib.mjs';
 const DEF = { dpr: '4', widths: '1200,1440,1728,1920', scrollbar: 'classic,none', url: 'http://localhost:5411/', pages: 'cocktails' };
@@ -15,11 +16,11 @@ runMain('cocktail-ink', DEF, async (o) => {
           await page.evaluate((i) => { const t = document.querySelectorAll('.cocktail')[i].querySelector('.cocktail__title'); scrollTo({ top: Math.round(t.getBoundingClientRect().top + scrollY - 160), behavior: 'instant' }); /* ціле зміщення скролу, як у користувача на dpr 1 */ }, i);
           await sleep(400);
           const g = await page.evaluate((i) => {
-            const a = document.querySelectorAll('.cocktail')[i]; const t = a.querySelector('.cocktail__title'); window.__t = t;
+            const a = document.querySelectorAll('.cocktail')[i]; const bd = a.querySelector('.cocktail__body'); const bcs = getComputedStyle(bd); const inner = bd.getBoundingClientRect().top + parseFloat(bcs.borderTopWidth) + parseFloat(bcs.paddingTop); const t = a.querySelector('.cocktail__title'); window.__t = t;
             const r = (e) => { const b = e.getBoundingClientRect(); return { t: b.top, l: b.left, w: b.width, h: b.height }; };
             const rg = document.createRange(); rg.setStart(t.firstChild, 0); rg.setEnd(t.firstChild, 1);
             const f = rg.getBoundingClientRect();
-            return { title: t.textContent.trim(), stage: r(a.querySelector('.product-stage')), card: a.querySelector('.product-card') ? r(a.querySelector('.product-card')) : null, tt: r(t), g: { t: f.top, b: f.bottom, l: f.left, r: f.right }, sy: scrollY, fs: parseFloat(getComputedStyle(t).fontSize) };
+            return { inner, title: t.textContent.trim(), stage: r(a.querySelector('.product-stage')), card: a.querySelector('.product-card') ? r(a.querySelector('.product-card')) : null, tt: r(t), g: { t: f.top, b: f.bottom, l: f.left, r: f.right }, sy: scrollY, fs: parseFloat(getComputedStyle(t).fontSize) };
           }, i);
           const x0 = 0, y0 = 0; // знімок усього в'юпорта: піксель (x·4, y·4) = CSS-координата
           const A = await page.screenshot({ type: 'png', encoding: 'base64' });
@@ -36,15 +37,15 @@ runMain('cocktail-ink', DEF, async (o) => {
             return top;
           }, A, B, gx0, gx1, gy0, gy1);
           const inkTop = y0 + top / D;
-          rows.push({ capOff: +(inkTop - g.tt.t).toFixed(2), titleTop: +g.tt.t.toFixed(2), sb, w, i, title: g.title, d_stage: +(inkTop - g.stage.t).toFixed(2), d_card: g.card ? +(inkTop - g.card.t).toFixed(2) : null, stageTop: +g.stage.t.toFixed(2), cardTop: g.card ? +g.card.t.toFixed(2) : null, fs: g.fs });
+          rows.push({ d_inner: +(inkTop - g.inner).toFixed(2), capOff: +(inkTop - g.tt.t).toFixed(2), titleTop: +g.tt.t.toFixed(2), sb, w, i, title: g.title, d_stage: +(inkTop - g.stage.t).toFixed(2), d_card: g.card ? +(inkTop - g.card.t).toFixed(2) : null, stageTop: +g.stage.t.toFixed(2), cardTop: g.card ? +g.card.t.toFixed(2) : null, fs: g.fs });
         }
         await page.close();
       }
     } finally { await h.close(); }
   }
-  const bad = rows.filter((r) => Math.abs(r.d_stage) > 1 || (r.d_card !== null && Math.abs(r.d_card) > 1));
-  for (const r of rows) console.log(`fs ${r.fs} capOff ${r.capOff} title ${r.titleTop} stage ${r.stageTop} | ${r.sb} ${r.w} #${r.i + 1} ${r.title.padEnd(22)} stage ${String(r.d_stage).padStart(6)} card ${String(r.d_card).padStart(6)}${Math.abs(r.d_stage) > 1 || Math.abs(r.d_card ?? 0) > 1 ? '  <<<' : ''}`);
-  console.log(`max |d|: ${Math.max(...rows.map((r) => Math.max(Math.abs(r.d_stage), Math.abs(r.d_card ?? 0))))}, >1px: ${bad.length}`);
-  for (const b of bad) rep.add({ rule: 'INK', page: `${b.sb}@${b.w}`, selector: `#${b.i + 1} ${b.title}`, value: `stage ${b.d_stage} card ${b.d_card}` });
+  const bad = rows.filter((r) => Math.abs(r.d_inner) > 1);
+  for (const r of rows) console.log(`fs ${r.fs} capOff ${r.capOff} title ${r.titleTop} stage ${r.stageTop} | ${r.sb} ${r.w} #${r.i + 1} ${r.title.padEnd(22)} inner ${String(r.d_inner).padStart(6)} | (довідково) stage ${String(r.d_stage).padStart(6)} card ${String(r.d_card).padStart(6)}${Math.abs(r.d_inner) > 1 ? '  <<<' : ''}`);
+  console.log(`max |d_inner|: ${Math.max(...rows.map((r) => Math.abs(r.d_inner)))}, >1px: ${bad.length}`);
+  for (const b of bad) rep.add({ rule: 'INK', page: `${b.sb}@${b.w}`, selector: `#${b.i + 1} ${b.title}`, value: `inner ${b.d_inner}` });
   rep.stats = { rows }; return rep;
 });
