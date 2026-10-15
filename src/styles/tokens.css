@@ -968,32 +968,31 @@
   --lh-barrels-note: 1.5;                             /* дрібний текст-застереження */
   --container-barrels-note: calc(900 * var(--u));
 
-  /* S4 «Арифметика бочки»: єдина світла кімната; заголовок + легенда зверху, нижче дві групи-«гросбухи» на спільних рядках (subgrid)
-     і «стіна пляшок» в ОДНОМУ масштабі: 50 L = 1 блок 12×8 (96), 200 L = 4 такі блоки мінус одна пляшка (383 = 4 × 96 − 1) */
+  /* S4 «Арифметика бочки»: світла кімната (суцільна з S5); 4 колонки шириною в блок пляшок 16×6 = 96 (один масштаб): верхня смуга — блок 50 L
+     і підписи обох бочок (subgrid), нижня — стіна 200 L з 4 таких блоків мінус одна пляшка (383 = 4 × 96 − 1) */
   --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* підписи на «папері»: контраст на beige ≈ 5.5:1 */
-  --color-barrels-pattern-paper: color-mix(in srgb, var(--color-teal) 3%, transparent);           /* ромб тон-у-тон на «папері» */
   --color-barrels-amber-paper: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));    /* акцент 50 L на «папері»: «віскі» (коричневий з палітри), контраст на beige ≈ 5.2:1 */
   --container-barrels-profit-title: calc(760 * var(--u));  /* заголовок секції у 2 рядки (balance) */
-  --space-barrels-profit-head: calc(80 * var(--u));     /* заголовок → ярлики груп */
-  --font-size-barrels-ledger-num: calc(170 * var(--u)); /* «96» / «383» */
+  --space-barrels-profit-head: calc(80 * var(--u));     /* заголовок → верхня смуга */
+  --space-barrels-band-gap: calc(56 * var(--u));        /* «полиця» верхньої смуги → стіна 200 L */
+  --space-barrels-room-join: calc(120 * var(--u));      /* S4 → S5 в одній світлій кімнаті: лише повітря, без межі */
+  --font-size-barrels-ledger-num: calc(150 * var(--u)); /* «96» / «383» */
   --font-size-barrels-ledger-approx: 0.42em;            /* «≈» перед числом: менший, щоб не змагався з числом */
   --shift-barrels-ledger-approx: -0.3em;                /* «≈» вгору до середини висоти old-style цифр (у власних em знака) */
   --shift-barrels-approx-ink: -0.068em;                 /* бокове поле гліфа «≈» EB Garamond: чорнило на 0.068em правіше осі колонки (виміряно) */
-  --space-barrels-approx-gap: 0.08em;                   /* «≈» → число (в em числа) */
+  --space-barrels-approx-gap: 0.08em;                   /* «≈» → число (в em знака «≈») */
   --font-size-barrels-ledger-cost: calc(34 * var(--u)); /* «≈ € 20,83» */
-  --space-barrels-ledger-row: var(--space-20);          /* вертикальний крок рядків групи */
-  --size-barrels-wall-cell-w: round(calc(20 * var(--u)), 1px);                     /* комірка стіни (одна пляшка): ціле px — маска не «пливе»; 13px на 1200 */
+  --space-barrels-ledger-row: var(--space-20);          /* ярлик → число */
+  --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
+  --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками (фактичний — space-between) */
+  --size-barrels-wall-cell-w: round(down, calc((var(--container-barrels) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* комірка (одна пляшка): ціле px, 4 блоки + 3 мін. проміжки = ширина; 14px на 1200, 22px на 1920 */
   --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
-  --count-barrels-block-cols: 12; --count-barrels-block-rows: 8;                   /* блок barrels-bottle-block.svg: 12 × 8 = 96 пляшок */
   --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
   --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
-  --space-barrels-block-gap: calc(24 * var(--u));       /* між блоками однієї стіни */
-  --count-barrels-wall-sm-blocks: 1;                    /* 50 L: 96 = 1 блок */
-  --count-barrels-wall-lg-blocks: 4;                    /* 200 L: 383 = 4 блоки − 1 (верхня права пляшка останнього блоку стерта маскою) */
-  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поля плитки 3/22 з боків — чорнило першої пляшки на осі групи, останньої — на правому краї сітки */
-  --shift-barrels-caption-ink: -0.04em;                 /* оптика підписів групи («пляшок…», «вартість…»): бокове поле першої літери */
-  --shift-barrels-h2-round: -0.012em;                   /* оптика H2 «Скільки…»: бокове поле круглої «С» 67u — на осі групи 50 L */
-  --shift-barrels-legend-ink: -0.09em;                  /* оптика легенди: бокове поле «л» + хвостовий letter-spacing — правий край чорнила = правий край стіни 200 L */
+  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 зліва — чорнило першої пляшки блоку на лівій осі колонки */
+  --shift-barrels-caption-ink: -0.04em;                 /* оптика підписів («пляшок…», «вартість…»): бокове поле першої літери */
+  --shift-barrels-h2-round: -0.012em;                   /* оптика H2 «Скільки…»: бокове поле круглої «С» 67u — на лівій осі */
+  --shift-barrels-legend-ink: -0.09em;                  /* оптика легенди: бокове поле «л» + хвостовий letter-spacing — правий край чорнила = правий край сітки */
 
   /* S2 «Що дає бочка»: чотири шари клепки зсередини назовні — пари кіл: коло з фото-текстурою (СЛОТ IMG-T1…T4) і «накладка» того ж
      діаметра, що заходить на нього знизу; іконка — у центрі «лінзи» перетину, назва й пояснення — по центру решти накладки */

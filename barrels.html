@@ -67,16 +67,22 @@
       </div>
     </section>
 
-    <!-- Єдина світла кімната «папір»: арифметика бочки — заголовок і легенда зверху, нижче дві групи-«гросбухи» зі спільною сіткою рядків
-         (subgrid); «стіна пляшок» в одному масштабі = рівно стільки силуетів, скільки пляшок: 50 L — 1 блок 12×8 (96), 200 L — 4 блоки
-         мінус одна (383); стіни стоять на спільній «полиці»; 50 L — першим і з акцентом -->
-    <section class="barrels-profit bx-room bx-room--paper bx-room--pattern" id="profit" aria-labelledby="profit-title">
+    <!-- Світла кімната «папір» (S4 + S5 — одне суцільне тло без візерунків і зерна, рішення замовника). Арифметика бочки: сітка з 4 колонок
+         шириною в блок пляшок. Верхня смуга: блок 50 L (96 = 16×6) + його підписи + підписи 200 L; нижня смуга: стіна 200 L з 4 таких самих
+         блоків мінус одна пляшка (383). Один масштаб: блок 50 L стоїть над першим блоком 200 L — співвідношення 1 : 4 видно одразу -->
+    <section class="barrels-profit bx-room bx-room--paper" id="profit" aria-labelledby="profit-title">
       <div class="barrels-profit__grid">
         <h2 class="barrels-profit__title t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
         <p class="barrels-profit__legend" aria-hidden="true"><span class="barrels-profit__legend-key"></span>= 1 пляшка 0,7 л</p>
-        <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent" count="%barrels.bottles50%" word="%barrels.bottles50Word%" cost="%barrels.cost50%" wall="sm"-->
-        <!--@include components/barrels-ledger size="200 L" count="%barrels.bottles200%" word="%barrels.bottles200Word%" cost="%barrels.cost200%" wall="lg"-->
-        <span class="barrels-profit__shelf" aria-hidden="true"></span>
+        <span class="bx-wall bx-wall--50" data-reveal="fade" aria-hidden="true"></span>
+        <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent bx-ledger--50" count="%barrels.bottles50%" word="%barrels.bottles50Word%" cost="%barrels.cost50%"-->
+        <!--@include components/barrels-ledger size="200 L" mod=" bx-ledger--200" count="%barrels.bottles200%" word="%barrels.bottles200Word%" cost="%barrels.cost200%"-->
+        <span class="barrels-profit__shelf barrels-profit__shelf--top" aria-hidden="true"></span>
+        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
+        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
+        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
+        <span class="bx-wall bx-wall--200 bx-wall--short" data-reveal="fade" aria-hidden="true"></span>
+        <span class="barrels-profit__shelf barrels-profit__shelf--bottom" aria-hidden="true"></span>
       </div>
     </section>
 
