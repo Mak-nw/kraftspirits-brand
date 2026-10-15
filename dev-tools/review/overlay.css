@@ -75,10 +75,16 @@ button { font: inherit; cursor: pointer; }
 .insp i, .insp b { position: fixed; pointer-events: none; font-style: normal; }
 .bp { background: rgba(34, 160, 80, 0.38); }
 .bg { background: rgba(255, 140, 0, 0.42); }
+.bn { background: rgba(138, 74, 222, 0.34); }
+.bh { outline: 1px solid #f24822; outline-offset: -1px; background: rgba(242, 72, 34, 0.06); }
+.hl { background: #f24822; }
 .tb { border: 1px solid rgba(10, 55, 130, 0.55); }
 .lb { font: 500 11px/14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; padding: 0 4px; border-radius: 3px; white-space: nowrap; max-width: 520px; overflow: hidden; text-overflow: clip; font-variant-numeric: tabular-nums; }
 .lp { color: #fff; background: rgba(21, 110, 52, 0.92); }
 .lg { color: #fff; background: rgba(194, 90, 0, 0.94); }
+.ln { color: #fff; background: rgba(104, 48, 188, 0.94); }
+.lh { color: #fff; background: #f24822; }
+.lhd { background: rgba(20, 33, 61, 0.92); }
 .lt { color: #fff; background: rgba(10, 30, 70, 0.92); }
 .lk { color: #14213d; background: rgba(255, 255, 255, 0.94); box-shadow: 0 0 0 1px rgba(20, 33, 61, 0.35); display: flex; flex-direction: column; }
 .kl { display: flex; align-items: center; gap: 4px; }

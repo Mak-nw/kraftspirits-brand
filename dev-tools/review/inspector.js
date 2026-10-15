@@ -1,9 +1,9 @@
 // DEV-ONLY inspectors (loaded from overlay.js, never part of the build):
-//   S = paddings (green) and flex/grid gaps (orange), T = typography labels, K = colour labels.
+//   S = paddings (green), flex/grid gaps (orange), measured spacing between sibling boxes (violet) + hover redline distances, T = typography labels, K = colour labels.
 // Everything is drawn in the overlay's Shadow DOM; the site's DOM/styles are only read.
 
 const MODES = [
-  { id: 's', code: 'KeyS', label: 'Стиль', key: 'review.insp.s', title: 'Відступи (зелений) і gap (помаранчевий)' },
+  { id: 's', code: 'KeyS', label: 'Стиль', key: 'review.insp.s', title: 'Відступи (зелений), gap (помаранчевий), відстані між сусідніми блоками (фіолетовий); при наведенні — відстані до сусідів і краю батька' },
   { id: 't', code: 'KeyT', label: 'Текст', key: 'review.insp.t', title: 'Типографіка: розмір/інтерліньяж, вага, трекінг, клас, шрифт' },
   { id: 'k', code: 'KeyK', label: 'Колір', key: 'review.insp.k', title: 'Кольори тексту, фону й рамки з назвою токена' },
 ];
@@ -31,9 +31,9 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
     if (now - uAt > 300) {
       uAt = now;
       const p = document.createElement('div');
-      p.style.cssText = 'position:absolute;visibility:hidden;width:calc(1 * var(--u));height:0';
+      p.style.cssText = 'position:absolute;visibility:hidden;width:calc(1000 * var(--u));height:0';
       root.append(p);
-      const w = p.getBoundingClientRect().width;
+      const w = p.getBoundingClientRect().width / 1000;
       p.remove();
       uPx = w > 0 ? w : 1;
     }
@@ -53,6 +53,10 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
     layers[m.id] = d;
     wrap.append(d);
   }
+  const hov = document.createElement('div');
+  hov.className = 'insp-layer insp-h';
+  hov.hidden = true;
+  wrap.append(hov);
   const more = document.createElement('div');
   more.className = 'insp-more';
   more.hidden = true;
@@ -180,8 +184,22 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
   const box = (cls, b) => `<i class="${cls}" style="left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:${b[3]}px"></i>`;
   const label = (cls, x, y, inner, extra = '') => `<b class="lb ${cls}" style="left:${Math.round(x)}px;top:${Math.round(y)}px;${extra}">${inner}</b>`;
 
+  // boxes of the in-flow children (absolute/fixed, inline, display:contents and hidden ones are not neighbours)
+  function flowRects(el) {
+    const out = [];
+    for (const ch of el.children) {
+      if (SKIP.has(ch.tagName)) continue;
+      const c = getComputedStyle(ch);
+      if (c.display === 'none' || c.display === 'contents' || c.display === 'inline' || c.position === 'absolute' || c.position === 'fixed' || c.visibility === 'hidden') continue;
+      const q = ch.getBoundingClientRect();
+      if (q.width > 0 && q.height > 0) out.push(q);
+    }
+    return out;
+  }
+
   // ---------- S: padding + gap ----------
   function drawS(items, vw, vh) {
+    const u = unitPx();
     let html = '', bands = 0;
     const labels = [];
     for (const { el, r, cs } of items) {
@@ -204,41 +222,39 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
           labels.push({ pri: bestB[2] * bestB[3], cls: 'lp', cx: bestB[0] + bestB[2] / 2, cy: bestB[1] + bestB[3] / 2, txt });
         }
       }
-      // gap of flex/grid containers
-      const d = cs.display;
-      if (d === 'flex' || d === 'inline-flex' || d === 'grid' || d === 'inline-grid') {
-        const cg = px(cs.columnGap), rg = px(cs.rowGap);
-        if ((cg > 0 || rg > 0) && el.children.length > 1 && el.children.length <= 80 && visible(el)) {
-          const rects = [];
-          for (const ch of el.children) { const q = ch.getBoundingClientRect(); if (q.width > 0 && q.height > 0) rects.push(q); }
-          const seen = new Set();
-          let lab = 0;
-          for (let i = 0; i < rects.length; i++) {
-            for (let j = 0; j < rects.length; j++) {
-              if (i === j) continue;
-              const a = rects[i], b = rects[j];
-              let band = null, val = 0;
-              if (cg > 0) {
-                const dx = b.left - a.right, y0 = Math.max(a.top, b.top), y1 = Math.min(a.bottom, b.bottom);
-                if (Math.abs(dx - cg) <= 1.5 && y1 - y0 >= 1) { band = [a.right, y0, dx, y1 - y0]; val = cg; }
-              }
-              if (!band && rg > 0) {
-                const dy = b.top - a.bottom, x0 = Math.max(a.left, b.left), x1 = Math.min(a.right, b.right);
-                if (Math.abs(dy - rg) <= 1.5 && x1 - x0 >= 1) { band = [x0, a.bottom, x1 - x0, dy]; val = rg; }
-              }
-              if (!band) continue;
-              const k = band.map(Math.round).join(',');
-              if (seen.has(k)) continue;
-              seen.add(k);
-              const c = clip(band[0], band[1], band[2], band[3], vw, vh);
-              if (!c || Math.min(c[2], c[3]) < MIN_BAND) continue;
-              if (bands++ < MAX_BANDS) html += box('bg', c);
-              if (Math.max(c[2], c[3]) >= MIN_LABEL && lab < 4) {
-                lab++;
-                labels.push({ pri: c[2] * c[3], cls: 'lg', cx: c[0] + c[2] / 2, cy: c[1] + c[3] / 2, txt: num(val) });
-              }
-            }
+      // spacing between sibling boxes: exact bounding-box distance to the nearest neighbour right/below.
+      // Orange = equals the container's CSS gap; violet = anything else (margin, bleed, free grid tracks, justify-content).
+      if (el.children.length > 1 && el.children.length <= 80 && visible(el)) {
+        const d = cs.display;
+        const gapBox = d === 'flex' || d === 'inline-flex' || d === 'grid' || d === 'inline-grid';
+        const cg = gapBox ? px(cs.columnGap) : 0, rg = gapBox ? px(cs.rowGap) : 0;
+        const rects = flowRects(el);
+        const seen = new Set();
+        let lab = 0;
+        const add = (band, val, isGap) => {
+          const k = band.map(Math.round).join(',');
+          if (seen.has(k)) return;
+          seen.add(k);
+          if (val > Math.max(vw, vh)) return; // проміжок більший за екран — не відступ, а різні частини сторінки
+          const c = clip(band[0], band[1], band[2], band[3], vw, vh);
+          if (!c || Math.min(c[2], c[3]) < MIN_BAND) return;
+          if (bands++ < MAX_BANDS) html += box(isGap ? 'bg' : 'bn', c);
+          if (Math.max(c[2], c[3]) >= MIN_LABEL && lab < 6) {
+            lab++;
+            labels.push({ pri: c[2] * c[3], cls: isGap ? 'lg' : 'ln', cx: c[0] + c[2] / 2, cy: c[1] + c[3] / 2, txt: `${num(val)} · ${num(val / u)}u` });
           }
+        };
+        for (const a of rects) {
+          let nx = null, ny = null;
+          for (const b of rects) {
+            if (a === b) continue;
+            const dx = b.left - a.right, oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+            if (dx >= 0.5 && oy >= 1 && (!nx || dx < nx.d)) nx = { d: dx, y0: Math.max(a.top, b.top), h: oy };
+            const dy = b.top - a.bottom, ox = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+            if (dy >= 0.5 && ox >= 1 && (!ny || dy < ny.d)) ny = { d: dy, x0: Math.max(a.left, b.left), w: ox };
+          }
+          if (nx) add([a.right, nx.y0, nx.d, nx.h], nx.d, cg > 0 && Math.abs(nx.d - cg) <= 1.5);
+          if (ny) add([ny.x0, a.bottom, ny.w, ny.d], ny.d, rg > 0 && Math.abs(ny.d - rg) <= 1.5);
         }
       }
     }
@@ -346,6 +362,72 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
     return { html, shown: shown.length, extra: list.length - shown.length };
   }
 
+  // ---------- S: hover redline (відстані навіть до сусідів і краю батька, як у Figma) ----------
+  const host = root.getRootNode().host;
+  let mouse = null, hoverRaf = 0;
+  function hoverTarget() {
+    if (!mouse) return null;
+    for (const e of document.elementsFromPoint(mouse.x, mouse.y)) {
+      if (e === host || (host && host.contains(e)) || SKIP.has(e.tagName) || e === document.documentElement) continue;
+      return e;
+    }
+    return null;
+  }
+  function drawHover() {
+    hoverRaf = 0;
+    if (!st.s) { hov.innerHTML = ''; return; }
+    const el = hoverTarget();
+    if (!el) { hov.innerHTML = ''; return; }
+    const u = unitPx(), vw = document.documentElement.clientWidth, vh = innerHeight;
+    const r = el.getBoundingClientRect();
+    const par = el.parentElement;
+    const sib = par ? [...par.children].filter((c) => c !== el && !SKIP.has(c.tagName)).map((c) => ({ c, cs: getComputedStyle(c) }))
+      .filter((x) => x.cs.display !== 'none' && x.cs.display !== 'contents' && x.cs.display !== 'inline' && x.cs.position !== 'absolute' && x.cs.position !== 'fixed' && x.cs.visibility !== 'hidden')
+      .map((x) => x.c.getBoundingClientRect()).filter((q) => q.width > 0 && q.height > 0) : [];
+    const pr = par && par !== document.documentElement ? par.getBoundingClientRect() : null;
+    let html = `<i class="bh" style="left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px"></i>`;
+    const tag = el.localName + (el.classList.length ? '.' + [...el.classList].slice(0, 2).join('.') : '');
+    html += label('lh lhd', Math.min(Math.max(r.left, 0), vw - 140), r.top - 16 >= 0 ? r.top - 16 : r.top + 1, `${esc(tag)} ${num(r.width)}×${num(r.height)} · ${num(r.width / u)}×${num(r.height / u)}u`);
+    const line = (x0, y0, x1, y1, v) => {
+      const L = Math.abs(x1 - x0) + Math.abs(y1 - y0);
+      if (L < 0.5) return '';
+      const x = Math.min(x0, x1), y = Math.min(y0, y1);
+      const horiz = y0 === y1;
+      let out = `<i class="hl" style="left:${x}px;top:${y}px;width:${horiz ? L : 1}px;height:${horiz ? 1 : L}px"></i>`;
+      out += label('lh', (x0 + x1) / 2, (y0 + y1) / 2, `${num(v)} · ${num(v / u)}u`, 'transform:translate(-50%,-50%)');
+      return out;
+    };
+    const cy = Math.min(Math.max(r.top + r.height / 2, 0), vh), cx = Math.min(Math.max(r.left + r.width / 2, 0), vw);
+    // nearest neighbour per side (sibling overlapping on the cross axis, else parent edge)
+    const best = { l: null, r: null, t: null, b: null };
+    for (const q of sib) {
+      const oy = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top), ox = Math.min(r.right, q.right) - Math.max(r.left, q.left);
+      let d;
+      if (oy >= 1) {
+        d = r.left - q.right; if (d >= 0 && (!best.l || d < best.l.d)) best.l = { d, at: q.right };
+        d = q.left - r.right; if (d >= 0 && (!best.r || d < best.r.d)) best.r = { d, at: q.left };
+      }
+      if (ox >= 1) {
+        d = r.top - q.bottom; if (d >= 0 && (!best.t || d < best.t.d)) best.t = { d, at: q.bottom };
+        d = q.top - r.bottom; if (d >= 0 && (!best.b || d < best.b.d)) best.b = { d, at: q.top };
+      }
+    }
+    if (pr) {
+      if (!best.l && r.left >= pr.left) best.l = { d: r.left - pr.left, at: pr.left };
+      if (!best.r && pr.right >= r.right) best.r = { d: pr.right - r.right, at: pr.right };
+      if (!best.t && r.top >= pr.top) best.t = { d: r.top - pr.top, at: pr.top };
+      if (!best.b && pr.bottom >= r.bottom) best.b = { d: pr.bottom - r.bottom, at: pr.bottom };
+    }
+    if (best.l) html += line(best.l.at, cy, r.left, cy, best.l.d);
+    if (best.r) html += line(r.right, cy, best.r.at, cy, best.r.d);
+    if (best.t) html += line(cx, best.t.at, cx, r.top, best.t.d);
+    if (best.b) html += line(cx, r.bottom, cx, best.b.at, best.b.d);
+    hov.innerHTML = html;
+  }
+  const requestHover = () => { if (!hoverRaf && st.s) hoverRaf = requestAnimationFrame(drawHover); };
+  addEventListener('mousemove', (e) => { mouse = { x: e.clientX, y: e.clientY }; requestHover(); }, { passive: true, capture: true });
+  document.addEventListener('mouseleave', () => { mouse = null; hov.innerHTML = ''; });
+
   // ---------- update loop ----------
   const drawers = { s: drawS, t: drawT, k: drawK };
   const lastHtml = { s: '', t: '', k: '' };
@@ -369,6 +451,7 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
     const dt = performance.now() - t0;
     stats.lastMs = dt; stats.runs++; stats.avgMs += (dt - stats.avgMs) / stats.runs;
     lastRun = performance.now();
+    requestHover();
   }
   // rAF throttle, at most ~30 fps
   function request() {
@@ -394,6 +477,7 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
     st[id] = !!on;
     store.set(MODES.find((m) => m.id === id).key, on ? '1' : '0');
     layers[id].hidden = !on;
+    if (id === 's') { hov.hidden = !on; if (!on) hov.innerHTML = ''; else requestHover(); }
     buttons[id].classList.toggle('on', !!on);
     if (!on) { layers[id].innerHTML = ''; lastHtml[id] = ''; stats.labels[id] = 0; stats.extra[id] = 0; }
     if (on && id === 'k') tokenMap = null; // rebuild: stylesheets may have changed (HMR)
