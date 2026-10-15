@@ -836,7 +836,10 @@
 
 /* ===================================================================
    Ф'ючерсні бочки (barrels.html), редизайн «Світло в погребі» (15.10, доопрацювання за рев'ю замовника): hero (фото) → що дає бочка
-   (wood, пари кіл) → від бочки до пляшки (cellar, єдина арка) → арифметика + подальша витримка (одна світла кімната paper) → ціна (текст на фото). Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу.
+   (wood, пари кіл) → від бочки до пляшки (cellar, єдина арка) → арифметика + подальша витримка (одна світла кімната paper) → ціна (фото + панелі).
+   Словник — лише елементи design-system.html (CLAUDE.md п. 5б): кольори палітри, типографіка, hairline-лінії й рамки, панель beige + --radius-panel,
+   кнопки DS. Без ромбів-маркерів, подвійних рамок, світіння, зерна. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12 для сторінки):
+   поля 47.5u, зазор 40u, вміст 1825u. Шапки секцій — по центру. Значення — з палітри/масштабу.
    Компоненти: barrels-layer (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
@@ -844,20 +847,16 @@
   --font-size-barrels-hero: calc(88 * var(--u));      /* H1 hero (більший за --font-size-hero 55: п'ять слів у два рядки по центру фото) */
   --lh-barrels-hero: 1.05;                            /* міжрядковий H1 hero */
   --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
-  --container-barrels-hero-title: calc(1100 * var(--u)); /* ширина H1 hero (два рядки) */
   --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
-  --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → лінія → лід → кнопка */
-  --size-barrels-hero-rule-w: calc(220 * var(--u));   /* брендова лінія з ромбом між заголовком і лідом */
+  --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → лід → кнопка */
   --size-barrels-slot-outline: 2px;                   /* ?slots=on: пунктир навколо місць під фото/тексти (лише режим огляду) */
   --size-barrels-sr: 1px;                             /* .bx-sr — текст лише для читачів екрана (класичний visually-hidden 1×1px) */
   --container-barrels-slots: calc(560 * var(--u));    /* ?slots=on: ширина переліку місць */
   --size-barrels-slots-max-h: 60vh;                   /* ?slots=on: перелік не вищий за 60% екрана (далі — прокрутка) */
-  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 82%, transparent);    /* затемнення hero зверху (читабельність тексту й пілюлі); виміряно пікселями: контраст заголовка ≥ 4.5:1 у медіані */
+  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 82%, transparent);    /* затемнення hero зверху лише під текстом (читабельність H1 і пілюлі; виміряно пікселями ≥ 4.5:1). Поза словником DS — питання замовнику у формі */
   --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 58%, transparent);    /* середина верхнього затемнення (під заголовком) */
-  --color-barrels-shade-bottom: color-mix(in srgb, var(--color-brown) 72%, transparent); /* теплий перехід знизу в кімнату «дерево» наступної секції */
   --stop-barrels-shade-mid: 38%;                      /* затемнення hero зверху: повна сила → середня (під текстом) → */
-  --stop-barrels-shade-end: 62%;                      /* … прозоре з 62% висоти */
-  --stop-barrels-shade-bottom-end: 34%;               /* коричневий перехід знизу — на нижню третину */
+  --stop-barrels-shade-end: 62%;                      /* … прозоре з 62% висоти (нижня частина фото — без затемнення) */
   --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
 
   /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
@@ -871,67 +870,97 @@
   --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
   --size-barrels-gap: 8;                              /* проміжок між штрихами */
 
-  /* ---------- «Світло в погребі» (редизайн 15.10, рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
-     Кожна секція — «кімната» зі своїм тлом: hero (фото), «дерево», «погріб» (єдина арка — S3), світла «паперова» S4+S5 (одне тло), «Ціна» — текст на фото.
-     Нових відтінків немає: лише аліаси й color-mix палітри.
-     Документація з живими зразками — design-system.html, розділ «Ф'ючерсні бочки». */
+  /* ---------- Кімнати (рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
+     Кожна секція — «кімната» з суцільним тлом палітри: «дерево» (brown), «погріб» (teal, єдина арка — S3), світла «паперова» S4+S5 (beige, одне тло),
+     «Ціна» — teal + смуга фото. Нових відтінків немає: лише аліаси й color-mix палітри. Живі зразки — design-system.html, розділ «Ф'ючерсні бочки». */
   --color-barrels-room-wood: var(--color-brown);      /* кімната «дерево»: що дає бочка */
   --color-barrels-room-cellar: var(--color-teal);     /* кімната «погріб»: від бочки до пляшки, ціна (Bazylsprings) */
-  --color-barrels-room-paper: var(--color-beige);     /* світла кімната: арифметика бочки + подальша витримка (одне суцільне тло, без візерунка й зерна) */
+  --color-barrels-room-paper: var(--color-beige);     /* світла кімната: арифметика бочки + подальша витримка (одне суцільне тло) */
   --color-barrels-ink: var(--color-light);            /* основний текст на темних кімнатах */
   --color-barrels-ink-muted: var(--color-nav-text);   /* підписи й пояснення на темних кімнатах (контраст на teal/brown ≥ 10:1) */
-  --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» */
-  --color-barrels-accent: var(--color-gold);          /* цифри-гіганти, гравюри, лінії (лише на темному) */
-  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* золоті тонкі лінії й рамки */
-  --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, внутрішня рамка) */
-  --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* лінії на «папері» */
-  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 18%, transparent);      /* «світло в погребі»: тепла пляма під склепінням арки S3 */
+  --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» (і на панелях beige) */
+  --color-barrels-accent: var(--color-gold);          /* цифри-гіганти, гравюри (лише на темному) */
+  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамки на темному (одна лінія, без подвійних рамок) */
+  --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, рамка накладки S2) */
+  --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* hairline-лінії на «папері» й панелях beige */
   --color-barrels-amber: color-mix(in srgb, var(--color-gold) 58%, var(--color-brown));  /* бурштин рідини в гравюрах (бочка, пляшка): НЕпрозорий, бо золото поверх teal дає оливковий сірий */
-  --opacity-barrels-grain: 0.11;                      /* зерно плівки в темних кімнатах і hero (barrels-grain.svg, шар ::after без анімації) */
-  --size-barrels-grain-tile: 240px;                   /* фізичний розмір плитки зерна (не масштабується з --u: зерно — властивість «плівки», а не макета) */
-  --z-barrels-grain: 3;                               /* шар зерна всередині кімнати/hero: над вмістом (hero__content — 2), нижче пілюлі header */
 
   /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
   --font-size-barrels-numeral: calc(200 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» (компактний ритм S3) */
   --lh-barrels-numeral: 0.86;
   --font-size-barrels-lead: calc(30 * var(--u));      /* лід у sentence case замість caps-ліда 40u */
   --lh-barrels-lead: 1.25;
-  --font-size-barrels-title: calc(30 * var(--u));     /* назви рядків/розділів (EB Garamond 600, caps) */
+  --font-size-barrels-title: calc(30 * var(--u));     /* назви рядків/розділів/бочок (EB Garamond 600, caps) */
   --font-size-barrels-copy: max(calc(18 * var(--u)), 13px);    /* пояснення (Manrope 500) */
   --lh-barrels-copy: 1.45;
-  --font-size-barrels-caption: max(calc(15 * var(--u)), 12px); /* підписи до схем і орнаментів */
+  --font-size-barrels-caption: max(calc(15 * var(--u)), 12px); /* підписи до схем */
   --font-size-barrels-note: max(calc(14 * var(--u)), 12px);    /* дрібний довідковий текст (застереження до цін) */
-  --container-barrels: var(--container-wide);         /* ширина вмісту кімнат (1508u) */
-  --space-barrels-col-gap: calc(100 * var(--u));      /* проміжок між великими колонками кімнати */
-  --space-barrels-stack: var(--space-20);              /* вертикальний ритм усередині блоків (кікер → заголовок → лід) */
+  --space-barrels-stack: var(--space-20);              /* вертикальний ритм шапки секції (кікер → заголовок → лід) */
+  --shift-barrels-cap-top: -0.18em;                   /* оптика: верх чорнила капітелі EB Garamond (lh 1) = верх бокса; виміряно 0.17–0.19em на 1200–1920 */
+  --shift-barrels-kicker-cap-top: -0.38em;            /* верх капітелі кікера (lh 1.4) = верх вмісту секції */
+  --lh-barrels-title: 1.1;                            /* назви шарів, розділів, бочок, сертифікатів, вин */
+  --space-barrels-head: var(--space-70);              /* шапка секції → вміст */
+  /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
+     центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
+  --shift-barrels-h2-center-benefits: -0.026em;       /* «Що дає бочка» */
+  --shift-barrels-h2-center-profit: 0.023em;          /* «Скільки пляшок ви отримаєте?» */
+  --shift-barrels-h2-center-next: -0.031em;           /* «Подальша витримка» */
+  --shift-barrels-h2-center-price: -0.030em;          /* «Ціна» */
+}
 
-  /* арка-вікно (спільна для кімнат): подвійна золота рамка, склепіння — вертикальний радіус від ширини */
-  --space-barrels-frame-gap: calc(8 * var(--u));      /* зазор між зовнішньою і внутрішньою лініями рамки */
+/* Сітка сторінки — 12 колонок сітки каталогу (рев'ю a1c08ac0 «чому не по всій ширині колонок», 16270ab4 «на ширину екрану»; еталон правила D12
+   для barrels — профіль catalog): поля 47.5u, зазор 40u, колонка 115.42u → вміст 1825u (як каталог і коктейлі). Раніше бочки стояли в --container-wide
+   (1508u, текстові секції головної) з проміжком 100u — вміст не доходив до крайніх колонок і не лягав на колонки. Блок по центру — лише парна кількість
+   колонок (2/4/6/8). Похідні розміри оголошено й на .bx-scope — демо design-system.html перераховує їх у своїй ширині. */
+:root, .bx-scope {
+  --columns-barrels: 12;                              /* 12 колонок сітки каталогу */
+  --space-barrels-grid-gap: var(--space-catalog-grid-gap); /* 40u */
+  --container-barrels: var(--size-catalog-grid-w);    /* 1825u: від лівого краю колонки 1 до правого краю колонки 12 */
+  --size-barrels-col: calc((var(--container-barrels) - (var(--columns-barrels) - 1) * var(--space-barrels-grid-gap)) / var(--columns-barrels)); /* одна колонка (115.42u) */
+  --size-barrels-hero-title-w: calc(8 * var(--size-barrels-col) + 7 * var(--space-barrels-grid-gap)); /* H1 hero — 8 колонок по центру (колонки 3–10), два рядки */
+  --size-barrels-text-w: calc(6 * var(--size-barrels-col) + 5 * var(--space-barrels-grid-gap));       /* лід / застереження по центру — 6 колонок (4–9) */
+
+  /* S2 «Що дає бочка»: чотири шари клепки зсередини назовні — пари кіл: коло з фото-текстурою (AI-фото IMG-T1…T4) і «накладка» того ж
+     діаметра, що заходить на нього знизу; іконка — у центрі «лінзи» перетину, назва й пояснення — по центру решти накладки. Кожна пара — 3 колонки */
+  --span-barrels-layer: 3;
+  --size-barrels-layer: calc(var(--span-barrels-layer) * var(--size-barrels-col) + (var(--span-barrels-layer) - 1) * var(--space-barrels-grid-gap)); /* діаметр кола = 3 колонки: текстура = накладка */
+  --size-barrels-layer-overlap: calc(var(--size-barrels-layer) * 0.26);  /* накладка заходить на коло текстури на 26% діаметра («лінза») */
+  --size-barrels-layer-icon: calc(var(--size-barrels-layer) * 0.15);     /* іконка 64×64 (viewBox) у центрі «лінзи» */
+  --space-barrels-layer-pad: calc(var(--size-barrels-layer) * 0.11);     /* бокові й нижнє поле тексту накладки: рядки — у межах хорди кола */
+
+  /* S4 «Арифметика бочки»: 50 L — колонки 1–3, 200 L — колонки 4–12; стіна пляшок в ОДНОМУ масштабі: 50 L = 1 блок 16 × 6 = 96, 200 L = 4 такі
+     блоки в ряд (383 = 4 × 96 − 1) на всю ширину своїх колонок. Комірка (одна пляшка) — ціле px, щоб маска лягала на пікселі */
+  --span-barrels-ledger-50: 3;
+  --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
+  --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками 200 L (фактичний — рівномірний розподіл на всю ширину) */
+  --size-barrels-wall-200-w: calc((var(--columns-barrels) - var(--span-barrels-ledger-50)) * var(--size-barrels-col) + (var(--columns-barrels) - var(--span-barrels-ledger-50) - 1) * var(--space-barrels-grid-gap)); /* колонки 4–12 */
+  --size-barrels-wall-cell-w: round(down, calc((var(--size-barrels-wall-200-w) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* 4 блоки + 3 мін. проміжки ≤ колонки 4–12 */
+  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
+  --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
+  --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
+  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 — чорнило крайніх пляшок на лініях колонок */
+}
+
+:root {
+  /* S3 «Від бочки до пляшки»: заголовок по центру на всю ширину; sticky-арка (колонки 1–5) зі сценою + три розділи-цифри (колонки 7–12) */
   --ratio-barrels-arch-rise: 0.42;                    /* висота склепіння = 0.42 ширини арки (як арка панелі YC, 352/900 ≈ 0.39, трохи вища) */
-
-  /* S3 «Від бочки до пляшки»: sticky-арка зі сценою + три розділи-цифри */
+  --span-barrels-stage: 5;                            /* арка — колонки 1–5; колонка 6 — проміжок */
+  --col-barrels-chapters: 7;                          /* розділи — від колонки 7 до правого краю сітки */
   --offset-barrels-stage-top: var(--offset-product-stage-sticky);                    /* sticky-верх арки: під пілюлею header (як фото товару) */
   --size-barrels-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки: екран − пілюля − повітря знизу */
-  --size-barrels-stage-w: calc((var(--container-barrels) - var(--space-barrels-col-gap)) / 2);
+  --size-barrels-stage-w: calc(var(--span-barrels-stage) * var(--size-barrels-col) + (var(--span-barrels-stage) - 1) * var(--space-barrels-grid-gap));
   --size-barrels-stage-rise: calc(var(--size-barrels-stage-w) * var(--ratio-barrels-arch-rise));
-  --size-barrels-stage-glow: 72% 58%;                 /* еліпс «світла» під склепінням арки-сцени (ширина висота, від верху) */
-  --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині внутрішньої рамки */
-  --size-barrels-lamp-w: calc(56 * var(--u));         /* лампа під склепінням — джерело «світла в погребі» */
+  --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині арки */
   --space-barrels-chapter-gap: calc(64 * var(--u));   /* проміжок між розділами (рядки однакової висоти): компактний ритм, колонка ≈ висоті арки */
-  --space-barrels-how-head: var(--space-70);          /* заголовок S3 (на всю ширину) → арка й розділи */
-  --size-barrels-rule-marker: calc(10 * var(--u));    /* ромб-маркер на початку лінії розділу (лівий кут = ліва вісь тексту) */
-  --space-barrels-rule-gap: calc(14 * var(--u));      /* ромб → лінія */
-  --space-barrels-chapter-rule: var(--space-30);      /* лінія → цифра */
+  --space-barrels-chapter-rule: var(--space-30);      /* лінія розділу (hairline зверху, як рядок акордеона DS) → цифра */
   --space-barrels-chapter-title: var(--space-30);     /* цифра → назва (з запасом під нижні виносні old-style цифр) */
   --space-barrels-chapter-text: var(--space-10);      /* назва → пояснення */
   --space-barrels-note-gap: var(--space-20);          /* цифра → підпис «орієнтовно» (одна базова лінія) */
-  --container-barrels-copy: calc(560 * var(--u));     /* ширина пояснення */
-  --shift-barrels-numeral-pour: -0.0465em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до осі ромба/тексту (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920: */
+  --shift-barrels-numeral-pour: -0.0465em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до лівої осі розділу (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920: */
   --shift-barrels-numeral-angels: -0.0715em;          /* бокові поля гліфів EB Garamond 240u: «6» ≈0.047em, «≈» ≈0.071em, «4» ≈0.018em; поправка в em — тримається на всіх ширинах) */
   --shift-barrels-numeral-bottle: -0.0175em;
   --shift-barrels-title-round: -0.025em;              /* оптика назви розділу: перша капітель з круглим боком (З) має ширше бокове поле */
   --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
-  --shift-barrels-h2-stem: -0.011em;                  /* оптика H2 зі штамбовою першою літерою («Від бочки…» — В, «Що дає бочка» — Щ, «Подальша витримка» — П) 67u: на ліву вісь секції */
   --shift-barrels-copy-stem: -0.04em;                 /* оптика пояснення: перша літера зі штамбом (П) — разом ліва вісь розділу ≤1px на 1200–1920 */
   --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між розділами */
   --opacity-barrels-dim: 0.32;                        /* неактивні частини гравюри */
@@ -942,42 +971,31 @@
   --shift-barrels-wisp-from: 10px;                    /* пара «частки ангелів»: підйом вгору й згасання */
   --shift-barrels-wisp-to: -22px;
   --svg-stroke-hair: 0.9;                             /* гравюрні тонкі лінії (клепки, штрихування, меніск), одиниці viewBox */
-  --shift-barrels-cap-top: -0.18em;                   /* оптика: верх чорнила капітелі EB Garamond (lh 1) = верх бокса; виміряно 0.17–0.19em на 1200–1920 */
   --size-barrels-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
   --size-barrels-demo-stage-h: calc(600 * var(--u));
+  --size-barrels-demo-w: calc(1408 * var(--u));       /* ширина сітки в демо design-system.html: сторінка DS 1508u − поля демо-панелі 2 × 50u */
 
-  /* S6 «Ціна»: текст на реальному фото (днища бочок) — сертифікати однакової ширини й вигляду (subgrid), маршрут, застереження */
-  --size-barrels-cert-w: calc(520 * var(--u));        /* ширина КОЖНОГО сертифіката (однакова, рев'ю 345adb85) */
-  --pos-barrels-price-bg: 60% 50%;                    /* кадрування фото тла: днища — у правій частині секції */
-  --color-barrels-price-shade: color-mix(in srgb, var(--color-teal) 90%, transparent);      /* затемнення фото під текстом і сертифікатами (контраст ≥ 4.5) */
-  --color-barrels-price-shade-soft: color-mix(in srgb, var(--color-teal) 12%, transparent); /* праворуч днища проступають */
-  --stop-barrels-price-shade: 62%;                    /* до цієї частки ширини — повне затемнення (сертифікати), далі — перехід */
-  --color-barrels-cert-glass: color-mix(in srgb, var(--color-barrels-cert-bg) 88%, transparent); /* «папір» сертифіката поверх фото */
-  --size-barrels-cert-blur: calc(8 * var(--u));       /* розмиття фото під сертифікатом */
-  --shift-barrels-cert-title-ink: -0.025em;           /* оптика назви сертифіката «Бочка …»: бокове поле «Б» 30u — на лівій осі сертифіката (ціна, факти, маркери, кнопка) */
-  --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами */
-  --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле сертифіката (від зовнішньої рамки) */
-  --space-barrels-cert-row: var(--space-30);          /* вертикальний крок між рядками сертифіката */
-  --color-barrels-cert-bg: color-mix(in srgb, var(--color-teal) 92%, var(--color-light)); /* «папір» сертифіката: на півтону світліший за кімнату */
-  --size-barrels-corner: calc(9 * var(--u));          /* ромб у кутах внутрішньої рамки (центр = кут рамки) */
+  /* S6 «Ціна»: шапка по центру на teal (заголовок, маршрут, застереження), нижче — смуга реального фото днищ БЕЗ затемнення (композиція як у секції
+     підбору на головній: текст на кольорі секції, фото — смугою під вмістом) і на ній два однакові сертифікати — панелі DS (beige + --radius-panel) */
+  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото смуги: ряд днищ */
+  --space-barrels-price-band: var(--space-barrels-section-y); /* фото видно над і під сертифікатами */
+  --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами (стопкою) — крізь проміжок видно фото */
+  --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле панелі (як панелі контактів, --space-contacts-pad) */
+  --space-barrels-cert-row: var(--space-30);          /* «що входить» → кнопка */
+  --span-barrels-cert-head: 4;                        /* сертифікат = subgrid 12 колонок: назва + ціна — колонки 1–4, */
+  --span-barrels-cert-facts: 4;                       /* факти — 5–8, */
+  --col-barrels-cert-offer: 10;                       /* «що входить» + кнопка — 10–12 (колонка 9 — проміжок) */
+  --shift-barrels-cert-title-ink: -0.025em;           /* оптика назви сертифіката «Бочка …»: бокове поле «Б» 30u — на лівій осі панелі */
   --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» */
   --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — зсув праворуч */
   --font-size-barrels-fact: calc(26 * var(--u));      /* значення у рядках «пляшок / вартість вмісту» (EB Garamond, tabular) */
-  --shift-barrels-fact-ink: -0.06em;                  /* оптика підписів фактів («Пляшок…», «Вартість…» 15u): бокове поле «П»/«В» — на лівій осі сертифіката */
-  --size-barrels-bullet: calc(7 * var(--u));          /* ромб-маркер пункту списку: центр = середина висоти великих літер першого рядка */
-  --space-barrels-bullet-gap: calc(14 * var(--u));
-  --space-barrels-route-gap: var(--space-20);
-  --size-barrels-route-wave: calc(48 * var(--u));
+  --shift-barrels-fact-ink: -0.06em;                  /* оптика підписів фактів («Пляшок…», «Вартість…» 15u): бокове поле «П»/«В» — на лівій осі фактів */
   --lh-barrels-note: 1.5;                             /* дрібний текст-застереження */
-  --container-barrels-note: calc(900 * var(--u));
 
-  /* S4 «Арифметика бочки»: світла кімната (суцільна з S5); 4 колонки шириною в блок пляшок 16×6 = 96 (один масштаб): верхня смуга — блок 50 L
-     і підписи обох бочок (subgrid), нижня — стіна 200 L з 4 таких блоків мінус одна пляшка (383 = 4 × 96 − 1) */
+  /* S4 «Арифметика бочки»: світла кімната (суцільна з S5); ліворуч 50 L, праворуч 200 L (рев'ю b9892b9b — повернуто композицію «зліва/справа»):
+     ярлик, число, одиниця, стіна пляшок, вартість — на спільних рядках (subgrid); стіни на спільній hairline-лінії */
   --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* підписи на «папері»: контраст на beige ≈ 5.5:1 */
   --color-barrels-amber-paper: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));    /* акцент 50 L на «папері»: «віскі» (коричневий з палітри), контраст на beige ≈ 5.2:1 */
-  --container-barrels-profit-title: calc(760 * var(--u));  /* заголовок секції у 2 рядки (balance) */
-  --space-barrels-profit-head: calc(80 * var(--u));     /* заголовок → верхня смуга */
-  --space-barrels-band-gap: calc(56 * var(--u));        /* «полиця» верхньої смуги → стіна 200 L */
   --space-barrels-room-join: calc(120 * var(--u));      /* S4 → S5 в одній світлій кімнаті: лише повітря, без межі */
   --font-size-barrels-ledger-num: calc(150 * var(--u)); /* «96» / «383» */
   --font-size-barrels-ledger-approx: 0.42em;            /* «≈» перед числом: менший, щоб не змагався з числом */
@@ -985,59 +1003,37 @@
   --shift-barrels-approx-ink: -0.068em;                 /* бокове поле гліфа «≈» EB Garamond: чорнило на 0.068em правіше осі колонки (виміряно) */
   --space-barrels-approx-gap: 0.08em;                   /* «≈» → число (в em знака «≈») */
   --font-size-barrels-ledger-cost: calc(34 * var(--u)); /* «≈ € 20,83» */
-  --space-barrels-ledger-row: var(--space-20);          /* ярлик → число */
-  --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
-  --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками (фактичний — space-between) */
-  --size-barrels-wall-cell-w: round(down, calc((var(--container-barrels) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* комірка (одна пляшка): ціле px, 4 блоки + 3 мін. проміжки = ширина; 14px на 1200, 22px на 1920 */
-  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
-  --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
-  --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
-  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 зліва — чорнило першої пляшки блоку на лівій осі колонки */
+  --space-barrels-ledger-row: var(--space-20);          /* ярлик → число; лінія → вартість */
+  --space-barrels-wall-top: var(--space-30);            /* одиниця → стіна */
   --shift-barrels-caption-ink: -0.04em;                 /* оптика підписів («пляшок…», «вартість…»): бокове поле першої літери */
-  --shift-barrels-num-rsb: -0.04em;                     /* оптика числа 200 L (вирівняне праворуч): праве бокове поле «3» EB Garamond (виміряно 0.04em) */
-  --shift-barrels-h2-round: -0.012em;                   /* оптика H2 «Скільки…»: бокове поле круглої «С» 67u — на лівій осі */
-  --shift-barrels-legend-ink: -0.09em;                  /* оптика легенди: бокове поле «л» + хвостовий letter-spacing — правий край чорнила = правий край сітки */
 
-  /* S2 «Що дає бочка»: чотири шари клепки зсередини назовні — пари кіл: коло з фото-текстурою (AI-фото IMG-T1…T4) і «накладка» того ж
-     діаметра, що заходить на нього знизу; іконка — у центрі «лінзи» перетину, назва й пояснення — по центру решти накладки */
-  --space-barrels-layer-gap: calc(32 * var(--u));         /* між парами кіл (ряд — space-between) */
-  --size-barrels-layer: calc((var(--container-barrels) - 3 * var(--space-barrels-layer-gap)) / 4); /* діаметр кола: текстура = накладка */
-  --size-barrels-layer-overlap: calc(var(--size-barrels-layer) * 0.26);  /* накладка заходить на коло текстури на 26% діаметра («лінза») */
-  --size-barrels-layer-icon: calc(var(--size-barrels-layer) * 0.15);     /* іконка 64×64 (viewBox) у центрі «лінзи» */
-  --space-barrels-layer-pad: calc(var(--size-barrels-layer) * 0.11);     /* бокові й нижнє поле тексту накладки: рядки — у межах хорди кола */
+  /* S2: решта (розміри кіл — у блоці сітки вище) */
   --space-barrels-layer-text-top: calc(56 * var(--u));    /* низ «лінзи» → поле назви (текст — із верхнього вирівнювання: однакова сітка в усіх чотирьох) */
   --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
   --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
   --svg-stroke-icon: 2;                                   /* лінія іконок шарів, одиниці viewBox 64 */
   --color-barrels-plate: color-mix(in srgb, var(--color-gold) 5%, var(--color-barrels-room-wood)); /* тло накладки: на пів тону світліше за кімнату «дерево» */
   --color-barrels-layer-plate: color-mix(in srgb, var(--color-barrels-plate) 88%, transparent);   /* накладка напівпрозора: крізь «лінзу» ледь проступає текстура */
-  --size-barrels-layer-blur: calc(6 * var(--u));          /* розмиття текстури під накладкою */
-  --lh-barrels-title: 1.1;                                /* назви шарів, розділів, сертифікатів, вин */
-  --shift-barrels-kicker-cap-top: -0.38em;                /* верх капітелі кікера (lh 1.4) = верх вмісту секції */
-  /* тони шарів — лише суміші палітри; тло кола під фото-текстурою (видно, доки фото вантажиться, або якщо img не задано) */
+  --size-barrels-layer-blur: calc(6 * var(--u));          /* розмиття текстури під накладкою (як розмиття пілюлі header) */
+  /* тони шарів — лише суміші палітри; суцільне тло кола під фото-текстурою (видно, доки фото вантажиться, або якщо img не задано) */
   --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* обпал (вугілля) */
   --color-barrels-caramel: color-mix(in srgb, var(--color-gold) 28%, var(--color-brown)); /* карамелізований шар */
   --color-barrels-toast: color-mix(in srgb, var(--color-gold) 64%, var(--color-brown));   /* підсмажений дуб */
   --color-barrels-oak: color-mix(in srgb, var(--color-gold) 82%, var(--color-light));     /* дуб */
-  --pos-barrels-tex-light: 50% 35%;                       /* заглушка текстури: м'яке «світло» зверху (не куля) */
-  --stop-barrels-tex-mid: 70%;
 
-  /* S5 «Подальша витримка»: продовження світлої кімнати; чотири плашки вин зі спільною сіткою рядків (subgrid: плашка, назва, регіон, ноти) */
-  --space-barrels-finish-gap: var(--space-40);
-  --size-barrels-finish-head: 76%;                       /* гравюра днища — частка ширини плашки */
+  /* S5 «Подальша витримка»: продовження світлої кімнати; чотири вина по 3 колонки сітки зі спільними рядками (subgrid: гравюра, назва, регіон, ноти) */
+  --span-barrels-finish: 3;
+  --size-barrels-finish-head: 76%;                       /* гравюра днища — частка ширини колонки вина */
   --font-size-barrels-finish-name: calc(28 * var(--u));
-  --container-barrels-next-lead: calc(820 * var(--u));
   --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається */
-  /* тони вин — лише суміші палітри (золото + коричневий); на плашках БЕЗ заливки — лише акцент (орнамент днища, ромб-легенда), контраст на
-     «папері» ≥ 3:1; у порядку плашок від найсвітлішого до найтемнішого: марсала → мадера → портвейн (тоні) → херес (олоросо) */
+  /* тони вин — лише суміші палітри (золото + коричневий); лише акцент — орнамент у центрі днища (контраст на «папері» ≥ 3:1);
+     у порядку від найсвітлішого до найтемнішого: марсала → мадера → портвейн (тоні) → херес (олоросо) */
   --color-barrels-wine-marsala: color-mix(in srgb, var(--color-gold) 62%, var(--color-brown)); /* марсала: золотисто-бурштинова */
   --color-barrels-wine-madeira: color-mix(in srgb, var(--color-gold) 50%, var(--color-brown)); /* мадера: бурштинова */
   --color-barrels-wine-port: color-mix(in srgb, var(--color-gold) 38%, var(--color-brown));    /* портвейн (тоні): горіхово-коричневий */
   --color-barrels-wine-sherry: color-mix(in srgb, var(--color-gold) 26%, var(--color-brown));  /* херес (олоросо): найтемніший */
   --opacity-barrels-head-boards: 0.6;                    /* клепки днища — тонше за обідок */
   --opacity-barrels-head-shade: 0.6;                     /* штрихування тіні днища */
-  --shift-barrels-lead-stem: -0.02em;                   /* оптика ліду «Бочки з-під…»: бокове поле «Б» 30u — на лівій осі */
-  --font-cap-height-barrels-serif: 0.6745;               /* висота капітелі EB Garamond (частка em, виміряно чорнилом) — центр ромба-легенди = середина капітелі назви */
 }
 
 /* ---------- Коктейлі (cocktails.html, partials/components/cocktail.html, lightbox.html) ----------
@@ -1050,14 +1046,13 @@
   --span-cocktail-media: 4;                                     /* фото-галерея */
   --span-cocktail-body: 5;                                      /* заголовок, опис, таби */
   --span-cocktail-item: 3;                                      /* картка каталогу (= 1 колонка сітки каталогу) */
-  /* висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
+  /* МІНІМАЛЬНА висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
   --size-cocktail-h: var(--size-card-cat2-h);
-  /* мін. висота панелі табів: 7 рядків тексту + 6 проміжків — найдовша вкладка (6 кроків / 7 інгредієнтів) не зсуває таби й низ блоку */
-  --size-cocktail-panel-h: calc(7 * var(--type-body-size) * var(--type-body-lh) + 6 * var(--space-10));
+  --col-cocktails-intro: 4 / span 6;                           /* вступ: 6 середніх колонок — центр = центр екрана */
+  --shift-cocktail-title-cap-top: -0.185em;                     /* оптика: верх чорнила капітелі заголовка (EB Garamond SemiBold, lh 1) = верх фото/картки; виміряно по чорнилу, DPR 2, 1200–1920 (Й/Ґ/апостроф виходять вище капітелі — це надрядкові знаки) */
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
-  --container-cocktail-text: var(--container-intro-text);       /* 658u: міра опису й вступу (≈70 знаків) */
   --color-cocktail-text: var(--color-beige);
   --color-cocktail-accent: var(--color-gold);                   /* єдиний акцент сторінки: оригінальна назва, кількості, номери кроків */
   --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */

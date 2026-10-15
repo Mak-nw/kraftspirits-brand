@@ -1,59 +1,59 @@
 /* Сторінка «Ф'ючерсні бочки Bazylsprings» (barrels.html), редизайн «Світло в погребі». Усі значення — токени (блок «Ф'ючерсні бочки» в tokens.css).
    Кімнати: hero (фото) → S2 що дає бочка (wood, пари кіл) → S3 від бочки до пляшки (cellar, ЄДИНА арка) → S4 арифметика + S5 подальша
-   витримка (одна світла кімната paper, без візерунків і зерна) → S6 ціна (текст на реальному фото). Однотипні плашки — subgrid зі спільними
-   рядками; оптичні поправки — лише токени в em. Гравюри: stroke currentColor, тонкі
-   лінії --svg-stroke-hair, заливки лише токенами; анімації — transform / opacity / stroke-dashoffset, без скрол-анімацій. */
+   витримка (одна світла кімната paper) → S6 ціна (смуга фото + панелі). Словник — лише елементи design-system.html (CLAUDE.md п. 5б):
+   суцільні кольори палітри, типографіка, hairline-лінії й рамки (одна лінія), панель beige + --radius-panel, кнопки й список DS. Без ромбів-маркерів,
+   подвійних рамок, світіння, тіней і зерна. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12): вміст 1825u, зазор 40u; кожен блок —
+   від початку колонки до кінця колонки. Шапки секцій — по центру. Оптичні поправки тексту — text-indent (бокс блока лишається на лініях колонок). Однотипні плашки — subgrid зі спільними рядками; оптичні поправки — лише токени в em. Гравюри (ілюстрації): stroke
+   currentColor, тонкі лінії --svg-stroke-hair, заливки лише токенами; анімації — transform / opacity / stroke-dashoffset, без скрол-анімацій. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 
-/* ---------- «Світло в погребі»: кімнати й зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
-   Кімната = секція з власним тлом (wood / cellar / paper). Header — як на всіх сторінках (рішення замовника: без власного тону пілюлі).
-   Зерно плівки — лише в темних кімнатах і hero (шар ::after поверх вмісту, без анімації, pointer-events: none); «паперова» кімната — чиста,
-   без зерна й візерунків (рішення замовника). */
-.hero--barrels::after, .bx-room--wood::after, .bx-room--cellar::after { content: ''; position: absolute; inset: 0; z-index: var(--z-barrels-grain); pointer-events: none; background: url('/assets/img/barrels-grain.svg') 0 0 / var(--size-barrels-grain-tile) var(--size-barrels-grain-tile) repeat; opacity: var(--opacity-barrels-grain); }
+/* ---------- Кімнати: секція з суцільним тлом палітри (wood / cellar / paper). Header — як на всіх сторінках ---------- */
 .bx-room { position: relative; isolation: isolate; color: var(--color-barrels-ink); }
 .bx-room--wood { background: var(--color-barrels-room-wood); }
 .bx-room--cellar { background: var(--color-barrels-room-cellar); }
 .bx-room--paper { background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
+/* шапка секції (кікер / заголовок / лід / підписи) — по центру сітки (рев'ю e725d1be, a40df587, 73b1b655; так само в S4 і S5) */
+.bx-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-stack); text-align: center; }
+.bx-head > .t-h2 { margin-left: var(--bx-h2-optic, 0em); } /* оптичний центр чорнила H2 (токени --shift-barrels-h2-center-*) */
+.barrels-benefits__head { --bx-h2-optic: var(--shift-barrels-h2-center-benefits); }
+.barrels-profit__head { --bx-h2-optic: var(--shift-barrels-h2-center-profit); }
+.barrels-next__head { --bx-h2-optic: var(--shift-barrels-h2-center-next); }
+.barrels-price__head { --bx-h2-optic: var(--shift-barrels-h2-center-price); }
 
 /* ?slots=on (barrels.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
 .show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-barrels-accent); outline-offset: calc(-1 * var(--space-10)); }
-.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-cert-bg); color: var(--color-barrels-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
+.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-room-cellar); color: var(--color-barrels-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
 
 /* зразки похідних кольорів у design-system.html (розділ «Ф'ючерсні бочки») */
 .swatch--bx-wood .swatch__chip { background: var(--color-barrels-room-wood); }
 .swatch--bx-cellar .swatch__chip { background: var(--color-barrels-room-cellar); }
 .swatch--bx-paper .swatch__chip { background: var(--color-barrels-room-paper); }
 .swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-barrels-room-cellar); }
-.swatch--bx-lightpool .swatch__chip { background: radial-gradient(ellipse var(--size-barrels-stage-glow) at top, var(--color-barrels-lightpool), transparent), var(--color-barrels-room-wood); }
 
-/* ---------- Hero ---------- */
+/* ---------- Hero: фото + затемнення зверху лише під текстом (читабельність H1 і пілюлі header; на головній ту саму роль виконує оброблене фото) ---------- */
 .hero--barrels { color: var(--color-light); }
-.hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top), var(--color-barrels-shade-mid) var(--stop-barrels-shade-mid), transparent var(--stop-barrels-shade-end)), linear-gradient(to top, var(--color-barrels-shade-bottom), transparent var(--stop-barrels-shade-bottom-end)); }
+.hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top), var(--color-barrels-shade-mid) var(--stop-barrels-shade-mid), transparent var(--stop-barrels-shade-end)); }
 .hero__content { position: absolute; z-index: 2; top: var(--offset-barrels-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-hero-gap); text-align: center; }
-.hero__title { max-width: var(--container-barrels-hero-title); font: var(--type-hero-weight) var(--font-size-barrels-hero)/var(--lh-barrels-hero) var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; text-wrap: balance; }
-.hero__rule { position: relative; display: block; width: var(--size-barrels-hero-rule-w); height: var(--size-barrels-rule-marker); color: var(--color-barrels-accent); background: linear-gradient(currentColor, currentColor) left center / 100% var(--border-hairline) no-repeat; }
-.hero__rule::before { content: ''; position: absolute; left: 50%; top: 0; translate: -50% 0; width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.hero__title { width: var(--size-barrels-hero-title-w); font: var(--type-hero-weight) var(--font-size-barrels-hero)/var(--lh-barrels-hero) var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; text-wrap: balance; }
 .hero__subtitle { max-width: var(--container-barrels-hero-sub); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); text-wrap: balance; }
 .hero--barrels .btn { margin-top: var(--space-10); }
 
 /* ---------- S2 «Що дає бочка»: кімната wood, чотири шари клепки — пари кіл з накладанням ----------
-   Ряд з 4 колонок (діаметр кола = ширина колонки, space-between). Пара: коло з фото-текстурою (img; без нього — заглушка-градієнт у тоні шару)
-   і «накладка» того самого діаметра, що заходить на нього знизу на --size-barrels-layer-overlap (на один рядок сітки вище — від'ємний відступ).
-   Накладка напівпрозора з розмиттям: у «лінзі» перетину ледь проступає текстура, кільце текстури лежить ПОВЕРХ накладки — видно обидва кола.
-   Іконка — у центрі «лінзи». Під нею текст з однаковою сіткою в усіх чотирьох: назва — у полі на 2 рядки, притиснута донизу (остання базова
-   лінія назв спільна), пояснення — з однакового відступу під нею (перша базова лінія спільна); усе — у межах хорди кола, контраст ≥ 4.5. */
+   Шапка по центру. Ряд з 4 пар по 3 колонки (крайні кола — на краях колонок 1 і 12). Пара: коло з фото-текстурою і
+   «накладка» того самого діаметра, що заходить на нього знизу на --size-barrels-layer-overlap. Накладка напівпрозора з розмиттям: у «лінзі» перетину
+   ледь проступає текстура, hairline-кільце текстури лежить ПОВЕРХ накладки — видно обидва кола. Іконка — у центрі «лінзи». Під нею текст з однаковою
+   сіткою в усіх чотирьох: назва — у полі на 2 рядки, притиснута донизу (остання базова лінія назв спільна), пояснення — з однакового відступу. */
 .barrels-benefits { padding-block: var(--space-barrels-section-y); }
 .barrels-benefits__grid { width: var(--container-barrels); margin-inline: auto; }
-.barrels-benefits__head { display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
-.barrels-benefits__head .t-h2 { margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «Щ» — на осі секції */
+.barrels-benefits__head { margin-bottom: var(--space-barrels-head); }
 .barrels-benefits__kicker { margin-top: var(--shift-barrels-kicker-cap-top); color: var(--color-barrels-accent); }
-.bx-layers { display: grid; grid-template-columns: repeat(4, var(--size-barrels-layer)); justify-content: space-between; }
-.bx-layer { position: relative; isolation: isolate; display: grid; grid-template-rows: var(--size-barrels-layer) auto; }
+.bx-layers { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); }
+.bx-layer { position: relative; isolation: isolate; grid-column: span var(--span-barrels-layer); display: grid; grid-template-rows: var(--size-barrels-layer) auto; }
 .bx-layer--char { --bx-tex: var(--color-barrels-char); }
 .bx-layer--caramel { --bx-tex: var(--color-barrels-caramel); }
 .bx-layer--toast { --bx-tex: var(--color-barrels-toast); }
 .bx-layer--oak { --bx-tex: var(--color-barrels-oak); }
-.bx-layer__tex { position: relative; display: block; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at var(--pos-barrels-tex-light), color-mix(in srgb, var(--bx-tex) 90%, var(--color-light)), var(--bx-tex) var(--stop-barrels-tex-mid), color-mix(in srgb, var(--bx-tex) 86%, var(--color-brown))); }
+.bx-layer__tex { position: relative; display: block; overflow: hidden; border-radius: 50%; background: var(--bx-tex); } /* суцільний тон шару — видно, доки фото вантажиться */
 .bx-layer__tex > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .bx-layer__tex::after { content: ''; position: absolute; inset: 0; z-index: 2; border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50%; pointer-events: none; } /* кільце текстури — над накладкою */
 .bx-layer__plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; aspect-ratio: 1; margin-top: calc(-1 * var(--size-barrels-layer-overlap)); padding: calc(var(--size-barrels-layer-overlap) + var(--space-barrels-layer-text-top)) var(--space-barrels-layer-pad) var(--space-barrels-layer-pad); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); border-radius: 50%; background: var(--color-barrels-layer-plate); -webkit-backdrop-filter: blur(var(--size-barrels-layer-blur)); backdrop-filter: blur(var(--size-barrels-layer-blur)); text-align: center; transition: border-color var(--duration-fast) var(--ease-out); }
@@ -63,41 +63,34 @@
 @media (hover: hover) {
   .bx-layer:hover .bx-layer__plate { border-color: var(--color-barrels-hairline); }
 }
-/* вісь під рядом: порядок шарів — зсередини бочки назовні */
-.bx-layers__axis { display: flex; align-items: center; gap: var(--space-20); margin-top: var(--space-50); margin-left: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
-.bx-layers__line { position: relative; flex: 1; height: var(--border-hairline); background: var(--color-barrels-hairline-soft); }
-.bx-layers__line::after { content: ''; position: absolute; right: 0; top: 50%; translate: 50% -50%; width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-/* демо S2 у design-system.html */
+/* демо S2 у design-system.html (у ширині демо-панелі: .bx-scope перераховує сітку) */
 .demo-panel.ds-barrels-layers { display: block; padding: var(--space-50); }
+.ds-barrels-layers.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
 
-/* ---------- S3 «Від бочки до пляшки»: кімната cellar (без візерунка), заголовок на всю ширину + sticky-арка з гравюрою + три розділи-цифри ----------
-   Розділи — рядки однакової висоти (grid-auto-rows: 1fr) з рівним проміжком: компактний ритм, колонка розділів лише трохи вища за арку,
-   тож ліва колонка не порожніє; верх першого розділу = верх арки. Внутрішня сітка розділу однакова в усіх трьох: лінія з ромбом → цифра
-   (+ підпис «орієнтовно») → назва → пояснення. Ліві краї чорнила
-   ромба, цифри, назви й пояснення — одна вісь (оптичні поправки цифр — токени --shift-barrels-numeral-*, виміряні по чорнилу).
-   Гравюра: активний розділ (data-step на секції, barrels.js) — його частина на повну силу, решта приглушена; рівень рідини в бочці
-   й пляшці — СТАН розділу (transition), а не прив'язка до скролу. Нескінченні цикли (струмінь, пара, трубка) — лише в активному
-   розділі й лише поки секція у в'юпорті (.is-playing). Без JS — уся сцена видима, бочка й пляшка повні. */
+/* ---------- S3 «Від бочки до пляшки»: кімната cellar, заголовок по центру + sticky-арка (колонки 1–5) + три розділи-цифри (колонки 7–12) ----------
+   Розділи — рядки однакової висоти (grid-auto-rows: 1fr) з рівним проміжком: компактний ритм, колонка розділів лише трохи вища за арку.
+   Кожен розділ — на всю ширину колонок 7–12 (рев'ю a1c08ac0): hairline-лінія зверху (як рядок акордеона DS) від лівого краю колонки 7 до правого
+   краю колонки 12, текст без обмеження ширини. Внутрішня сітка однакова в усіх трьох: лінія → цифра (+ підпис «орієнтовно») → назва → пояснення;
+   ліві краї чорнила цифри, назви й пояснення — одна вісь (оптичні поправки — токени --shift-barrels-numeral-*, виміряні по чорнилу).
+   Гравюра (ілюстрація): активний розділ (data-step на секції, barrels.js) — його частина на повну силу, решта приглушена; рівень рідини —
+   СТАН розділу (transition). Нескінченні цикли (струмінь, пара, трубка) — лише в активному розділі й лише поки секція у в'юпорті (.is-playing). */
 .barrels-how { padding-block: var(--space-barrels-section-y); }
-.barrels-how__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: var(--space-barrels-col-gap); align-items: start; width: var(--container-barrels); margin-inline: auto; }
-.barrels-how__stage { grid-column: 1; grid-row: 2; position: sticky; top: var(--offset-barrels-stage-top); height: var(--size-barrels-stage-h); }
-.barrels-how__title { grid-column: 1 / -1; grid-row: 1; margin-top: var(--shift-barrels-cap-top); margin-bottom: var(--space-barrels-how-head); margin-left: var(--shift-barrels-h2-stem); } /* лівий край чорнила «В» — на осі арки */
+.barrels-how__grid { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: var(--space-barrels-grid-gap); align-items: start; width: var(--container-barrels); margin-inline: auto; }
+.barrels-how__title { grid-column: 1 / -1; grid-row: 1; margin-top: var(--shift-barrels-cap-top); margin-bottom: var(--space-barrels-head); text-align: center; }
+.barrels-how__stage { grid-column: 1 / span var(--span-barrels-stage); grid-row: 2; position: sticky; top: var(--offset-barrels-stage-top); height: var(--size-barrels-stage-h); }
 
-/* арка-вікно: подвійна золота рамка (зовнішня + внутрішня через ::after, концентричні: 50% по горизонталі, «підйом» − зазор по вертикалі) */
+/* арка-вікно: ОДНА hairline-рамка (як арка картки каталогу), тло — колір кімнати */
 .bx-arch { --bx-rise: var(--size-barrels-stage-rise); position: relative; overflow: hidden; border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50% 50% 0 0 / var(--bx-rise) var(--bx-rise) 0 0; }
-.bx-arch::after { content: ''; position: absolute; inset: var(--space-barrels-frame-gap); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); border-radius: 50% 50% 0 0 / calc(var(--bx-rise) - var(--space-barrels-frame-gap)) calc(var(--bx-rise) - var(--space-barrels-frame-gap)) 0 0; pointer-events: none; }
-.bx-arch--stage { height: 100%; color: var(--color-barrels-accent); background: radial-gradient(ellipse var(--size-barrels-stage-glow) at top, var(--color-barrels-lightpool), transparent), var(--color-barrels-room-cellar); }
-.bx-lamp { position: absolute; top: 0; left: 50%; translate: -50% 0; width: var(--size-barrels-lamp-w); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.bx-arch--stage { height: 100%; color: var(--color-barrels-accent); }
 
-/* сцена: SVG 600×700, притиснута донизу (xMidYMax meet) всередині внутрішньої рамки; над нею — склепіння з лампою */
+/* сцена: SVG 600×700, притиснута донизу (xMidYMax meet) всередині арки */
 .bx-scene2 { position: absolute; inset: var(--space-barrels-scene-inset); width: calc(100% - 2 * var(--space-barrels-scene-inset)); height: calc(100% - 2 * var(--space-barrels-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
 .bx-sc-hair { stroke-width: var(--svg-stroke-hair); }
 .bx-sc-soft { stroke: var(--color-barrels-hairline-soft); }
 .bx-sc-liquid { fill: var(--color-barrels-amber); stroke: none; }
 .bx-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
-.bx-sc-spark { fill: currentColor; stroke: none; }
 .bx-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
-.bx-sc-wisp, .bx-sc-spark { transform-box: fill-box; }
+.bx-sc-wisp { transform-box: fill-box; }
 .bx-sc-part { transition: opacity var(--duration-barrels-step) var(--ease-out); }
 .bx-sc-level { transition: transform var(--duration-barrels-step) var(--ease-out); }
 .js [data-steps] .bx-sc-part { opacity: var(--opacity-barrels-dim); }
@@ -117,154 +110,130 @@
 .bx-sc-wisp--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }
 .js [data-loop]:not(.is-playing) *, .js [data-loop]:not(.is-playing) *::before { animation-play-state: paused; }
 
-/* розділи: рядки однакової висоти (1fr = найвищий розділ) з рівним проміжком; усередині — верхнє вирівнювання (ромб, цифра, назва, текст на
-   однакових відстанях від верху розділу в усіх трьох) */
-.barrels-how__chapters { grid-column: 2; grid-row: 2; display: grid; grid-auto-rows: 1fr; row-gap: var(--space-barrels-chapter-gap); }
-.bx-chapter { display: flex; flex-direction: column; justify-content: flex-start; }
+/* розділи: рядки однакової висоти (1fr = найвищий розділ) з рівним проміжком; усередині — верхнє вирівнювання */
+.barrels-how__chapters { grid-column: var(--col-barrels-chapters) / -1; grid-row: 2; display: grid; grid-auto-rows: 1fr; row-gap: var(--space-barrels-chapter-gap); }
+.bx-chapter { display: flex; flex-direction: column; justify-content: flex-start; padding-top: var(--space-barrels-chapter-rule); border-top: var(--border-hairline) solid var(--color-barrels-hairline); }
 .bx-chapter--pour { --bx-num-shift: var(--shift-barrels-numeral-pour); --bx-title-shift: var(--shift-barrels-title-round); }
 .bx-chapter--angels { --bx-num-shift: var(--shift-barrels-numeral-angels); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
 .bx-chapter--bottle { --bx-num-shift: var(--shift-barrels-numeral-bottle); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
-.bx-chapter__rule { display: flex; align-items: center; gap: var(--space-barrels-rule-gap); margin-bottom: var(--space-barrels-chapter-rule); }
-.bx-chapter__rule::before { content: ''; flex: none; width: var(--size-barrels-rule-marker); aspect-ratio: 1; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-chapter__rule::after { content: ''; flex: 1; height: var(--border-hairline); background: var(--color-barrels-hairline); }
 .bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-barrels-accent); }
 .bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); font: var(--fw-regular) var(--font-size-barrels-numeral)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
 .bx-chapter__note { font: var(--fw-semibold) var(--font-size-barrels-caption)/var(--lh-none) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: uppercase; }
 .bx-chapter__note:empty { display: none; }
-.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); margin-left: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
-.bx-chapter__text { margin-top: var(--space-barrels-chapter-text); margin-left: var(--bx-text-shift, 0em); max-width: var(--container-barrels-copy); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-chapter__text { margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
 
 /* демо S3 у design-system.html */
-.demo-panel.ds-barrels-how { align-items: stretch; gap: var(--space-barrels-col-gap); padding: var(--space-50); }
+.demo-panel.ds-barrels-how { align-items: stretch; gap: var(--space-50); padding: var(--space-50); }
 .ds-barrels-stage { flex: none; width: var(--size-barrels-demo-stage-w); height: var(--size-barrels-demo-stage-h); }
 .ds-barrels-stage .bx-arch { --bx-rise: calc(var(--size-barrels-demo-stage-w) * var(--ratio-barrels-arch-rise)); }
 .ds-barrels-how .bx-chapter { flex: 1; min-height: 0; }
 
-/* ---------- S4 «Арифметика бочки»: світла кімната («папір», суцільна з S5), блоки пляшок в ОДНОМУ масштабі ----------
-   Сітка — 4 колонки шириною в блок (16×6 = 96 пляшок, маска barrels-bottle-block.svg), space-between на всю ширину. Рядок 1 — заголовок
-   (ліворуч) і легенда (праворуч) на спільній останній базовій лінії. Верхня смуга (рядки 2–6): блок 50 L (колонка 1, стоїть на «полиці»),
-   підписи 50 L (колонка 2) і 200 L (колонки 3–4) — subgrid на спільні рядки (ярлик, число, одиниця, проміжок 1fr, вартість). Нижня смуга —
-   стіна 200 L: чотири такі самі блоки, кожен у своїй колонці (останній без верхньої правої пляшки: 383 = 4 × 96 − 1). Блок 50 L стоїть рівно
-   над першим блоком 200 L — співвідношення 1 : 4 читається одразу; порожніх кутів немає. 50 L — першим, акцент «віскі» (--color-barrels-amber-paper). */
+/* ---------- S4 «Арифметика бочки»: світла кімната («папір», суцільна з S5) — 50 L ліворуч, 200 L праворуч (рев'ю b9892b9b) ----------
+   Шапка по центру (заголовок + легенда «1 силует = 1 пляшка 0,7 л»). Нижче — дві групи на 12 колонках: 50 L — колонки 1–3, 200 L — 4–12; кожна —
+   subgrid на 6 спільних рядків (ярлик, число, одиниця, стіна, лінія, вартість), тож однотипні рядки обох груп на одних базових лініях.
+   Стіна пляшок в ОДНОМУ масштабі: маска-блок barrels-bottle-block.svg (16 × 6 = 96): 50 L = 1 блок, 200 L = 4 такі блоки в ряд на всю ширину
+   колонок 4–12 (повтор «space»: перший і останній — на краях), верхню праву пляшку останнього стирає другий шар маски (383 = 4 × 96 − 1).
+   Співвідношення 1 : 4 видно одразу; стіни однакової висоти стоять на спільній hairline-лінії. 50 L — першим, акцент «віскі» (ярлик і пляшки). */
 .barrels-profit { padding-block: var(--space-barrels-section-y) var(--space-barrels-room-join); }
-.barrels-profit__grid { display: grid; grid-template-columns: repeat(4, var(--size-barrels-block-w)); grid-template-rows: auto auto auto auto 1fr auto auto auto auto; justify-content: space-between; width: var(--container-barrels); margin-inline: auto; }
-.barrels-profit__title { grid-column: 1 / -1; grid-row: 1; justify-self: start; align-self: last baseline; max-width: var(--container-barrels-profit-title); margin-top: var(--shift-barrels-cap-top); margin-bottom: var(--space-barrels-profit-head); margin-left: var(--shift-barrels-h2-round); text-wrap: balance; }
-.barrels-profit__legend { grid-column: 1 / -1; grid-row: 1; justify-self: end; align-self: last baseline; display: flex; align-items: baseline; gap: var(--space-10); margin-right: calc(var(--shift-barrels-legend-ink) - 2 * var(--shift-barrels-wall-ink)); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); } /* правий край чорнила = правий край чорнила стіни 200 L */
+.barrels-profit__grid { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(7, auto); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
+.barrels-profit__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-barrels-head); }
+.barrels-profit__head .t-h2 { margin-top: var(--shift-barrels-cap-top); }
+.barrels-profit__legend { display: flex; align-items: baseline; gap: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
 .barrels-profit__legend-key { flex: none; width: var(--size-barrels-wall-cell-w); height: var(--size-barrels-wall-cell-h); background: var(--color-barrels-ink-paper); mask: url('/assets/img/barrels-bottle-tile.svg') 0 0 / 100% 100% no-repeat; } /* без власної базової лінії → стоїть на базовій лінії підпису */
-.bx-ledger { grid-row: 2 / 7; display: grid; grid-template-rows: subgrid; justify-items: start; }
-.bx-ledger--50 { grid-column: 2; }
-.bx-ledger--200 { grid-column: 3 / 5; justify-items: end; margin-right: calc(-2 * var(--shift-barrels-wall-ink)); text-align: right; } /* дзеркально до 50 L: праворуч, правий край — на правому краї чорнила стіни 200 L */
-.bx-ledger--200 .bx-ledger__unit, .bx-ledger--200 .bx-ledger__cost-label { margin-left: 0; margin-right: var(--shift-barrels-legend-ink); }
-.bx-ledger--200 .bx-ledger__cost { align-items: flex-end; }
-.bx-ledger--200 .bx-ledger__num { margin-right: var(--shift-barrels-num-rsb); } /* бокове поле останньої цифри — правий край чорнила на осі */
-.bx-ledger__size { padding: var(--space-5) var(--space-15); border: var(--border-hairline) solid var(--color-barrels-ink-paper); border-radius: var(--radius-btn); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
-.bx-ledger--accent .bx-ledger__size { border-color: var(--color-barrels-amber-paper); background: var(--color-barrels-amber-paper); color: var(--color-barrels-room-paper); }
+.bx-ledger { grid-row: 2 / span 6; display: grid; grid-template-rows: subgrid; }
+.bx-ledger--50 { grid-column: 1 / span var(--span-barrels-ledger-50); }
+.bx-ledger--200 { grid-column: calc(var(--span-barrels-ledger-50) + 1) / -1; }
+.bx-ledger__size { text-indent: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+.bx-ledger--accent .bx-ledger__size { color: var(--color-barrels-amber-paper); }
 .bx-ledger__num { margin-top: var(--space-barrels-ledger-row); font: var(--fw-regular) var(--font-size-barrels-ledger-num)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .bx-ledger__approx { position: relative; top: var(--shift-barrels-ledger-approx); margin-left: var(--shift-barrels-approx-ink); margin-right: var(--space-barrels-approx-gap); font-size: var(--font-size-barrels-ledger-approx); } /* «≈» піднято до середини висоти цифр (old-style) */
-.bx-ledger__unit { margin-top: var(--space-15); margin-left: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
-.bx-ledger__cost { grid-row: 5; display: flex; flex-direction: column; gap: var(--space-5); }
-.bx-ledger__cost-num { margin-left: var(--shift-barrels-approx-ink); font: var(--fw-medium) var(--font-size-barrels-ledger-cost)/var(--lh-none) var(--font-family-serif); white-space: nowrap; }
-.bx-ledger__cost-label { margin-left: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
-/* блок пляшок: рівно одна комірка-сітка 16×6; зсув на поле плитки (3/22 комірки) — чорнило першої пляшки на лівій осі колонки */
-.bx-wall { --bx-wall-color: var(--color-barrels-ink-paper); display: block; width: var(--size-barrels-block-w); height: var(--size-barrels-block-h); margin-left: var(--shift-barrels-wall-ink); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / 100% 100% no-repeat; }
-.bx-wall--50 { --bx-wall-color: var(--color-barrels-amber-paper); grid-column: 1; grid-row: 2 / 7; align-self: end; }
-.bx-wall--200 { grid-row: 8; } /* колонки 1–4 по черзі (автоматичне розміщення в рядку) */
-.bx-wall--short { mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / 100% 100% no-repeat, linear-gradient(var(--color-barrels-ink-paper) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; } /* 383 = 4 × 96 − 1: верхню праву пляшку стирає другий шар маски */
-/* поява: блок «наповнюється» знизу вгору (один раз; без JS / reduced-motion — одразу повний) */
-.js-reveal .bx-wall[data-reveal]:not(.is-in) { clip-path: inset(100% 0 0 0); }
-.js-reveal .bx-wall[data-reveal] { transition: clip-path var(--duration-reveal) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
-.barrels-profit__shelf { grid-column: 1 / -1; align-self: start; height: var(--border-hairline); background: var(--color-barrels-rule-paper); }
-.barrels-profit__shelf--top { grid-row: 7; margin-bottom: var(--space-barrels-band-gap); }
-.barrels-profit__shelf--bottom { grid-row: 9; }
+.bx-ledger__unit { margin-top: var(--space-15); text-indent: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+/* стіна: блок 16 × 6 комірок (ціле px); зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок */
+.bx-wall { --bx-wall-color: var(--color-barrels-ink-paper); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-barrels-wall-top); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
+.bx-ledger--50 .bx-wall { --bx-wall-color: var(--color-barrels-amber-paper); justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
+.bx-ledger--200 .bx-wall { margin-inline: var(--shift-barrels-wall-ink); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat, linear-gradient(var(--color-barrels-ink-paper) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; } /* 4 блоки на всю ширину колонок 4–12; верхню праву пляшку стирає другий шар маски */
+/* поява: стіна «наповнюється» знизу вгору разом із reveal групи (один раз; без JS / reduced-motion — одразу повна) */
+.js-reveal .bx-ledger[data-reveal] .bx-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
+.js-reveal .bx-ledger[data-reveal].is-in .bx-wall { clip-path: inset(0); }
+.barrels-profit__shelf { grid-column: 1 / -1; grid-row: 6; align-self: start; height: var(--border-hairline); margin-bottom: var(--space-barrels-ledger-row); background: var(--color-barrels-rule-paper); } /* спільна лінія під стінами — hairline, як рядок акордеона DS */
+.bx-ledger__cost { grid-row: 6; display: flex; flex-direction: column; gap: var(--space-5); }
+.bx-ledger__cost-num { text-indent: var(--shift-barrels-approx-ink); font: var(--fw-medium) var(--font-size-barrels-ledger-cost)/var(--lh-none) var(--font-family-serif); white-space: nowrap; }
+.bx-ledger__cost-label { text-indent: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
 /* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється.
    Страховка: через --duration-count-failsafe число з'являється саме. Без JS і з reduced-motion — фінальне значення одразу. */
 .js .page-barrels [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
 @keyframes count-failsafe { to { opacity: 1; } }
-/* демо S4 у design-system.html: та сама сітка без рядка заголовка */
+/* демо S4 у design-system.html: ті самі групи й лінія, без шапки (у ширині демо-панелі) */
 .demo-panel.ds-barrels-ledgers { display: block; padding: var(--space-50); }
-.ds-barrels-ledgers .barrels-profit__grid { width: 100%; }
+.ds-barrels-ledgers.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
 
-/* ---------- S5 «Подальша витримка»: продовження світлої кімнати S4 (одне тло, без межі), чотири плашки вин ----------
-   Сітка: заголовок + лід на всю ширину, нижче 4 колонки. Кожна .bx-finish — subgrid на 4 спільні рядки (плашка, назва, регіон, смакові ноти;
-   підпис — теж subgrid), тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Плашка — квадрат з радіусом --radius-panel БЕЗ заливки
-   (рев'ю 45c7d17f): тонка рамка й темна гравюра днища на світлому тлі; клепки обриваються колом навколо орнаменту (без плашки під іконкою).
-   Тон вина (--bx-wine) — лише акцент: орнамент у центрі днища й ромб-легенда перед назвою. Ноти — СЛОТ (src/data/barrels.js finishNotes): порожні не показуються.
-   Ромб-легенда тоном вина перед назвою (центр = середина капітелі), регіон і ноти — з відступом назви. */
+/* ---------- S5 «Подальша витримка»: продовження світлої кімнати S4 (одне тло, без межі), чотири вина по 3 колонки сітки ----------
+   Шапка (заголовок + лід) по центру. Кожна .bx-finish — subgrid на 4 спільні рядки (гравюра, назва, регіон, смакові ноти; підпис — теж subgrid),
+   тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Гравюра днища (ілюстрація) — темна на світлому тлі, без плашки, рамки й
+   заливки (рев'ю 45c7d17f, 79b93cfd); підписи — по центру під гравюрою, без маркерів (рев'ю e9a95f10). Тон вина (--bx-wine) — лише орнамент
+   у центрі днища. Ноти — src/data/barrels.js finishNotes: порожні не показуються. */
 .barrels-next { padding-block: 0 var(--space-barrels-section-y); }
-.barrels-next__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-finish-gap); width: var(--container-barrels); margin-inline: auto; }
-.barrels-next__head { grid-column: 1 / -1; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
-.barrels-next__head .t-h2 { margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «П» — на лівій осі; без підтягування капітелі вгору — секція продовжує світлу кімнату S4, заголовок не виходить за її верх */
-.barrels-next__lead { max-width: var(--container-barrels-next-lead); margin-left: var(--shift-barrels-lead-stem); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: pretty; }
-.bx-finish { grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; }
+.barrels-next__grid { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
+.barrels-next__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-barrels-head); }
+.barrels-next__lead { width: var(--size-barrels-text-w); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: balance; }
+.bx-finish { grid-column: span var(--span-barrels-finish); grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; text-align: center; }
 .bx-finish--marsala { --bx-wine: var(--color-barrels-wine-marsala); }
 .bx-finish--madeira { --bx-wine: var(--color-barrels-wine-madeira); }
 .bx-finish--port { --bx-wine: var(--color-barrels-wine-port); }
 .bx-finish--sherry { --bx-wine: var(--color-barrels-wine-sherry); }
-.bx-finish__tile { display: grid; place-items: center; aspect-ratio: 1; border: var(--border-hairline) solid var(--color-barrels-rule-paper); border-radius: var(--radius-panel); color: var(--color-barrels-ink-paper); } /* без заливки (рев'ю 45c7d17f): темна гравюра на світлому тлі кімнати, тонка рамка тримає сітку */
+.bx-finish__tile { display: flex; justify-content: center; color: var(--color-barrels-ink-paper); } /* місце під фото днища (СЛОТ); зараз — лише гравюра */
 .bx-head2 { width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
 .bx-head2__hair, .bx-head2__shade, .bx-head2__boards { stroke-width: var(--svg-stroke-hair); }
 .bx-head2__boards { opacity: var(--opacity-barrels-head-boards); }
 .bx-head2__shade { opacity: var(--opacity-barrels-head-shade); }
-.bx-head2__orn { color: var(--bx-wine); } /* орнамент — тоном свого вина: єдиний кольоровий акцент на плашці (≥ 3:1 на «папері») */
+.bx-head2__orn { color: var(--bx-wine); } /* орнамент — тоном свого вина: єдиний кольоровий акцент (≥ 3:1 на «папері») */
 @media (hover: hover) {
   .bx-finish:hover .bx-head2 { scale: var(--scale-barrels-finish-hover); }
 }
-/* підпис (subgrid на 3 рядки): ромб-легенда тоном вина + назва; регіон і ноти — з тим самим відступом, що й назва (висячий ромб на осі плашки) */
 .bx-finish__caption { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; }
-.bx-finish__name, .bx-finish__origin, .bx-finish__notes { padding-left: calc(var(--size-barrels-rule-marker) + var(--space-barrels-bullet-gap)); }
-.bx-finish__name { margin-top: var(--space-30); text-indent: calc(-1 * (var(--size-barrels-rule-marker) + var(--space-barrels-bullet-gap))); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-paper); }
-.bx-finish__name::before { content: ''; display: inline-block; width: var(--size-barrels-rule-marker); aspect-ratio: 1; margin-right: var(--space-barrels-bullet-gap); vertical-align: baseline; translate: 0 calc((var(--font-cap-height-barrels-serif) * 1em - var(--size-barrels-rule-marker)) / -2); background: var(--bx-wine); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-paper); }
 .bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
 .bx-finish__notes { margin-top: var(--space-5); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-serif); font-style: italic; color: var(--color-barrels-ink-paper); }
 .bx-finish__notes:empty { display: none; }
 /* демо S5 у design-system.html */
-.demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-finish-gap); align-items: stretch; padding: var(--space-50); }
+.demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-grid-gap); align-items: stretch; padding: var(--space-50); }
 .ds-barrels-finish .bx-finish { grid-row: 1 / span 4; }
 
-/* ---------- S6 «Ціна»: текст на реальному фото (днища бочок) — сертифікати + маршрут поверх затемненого фото ----------
-   Фото — тло всієї секції (СЛОТ; паралакс soft), холодне затемнення зліва направо: під текстом і сертифікатами — сильне (контраст ≥ 4.5),
-   праворуч днища проступають. Сітка: [50 L][200 L] однакової ширини (рев'ю 345adb85), 50 L — першим; вигляд обох однаковий, без «світла»
-   й акценту (рев'ю 6f298137), кнопки одного тону btn--gold (рев'ю 7f82b6cb). Сертифікати — subgrid на 6 спільних рядків (назва, ціна,
-   2 рядки фактів, «що входить», кнопка): рядки обох на одних лініях. Подвійна рамка: border + ::after, ромби — центр = кут внутрішньої рамки.
-   Маркери списку — ромб, центр = середина висоти великих літер першого рядка (базова лінія + --font-cap-height-sans). */
+/* ---------- S6 «Ціна»: шапка по центру на кольорі кімнати + смуга реального фото днищ БЕЗ затемнення з двома сертифікатами-панелями ----------
+   Рев'ю 003d2383 «фон не затемнювати»: фото без накладки; контраст тексту дає не затемнення, а розкладка — шапка (заголовок, маршрут, застереження)
+   стоїть на teal кімнати (як текст секції підбору на головній, де фото — смугою під вмістом), а сертифікати — панелі DS (beige + --radius-panel, як
+   панелі контактів і товару; рев'ю 2fcd6695 — без подвійної рамки й ромбів). Рев'ю 16270ab4: сертифікати 50 L (першим) і 200 L — один під одним, по
+   центру на всі 12 колонок; однакові ширина й вигляд, кнопки одного тону (btn--teal, як «додати в кошик» Bazylsprings на панелі beige).
+   Усередині — subgrid тих самих 12 колонок: [назва + ціна 1–4][факти 5–8][«що входить» + кнопка 10–12]: колонки обох сертифікатів на одних
+   лініях сітки сторінки. Рядки фактів — hairline-лінії (як рядки акордеона DS), «що входить» — список DS (диск-маркер, як у тілі акордеона товару). */
 .bx-sr { position: absolute; width: var(--size-barrels-sr); height: var(--size-barrels-sr); margin: calc(-1 * var(--size-barrels-sr)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
-.barrels-price { padding-block: var(--space-barrels-section-y); }
+.barrels-price { padding-top: var(--space-barrels-section-y); }
+.barrels-price__head { width: var(--container-barrels); margin: 0 auto var(--space-barrels-head); }
+.barrels-price__title { margin-top: var(--shift-barrels-cap-top); }
+.bx-route { color: var(--color-barrels-ink); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); }
+.bx-route__point { white-space: nowrap; }
+.barrels-price__note { width: var(--size-barrels-text-w); font: var(--fw-medium) var(--font-size-barrels-note)/var(--lh-barrels-note) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: balance; }
+.barrels-price__band { position: relative; padding-block: var(--space-barrels-price-band); }
 .barrels-price__bg { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
 .barrels-price__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos-barrels-price-bg); }
-.barrels-price__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--color-barrels-price-shade), var(--color-barrels-price-shade) var(--stop-barrels-price-shade), var(--color-barrels-price-shade-soft)); }
-.barrels-price__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, var(--size-barrels-cert-w)); grid-template-rows: repeat(9, auto); column-gap: var(--space-barrels-cert-gap); width: var(--container-barrels); margin-inline: auto; }
-.barrels-price__title { grid-column: 1 / -1; grid-row: 1; margin-top: var(--shift-barrels-cap-top); }
-.bx-route { grid-column: 1 / -1; grid-row: 2; display: flex; align-items: center; gap: var(--space-barrels-route-gap); margin-block: var(--space-barrels-stack) var(--space-50); color: var(--color-barrels-ink); }
-.bx-route__label { font: var(--fw-semibold) var(--font-size-barrels-caption)/var(--lh-none) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-muted); }
-.bx-route__point { font: var(--fw-semibold) var(--font-size-title)/var(--lh-none) var(--font-family-serif); letter-spacing: var(--ls-wide); white-space: nowrap; }
-.bx-route__line { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: var(--size-barrels-corner); color: var(--color-barrels-accent); background: linear-gradient(to right, var(--color-barrels-hairline) calc(50% - var(--size-barrels-route-wave) / 2), transparent 0 calc(50% + var(--size-barrels-route-wave) / 2), var(--color-barrels-hairline) 0) left center / 100% var(--border-hairline) no-repeat; } /* лінія з розривом під хвилю — без підкладки, фото не перекривається */
-.bx-route__line::before, .bx-route__line::after { content: ''; position: absolute; top: 50%; translate: 0 -50%; width: var(--size-barrels-corner); aspect-ratio: 1; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-route__line::before { left: 0; }
-.bx-route__line::after { right: 0; }
-.bx-route__wave { position: relative; z-index: 1; width: var(--size-barrels-route-wave); padding-inline: var(--space-10); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; }
+.barrels-price__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); row-gap: var(--space-barrels-cert-gap); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
 
-.bx-cert { position: relative; grid-row: 3 / span 6; display: grid; grid-template-rows: subgrid; align-items: start; padding: var(--space-barrels-cert-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-cert-glass); -webkit-backdrop-filter: blur(var(--size-barrels-cert-blur)); backdrop-filter: blur(var(--size-barrels-cert-blur)); }
-.bx-cert::after { content: ''; position: absolute; inset: var(--space-barrels-frame-gap); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); pointer-events: none; }
-.bx-cert__corner { position: absolute; width: var(--size-barrels-corner); aspect-ratio: 1; translate: -50% -50%; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-cert__corner--tl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
-.bx-cert__corner--tr { left: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
-.bx-cert__corner--bl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); }
-.bx-cert__corner--br { left: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); top: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); }
-.bx-cert__title { margin-bottom: var(--space-barrels-stack); margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
-.bx-cert__price { margin-bottom: var(--space-barrels-cert-row); margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); color: var(--color-barrels-accent); white-space: nowrap; }
-.bx-cert__facts { display: contents; } /* рядки фактів — прямі рядки subgrid: лінії між ними збігаються в обох сертифікатах за будь-якого переносу підпису */
-.bx-cert__fact { align-self: stretch; display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-barrels-hairline-soft); }
-.bx-cert__fact:first-child { border-top: var(--border-hairline) solid var(--color-barrels-hairline-soft); }
-.bx-cert__fact:last-child { margin-bottom: var(--space-barrels-cert-row); }
-.bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
-.bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/var(--lh-none) var(--font-family-serif); font-variant-numeric: tabular-nums; color: var(--color-barrels-ink); white-space: nowrap; }
-.bx-cert__list { display: flex; flex-direction: column; gap: var(--space-10); margin-bottom: var(--space-barrels-cert-row); }
-.bx-cert__item { padding-left: calc(var(--size-barrels-bullet) + var(--space-barrels-bullet-gap)); text-indent: calc(-1 * (var(--size-barrels-bullet) + var(--space-barrels-bullet-gap))); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink); }
-.bx-cert__item::before { content: ''; display: inline-block; width: var(--size-barrels-bullet); aspect-ratio: 1; margin-right: var(--space-barrels-bullet-gap); vertical-align: baseline; translate: 0 calc((var(--font-cap-height-sans) * 1em - var(--size-barrels-bullet)) / -2); background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-cert .btn { justify-self: start; }
-.barrels-price__note { grid-column: 1 / -1; grid-row: 9; max-width: var(--container-barrels-note); margin-top: var(--space-50); font: var(--fw-medium) var(--font-size-barrels-note)/var(--lh-barrels-note) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
+/* сертифікат = панель DS: beige, --radius-panel, поле --space-barrels-cert-pad; усередині — subgrid 12 колонок */
+.bx-cert { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: stretch; padding: var(--space-barrels-cert-pad); border-radius: var(--radius-panel); background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
+.bx-cert__head { grid-column: 1 / span var(--span-barrels-cert-head); display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-barrels-stack); }
+.bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+.bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
+.bx-cert__facts { grid-column: calc(var(--span-barrels-cert-head) + 1) / span var(--span-barrels-cert-facts); align-self: center; }
+.bx-cert__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-barrels-rule-paper); }
+.bx-cert__fact:first-child { border-top: var(--border-hairline) solid var(--color-barrels-rule-paper); }
+.bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/var(--lh-none) var(--font-family-serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bx-cert__offer { grid-column: var(--col-barrels-cert-offer) / -1; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: var(--space-barrels-cert-row); }
+.bx-cert__list { padding-inline-start: var(--space-20); list-style: disc; font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); } /* список DS: як у тілі акордеона товару (.acc--product .acc__body ul) */
+.bx-cert__list li + li { margin-top: var(--space-5); }
 
-/* демо S6 у design-system.html */
-.demo-panel.ds-barrels-price { flex-direction: column; align-items: stretch; padding: var(--space-50); }
-.ds-barrels-certs { display: grid; grid-template-columns: repeat(2, var(--size-barrels-cert-w)); grid-template-rows: repeat(6, auto); column-gap: var(--space-barrels-cert-gap); }
-.ds-barrels-certs .bx-cert { grid-row: 1 / span 6; }
+/* демо S6 у design-system.html: шапка й сертифікати на кольорі кімнати (у ширині демо-панелі) */
+.demo-panel.ds-barrels-price { flex-direction: column; align-items: stretch; gap: var(--space-50); padding: var(--space-50); }
+.ds-barrels-price.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
+.ds-barrels-price .barrels-price__head { margin-bottom: 0; }

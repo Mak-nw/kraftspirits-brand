@@ -17,24 +17,22 @@
   <!--@include components/age-gate-->
   <!--@include header-->
   <main>
-    <!-- Hero: AI-кадр бочок у хмільнику (СЛОТ: за ТЗ IMG-1 — асиметричний кадр або зйомка). Холодне затемнення зверху (читабельність, пілюля),
-         теплий коричневий перехід знизу — у кімнату «дерево» наступної секції. Між заголовком і лідом — брендова лінія з ромбом. -->
+    <!-- Hero: AI-кадр бочок у хмільнику (СЛОТ: за ТЗ IMG-1 — асиметричний кадр або зйомка). Затемнення лише зверху, під текстом (читабельність H1 і пілюлі) -->
     <section class="hero hero--barrels" data-reveal-load data-parallax="soft">
       <img class="hero__bg" data-reveal="fade" src="/assets/img/barrels-hero.webp" alt="" data-slot="Фото hero: наявний AI-кадр barrels-hero.webp; за ТЗ IMG-1 — асиметричний кадр (бочки праворуч) або нова зйомка">
       <div class="hero__content">
         <h1 class="hero__title" data-reveal="rise">%barrels.title%</h1>
-        <span class="hero__rule" aria-hidden="true" data-reveal="fade"></span>
         <p class="hero__subtitle" data-reveal="rise">%barrels.subtitle%</p>
         <!--@include components/btn variant="btn--light" href="#price" text="Переглянути ціни" reveal="rise"-->
       </div>
     </section>
 
-    <!-- Кімната «дерево»: що дає бочка — чотири шари клепки зсередини назовні. Кожен шар — пара кіл однакового розміру: зверху коло з
+    <!-- Кімната «дерево»: що дає бочка — чотири шари клепки зсередини назовні. Шапка по центру. Кожен шар — пара кіл однакового розміру: зверху коло з
          фото-текстурою шару (AI-фото IMG-T1…T4, Seedream 5 Pro; за потреби — замінити на макрозйомку), знизу «накладка», що заходить на нього; у «лінзі»
-         перетину — іконка, нижче — назва й пояснення. Центри кіл пари — на одній вертикалі, накладки всіх чотирьох — на одній горизонталі -->
+         перетину — іконка, нижче — назва й пояснення. Ряд — на всю ширину 12-колонкової сітки -->
     <section class="barrels-benefits bx-room bx-room--wood" id="benefits" aria-labelledby="benefits-title">
       <div class="barrels-benefits__grid">
-        <div class="barrels-benefits__head">
+        <div class="barrels-benefits__head bx-head">
           <p class="barrels-benefits__kicker t-kicker" data-reveal="rise">Переваги бочок</p>
           <h2 class="t-h2" id="benefits-title" data-reveal="rise">Що дає бочка</h2>
         </div>
@@ -44,18 +42,16 @@
           <!--@include components/barrels-layer layer="toast" n="IMG-T3" name="підсмажена поверхня дуба" img="/assets/img/barrels-tex-toast.webp" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
           <!--@include components/barrels-layer layer="oak" n="IMG-T4" name="світлий дуб" img="/assets/img/barrels-tex-oak.webp" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
         </ol>
-        <p class="bx-layers__axis" aria-hidden="true"><span>всередині бочки</span><span class="bx-layers__line"></span><span>зовні</span></p>
       </div>
     </section>
 
-    <!-- Кімната «погріб» (teal, без візерунка — рішення замовника): заголовок на всю ширину; нижче sticky-арка з гравюрою ліворуч (ЄДИНА арка
-         сторінки) і три розділи-цифри праворуч у компактному рівному ритмі; активний розділ підсвічує свою частину гравюри (barrels.js, data-step) -->
+    <!-- Кімната «погріб» (teal): заголовок по центру; нижче sticky-арка з гравюрою (колонки 1–5, ЄДИНА арка сторінки) і три розділи-цифри
+         на колонках 7–12 у компактному рівному ритмі; активний розділ підсвічує свою частину гравюри (barrels.js, data-step) -->
     <section class="barrels-how bx-room bx-room--cellar" id="how" data-loop data-steps aria-labelledby="how-title">
       <div class="barrels-how__grid">
         <h2 class="barrels-how__title t-h2" id="how-title">Від бочки до вашої пляшки</h2>
         <div class="barrels-how__stage">
           <div class="bx-arch bx-arch--stage">
-            <svg class="bx-lamp" viewBox="0 0 60 84" aria-hidden="true" focusable="false"><path d="M30 0 V40 M16 40 H44 L52 58 H8 Z M24 58 Q30 68 36 58"/></svg>
             <!--@include components/barrels-scene-->
           </div>
         </div>
@@ -67,32 +63,27 @@
       </div>
     </section>
 
-    <!-- Світла кімната «папір» (S4 + S5 — одне суцільне тло без візерунків і зерна, рішення замовника). Арифметика бочки: сітка з 4 колонок
-         шириною в блок пляшок. Верхня смуга: блок 50 L (96 = 16×6) + його підписи + підписи 200 L; нижня смуга: стіна 200 L з 4 таких самих
-         блоків мінус одна пляшка (383). Один масштаб: блок 50 L стоїть над першим блоком 200 L — співвідношення 1 : 4 видно одразу -->
+    <!-- Світла кімната «папір» (S4 + S5 — одне суцільне тло). Арифметика бочки: шапка по центру; 50 L ліворуч (колонки 1–3), 200 L праворуч (4–12) —
+         ярлик, число, одиниця, стіна пляшок, вартість на спільних рядках. Один масштаб: 50 L = 1 блок 96 пляшок, 200 L = 4 такі блоки мінус одна (383) -->
     <section class="barrels-profit bx-room bx-room--paper" id="profit" aria-labelledby="profit-title">
       <div class="barrels-profit__grid">
-        <h2 class="barrels-profit__title t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
-        <p class="barrels-profit__legend" aria-hidden="true"><span class="barrels-profit__legend-key"></span>= 1 пляшка 0,7 л</p>
-        <span class="bx-wall bx-wall--50" data-reveal="fade" aria-hidden="true"></span>
+        <div class="barrels-profit__head bx-head">
+          <h2 class="t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
+          <p class="barrels-profit__legend" aria-hidden="true"><span class="barrels-profit__legend-key"></span>= 1 пляшка 0,7 л</p>
+        </div>
         <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent bx-ledger--50" count="%barrels.bottles50%" word="%barrels.bottles50Word%" cost="%barrels.cost50%"-->
         <!--@include components/barrels-ledger size="200 L" mod=" bx-ledger--200" count="%barrels.bottles200%" word="%barrels.bottles200Word%" cost="%barrels.cost200%"-->
-        <span class="barrels-profit__shelf barrels-profit__shelf--top" aria-hidden="true"></span>
-        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
-        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
-        <span class="bx-wall bx-wall--200" data-reveal="fade" aria-hidden="true"></span>
-        <span class="bx-wall bx-wall--200 bx-wall--short" data-reveal="fade" aria-hidden="true"></span>
-        <span class="barrels-profit__shelf barrels-profit__shelf--bottom" aria-hidden="true"></span>
+        <span class="barrels-profit__shelf" aria-hidden="true"></span>
       </div>
     </section>
 
-    <!-- Продовження світлої кімнати (те саме суцільне тло, що й S4): заголовок і лід; чотири однакові плашки вин (без арок) у тоні свого вина
-         зі спільною сіткою рядків (subgrid: плашка, назва, регіон, смакові ноти). На плашках — тимчасові гравюри днищ (СЛОТИ під фото, ТЗ IMG-4) -->
+    <!-- Продовження світлої кімнати (те саме суцільне тло, що й S4): заголовок і лід по центру; чотири вина по 3 колонки зі спільною сіткою рядків
+         (subgrid: гравюра, назва, регіон, смакові ноти). Гравюри днищ — тимчасові (СЛОТИ під фото, ТЗ IMG-4) -->
     <section class="barrels-next bx-room bx-room--paper" id="next" aria-labelledby="next-title">
       <div class="barrels-next__grid">
-        <div class="barrels-next__head">
+        <div class="barrels-next__head bx-head">
           <h2 class="t-h2" id="next-title" data-reveal="rise">Подальша витримка</h2>
-          <p class="barrels-next__lead" data-reveal="rise">Бочки з-під марсали, мадери, портвейну, хересу — кожна додає свій унікальний відтінок смаку</p>
+          <p class="barrels-next__lead" data-reveal="rise">Бочки з-під марсали, мадери, портвейну, хересу&nbsp;— кожна додає свій унікальний відтінок смаку</p>
         </div>
         <!--@include components/barrels-finish orn="marsala" wine="марсали" name="Marsala" origin="Сицилія, Італія" notes="%barrels.notesMarsala%"-->
         <!--@include components/barrels-finish orn="madeira" wine="мадери" name="Madeira" origin="Мадейра, Португалія" notes="%barrels.notesMadeira%"-->
@@ -101,19 +92,22 @@
       </div>
     </section>
 
-    <!-- «Ціна» — текст на реальному фото: днища бочок із крейдяними номерами на тлі всієї секції (СЛОТ під нову зйомку), холодне затемнення
-         зліва під текст і сертифікати (контраст ≥ 4.5), праворуч фото проступає. Два однакові «сертифікати» (однакова ширина й вигляд, 50 L —
-         першим) зі спільною сіткою рядків (subgrid); кнопки одного тону -->
+    <!-- «Ціна»: шапка по центру на teal кімнати (заголовок, маршрут, застереження); нижче — смуга реального фото днищ БЕЗ затемнення (СЛОТ під нову
+         зйомку) і на ній два однакові сертифікати — панелі DS (beige), 50 L першим, кожен на всі 12 колонок -->
     <section class="barrels-price bx-room bx-room--cellar" id="price" aria-labelledby="price-title">
-      <figure class="barrels-price__bg" data-parallax="soft" data-slot="Фото тла «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку">
-        <img src="/assets/img/barrels-price-bg.webp" width="1620" height="1080" alt="" loading="lazy" decoding="async">
-      </figure>
-      <div class="barrels-price__grid">
+      <div class="barrels-price__head bx-head">
         <h2 class="barrels-price__title t-h2" id="price-title" data-reveal="rise">Ціна</h2>
         <!--@include components/barrels-route-->
-        <!--@include components/barrels-cert size="50 L" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50"-->
-        <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200"-->
         <p class="barrels-price__note">%barrels.disclaimer%</p>
+      </div>
+      <div class="barrels-price__band">
+        <figure class="barrels-price__bg" data-parallax="soft" data-slot="Фото смуги «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку">
+          <img src="/assets/img/barrels-price-bg.webp" width="1620" height="1080" alt="" loading="lazy" decoding="async">
+        </figure>
+        <div class="barrels-price__grid">
+          <!--@include components/barrels-cert size="50 L" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50"-->
+          <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200"-->
+        </div>
       </div>
     </section>
   </main>
