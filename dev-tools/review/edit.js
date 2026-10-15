@@ -47,6 +47,10 @@ Object.assign(PROPS, {
   'color-bg': { css: ['background-color'], type: 'color', chip: 'колір фону' },
   'text-align': { css: ['text-align'], type: 'align', chip: 'вирівнювання' },
 });
+// «Розподіл» контейнера (flex/grid): керується селектами панелі, не чіпами; запис type=align
+const LAYOUT_PROPS = ['flex-direction', 'flex-wrap', 'justify-content', 'align-content', 'justify-items', 'align-items'];
+for (const c of LAYOUT_PROPS) PROPS[c] = { css: [c], type: 'align', chip: c, layout: true, needs: 'fg' };
+const DIST_RE = /^space-(between|around|evenly)$/;
 const GROUPS = [
   ['Padding', ['padding-top', 'padding-right', 'padding-bottom', 'padding-left']],
   ['Margin', ['margin-top', 'margin-right', 'margin-bottom', 'margin-left']],
@@ -62,7 +66,7 @@ export function initEdit(deps) {
   const ROLE_CLASS = () => new RegExp(CFG.roleClass);
   api('GET', '/edit-config').then((c) => { if (c && typeof c === 'object') for (const k of Object.keys(c)) CFG[k] = (typeof CFG[k] === 'object' && !Array.isArray(CFG[k]) && typeof c[k] === 'object') ? { ...CFG[k], ...c[k] } : c[k]; }).catch(() => {});
 
-  const S = { on: false, el: null, prop: 'padding-top', all: false, scopeAll: false, view: 'after', side: 'right', drag: null, editing: null, ops: [], ptr: 0, changes: new Map(), sent: 0, hover: null };
+  const S = { on: false, el: null, prop: 'padding-top', all: false, scopeAll: false, view: 'after', side: 'right', drag: null, editing: null, ops: [], ptr: 0, changes: new Map(), sent: 0, hover: null, hint: null };
   let handles = [];
 
   // ---------- DOM ----------
@@ -265,7 +269,7 @@ export function initEdit(deps) {
       const token = m ? m[1] : colorToken(v);
       return { k: ckey(parseColor(v)), css: inl || null, token, color: v, label: token || v };
     }
-    if (P.type === 'align') { const v = getComputedStyle(n).textAlign; return { k: v, value: v, label: v }; }
+    if (P.type === 'align') { const v = getComputedStyle(n).getPropertyValue(css).trim(); return { k: v, value: v, label: v }; }
     const { px, set } = readLen(n, css);
     const inl = n.style.getPropertyValue(css), m = inl.match(/var\((--[\w-]+)\)/);
     const ent = tokenAt(P.scale, px);
@@ -348,13 +352,13 @@ export function initEdit(deps) {
     const a = m.orig.label, b = m.cur.label, nm = m.elName.replace(/ «.*»$/, '');
     const grp = m.group === 'gap-all' ? ' (row+column)' : m.group && /-all$/.test(m.group) ? ' (усі боки)' : '';
     switch (m.type) {
-      case 'spacing': case 'size': return `${m.prop}${grp} «${nm}»: ${(m.orig.token || a)} → ${(m.cur.token || b)}`;
+      case 'spacing': case 'size': return `${m.prop}${grp} «${nm}»: ${(m.orig.token || a)} → ${(m.cur.token || b)}${m.group && /^dist-/.test(m.group) ? ' (разом з розподілом: space-* → початок)' : ''}`;
       case 'span': return `ширина «${nm}» у сітці: span ${m.orig.span} → span ${m.cur.span} (з ${m.cur.columns} колонок)`;
       case 'text': return `текст «${nm}»: «${m.orig.text.slice(0, 50)}» → «${m.cur.text.slice(0, 50)}»`;
       case 'role': return `роль тексту «${nm}»: ${m.orig.role || '(без ролі)'} → ${m.cur.role || '(без ролі)'}`;
       case 'move': return `порядок у «${m.parentSel.split(' > ').pop()}»: «${nm}» позиція ${m.orig.index + 1} → ${m.cur.index + 1} з ${m.cur.of}${m.cur.index > m.orig.index ? `, після «${m.cur.before || ''}»` : `, перед «${m.cur.after || ''}»`}`;
       case 'color': return `${m.prop === 'color' ? 'колір тексту' : 'колір фону'} «${nm}»: ${m.orig.token || m.orig.color} → ${m.cur.token || m.cur.color}`;
-      case 'align': return `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}`;
+      case 'align': return m.prop === 'text-align' ? `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}` : `розподіл ${m.prop} «${nm}»: ${m.orig.value} → ${m.cur.value}${m.group && /^dist-/.test(m.group) ? ' (разом з gap)' : ''}`;
       case 'hide': return `прибрати елемент «${nm}»`;
       default: return `${m.type} «${nm}»`;
     }
@@ -422,6 +426,135 @@ export function initEdit(deps) {
     renderInfo(); draw();
   }
 
+  // ---------- розподіл вільного місця, чесні gap, «чому не змінилось» ----------
+  const GAPS = ['gap', 'column-gap', 'row-gap'];
+  const overlap = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0);
+  function firstDist(n, axis) {
+    const k = kids(n).filter(inflow).map((c) => c.getBoundingClientRect()).filter((q) => q.width > 0 && q.height > 0);
+    if (k.length < 2) return null;
+    const a = k[0];
+    const b = axis === 'x' ? k.find((q) => q !== a && q.left >= a.right - 1 && overlap(a.top, a.bottom, q.top, q.bottom) >= 1) : k.find((q) => q !== a && q.top >= a.bottom - 1 && overlap(a.left, a.right, q.left, q.right) >= 1);
+    if (!b) return null;
+    return axis === 'x' ? b.left - a.right : b.top - a.bottom;
+  }
+  // якщо на осі axis проміжок між дітьми — вільне місце (space-*), а не gap: повертає опис, інакше null
+  function distInfo(n, axis) {
+    const cs = getComputedStyle(n); if (!/flex|grid/.test(cs.display)) return null;
+    const grid = cs.display.includes('grid');
+    if (!grid && (cs.flexDirection.startsWith('column') ? 'y' : 'x') !== axis) return null;
+    const jc = grid ? (axis === 'x' ? cs.justifyContent : cs.alignContent) : cs.justifyContent;
+    if (!DIST_RE.test(jc)) return null;
+    const dist = firstDist(n, axis); if (dist == null) return null;
+    const gap = pxOf(axis === 'x' ? cs.columnGap : cs.rowGap);
+    if (dist - gap < 0.5) return null;
+    return { axis, grid, jc, dist, gap, gapProp: axis === 'x' ? 'column-gap' : 'row-gap', jcProp: grid && axis === 'y' ? 'align-content' : 'justify-content', start: grid ? 'start' : 'flex-start' };
+  }
+  const distFor = (n, p) => (p === 'column-gap' ? distInfo(n, 'x') : p === 'row-gap' ? distInfo(n, 'y') : GAPS.includes(p) ? (distInfo(n, 'x') || distInfo(n, 'y')) : null);
+  function distToken(info) { let t = null; for (const e of getScale('space')) if (e.px < info.dist - 0.6) t = e; return t || getScale('space')[0]; }
+  const distHint = (n, info, noop) => ({ kind: 'dist', info, tok: distToken(info), noop: !!noop });
+  function boxes(n) {
+    const set = [n, ...kids(n).slice(0, 40)];
+    if (n.parentElement) set.push(n.parentElement);
+    if (n.nextElementSibling) set.push(n.nextElementSibling);
+    if (n.previousElementSibling) set.push(n.previousElementSibling);
+    return set.map((e) => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; });
+  }
+  const boxDelta = (a, b) => a.reduce((s, x, i) => s + x.reduce((t, v, j) => t + Math.abs(v - (b[i]?.[j] ?? v)), 0), 0);
+  function explain(n, p) {
+    const P = PROPS[p], css = P.css[0], cs = getComputedStyle(n), r = [];
+    const par = n.parentElement, pcs = par ? getComputedStyle(par) : null;
+    if (GAPS.includes(p)) {
+      const info = distFor(n, p); if (info) return { info };
+      const grid = cs.display.includes('grid'), flex = cs.display.includes('flex');
+      if (!grid && !flex) r.push('елемент не flex/grid — gap тут не діє');
+      if (flex && css === 'row-gap' && !cs.flexDirection.startsWith('column') && cs.flexWrap === 'nowrap') r.push('row-gap у flex-ряду без flex-wrap: один рядок — немає між чим');
+      const kk = kids(n).find((c) => { const s = getComputedStyle(c); return (s.minWidth !== 'auto' && s.minWidth !== '0px') || (s.flexBasis !== 'auto' && s.flexBasis !== '0px' && s.flexBasis !== '0%'); });
+      if (flex && kk) r.push('діти мають min-width/flex-basis — їхній розмір задано, gap його не змінює');
+      if (grid) r.push('grid-доріжки (1fr або фіксовані) задають розмір комірок — gap забирає місце в доріжок, а не зсуває елементи; перевір grid-template-*');
+      if (kids(n).length < 2) r.push('усередині менше двох елементів');
+    } else if (P.layout) {
+      r.push('немає вільного місця для розподілу: діти заповнюють контейнер (flex-grow, 1fr або розмір за вмістом)');
+      if (p === 'flex-wrap') r.push('усі діти вміщуються в один рядок');
+      if (p === 'align-items') r.push('усі діти однакової висоти або контейнер без запасу по висоті');
+    } else if (/^padding-/.test(p)) {
+      if (cs.display === 'inline') r.push('inline-елемент: вертикальні padding не впливають на розкладку');
+      if (cs.display === 'contents') r.push('display: contents — боксу немає');
+      if (kids(n).length && kids(n).every((c) => !inflow(c))) r.push('усі діти поза потоком (absolute/fixed) — padding їх не зсуває');
+      r.push('фіксована height/width при border-box: padding забирає місце в вмісту, а не збільшує бокс');
+    } else if (/^margin-/.test(p)) {
+      if (cs.position === 'absolute' || cs.position === 'fixed') r.push('position: absolute/fixed — margin не зсуває інших');
+      if (cs.display === 'inline' && /top|bottom/.test(p)) r.push('inline-елемент: вертикальні margin не діють');
+      if (/top|bottom/.test(p) && pcs && !/flex|grid/.test(pcs.display)) {
+        const nb = /top/.test(p) ? n.previousElementSibling : n.nextElementSibling;
+        if (nb) { const o = pxOf(getComputedStyle(nb)[/top/.test(p) ? 'marginBottom' : 'marginTop']); r.push(`margin collapsing: сусід має margin ${r1(o)}px — з двох діє більший`); }
+      }
+      if (/auto/.test(cs.marginLeft + cs.marginRight)) r.push('margin: auto поглинає вільне місце');
+      if (pcs && /flex|grid/.test(pcs.display) && (pxOf(pcs.columnGap) || pxOf(pcs.rowGap) || DIST_RE.test(pcs.justifyContent))) r.push('батько flex/grid з gap або space-*: відстань між елементами визначають вони, а не margin');
+    } else if (P.type === 'size') {
+      const rc = n.getBoundingClientRect();
+      if (css === 'height' || css === 'min-height') { if (pxOf(cs.minHeight) > 0 && Math.abs(rc.height - pxOf(cs.minHeight)) < 1) r.push('min-height тримає висоту'); if (cs.maxHeight !== 'none' && Math.abs(rc.height - pxOf(cs.maxHeight)) < 1) r.push('max-height обрізає висоту'); }
+      if (css === 'width' || css === 'max-width') { if (cs.maxWidth !== 'none' && Math.abs(rc.width - pxOf(cs.maxWidth)) < 1) r.push('max-width обмежує ширину'); if (pxOf(cs.minWidth) > 0 && Math.abs(rc.width - pxOf(cs.minWidth)) < 1) r.push('min-width тримає ширину'); if (pcs && pcs.display.includes('flex') && cs.flexBasis !== 'auto') r.push('flex-basis має пріоритет над width'); if (pcs && pcs.display.includes('grid')) r.push('grid-доріжка визначає ширину (1fr/фіксована)'); }
+      if (cs.display === 'inline') r.push('inline-елемент ігнорує width/height');
+    }
+    return { text: r.length ? `${r[0]}${r.length > 1 ? ' (також: ' + r.slice(1).join('; ') + ')' : ''}` : 'причину не визначено автоматично — перевір min-width/flex-basis дітей, grid-доріжки 1fr, padding батька, margin сусіда' };
+  }
+  // після зміни: чи змінилась фактична геометрія? якщо ні — підказка з причиною
+  function checkEffect(n, p, box0) {
+    if (!box0 || boxDelta(box0, boxes(n)) > 0.3) return;
+    const ex = explain(n, p);
+    S.hint = ex.info ? distHint(n, ex.info, true) : { kind: 'noop', text: `Зміна не вплинула: ${ex.text}` };
+    renderInfo(); showTip('зміна не вплинула на фактичну відстань/розмір');
+  }
+  // спроба змінити gap, коли проміжок — розподіл вільного місця: нічого не застосовуємо, пропонуємо перехід
+  function gapGuard(n, p, px) {
+    if (!GAPS.includes(p)) return false;
+    const info = distFor(n, p);
+    if (!info || px > info.dist + 0.5) return false;
+    S.hint = distHint(n, info); renderInfo(); draw();
+    showTip(`${info.jcProp}: ${info.jc} — проміжок ${fmtLen(info.dist)} це вільне місце, не gap`);
+    return true;
+  }
+  function distFix(n) {
+    if (!n || !guard()) return;
+    const info = distInfo(n, S.hint?.info?.axis || 'x') || distInfo(n, 'y'); if (!info) return say('Розподіл уже не space-*');
+    const tok = distToken(info), gid = 'dist-' + Math.random().toString(16).slice(2, 8);
+    const A = styleSpec(n, [n], info.jcProp, '', gid), B = styleSpec(n, [n], info.gapProp, '', gid);
+    touch(A); touch(B);
+    const bA = A.snap(), bB = B.snap();
+    const op = { specs: [A, B], keys: [A.key, B.key],
+      doIt() { n.style.setProperty(info.jcProp, info.start); n.style.setProperty(info.gapProp, tok.css); },
+      undoIt() { A.put(bA); B.put(bB); } };
+    S.hint = null; op.doIt(); pushOp(op);
+    const now = firstDist(n, info.axis);
+    S.hint = { kind: 'ok', text: `Готово: ${info.jcProp} ${info.jc} → ${info.start}, ${info.gapProp} = ${tok.name} · ${fmtU(tok.px)}. Фактична відстань між дітьми: ${now == null ? '—' : `${fmtLen(now)} · ${fmtU(now)}`} (було ${fmtLen(info.dist)}). Далі gap зменшується кроками шкали.` };
+    S.prop = info.gapProp; renderInfo(); draw();
+  }
+  const LAY_VALS = {
+    'flex-direction': ['row', 'row-reverse', 'column', 'column-reverse'],
+    'flex-wrap': ['nowrap', 'wrap', 'wrap-reverse'],
+  };
+  function layoutRows(n) {
+    const cs = getComputedStyle(n); if (!/flex|grid/.test(cs.display)) return '';
+    const grid = cs.display.includes('grid');
+    const pos = grid ? ['start', 'center', 'end'] : ['flex-start', 'center', 'flex-end'];
+    const dist = ['space-between', 'space-around', 'space-evenly'];
+    const rows = grid
+      ? [['justify-content', [...pos, ...dist, 'stretch']], ['justify-items', [...pos, 'stretch']], ['align-items', [...pos, 'stretch']]]
+      : [['flex-direction', LAY_VALS['flex-direction']], ['flex-wrap', LAY_VALS['flex-wrap']], ['justify-content', [...pos, ...dist]], ['align-items', [...pos, 'stretch', 'baseline']]];
+    return `<div class="ed-lay"><em>Розподіл</em>${rows.map(([prop, vals]) => {
+      const cur = cs.getPropertyValue(prop).trim(), list = vals.includes(cur) ? vals : [cur, ...vals];
+      return `<label><span>${prop}</span><select data-lay="${prop}">${list.map((v) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></label>`;
+    }).join('')}</div>`;
+  }
+  function hintHtml() {
+    const h = S.hint; if (!h || !S.el) return '';
+    if (h.kind === 'dist') {
+      const i = h.info;
+      return `<div class="ed-warn"><b>${h.noop ? 'Зміна не вплинула: ' : ''}це не gap, а розподіл вільного місця.</b> ${esc(i.jcProp)}: <code>${esc(i.jc)}</code> розтягує проміжок між дітьми до ${fmtLen(i.dist)} · ${fmtU(i.dist)}; ${esc(i.gapProp)} — лише мінімум (зараз ${fmtLen(i.gap)}), тому нижче цієї відстані його зменшити неможливо.<button data-a="distfix">Перейти на початок (${esc(i.start)}) + ${esc(i.gapProp)} = ${esc(h.tok.name)} · ${fmtU(h.tok.px)}</button></div>`;
+    }
+    return `<div class="ed-warn${h.kind === 'ok' ? ' ok' : ''}">${esc(h.text)}</div>`;
+  }
+
   // ---------- застосування змін ----------
   const propsFor = (p, all) => { const P = PROPS[p]; return all && P.all ? P.all : P.css; };
   function beginStyle(n, p, all) {
@@ -441,7 +574,13 @@ export function initEdit(deps) {
       },
     };
   }
-  function applyStyle(n, p, css, all) { if (!guard()) return; const g = beginStyle(n, p, all); g.set(css); g.finish(css); }
+  function applyStyle(n, p, css, all) {
+    if (!guard()) return;
+    const P = PROPS[p], watch = P.type === 'spacing' || P.type === 'size' || P.layout, box0 = watch ? boxes(n) : null;
+    S.hint = null;
+    const g = beginStyle(n, p, all); g.set(css); g.finish(css);
+    if (watch) checkEffect(n, p, box0);
+  }
   function baseOf(n, p) {
     const P = PROPS[p];
     const { px, set } = readLen(n, P.css[0]);
@@ -456,8 +595,10 @@ export function initEdit(deps) {
     if (P.type === 'span') { const { span, columns } = spanOf(el); return setSpan(el, Math.min(columns, Math.max(1, span + dir * n))); }
     if (P.type === 'color' || P.type === 'align') return say('Колір і вирівнювання — вибір у панелі');
     if (!available(S.prop)) return say('Для цього елемента ця властивість недоступна');
+    S.hint = null;
     const e = stepOn(P.scale, baseOf(el, S.prop), dir, n);
     if (!e) return;
+    if (gapGuard(el, S.prop, e.px)) return;
     applyStyle(el, S.prop, e.css, S.all);
     showTip(`${S.prop}${S.all && P.all ? ' (усі боки)' : ''} → ${e.name} · ${fmtU(e.px)} · ${fmtLen(e.px)}`);
   }
@@ -567,7 +708,7 @@ export function initEdit(deps) {
 
   // ---------- вибір, навігація ----------
   function select(n) {
-    S.el = n && n.isConnected ? n : null;
+    S.el = n && n.isConnected ? n : null; S.hint = null;
     if (S.el && !available(S.prop)) S.prop = 'padding-top';
     renderInfo(); draw();
   }
@@ -615,8 +756,9 @@ export function initEdit(deps) {
         const a = k[0];
         const right = k.find((q) => q !== a && q.left >= a.right - 1 && Math.min(a.bottom, q.bottom) - Math.max(a.top, q.top) >= 1);
         const below = k.find((q) => q !== a && q.top >= a.bottom - 1 && Math.min(a.right, q.right) - Math.max(a.left, q.left) >= 1);
-        if (right) hs.push({ prop: 'column-gap', cls: 'gap', band: { x: a.right, y: Math.max(a.top, right.top), w: right.left - a.right, h: Math.min(a.bottom, right.bottom) - Math.max(a.top, right.top) }, g: { x: (a.right + right.left) / 2, y: (Math.max(a.top, right.top) + Math.min(a.bottom, right.bottom)) / 2, hz: false }, sgn: [1, 0] });
-        if (below) hs.push({ prop: 'row-gap', cls: 'gap', band: { x: Math.max(a.left, below.left), y: a.bottom, w: Math.min(a.right, below.right) - Math.max(a.left, below.left), h: below.top - a.bottom }, g: { x: (Math.max(a.left, below.left) + Math.min(a.right, below.right)) / 2, y: (a.bottom + below.top) / 2, hz: true }, sgn: [0, 1] });
+        const dX = distInfo(n, 'x'), dY = distInfo(n, 'y');
+        if (right) hs.push({ prop: 'column-gap', cls: dX ? 'gap dist' : 'gap', dist: dX, band: { x: a.right, y: Math.max(a.top, right.top), w: right.left - a.right, h: Math.min(a.bottom, right.bottom) - Math.max(a.top, right.top) }, g: { x: (a.right + right.left) / 2, y: (Math.max(a.top, right.top) + Math.min(a.bottom, right.bottom)) / 2, hz: false }, sgn: [1, 0] });
+        if (below) hs.push({ prop: 'row-gap', cls: dY ? 'gap dist' : 'gap', dist: dY, band: { x: Math.max(a.left, below.left), y: a.bottom, w: Math.min(a.right, below.right) - Math.max(a.left, below.left), h: below.top - a.bottom }, g: { x: (Math.max(a.left, below.left) + Math.min(a.right, below.right)) / 2, y: (a.bottom + below.top) / 2, hz: true }, sgn: [0, 1] });
       }
     }
     if (n.parentElement && n.parentElement !== document.documentElement) hs.push({ prop: 'move', cls: 'move', g: { x: r.left, y: r.top, mv: true }, sgn: [0, 0] });
@@ -636,8 +778,9 @@ export function initEdit(deps) {
     handles.forEach((h, i) => {
       if (h.band && h.band.w > 0 && h.band.h > 0) html += `<i class="ed-band ${h.cls}${S.prop === h.prop ? ' act' : ''}" style="left:${h.band.x}px;top:${h.band.y}px;width:${h.band.w}px;height:${h.band.h}px"></i>`;
       const g = h.g, w = g.mv ? 18 : g.sq ? 11 : g.hz ? 24 : 9, hh = g.mv ? 18 : g.sq ? 11 : g.hz ? 9 : 24;
-      const ttl = g.mv ? 'Перетягни, щоб змінити місце серед сусідів' : h.prop;
-      html += `<b class="ed-grip ${h.cls}${S.prop === h.prop ? ' act' : ''}" data-h="${i}" title="${esc(ttl)}" style="left:${clampX(g.x) - w / 2}px;top:${clampY(g.y) - hh / 2}px;width:${w}px;height:${hh}px">${g.mv ? '⠿' : ''}</b>`;
+      const ttl = g.mv ? 'Перетягни, щоб змінити місце серед сусідів' : h.dist ? `розподіл вільного місця — не gap (${h.dist.jcProp}: ${h.dist.jc}), фактично ${fmtLen(h.dist.dist)}` : h.prop;
+      html += `<b class="ed-grip ${h.cls}${S.prop === h.prop ? ' act' : ''}" data-h="${i}" title="${esc(ttl)}" style="left:${clampX(g.x) - w / 2}px;top:${clampY(g.y) - hh / 2}px;width:${w}px;height:${hh}px">${g.mv ? '⠿' : h.dist ? '≈' : ''}</b>`;
+      if (h.dist) html += `<u class="ed-dl" style="left:${Math.min(Math.max(clampX(g.x), 120), vw - 120)}px;top:${clampY(g.y) + (g.hz ? 14 : -24)}px">розподіл, не gap · ${fmtLen(h.dist.dist)} · ${fmtU(h.dist.dist)}</u>`;
     });
     zones.innerHTML = html;
   }
@@ -674,7 +817,9 @@ export function initEdit(deps) {
     const h = handles[+g.dataset.h]; if (!h) return;
     if (!guard()) return;
     if (h.prop === 'move') return startMoveDrag(h, e);
-    S.prop = h.prop; renderInfo();
+    S.prop = h.prop;
+    if (h.dist) { S.hint = distHint(S.el, h.dist); renderInfo(); draw(); return; }
+    renderInfo();
     startDrag(h, e);
   });
   function startDrag(h, e) {
@@ -686,6 +831,7 @@ export function initEdit(deps) {
       spanSpec = styleSpec(n, [n], 'span', '', ''); touch(spanSpec); spanBefore = spanSpec.snap(); // orig фіксуємо ДО першої зміни
       cols = spanOf(n); const c = gridCols(n.parentElement); colPx = c.reduce((a, b) => a + b, 0) / c.length + pxOf(getComputedStyle(n.parentElement).columnGap);
     } else g = beginStyle(n, h.prop, all);
+    const box0 = isSpan ? null : boxes(n); S.hint = null;
     const base = isSpan ? cols.span : baseOf(n, h.prop);
     S.drag = { h, x0: e.clientX, y0: e.clientY, last: null };
     document.body.style.userSelect = 'none';
@@ -707,7 +853,7 @@ export function initEdit(deps) {
         const last = S.drag.last; S.drag = null; tip.style.display = 'none';
         if (last == null) { if (isSpan) dropIfNoop(spanSpec); else g.keys.forEach((k) => { const m = S.changes.get(k); if (m && m.cur.k === m.orig.k) dropRecord(m); }); return; }
         if (isSpan) { const cssv = `span ${last}`; pushOp({ specs: [spanSpec], keys: [spanSpec.key], css: cssv, doIt() { n.style.setProperty('grid-column-end', cssv); }, undoIt() { spanSpec.put(spanBefore); } }); return; }
-        g.finish(last);
+        g.finish(last); checkEffect(n, h.prop, box0);
       }),
     ];
   }
@@ -801,15 +947,16 @@ export function initEdit(deps) {
     if (P.type === 'align') return `<div class="ed-val">${['left', 'center', 'right'].map((v) => `<button data-align="${v}"${getComputedStyle(n).textAlign === v ? ' class="on"' : ''}>${v}</button>`).join('')}</div>`;
     if (P.type === 'span') { const v = readSpan(n); return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button></div>`; }
     if (!available(S.prop)) return '<div class="ed-meta">Недоступно для цього елемента</div>';
+    const dn = GAPS.includes(S.prop) ? distFor(n, S.prop) : null;
     const v = readStyle(n, S.prop), sc = getScale(P.scale), i = sc.findIndex((e) => Math.abs(e.px - (v.px ?? baseOf(n, S.prop))) < 0.6);
-    return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button><button data-a="reset" title="Повернути вихідне">↺</button></div><div class="ed-val"><select data-a="pick" title="Вибрати токен зі шкали"><option value="">значення зі шкали (${sc.length})…</option>${sc.map((e) => `<option value="${esc(e.name)}">${esc(e.name)} · ${r1(e.px / unit())}u</option>`).join('')}</select></div><div class="ed-meta">крок шкали ${i >= 0 ? i + 1 : '—'}/${sc.length}${i >= 0 && sc[i].aliases.length ? ' · також ' + esc(sc[i].aliases.slice(0, 2).join(', ')) : ''} · ↑/→ більше, ↓/← менше, Shift ×${CFG.shiftSteps}, Alt усі боки</div>`;
+    return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button><button data-a="reset" title="Повернути вихідне">↺</button></div><div class="ed-val"><select data-a="pick" title="Вибрати токен зі шкали"><option value="">значення зі шкали (${sc.length})…</option>${sc.map((e) => `<option value="${esc(e.name)}">${esc(e.name)} · ${r1(e.px / unit())}u</option>`).join('')}</select></div>${dn ? `<div class="ed-meta warn">розподіл вільного місця (${esc(dn.jcProp)}: ${esc(dn.jc)}) — не gap. Фактична відстань між дітьми: ${fmtLen(dn.dist)} · ${fmtU(dn.dist)}; ${esc(dn.gapProp)} зараз ${fmtLen(dn.gap)} (мінімум)</div>` : ''}<div class="ed-meta">крок шкали ${i >= 0 ? i + 1 : '—'}/${sc.length}${i >= 0 && sc[i].aliases.length ? ' · також ' + esc(sc[i].aliases.slice(0, 2).join(', ')) : ''} · ↑/→ більше, ↓/← менше, Shift ×${CFG.shiftSteps}, Alt усі боки</div>`;
   }
   function renderInfo() {
     const u = unit();
     pHead.innerHTML = `<b>Едіт</b><span class="ed-sub">${innerWidth}px · 1u=${r2(u)}px${S.view === 'before' ? ' · ДО' : ''}</span><span class="ed-sp"></span><button data-a="flip" title="Панель ліворуч/праворуч">⇄</button><button data-a="close" title="Закрити (E)">×</button>`;
     const chips = GROUPS.map(([g, ps]) => `<div class="ed-grp"><em>${g}</em>${ps.map((p) => `<button class="ed-chip${S.prop === p ? ' on' : ''}" data-p="${p}"${S.el && !available(p) ? ' disabled' : ''}>${esc(PROPS[p].chip)}</button>`).join('')}</div>`).join('');
     const sc = S.el ? scopeFor(S.el, PROPS[S.prop].type, S.prop) : null;
-    pInfo.innerHTML = `${crumbs()}${S.el ? `${chips}<div class="ed-tog"><label><input type="checkbox" data-a="all"${S.all ? ' checked' : ''}> усі боки <kbd>Alt</kbd></label><label><input type="checkbox" data-a="scope"${S.scopeAll ? ' checked' : ''}> на всі такого типу <kbd>A</kbd>${S.scopeAll && sc?.scope ? ` <i>${esc(sc.scope)} · ${sc.targets.length}</i>` : ''}</label></div>${readout()}<div class="ed-acts"><button data-a="text">Текст <kbd>Enter</kbd></button><button data-a="hide">Прибрати <kbd>Del</kbd></button><button data-a="undo">↶</button><button data-a="redo">↷</button></div>` : ''}`;
+    pInfo.innerHTML = `${crumbs()}${S.el ? `${hintHtml()}${chips}<div class="ed-tog"><label><input type="checkbox" data-a="all"${S.all ? ' checked' : ''}> усі боки <kbd>Alt</kbd></label><label><input type="checkbox" data-a="scope"${S.scopeAll ? ' checked' : ''}> на всі такого типу <kbd>A</kbd>${S.scopeAll && sc?.scope ? ` <i>${esc(sc.scope)} · ${sc.targets.length}</i>` : ''}</label></div>${readout()}${layoutRows(S.el)}<div class="ed-acts"><button data-a="text">Текст <kbd>Enter</kbd></button><button data-a="hide">Прибрати <kbd>Del</kbd></button><button data-a="undo">↶</button><button data-a="redo">↷</button></div>` : ''}`;
     renderFoot();
   }
   function renderFoot() {
@@ -835,6 +982,7 @@ export function initEdit(deps) {
       case 'dec': stepProp(-1, 1); break;
       case 'inc': stepProp(1, 1); break;
       case 'reset': resetProp(S.el, S.prop); break;
+      case 'distfix': distFix(S.el); break;
       case 'mvprev': swap(-1); break;
       case 'mvnext': swap(1); break;
       case 'text': startText(S.el); break;
@@ -852,8 +1000,9 @@ export function initEdit(deps) {
     const t = e.target;
     if (t.dataset.a === 'all') { S.all = t.checked; renderInfo(); }
     else if (t.dataset.a === 'scope') { S.scopeAll = t.checked; renderInfo(); }
+    else if (t.dataset.lay && S.el) { if (guard()) applyStyle(S.el, t.dataset.lay, t.value, false); }
     else if (t.dataset.a === 'role' && S.el) setRole(S.el, t.value || null);
-    else if (t.dataset.a === 'pick' && S.el && t.value) { const e2 = getScale(PROPS[S.prop].scale).find((x) => x.name === t.value); if (e2) applyStyle(S.el, S.prop, e2.css, S.all); }
+    else if (t.dataset.a === 'pick' && S.el && t.value) { const e2 = getScale(PROPS[S.prop].scale).find((x) => x.name === t.value); if (e2 && !gapGuard(S.el, S.prop, e2.px)) applyStyle(S.el, S.prop, e2.css, S.all); else if (e2) t.value = ''; }
   });
   panelEl.addEventListener('input', (e) => {
     const t = e.target; if (t.dataset.note == null) return;

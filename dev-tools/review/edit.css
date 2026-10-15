@@ -71,3 +71,18 @@
 .edpanel footer button { border: 1px solid #c8d0e0; background: #fff; border-radius: 6px; padding: 4px 8px; color: #14213d; }
 .edpanel footer button.on { background: #c2410c; border-color: #c2410c; color: #fff; }
 .edpanel footer button.primary { background: var(--a); border-color: var(--a); color: #fff; font-weight: 600; margin-left: auto; }
+
+/* розподіл вільного місця (space-*) — не gap: штрихована смуга + підпис */
+.ed-band.gap.dist { background: repeating-linear-gradient(45deg, rgba(37, 99, 235, 0.30) 0 4px, rgba(37, 99, 235, 0.08) 4px 8px); outline: 1px dashed #2563eb; outline-offset: -1px; }
+.ed-grip.gap.dist { background: #2563eb; color: #fff; font-size: 11px; font-weight: 700; }
+.ed-zones u.ed-dl { position: fixed; text-decoration: none; transform: translateX(-50%); white-space: nowrap; font: 600 10px/13px ui-monospace, Menlo, monospace; color: #fff; background: #2563eb; padding: 1px 6px; border-radius: 3px; pointer-events: none; }
+.ed-warn { margin: 4px 0 6px; padding: 6px 8px; border-radius: 6px; background: #fff4e5; border: 1px solid #f5b062; color: #5b2d00; font-size: 11px; line-height: 15px; }
+.ed-warn.ok { background: #e9f8ee; border-color: #86d3a0; color: #0f4d24; }
+.ed-warn code { font: 600 11px ui-monospace, Menlo, monospace; background: rgba(0, 0, 0, .07); border-radius: 3px; padding: 0 3px; }
+.ed-warn button { display: block; width: 100%; margin-top: 6px; border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; padding: 5px 8px; font-weight: 600; text-align: left; cursor: pointer; }
+.ed-meta.warn { color: #1d4ed8; }
+.ed-lay { margin: 6px 0 2px; padding-top: 4px; border-top: 1px solid #e5e9f2; }
+.ed-lay em { font-style: normal; font-weight: 700; color: #5b6784; font-size: 11px; display: block; margin-bottom: 2px; }
+.ed-lay label { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.ed-lay label span { width: 104px; color: #5b6784; font: 11px ui-monospace, Menlo, monospace; }
+.ed-lay select { flex: 1; font: inherit; font-size: 11px; border: 1px solid #c8d0e0; border-radius: 6px; padding: 2px 4px; background: #fff; color: #14213d; }
