@@ -186,9 +186,9 @@
 
 /* ---------- S5 «Подальша витримка»: продовження світлої кімнати S4 (одне тло, без межі), чотири плашки вин ----------
    Сітка: заголовок + лід на всю ширину, нижче 4 колонки. Кожна .bx-finish — subgrid на 4 спільні рядки (плашка, назва, регіон, смакові ноти;
-   підпис — теж subgrid), тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Плашка — квадрат з радіусом --radius-panel у тоні
-   свого вина (--bx-wine; тони — від найсвітлішого до найтемнішого, ряд читається як шкала кольору), на ній — світла гравюра днища: клепки
-   обриваються колом навколо орнаменту (без плашки під іконкою). Ноти — СЛОТ (src/data/barrels.js finishNotes): порожні не показуються.
+   підпис — теж subgrid), тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Плашка — квадрат з радіусом --radius-panel БЕЗ заливки
+   (рев'ю 45c7d17f): тонка рамка й темна гравюра днища на світлому тлі; клепки обриваються колом навколо орнаменту (без плашки під іконкою).
+   Тон вина (--bx-wine) — лише акцент: орнамент у центрі днища й ромб-легенда перед назвою. Ноти — СЛОТ (src/data/barrels.js finishNotes): порожні не показуються.
    Ромб-легенда тоном вина перед назвою (центр = середина капітелі), регіон і ноти — з відступом назви. */
 .barrels-next { padding-block: 0 var(--space-barrels-section-y); }
 .barrels-next__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-finish-gap); width: var(--container-barrels); margin-inline: auto; }
@@ -200,11 +200,12 @@
 .bx-finish--madeira { --bx-wine: var(--color-barrels-wine-madeira); }
 .bx-finish--port { --bx-wine: var(--color-barrels-wine-port); }
 .bx-finish--sherry { --bx-wine: var(--color-barrels-wine-sherry); }
-.bx-finish__tile { display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--radius-panel); background: radial-gradient(circle at var(--pos-barrels-tile-light), color-mix(in srgb, var(--bx-wine) 86%, var(--color-light)), var(--bx-wine) var(--stop-barrels-tile-mid)); color: var(--color-barrels-ink); }
+.bx-finish__tile { display: grid; place-items: center; aspect-ratio: 1; border: var(--border-hairline) solid var(--color-barrels-rule-paper); border-radius: var(--radius-panel); color: var(--color-barrels-ink-paper); } /* без заливки (рев'ю 45c7d17f): темна гравюра на світлому тлі кімнати, тонка рамка тримає сітку */
 .bx-head2 { width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
 .bx-head2__hair, .bx-head2__shade, .bx-head2__boards { stroke-width: var(--svg-stroke-hair); }
 .bx-head2__boards { opacity: var(--opacity-barrels-head-boards); }
 .bx-head2__shade { opacity: var(--opacity-barrels-head-shade); }
+.bx-head2__orn { color: var(--bx-wine); } /* орнамент — тоном свого вина: єдиний кольоровий акцент на плашці (≥ 3:1 на «папері») */
 @media (hover: hover) {
   .bx-finish:hover .bx-head2 { scale: var(--scale-barrels-finish-hover); }
 }
