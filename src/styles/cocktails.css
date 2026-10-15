@@ -15,24 +15,25 @@
 .cocktails__lead { text-wrap: balance; }
 .cocktails__list { display: grid; row-gap: var(--space-cocktail-block-gap); margin-top: var(--space-cocktail-block-gap); }
 
-/* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною). Сітка = 12 колонок каталогу, порядок зліва направо (коментар bb972de6):
-   ТЕКСТ (кол. 1–5) — ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель контактів): заголовок, опис, таби, списки;
-   СЛАЙДЕР-галерея (кол. 6–9) і картка каталогу (кол. 10–12) стоять прямо на зеленому. Усі три притиснуті до верху й НЕ розтягуються (align-items: start; коментар 897ea0d1): панель — за вмістом
-   (висота табів = найвища панель коктейлю), фото — 4:5 від ширини колонок, картка — своєї висоти; висота ряду = найвищий із трьох. Порядок у DOM = порядок Tab: текст → слайдер → картка.
+/* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною), порядок зліва направо (bb972de6): ТЕКСТ — ІСНУЮЧА панель DS .contacts-panel
+   (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad), СЛАЙДЕР-галерея (ширина 4 колонок сітки каталогу, висота = картка каталогу, кадр cover по центру; e9d6192c) і картка каталогу (426.25u) стоять прямо на зеленому.
+   Між трьома плашками ОДНАКОВИЙ проміжок --space-cocktail-plate-gap = 5u (c121e3bf, «4,5» = 4.5px у вікні 1728); панель забирає весь простір, що лишився (колонки 1–5 + 70u).
+   Усі три притиснуті до верху й не розтягуються (897ea0d1): панель — за вмістом (висота табів = найвища панель), слайдер і картка — на одній висоті (--size-cocktail-h); ряд = найвищий із трьох (довша панель з даних збільшує ряд). Порядок у DOM = порядок Tab.
    Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
-.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-col-gap); row-gap: 0; align-items: start; }
-.cocktail__media { --accent: var(--color-cocktail-text); position: relative; grid-column: var(--col-cocktail-media); aspect-ratio: var(--ratio-cocktail-photo); } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
+.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-plate-gap); row-gap: 0; align-items: start; }
+.cocktail__media { --accent: var(--color-cocktail-text); position: relative; height: var(--size-cocktail-h); } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
+.cocktail__thumbs .product-thumb { width: calc(var(--size-product-thumb-w) * var(--scale-cocktail-thumb)); height: calc(var(--size-product-thumb-h) * var(--scale-cocktail-thumb)); } /* менші мініатюри лише на коктейлях (параметр .product-thumbs; сторінка товару без змін) */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
-/* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто. Правий край виходить у зазор до слайдера на --space-cocktail-panel-bleed (видимий проміжок = --space-cocktail-panel-gap; e4f93328), текст лишається на колонках (padding компенсує виліт); лівий край — на сітці */
-.cocktail__body { grid-column: var(--col-cocktail-body); min-height: 0; gap: 0; min-width: 0; margin-right: calc(-1 * var(--space-cocktail-panel-bleed)); padding-right: calc(var(--space-contacts-pad) + var(--space-cocktail-panel-bleed)); }
+/* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
+.cocktail__body { min-height: 0; gap: 0; min-width: 0; }
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
 .cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
 .cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-cocktail-accent); }
 .cocktail__desc { margin-top: var(--space-cocktail-head-gap); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
-.cocktail__item { grid-column: var(--col-cocktail-item); display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
+.cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
-.tabs__list { display: flex; gap: var(--space-product-volumes-gap); } /* як ряд об'ємів на товарі (той самий зазор, без лінії) */
+.tabs__list { display: flex; justify-content: space-between; align-items: center; } /* таби на всю ширину панелі: перший — лівий край поля, останній — правий, проміжки рівні (коментар 580810af); вигляд вкладки як перемикач об'єму товару */
 .tabs__panels { display: grid; padding-top: var(--space-20); }
 /* панелі в одній комірці: висота = найвища панель цього коктейлю, перемикання не змінює висоту; неактивні приховані й від допоміжних технологій. Без JS видно всі панелі одна під одною */
 .js .tabs__panel { grid-area: 1 / 1; }
@@ -41,10 +42,10 @@
 /* «Інгредієнти» і «Подача» — ОДНА верстка (коментар замовника b1859f76): назва ліворуч, значення за правим краєм у 2 частках з 5 ширини тіла, під кожним рядком hairline-розділювач
    (той самий, що в рядках акордеона товару, колір --accent-line; коментар b60b8cab), однаковий крок рядка; довге значення переноситься в межах своєї колонки,
    висота панелей не змінюється (вони в одній комірці). Колонки без зазору: проміжок між ними — padding-left у dd (всередині комірки), тож лінія суцільна */
-.cocktail__specs { --accent-line: var(--color-cocktail-line); column-gap: 0; row-gap: 0; grid-template-columns: minmax(0, 1fr) calc(100% * var(--span-cocktail-specs-value) / var(--span-cocktail-body)); }
+.cocktail__specs { margin: 0; --accent-line: var(--color-cocktail-line); column-gap: 0; row-gap: 0; grid-template-columns: minmax(0, 1fr) calc(100% * var(--span-cocktail-specs-value) / var(--span-cocktail-body)); }
 .cocktail__specs > :is(dt, dd) { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--accent-line); }
 .cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); color: var(--color-cocktail-accent); text-align: right; }
 .cocktail__specs > dt { font-weight: inherit; }
-.cocktail__steps { display: grid; row-gap: var(--space-10); }
-.cocktail__step { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-20); align-items: baseline; }
+.cocktail__steps { display: grid; row-gap: 0; margin: 0; padding: 0; list-style: none; } /* ритм рядків = «Інгредієнти»/«Подача»: padding-block --space-5 + hairline під кожним рядком (коментар 0bea51f5) */
+.cocktail__step { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-cocktail-line); display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-20); align-items: baseline; }
 .cocktail__step-n { color: var(--color-cocktail-accent); }
