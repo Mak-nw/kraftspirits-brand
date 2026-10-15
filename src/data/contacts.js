@@ -49,7 +49,7 @@ const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
 // Плитки теми (radiogroup на feedback.html): готовий HTML — ключі *Html у vite.config.js підставляються без екранування (екранування тут)
 function topicTiles(topics) {
   return topics
-    .map((t, i) => `<button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="${i === 0 ? 0 : -1}" data-value="${esc(t.value)}"><span class="topic-tile__label">${esc(t.label)}</span></button>`)
+    .map((t, i) => `<button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="${i === 0 ? 0 : -1}" data-value="${esc(t.value)}"><span class="topic-tile__label">${esc(t.label)}</span></button>`)
     .join('\n            ');
 }
 

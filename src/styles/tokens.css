@@ -83,10 +83,8 @@
   --type-nav-font: var(--font-family-sans); --type-nav-weight: var(--fw-semibold); --type-nav-size: var(--font-size-nav); --type-nav-lh: var(--nav-box-h); --type-nav-ls: var(--ls-wide);
   /* ТЕКСТ УСІХ КНОПОК (рішення замовника): єдиний набір для .btn і .nav-cell (клас .t-btn) — EB Garamond SemiBold 16 / 1.4 / 0.48px, uppercase (206:2498). Розмір кнопки задає --size-btn-h / u-масштаб */
   --type-btn-font: var(--font-family-serif); --type-btn-weight: var(--fw-semibold); --type-btn-size: var(--font-size-text); --type-btn-lh: var(--lh-normal); --type-btn-ls: var(--ls-wide);
-  /* ціна (в картці): 194:1332 */
-  --type-price-font: var(--font-family-sans); --type-price-weight: var(--fw-regular); --type-price-size: var(--font-size-title); --type-price-lh: var(--lh-none); --type-price-ls: var(--ls-wide);
-  /* ціна на ітемі (картка товару: каталог і слайдер підбору): сімейство = EB Garamond (той самий токен, що заголовки/назви); вага/розмір/ls/lh/регістр — як у --type-price-* */
-  --type-price-card-font: var(--font-family-serif); --type-price-card-weight: var(--fw-medium); /* Medium 500 (як ціна в кнопці «додати в кошик»): EB Garamond Regular на 12.5–20u читається слабо */
+  /* ціна (картка товару, ціна в кнопці «додати в кошик»): EB Garamond Medium 500 — рішення замовника (шрифт, що фактично вживався скрізь; Manrope Regular 400 з 194:1332 не вживався) */
+  --type-price-font: var(--font-family-serif); --type-price-weight: var(--fw-medium); --type-price-size: var(--font-size-title); --type-price-lh: var(--lh-none); --type-price-ls: var(--ls-wide);
   /* назва товару в картці: 194:1331 */
   --type-product-name-font: var(--font-family-serif); --type-product-name-weight: var(--fw-semibold); --type-product-name-size: var(--font-size-title); --type-product-name-lh: var(--lh-tight); --type-product-name-ls: var(--ls-none);
   /* підпис/обʼєм: 194:1396 */
@@ -668,7 +666,6 @@
   --space-100: calc(100 * var(--u));              /* 224:3639 gap блоків; 224:3586 */
   --container-intro-title: calc(1194 * var(--u)); /* 224:3653 */
   --container-intro-text: calc(658 * var(--u));   /* 224:3657 */
-  --ls-intro-body: calc(0.8 * var(--u));          /* 224:3657: tracking 0.8px (5%), у Figma ширше за 3% */
   --space-intro-pad-y: calc(70 * var(--u));       /* 224:3639 py */
 
   --size-sec-tours: calc(1303 * var(--u));        /* 224:3586 */
@@ -767,7 +764,6 @@
   --map-pin-border: var(--color-green);
   --map-pin-shadow: 0 calc(4 * var(--u)) calc(12 * var(--u)) color-mix(in srgb, var(--color-green) 30%, transparent);
   --size-map-ctrl: calc(40 * var(--u));                                            /* кнопки зуму: квадрат */
-  --size-map-ctrl-glyph: calc(26 * var(--u));                                      /* знак «+» / «−» (EB Garamond) */
   --space-map-edge: calc(10 * var(--u));                                           /* відступ контролів і атрибуції від країв карти */
   --map-ctrl-bg: var(--btn-light-bg-default);                                      /* кнопки зуму = світла кнопка сайту */
   --map-ctrl-bg-hover: var(--btn-light-bg-hover);
@@ -844,8 +840,6 @@
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
 :root {
-  --font-size-barrels-hero: calc(88 * var(--u));      /* H1 hero (більший за --font-size-hero 55: п'ять слів у два рядки по центру фото) */
-  --lh-barrels-hero: 1.05;                            /* міжрядковий H1 hero */
   --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
   --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
   --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → лід → кнопка */

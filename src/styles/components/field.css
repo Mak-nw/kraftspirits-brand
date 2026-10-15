@@ -8,7 +8,6 @@
   display: block; width: 100%; min-height: var(--size-control-h); margin: 0; padding: var(--space-15) var(--space-20);
   background: var(--color-field-bg); color: var(--color-green);
   border: var(--border-hairline) solid var(--color-field-border); border-radius: var(--radius-select);
-  font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide);
   appearance: none; -webkit-appearance: none;
   transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
 }

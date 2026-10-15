@@ -9,10 +9,8 @@
 .site-footer__col { margin-inline: calc(-1 * var(--footer-ring-room)); padding-inline: var(--footer-ring-room); }
 .site-footer__col--menu { padding-left: calc(var(--footer-menu-x) - var(--gutter) + var(--footer-ring-room)); }
 .site-footer__col--end { align-self: start; }
-/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap); line-height фіксований, інакше li успадкує 1.4 */
-.site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); line-height: var(--nav-box-h); }
-.site-footer__list li { line-height: var(--nav-box-h); }
-.site-footer__list .t-nav { text-transform: none; } /* 224:3705…3724: пункти меню/каталогу/контактів без uppercase (© і «Публічна оферта» — uppercase) */
+/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-nav (її line-height = --nav-box-h) на посиланні/пункті; регістр — КАПС, як у шапці (рішення замовника) */
+.site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); }
 .site-footer__list a { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом, а не на всю колонку (кільце не заходить у сусідню колонку) */
 /* рядок: © / wordmark по центру / оферта; 194:1260 top 623 → 20 до низу бежевої частини */
 .site-footer__legal { display: grid; grid-template-columns: 1fr var(--container-heading-narrow) 1fr; align-items: end; padding-bottom: var(--space-20); position: relative; }

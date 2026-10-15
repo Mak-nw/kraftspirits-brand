@@ -7,7 +7,7 @@
   display: flex; align-items: center; justify-content: flex-start; min-height: var(--size-topic-tile-min-h); margin: 0; padding: var(--space-10) var(--space-20);
   background: var(--btn-choice-bg-default); color: var(--btn-choice-text-default);
   border: var(--border-hairline) solid var(--btn-choice-border-default); border-radius: var(--radius-select);
-  font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-align: left;
+  text-align: left;
   cursor: pointer; appearance: none; -webkit-appearance: none;
   transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease);
 }

@@ -93,7 +93,7 @@ function createZoomControl() {
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   const button = (cls, label, glyph, onClick) => {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = `contacts-map__zoom ${cls}`; b.setAttribute('aria-label', label); b.textContent = glyph;
+    b.type = 'button'; b.className = `contacts-map__zoom t-chip ${cls}`; b.setAttribute('aria-label', label); b.textContent = glyph;
     b.addEventListener('click', onClick);
     return b;
   };
@@ -159,6 +159,7 @@ async function initMap(host) {
     map.keyboard.disableRotation?.();
     map.addControl(new AttributionControl({ compact: false, customAttribution: ATTRIBUTION }), 'bottom-right');
     map.addControl(createZoomControl(), 'top-right');
+    canvas.querySelectorAll('.maplibregl-desktop-message, .maplibregl-mobile-message').forEach((n) => n.classList.add('t-kicker')); // підказка «Ctrl + прокрутка» — сторонні вузли MapLibre (його .screen має власний font-size 1.4em, тож роль — на повідомленнях)
     new Marker({ element: createMarkerElement(), anchor: 'bottom' }).setLngLat([lng, lat]).addTo(map);
 
     map.on('style.load', () => paintStyle(map));

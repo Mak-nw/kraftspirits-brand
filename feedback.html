@@ -37,18 +37,18 @@
               <span class="visually-hidden" id="contact-data-label">Контактні дані</span>
               <div class="field" data-field="name">
                 <label class="field__label" for="contact-name">Ім'я</label>
-                <input class="field__control" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" aria-describedby="contact-name-error">
+                <input class="field__control t-text" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" aria-describedby="contact-name-error">
                 <p class="field__error" id="contact-name-error" role="alert"><span></span></p>
               </div>
               <div class="feedback-pair">
               <div class="field" data-field="phone">
                 <label class="field__label" for="contact-phone">Телефон</label>
-                <input class="field__control" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" aria-describedby="contact-phone-error">
+                <input class="field__control t-text" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" aria-describedby="contact-phone-error">
                 <p class="field__error" id="contact-phone-error" role="alert"><span></span></p>
               </div>
               <div class="field" data-field="email">
                 <label class="field__label" for="contact-email">E-mail</label>
-                <input class="field__control" id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" aria-describedby="contact-email-error">
+                <input class="field__control t-text" id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" aria-describedby="contact-email-error">
                 <p class="field__error" id="contact-email-error" role="alert"><span></span></p>
               </div>
               </div>
@@ -66,12 +66,12 @@
           <div class="feedback-col feedback-col--main">
             <div class="field feedback-message" data-field="message">
               <label class="field__label" for="contact-message">Ваше повідомлення</label>
-              <textarea class="field__control" id="contact-message" name="message" rows="8" placeholder="Розкажіть, чим можемо допомогти" aria-describedby="contact-message-error"></textarea>
+              <textarea class="field__control t-text" id="contact-message" name="message" rows="8" placeholder="Розкажіть, чим можемо допомогти" aria-describedby="contact-message-error"></textarea>
               <p class="field__error" id="contact-message-error" role="alert"><span></span></p>
             </div>
             <div class="field visually-hidden" aria-hidden="true">
               <label for="contact-website">Не заповнюйте це поле</label>
-              <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              <input class="t-text" id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
             </div>
             <p class="contact-form__alert t-text" role="alert" hidden data-form-alert></p>
             <div class="feedback-foot">

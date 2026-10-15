@@ -15,10 +15,11 @@ export function initSelect(el, config = {}) {
   let value = config.value ?? (placeholder !== undefined ? '' : options[0]?.value);
   let active = -1;
   const id = button.id;
+  const roleClass = [...button.classList].find((c) => c.startsWith('t-')) || 't-caption';
 
   list.replaceChildren(...options.map((o, i) => {
     const li = document.createElement('li');
-    li.className = 'select__option';
+    li.className = `select__option ${roleClass}`; // роль тексту пункту = роль кнопки (t-caption каталожного, t-text світлого варіанта)
     li.id = `${id}-opt-${i}`;
     li.setAttribute('role', 'option');
     li.dataset.value = o.value;

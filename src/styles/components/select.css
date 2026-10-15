@@ -14,7 +14,6 @@
 .select__button {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-10); width: 100%; text-align: left;
   color: var(--btn-select-text-default);
-  font: var(--type-caption-weight) var(--font-size-nav)/var(--lh-none) var(--type-caption-font); letter-spacing: var(--ls-wide); text-transform: uppercase;
   text-decoration: none; cursor: pointer;
 }
 /* Клікабельна вся плитка: .hit-area (base.css) розтягує кнопку на весь .select (лейбл, значення, шеврон, внутрішні відступи); кнопка без position, тож inset:0 рахується від .select */
@@ -39,7 +38,6 @@
 .select.is-open .select__list { visibility: visible; opacity: 1; translate: none; transition-delay: 0s; }
 .select__option {
   padding: var(--space-10) var(--space-15); cursor: pointer; white-space: nowrap;
-  font: var(--type-caption-weight) var(--font-size-nav)/var(--type-caption-lh) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: uppercase;
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 .select__option[aria-selected="true"] { font-weight: var(--fw-semibold); }
@@ -58,7 +56,7 @@
   background: var(--btn-select-field-bg-default); border: var(--border-hairline) solid var(--btn-select-field-border-default); border-radius: var(--radius-select);
   transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), border-color var(--btn-transition-duration) var(--btn-transition-ease);
 }
-.select--light .select__button { color: var(--color-green); font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
+.select--light .select__button { color: var(--color-green); }
 .select--light .select__value { white-space: normal; }
 .select--light.is-placeholder .select__value { color: var(--color-field-placeholder); }
 .select--light .select__chevron { content: url('/assets/icons/chevron-down.svg'); } /* темний шеврон (#223520) замість світлого каталожного */
@@ -67,7 +65,7 @@
 @media (hover: hover) { .select--field:has(.select__button:hover) .select__field { background: var(--btn-select-field-bg-hover); border-color: var(--btn-select-field-border-hover); } }
 .select--light .select__button:focus-visible::after { border-radius: var(--radius-select); }
 .select--field .select__list { top: calc(100% + var(--space-5)); left: 0; right: 0; width: auto; min-width: 0; background: var(--color-field-bg); border-color: var(--color-field-border-hover); border-radius: var(--radius-select); }
-.select--light .select__option { white-space: normal; font: var(--fw-medium) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: none; }
+.select--light .select__option { white-space: normal; }
 .select--light .select__option[aria-selected="true"] { font-weight: var(--fw-bold); }
 .select--light .select__option.is-active { background: var(--btn-select-field-option-bg-hover); }
 @media (hover: hover) { .select--light .select__option:hover { background: var(--btn-select-field-option-bg-hover); } }

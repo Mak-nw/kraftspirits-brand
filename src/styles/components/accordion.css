@@ -18,7 +18,7 @@
 }
 .acc[open]:not(.is-closing) > summary::after { background-size: var(--acc-icon-bar) 0%, 100% 100%; }
 .acc.is-animating { overflow: clip; } /* лише поки триває анімація висоти */
-.acc__body { margin-top: var(--space-30); max-width: var(--container-faq-body); text-transform: none; } /* 194:1216: відповідь без uppercase */
+.acc__body { margin-top: var(--space-30); max-width: var(--container-faq-body); } /* 194:1216: відповідь без uppercase — роль .t-text (sentence case) у розмітці */
 .acc--faq .acc__body > * + * { margin-top: var(--space-15); } /* відповідь з кількох абзаців (faq-item з параметром aHtml, faq.html): проміжок як у рядку товару */
 
 /* FAQ-рядок (194:1188): рамка (--border-hairline), padding --space-30 */

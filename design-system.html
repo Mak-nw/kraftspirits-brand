@@ -244,7 +244,7 @@
         <div>
           <div class="t-kicker">.t-price</div>
           <div class="ds-meta" data-spec="#spec-price"></div>
-          <div class="ds-meta is-muted">Figma 194:1332 (сімейство Manrope — базова ціна; на ітемі картки — EB Garamond Medium, токен --type-price-card-font / --type-price-card-weight, правило .product-card .t-price)</div>
+          <div class="ds-meta is-muted">EB Garamond Medium 500 (рішення замовника: шрифт, що вживався скрізь — картка товару, ціна в кнопці; токени --type-price-*; перевизначень у компонентах немає)</div>
         </div>
         <div class="type-row__sample"><span id="spec-price" class="t-price">1 250 ₴</span></div>
       </div>
@@ -404,7 +404,7 @@
       <div class="pattern-catalog ds-pattern-demo"></div>
 
       <p class="demo-label t-kicker">Панель .tour-card (224:3688 / 224:3691, 1836×629): partial components/tour-card (kicker, title, text, btn, href, photo, alt; мод. tour-card--photo-first); секція — partials/sections/tours.html</p>
-      <p class="ds-note ds-meta">Бежевий фон + візерунок — вертикальні ромби ◇ (без нахилу) великого масштабу за pattern-заливкою Figma 224:3961: плитка 131×131u (--size-pattern-tile, ціле px) з одним світлим ромбом 63×80 (беж), одним великим темним 68×88 і одним малим темним 40×52 (темні = 2 шари #223520 2%, фон = 1 шар); три тони 220/217/213 збігаються з Figma; home-pattern-diamond.svg, радіус --radius-panel, padding --space-tour-pad (80), текст: .t-kicker / .t-hero / .t-text (517, ls 0.8 = --ls-intro-body) / btn--teal; фото 757; коричнева рамка --border-tour-frame (5, ціле px) кольору --color-brown лише з внутрішнього боку (між фото й бежевою колонкою), зовнішні краї — фото впритул до краю панелі, як у бежевої колонки (hover — zoom). Фон лише під текстовою колонкою; висота --size-tour-card-h, поля --space-tour-edge-l / -r (43 / 41, як у Figma), фото-колонка --size-tour-photo-box-w = рамка + фото 757 (шви рамки на 1117 / 800 при 1920), проміжок --space-tour-gap — цілі px (round), щоб краї лягали на пікселі пристрою.</p>
+      <p class="ds-note ds-meta">Бежевий фон + візерунок — вертикальні ромби ◇ (без нахилу) великого масштабу за pattern-заливкою Figma 224:3961: плитка 131×131u (--size-pattern-tile, ціле px) з одним світлим ромбом 63×80 (беж), одним великим темним 68×88 і одним малим темним 40×52 (темні = 2 шари #223520 2%, фон = 1 шар); три тони 220/217/213 збігаються з Figma; home-pattern-diamond.svg, радіус --radius-panel, padding --space-tour-pad (80), текст: .t-kicker / .t-hero / .t-desc / btn--teal; фото 757; коричнева рамка --border-tour-frame (5, ціле px) кольору --color-brown лише з внутрішнього боку (між фото й бежевою колонкою), зовнішні краї — фото впритул до краю панелі, як у бежевої колонки (hover — zoom). Фон лише під текстовою колонкою; висота --size-tour-card-h, поля --space-tour-edge-l / -r (43 / 41, як у Figma), фото-колонка --size-tour-photo-box-w = рамка + фото 757 (шви рамки на 1117 / 800 при 1920), проміжок --space-tour-gap — цілі px (round), щоб краї лягали на пікселі пристрою.</p>
       <!--@include sections/tours-->
 
       <p class="demo-label t-kicker">Вступ .intro (224:3639): лічильники stat--compact ( 2 ) · ( 8 ) · ( 1 ), заголовок .t-hero (1194), абзац .t-text (658), кнопка btn--beige</p>
@@ -891,7 +891,7 @@
         </div>
       </div>
 
-      <p class="ds-note ds-meta">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid; ціна на ітемі — EB Garamond Medium: токен <span class="ds-meta">--type-price-card-font</span> = --font-family-serif, <span class="ds-meta">--type-price-card-weight</span> = --fw-medium, правило <span class="ds-meta">.product-card .t-price</span>; розмір і регістр — як у --type-price-*) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
+      <p class="ds-note ds-meta">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid; ціна — роль <span class="ds-meta">.t-price</span> (EB Garamond Medium 500, токени --type-price-*; без перевизначень у компоненті)) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
     </section>
 
     <section class="ds-section" id="partials">
@@ -1004,7 +1004,7 @@
         </div>
       </div>
       <p class="demo-label t-kicker">Фрейм фото (.product-media): sticky під хедером, висота = 100svh − зона header (обидва бренди: токен --size-product-frame-h, зона header 103u + відступ --space-product-top 20u = 123u) — низ фрейму лежить на низу вікна; мінімум --size-product-frame-min-h (700u), нижче сторінка скролиться. Ширина фрейму 905u однакова для обох брендів. Фото заповнює фрейм (object-fit: cover, object-position: --position-product-photo); вирізи без студійного фото (.is-cutout) лишаються contain. Мініатюри — накладки всередині фрейму (126×167, відступ 15, крок 7) однаково для обох брендів.</p>
-      <p class="demo-label t-kicker">Кнопка «додати в кошик» (btn з price): YasnoCraft — btn--green, Bazylsprings — btn--teal; текст — єдиний .t-btn (EB Garamond SemiBold), ціна .t-price усередині кнопки — EB Garamond Medium (токени --type-price-card-*); усі активні</p>
+      <p class="demo-label t-kicker">Кнопка «додати в кошик» (btn з price): YasnoCraft — btn--green, Bazylsprings — btn--teal; текст — єдиний .t-btn (EB Garamond SemiBold), ціна .t-price усередині кнопки — та сама роль (EB Garamond Medium, токени --type-price-*); усі активні</p>
       <div class="demo-panel theme-beige">
         <!--@include components/btn variant="btn--green" href="#" text="додати в кошик" price="1 250 ₴"-->
         <!--@include components/btn variant="btn--teal" href="#" text="додати в кошик" price="1 690 ₴"-->
@@ -1022,12 +1022,12 @@
       <p class="ds-note t-body">Сторінка <span class="ds-meta">contacts.html</span> («Контакти»): сітка 12 колонок у контейнері товару (поля 50u, відступ 20u, зона header 103u), зазор 5u, панелі beige, радіус 10u, однакової висоти. Ліворуч 5 колонок — контактна інформація (Адреса на всю ширину; Телефон, E-mail у 2 колонки; перед заголовками Адреса/Телефон/E-mail — іконки <span class="ds-meta">icon--pin|phone|mail</span> (розмір <span class="ds-meta">--size-contacts-icon</span>); значення клікабельні tel:/mailto:/<span class="ds-meta">feedback.html?topic=…</span>) і внизу кнопки «Написати нам» (<span class="ds-meta">btn--green</span> → feedback.html) та «Замовити екскурсію» (<span class="ds-meta">btn--outline</span> → ?topic=excursion); праворуч 7 колонок — мапа без відступів і рамки (сама мапа = блок з радіусом панелі; компонент <span class="ds-meta">components/contacts-map</span>: MapLibre GL + OpenFreeMap (без ключа), стиль positron перефарбований у палітру токенами <span class="ds-meta">--map-*</span> (земля — beige, вода — приглушений teal, парки — зелений, дороги — light, магістралі — золоті, текст — green з ореолом light), маркер-«крапля» з іконкою pin (<span class="ds-meta">--size-map-pin</span>; кінчик = координата, підпис населеного пункту — під ним), кнопки зуму «+»/«−» в стилі світлої кнопки (<span class="ds-meta">--size-map-ctrl</span>, EB Garamond, hover/focus — токени <span class="ds-meta">--btn-light-*</span>), видима атрибуція OpenFreeMap / OpenMapTiles / OpenStreetMap у правому нижньому куті (обов'язкова за ліцензією), колесо без Ctrl/⌘ прокручує сторінку (cooperative gestures); без WebGL/мережі та в <span class="ds-meta">&lt;noscript&gt;</span> — статична заглушка <span class="ds-meta">.contacts-map__fallback</span> з кнопкою «Відкрити в OpenStreetMap»; розтягується на висоту панелі); рядка посилань під мапою немає. Кнопки лівої панелі (<span class="ds-meta">btn--block</span>) ділять усю її ширину порівну. Фон — візерунок ромбів (<span class="ds-meta">.page-contacts</span>, правило спільне з <span class="ds-meta">.page-product</span> і <span class="ds-meta">.page-feedback</span>). Дані — <span class="ds-meta">src/data/contacts.js</span>. Старі посилання <span class="ds-meta">contacts.html?topic=…#form</span> перенаправляються на feedback.html (inline-скрипт у head).</p>
       <p class="demo-label t-kicker">Поле форми (.field > .field__label + .field__control + .field__error): спокій, значення, помилка (.is-invalid: колір --color-field-error + ромб-маркер, aria-invalid)</p>
       <div class="demo-panel demo-panel--start theme-beige">
-        <div class="field"><label class="field__label" for="ds-f1">Ім'я</label><input class="field__control" id="ds-f1" type="text" placeholder="Як до вас звертатись"><p class="field__error"><span></span></p></div>
-        <div class="field is-invalid"><label class="field__label" for="ds-f2">E-mail</label><input class="field__control" id="ds-f2" type="email" value="name@" aria-invalid="true"><p class="field__error"><span>Перевірте адресу e-mail</span></p></div>
+        <div class="field"><label class="field__label" for="ds-f1">Ім'я</label><input class="field__control t-text" id="ds-f1" type="text" placeholder="Як до вас звертатись"><p class="field__error"><span></span></p></div>
+        <div class="field is-invalid"><label class="field__label" for="ds-f2">E-mail</label><input class="field__control t-text" id="ds-f2" type="email" value="name@" aria-invalid="true"><p class="field__error"><span>Перевірте адресу e-mail</span></p></div>
       </div>
       <p class="demo-label t-kicker">Select для світлої панелі: .select.select--light.select--field (+ data-placeholder); каталожний .select не змінюється</p>
       <div class="demo-panel theme-beige">
-        <div class="field"><!--@include components/select id="ds-topic" name="ds-topic" label="Тема звернення" options="excursion:Екскурсії|barrel:Бочкова торгівля|other:Інше" value="Оберіть тему" placeholder="Оберіть тему" mod=" select--light select--field"--></div>
+        <div class="field"><!--@include components/select id="ds-topic" name="ds-topic" label="Тема звернення" options="excursion:Екскурсії|barrel:Бочкова торгівля|other:Інше" value="Оберіть тему" placeholder="Оберіть тему" mod=" select--light select--field" btn-text="t-text"--></div>
       </div>
       <p class="demo-label t-kicker">Згода (.check-field > .check) і кнопка відправки (btn--green btn--block; disabled — opacity --opacity-disabled)</p>
       <div class="demo-panel theme-beige">
@@ -1052,12 +1052,12 @@
         <div class="field">
           <span class="field__label" id="ds-topic-label">Тип звернення</span>
           <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-label">
-            <button class="topic-tile" type="button" role="radio" aria-checked="true" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Замовлення та доставка</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Співпраця для закладів</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Консультація з інших питань</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Інше</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="true" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Замовлення та доставка</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Співпраця для закладів</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Консультація з інших питань</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Інше</span></button>
           </div>
         </div>
       </div>
@@ -1066,8 +1066,8 @@
         <div class="field is-invalid">
           <span class="field__label" id="ds-topic-label-2">Тип звернення</span>
           <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-label-2" aria-invalid="true">
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
-            <button class="topic-tile" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
+            <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
           </div>
           <p class="field__error"><span>Оберіть тему звернення</span></p>
         </div>
