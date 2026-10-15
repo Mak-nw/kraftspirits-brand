@@ -1,5 +1,5 @@
 /* Сторінка «Ф'ючерсні бочки Bazylsprings» (barrels.html), редизайн «Світло в погребі». Усі значення — токени (блок «Ф'ючерсні бочки» в tokens.css).
-   Кімнати: hero (фото) → S2 що дає бочка (wood, пари кіл) → S3 від бочки до пляшки (cellar, ЄДИНА арка) → S4 арифметика + S5 подальша
+   Кімнати: hero (фото) → S2 що дає бочка (wood, розріз клепки) → S3 від бочки до пляшки (cellar, ЄДИНА арка) → S4 арифметика + S5 подальша
    витримка (одна світла кімната paper) → S6 ціна (смуга фото + панелі). Словник — лише елементи design-system.html (CLAUDE.md п. 5б):
    суцільні кольори палітри, типографіка, hairline-лінії й рамки (одна лінія), панель beige + --radius-panel, кнопки й список DS. Без ромбів-маркерів,
    подвійних рамок, світіння, тіней і зерна. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12): вміст 1825u, зазор 40u; кожен блок —
@@ -28,7 +28,6 @@
 .swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-teal); } /* напівпрозорі — на своєму тлі */
 .swatch--bx-amber .swatch__chip { background: var(--color-barrels-amber); }
 .swatch--bx-ink-muted .swatch__chip { background: var(--color-barrels-ink-paper-muted); }
-.swatch--bx-plate .swatch__chip { background: linear-gradient(var(--color-barrels-layer-plate), var(--color-barrels-layer-plate)), var(--color-brown); }
 
 /* ---------- Hero: чисте фото без градієнта й без CSS-оверлея (рішення замовника a2289410) ---------- */
 .hero--barrels { color: var(--color-teal); } /* тексти hero — темний teal на світлому небі чистого фото (як .bx-room--paper); D8 */
@@ -37,23 +36,26 @@
 .hero__subtitle { width: var(--container-barrels-hero-sub); text-wrap: balance; }
 .hero--barrels .btn { margin-top: var(--space-10); }
 
-/* ---------- S2 «Що дає бочка»: кімната wood, чотири шари клепки — пари кіл з накладанням ----------
-   Шапка по центру. Ряд з 4 пар по 3 колонки (крайні кола — на краях колонок 1 і 12). Пара: коло з фото-текстурою і
-   «накладка» того самого діаметра, що заходить на нього знизу на --size-barrels-layer-overlap. Накладка — суцільний тон палітри з простою прозорістю
-   (без розмиття й рамок): у «лінзі» перетину ледь проступає текстура — видно обидва кола. Іконка — у центрі «лінзи». Під нею текст з однаковою
-   сіткою в усіх чотирьох: назва — у полі на 2 рядки, притиснута донизу (остання базова лінія назв спільна), пояснення — з однакового відступу. */
+/* ---------- S2 «Що дає бочка»: кімната wood, «розріз клепки» (рев'ю 77dd7d09: без кіл з фото, без розмиття/прозорості на накладанні) ----------
+   Шапка по центру. Нижче — розріз: чотири фото-текстури шарів зсередини назовні (обпал → карамелізація → тост → дуб) СМУГАМИ впритул в одній
+   рамці на всі 12 колонок (радіус панелі DS --radius-panel, як фото-рамки сайту): смуга = 3 колонки + зазор, межі смуг — на початках колонок 4, 7, 10,
+   тож розріз читається одним шматком дерева, що світлішає назовні. Розріз — декоративний (aria-hidden). Під кожною смугою, по лівому краю її колонок,
+   — підпис шару в спільній сітці рядків (subgrid): іконка DS (золото) → назва .t-product-name (золото, акцент кімнати, як кікер) → пояснення .t-desc
+   (--color-light): заголовок і опис відрізняються кольором, регістром і накресленням. Без плашок, накладок, рамок і ліній. */
 .barrels-benefits { padding-block: var(--space-barrels-section-y); }
 .barrels-benefits__grid { width: var(--container-barrels); margin-inline: auto; }
 .barrels-benefits__head { margin-bottom: var(--space-barrels-head); }
 .barrels-benefits__kicker { margin-top: var(--shift-barrels-kicker-cap-top); color: var(--color-gold); }
-.bx-layers { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); }
-.bx-layer { position: relative; isolation: isolate; grid-column: span var(--span-barrels-layer); display: grid; grid-template-rows: var(--size-barrels-layer) auto; }
-.bx-layer__tex { position: relative; display: block; overflow: hidden; border-radius: 50%; background: var(--color-barrels-amber); } /* суцільний тон «віскі» — видно, доки фото вантажиться */
-.bx-layer__tex > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.bx-layer__plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; aspect-ratio: 1; margin-top: calc(-1 * var(--size-barrels-layer-overlap)); padding: calc(var(--size-barrels-layer-overlap) + var(--space-barrels-layer-text-top)) var(--space-barrels-layer-pad) var(--space-barrels-layer-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50%; background: var(--color-barrels-layer-plate); text-align: center; } /* суцільний тон палітри з простою прозорістю (токен): без розмиття й рамки */
-.bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); position: absolute; top: calc(var(--size-barrels-layer-overlap) / 2); left: 50%; translate: -50% -50%; color: var(--color-gold); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) — у центрі «лінзи» */
-.bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-tight) * 1em); color: var(--color-light); text-wrap: balance; }
-.bx-layer__text { margin-top: var(--space-10); color: var(--color-nav-text); text-wrap: balance; }
+.bx-layers { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: var(--size-barrels-layer-band-h) repeat(3, auto); column-gap: var(--space-barrels-grid-gap); }
+.bx-layers__cut { grid-column: 1 / -1; grid-row: 1; display: grid; grid-template-columns: subgrid; overflow: hidden; border-radius: var(--radius-panel); background: var(--color-barrels-amber); } /* суцільний тон «віскі» — видно, доки вантажаться фото */
+.bx-layers__band { grid-column: span var(--span-barrels-layer); display: block; margin-right: calc(-1 * var(--space-barrels-grid-gap)); } /* смуга закриває й зазор до наступної: смуги впритул */
+.bx-layers__band:last-child { margin-right: 0; }
+.bx-layers__band > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bx-layers__list { display: contents; }
+.bx-layer { grid-column: span var(--span-barrels-layer); grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; justify-items: start; }
+.bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); margin-top: var(--space-barrels-layer-text); color: var(--color-gold); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) */
+.bx-layer__title { margin-top: var(--space-barrels-layer-title); color: var(--color-gold); text-wrap: balance; }
+.bx-layer__text { margin-top: var(--space-10); color: var(--color-light); text-wrap: pretty; }
 /* демо S2 у design-system.html (у ширині демо-панелі: .bx-scope перераховує сітку) */
 .demo-panel.ds-barrels-layers { display: block; padding: var(--space-50); }
 .ds-barrels-layers.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
@@ -77,7 +79,7 @@
 /* сцена: SVG 600×700, притиснута донизу (xMidYMax meet) всередині арки */
 .bx-scene2 { position: absolute; inset: var(--space-barrels-scene-inset); width: calc(100% - 2 * var(--space-barrels-scene-inset)); height: calc(100% - 2 * var(--space-barrels-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
 .bx-sc-hair { stroke-width: var(--svg-stroke-hair); }
-.bx-sc-soft { opacity: var(--opacity-disabled); } /* другорядні лінії сцени (стелаж, підлога) — те саме золото, приглушене */
+.bx-sc-soft { opacity: var(--opacity-disabled); } /* другорядні лінії сцени (підлога, тінь) — те саме золото, приглушене */
 .bx-sc-liquid { fill: var(--color-barrels-amber); stroke: none; }
 .bx-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
 .bx-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }

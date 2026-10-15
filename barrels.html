@@ -27,21 +27,28 @@
       </div>
     </section>
 
-    <!-- Кімната «дерево»: що дає бочка — чотири шари клепки зсередини назовні. Шапка по центру. Кожен шар — пара кіл однакового розміру: зверху коло з
-         фото-текстурою шару (AI-фото IMG-T1…T4, Seedream 5 Pro; за потреби — замінити на макрозйомку), знизу «накладка», що заходить на нього; у «лінзі»
-         перетину — іконка, нижче — назва й пояснення. Ряд — на всю ширину 12-колонкової сітки -->
+    <!-- Кімната «дерево»: що дає бочка — «розріз клепки»: чотири фото-текстури шарів (зсередини назовні) смугами впритул в одній рамці на 12 колонок
+         (AI-фото IMG-T1…T4, Seedream 5 Pro; за потреби — замінити на макрозйомку); під кожною смугою — іконка, назва й пояснення шару (3 колонки) -->
     <section class="barrels-benefits bx-room bx-room--wood" id="benefits" aria-labelledby="benefits-title">
       <div class="barrels-benefits__grid">
         <div class="barrels-benefits__head bx-head">
           <p class="barrels-benefits__kicker t-kicker" data-reveal="rise">Переваги бочок</p>
           <h2 class="t-h2" id="benefits-title" data-reveal="rise">Що дає бочка</h2>
         </div>
-        <ol class="bx-layers">
-          <!--@include components/barrels-layer layer="char" n="IMG-T1" name="обпалена клепка" img="/assets/img/barrels-tex-char.webp" title="Сильний обпал" text="Формує глибину та структуру"-->
-          <!--@include components/barrels-layer layer="caramel" n="IMG-T2" name="карамелізований шар дерева" img="/assets/img/barrels-tex-caramel.webp" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
-          <!--@include components/barrels-layer layer="toast" n="IMG-T3" name="підсмажена поверхня дуба" img="/assets/img/barrels-tex-toast.webp" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
-          <!--@include components/barrels-layer layer="oak" n="IMG-T4" name="світлий дуб" img="/assets/img/barrels-tex-oak.webp" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
-        </ol>
+        <div class="bx-layers">
+          <div class="bx-layers__cut" aria-hidden="true" data-reveal="fade">
+          <!--@include components/barrels-layer-band n="IMG-T1" name="обпалена клепка" img="/assets/img/barrels-tex-char.webp"-->
+          <!--@include components/barrels-layer-band n="IMG-T2" name="карамелізований шар дерева" img="/assets/img/barrels-tex-caramel.webp"-->
+          <!--@include components/barrels-layer-band n="IMG-T3" name="підсмажена поверхня дуба" img="/assets/img/barrels-tex-toast.webp"-->
+          <!--@include components/barrels-layer-band n="IMG-T4" name="світлий дуб" img="/assets/img/barrels-tex-oak.webp"-->
+          </div>
+          <ol class="bx-layers__list">
+          <!--@include components/barrels-layer layer="char" title="Сильний обпал" text="Формує глибину та структуру"-->
+          <!--@include components/barrels-layer layer="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
+          <!--@include components/barrels-layer layer="toast" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
+          <!--@include components/barrels-layer layer="oak" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+          </ol>
+        </div>
       </div>
     </section>
 
