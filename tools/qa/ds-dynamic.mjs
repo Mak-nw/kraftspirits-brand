@@ -2,6 +2,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
+import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13.mjs';
 import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
@@ -202,6 +203,7 @@ export async function runDynamic(opts, allow, rep) {
   const gcfg = { ...GRID_DEFAULTS, ...(allow.grid || {}), profiles: { ...GRID_DEFAULTS.profiles, ...(allow.grid?.profiles || {}) }, pageProfile: { ...GRID_DEFAULTS.pageProfile, ...(allow.grid?.pageProfile || {}) } };
   if (opts.gridDeep) gcfg.deep = true;
   const grid12 = []; // { label, spec, width, sb, gate, data }
+  const want13 = want('D13'); const d13 = []; const d13cfg = { roles: want13 ? roleClassesFromBase() : [], root: null };
   const specs = opts.pagesList.map(pageSpec);
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
   const cfg = { compSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.product-card--catalog'], textMin: A.textMinContrast ?? 4.5, largeMin: A.largeTextMinContrast ?? 3 };
@@ -233,6 +235,7 @@ export async function runDynamic(opts, allow, rep) {
         }
         // збір D1/D2/D7/D8/D9
         const data = await page.evaluate(COLLECT, cfg);
+        if (want13 && (spec.name !== 'design-system' || opts.d13Ds)) d13.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_D13, d13cfg) });
         // D8: ланцюжок фонів не бачить фонів із псевдоелементів/картинок → для «підозрілих» міряємо піксельно (мода кольору = фон, найдальший = текст)
         for (const t of data.text) {
           if (t.ratio >= (t.large ? cfg.largeMin : cfg.textMin)) continue;
@@ -274,10 +277,11 @@ export async function runDynamic(opts, allow, rep) {
           await gp12.close().catch(() => {});
         }
         // D10: age-gate smoke (лише перша комбінація)
-        if ((want('D10') && combo === combos[0]) || want('D11')) { // ворота: D10 — лише перша комбінація; D11 (чекбокс «запам'ятати») — на кожній ширині
+        if ((want('D10') && combo === combos[0]) || want('D11') || (want13 && spec === specs[0])) { // ворота: D10 — лише перша комбінація; D11 (чекбокс «запам'ятати») — на кожній ширині
           const gp = await openPage(L.browser, pageUrl(opts.url, spec, 'gate'), { width: combo.width, height: opts.height, dpr: 1, settle: false });
           await waitStable(gp);
           if (want('D11')) { const gd = await gp.evaluate(COLLECT, cfg); collect.push({ label: `${label}/ворота`, spec, width: combo.width, sb: combo.scrollbar, data: { ...gd, roles: [], comps: [], headings: [], a11y: [], text: [] } }); }
+          if (want13 && spec === specs[0]) d13.push({ label: `ворота18+@${combo.width}`, spec: { name: 'age-gate', label: 'ворота 18+' }, width: combo.width, sb: combo.scrollbar, gate: true, data: await gp.evaluate(COLLECT_D13, { ...d13cfg, root: '[data-age-gate]' }) });
           const g = !(want('D10') && combo === combos[0]) ? null : await gp.evaluate(() => { const el = document.querySelector('[data-age-gate]'); if (!el) return { exists: false }; const cs = getComputedStyle(el); return { exists: true, visible: el.checkVisibility?.({ checkVisibilityCSS: true, checkOpacity: true }) !== false && cs.display !== 'none', ageOk: document.documentElement.classList.contains('age-ok'), role: el.getAttribute('role'), modal: el.getAttribute('aria-modal') }; });
           if (g) if (spec.name !== '404' || g.exists) { if (!g.exists) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM' }); else if (!g.visible || g.ageOk) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: JSON.stringify(g), msg: 'ворота не показуються без ?age=ok' }); }
           else addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM (404)' });
@@ -357,6 +361,16 @@ export async function runDynamic(opts, allow, rep) {
     }
     for (const [k, o] of capInfo) if (Math.abs(o.v) > (A.alignIconCapInfoPx ?? 1.5)) rep.info({ rule: 'D11', msg: `${k}: іконка відносно cap-центру тексту ${o.v > 0 ? '+' : ''}${o.v.toFixed(2)}px (інформаційно; за content-area ${o.d.toFixed(2)}; найгірше: ${o.page})` });
     rep.info({ rule: 'D11', msg: `макс. відхилення (layout, Range+метрики): чекбокси ${stats.alignMaxCheck.toFixed(2)}px, іконки (content-area) ${stats.alignMaxIcon.toFixed(2)}px, іконки (cap) ${stats.alignMaxIconCap.toFixed(2)}px; вибірок ${stats.alignSamples}` });
+  }
+  // D13: кожен текстовий вузол = одна з ролей .t-* (tools/qa/typo-d13.mjs)
+  if (want13) {
+    const a = analyzeD13(d13, A.d13);
+    const st = (stats.d13 = { pageWidths: d13.length, nodeKinds: 0, violations: a.violations.length, implicit: a.implicit.length, semantic: a.semantic.length });
+    for (const c of d13) st.nodeKinds += c.data.nodes.length;
+    for (const v of a.violations) addV({ rule: 'D13', page: v.page, selector: v.selector, value: `«${v.text}» ×${v.nodes}: ${fmtSig(v.sig)}${v.near ? `; найближча ${v.near.role}: ${v.near.diff || 'збіг'}` : ''}`, msg: v.kind === 'поза ролями' ? 'текст поза ролями .t-*' : `роль ${v.role} перевизначена у CSS (стиль ≠ ролі)` });
+    if (a.implicit.length) rep.info({ rule: 'D13', msg: `${a.implicit.length} типів вузлів збігаються з роллю лише за значеннями, без класу .t-* (роль у розмітці не призначена)` });
+    for (const sm of a.semantic.filter((x) => x.width === opts.widths[Math.min(1, opts.widths.length - 1)] || opts.widths.length === 1)) rep.info({ rule: 'D13', msg: `семантика ${sm.key}@${sm.width}: ${sm.variants.length} різних начерків — ${sm.variants.map((v) => `${v.role} [${v.pages.slice(0, 4).join(',')}${v.pages.length > 4 ? ',…' : ''}]`).join(' ≠ ')}` });
+    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd13.json'), JSON.stringify({ tolerances: a.tolerances, violations: a.violations, implicit: a.implicit, semantic: a.semantic, dump: a.dump }, null, 1)); } catch {}
   }
   // D12: прив'язка блоків до колонок сітки (tools/qa/grid-d12.mjs)
   if (want12) {

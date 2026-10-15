@@ -13,8 +13,8 @@ await runMain('check-ds', { widths: '1920', scrollbar: 'classic', dpr: '1' }, as
   const allow = loadAllow(join(QA_DIR, 'check-ds.allow.json'));
   o.rules = o.rules ? new Set(String(o.rules).split(',').map((s) => s.trim().toUpperCase())) : null;
   const want = (set) => !o.rules || [...set].some((r) => o.rules.has(r));
-  const doStatic = !o.dynamicOnly && want(['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']);
-  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12']);
+  const doStatic = !o.dynamicOnly && want(['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11']);
+  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13']);
 
   if (doStatic) {
     let dist = o.dist ? join(ROOT, o.dist) : join(o.out, 'dist');

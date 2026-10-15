@@ -25,6 +25,7 @@
     "underlineReason": "правило проєкту: підкреслень при hover/focus немає, крім футера (.site-footer .nav-link) і юридичного тексту воріт (.age-card__legal a)",
     "hscrollTolerancePx": 1,
     "roleTolerancePx": 0.5,
+    "d13": { "size": 0.25, "lh": 0.5, "ls": 0.15 },
     "heightTolerancePx": 0.5,
     "ringMinContrast": 3,
     "textMinContrast": 4.5,
@@ -60,6 +61,11 @@
       "tan"
     ],
     "sizeProps": "^(font-size|line-height|letter-spacing|padding(-(top|right|bottom|left|inline|block)(-(start|end))?)?|margin(-(top|right|bottom|left|inline|block)(-(start|end))?)?|gap|row-gap|column-gap|width|height|min-width|min-height|max-width|max-height)$",
+    "s11": {
+      "_comment": "S11 (CLAUDE.md п. 5в): props — заборонені властивості поза base.css; inheritValues — значення-наслідування, що не вважаються порушенням. font-variant-numeric не заборонено (вибір гліфів цифр, не начерк). Нові винятки (напр. em-частка для оптичної поправки гліфа) — лише записом allow[] з rule:S11 і рішенням замовника.",
+      "props": "^(font|font-size|font-family|font-weight|line-height|letter-spacing|text-transform)$",
+      "inheritValues": "^(inherit|unset|initial|revert|revert-layer)$"
+    },
     "underlineAllowSelectors": [
       "\\.site-footer",
       "\\.age-card__legal"

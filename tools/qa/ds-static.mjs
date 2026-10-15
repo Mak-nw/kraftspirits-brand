@@ -85,7 +85,7 @@ export function buildDist(outDir, { reuse = false } = {}) {
 const stripUrl = (v) => v.replace(/url\([^)]*\)/g, 'url()');
 
 /**
- * Виконує S1–S10. Повертає { items:[{rule,file,line,selector,prop,value,msg}], infos:[…], stats }.
+ * Виконує S1–S11. Повертає { items:[{rule,file,line,selector,prop,value,msg}], infos:[…], stats }.
  * opts: { allow, dist (шлях до зібраного HTML), rules:Set|null }
  */
 export function runStatic({ allow, dist, rules = null, root = ROOT }) {
@@ -184,6 +184,46 @@ export function runStatic({ allow, dist, rules = null, root = ROOT }) {
     if (unused.length) infos.push({ rule: 'S6', msg: `невикористаних токенів у tokens.css: ${unused.length} (інформаційно): ${unused.slice(0, 12).join(' ')}${unused.length > 12 ? ' …' : ''}`, list: unused });
   }
   stats.tokensDefined = defined.size;
+
+  /* --- S11: текст = лише ролі .t-* (CLAUDE.md п. 5в): заборонені типографічні властивості поза base.css + сторінкові типо-токени в tokens.css --- */
+  if (want('S11')) {
+    const S11 = S.s11 || {};
+    const forbidden = new RegExp(S11.props || '^(font|font-size|font-family|font-weight|line-height|letter-spacing|text-transform)$');
+    const inheritRe = new RegExp(S11.inheritValues || '^(inherit|unset|initial|revert|revert-layer)$', 'i');
+    const basePath = join(root, 'src/styles/base.css');
+    const catOf = (d) => {
+      const v = d.value.replace(/\s*!important\s*$/, '').trim();
+      if (d.prop === 'font-size' && /^-?[\d.]+(em|%)$/.test(v)) return 'em-частка';
+      if (d.prop === 'text-transform' && /^none$/i.test(v)) return 'text-transform:none (скидання регістру ролі)';
+      if (/var\(\s*--(type|font-size|lh|ls)-/.test(v) && /(barrels|age|cocktail|catalog|product|contacts|feedback|ds-)/.test(v)) return 'сторінковий токен';
+      if (/var\(/.test(v)) return 'токен без ролі';
+      return 'власне значення';
+    };
+    stats.s11 = { inheritAllowed: 0, fontVariantNumeric: 0, byCat: {} };
+    for (const [f, p] of parsed) {
+      if (f === basePath || f === tokensPath) continue;
+      for (const d of p.decls) {
+        if (d.prop === 'font-variant-numeric') { stats.s11.fontVariantNumeric++; continue; }
+        if (!forbidden.test(d.prop) || /@font-face/.test(d.at)) continue;
+        const v = d.value.replace(/\s*!important\s*$/, '').trim();
+        if (inheritRe.test(v)) { stats.s11.inheritAllowed++; continue; }
+        const cat = catOf(d);
+        stats.s11.byCat[cat] = (stats.s11.byCat[cat] || 0) + 1;
+        add({ rule: 'S11', file: rel(f), line: d.line, selector: d.selector, prop: d.prop, value: d.value.slice(0, 90), cat, msg: `власний шрифтовий стиль поза base.css [${cat}] — потрібна роль .t-*` });
+      }
+    }
+    // сторінкові/компонентні типографічні токени в tokens.css: дозволені лише примітиви, на які посилаються ролі base.css, і --type-<роль>-*
+    const tp = parsed.get(tokensPath), bp = parsed.get(basePath);
+    if (tp && bp) {
+      const typoRe = /^--(font-size|lh|ls|type|fw|font-weight|letter-spacing|line-height)-/;
+      const defs = new Map(); for (const d of tp.decls) if (d.prop.startsWith('--') && !defs.has(d.prop)) defs.set(d.prop, d);
+      const ok = new Set(); const q = [];
+      for (const d of bp.decls) for (const m of d.value.matchAll(/var\(\s*(--[\w-]+)/g)) if (typoRe.test(m[1])) q.push(m[1]);
+      while (q.length) { const n = q.pop(); if (ok.has(n)) continue; ok.add(n); const d = defs.get(n); if (d) for (const m of d.value.matchAll(/var\(\s*(--[\w-]+)/g)) if (typoRe.test(m[1])) q.push(m[1]); }
+      stats.s11.roleTokens = ok.size;
+      for (const [n, d] of defs) if (typoRe.test(n) && !ok.has(n)) add({ rule: 'S11', file: rel(tokensPath), line: d.line, selector: ':root', prop: n, value: d.value.slice(0, 70), cat: 'токен поза ролями', msg: 'типографічний токен, якого не використовує жодна роль base.css (паралельна шкала)' });
+    }
+  }
 
   /* --- S8: @import і url() на неіснуючі файли --- */
   if (want('S8')) {
