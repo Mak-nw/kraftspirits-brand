@@ -3,4 +3,3 @@
 .stat { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); width: var(--size-stat-w); text-align: center; }
 /* compact (224:3643): «( 2 )» Regular 67 (Figma 65) + підпис, gap 40; фон коричневий */
 .stat--compact { gap: var(--space-40); }
-.stat--compact .stat__num { font: var(--type-stat-compact-weight) var(--type-stat-compact-size)/var(--type-stat-compact-lh) var(--type-stat-compact-font); letter-spacing: var(--type-stat-compact-ls); }

@@ -39,7 +39,7 @@ const el = (tag, cls, text) => {
 };
 const labelled = (label, text) => {
   const p = el('p');
-  p.append(el('strong', '', text == null ? label : `${label}:`));
+  p.append(el('strong', 't-nav', text == null ? label : `${label}:`));
   if (text != null) p.append(' ', ...richVol(text));
   return p;
 };
@@ -83,7 +83,7 @@ function buildSections(p) {
   specRows.forEach(([k, v]) => {
     const dd = el('dd');
     if (k.startsWith("Об'єм")) p.volumes.forEach((x) => dd.append(volNode(x.l))); else if (k === 'Міцність') dd.append(strengthNode(v, 'strength--inline')); else dd.textContent = v;
-    dl.append(el('dt', '', k), dd);
+    dl.append(el('dt', 't-nav', k), dd);
   });
   // «Доставка й оплата»
   const delivery = PRODUCT_DELIVERY.map(([k, v]) => labelled(k, v));

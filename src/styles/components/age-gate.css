@@ -59,8 +59,6 @@ html:not(.age-ok) .age-gate { display: flex; }
 /* юридичний уривок: малий кегль, приглушений колір; посилання підкреслені (виняток із правила «підкреслень немає, крім футера» — юридичний текст) */
 .age-card__legal {
   max-width: var(--size-age-legal-w);
-  font: var(--fw-regular) var(--font-size-age-legal)/var(--lh-age-legal) var(--font-family-sans);
-  letter-spacing: var(--ls-wide);
   color: var(--color-age-legal);
 }
 .age-card__legal a { color: var(--color-green); text-decoration: underline; text-underline-offset: 0.2em; transition: color var(--duration-fast) var(--ease-out); }

@@ -22,7 +22,7 @@
 
 /* ?slots=on (barrels.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
 .show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-gold); outline-offset: calc(-1 * var(--space-10)); }
-.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-teal); color: var(--color-light); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
+.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-teal); color: var(--color-light); list-style: none; }
 
 /* зразки похідних кольорів у design-system.html (розділ «Ф'ючерсні бочки») */
 .swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-teal); } /* напівпрозорі — на своєму тлі */
@@ -52,7 +52,7 @@
 .bx-layer__tex > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .bx-layer__plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; aspect-ratio: 1; margin-top: calc(-1 * var(--size-barrels-layer-overlap)); padding: calc(var(--size-barrels-layer-overlap) + var(--space-barrels-layer-text-top)) var(--space-barrels-layer-pad) var(--space-barrels-layer-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50%; background: var(--color-barrels-layer-plate); text-align: center; } /* суцільний тон палітри з простою прозорістю (токен): без розмиття й рамки */
 .bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); position: absolute; top: calc(var(--size-barrels-layer-overlap) / 2); left: 50%; translate: -50% -50%; color: var(--color-gold); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) — у центрі «лінзи» */
-.bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-barrels-title) * 1em); font: var(--fw-semibold) var(--font-size-barrels-layer-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-light); text-wrap: balance; }
+.bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-tight) * 1em); color: var(--color-light); text-wrap: balance; }
 .bx-layer__text { margin-top: var(--space-10); color: var(--color-nav-text); text-wrap: balance; }
 /* демо S2 у design-system.html (у ширині демо-панелі: .bx-scope перераховує сітку) */
 .demo-panel.ds-barrels-layers { display: block; padding: var(--space-50); }
@@ -108,8 +108,8 @@
 .bx-chapter--angels { --bx-num-shift: var(--shift-barrels-numeral-angels); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
 .bx-chapter--bottle { --bx-num-shift: var(--shift-barrels-numeral-bottle); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
 .bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-gold); }
-.bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); font: var(--fw-regular) var(--font-size-barrels-numeral)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
-.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-light); }
+.bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); white-space: nowrap; }
+.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); color: var(--color-light); }
 .bx-chapter__text { max-width: var(--size-barrels-chapter-text-w); margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); color: var(--color-nav-text); text-wrap: pretty; }
 
 /* демо S3 у design-system.html */
@@ -131,7 +131,7 @@
 .bx-ledger { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; }
 .bx-ledger--50 { grid-column: 1 / span var(--span-barrels-ledger-50); }
 .bx-ledger--200 { grid-column: calc(var(--span-barrels-ledger-50) + 1) / -1; }
-.bx-ledger__size { text-indent: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+.bx-ledger__size { text-indent: var(--shift-barrels-cert-title-ink); }
 .bx-ledger--accent .bx-ledger__size { color: var(--color-teal); }
 /* 200 L: текст групи — по центру її колонок 4–12 (рев'ю a58b6a28: число «≈ 383» з приміткою «приблизно» над своєю групою блоків); оптичні поправки лівого краю тут не потрібні */
 .bx-ledger--200 { text-align: center; }
@@ -139,8 +139,8 @@
 .bx-ledger--200 .bx-ledger__cost { align-items: center; }
 .bx-ledger--200 .bx-ledger__approx { margin-left: calc(var(--shift-barrels-approx-ink) / -2); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
 .bx-ledger--200 .bx-ledger__cost-num { text-indent: calc(var(--shift-barrels-approx-ink) / 2); }
-.bx-ledger__num { margin-top: var(--space-barrels-ledger-row); font: var(--fw-regular) var(--font-size-barrels-ledger-num)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.bx-ledger__approx { position: relative; top: var(--shift-barrels-ledger-approx); margin-left: var(--shift-barrels-approx-ink); margin-right: var(--space-barrels-approx-gap); font-size: var(--font-size-barrels-ledger-approx); } /* «≈» піднято до середини висоти цифр (old-style) */
+.bx-ledger__num { margin-top: var(--space-barrels-ledger-row); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bx-ledger__approx { margin-left: var(--shift-barrels-approx-ink); margin-right: var(--space-barrels-approx-gap); } /* «≈» піднято до середини висоти цифр (old-style) */
 .bx-ledger__unit { margin-top: var(--space-15); text-indent: var(--shift-barrels-caption-ink); color: var(--color-barrels-ink-paper-muted); }
 /* стіна: блок 16 × 6 комірок (ціле px); зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок */
 .bx-wall { --bx-wall-color: var(--color-teal); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-barrels-wall-top); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
@@ -150,7 +150,7 @@
 .js-reveal .bx-ledger[data-reveal] .bx-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
 .js-reveal .bx-ledger[data-reveal].is-in .bx-wall { clip-path: inset(0); }
 .bx-ledger__cost { grid-row: 5; display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-barrels-ledger-row); } /* стіна → вартість: повітря без лінії-полиці */
-.bx-ledger__cost-num { text-indent: var(--shift-barrels-approx-ink); font: var(--fw-medium) var(--font-size-barrels-ledger-cost)/var(--lh-none) var(--font-family-serif); white-space: nowrap; }
+.bx-ledger__cost-num { text-indent: var(--shift-barrels-approx-ink); white-space: nowrap; }
 .bx-ledger__cost-label { text-indent: var(--shift-barrels-caption-ink); color: var(--color-barrels-ink-paper-muted); }
 /* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється.
    Страховка: через --duration-count-failsafe число з'являється саме. Без JS і з reduced-motion — фінальне значення одразу. */
@@ -168,7 +168,7 @@
 .barrels-next { padding-block: 0 var(--space-barrels-section-y); }
 .barrels-next__grid { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
 .barrels-next__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-barrels-head); }
-.barrels-next__lead { width: var(--size-barrels-text-w); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: balance; }
+.barrels-next__lead { width: var(--size-barrels-text-w); color: var(--color-barrels-ink-paper-muted); text-wrap: balance; }
 .bx-finish { grid-column: span var(--span-barrels-finish); grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; text-align: center; }
 .bx-finish__tile { position: relative; container-type: inline-size; display: flex; justify-content: center; color: var(--color-teal); transition: scale var(--duration-base) var(--ease-out); } /* місце під фото днища (СЛОТ); зараз — гравюра + значок; cqw = ширина плашки (= колонки) */
 .bx-head2 { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; }
@@ -179,8 +179,8 @@
   .bx-finish:hover .bx-finish__tile { scale: var(--scale-barrels-finish-hover); }
 }
 .bx-finish__caption { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; }
-.bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-teal); }
-.bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-finish__name { margin-top: var(--space-30); color: var(--color-teal); }
+.bx-finish__origin { margin-top: var(--space-10); color: var(--color-barrels-ink-paper-muted); }
 .bx-finish__notes { margin-top: var(--space-5); color: var(--color-teal); }
 .bx-finish__notes:empty { display: none; }
 /* демо S5 у design-system.html */
@@ -208,7 +208,7 @@
 /* маршрут «Кентуккі (США) — Київ (Україна)»: на 6 середніх колонках (4–9) — два міста по краях, між ними hairline-лінія DS і корабель по центру (іконка DS
    .icon--barrels-ship; стоїть у проміжку між колонками 6 і 7). Ліва половина — колонки 4–6, права — 7–9: корабель рівно посередині незалежно від довжини назв,
    межі половин лежать на лініях колонок; лінія тягнеться від назви до корабля (з відступом від нього) */
-.bx-route { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); align-items: center; width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-light); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); }
+.bx-route { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); align-items: center; width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-light); }
 .bx-route__side { display: flex; align-items: center; gap: var(--space-20); min-width: 0; }
 .bx-route__side--from { grid-column: 1 / span 3; }
 .bx-route__side--to { grid-column: 4 / span 3; }
@@ -222,11 +222,11 @@
    контактів). .bx-cert задає лише розкладку: 6 колонок, усередині — вертикальна стопка; колір тексту — чорнило Bazylsprings */
 .bx-cert { grid-column: span var(--span-barrels-cert); display: flex; flex-direction: column; gap: var(--space-barrels-cert-block); min-height: 0; color: var(--color-teal); }
 .bx-cert__head { display: flex; flex-direction: column; gap: var(--space-barrels-stack); }
-.bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
-.bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
+.bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); }
+.bx-cert__price { margin-left: var(--shift-barrels-price-ink); white-space: nowrap; }
 .bx-cert__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
 .bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); color: var(--color-barrels-ink-paper-muted); }
-.bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/var(--lh-none) var(--font-family-serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bx-cert__fact dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bx-cert__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-barrels-cert-row); margin-top: auto; }
 .bx-cert__list { padding-inline-start: var(--space-20); list-style: disc; } /* список DS: як у тілі акордеона товару (.acc--product .acc__body ul) */
 .bx-cert__list li + li { margin-top: var(--space-5); }

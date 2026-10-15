@@ -26,30 +26,30 @@
               <p class="t-desc">Оберіть тему звернення та залиште контакти, ми відповімо найближчим часом</p>
             </div>
             <div class="field" data-field="topic">
-              <span class="field__label" id="contact-topic-label">Тип звернення</span>
+              <span class="field__label t-btn" id="contact-topic-label">Тип звернення</span>
               <div class="topic-group" id="contact-topic" role="radiogroup" aria-labelledby="contact-topic-label" aria-describedby="contact-topic-error" aria-required="true">
             %contacts.topicTilesHtml%
               </div>
               <input type="hidden" name="topic" value="">
-              <p class="field__error" id="contact-topic-error" role="alert"><span></span></p>
+              <p class="field__error" id="contact-topic-error" role="alert"><span class="t-text"></span></p>
             </div>
             <div class="feedback-block" role="group" aria-labelledby="contact-data-label">
               <span class="visually-hidden" id="contact-data-label">Контактні дані</span>
               <div class="field" data-field="name">
-                <label class="field__label" for="contact-name">Ім'я</label>
+                <label class="field__label t-btn" for="contact-name">Ім'я</label>
                 <input class="field__control t-text" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" aria-describedby="contact-name-error">
-                <p class="field__error" id="contact-name-error" role="alert"><span></span></p>
+                <p class="field__error" id="contact-name-error" role="alert"><span class="t-text"></span></p>
               </div>
               <div class="feedback-pair">
               <div class="field" data-field="phone">
-                <label class="field__label" for="contact-phone">Телефон</label>
+                <label class="field__label t-btn" for="contact-phone">Телефон</label>
                 <input class="field__control t-text" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" aria-describedby="contact-phone-error">
-                <p class="field__error" id="contact-phone-error" role="alert"><span></span></p>
+                <p class="field__error" id="contact-phone-error" role="alert"><span class="t-text"></span></p>
               </div>
               <div class="field" data-field="email">
-                <label class="field__label" for="contact-email">E-mail</label>
+                <label class="field__label t-btn" for="contact-email">E-mail</label>
                 <input class="field__control t-text" id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" aria-describedby="contact-email-error">
-                <p class="field__error" id="contact-email-error" role="alert"><span></span></p>
+                <p class="field__error" id="contact-email-error" role="alert"><span class="t-text"></span></p>
               </div>
               </div>
             </div>
@@ -59,15 +59,15 @@
                 <span class="check__box" aria-hidden="true"></span>
                 <span class="check__label t-text">Погоджуюсь на обробку персональних даних та з <a href="offer.html#rules" target="_blank" rel="noopener">правилами користування</a> сайтом</span>
               </label>
-              <p class="field__error" id="contact-consent-error" role="alert"><span></span></p>
+              <p class="field__error" id="contact-consent-error" role="alert"><span class="t-text"></span></p>
             </div>
           </div>
 
           <div class="feedback-col feedback-col--main">
             <div class="field feedback-message" data-field="message">
-              <label class="field__label" for="contact-message">Ваше повідомлення</label>
+              <label class="field__label t-btn" for="contact-message">Ваше повідомлення</label>
               <textarea class="field__control t-text" id="contact-message" name="message" rows="8" placeholder="Розкажіть, чим можемо допомогти" aria-describedby="contact-message-error"></textarea>
-              <p class="field__error" id="contact-message-error" role="alert"><span></span></p>
+              <p class="field__error" id="contact-message-error" role="alert"><span class="t-text"></span></p>
             </div>
             <div class="field visually-hidden" aria-hidden="true">
               <label for="contact-website">Не заповнюйте це поле</label>

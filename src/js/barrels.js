@@ -56,7 +56,7 @@ else document.querySelectorAll('[data-count-to]').forEach((el) => { el.dataset.c
 if (/[?&]slots=on/.test(location.search)) {
   document.documentElement.classList.add('show-slots');
   const list = document.createElement('ol');
-  list.className = 'bx-slots';
+  list.className = 'bx-slots t-text';
   list.setAttribute('aria-label', 'Місця під фото й тексти');
   document.querySelectorAll('[data-slot]').forEach((el, i) => {
     el.dataset.slotN = String(i + 1);

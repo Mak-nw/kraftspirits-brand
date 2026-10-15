@@ -158,6 +158,7 @@ async function initMap(host) {
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation?.();
     map.addControl(new AttributionControl({ compact: false, customAttribution: ATTRIBUTION }), 'bottom-right');
+    canvas.querySelector('.maplibregl-ctrl-attrib')?.classList.add('t-caption'); // атрибуція — сторонній вузол MapLibre: роль ставить JS (як для підказки нижче)
     map.addControl(createZoomControl(), 'top-right');
     canvas.querySelectorAll('.maplibregl-desktop-message, .maplibregl-mobile-message').forEach((n) => n.classList.add('t-kicker')); // підказка «Ctrl + прокрутка» — сторонні вузли MapLibre (його .screen має власний font-size 1.4em, тож роль — на повідомленнях)
     new Marker({ element: createMarkerElement(), anchor: 'bottom' }).setLngLat([lng, lat]).addTo(map);

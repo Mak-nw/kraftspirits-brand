@@ -39,7 +39,6 @@
   --fw-regular: 400;   /* 194:1282 (stat number), 194:1332 (price) */
   --fw-medium: 500;    /* 194:1279 (body), 194:1350 (лід) */
   --fw-semibold: 600;  /* 194:1376 (nav), 194:1370 (hero) */
-  --fw-bold: 700;      /* 194:1373 (button) */
 
   /* розміри (px макета 1920) */
   --font-size-wordmark: calc(137 * var(--u));  /* 194:1236 */
@@ -690,7 +689,6 @@
 
   /* типографіка нових ролей */
   --type-desc-font: var(--font-family-serif); --type-desc-weight: var(--fw-medium); --type-desc-size: var(--font-size-title); --type-desc-lh: var(--lh-tight); --type-desc-ls: calc(1 * var(--u)); /* 224:3812: опис бренду, EB Garamond Medium 20 / 1.2, letter-spacing 1px (масштабується з --u; у Figma текст YC набраний у 3 рядки) */
-  --type-stat-compact-font: var(--font-family-serif); --type-stat-compact-weight: var(--fw-regular); --type-stat-compact-size: calc(65 * var(--u)); --type-stat-compact-lh: var(--lh-none); --type-stat-compact-ls: var(--ls-none); /* 224:3644: «( 2 )» Regular, розмір 65 як у Figma (висота стовпця 145) */
   --color-hover-btn-beige: var(--color-light);    /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки beige на коричневому */
 }
 
@@ -717,8 +715,6 @@
   --size-age-logo-sep-h: calc(70 * var(--u));                   /* вертикальна риска між логотипами */
   --size-age-subtitle-w: calc(620 * var(--u));                  /* ширина пояснення під заголовком */
   --size-age-legal-w: calc(560 * var(--u));                     /* ширина юридичного тексту */
-  --font-size-age-legal: var(--font-size-small);                /* 12u: юридичний текст малим кеглем (caption/small) */
-  --lh-age-legal: 1.5;
   --size-age-check: round(calc(26 * var(--u)), 1px);            /* квадрат індикатора «запам'ятати» (ціле px — чіткі краї) */
   --border-age-check: round(calc(1.5 * var(--u)), 1px);        /* рамка індикатора 1.5u (ціле px) */
   --size-age-check-tick-w: round(calc(7 * var(--u)), 1px);      /* галочка: ширина/висота кута */
@@ -866,19 +862,9 @@
   --color-barrels-amber: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));  /* «віскі»: рідина в гравюрі S3, акцент 50 L у S4 (текст на beige 5.2:1), тло кола S2, доки вантажиться фото */
 
   /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
-  --font-size-barrels-numeral: calc(200 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» (компактний ритм S3) */
-  --lh-barrels-numeral: 0.86;
-  --font-size-barrels-lead: calc(30 * var(--u));      /* лід у sentence case замість caps-ліда 40u */
-  --lh-barrels-lead: 1.25;
-  --font-size-barrels-title: calc(30 * var(--u));     /* назви рядків/розділів/бочок (EB Garamond 600, caps) */
-  --font-size-barrels-copy: max(calc(18 * var(--u)), 13px);    /* пояснення (Manrope 500) */
-  --lh-barrels-copy: 1.45;
-  --font-size-barrels-caption: max(calc(15 * var(--u)), 12px); /* підписи до схем */
-  --font-size-barrels-note: max(calc(14 * var(--u)), 12px);    /* дрібний довідковий текст (застереження до цін) */
   --space-barrels-stack: var(--space-20);              /* вертикальний ритм шапки секції (кікер → заголовок → лід) */
   --shift-barrels-cap-top: -0.18em;                   /* оптика: верх чорнила капітелі EB Garamond (lh 1) = верх бокса; виміряно 0.17–0.19em на 1200–1920 */
   --shift-barrels-kicker-cap-top: -0.38em;            /* верх капітелі кікера (lh 1.4) = верх вмісту секції */
-  --lh-barrels-title: 1.1;                            /* назви шарів, розділів, бочок, сертифікатів, вин */
   --space-barrels-head: var(--space-70);              /* шапка секції → вміст */
   /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
      центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
@@ -968,22 +954,15 @@
   --span-barrels-cert: 6;                             /* сертифікат — 6 колонок: 50 L — 1–6, 200 L — 7–12 */
   --size-barrels-route-ship: calc(40 * var(--u));     /* корабель на лінії маршруту (іконка DS, 24×24, лінія 1.5) */
   --shift-barrels-cert-title-ink: -0.025em;           /* оптика назви сертифіката «Бочка …»: бокове поле «Б» 30u — на лівій осі панелі */
-  --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» */
   --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — зсув праворуч */
-  --font-size-barrels-fact: calc(26 * var(--u));      /* значення у рядках «пляшок / вартість вмісту» (EB Garamond, tabular) */
   --shift-barrels-fact-ink: -0.06em;                  /* оптика підписів фактів («Пляшок…», «Вартість…» 15u): бокове поле «П»/«В» — на лівій осі фактів */
-  --lh-barrels-note: 1.5;                             /* дрібний текст-застереження */
 
   /* S4 «Арифметика бочки»: світла кімната (суцільна з S5); ліворуч 50 L, праворуч 200 L (рев'ю b9892b9b — повернуто композицію «зліва/справа»):
      ярлик, число, одиниця, стіна пляшок, вартість — на спільних рядках (subgrid); стіни на спільній hairline-лінії */
   --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* підписи на «папері»: контраст на beige ≈ 5.5:1 */
   --space-barrels-room-join: calc(120 * var(--u));      /* S4 → S5 в одній світлій кімнаті: лише повітря, без межі */
-  --font-size-barrels-ledger-num: calc(150 * var(--u)); /* «96» / «383» */
-  --font-size-barrels-ledger-approx: 0.42em;            /* «≈» перед числом: менший, щоб не змагався з числом */
-  --shift-barrels-ledger-approx: -0.3em;                /* «≈» вгору до середини висоти old-style цифр (у власних em знака) */
   --shift-barrels-approx-ink: -0.068em;                 /* бокове поле гліфа «≈» EB Garamond: чорнило на 0.068em правіше осі колонки (виміряно) */
   --space-barrels-approx-gap: 0.08em;                   /* «≈» → число (в em знака «≈») */
-  --font-size-barrels-ledger-cost: calc(34 * var(--u)); /* «≈ € 20,83» */
   --space-barrels-ledger-row: var(--space-30);          /* ярлик → число; стіна → вартість (було 20u: рев'ю 45c32ffe «треба більше відступ») */
   --space-barrels-wall-top: var(--space-50);            /* одиниця → стіна (було 30u) */
   --space-barrels-profit-head: var(--space-100);        /* шапка «Скільки пляшок…» → групи 50 L / 200 L (було 70u) */
@@ -992,7 +971,6 @@
   /* S2: решта (розміри кіл — у блоці сітки вище) */
   --space-barrels-layer-text-top: calc(56 * var(--u));    /* низ «лінзи» → поле назви (текст — із верхнього вирівнювання: однакова сітка в усіх чотирьох) */
   --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
-  --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
   --color-barrels-layer-plate: color-mix(in srgb, color-mix(in srgb, var(--color-gold) 12%, var(--color-brown)) 88%, transparent); /* накладка: тон «дерева» на 12% світліший (коло видно без рамки), проста прозорість 88% — у «лінзі» ледь проступає текстура; без розмиття */
 
   /* S5 «Подальша витримка»: продовження світлої кімнати; чотири вина по 3 колонки сітки зі спільними рядками (subgrid: гравюра, назва, регіон, ноти) */
@@ -1000,7 +978,6 @@
   --size-barrels-finish-head: 76cqw;                       /* гравюра днища (одне коло-обідок hairline + клепки в кільці навколо значка) — частка ширини колонки вина */
   --border-barrels-rim: calc(2 * var(--border-hairline));  /* обідок днища S5 — 2px (клепки лишаються hairline 1px) */
   --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.2);                      /* значок вина (іконка DS, 24×24, лінія 1.5) у центрі днища — частка ширини гравюри; порожній центр гравюри r 32/100 лишає ≥ 23% простору навколо */
-  --font-size-barrels-finish-name: calc(28 * var(--u));
   --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається */
 }
 

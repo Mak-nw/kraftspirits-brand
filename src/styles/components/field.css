@@ -3,7 +3,6 @@
    Для селекта — .select--light.select--field (components/select.css) у тій самій обгортці .field.
    Помилка: .field.is-invalid (JS ставить aria-invalid + aria-describedby); колір --color-field-error + ромб-маркер, поява плавна (grid 0fr → 1fr). */
 .field { display: flex; flex-direction: column; gap: var(--space-field-label-gap); color: var(--color-green); }
-.field__label { font: var(--type-kicker-weight) var(--font-size-text)/var(--lh-normal) var(--type-kicker-font); letter-spacing: var(--ls-wide); }
 .field__control {
   display: block; width: 100%; min-height: var(--size-control-h); margin: 0; padding: var(--space-15) var(--space-20);
   background: var(--color-field-bg); color: var(--color-green);
@@ -18,7 +17,7 @@ textarea.field__control { resize: vertical; min-height: calc(var(--size-btn-h) *
 
 /* помилка під полем: висота плавно 0 → авто (grid 0fr → 1fr), без стрибка розкладки */
 .field__error { display: grid; grid-template-rows: 0fr; margin: 0; color: var(--color-field-error); opacity: 0; transition: grid-template-rows var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out); }
-.field__error > span { display: block; min-height: 0; overflow: hidden; font: var(--fw-semibold) var(--font-size-text)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
+.field__error > span { display: block; min-height: 0; overflow: hidden; }
 .field.is-invalid .field__error, .check-field.is-invalid .field__error { grid-template-rows: 1fr; opacity: 1; }
 .field.is-invalid .field__error:has(> span:empty) { grid-template-rows: 0fr; opacity: 0; } /* e-mail ділить повідомлення з телефоном: власний рядок помилки порожній і схований */
 .field__error > span::before { content: ''; display: inline-block; width: var(--size-field-error-mark); height: var(--size-field-error-mark); margin-right: var(--space-10); background: currentColor; rotate: var(--angle-chip-diamond); } /* ромб-маркер: помилка читається не лише кольором */

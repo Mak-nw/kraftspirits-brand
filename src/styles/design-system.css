@@ -6,7 +6,6 @@
 .ds-pattern-demo { height: calc(360 * var(--u)); margin-bottom: var(--space-30); }
 .ds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-30); }
 .ds-grid--3 { grid-template-columns: repeat(3, 1fr); }
-.ds-meta { font: var(--fw-regular) var(--font-size-small)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
 /* значення, які design-system.js підставляє після завантаження (data-token / data-spec / data-width / data-u): порожній рядок займає ту саму висоту (нульової ширини пробіл), тож підстановка не зсуває секції (CLS) */
 :is([data-token], [data-spec], [data-width], [data-u]):empty::before { content: '\200b'; }
 [data-u]:empty::before { content: '1 px макета = 0.0000 px (вікно 0000)'; visibility: hidden; } /* рядок масштабу в .ds-note: резерв довжини майбутнього тексту, щоб абзац не перенісся на 2 рядки після підстановки */
@@ -92,8 +91,7 @@
 .state-row--head { padding-block: 0; }
 .state-row > * { min-width: 0; }
 .ds-table { width: 100%; margin-bottom: var(--space-30); border-collapse: collapse; }
-.ds-table th, .ds-table td { padding: var(--space-10) var(--space-15); text-align: left; vertical-align: top; border-bottom: var(--border-hairline) solid var(--color-line); font: var(--fw-regular) var(--font-size-small)/var(--lh-normal) var(--font-family-sans); letter-spacing: var(--ls-wide); }
-.ds-table th { font-weight: var(--fw-bold); }
+.ds-table th, .ds-table td { padding: var(--space-10) var(--space-15); text-align: left; vertical-align: top; border-bottom: var(--border-hairline) solid var(--color-line); }
 .ds-table code { overflow-wrap: anywhere; }
 .ds-table .is-exempt { opacity: var(--opacity-disabled); }
 .ds-token-group { margin-bottom: var(--space-10); }

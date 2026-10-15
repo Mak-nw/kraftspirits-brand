@@ -16,6 +16,7 @@ export function initSelect(el, config = {}) {
   let active = -1;
   const id = button.id;
   const roleClass = [...button.classList].find((c) => c.startsWith('t-')) || 't-caption';
+  const selectedRole = { 't-caption': 't-nav', 't-text': 't-body' }[roleClass] || roleClass; // вибраний пункт — сусідня роль того ж шрифту (без font-weight у CSS): t-nav (600) для каталожного, t-body (CAPS) для світлого; висота рядка пункту та сама
 
   list.replaceChildren(...options.map((o, i) => {
     const li = document.createElement('li');
@@ -29,7 +30,12 @@ export function initSelect(el, config = {}) {
   const items = [...list.children];
 
   const paint = () => {
-    items.forEach((li, i) => { li.setAttribute('aria-selected', String(options[i].value === value)); });
+    items.forEach((li, i) => {
+      const sel = options[i].value === value;
+      li.setAttribute('aria-selected', String(sel));
+      li.classList.remove(roleClass, selectedRole);
+      li.classList.add(sel ? selectedRole : roleClass);
+    });
     const cur = options.find((o) => o.value === value);
     if (cur) valueEl.textContent = cur.label;
     else if (placeholder !== undefined) valueEl.textContent = placeholder;
