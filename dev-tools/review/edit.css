@@ -121,3 +121,6 @@
 @keyframes ed-mv-fade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
 .ed-info { max-height: 34vh; }
 .ed-chg { min-height: 120px; }
+.ed-hacts { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.ed-hacts button, .ed-warn > button { border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; padding: 4px 8px; text-align: left; cursor: pointer; }
+.ed-warn > button { display: block; width: 100%; margin-top: 5px; }

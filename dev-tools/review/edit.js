@@ -48,6 +48,11 @@ Object.assign(PROPS, {
   'color-text': { css: ['color'], type: 'color', chip: 'колір тексту' },
   'color-bg': { css: ['background-color'], type: 'color', chip: 'колір фону' },
   'text-align': { css: ['text-align'], type: 'align', chip: 'вирівнювання' },
+  // службові (не чіпи): «вимкнути розтягування» — записуються разом із висотою/шириною групою unstretch-*
+  'align-self': { css: ['align-self'], type: 'align', chip: 'align-self', hidden: true },
+  'justify-self': { css: ['justify-self'], type: 'align', chip: 'justify-self', hidden: true },
+  'flex-grow': { css: ['flex-grow'], type: 'align', chip: 'flex-grow', hidden: true },
+  'flex-basis': { css: ['flex-basis'], type: 'align', chip: 'flex-basis', hidden: true },
 });
 // «Розподіл» контейнера (flex/grid): керується селектами панелі, не чіпами; запис type=align
 const LAYOUT_PROPS = ['flex-direction', 'flex-wrap', 'justify-content', 'align-content', 'justify-items', 'align-items'];
@@ -519,7 +524,7 @@ export function initEdit(deps) {
       case 'role': return `роль тексту «${nm}»: ${m.orig.role || '(без ролі)'} → ${m.cur.role || '(без ролі)'}`;
       case 'move': return `порядок у «${m.parentSel.split(' > ').pop()}»: «${nm}» позиція ${m.orig.index + 1} → ${m.cur.index + 1} з ${m.cur.of} (було: ${(m.orig.order || []).join(' · ')} → стало: ${(m.cur.order || []).join(' · ')})${m.cur.tracks && m.cur.tracks !== m.orig.tracks ? `; доріжки: ${m.orig.tracks} → ${m.cur.tracks}` : ''}`;
       case 'color': return `${m.prop === 'color' ? 'колір тексту' : 'колір фону'} «${nm}»: ${m.orig.token || m.orig.color} → ${m.cur.token || m.cur.color}`;
-      case 'align': return m.prop === 'text-align' ? `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}` : `розподіл ${m.prop} «${nm}»: ${m.orig.value} → ${m.cur.value}${m.group && /^dist-/.test(m.group) ? ' (разом з gap)' : ''}`;
+      case 'align': if (/^(align-self|justify-self|flex-grow|flex-basis)$/.test(m.prop)) return `вимкнено розтягування «${nm}»: ${m.prop} ${m.orig.value} → ${m.cur.value} (разом із розміром: ${m.group})`; return m.prop === 'text-align' ? `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}` : `розподіл ${m.prop} «${nm}»: ${m.orig.value} → ${m.cur.value}${m.group && /^dist-/.test(m.group) ? ' (разом з gap)' : ''}`;
       case 'hide': return `прибрати елемент «${nm}»`;
       default: return `${m.type} «${nm}»`;
     }
@@ -645,8 +650,53 @@ export function initEdit(deps) {
     return set.map((e) => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; });
   }
   const boxDelta = (a, b) => a.reduce((s, x, i) => s + x.reduce((t, v, j) => t + Math.abs(v - (b[i]?.[j] ?? v)), 0), 0);
+  // ---------- хто керує розміром: батько (stretch / flex-grow), власне значення, вміст ----------
+  const SIZE_CSS = /^(height|min-height|width|max-width)$/;
+  function declaredSize(n, prop) { // значення з таблиць стилів (inline не рахуємо — його ставить Едіт)
+    let v = null; eachRule((r) => { if (r.selectorText && r.style.getPropertyValue(prop)) { try { if (n.matches(r.selectorText)) v = r.style.getPropertyValue(prop).trim(); } catch { /* */ } } }); return v;
+  }
+  function sizeCause(n, css) {
+    const par = n.parentElement; if (!par) return null;
+    const axis = /height/.test(css) ? 'y' : 'x', main = axis === 'y' ? 'height' : 'width', word = axis === 'y' ? 'висоту' : 'ширину';
+    const cs = getComputedStyle(n), pcs = getComputedStyle(par), pn = nameOf(par), decl = declaredSize(n, main), auto = !decl || decl === 'auto';
+    const goParent = { a: 'h-parent', label: `Перейти на батька ${pn}` };
+    const replaced = /^(IMG|VIDEO|CANVAS|SVG|PICTURE)$/i.test(n.tagName);
+    const out = { kind: 'content', source: 'за вмістом', text: '', fix: null, acts: [] };
+    const fixTxt = axis === 'y' ? 'висоту' : 'ширину';
+    if (pcs.display.includes('flex')) {
+      const col = pcs.flexDirection.startsWith('column'), isMain = (axis === 'y') === col;
+      if (isMain && parseFloat(cs.flexGrow) > 0) {
+        Object.assign(out, { kind: 'grow', source: 'розтягнуто', text: `${word} задає батько ${pn} (flex-grow: ${cs.flexGrow}, flex-basis: ${cs.flexBasis}): елемент займає весь вільний простір flex-${col ? 'колонки' : 'ряду'}, тому inline ${main} не діє`, fix: { props: [['flex-grow', '0'], ['flex-basis', 'auto']] } });
+        out.acts = [{ a: 'h-fix', label: `Вимкнути розтягування (flex-grow: 0) і задати ${fixTxt}` }, goParent];
+      } else if (!isMain) {
+        const as = cs.alignSelf === 'auto' ? pcs.alignItems : cs.alignSelf;
+        if (auto && (as === 'normal' || as === 'stretch') && !replaced) { Object.assign(out, { kind: 'stretch', source: 'розтягнуто', text: `${word} задає батько ${pn} (align-items: ${pcs.alignItems}${cs.alignSelf !== 'auto' ? `, align-self: ${cs.alignSelf}` : ''}): елемент розтягується по поперечній осі flex`, fix: { props: [['align-self', 'start']] } }); out.acts = [{ a: 'h-fix', label: `Вимкнути розтягування (align-self: start) і задати ${fixTxt}` }, goParent]; }
+      }
+    } else if (pcs.display.includes('grid') && !out.fix) {
+      const as = axis === 'y' ? (cs.alignSelf === 'auto' ? pcs.alignItems : cs.alignSelf) : (cs.justifySelf === 'auto' ? pcs.justifyItems : cs.justifySelf);
+      if (auto && (as === 'normal' || as === 'stretch') && !replaced) {
+        const pr = axis === 'y' ? 'align-self' : 'justify-self';
+        Object.assign(out, { kind: 'stretch', source: 'розтягнуто', text: `${word} задає батько ${pn} (grid: ${axis === 'y' ? 'align-items' : 'justify-items'}: ${as}${(axis === 'y' ? cs.alignSelf : cs.justifySelf) !== 'auto' ? `, ${pr}: ${axis === 'y' ? cs.alignSelf : cs.justifySelf}` : ''}): елемент розтягується на всю комірку сітки`, fix: { props: [[pr, 'start']] } });
+        out.acts = [{ a: 'h-fix', label: `Вимкнути розтягування (${pr}: start) і задати ${fixTxt}` }, goParent];
+      }
+    }
+    if (out.kind === 'content') {
+      if (decl && /%$/.test(decl)) { out.kind = 'percent'; out.source = `${decl} батька`; }
+      else if (decl && decl !== 'auto') { out.kind = 'fixed'; out.source = `фіксовано (${main}: ${decl.length > 40 ? decl.slice(0, 40) + '…' : decl})`; }
+      else if (cs.aspectRatio !== 'auto' && !(/auto/.test(cs.aspectRatio) && !replaced)) { out.kind = 'ratio'; out.source = `за співвідношенням сторін (aspect-ratio: ${cs.aspectRatio})`; }
+    }
+    if (n.localName === 'textarea' && axis === 'y') out.extra = `textarea: за замовчуванням висота = rows (${n.rows}) × висота рядка + padding; resize: ${cs.resize} дозволяє користувачу тягнути поле; значення height із Едіта перекриває rows, але не flex-grow/stretch батька`;
+    if (n.closest('fieldset') && (n.localName === 'fieldset' || n.parentElement.localName === 'fieldset')) out.extra = ((out.extra || '') + ' fieldset: має min-width: min-content і власні правила розкладки — може ігнорувати width/height').trim();
+    return out;
+  }
+  function sizeSourceHtml(n, css) {
+    if (!SIZE_CSS.test(css)) return '';
+    const c = sizeCause(n, css); if (!c) return '';
+    const warn = c.kind === 'grow' || c.kind === 'stretch';
+    return `<div class="ed-meta${warn ? ' warn' : ''}">джерело розміру: <b>${esc(c.source)}</b>${warn ? ` — ${esc(c.text.split(':')[0])}` : ''}${c.acts.length ? `<div class="ed-hacts">${c.acts.map((a) => `<button data-a="${a.a}">${esc(a.label)}</button>`).join('')}</div>` : ''}${c.extra ? `<br><i>${esc(c.extra)}</i>` : ''}</div>`;
+  }
   function explain(n, p) {
-    const P = PROPS[p], css = P.css[0], cs = getComputedStyle(n), r = [];
+    const P = PROPS[p], css = P.css[0], cs = getComputedStyle(n), r = [], acts = [];
     const par = n.parentElement, pcs = par ? getComputedStyle(par) : null;
     if (GAPS.includes(p)) {
       const info = distFor(n, p); if (info) return { info };
@@ -676,18 +726,24 @@ export function initEdit(deps) {
       if (/auto/.test(cs.marginLeft + cs.marginRight)) r.push('margin: auto поглинає вільне місце');
       if (pcs && /flex|grid/.test(pcs.display) && (pxOf(pcs.columnGap) || pxOf(pcs.rowGap) || DIST_RE.test(pcs.justifyContent))) r.push('батько flex/grid з gap або space-*: відстань між елементами визначають вони, а не margin');
     } else if (P.type === 'size') {
+      const sc = SIZE_CSS.test(css) ? sizeCause(n, css) : null;
+      if (sc && sc.fix) return { text: sc.text + (sc.extra ? `. ${sc.extra}` : ''), acts: sc.acts, fix: sc.fix };
       const rc = n.getBoundingClientRect();
+      if (sc?.extra) r.push(sc.extra);
+      if (sc && (sc.kind === 'ratio')) r.push(`розмір керується ${sc.source}`);
+      if ((css === 'height' || css === 'min-height') && pxOf(cs.minHeight) > 0 && Math.abs(rc.height - pxOf(cs.minHeight)) < 1) acts.push({ a: 'h-min', label: 'Змінити min-height замість height' });
+      if (par && (n.parentElement.localName)) acts.push({ a: 'h-parent', label: `Перейти на батька ${nameOf(par)}` });
       if (css === 'height' || css === 'min-height') { if (pxOf(cs.minHeight) > 0 && Math.abs(rc.height - pxOf(cs.minHeight)) < 1) r.push('min-height тримає висоту'); if (cs.maxHeight !== 'none' && Math.abs(rc.height - pxOf(cs.maxHeight)) < 1) r.push('max-height обрізає висоту'); }
       if (css === 'width' || css === 'max-width') { if (cs.maxWidth !== 'none' && Math.abs(rc.width - pxOf(cs.maxWidth)) < 1) r.push('max-width обмежує ширину'); if (pxOf(cs.minWidth) > 0 && Math.abs(rc.width - pxOf(cs.minWidth)) < 1) r.push('min-width тримає ширину'); if (pcs && pcs.display.includes('flex') && cs.flexBasis !== 'auto') r.push('flex-basis має пріоритет над width'); if (pcs && pcs.display.includes('grid')) r.push('grid-доріжка визначає ширину (1fr/фіксована)'); }
       if (cs.display === 'inline') r.push('inline-елемент ігнорує width/height');
     }
-    return { text: r.length ? `${r[0]}${r.length > 1 ? ' (також: ' + r.slice(1).join('; ') + ')' : ''}` : 'причину не визначено автоматично — перевір min-width/flex-basis дітей, grid-доріжки 1fr, padding батька, margin сусіда' };
+    return { acts, text: r.length ? `${r[0]}${r.length > 1 ? ' (також: ' + r.slice(1).join('; ') + ')' : ''}` : 'причину не визначено автоматично — перевір min-width/flex-basis дітей, grid-доріжки 1fr, padding батька, margin сусіда' };
   }
   // після зміни: чи змінилась фактична геометрія? якщо ні — підказка з причиною
-  function checkEffect(n, p, box0) {
+  function checkEffect(n, p, box0, css) {
     if (!box0 || boxDelta(box0, boxes(n)) > 0.3) return;
     const ex = explain(n, p);
-    S.hint = ex.info ? distHint(n, ex.info, true) : { kind: 'noop', text: `Зміна не вплинула: ${ex.text}` };
+    S.hint = ex.info ? distHint(n, ex.info, true) : { kind: 'noop', text: `Зміна не вплинула: ${ex.text}`, acts: ex.acts || [], fix: ex.fix || null, ctx: { n, p, css } };
     renderInfo(); showTip('зміна не вплинула на фактичну відстань/розмір');
   }
   // спроба змінити gap, коли проміжок — розподіл вільного місця: нічого не застосовуємо, пропонуємо перехід
@@ -698,6 +754,30 @@ export function initEdit(deps) {
     S.hint = distHint(n, info); renderInfo(); draw();
     showTip(`${info.jcProp}: ${info.jc} — проміжок ${fmtLen(info.dist)} це вільне місце, не gap`);
     return true;
+  }
+  // дії з підказки «чому не змінюється»
+  function hintFix() {
+    const h = S.hint, n = S.el; if (!h?.fix || !n || !guard()) return;
+    const c = h.ctx || { n, p: S.prop, css: null }, css = c.css || null, P = PROPS[c.p], cssProp = P.css[0];
+    const gid = 'unstretch-' + Math.random().toString(16).slice(2, 8);
+    const specs = [...h.fix.props.map(([cp]) => styleSpec(n, [n], propByCss(cp, 'padding-top'), '', gid)), ...(css ? [styleSpec(n, [n], c.p, '', gid)] : [])];
+    specs.forEach(touch);
+    const before = specs.map((x) => x.snap()), box0 = boxes(n);
+    const op = { specs, keys: specs.map((x) => x.key),
+      doIt() { h.fix.props.forEach(([cp, v]) => n.style.setProperty(cp, v)); if (css) n.style.setProperty(cssProp, css); },
+      undoIt() { specs.forEach((x, i) => x.put(before[i])); } };
+    S.hint = null; op.doIt(); pushOp(op);
+    if (boxDelta(box0, boxes(n)) > 0.3) {
+      S.hint = { kind: 'ok', text: `Готово: ${h.fix.props.map(([a, b2]) => `${a}: ${b2}`).join(', ')}${css ? `, ${cssProp} = ${css.replace(/^var\((.*)\)$/, '$1')}` : ''}. Далі ${cssProp} змінюється кроками шкали.` };
+    } else { const ex = explain(n, c.p); S.hint = { kind: 'noop', text: `Зміна все ще не вплинула: ${ex.text}`, acts: ex.acts || [], fix: ex.fix || null, ctx: c }; }
+    renderInfo(); draw();
+  }
+  function hintMin() {
+    const h = S.hint, n = S.el; if (!n || !guard()) return;
+    const css = h?.ctx?.css, hm = S.changes.get(keyOf(n, 'height'));
+    if (hm) revertChange(hm);
+    S.prop = /^width|max-width/.test(S.prop) ? 'max-width' : 'min-height'; S.hint = null;
+    if (css) applyStyle(n, S.prop, css, false); else renderInfo();
   }
   function distFix(n) {
     if (!n || !guard()) return;
@@ -737,7 +817,7 @@ export function initEdit(deps) {
       const i = h.info;
       return `<div class="ed-warn"><b>${h.noop ? 'Зміна не вплинула: ' : ''}це не gap, а розподіл вільного місця.</b> ${esc(i.jcProp)}: <code>${esc(i.jc)}</code> розтягує проміжок між дітьми до ${fmtLen(i.dist)} · ${fmtU(i.dist)}; ${esc(i.gapProp)} — лише мінімум (зараз ${fmtLen(i.gap)}), тому нижче цієї відстані його зменшити неможливо.<button data-a="distfix">Перейти на початок (${esc(i.start)}) + ${esc(i.gapProp)} = ${esc(h.tok.name)} · ${fmtU(h.tok.px)}</button></div>`;
     }
-    return `<div class="ed-warn${h.kind === 'ok' ? ' ok' : ''}">${esc(h.text)}</div>`;
+    return `<div class="ed-warn${h.kind === 'ok' ? ' ok' : ''}">${esc(h.text)}${(h.acts || []).map((a) => `<button data-a="${a.a}">${esc(a.label)}</button>`).join('')}</div>`;
   }
 
   // ---------- застосування змін ----------
@@ -764,7 +844,7 @@ export function initEdit(deps) {
     const P = PROPS[p], watch = P.type === 'spacing' || P.type === 'size' || P.layout, box0 = watch ? boxes(n) : null;
     S.hint = null;
     const g = beginStyle(n, p, all); g.set(css); g.finish(css);
-    if (watch) checkEffect(n, p, box0);
+    if (watch) checkEffect(n, p, box0, css);
   }
   function baseOf(n, p) {
     const P = PROPS[p];
@@ -1049,7 +1129,7 @@ export function initEdit(deps) {
         const last = S.drag.last; S.drag = null; tip.style.display = 'none'; setTimeout(maybeRelease, 0);
         if (last == null) { if (isSpan) dropIfNoop(spanSpec); else g.keys.forEach((k) => { const m = S.changes.get(k); if (m && m.cur.k === m.orig.k) dropRecord(m); }); return; }
         if (isSpan) { const cssv = `span ${last}`; pushOp({ specs: [spanSpec], keys: [spanSpec.key], css: cssv, doIt() { n.style.setProperty('grid-column-end', cssv); }, undoIt() { spanSpec.put(spanBefore); } }); return; }
-        g.finish(last); checkEffect(n, h.prop, box0);
+        g.finish(last); checkEffect(n, h.prop, box0, last);
       }),
     ];
   }
@@ -1157,7 +1237,7 @@ export function initEdit(deps) {
     if (!available(S.prop)) return '<div class="ed-meta">Недоступно для цього елемента</div>';
     const dn = GAPS.includes(S.prop) ? distFor(n, S.prop) : null;
     const v = readStyle(n, S.prop), sc = getScale(P.scale), i = sc.findIndex((e) => Math.abs(e.px - (v.px ?? baseOf(n, S.prop))) < 0.6);
-    return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button><button data-a="reset" title="Повернути вихідне">↺</button></div><div class="ed-val"><select data-a="pick" title="Вибрати токен зі шкали"><option value="">значення зі шкали (${sc.length})…</option>${sc.map((e) => `<option value="${esc(e.name)}">${esc(e.name)} · ${r1(e.px / unit())}u</option>`).join('')}</select></div>${dn ? `<div class="ed-meta warn">розподіл вільного місця (${esc(dn.jcProp)}: ${esc(dn.jc)}) — не gap. Фактична відстань між дітьми: ${fmtLen(dn.dist)} · ${fmtU(dn.dist)}; ${esc(dn.gapProp)} зараз ${fmtLen(dn.gap)} (мінімум)</div>` : ''}<div class="ed-meta">крок шкали ${i >= 0 ? i + 1 : '—'}/${sc.length}${i >= 0 && sc[i].aliases.length ? ' · також ' + esc(sc[i].aliases.slice(0, 2).join(', ')) : ''} · ↑/→ більше, ↓/← менше, Shift ×${CFG.shiftSteps}, Alt усі боки</div>`;
+    return `${sizeSourceHtml(n, P.css[0])}<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button><button data-a="reset" title="Повернути вихідне">↺</button></div><div class="ed-val"><select data-a="pick" title="Вибрати токен зі шкали"><option value="">значення зі шкали (${sc.length})…</option>${sc.map((e) => `<option value="${esc(e.name)}">${esc(e.name)} · ${r1(e.px / unit())}u</option>`).join('')}</select></div>${dn ? `<div class="ed-meta warn">розподіл вільного місця (${esc(dn.jcProp)}: ${esc(dn.jc)}) — не gap. Фактична відстань між дітьми: ${fmtLen(dn.dist)} · ${fmtU(dn.dist)}; ${esc(dn.gapProp)} зараз ${fmtLen(dn.gap)} (мінімум)</div>` : ''}<div class="ed-meta">крок шкали ${i >= 0 ? i + 1 : '—'}/${sc.length}${i >= 0 && sc[i].aliases.length ? ' · також ' + esc(sc[i].aliases.slice(0, 2).join(', ')) : ''} · ↑/→ більше, ↓/← менше, Shift ×${CFG.shiftSteps}, Alt усі боки</div>`;
   }
   function renderInfo() {
     const u = unit(), keepTop = pInfo.scrollTop, ae = shadowActive(), aeKey = ae && /^(INPUT|SELECT)$/.test(ae.tagName) && pInfo.contains(ae) ? ['data-a', 'data-lay', 'data-p'].map((k) => [k, ae.getAttribute(k)]).find((x) => x[1] != null) : null;
@@ -1233,6 +1313,9 @@ export function initEdit(deps) {
       case 'inc': stepProp(1, 1); break;
       case 'reset': resetProp(S.el, S.prop); break;
       case 'distfix': distFix(S.el); break;
+      case 'h-fix': hintFix(); break;
+      case 'h-min': hintMin(); break;
+      case 'h-parent': if (S.el?.parentElement && S.el.parentElement !== document.body) select(S.el.parentElement); break;
       case 'mv-left': swapDir('left'); break;
       case 'mv-right': swapDir('right'); break;
       case 'mv-up': swapDir('up'); break;
