@@ -809,11 +809,12 @@
 /* ===================================================================
    Ф'ючерсні бочки (barrels.html), редизайн «Світло в погребі» (15.10): hero → анатомія бочки (wood) → від бочки до пляшки (cellar) →
    арифметика (paper) → подальша витримка (wood) → ціна (cellar). Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу.
-   Компоненти: barrels-note, barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
+   Компоненти: barrels-note (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
 :root {
   --font-size-barrels-hero: calc(88 * var(--u));      /* H1 hero (більший за --font-size-hero 55: п'ять слів у два рядки по центру фото) */
+  --lh-barrels-hero: 1.05;                            /* міжрядковий H1 hero */
   --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
   --container-barrels-hero-title: calc(1100 * var(--u)); /* ширина H1 hero (два рядки) */
   --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
@@ -822,9 +823,13 @@
   --size-barrels-slot-outline: 2px;                   /* ?slots=on: пунктир навколо місць під фото/тексти (лише режим огляду) */
   --size-barrels-sr: 1px;                             /* .bx-sr — текст лише для читачів екрана (класичний visually-hidden 1×1px) */
   --container-barrels-slots: calc(560 * var(--u));    /* ?slots=on: ширина переліку місць */
+  --size-barrels-slots-max-h: 60vh;                   /* ?slots=on: перелік не вищий за 60% екрана (далі — прокрутка) */
   --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 82%, transparent);    /* затемнення hero зверху (читабельність тексту й пілюлі); виміряно пікселями: контраст заголовка ≥ 4.5:1 у медіані */
   --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 58%, transparent);    /* середина верхнього затемнення (під заголовком) */
   --color-barrels-shade-bottom: color-mix(in srgb, var(--color-brown) 72%, transparent); /* теплий перехід знизу в кімнату «дерево» наступної секції */
+  --stop-barrels-shade-mid: 38%;                      /* затемнення hero зверху: повна сила → середня (під текстом) → */
+  --stop-barrels-shade-end: 62%;                      /* … прозоре з 62% висоти */
+  --stop-barrels-shade-bottom-end: 34%;               /* коричневий перехід знизу — на нижню третину */
   --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
 
   /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
@@ -883,6 +888,7 @@
   --size-barrels-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки: екран − пілюля − повітря знизу */
   --size-barrels-stage-w: calc((var(--container-barrels) - var(--space-barrels-col-gap)) / 2);
   --size-barrels-stage-rise: calc(var(--size-barrels-stage-w) * var(--ratio-barrels-arch-rise));
+  --size-barrels-stage-glow: 72% 58%;                 /* еліпс «світла» під склепінням арки-сцени (ширина висота, від верху) */
   --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині внутрішньої рамки */
   --size-barrels-lamp-w: calc(56 * var(--u));         /* лампа під склепінням — джерело «світла в погребі» */
   --size-barrels-chapter-h: calc(var(--size-barrels-stage-h) * 0.78); /* висота розділу: одна цифра на екран */
@@ -916,6 +922,7 @@
 
   /* S6 «Ціна»: сертифікати (спільна сітка рядків — subgrid), маршрут, фото в арці */
   --fr-barrels-cert-accent: 1.14fr;                   /* 50 L ширший за 200 L (рішення замовника: першим просуваємо 50 L) */
+  --size-barrels-cert-glow: 80% 50%;                  /* еліпс «світла» зверху сертифіката 50 L */
   --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами */
   --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле сертифіката (від зовнішньої рамки) */
   --space-barrels-cert-row: var(--space-30);          /* вертикальний крок між рядками сертифіката */
@@ -930,6 +937,7 @@
   --space-barrels-price-photo-gap: calc(70 * var(--u)); /* додатковий відступ фото від сертифікатів (понад --space-barrels-cert-gap) */
   --space-barrels-route-gap: var(--space-20);
   --size-barrels-route-wave: calc(48 * var(--u));
+  --lh-barrels-note: 1.5;                             /* дрібний текст-застереження */
   --container-barrels-note: calc(900 * var(--u));
 
   /* S4 «Арифметика бочки»: єдина світла кімната; заголовок + легенда зверху, нижче дві групи-«гросбухи» на спільних рядках (subgrid)
