@@ -3,9 +3,10 @@
       <div class="tour-card__head">
         <p class="t-kicker" data-reveal="rise">{{kicker}}</p>
         <h2 class="t-hero" data-reveal="rise">{{title}}</h2>
-        <p class="tour-card__body t-desc" data-reveal="rise">{{text}}</p>
+        {{#text}}<p class="tour-card__body t-desc" data-reveal="rise">{{text}}</p>{{/text}}{{#list}}
+        <ul class="tour-card__body lp-list t-desc" data-reveal="rise">{{list}}</ul>{{/list}}
       </div>
-      <!--@include components/btn variant="btn--teal" href="{{href}}" text="{{btn}}" arrow="arrow-up-right" reveal="rise"-->
+      <!--@include components/btn variant="btn--{{tone|teal}}" href="{{href}}" text="{{btn}}" arrow="arrow-up-right" reveal="rise"-->
     </div>
-    <div class="tour-card__photo" data-parallax data-parallax-bleed><img data-reveal="fade" src="/assets/img/{{photo}}" alt="{{alt}}" loading="lazy"></div>
+    <div class="tour-card__photo" data-parallax data-parallax-bleed{{#slot}} data-slot="{{slot}}"{{/slot}}><img data-reveal="fade" src="/assets/img/{{photo}}" alt="{{alt}}" loading="lazy"></div>
   </article>

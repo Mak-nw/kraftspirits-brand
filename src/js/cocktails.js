@@ -44,7 +44,7 @@ document.querySelectorAll('[data-cocktail]').forEach((block) => {
 if (/[?&]slots=on/.test(location.search)) {
   document.documentElement.classList.add('show-slots');
   const list = document.createElement('ol');
-  list.className = 'bx-slots';
+  list.className = 'lp-slots';
   document.querySelectorAll('[data-cocktail]').forEach((b) => {
     const li = document.createElement('li');
     const title = b.querySelector('h2').textContent;

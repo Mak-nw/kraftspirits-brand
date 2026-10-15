@@ -1,6 +1,8 @@
-// Сторінка «Ф'ючерсні бочки»: (1) зациклені SVG-анімації грають лише поки секція [data-loop] у в'юпорті (клас .is-playing; CSS ставить animation-play-state: paused поза екраном);
+// Шаблон посадкової сторінки (lp: barrels.html, excursions.html; docs/page-template.md). Поведінка залежить лише від того, які секції є в даних:
+// (1) зациклені SVG-анімації грають лише поки секція [data-loop] у в'юпорті (клас .is-playing; CSS ставить animation-play-state: paused поза екраном);
 // (2) лічильники [data-count-to] 0 → значення при вході у в'юпорт (--duration-reveal, ease-out; без reduced-motion; значення в DOM — фінальне для SEO/без JS; до старту число приховане, без мигання);
-// (3) reveal і паралакс hero — спільні модулі сайту; (4) розділи «від бочки до пляшки» перемикають стан гравюри (data-step).
+// (3) reveal і паралакс hero — спільні модулі сайту; (4) кроки [data-steps] перемикають стан гравюри арки (data-step);
+// (5) ?slots=on — огляд місць під фото; (6) FAQ — акордеони DS (accordion.js); (7) мапа DS (contacts-map.js) — лише якщо секція «місце» є на сторінці.
 import { cssTimeMs } from './duration.js';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11,7 +13,7 @@ if ('IntersectionObserver' in window) {
   });
   document.querySelectorAll('[data-loop]').forEach((el) => loops.observe(el));
 
-  // (4) «Від бочки до пляшки»: активний розділ = той, що перетинає середню смугу в'юпорта; data-step на секції [data-steps]
+  // (4) кроки: активний крок = той, що перетинає середню смугу в'юпорта; data-step на секції [data-steps]
   //     керує гравюрою (CSS: підсвічена частина, рівень рідини). До першого розділу — "0" (бочка порожня). Це стан, не скрол-анімація;
   //     при reduced-motion стан теж перемикається, лише без переходів (reveal.css гасить transition/animation).
   document.querySelectorAll('[data-steps]').forEach((sec) => {
@@ -22,7 +24,7 @@ if ('IntersectionObserver' in window) {
     sec.querySelectorAll('[data-step]').forEach((ch) => io.observe(ch));
   });
 
-  // (2) лічильники: до старту число приховане CSS (barrels.css: html.js .page-barrels [data-count-to]:not([data-count]) { opacity: 0 }), тож 383 → 0 → … не мигає;
+  // (2) лічильники: до старту число приховане CSS (lp.css: html.js .page-lp [data-count-to]:not([data-count]) { opacity: 0 }), тож 383 → 0 → … не мигає;
   //     у DOM воно завжди фінальне (SEO/без JS: html.js немає — видно одразу). data-count: "run" (рахує) → "done" (фінал). reduced-motion — одразу "done".
   const counterEls = [...document.querySelectorAll('[data-count-to]')];
   if (!reduce) {
@@ -56,7 +58,7 @@ else document.querySelectorAll('[data-count-to]').forEach((el) => { el.dataset.c
 if (/[?&]slots=on/.test(location.search)) {
   document.documentElement.classList.add('show-slots');
   const list = document.createElement('ol');
-  list.className = 'bx-slots t-text';
+  list.className = 'lp-slots t-text';
   list.setAttribute('aria-label', 'Місця під фото й тексти');
   document.querySelectorAll('[data-slot]').forEach((el, i) => {
     el.dataset.slotN = String(i + 1);
@@ -66,6 +68,15 @@ if (/[?&]slots=on/.test(location.search)) {
   });
   document.body.append(list);
 }
+
+// (6) FAQ (секція faq): ті самі акордеони й клавіатура, що на faq.html
+if (document.querySelector('[data-faq-list]')) {
+  const { initAccordions, initAccordionKeys } = await import('./accordion.js');
+  initAccordions();
+  initAccordionKeys();
+}
+// (7) мапа (секція place): той самий модуль, що на contacts.html (maplibre — окремий чанк, вантажиться лише тут)
+if (document.querySelector('[data-contacts-map]')) import('./contacts-map.js');
 
 await import('./reveal.js');
 await import('./parallax.js');

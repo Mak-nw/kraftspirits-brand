@@ -1,0 +1,8 @@
+<svg class="lp-engraving" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+  <!-- гравюра днища (тимчасова, СЛОТ під фото IMG-4): одне коло-обідок hairline і клепки тонкими лініями у кільці між обідком (r 92) і порожнім центром (r 32):
+       лінії обриваються перед центром, і їхні кінці самі утворюють коло навколо значка — без окремої плашки й подвійних кіл (рев'ю f8003f2f, FIX-4, 8bc21d47).
+       Значок — іконка DS (поле icon плитки) поверх центру, див. partials/lp/tile.html. МЕДІА шаблону lp (тип tiles, поле engraving). id кліпу — за параметром orn (унікальний на сторінці) -->
+  <defs><clipPath id="lp-engraving-{{orn}}-in"><path clip-rule="evenodd" d="M100 8 A92 92 0 1 1 99.99 8 Z M100 68 A32 32 0 1 1 99.99 68 Z"/></clipPath></defs>
+  <g clip-path="url(#lp-engraving-{{orn}}-in)"><path class="lp-engraving__boards" d="M16 0 V200 M28 0 V200 M40 0 V200 M52 0 V200 M64 0 V200 M76 0 V200 M88 0 V200 M100 0 V200 M112 0 V200 M124 0 V200 M136 0 V200 M148 0 V200 M160 0 V200 M172 0 V200 M184 0 V200"/></g>
+  <circle class="lp-engraving__rim" cx="100" cy="100" r="92"/>
+</svg>

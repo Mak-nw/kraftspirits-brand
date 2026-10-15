@@ -3,7 +3,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
-import { barrels, barrelsView } from './src/data/barrels.js';
+import { barrels } from './src/data/barrels.js';
+import { lpView } from './src/data/lp-schema.js';
 import { COCKTAILS } from './src/data/cocktails.js';
 import { PRODUCTS } from './src/data/products.js';
 import { cocktailsView } from './src/data/cocktails-view.js';
@@ -30,9 +31,10 @@ const CONTACTS = contactsView(contacts);
 const escapeHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? (key.endsWith('Html') ? CONTACTS[key] : escapeHtml(CONTACTS[key])) : m)); // ключі *Html — готова розмітка (екранування в contacts.js)
 
-// %barrels.<ключ>% у HTML -> значення з src/data/barrels.js (ціни, кількість пляшок, дрібний текст) для barrels.html
-const BARRELS = barrelsView(barrels);
-const fillBarrels = (html) => html.replace(/%barrels\.(\w+)%/g, (m, key) => (key in BARRELS ? escapeHtml(BARRELS[key]) : m));
+// ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (docs/page-template.md): <!--@page name--> у <name>.html -> уся сторінка з partials/lp/page.html і секцій partials/lp/<type>.html
+// за даними src/data/<name>.js (схема й перевірка — src/data/lp-schema.js: збірка падає з поясненням, якщо дані не за схемою).
+// <!--@lp name id--> -> одна секція сторінки (демо в design-system.html). Нова сторінка = файл даних + рядок тут + <name>.html з одним рядком <!--@page name-->.
+const LP = { barrels: lpView(barrels) };
 
 // <!--@include name--> -> partials/name.html (вкладені include підтримуються).
 // Параметри: <!--@include cta title="Текст"--> -> у partial {{title}} замінюється значенням;
@@ -42,6 +44,10 @@ const ATTR_RE = /([\w-]+)="([^"]*)"/g;
 // <!--@each list name--> -> partials/name.html для КОЖНОГО елемента списку (параметри = поля елемента, уже екрановані);
 // list — ключ у LISTS (верхній рівень) або поле-масив поточного елемента (вкладений цикл: фото, кроки, інгредієнти коктейлю).
 const EACH_RE = /<!--@each ([\w]+) ([\w/-]+)\s*-->/g;
+// шаблон lp: сторінка, секції сторінки (у partials/lp/page.html — зі scope сторінки) і одна секція для демо
+const PAGE_RE = /<!--@page ([\w-]+)\s*-->/g;
+const SECTIONS_RE = /<!--@sections\s*-->/g;
+const LPSEC_RE = /<!--@lp ([\w-]+) ([\w-]+)\s*-->/g;
 // Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
 const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
 const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2) }; // cocktailsDemo — один блок для design-system.html
@@ -66,8 +72,13 @@ function htmlPartials() {
     // {{key}} або {{key|типове значення}}
     .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? def ?? '');
   const readPartial = (name) => readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8');
+  const lpPage = (name) => { const pg = LP[name]; if (!pg) throw new Error(`@page ${name}: немає даних у LP (vite.config.js)`); return pg; };
+  const lpSection = (s) => render(fill(readPartial(`lp/${s.type}`), s), s);
   const render = (html, scope = {}) =>
     html
+      .replace(PAGE_RE, (_, name) => { const pg = lpPage(name); return render(fill(readPartial('lp/page'), pg), pg); })
+      .replace(SECTIONS_RE, () => (scope.sections || []).map(lpSection).join(''))
+      .replace(LPSEC_RE, (_, name, id) => { const s = lpPage(name).sections.find((x) => x.id === id); if (!s) throw new Error(`@lp ${name} ${id}: немає секції`); return lpSection(s); })
       .replace(EACH_RE, (_, key, name) => {
         const list = Array.isArray(scope[key]) ? scope[key] : LISTS[key] || [];
         const tpl = readPartial(name);
@@ -81,7 +92,7 @@ function htmlPartials() {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
     // %BASE_URL% (404.html: <base href>) підставляємо самі, щоб dev і build/preview давали однаковий результат
-    transformIndexHtml: { order: 'pre', handler: (html) => fillBarrels(fillContacts(render(html))).replaceAll('%BASE_URL%', base) },
+    transformIndexHtml: { order: 'pre', handler: (html) => fillContacts(render(html)).replaceAll('%BASE_URL%', base) },
     handleHotUpdate({ file, server }) {
       if (file.includes('/partials/')) server.ws.send({ type: 'full-reload' });
     },

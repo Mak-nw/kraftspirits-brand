@@ -29,7 +29,9 @@
 @import './product.css';
 @import './contacts.css';
 @import './feedback.css';
-@import './barrels.css';
+@import './lp.css';
+@import './lp-media.css';
+@import './themes/barrels.css';
 @import './cocktails.css';
 @import './faq.css';
 @import './under-construction.css';

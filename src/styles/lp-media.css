@@ -1,0 +1,47 @@
+/* МЕДІА-ІЛЮСТРАЦІЇ шаблону посадкової сторінки (partials/media/*): обираються в даних сторінки, як фото (scene / engraving / wall).
+   Це не блоки сторінки, а «малюнки»: гравюри SVG (stroke currentColor, тонкі лінії --svg-stroke-hair, заливки лише токенами) і маска-стіна пляшок.
+   Анімації — transform / opacity / stroke-dashoffset / clip-path появи, без скрол-анімацій; цикли — лише поки секція [data-loop] у в'юпорті. */
+
+/* ---------- scene «barrels-scene» (кроки «від бочки до пляшки»): SVG 600×700, притиснута донизу (xMidYMax meet) всередині арки ----------
+   Активний крок (data-step секції, lp.js) — його частина на повну силу, решта приглушена; рівень рідини — СТАН кроку (transition). */
+.lp-scene { position: absolute; inset: var(--space-lp-scene-inset); width: calc(100% - 2 * var(--space-lp-scene-inset)); height: calc(100% - 2 * var(--space-lp-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.lp-sc-hair { stroke-width: var(--svg-stroke-hair); }
+.lp-sc-soft { opacity: var(--opacity-disabled); } /* другорядні лінії сцени (підлога, тінь) — те саме золото, приглушене */
+.lp-sc-liquid { fill: var(--lp-amber); stroke: none; }
+.lp-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
+.lp-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
+.lp-sc-wisp { transform-box: fill-box; }
+.lp-sc-part { transition: opacity var(--duration-barrels-step) var(--ease-out); }
+.lp-sc-level { transition: transform var(--duration-barrels-step) var(--ease-out); }
+.js [data-steps] .lp-sc-part { opacity: var(--opacity-disabled); }
+.js [data-steps][data-step="1"] .lp-sc-part--pour,
+.js [data-steps][data-step="2"] .lp-sc-part--angels,
+.js [data-steps][data-step="3"] .lp-sc-part--bottle { opacity: 1; }
+.js [data-steps][data-step="0"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-empty)); }
+.js [data-steps][data-step="2"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-angels)); }
+.js [data-steps][data-step="3"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-bottled)); }
+.js [data-steps]:not([data-step="3"]) .lp-sc-level--bottle { transform: translateY(var(--shift-barrels-bottle-empty)); }
+@keyframes lp-sc-flow { to { stroke-dashoffset: calc((var(--size-barrels-dash) + var(--size-barrels-gap)) * -1); } }
+@keyframes lp-sc-rise { 0% { transform: translateY(var(--shift-barrels-wisp-from)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(var(--shift-barrels-wisp-to)); opacity: 0; } }
+.js [data-steps].is-playing[data-step="1"] .lp-sc-stream,
+.js [data-steps].is-playing[data-step="3"] .lp-sc-pipe { animation: lp-sc-flow var(--duration-flow) linear infinite; }
+.js [data-steps].is-playing[data-step="2"] .lp-sc-wisp { animation: lp-sc-rise var(--duration-loop-mid) var(--ease-loop) infinite; }
+.lp-sc-wisp--2 { animation-delay: calc(var(--duration-loop-mid) / -3); }
+.lp-sc-wisp--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }
+.js [data-loop]:not(.is-playing) *, .js [data-loop]:not(.is-playing) *::before { animation-play-state: paused; }
+
+/* ---------- wall «стіна пляшок» (compare): маска-блок barrels-bottle-block.svg (16 × 6 = 96) в ОДНОМУ масштабі ----------
+   one — 1 блок по лівому краю групи; four-minus-one — 4 блоки на всю ширину групи (повтор «space»: перший і останній — на краях), верхню праву
+   пляшку останнього стирає другий шар маски (383 = 4 × 96 − 1). Стіни однакової висоти стоять на спільній нижній межі рядка (без лінії-полиці, рев'ю cf9a7bd2).
+   Зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок. */
+.lp-wall { --lp-wall-color: var(--lp-on-paper); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-lp-wall-top); background: var(--lp-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
+.lp-wall.lp-wall--one { justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
+.lp-wall.lp-wall--four-minus-one { margin-inline: var(--shift-barrels-wall-ink); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat, linear-gradient(var(--color-teal) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; }
+/* поява: стіна «наповнюється» знизу вгору разом із reveal групи (один раз; без JS / reduced-motion — одразу повна) */
+.js-reveal .lp-group[data-reveal] .lp-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
+.js-reveal .lp-group[data-reveal].is-in .lp-wall { clip-path: inset(0); }
+
+/* ---------- engraving «barrels-head» (tiles): днище бочки — одне коло-обідок і клепки тонкими лініями в кільці навколо порожнього центру (іконка DS) ---------- */
+.lp-engraving { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; }
+.lp-engraving__rim, .lp-engraving__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); } /* одна hairline-лінія DS (1px за будь-якого масштабу) */
+.lp-engraving__rim { stroke-width: var(--border-barrels-rim); } /* обідок днища вдвічі товщий за клепки (рев'ю 3cc0afdd) */

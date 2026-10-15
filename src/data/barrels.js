@@ -1,62 +1,90 @@
-// Дані сторінки «Ф'ючерсні бочки Bazylsprings» (barrels.html). Єдине джерело чисел і текстів із банера замовника.
-// У HTML підставляються через %barrels.<ключ>% (vite.config.js → barrelsView); лічильники в src/js/barrels.js читають data-count-to із DOM.
-const NB = ' '; // нерозривний пробіл: «€ 6 000» не розривається між рядками
+// Дані сторінки «Ф'ючерсні бочки Bazylsprings» (barrels.html) за схемою шаблону посадкової сторінки (src/data/lp-schema.js, docs/page-template.md).
+// Сторінка = ці дані + медіа (шляхи нижче) + тема src/styles/themes/barrels.css. Розмітку будує vite.config.js (<!--@page barrels-->) з partials/lp/*.
+// Єдине джерело чисел і текстів із банера замовника: змінюйте значення тут (поля = поля адмінки).
+const NB = ' '; // нерозривний пробіл: «€ 6 000» не розривається між рядками
+
+// числа (рішення замовника 15.10): ціна, вихід пляшок 0,7 л, вартість вмісту однієї пляшки, міцність, «частка ангелів»
+const B50 = { size: '50 L', price: `€${NB}2${NB}000`, bottles: 96, bottlesWord: 'пляшок', cost: `€${NB}20,83` };
+const B200 = { size: '200 L', price: `€${NB}6${NB}000`, bottles: 383, bottlesWord: 'пляшки', cost: `€${NB}15,66` };
+// що входить у ціну (рішення замовника 15.10: «власність, сертифікат»; рев'ю 395a73a7/f733e520 — рядок «інші умови» прибрано). Інших пунктів НЕ вигадувати.
+const INCLUDES = ['Бочка у вашій власності', 'Сертифікат на бочку'];
+// Смакові ноти «Подальшої витримки» — ЧЕРНЕТКА (замовник 15.10 попросив придумати): загальновідомі ноти СТИЛЮ вина (марсала «оро», мадера, портвейн тоні,
+// херес олоросо), орієнтовні — не опис конкретних бочок; по 3 слова, щоб плашки були рівні. Порожнє значення — рядок не показується.
+const NOTES = { marsala: 'абрикос, мед, мигдаль', madeira: 'карамель, кава, цедра', port: 'інжир, родзинки, ірис', sherry: 'горіх, чорнослив, прянощі' };
+const DISCLAIMER = 'Розрахунок наведено для початкової міцності дистиляту 63% та умовних втрат 15% під час витримки. Кількість пляшок і вартість є орієнтовними та можуть відрізнятися залежно від тривалості витримки та інших факторів. У вартість не включено тару, розлив, податки та інші витрати.';
+const TEX = (n, name) => `Фото-текстура «${name}»: AI-кадр (${n}, Seedream 5 Pro) — за потреби замінити на макрозйомку`;
+const HEAD = (wine) => `Фото: днище бочки з-під ${wine} (зйомка або AI за ТЗ IMG-4) — замінить гравюру на плашці`;
 
 export const barrels = {
-  title: "Ф'ючерсні бочки Bazylsprings",
-  subtitle: 'Екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу',
-  route: { from: 'Кентуккі (США)', to: 'Київ (Україна)' },
-  // ціни (формат «€ 6 000»)
-  price200: `€${NB}6${NB}000`,
-  price50: `€${NB}2${NB}000`,
-  // скільки пляшок 0,7 л і вартість вмісту однієї пляшки (+ форма слова за числом: 383 пляшки, 96 пляшок)
-  bottles200: 383,
-  bottles50: 96,
-  bottles200Word: 'пляшки',
-  bottles50Word: 'пляшок',
-  // що входить у ціну (рішення замовника 15.10: «власність, сертифікат»; рев'ю 395a73a7/f733e520 — рядок «інші умови» прибрано). Інших пунктів НЕ вигадувати.
-  includeOwnership: 'Бочка у вашій власності',
-  includeCertificate: 'Сертифікат на бочку',
-  cost200: `€${NB}15,66`,
-  cost50: `€${NB}20,83`,
-  // міцність: у бочку / питна
-  abvIn: '63%',
-  abvOut: '40%',
-  // «частка ангелів» (рішення замовника 15.10): показувати числом як приблизне — знак ≈ (підпис «орієнтовно» прибрано, рев'ю bed93e9e; наближеність пояснює дрібний текст у «Ціні»).
-  // Число = умовні втрати з розрахунку в дрібному тексті (disclaimer), не технологічна норма.
-  angelsShare: '≈15%',
-  // Смакові ноти для «Подальшої витримки» — ЧЕРНЕТКА (замовник 15.10 попросив придумати): загальновідомі ноти СТИЛЮ вина, з-під якого бочка
-  // (марсала «оро», мадера, портвейн тоні, херес олоросо), орієнтовні — не опис конкретних бочок; по 3 слова, щоб плашки були рівні.
-  // Замовник може уточнити тут; порожнє значення — рядок під регіоном не показується (CSS :empty).
-  finishNotes: { marsala: 'абрикос, мед, мигдаль', madeira: 'карамель, кава, цедра', port: 'інжир, родзинки, ірис', sherry: 'горіх, чорнослив, прянощі' },
-  disclaimer:
-    'Розрахунок наведено для початкової міцності дистиляту 63% та умовних втрат 15% під час витримки. Кількість пляшок і вартість є орієнтовними та можуть відрізнятися залежно від тривалості витримки та інших факторів. У вартість не включено тару, розлив, податки та інші витрати.',
+  slug: 'barrels',
+  theme: 'barrels',
+  tone: 'teal',
+  metaTitle: "Ф'ючерсні бочки Bazylsprings — YasnoCraft × Bazylsprings",
+  metaDescription: "Ф'ючерсні бочки Bazylsprings: екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу, 200 L і 50 L. Від бочки до пляшки, орієнтовний вихід пляшок 0,7 л, подальша витримка та ціна.",
+  sections: [
+    {
+      type: 'hero', id: '',
+      title: "Ф'ючерсні бочки Bazylsprings",
+      lead: 'Екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу',
+      img: '/assets/img/barrels-hero.webp', alt: '',
+      slot: 'Фото hero: наявний AI-кадр barrels-hero.webp; за ТЗ IMG-1 — асиметричний кадр (бочки праворуч) або нова зйомка',
+      cta: { text: 'Переглянути ціни', href: '#price' },
+    },
+    {
+      type: 'layers', id: 'benefits', room: 'warm',
+      kicker: 'Переваги бочок', title: 'Що дає бочка',
+      items: [
+        { key: 'char', icon: 'barrels-char', title: 'Сильний обпал', text: 'Формує глибину та структуру', img: '/assets/img/barrels-tex-char.webp', slot: TEX('IMG-T1', 'обпалена клепка') },
+        { key: 'caramel', icon: 'barrels-caramel', title: 'Карамелізація целюлози', text: 'Надає солодкі ванільні відтінки', img: '/assets/img/barrels-tex-caramel.webp', slot: TEX('IMG-T2', 'карамелізований шар дерева') },
+        { key: 'toast', icon: 'barrels-toast', title: 'Ароматичні сполуки', text: 'Збагачують букет складними нотами', img: '/assets/img/barrels-tex-toast.webp', slot: TEX('IMG-T3', 'підсмажена поверхня дуба') },
+        { key: 'oak', icon: 'barrels-oak', title: 'Феноли та смак', text: 'Додають пряність, дубові й димні нюанси', img: '/assets/img/barrels-tex-oak.webp', slot: TEX('IMG-T4', 'світлий дуб') },
+      ],
+    },
+    {
+      type: 'steps', id: 'how', room: 'deep',
+      title: 'Від бочки до вашої пляшки',
+      scene: 'barrels-scene',
+      items: [
+        { key: 'pour', value: '63%', title: 'Заливка', text: 'У бочку заливається дистилят міцністю близько 63%' },
+        // «частка ангелів» (рішення замовника 15.10): число як приблизне — знак ≈; наближеність пояснює дрібний текст у «Ціні»
+        { key: 'angels', value: '≈15%', title: 'Витримка', text: 'Під час витримки приблизно 15% спирту природно випаровується («частка ангелів»)' },
+        { key: 'bottle', value: '40%', title: 'Розлив', text: 'Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л' },
+      ],
+    },
+    {
+      type: 'compare', id: 'profit', room: 'paper',
+      title: 'Скільки пляшок ви отримаєте?',
+      groups: [
+        { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'one',
+          facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
+        { key: 'b200', label: `Бочка ${B200.size}`, span: 9, align: 'center', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'four-minus-one',
+          facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
+      ],
+    },
+    {
+      type: 'tiles', id: 'next', room: 'paper', join: true,
+      title: 'Подальша витримка',
+      lead: `Бочки з-під марсали, мадери, портвейну, хересу${NB}— кожна додає свій унікальний відтінок смаку`,
+      items: [
+        { key: 'marsala', engraving: 'barrels-head', icon: 'barrels-grape', name: 'Marsala', origin: 'Сицилія, Італія', notes: NOTES.marsala, slot: HEAD('марсали') },
+        { key: 'madeira', engraving: 'barrels-head', icon: 'barrels-mountain', name: 'Madeira', origin: 'Мадейра, Португалія', notes: NOTES.madeira, slot: HEAD('мадери') },
+        { key: 'port', engraving: 'barrels-head', icon: 'barrels-glass', name: 'Port', origin: 'Долина Дору, Португалія', notes: NOTES.port, slot: HEAD('портвейну') },
+        { key: 'sherry', engraving: 'barrels-head', icon: 'barrels-sun', name: 'Sherry', origin: 'Херес, Іспанія', notes: NOTES.sherry, slot: HEAD('хересу') },
+      ],
+    },
+    {
+      type: 'offers', id: 'price', room: 'deep',
+      bg: '/assets/img/barrels-price-bg.webp', bgW: 1620, bgH: 1080,
+      bgSlot: 'Фото «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку (≥ 2400 px по довгій стороні, MEDIA.md)',
+      title: 'Ціна',
+      route: { from: 'Кентуккі (США)', to: 'Київ (Україна)', icon: 'barrels-ship' },
+      lead: DISCLAIMER,
+      items: [B50, B200].map((b) => ({
+        key: `b${b.size.replace(/\D/g, '')}`, title: `Бочка ${b.size}`, price: b.price,
+        facts: [{ dt: 'Пляшок по 0,7 л', dd: `≈ ${b.bottles}${NB}шт.` }, { dt: 'Вартість вмісту однієї пляшки', dd: `≈ ${b.cost}` }],
+        includes: INCLUDES,
+        cta: { text: 'замовити', href: `feedback.html?topic=barrel&size=${b.size.replace(/\D/g, '')}` },
+      })),
+    },
+  ],
 };
-
-// плоский вигляд для %barrels.key% у HTML
-export function barrelsView(b) {
-  return {
-    title: b.title,
-    subtitle: b.subtitle,
-    routeFrom: b.route.from,
-    routeTo: b.route.to,
-    price200: b.price200,
-    price50: b.price50,
-    bottles200: b.bottles200,
-    bottles50: b.bottles50,
-    bottles200Word: b.bottles200Word,
-    bottles50Word: b.bottles50Word,
-    includeOwnership: b.includeOwnership,
-    includeCertificate: b.includeCertificate,
-    cost200: b.cost200,
-    cost50: b.cost50,
-    abvIn: b.abvIn,
-    abvOut: b.abvOut,
-    angelsShare: b.angelsShare,
-    notesMarsala: b.finishNotes.marsala,
-    notesMadeira: b.finishNotes.madeira,
-    notesPort: b.finishNotes.port,
-    notesSherry: b.finishNotes.sherry,
-    disclaimer: b.disclaimer,
-  };
-}

@@ -1,0 +1,17 @@
+    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}" id="{{id}}" aria-labelledby="{{id}}-title">
+      <div class="lp-place__grid">
+        <div class="contacts-panel lp-place__panel" data-reveal="rise">
+          <div class="lp-place__head">
+            {{#kicker}}<p class="t-kicker">{{kicker}}</p>{{/kicker}}
+            <h2 class="t-h2" id="{{id}}-title">{{title}}</h2>
+            {{#lead}}<p class="t-desc">{{lead}}</p>{{/lead}}
+          </div>
+          <div class="contacts-data"><!--@each facts lp/place-fact--></div>
+          {{#ctas}}<div class="contacts-cta"><!--@each ctas lp/place-cta--></div>{{/ctas}}
+        </div>
+        <div class="lp-place__map contacts-map-panel" data-reveal="rise">
+          <!--@include components/contacts-map-->
+        </div>
+      </div>
+    </section>
+
