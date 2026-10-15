@@ -11,6 +11,9 @@
 
 /* вступ і фінальний блок: зелена кімната, 6 середніх колонок, текст по центру */
 .faq-page__intro { padding: var(--space-faq-intro-top) 0 var(--space-faq-room-y); }
+.faq-page__intro:not(.theme-green) { padding-bottom: 0; } /* FAQ (8131e645): без зеленої кімнати — лише h1 темним на beige тлі, далі тіло зі своїм верхнім полем */
+.faq-page__intro:not(.theme-green) > .faq-page__h1 { width: var(--size-faq-w); margin-inline: auto; text-align: center; color: var(--color-green); }
+.page-faq:has(.faq-page__intro:not(.theme-green)) .site-header { background: transparent; } /* 8add73a2: на FAQ без зеленого зверху — зона header прозора, як .page-contacts/.page-product; юридичні сторінки (зелене інтро) без змін */
 .faq-page__more { padding: var(--space-faq-room-y) 0; }
 .faq-page__intro .faq-page__grid, .faq-page__more .faq-page__grid { row-gap: var(--space-faq-head-gap); text-align: center; }
 .faq-page__intro .faq-page__grid > *, .faq-page__more .faq-page__grid > * { grid-column: var(--col-faq-intro); }
@@ -24,6 +27,7 @@
 /* тіло на beige тлі сторінки: кожна група — рядок сітки «заголовок (колонки 1–4, sticky у межах групи) | рядки питань (колонки 5–12)» */
 .faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-green); }
 .faq-page__group { align-items: start; scroll-margin-top: var(--space-faq-anchor); }
-.faq-page__title { grid-column: var(--col-faq-title); position: sticky; top: var(--offset-faq-title-sticky); text-indent: var(--shift-faq-title-ink); } /* оптика: чорнило першої літери на лінії колонки 1 */
+.faq-page__title { grid-column: var(--col-faq-title); text-indent: var(--shift-faq-title-ink); }
+.faq-page__group:has(> .faq-page__text) > .faq-page__title { position: sticky; top: var(--offset-faq-title-sticky); } /* sticky лишився лише на юридичних сторінках; у FAQ заголовки груп не sticky (72ec664c) */ /* оптика: чорнило першої літери на лінії колонки 1 */
 .faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-row-gap); align-items: start; } /* проміжок між двома колонками = вертикальному (--space-faq-row-gap) за рішенням замовника e71b1181; виняток із D12 — check-ds.allow.json */
 .faq-page__col { display: grid; row-gap: var(--space-faq-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки по 4 колонки сітки (5–8 і 9–12): розкриття питання зсуває лише свою колонку */
