@@ -9,6 +9,8 @@ import { PRODUCTS } from './src/data/products.js';
 import { cocktailsView } from './src/data/cocktails-view.js';
 import { FAQ } from './src/data/faq.js';
 import { faqView } from './src/data/faq-view.js';
+import { LEGAL } from './src/data/legal.js';
+import { legalLists } from './src/data/legal-view.js';
 
 const root = import.meta.dirname;
 
@@ -46,6 +48,9 @@ const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1
 // faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group--> і навігація <!--@each faq sections/faq-nav-->; faqDemo — два рядки для design-system.html
 const FAQ_VIEW = faqView(FAQ);
 LISTS.faq = FAQ_VIEW;
+// юридичні сторінки (src/data/legal.js): legalPrivacy / legalCookies / legalOffer / legalDelivery / legalAgePolicy / legalBarrelsTerms — список з одного документа
+// для <!--@each legalX sections/legal-doc--> (вкладені цикли sections → faq-nav і legal-section)
+Object.assign(LISTS, legalLists(LEGAL));
 LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
 
 function htmlPartials() {

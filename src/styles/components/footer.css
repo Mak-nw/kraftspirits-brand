@@ -16,7 +16,10 @@
 .site-footer__legal { display: grid; grid-template-columns: 1fr var(--container-heading-narrow) 1fr; align-items: end; padding-bottom: var(--space-20); position: relative; }
 .site-footer__legal .site-footer__wordmark { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
 .site-footer__copy { justify-self: start; }
-.site-footer__offer { grid-column: 3; justify-self: end; }
+/* юридичні посилання (оферта, конфіденційність, cookies, доставка й оплата, 18+, умови бочок): той самий .nav-link.t-nav; шість посилань не вміщаються в один рядок третьої третини
+   (256px на 1200 / 410px на 1920), тому стоять таблицею 2 колонки × 3 рядки, обидві колонки притиснуті праворуч; нижній рядок на одній лінії з «©» (align-items: end рядка);
+   проміжки як між пунктами навігації header (37u) і списків футера (15u). Тимчасово — до перебудови футера на колонки (рішення замовника) */
+.site-footer__offer { grid-column: 3; justify-self: end; width: var(--size-footer-legal-w); display: grid; grid-template-columns: auto auto; justify-content: end; justify-items: end; column-gap: var(--space-37); row-gap: var(--space-15); } /* ширина = колонки 10–12 сітки каталогу (блок на сітці; третя третина рядка вужча на 16u — блок виступає ліворуч у порожню частину середньої третини, wordmark там не сягає) */
 .site-footer__wordmark { display: flex; justify-content: center; width: var(--container-heading-narrow); white-space: nowrap; }
 /* нижній блок (194:1263) */
 .site-footer__bottom { display: flex; flex-direction: column; align-items: center; gap: var(--space-5); height: var(--footer-h-bottom); overflow: clip; background: var(--color-teal); color: var(--color-gold); }

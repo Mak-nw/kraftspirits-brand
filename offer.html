@@ -6,18 +6,19 @@
   <!--@include head-icons-->
   <!--@include head-fonts-->
   <!--@include head-age-->
-  <title>Сторінка в розробці — YasnoCraft × Bazylsprings</title>
-  <meta name="robots" content="noindex">
+  <title>Публічна оферта — YasnoCraft × Bazylsprings</title>
+  <meta name="description" content="Публічна оферта інтернет-магазину YasnoCraft × Bazylsprings: договір купівлі-продажу алкогольних напоїв на відстані, вік 18+, оформлення, оплата, доставка, якість і правила користування сайтом.">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
 </head>
-<body>
+<body class="page-legal">
   <!--@include body-vw-->
   <!--@include components/age-gate-->
   <!--@include header-->
-  <main class="under-construction-page">
-    <!--@include sections/under-construction page="Публічна оферта" id="rules"-->
+  <main class="faq-page faq-page--legal">
+    <!-- текст — src/data/legal.js (документ «offer»); композиція — як faq.html (design-system.html#legal) -->
+    <!--@each legalOffer sections/legal-doc-->
   </main>
   <!--@include footer-->
 </body>
