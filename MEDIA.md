@@ -145,6 +145,17 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 |---|---|---|---|---|
 | `img/barrels-price-bg.webp` | `photo/Фото Яснокрафт 4/Обладнання/IMG_2221.JPG` (легке підняття тіней, webp q74) | 1620×1080, 25 KB | barrels.html, «Ціна» — тло всієї секції під холодним затемненням | реальне фото днищ бочок; СЛОТ — за потреби нова зйомка |
 
+**AI-зображення** (згенеровано 15.10 з дозволу замовника за ТЗ IMG-T1…T4 нижче; Seedream 5 Pro, 2k 2048², по одному кадру, 4 × 100 = 400 кредитів; обробка: зменшення до 1024² (sips), WebP `cwebp -m 6` — для деталізованих цільовий розмір ≤ 120 KB, дуб — q78):
+
+| Файл | Що | Розмір / вага | Де | Статус |
+|---|---|---|---|---|
+| `img/barrels-tex-char.webp` | макро обпаленої клепки («алігаторна» шкірка, бурштинові відблиски в тріщинах) | 1024×1024, 114 KB | barrels.html, «Що дає бочка» — коло «Сильний обпал» | **AI** (IMG-T1) |
+| `img/barrels-tex-caramel.webp` | макро карамелізованого дуба (глянцеві карамельні цукри на волокнах) | 1024×1024, 116 KB | коло «Карамелізація целюлози» | **AI** (IMG-T2) |
+| `img/barrels-tex-toast.webp` | макро підсмаженого білого дуба (золотисто-коричневий, пори й промені) | 1024×1024, 114 KB | коло «Ароматичні сполуки» | **AI** (IMG-T3) |
+| `img/barrels-tex-oak.webp` | макро сирого білого дуба (світлий медовий, прямі волокна) | 1024×1024, 95 KB | коло «Феноли та смак» | **AI** (IMG-T4) |
+
+Підключення — параметр `img` у `barrels-layer` (barrels.html, design-system); `data-slot` на колі лишається: за потреби AI-кадр можна замінити на макрозйомку.
+
 Векторні ассети (кольорів у файлах немає — маски, колір задають токени `--color-barrels-*`):
 
 | Файл | Призначення |
@@ -155,12 +166,12 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 
 Видалено під час доопрацювання (арки й ілюстративні фактури прибрано за рішенням замовника): `barrels-staves.webp`, `barrels-amber.webp`, `barrels-heads-chalk.webp`, `barrels-tex-char|caramel|toast|oak.svg`, `barrels-pattern-diamond.svg`.
 
-Слоти під майбутні фото (позначені `data-slot`, огляд — `barrels.html?slots=on`): hero (ТЗ IMG-1, зараз наявний AI-кадр `barrels-hero.webp`); 4 фото-текстури шарів клепки в колах S2 (IMG-T1…T4, зараз заглушка-градієнт у тоні шару — ТЗ нижче); 4 днища бочок з-під вин — марсала / мадера / портвейн / херес (IMG-4, зараз гравюри на плашках); тло «Ціни» (зараз реальний кадр IMG_2221).
+Слоти під майбутні фото (позначені `data-slot`, огляд — `barrels.html?slots=on`): hero (ТЗ IMG-1, зараз наявний AI-кадр `barrels-hero.webp`); 4 фото-текстури шарів клепки в колах S2 (IMG-T1…T4 — AI-кадри вже підключені, див. таблицю вище; за потреби — макрозйомка); 4 днища бочок з-під вин — марсала / мадера / портвейн / херес (IMG-4, зараз гравюри на плашках); тло «Ціни» (зараз реальний кадр IMG_2221).
 
-**ТЗ IMG-T1…T4 — фото-текстури шарів клепки (S2 «Що дає бочка»).** Кола діаметром до 360 px на 1920 (@2x ≈ 720 px), кадрування кругле — фактура рівномірна на всю площу, центр важливий, краї обрізаються. Генерація: квадрат 1:1, 2048×2048 (Seedream 5 Pro, 2k); здача — WebP 1024×1024, q≈78, ≤ 120 KB кожна, sRGB → `public/assets/img/barrels-tex-{char|caramel|toast|oak}.webp`, підключення — параметр `img` у `barrels-layer` (barrels.html). Стиль: фотографічна макрозйомка (НЕ ілюстрація й НЕ 3D-рендер), погляд строго зверху на площину, м'яке рівне світло, різкість на всю площу, без віньєтки, тексту, логотипів, людей і предметів; тони в межах палітри (вугільний → карамель/бурштин → підсмажений дуб → світлий дуб), без насиченого червоного й зеленого. Промпти (англ.):
+**ТЗ IMG-T1…T4 — фото-текстури шарів клепки (S2 «Що дає бочка»)** — ВИКОНАНО 15.10 (4 кадри Seedream 5 Pro, 400 кредитів; файли — у таблиці AI-зображень). Кола діаметром до 360 px на 1920 (@2x ≈ 720 px), кадрування кругле — фактура рівномірна на всю площу, центр важливий, краї обрізаються. Генерація: квадрат 1:1, 2048×2048 (Seedream 5 Pro, 2k); здача — WebP 1024×1024, q≈78, ≤ 120 KB кожна, sRGB → `public/assets/img/barrels-tex-{char|caramel|toast|oak}.webp`, підключення — параметр `img` у `barrels-layer` (barrels.html). Стиль: фотографічна макрозйомка (НЕ ілюстрація й НЕ 3D-рендер), погляд строго зверху на площину, м'яке рівне світло, різкість на всю площу, без віньєтки, тексту, логотипів, людей і предметів; тони в межах палітри (вугільний → карамель/бурштин → підсмажений дуб → світлий дуб), без насиченого червоного й зеленого. Промпти (англ.):
 - T1 обпал: `Extreme close-up macro photograph of the heavily charred inner surface of a bourbon barrel stave, deep alligator-skin char pattern with cracked glossy black blisters, faint warm amber glints in the cracks, top-down flat view, even soft studio light, texture fills the entire frame edge to edge, sharp focus throughout, no vignette, photorealistic, square 1:1`
 - T2 карамелізація: `Extreme close-up macro photograph of caramelized oak wood just beneath the char layer of a whiskey barrel stave, glossy dark caramel and amber sugars soaked into the wood grain, translucent toffee tones, top-down flat view, even soft light, texture fills the entire frame, sharp focus, no vignette, photorealistic, square 1:1`
 - T3 тост: `Extreme close-up macro photograph of a toasted American white oak barrel stave surface, medium golden-brown toast, tight visible wood grain and pores, subtle roasting gradient, top-down flat view, even soft light, texture fills the entire frame, sharp focus, no vignette, photorealistic, square 1:1`
 - T4 дуб: `Extreme close-up macro photograph of raw untoasted American white oak, light honey-beige wood with fine straight grain and medullary rays, matte surface, top-down flat view, even soft daylight, texture fills the entire frame, sharp focus, no vignette, photorealistic, square 1:1`
 - Negative для всіх: `illustration, drawing, vector, 3d render, cgi, text, watermark, logo, people, hands, glass, bottle, liquid splash, vignette, blur, oversaturated`
-Кредити: Seedream 5 Pro 2k ≈ 100 / кадр → 4 текстури ≈ 400 (по одному варіанту; із запасом на другий варіант кожної ≈ 800). Генерацію не запускали (лише з окремого дозволу замовника).
+Кредити: Seedream 5 Pro 2k = 100 / кадр (simulate_cost: exact) → 4 текстури = 400; баланс 24 070 → 23 670. Інші генерації (днища IMG-4, hero IMG-1) — НЕ запускали, лише з окремого дозволу замовника.
