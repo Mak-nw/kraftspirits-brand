@@ -25,5 +25,5 @@
 .faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-green); }
 .faq-page__group { align-items: start; scroll-margin-top: var(--space-faq-anchor); }
 .faq-page__title { grid-column: var(--col-faq-title); position: sticky; top: var(--offset-faq-title-sticky); text-indent: var(--shift-faq-title-ink); } /* оптика: чорнило першої літери на лінії колонки 1 */
-.faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-col-gap); align-items: start; }
+.faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-row-gap); align-items: start; } /* проміжок між двома колонками = вертикальному (--space-faq-row-gap) за рішенням замовника e71b1181; виняток із D12 — check-ds.allow.json */
 .faq-page__col { display: grid; row-gap: var(--space-faq-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки по 4 колонки сітки (5–8 і 9–12): розкриття питання зсуває лише свою колонку */
