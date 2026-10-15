@@ -101,18 +101,19 @@
       </div>
     </section>
 
-    <!-- Кімната «погріб» (teal): два «сертифікати» зі спільною сіткою рядків (subgrid), 50 L першим і з акцентом (рішення замовника),
-         праворуч — реальне фото днищ із крейдяними номерами в арці (СЛОТ: можна замінити на нову зйомку) -->
+    <!-- «Ціна» — текст на реальному фото: днища бочок із крейдяними номерами на тлі всієї секції (СЛОТ під нову зйомку), холодне затемнення
+         зліва під текст і сертифікати (контраст ≥ 4.5), праворуч фото проступає. Два однакові «сертифікати» (однакова ширина й вигляд, 50 L —
+         першим) зі спільною сіткою рядків (subgrid); кнопки одного тону -->
     <section class="barrels-price bx-room bx-room--cellar" id="price" aria-labelledby="price-title">
+      <figure class="barrels-price__bg" data-parallax="soft" data-slot="Фото тла «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку">
+        <img src="/assets/img/barrels-price-bg.webp" width="1620" height="1080" alt="" loading="lazy" decoding="async">
+      </figure>
       <div class="barrels-price__grid">
         <h2 class="barrels-price__title t-h2" id="price-title" data-reveal="rise">Ціна</h2>
         <!--@include components/barrels-route-->
-        <!--@include components/barrels-cert size="50 L" mod=" bx-cert--accent" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50" btn="btn--gold"-->
-        <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200" btn="btn--beige"-->
+        <!--@include components/barrels-cert size="50 L" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50"-->
+        <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200"-->
         <p class="barrels-price__note">%barrels.disclaimer%</p>
-        <figure class="barrels-price__photo bx-arch bx-arch--photo" data-parallax="soft" data-slot="Фото: реальний кадр дистилерії (photo/…/Обладнання/IMG_2222) — за потреби замінити на нову зйомку бочок">
-          <img src="/assets/img/barrels-heads-chalk.webp" width="1080" height="1620" alt="Днища дубових бочок із крейдяними номерами на складі дистилерії" loading="lazy" decoding="async">
-        </figure>
       </div>
     </section>
   </main>

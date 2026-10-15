@@ -947,22 +947,25 @@
   --size-barrels-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
   --size-barrels-demo-stage-h: calc(600 * var(--u));
 
-  /* S6 «Ціна»: сертифікати (спільна сітка рядків — subgrid), маршрут, фото в арці */
-  --fr-barrels-cert-accent: 1.14fr;                   /* 50 L ширший за 200 L (рішення замовника: першим просуваємо 50 L) */
-  --size-barrels-cert-glow: 80% 50%;                  /* еліпс «світла» зверху сертифіката 50 L */
+  /* S6 «Ціна»: текст на реальному фото (днища бочок) — сертифікати однакової ширини й вигляду (subgrid), маршрут, застереження */
+  --size-barrels-cert-w: calc(520 * var(--u));        /* ширина КОЖНОГО сертифіката (однакова, рев'ю 345adb85) */
+  --pos-barrels-price-bg: 60% 50%;                    /* кадрування фото тла: днища — у правій частині секції */
+  --color-barrels-price-shade: color-mix(in srgb, var(--color-teal) 90%, transparent);      /* затемнення фото під текстом і сертифікатами (контраст ≥ 4.5) */
+  --color-barrels-price-shade-soft: color-mix(in srgb, var(--color-teal) 12%, transparent); /* праворуч днища проступають */
+  --stop-barrels-price-shade: 62%;                    /* до цієї частки ширини — повне затемнення (сертифікати), далі — перехід */
+  --color-barrels-cert-glass: color-mix(in srgb, var(--color-barrels-cert-bg) 88%, transparent); /* «папір» сертифіката поверх фото */
+  --size-barrels-cert-blur: calc(8 * var(--u));       /* розмиття фото під сертифікатом */
   --shift-barrels-cert-title-ink: -0.025em;           /* оптика назви сертифіката «Бочка …»: бокове поле «Б» 30u — на лівій осі сертифіката (ціна, факти, маркери, кнопка) */
   --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами */
   --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле сертифіката (від зовнішньої рамки) */
   --space-barrels-cert-row: var(--space-30);          /* вертикальний крок між рядками сертифіката */
   --color-barrels-cert-bg: color-mix(in srgb, var(--color-teal) 92%, var(--color-light)); /* «папір» сертифіката: на півтону світліший за кімнату */
   --size-barrels-corner: calc(9 * var(--u));          /* ромб у кутах внутрішньої рамки (центр = кут рамки) */
-  --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» ≈ 3em має вміститися у вужчий (200 L) сертифікат із запасом */
-  --shift-barrels-price-ink: 0.026em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — оптична поправка */
+  --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» */
+  --shift-barrels-price-ink: 0.026em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — зсув праворуч */
   --font-size-barrels-fact: calc(26 * var(--u));      /* значення у рядках «пляшок / вартість вмісту» (EB Garamond, tabular) */
   --size-barrels-bullet: calc(7 * var(--u));          /* ромб-маркер пункту списку: центр = середина висоти великих літер першого рядка */
   --space-barrels-bullet-gap: calc(14 * var(--u));
-  --size-barrels-price-photo-w: calc(380 * var(--u)); /* фото в арці праворуч */
-  --space-barrels-price-photo-gap: calc(70 * var(--u)); /* додатковий відступ фото від сертифікатів (понад --space-barrels-cert-gap) */
   --space-barrels-route-gap: var(--space-20);
   --size-barrels-route-wave: calc(48 * var(--u));
   --lh-barrels-note: 1.5;                             /* дрібний текст-застереження */

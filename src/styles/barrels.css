@@ -222,30 +222,31 @@
 .demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-finish-gap); align-items: stretch; padding: var(--space-50); }
 .ds-barrels-finish .bx-finish { grid-row: 1 / span 4; }
 
-/* ---------- S6 «Ціна»: кімната cellar, сертифікати + маршрут + фото в арці ----------
-   Одна сітка секції: [50 L][200 L][фото]. Сертифікати — subgrid на 5 спільних рядків (назва, ціна, факти, «що входить», кнопка):
-   однакова структура, рядки обох сертифікатів на одних лініях за будь-якої довжини тексту. 50 L — першим, ширшим (--fr-barrels-cert-accent),
-   з яскравішою рамкою й золотою кнопкою (рішення замовника). Подвійна рамка: зовнішня border + внутрішня ::after, ромби — центр = кут
-   внутрішньої рамки. Маркери списку — ромб, центр = середина висоти великих літер першого рядка (базова лінія + --font-cap-height-sans). */
+/* ---------- S6 «Ціна»: текст на реальному фото (днища бочок) — сертифікати + маршрут поверх затемненого фото ----------
+   Фото — тло всієї секції (СЛОТ; паралакс soft), холодне затемнення зліва направо: під текстом і сертифікатами — сильне (контраст ≥ 4.5),
+   праворуч днища проступають. Сітка: [50 L][200 L] однакової ширини (рев'ю 345adb85), 50 L — першим; вигляд обох однаковий, без «світла»
+   й акценту (рев'ю 6f298137), кнопки одного тону btn--gold (рев'ю 7f82b6cb). Сертифікати — subgrid на 6 спільних рядків (назва, ціна,
+   2 рядки фактів, «що входить», кнопка): рядки обох на одних лініях. Подвійна рамка: border + ::after, ромби — центр = кут внутрішньої рамки.
+   Маркери списку — ромб, центр = середина висоти великих літер першого рядка (базова лінія + --font-cap-height-sans). */
 .bx-sr { position: absolute; width: var(--size-barrels-sr); height: var(--size-barrels-sr); margin: calc(-1 * var(--size-barrels-sr)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
 .barrels-price { padding-block: var(--space-barrels-section-y); }
-.barrels-price__grid { display: grid; grid-template-columns: minmax(0, var(--fr-barrels-cert-accent)) minmax(0, 1fr) calc(var(--size-barrels-price-photo-w) + var(--space-barrels-price-photo-gap)); grid-template-rows: repeat(9, auto); column-gap: var(--space-barrels-cert-gap); width: var(--container-barrels); margin-inline: auto; }
-.barrels-price__title { grid-column: 1 / 3; grid-row: 1; margin-top: var(--shift-barrels-cap-top); }
-.bx-route { grid-column: 1 / 3; grid-row: 2; display: flex; align-items: center; gap: var(--space-barrels-route-gap); margin-block: var(--space-barrels-stack) var(--space-50); color: var(--color-barrels-ink); }
+.barrels-price__bg { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
+.barrels-price__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos-barrels-price-bg); }
+.barrels-price__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--color-barrels-price-shade), var(--color-barrels-price-shade) var(--stop-barrels-price-shade), var(--color-barrels-price-shade-soft)); }
+.barrels-price__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, var(--size-barrels-cert-w)); grid-template-rows: repeat(9, auto); column-gap: var(--space-barrels-cert-gap); width: var(--container-barrels); margin-inline: auto; }
+.barrels-price__title { grid-column: 1 / -1; grid-row: 1; margin-top: var(--shift-barrels-cap-top); }
+.bx-route { grid-column: 1 / -1; grid-row: 2; display: flex; align-items: center; gap: var(--space-barrels-route-gap); margin-block: var(--space-barrels-stack) var(--space-50); color: var(--color-barrels-ink); }
 .bx-route__label { font: var(--fw-semibold) var(--font-size-barrels-caption)/var(--lh-none) var(--font-family-sans); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-muted); }
 .bx-route__point { font: var(--fw-semibold) var(--font-size-title)/var(--lh-none) var(--font-family-serif); letter-spacing: var(--ls-wide); white-space: nowrap; }
-.bx-route__line { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: var(--size-barrels-corner); color: var(--color-barrels-accent); background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)) 0 50% / 100% var(--border-hairline) no-repeat; }
+.bx-route__line { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: var(--size-barrels-corner); color: var(--color-barrels-accent); background: linear-gradient(to right, var(--color-barrels-hairline) calc(50% - var(--size-barrels-route-wave) / 2), transparent 0 calc(50% + var(--size-barrels-route-wave) / 2), var(--color-barrels-hairline) 0) left center / 100% var(--border-hairline) no-repeat; } /* лінія з розривом під хвилю — без підкладки, фото не перекривається */
 .bx-route__line::before, .bx-route__line::after { content: ''; position: absolute; top: 50%; translate: 0 -50%; width: var(--size-barrels-corner); aspect-ratio: 1; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .bx-route__line::before { left: 0; }
 .bx-route__line::after { right: 0; }
-.bx-route__wave { position: relative; z-index: 1; width: var(--size-barrels-route-wave); padding-inline: var(--space-10); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; background: var(--color-barrels-room-cellar); }
+.bx-route__wave { position: relative; z-index: 1; width: var(--size-barrels-route-wave); padding-inline: var(--space-10); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; }
 
-.bx-cert { position: relative; grid-row: 3 / span 6; display: grid; grid-template-rows: subgrid; align-items: start; padding: var(--space-barrels-cert-pad); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); background: var(--color-barrels-cert-bg); }
+.bx-cert { position: relative; grid-row: 3 / span 6; display: grid; grid-template-rows: subgrid; align-items: start; padding: var(--space-barrels-cert-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-cert-glass); -webkit-backdrop-filter: blur(var(--size-barrels-cert-blur)); backdrop-filter: blur(var(--size-barrels-cert-blur)); }
 .bx-cert::after { content: ''; position: absolute; inset: var(--space-barrels-frame-gap); border: var(--border-hairline) solid var(--color-barrels-hairline-soft); pointer-events: none; }
-.bx-cert--accent { border-color: var(--color-barrels-hairline); background: radial-gradient(ellipse var(--size-barrels-cert-glow) at top, var(--color-barrels-lightpool), transparent), var(--color-barrels-cert-bg); }
-.bx-cert--accent::after { border-color: var(--color-barrels-hairline); }
-.bx-cert__corner { position: absolute; width: var(--size-barrels-corner); aspect-ratio: 1; translate: -50% -50%; background: var(--color-barrels-hairline-soft); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-cert--accent .bx-cert__corner { background: var(--color-barrels-accent); }
+.bx-cert__corner { position: absolute; width: var(--size-barrels-corner); aspect-ratio: 1; translate: -50% -50%; background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .bx-cert__corner--tl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
 .bx-cert__corner--tr { left: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); top: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); }
 .bx-cert__corner--bl { left: calc(var(--space-barrels-frame-gap) + var(--border-hairline) / 2); top: calc(100% - var(--space-barrels-frame-gap) - var(--border-hairline) / 2); }
@@ -261,15 +262,10 @@
 .bx-cert__list { display: flex; flex-direction: column; gap: var(--space-10); margin-bottom: var(--space-barrels-cert-row); }
 .bx-cert__item { padding-left: calc(var(--size-barrels-bullet) + var(--space-barrels-bullet-gap)); text-indent: calc(-1 * (var(--size-barrels-bullet) + var(--space-barrels-bullet-gap))); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink); }
 .bx-cert__item::before { content: ''; display: inline-block; width: var(--size-barrels-bullet); aspect-ratio: 1; margin-right: var(--space-barrels-bullet-gap); vertical-align: baseline; translate: 0 calc((var(--font-cap-height-sans) * 1em - var(--size-barrels-bullet)) / -2); background: var(--color-barrels-accent); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-cert__item--slot { color: var(--color-barrels-ink-muted); }
-.bx-cert__item--slot::before { background: var(--color-barrels-hairline-soft); }
 .bx-cert .btn { justify-self: start; }
-.barrels-price__note { grid-column: 1 / 3; grid-row: 9; max-width: var(--container-barrels-note); margin-top: var(--space-50); font: var(--fw-medium) var(--font-size-barrels-note)/var(--lh-barrels-note) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
-.barrels-price__photo { grid-column: 3; grid-row: 1 / -1; justify-self: end; width: var(--size-barrels-price-photo-w); margin: 0; --bx-rise: calc(var(--size-barrels-price-photo-w) * var(--ratio-barrels-arch-rise)); }
-.bx-arch--photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.bx-arch--photo::after { z-index: 1; }
+.barrels-price__note { grid-column: 1 / -1; grid-row: 9; max-width: var(--container-barrels-note); margin-top: var(--space-50); font: var(--fw-medium) var(--font-size-barrels-note)/var(--lh-barrels-note) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
 
 /* демо S6 у design-system.html */
 .demo-panel.ds-barrels-price { flex-direction: column; align-items: stretch; padding: var(--space-50); }
-.ds-barrels-certs { display: grid; grid-template-columns: minmax(0, var(--fr-barrels-cert-accent)) minmax(0, 1fr); grid-template-rows: repeat(6, auto); column-gap: var(--space-barrels-cert-gap); }
+.ds-barrels-certs { display: grid; grid-template-columns: repeat(2, var(--size-barrels-cert-w)); grid-template-rows: repeat(6, auto); column-gap: var(--space-barrels-cert-gap); }
 .ds-barrels-certs .bx-cert { grid-row: 1 / span 6; }

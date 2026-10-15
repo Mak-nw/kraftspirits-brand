@@ -14,11 +14,9 @@ export const barrels = {
   bottles50: 96,
   bottles200Word: 'пляшки',
   bottles50Word: 'пляшок',
-  // що входить у ціну (рішення замовника 15.10: «власність, сертифікат»). Інших пунктів НЕ вигадувати.
+  // що входить у ціну (рішення замовника 15.10: «власність, сертифікат»; рев'ю 395a73a7/f733e520 — рядок «інші умови» прибрано). Інших пунктів НЕ вигадувати.
   includeOwnership: 'Бочка у вашій власності',
   includeCertificate: 'Сертифікат на бочку',
-  // СЛОТ: нейтральний рядок, доки замовник не дасть умов (зберігання, візити, розлив, терміни). Замінити на конкретні пункти тут.
-  includeMore: 'Інші умови обговоримо під час замовлення',
   cost200: `€${NB}15,66`,
   cost50: `€${NB}20,83`,
   // міцність: у бочку / питна
@@ -49,7 +47,6 @@ export function barrelsView(b) {
     bottles50Word: b.bottles50Word,
     includeOwnership: b.includeOwnership,
     includeCertificate: b.includeCertificate,
-    includeMore: b.includeMore,
     cost200: b.cost200,
     cost50: b.cost50,
     abvIn: b.abvIn,
