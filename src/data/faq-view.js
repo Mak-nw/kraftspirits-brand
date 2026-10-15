@@ -11,10 +11,7 @@ export function faqView(groups) {
     slugs.add(g.slug);
     if (!g.title) throw new Error(`faq.js «${g.slug}»: немає title`);
     if (!g.items?.length) throw new Error(`faq.js «${g.slug}»: порожній items`);
-    return {
-      slug: g.slug,
-      title: esc(g.title),
-      items: g.items.map((it, k) => {
+    const items = g.items.map((it, k) => {
         const paras = (Array.isArray(it.a) ? it.a : [it.a]).filter((p) => p && String(p).trim());
         if (!it.q) throw new Error(`faq.js «${g.slug}» №${k + 1}: немає q`);
         if (!paras.length) throw new Error(`faq.js «${g.slug}» №${k + 1}: немає відповіді a`);
@@ -27,7 +24,9 @@ export function faqView(groups) {
           open: ' open',
           expanded: 'true',
         };
-      }),
-    };
+      });
+    // дві незалежні колонки (колонкове заповнення): перша половина питань — ліва колонка, друга — права; непарна кількість — зайве питання в лівій
+    const half = Math.ceil(items.length / 2);
+    return { slug: g.slug, title: esc(g.title), items, itemsLeft: items.slice(0, half), itemsRight: items.slice(half) };
   });
 }
