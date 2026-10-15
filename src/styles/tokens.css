@@ -1013,9 +1013,7 @@
   --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
   --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
   --svg-stroke-icon: 2;                                   /* лінія іконок шарів, одиниці viewBox 64 */
-  --color-barrels-plate: color-mix(in srgb, var(--color-gold) 5%, var(--color-barrels-room-wood)); /* тло накладки: на пів тону світліше за кімнату «дерево» */
-  --color-barrels-layer-plate: color-mix(in srgb, var(--color-barrels-plate) 88%, transparent);   /* накладка напівпрозора: крізь «лінзу» ледь проступає текстура */
-  --size-barrels-layer-blur: calc(6 * var(--u));          /* розмиття текстури під накладкою (як розмиття пілюлі header) */
+  --color-barrels-layer-plate: color-mix(in srgb, color-mix(in srgb, var(--color-gold) 12%, var(--color-brown)) 88%, transparent); /* накладка: тон «дерева» на 12% світліший (коло видно без рамки), проста прозорість 88% — у «лінзі» ледь проступає текстура; без розмиття */
   /* тони шарів — лише суміші палітри; суцільне тло кола під фото-текстурою (видно, доки фото вантажиться, або якщо img не задано) */
   --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* обпал (вугілля) */
   --color-barrels-caramel: color-mix(in srgb, var(--color-gold) 28%, var(--color-brown)); /* карамелізований шар */
