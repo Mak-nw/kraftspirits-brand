@@ -186,40 +186,37 @@
 .demo-panel.ds-barrels-ledgers { display: block; padding: var(--space-50); }
 .ds-barrels-ledgers .barrels-profit__grid { width: 100%; }
 
-/* ---------- S5 «Подальша витримка»: кімната wood + ромб, чотири арки-«вікна», кожна — тоном свого вина ----------
-   Сітка: заголовок + лід на всю ширину, нижче 4 колонки. Кожна .bx-finish — subgrid на 4 спільні рядки (арка, назва, регіон, смакові
-   ноти; figcaption — display: contents), тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Ноти — СЛОТ (дані
-   src/data/barrels.js finishNotes): порожні не показуються. Тон вина (--bx-wine, суміші палітри): «світло» під склепінням, пляма на
-   днищі й ромб-легенда перед назвою (центр ромба = середина капітелі). У вікні — тимчасова гравюра днища (СЛОТ під фото, IMG-4). */
-.barrels-next { padding-block: var(--space-barrels-section-y); }
+/* ---------- S5 «Подальша витримка»: продовження світлої кімнати S4 (одне тло, без межі), чотири плашки вин ----------
+   Сітка: заголовок + лід на всю ширину, нижче 4 колонки. Кожна .bx-finish — subgrid на 4 спільні рядки (плашка, назва, регіон, смакові ноти;
+   підпис — теж subgrid), тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Плашка — квадрат з радіусом --radius-panel у тоні
+   свого вина (--bx-wine; тони — від найсвітлішого до найтемнішого, ряд читається як шкала кольору), на ній — світла гравюра днища: клепки
+   обриваються колом навколо орнаменту (без плашки під іконкою). Ноти — СЛОТ (src/data/barrels.js finishNotes): порожні не показуються.
+   Ромб-легенда тоном вина перед назвою (центр = середина капітелі), регіон і ноти — з відступом назви. */
+.barrels-next { padding-block: 0 var(--space-barrels-section-y); }
 .barrels-next__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-finish-gap); width: var(--container-barrels); margin-inline: auto; }
 .barrels-next__head { grid-column: 1 / -1; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
-.barrels-next__head .t-h2 { margin-top: var(--shift-barrels-cap-top); margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «П» — на осі арок */
-.barrels-next__lead { max-width: var(--container-barrels-next-lead); margin-left: var(--shift-barrels-lead-stem); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+.barrels-next__head .t-h2 { margin-top: var(--shift-barrels-cap-top); margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «П» — на лівій осі */
+.barrels-next__lead { max-width: var(--container-barrels-next-lead); margin-left: var(--shift-barrels-lead-stem); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: pretty; }
 .bx-finish { grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; }
 .bx-finish--marsala { --bx-wine: var(--color-barrels-wine-marsala); }
 .bx-finish--madeira { --bx-wine: var(--color-barrels-wine-madeira); }
 .bx-finish--port { --bx-wine: var(--color-barrels-wine-port); }
 .bx-finish--sherry { --bx-wine: var(--color-barrels-wine-sherry); }
-.bx-finish__caption { display: contents; }
-.bx-finish__arch { --bx-rise: calc(var(--size-barrels-finish-w) * var(--ratio-barrels-arch-rise)); display: grid; place-items: end center; padding-bottom: var(--space-barrels-finish-head-bottom); aspect-ratio: var(--ratio-barrels-finish); color: var(--color-barrels-accent); background: radial-gradient(ellipse var(--size-barrels-finish-glow) at top, color-mix(in srgb, var(--bx-wine) var(--alpha-barrels-wine-glow), transparent), transparent), var(--color-barrels-depth); }
-.bx-finish__arch::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse var(--size-barrels-finish-glow-hover) at top, color-mix(in srgb, var(--bx-wine) var(--alpha-barrels-wine-glow-hover), transparent), transparent); opacity: 0; transition: opacity var(--duration-base) var(--ease-out); }
-.bx-head2 { position: relative; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
-.bx-head2__stain { fill: var(--bx-wine); stroke: none; opacity: var(--opacity-barrels-stain); }
+.bx-finish__tile { display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--radius-panel); background: radial-gradient(circle at var(--pos-barrels-tile-light), color-mix(in srgb, var(--bx-wine) 86%, var(--color-light)), var(--bx-wine) var(--stop-barrels-tile-mid)); color: var(--color-barrels-ink); }
+.bx-head2 { width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
 .bx-head2__hair, .bx-head2__shade, .bx-head2__boards { stroke-width: var(--svg-stroke-hair); }
 .bx-head2__boards { opacity: var(--opacity-barrels-head-boards); }
 .bx-head2__shade { opacity: var(--opacity-barrels-head-shade); }
-.bx-head2__plate { fill: var(--color-barrels-depth); stroke-width: var(--svg-stroke-hair); }
 @media (hover: hover) {
-  .bx-finish:hover .bx-finish__arch::before { opacity: 1; }
   .bx-finish:hover .bx-head2 { scale: var(--scale-barrels-finish-hover); }
 }
-/* підпис: ромб-легенда тоном вина + назва; регіон і ноти — з тим самим відступом, що й назва (висячий ромб на осі арки) */
+/* підпис (subgrid на 3 рядки): ромб-легенда тоном вина + назва; регіон і ноти — з тим самим відступом, що й назва (висячий ромб на осі плашки) */
+.bx-finish__caption { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; }
 .bx-finish__name, .bx-finish__origin, .bx-finish__notes { padding-left: calc(var(--size-barrels-rule-marker) + var(--space-barrels-bullet-gap)); }
-.bx-finish__name { margin-top: var(--space-30); text-indent: calc(-1 * (var(--size-barrels-rule-marker) + var(--space-barrels-bullet-gap))); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
+.bx-finish__name { margin-top: var(--space-30); text-indent: calc(-1 * (var(--size-barrels-rule-marker) + var(--space-barrels-bullet-gap))); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-paper); }
 .bx-finish__name::before { content: ''; display: inline-block; width: var(--size-barrels-rule-marker); aspect-ratio: 1; margin-right: var(--space-barrels-bullet-gap); vertical-align: baseline; translate: 0 calc((var(--font-cap-height-barrels-serif) * 1em - var(--size-barrels-rule-marker)) / -2); background: var(--bx-wine); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
-.bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); }
-.bx-finish__notes { margin-top: var(--space-5); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-serif); font-style: italic; color: var(--color-barrels-ink); }
+.bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-finish__notes { margin-top: var(--space-5); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-serif); font-style: italic; color: var(--color-barrels-ink-paper); }
 .bx-finish__notes:empty { display: none; }
 /* демо S5 у design-system.html */
 .demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-finish-gap); align-items: stretch; padding: var(--space-50); }
