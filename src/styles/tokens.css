@@ -880,10 +880,10 @@
   --color-barrels-ink-muted: var(--color-nav-text);   /* підписи й пояснення на темних кімнатах (контраст на teal/brown ≥ 10:1) */
   --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» (і на панелях beige) */
   --color-barrels-accent: var(--color-gold);          /* цифри-гіганти, гравюри (лише на темному) */
-  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамки на темному (одна лінія, без подвійних рамок) */
-  --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, рамка накладки S2) */
-  --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* hairline-лінії на «папері» й панелях beige */
-  --color-barrels-amber: color-mix(in srgb, var(--color-gold) 58%, var(--color-brown));  /* бурштин рідини в гравюрах (бочка, пляшка): НЕпрозорий, бо золото поверх teal дає оливковий сірий */
+  /* ПОХІДНІ кольори сторінки (дозвіл замовника: лише color-mix палітри; зведено до мінімального набору, задокументовано в design-system.html →
+     «Палітра → Похідні кольори: бочки»). Лінії на світлому — токен DS --color-line-soft. */
+  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамка на темному: арка S3, лінії розділів S3 */
+  --color-barrels-amber: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));  /* «віскі»: рідина в гравюрі S3, акцент 50 L у S4 (текст на beige 5.2:1), тло кола S2, доки вантажиться фото */
 
   /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
   --font-size-barrels-numeral: calc(200 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» (компактний ритм S3) */
@@ -996,7 +996,6 @@
   /* S4 «Арифметика бочки»: світла кімната (суцільна з S5); ліворуч 50 L, праворуч 200 L (рев'ю b9892b9b — повернуто композицію «зліва/справа»):
      ярлик, число, одиниця, стіна пляшок, вартість — на спільних рядках (subgrid); стіни на спільній hairline-лінії */
   --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* підписи на «папері»: контраст на beige ≈ 5.5:1 */
-  --color-barrels-amber-paper: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));    /* акцент 50 L на «папері»: «віскі» (коричневий з палітри), контраст на beige ≈ 5.2:1 */
   --space-barrels-room-join: calc(120 * var(--u));      /* S4 → S5 в одній світлій кімнаті: лише повітря, без межі */
   --font-size-barrels-ledger-num: calc(150 * var(--u)); /* «96» / «383» */
   --font-size-barrels-ledger-approx: 0.42em;            /* «≈» перед числом: менший, щоб не змагався з числом */
@@ -1013,11 +1012,6 @@
   --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
   --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
   --color-barrels-layer-plate: color-mix(in srgb, color-mix(in srgb, var(--color-gold) 12%, var(--color-brown)) 88%, transparent); /* накладка: тон «дерева» на 12% світліший (коло видно без рамки), проста прозорість 88% — у «лінзі» ледь проступає текстура; без розмиття */
-  /* тони шарів — лише суміші палітри; суцільне тло кола під фото-текстурою (видно, доки фото вантажиться, або якщо img не задано) */
-  --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* обпал (вугілля) */
-  --color-barrels-caramel: color-mix(in srgb, var(--color-gold) 28%, var(--color-brown)); /* карамелізований шар */
-  --color-barrels-toast: color-mix(in srgb, var(--color-gold) 64%, var(--color-brown));   /* підсмажений дуб */
-  --color-barrels-oak: color-mix(in srgb, var(--color-gold) 82%, var(--color-light));     /* дуб */
 
   /* S5 «Подальша витримка»: продовження світлої кімнати; чотири вина по 3 колонки сітки зі спільними рядками (subgrid: гравюра, назва, регіон, ноти) */
   --span-barrels-finish: 3;
@@ -1039,13 +1033,14 @@
   /* МІНІМАЛЬНА висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
   --size-cocktail-h: var(--size-card-cat2-h);
   --col-cocktails-intro: 4 / span 6;                           /* вступ: 6 середніх колонок — центр = центр екрана */
-  /* метрики EB Garamond (частки em; canvas measureText, wght 600): ascent/descent рядка (hhea) і висота капітелі «Н» */
+  /* метрики EB Garamond (частки em; canvas measureText, wght 600): ascent/descent рядка (hhea); висота капітелі за чорнилом — 0.639
+     (геометрична «Н» 0.654; верхній ряд пікселів згладжений, видимий край чорнила нижче на ≈0.015em — виміряно DPR 2 на 1200–1920) */
   --font-ascent-serif: 1.007;
   --font-descent-serif: 0.298;
-  --font-cap-height-serif: 0.654;
-  /* оптика заголовка блоку: верх чорнила капітелі = верх фото/картки. Відстань від верху line-box до верху капітелі = півінтерліньяж + ascent − cap;
-     ascent і descent Chrome округлює до цілих px (тому round(…, 1px)) — розрахунок за метриками, а не підібране число */
-  --shift-cocktail-title-cap-top: -0.185em;
+  --font-cap-height-serif-ink: 0.639;
+  /* оптика заголовка блоку: верх чорнила капітелі = верх фото/картки. Від верху line-box до верху капітелі = півінтерліньяж + ascent − cap;
+     ascent і descent Chrome округлює до цілих px (round(…, 1px)) — розрахунок за метриками шрифту на кожній ширині, а не підібране число в em */
+  --shift-cocktail-title-cap-top: calc(-1 * ((var(--type-hero-lh) * 1em - round(var(--font-ascent-serif) * 1em, 1px) - round(var(--font-descent-serif) * 1em, 1px)) / 2 + round(var(--font-ascent-serif) * 1em, 1px) - var(--font-cap-height-serif-ink) * 1em));
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
