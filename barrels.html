@@ -29,36 +29,30 @@
       </div>
     </section>
 
-    <!-- Кімната «дерево» (brown): реальне фото бочок в арці ліворуч; схема зрізу клепки — 4 шари зсередини назовні, кожен шар у ТОМУ Ж
-         рядку сітки, що й пояснення (вкладений subgrid); виноска йде від шару до середини капітелі назви -->
+    <!-- Кімната «дерево»: що дає бочка — чотири шари клепки зсередини назовні. Кожен шар — пара кіл однакового розміру: зверху коло з
+         фото-текстурою шару (СЛОТИ IMG-T1…T4, ТЗ у MEDIA.md; поки — заглушка в тоні шару), знизу «накладка», що заходить на нього; у «лінзі»
+         перетину — іконка, нижче — назва й пояснення. Центри кіл пари — на одній вертикалі, накладки всіх чотирьох — на одній горизонталі -->
     <section class="barrels-benefits bx-room bx-room--wood" id="benefits" aria-labelledby="benefits-title">
       <div class="barrels-benefits__grid">
-        <figure class="barrels-benefits__photo bx-arch bx-arch--photo" data-parallax="soft" data-slot="Фото: реальний кадр складу (photo/…/Обладнання/IMG_2230); за потреби — нова зйомка бочок на складі">
-          <img src="/assets/img/barrels-staves.webp" width="1080" height="1620" alt="Дубові бочки з металевими обручами на складі дистилерії" loading="lazy" decoding="async">
-        </figure>
         <div class="barrels-benefits__head">
           <p class="barrels-benefits__kicker t-kicker" data-reveal="rise">Переваги бочок</p>
           <h2 class="t-h2" id="benefits-title" data-reveal="rise">Що дає бочка</h2>
         </div>
-        <figure class="barrels-benefits__lens" data-reveal="fade" data-slot="Фото: погляд усередину бочки (крізь отвір чопа) або макро обпаленої клепки — зйомка або AI, ТЗ IMG-2; зараз — реальний кадр дистиляту зблизька (photo/…/Обладнання/IMG_2223)">
-          <img src="/assets/img/barrels-amber.webp" width="640" height="640" alt="Бурштиновий дистилят зблизька" loading="lazy" decoding="async">
-        </figure>
-        <p class="bx-strata__edge bx-strata__edge--in" aria-hidden="true">всередині бочки</p>
-        <ol class="bx-strata">
-          <!--@include components/barrels-note layer="char" title="Сильний обпал" text="Формує глибину та структуру"-->
-          <!--@include components/barrels-note layer="caramel" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
-          <!--@include components/barrels-note layer="toast" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
-          <!--@include components/barrels-note layer="oak" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
+        <ol class="bx-layers">
+          <!--@include components/barrels-layer layer="char" n="IMG-T1" name="обпалена клепка" title="Сильний обпал" text="Формує глибину та структуру"-->
+          <!--@include components/barrels-layer layer="caramel" n="IMG-T2" name="карамелізований шар дерева" title="Карамелізація целюлози" text="Надає солодкі ванільні відтінки"-->
+          <!--@include components/barrels-layer layer="toast" n="IMG-T3" name="підсмажена поверхня дуба" title="Ароматичні сполуки" text="Збагачують букет складними нотами"-->
+          <!--@include components/barrels-layer layer="oak" n="IMG-T4" name="світлий дуб" title="Феноли та смак" text="Додають пряність, дубові й димні нюанси"-->
         </ol>
-        <p class="bx-strata__edge bx-strata__edge--out" aria-hidden="true">зовні · схема шарів клепки</p>
+        <p class="bx-layers__axis" aria-hidden="true"><span>всередині бочки</span><span class="bx-layers__line"></span><span>зовні</span></p>
       </div>
-        <h2 class="barrels-how__title t-h2" id="how-title">Від бочки до вашої пляшки</h2>
     </section>
 
     <!-- Кімната «погріб» (teal, без візерунка — рішення замовника): заголовок на всю ширину; нижче sticky-арка з гравюрою ліворуч (ЄДИНА арка
          сторінки) і три розділи-цифри праворуч у компактному рівному ритмі; активний розділ підсвічує свою частину гравюри (barrels.js, data-step) -->
     <section class="barrels-how bx-room bx-room--cellar" id="how" data-loop data-steps aria-labelledby="how-title">
       <div class="barrels-how__grid">
+        <h2 class="barrels-how__title t-h2" id="how-title">Від бочки до вашої пляшки</h2>
         <div class="barrels-how__stage">
           <div class="bx-arch bx-arch--stage">
             <svg class="bx-lamp" viewBox="0 0 60 84" aria-hidden="true" focusable="false"><path d="M30 0 V40 M16 40 H44 L52 58 H8 Z M24 58 Q30 68 36 58"/></svg>

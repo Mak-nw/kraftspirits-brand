@@ -837,7 +837,7 @@
 /* ===================================================================
    Ф'ючерсні бочки (barrels.html), редизайн «Світло в погребі» (15.10): hero → анатомія бочки (wood) → від бочки до пляшки (cellar) →
    арифметика (paper) → подальша витримка (wood) → ціна (cellar). Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу.
-   Компоненти: barrels-note (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
+   Компоненти: barrels-layer (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
 :root {
@@ -995,34 +995,29 @@
   --shift-barrels-h2-round: -0.012em;                   /* оптика H2 «Скільки…»: бокове поле круглої «С» 67u — на осі групи 50 L */
   --shift-barrels-legend-ink: -0.09em;                  /* оптика легенди: бокове поле «л» + хвостовий letter-spacing — правий край чорнила = правий край стіни 200 L */
 
-  /* S2 «Анатомія бочки»: фото в арці + «ілюмінатор» (друге фото) + схема зрізу клепки (4 шари) з виносками до плашок;
-     шар, виноска й плашка — в одному рядку сітки: середина шару = виноска = середина плашки = центр іконки */
-  --size-barrels-anatomy-photo-w: calc(460 * var(--u));   /* фото в арці ліворуч */
-  --space-barrels-anatomy-gap: calc(90 * var(--u));       /* фото → схема */
-  --size-barrels-strata-w: calc(190 * var(--u));          /* ширина «зразка» клепки */
-  --size-barrels-strata-row: calc(170 * var(--u));        /* висота шару = висота рядка плашки */
-  --space-barrels-leader: calc(80 * var(--u));            /* довжина виноски: від краю шару до рамки плашки */
-  --space-barrels-plate-gap: calc(8 * var(--u));          /* половина зазору між плашками (margin-block): середина плашки = середина шару */
-  --size-barrels-note-mark: calc(120 * var(--u));         /* комірка іконки в плашці (на всю висоту, роздільник праворуч) */
-  --size-barrels-note-icon: calc(68 * var(--u));          /* іконка 64×64 (viewBox), центр чорнила = центр комірки */
-  --svg-stroke-icon: 2;                                   /* лінія іконок плашок, одиниці viewBox 64 */
-  --space-barrels-plate-pad: calc(36 * var(--u));         /* поля тексту плашки */
-  --color-barrels-plate: color-mix(in srgb, var(--color-gold) 5%, var(--color-barrels-room-wood)); /* плашка на пів тону світліша за кімнату «дерево» */
-  --font-size-barrels-note-title: calc(28 * var(--u));    /* назви шарів (EB Garamond 600, caps) */
-  --font-size-barrels-note-copy: max(calc(20 * var(--u)), 14px); /* пояснення в плашках: 20px на 1920, 15px на 1440, 14px на 1200 */
-  --lh-barrels-title: 1.1;                                /* назви плашок, розділів, сертифікатів, вин */
-  --shift-barrels-kicker-cap-top: -0.38em;                /* верх капітелі кікера (lh 1.4) = верх фото-арки = верх «ілюмінатора» */
-  --size-barrels-lens: calc(180 * var(--u));              /* «ілюмінатор»: кругле фото праворуч від заголовка (слот IMG-2); ≈ висота кікер+H2+відступ — рядок не росте */
-  --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* шари клепки — лише суміші палітри: обпал (вугілля) */
+  /* S2 «Що дає бочка»: чотири шари клепки зсередини назовні — пари кіл: коло з фото-текстурою (СЛОТ IMG-T1…T4) і «накладка» того ж
+     діаметра, що заходить на нього знизу; іконка — у центрі «лінзи» перетину, назва й пояснення — по центру решти накладки */
+  --space-barrels-layer-gap: calc(32 * var(--u));         /* між парами кіл (ряд — space-between) */
+  --size-barrels-layer: calc((var(--container-barrels) - 3 * var(--space-barrels-layer-gap)) / 4); /* діаметр кола: текстура = накладка */
+  --size-barrels-layer-overlap: calc(var(--size-barrels-layer) * 0.26);  /* накладка заходить на коло текстури на 26% діаметра («лінза») */
+  --size-barrels-layer-icon: calc(var(--size-barrels-layer) * 0.15);     /* іконка 64×64 (viewBox) у центрі «лінзи» */
+  --space-barrels-layer-pad: calc(var(--size-barrels-layer) * 0.11);     /* бокові й нижнє поле тексту накладки: рядки — у межах хорди кола */
+  --space-barrels-layer-text-top: calc(56 * var(--u));    /* низ «лінзи» → поле назви (текст — із верхнього вирівнювання: однакова сітка в усіх чотирьох) */
+  --count-barrels-layer-title-lines: 2;                   /* поле назви — на 2 рядки, назва притиснута донизу: остання базова лінія спільна */
+  --font-size-barrels-layer-title: calc(26 * var(--u));   /* назви шарів (EB Garamond 600, caps) */
+  --svg-stroke-icon: 2;                                   /* лінія іконок шарів, одиниці viewBox 64 */
+  --color-barrels-plate: color-mix(in srgb, var(--color-gold) 5%, var(--color-barrels-room-wood)); /* тло накладки: на пів тону світліше за кімнату «дерево» */
+  --color-barrels-layer-plate: color-mix(in srgb, var(--color-barrels-plate) 88%, transparent);   /* накладка напівпрозора: крізь «лінзу» ледь проступає текстура */
+  --size-barrels-layer-blur: calc(6 * var(--u));          /* розмиття текстури під накладкою */
+  --lh-barrels-title: 1.1;                                /* назви шарів, розділів, сертифікатів, вин */
+  --shift-barrels-kicker-cap-top: -0.38em;                /* верх капітелі кікера (lh 1.4) = верх вмісту секції */
+  /* тони шарів — лише суміші палітри; поки фото-текстур немає, коло текстури = заглушка-градієнт у тоні шару */
+  --color-barrels-char: color-mix(in srgb, var(--color-brown) 70%, var(--color-teal));   /* обпал (вугілля) */
   --color-barrels-caramel: color-mix(in srgb, var(--color-gold) 28%, var(--color-brown)); /* карамелізований шар */
   --color-barrels-toast: color-mix(in srgb, var(--color-gold) 64%, var(--color-brown));   /* підсмажений дуб */
   --color-barrels-oak: color-mix(in srgb, var(--color-gold) 82%, var(--color-light));     /* дуб */
-  --color-barrels-tex-char: color-mix(in srgb, var(--color-gold) 34%, transparent);       /* «тріщини» вугілля (маска barrels-tex-char.svg) */
-  --color-barrels-tex-wood: color-mix(in srgb, var(--color-brown) 32%, transparent);      /* волокна дерева (маски tex-caramel/toast/oak) */
-  --size-barrels-tex-char: calc(64 * var(--u)) calc(40 * var(--u));     /* розміри плиток фактур (як viewBox масок) */
-  --size-barrels-tex-caramel: calc(80 * var(--u)) calc(16 * var(--u));
-  --size-barrels-tex-toast: calc(90 * var(--u)) calc(18 * var(--u));
-  --size-barrels-tex-oak: calc(100 * var(--u)) calc(20 * var(--u));
+  --pos-barrels-tex-light: 50% 35%;                       /* заглушка текстури: м'яке «світло» зверху (не куля) */
+  --stop-barrels-tex-mid: 70%;
 
   /* S5 «Подальша витримка»: чотири арки-«вікна» зі спільною сіткою рядків (subgrid: арка, назва, регіон) */
   --space-barrels-finish-gap: var(--space-40);

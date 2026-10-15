@@ -1,4 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="40" viewBox="0 0 64 40" fill="none">
-<!-- МАСКА-фактура шару «сильний обпал» (схема клепки, barrels.html): «алігаторні» тріщини вугілля; безшовна по краях. Колір задає CSS. -->
-<path stroke="#000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" d="M0 12 L14 10 L10 0 M14 10 L18 24 L6 30 L0 28 M18 24 L34 20 L40 8 L52 6 L64 12 M40 8 L30 0 M34 20 L40 34 L30 40 M40 34 L56 30 L64 28 M56 30 L52 6 M6 30 L10 40"/>
-</svg>
