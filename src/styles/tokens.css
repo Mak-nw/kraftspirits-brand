@@ -1054,6 +1054,7 @@
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
   --color-cocktail-text: var(--color-beige);
+  --color-cocktail-line: color-mix(in srgb, var(--color-cocktail-text) 20%, transparent); /* розділювач рядків інгредієнтів/подачі = правило --color-line-soft (колір тексту 20%, лінії акордеона товару) для світлого тексту */
   --color-cocktail-accent: var(--color-gold);                   /* єдиний акцент сторінки: оригінальна назва, кількості, номери кроків */
   --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */
   --space-lightbox-pad: var(--space-50);

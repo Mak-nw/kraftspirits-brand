@@ -34,8 +34,15 @@
 .js .tabs__panel:not(.is-active) { visibility: hidden; }
 .tabs__panel:focus-visible { outline-offset: var(--space-5); }
 /* інгредієнти: назва ліворуч, кількість праворуч (акцент), як у барній карті; подача — пари «підпис — значення» (.product-specs як на товарі) */
-.cocktail__specs { row-gap: var(--space-10); } /* на всю ширину тіла (5 колонок) */
-.cocktail__specs--amounts { grid-template-columns: minmax(0, 1fr) max-content; }
+/* розділювачі рядків (коментар замовника b60b8cab) — той самий розділювач, що в рядках акордеона сторінки товару: нижня hairline-лінія кожного рядка,
+   включно з останнім, колір --accent-line (на товарі = колір тексту 20%: --color-line-soft; тут — те саме правило для світлого тексту на зеленому тлі).
+   Крок рядка не змінився: був рядок + проміжок 10u, тепер рядок + 2×5u + 1px; проміжок між колонками — padding замість column-gap, щоб лінія була суцільною */
+.cocktail__specs { --accent-line: var(--color-cocktail-line); column-gap: 0; row-gap: 0; } /* на всю ширину тіла (5 колонок) */
+.cocktail__specs > :is(dt, dd) { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--accent-line); }
+.cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); }
+/* колонки списку — на колонках сітки (D12): тіло = 5 колонок; підпис подачі — 1 колонка, значення — 4; назва інгредієнта — 4, кількість — 1 (зазор сітки = padding dd) */
+.cocktail__specs { --cocktail-col: calc((100% - (var(--span-cocktail-body) - 1) * var(--space-cocktail-col-gap)) / var(--span-cocktail-body)); grid-template-columns: var(--cocktail-col) minmax(0, 1fr); }
+.cocktail__specs--amounts { grid-template-columns: minmax(0, 1fr) calc(var(--cocktail-col) + var(--space-cocktail-col-gap)); }
 .cocktail__specs--amounts dt { font-weight: inherit; }
 .cocktail__specs--amounts dd { color: var(--color-cocktail-accent); text-align: right; }
 .cocktail__specs:not(.cocktail__specs--amounts) dt { color: var(--color-cocktail-accent); }
