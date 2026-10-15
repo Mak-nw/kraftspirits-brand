@@ -25,7 +25,7 @@
 .cocktail__thumbs .product-thumb { width: calc(var(--size-product-thumb-w) * var(--scale-cocktail-thumb)); height: calc(var(--size-product-thumb-h) * var(--scale-cocktail-thumb)); } /* менші мініатюри лише на коктейлях (параметр .product-thumbs; сторінка товару без змін) */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
 /* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
-.cocktail__body { min-height: 0; gap: 0; min-width: 0; }
+.cocktail__body { min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
 .cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
 .cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-cocktail-accent); }
@@ -46,6 +46,7 @@
 .cocktail__specs > :is(dt, dd) { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--accent-line); }
 .cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); color: var(--color-cocktail-accent); text-align: right; }
 .cocktail__specs > dt { font-weight: inherit; }
-.cocktail__steps { display: grid; row-gap: 0; margin: 0; padding: 0; list-style: none; } /* ритм рядків = «Інгредієнти»/«Подача»: padding-block --space-5 + hairline під кожним рядком (коментар 0bea51f5) */
-.cocktail__step { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-cocktail-line); display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-20); align-items: baseline; }
+.cocktail__steps { display: grid; grid-template-columns: max-content minmax(0, 1fr); row-gap: 0; text-align: left; margin: 0; padding: 0; list-style: none; } /* ритм рядків = «Інгредієнти»/«Подача»: padding-block --space-5 + hairline під кожним рядком (коментар 0bea51f5) */
+/* колонки номерів і тексту спільні для всіх кроків (subgrid): номери й текст стоять в одній лівій осі (6661d10c) */
+.cocktail__step { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--color-cocktail-line); display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; column-gap: var(--space-20); align-items: baseline; }
 .cocktail__step-n { color: var(--color-cocktail-accent); }
