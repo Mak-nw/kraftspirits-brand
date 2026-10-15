@@ -838,7 +838,7 @@
    =================================================================== */
 :root {
   --offset-barrels-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над бочками кадру */
-  --container-barrels-hero-sub: calc(900 * var(--u));    /* ширина субхедера hero */
+  --container-barrels-hero-sub: calc(4 * var(--size-barrels-col) + 3 * var(--space-barrels-grid-gap));    /* субхедер hero — 4 колонки по центру (колонки 5–8), текст по центру з переносами (1825e97a) */
   --space-barrels-hero-gap: var(--space-30);          /* відступ H1 → лід → кнопка */
   --size-barrels-slot-outline: 2px;                   /* ?slots=on: пунктир навколо місць під фото/тексти (лише режим огляду) */
   --size-barrels-sr: 1px;                             /* .bx-sr — текст лише для читачів екрана (класичний visually-hidden 1×1px) */
