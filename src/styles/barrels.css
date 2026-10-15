@@ -56,7 +56,7 @@
 .bx-layer__plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; aspect-ratio: 1; margin-top: calc(-1 * var(--size-barrels-layer-overlap)); padding: calc(var(--size-barrels-layer-overlap) + var(--space-barrels-layer-text-top)) var(--space-barrels-layer-pad) var(--space-barrels-layer-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50%; background: var(--color-barrels-layer-plate); text-align: center; } /* суцільний тон палітри з простою прозорістю (токен): без розмиття й рамки */
 .bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); position: absolute; top: calc(var(--size-barrels-layer-overlap) / 2); left: 50%; translate: -50% -50%; color: var(--color-barrels-accent); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) — у центрі «лінзи» */
 .bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-barrels-title) * 1em); font: var(--fw-semibold) var(--font-size-barrels-layer-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); text-wrap: balance; }
-.bx-layer__text { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: balance; }
+.bx-layer__text { margin-top: var(--space-10); color: var(--color-barrels-ink-muted); text-wrap: balance; }
 /* демо S2 у design-system.html (у ширині демо-панелі: .bx-scope перераховує сітку) */
 .demo-panel.ds-barrels-layers { display: block; padding: var(--space-50); }
 .ds-barrels-layers.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
@@ -113,7 +113,7 @@
 .bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-barrels-accent); }
 .bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); font: var(--fw-regular) var(--font-size-barrels-numeral)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
 .bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
-.bx-chapter__text { max-width: var(--size-barrels-chapter-text-w); margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+.bx-chapter__text { max-width: var(--size-barrels-chapter-text-w); margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
 
 /* демо S3 у design-system.html */
 .demo-panel.ds-barrels-how { align-items: stretch; gap: var(--space-50); padding: var(--space-50); }
@@ -144,7 +144,7 @@
 .bx-ledger--200 .bx-ledger__cost-num { text-indent: calc(var(--shift-barrels-approx-ink) / 2); }
 .bx-ledger__num { margin-top: var(--space-barrels-ledger-row); font: var(--fw-regular) var(--font-size-barrels-ledger-num)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .bx-ledger__approx { position: relative; top: var(--shift-barrels-ledger-approx); margin-left: var(--shift-barrels-approx-ink); margin-right: var(--space-barrels-approx-gap); font-size: var(--font-size-barrels-ledger-approx); } /* «≈» піднято до середини висоти цифр (old-style) */
-.bx-ledger__unit { margin-top: var(--space-15); text-indent: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-ledger__unit { margin-top: var(--space-15); text-indent: var(--shift-barrels-caption-ink); color: var(--color-barrels-ink-paper-muted); }
 /* стіна: блок 16 × 6 комірок (ціле px); зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок */
 .bx-wall { --bx-wall-color: var(--color-barrels-ink-paper); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-barrels-wall-top); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
 .bx-ledger--50 .bx-wall { --bx-wall-color: var(--color-barrels-amber); justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
@@ -154,7 +154,7 @@
 .js-reveal .bx-ledger[data-reveal].is-in .bx-wall { clip-path: inset(0); }
 .bx-ledger__cost { grid-row: 5; display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-barrels-ledger-row); } /* стіна → вартість: повітря без лінії-полиці */
 .bx-ledger__cost-num { text-indent: var(--shift-barrels-approx-ink); font: var(--fw-medium) var(--font-size-barrels-ledger-cost)/var(--lh-none) var(--font-family-serif); white-space: nowrap; }
-.bx-ledger__cost-label { text-indent: var(--shift-barrels-caption-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-ledger__cost-label { text-indent: var(--shift-barrels-caption-ink); color: var(--color-barrels-ink-paper-muted); }
 /* лічильник: до старту (barrels.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється.
    Страховка: через --duration-count-failsafe число з'являється саме. Без JS і з reduced-motion — фінальне значення одразу. */
 .js .page-barrels [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
@@ -184,7 +184,7 @@
 .bx-finish__caption { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; }
 .bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-paper); }
 .bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
-.bx-finish__notes { margin-top: var(--space-5); font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-serif); font-style: italic; color: var(--color-barrels-ink-paper); }
+.bx-finish__notes { margin-top: var(--space-5); color: var(--color-barrels-ink-paper); }
 .bx-finish__notes:empty { display: none; }
 /* демо S5 у design-system.html */
 .demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-grid-gap); align-items: stretch; padding: var(--space-50); }
@@ -206,7 +206,7 @@
 /* шапка: на всі 12 колонок, по центру, світлий текст прямо на фото (без плашки й заливки; рев'ю 8263cbc6) */
 .bx-head.barrels-price__head { grid-column: 1 / -1; }
 .barrels-price__title { margin-top: var(--shift-barrels-cap-top); }
-.barrels-price__note { width: var(--size-barrels-text-w); max-width: 100%; font: var(--fw-medium) var(--font-size-barrels-note)/var(--lh-barrels-note) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink); text-wrap: balance; }
+.barrels-price__note { width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-barrels-ink); text-wrap: balance; }
 
 /* маршрут «Кентуккі (США) — Київ (Україна)»: на 6 середніх колонках (4–9) — два міста по краях, між ними hairline-лінія DS і корабель по центру (іконка DS
    .icon--barrels-ship; стоїть у проміжку між колонками 6 і 7). Ліва половина — колонки 4–6, права — 7–9: корабель рівно посередині незалежно від довжини назв,
@@ -228,10 +228,10 @@
 .bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
 .bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
 .bx-cert__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
-.bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
+.bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); color: var(--color-barrels-ink-paper-muted); }
 .bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/var(--lh-none) var(--font-family-serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bx-cert__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-barrels-cert-row); margin-top: auto; }
-.bx-cert__list { padding-inline-start: var(--space-20); list-style: disc; font: var(--fw-medium) var(--font-size-barrels-copy)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); } /* список DS: як у тілі акордеона товару (.acc--product .acc__body ul) */
+.bx-cert__list { padding-inline-start: var(--space-20); list-style: disc; } /* список DS: як у тілі акордеона товару (.acc--product .acc__body ul) */
 .bx-cert__list li + li { margin-top: var(--space-5); }
 
 /* демо S6 у design-system.html: фото-фон секції, шапка-панель і два сертифікати поруч (у ширині демо-панелі) */

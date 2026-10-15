@@ -11,7 +11,7 @@
   background: url('/assets/img/home-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat, var(--color-beige);
 }
 .tour-card__head { display: flex; flex-direction: column; gap: var(--space-30); width: var(--size-tour-text-w); }
-.tour-card .tour-card__body { width: var(--container-tour-text); letter-spacing: var(--ls-intro-body); } /* 224:3973: tracking 0.8px (як абзац intro), не 3% */
+.tour-card .tour-card__body { width: var(--container-tour-text); } /* шрифт — .t-desc (EB Garamond Medium 20u) у розмітці */
 .tour-card__photo { flex: none; width: var(--size-tour-photo-box-w); /* рамка + фото 757 */ border: 0 solid var(--color-brown); border-left-width: var(--border-tour-frame); overflow: hidden; /* рамка лише з внутрішнього боку (до бежевої колонки); зовнішні краї — фото впритул до краю панелі */ }
 .tour-card--photo-first .tour-card__text { padding-left: calc(var(--space-tour-pad) - var(--border-tour-frame)); } /* 224:3985: текст картки 2 стартує на x=837 від краю панелі (= фото 757 + 80); рамка 5 входить у фото-колонку, тож відступ на 5 менший */
 .tour-card--photo-first .tour-card__photo { border-left-width: 0; border-right-width: var(--border-tour-frame); }
