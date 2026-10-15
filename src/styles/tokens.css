@@ -899,7 +899,7 @@
   --shift-barrels-numeral-bottle: -0.0175em;
   --shift-barrels-title-round: -0.025em;              /* оптика назви розділу: перша капітель з круглим боком (З) має ширше бокове поле */
   --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
-  --shift-barrels-h2-stem: -0.011em;                  /* оптика H2 зі штамбовою першою літерою («Від бочки…» — В, «Що дає бочка» — Щ) 67u: на ліву вісь секції */
+  --shift-barrels-h2-stem: -0.011em;                  /* оптика H2 зі штамбовою першою літерою («Від бочки…» — В, «Що дає бочка» — Щ, «Подальша витримка» — П) 67u: на ліву вісь секції */
   --shift-barrels-copy-stem: -0.04em;                 /* оптика пояснення: перша літера зі штамбом (П) — разом ліва вісь розділу ≤1px на 1200–1920 */
   --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між розділами */
   --opacity-barrels-dim: 0.32;                        /* неактивні частини гравюри */
@@ -997,4 +997,20 @@
   --font-size-barrels-finish-name: calc(28 * var(--u));
   --container-barrels-next-lead: calc(820 * var(--u));
   --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається, світло під склепінням яскравішає */
+  /* тони вин — лише суміші палітри (золото + коричневий); у порядку арок від найсвітлішого до найтемнішого — ряд читається як шкала
+     кольору: марсала «оро» → мадера (бурштин) → портвейн (тоні) → херес (олоросо). Тоном свого вина в арці: «світло» під склепінням,
+     пляма на днищі й ромб-легенда перед назвою */
+  --color-barrels-wine-marsala: var(--color-gold);                                          /* марсала «оро»: золотиста */
+  --color-barrels-wine-madeira: color-mix(in srgb, var(--color-gold) 72%, var(--color-brown)); /* мадера: бурштинова */
+  --color-barrels-wine-port: color-mix(in srgb, var(--color-gold) 52%, var(--color-brown));    /* портвейн (тоні): горіхово-коричневий */
+  --color-barrels-wine-sherry: color-mix(in srgb, var(--color-gold) 36%, var(--color-brown));  /* херес (олоросо): найтемніший */
+  --alpha-barrels-wine-glow: 50%;                        /* «світло» під склепінням тоном вина */
+  --alpha-barrels-wine-glow-hover: 70%;
+  --size-barrels-finish-glow: 78% 58%;                   /* еліпс «світла» (ширина висота) від верху арки */
+  --size-barrels-finish-glow-hover: 88% 68%;
+  --opacity-barrels-stain: 0.42;                         /* пляма вина на днищі */
+  --opacity-barrels-head-boards: 0.45;                   /* клепки днища — тонше за обідок */
+  --opacity-barrels-head-shade: 0.6;                     /* штрихування тіні днища */
+  --shift-barrels-lead-stem: -0.02em;                   /* оптика ліду «Бочки з-під…»: бокове поле «Б» 30u — на осі арок */
+  --font-cap-height-barrels-serif: 0.6745;               /* висота капітелі EB Garamond (частка em, виміряно чорнилом) — центр ромба-легенди = середина капітелі назви */
 }

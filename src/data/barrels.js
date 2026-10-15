@@ -28,6 +28,8 @@ export const barrels = {
   // Число = умовні втрати з розрахунку в дрібному тексті (disclaimer), не технологічна норма.
   angelsShare: '≈15%',
   angelsNote: 'орієнтовно',
+  // СЛОТ: смакові ноти вин для «Подальшої витримки» (2–3 слова від замовника). Порожньо — рядок під регіоном не показується (CSS :empty).
+  finishNotes: { marsala: '', madeira: '', port: '', sherry: '' },
   disclaimer:
     'Розрахунок наведено для початкової міцності дистиляту 63% та умовних втрат 15% під час витримки. Кількість пляшок і вартість є орієнтовними та можуть відрізнятися залежно від тривалості витримки та інших факторів. У вартість не включено тару, розлив, податки та інші витрати.',
 };
@@ -54,6 +56,10 @@ export function barrelsView(b) {
     abvOut: b.abvOut,
     angelsShare: b.angelsShare,
     angelsNote: b.angelsNote,
+    notesMarsala: b.finishNotes.marsala,
+    notesMadeira: b.finishNotes.madeira,
+    notesPort: b.finishNotes.port,
+    notesSherry: b.finishNotes.sherry,
     disclaimer: b.disclaimer,
   };
 }
