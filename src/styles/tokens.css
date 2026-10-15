@@ -981,7 +981,6 @@
   --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото смуги: ряд днищ */
   --space-barrels-price-band: var(--space-barrels-section-y); /* фото видно над і під сертифікатами */
   --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами (стопкою) — крізь проміжок видно фото */
-  --space-barrels-cert-pad: var(--space-50);          /* внутрішнє поле панелі (як панелі контактів, --space-contacts-pad) */
   --space-barrels-cert-row: var(--space-30);          /* «що входить» → кнопка */
   --span-barrels-cert-head: 4;                        /* сертифікат = subgrid 12 колонок: назва + ціна — колонки 1–4, */
   --span-barrels-cert-facts: 4;                       /* факти — 5–8, */
@@ -1037,7 +1036,7 @@
      (геометрична «Н» 0.654; верхній ряд пікселів згладжений, видимий край чорнила нижче на ≈0.015em — виміряно DPR 2 на 1200–1920) */
   --font-ascent-serif: 1.007;
   --font-descent-serif: 0.298;
-  --font-cap-height-serif-ink: 0.639;
+  --font-cap-height-serif-ink: 0.668;
   /* оптика заголовка блоку: верх чорнила капітелі = верх фото/картки. Від верху line-box до верху капітелі = півінтерліньяж + ascent − cap;
      ascent і descent Chrome округлює до цілих px (round(…, 1px)) — розрахунок за метриками шрифту на кожній ширині, а не підібране число в em */
   --shift-cocktail-title-cap-top: calc(-1 * ((var(--type-hero-lh) * 1em - round(var(--font-ascent-serif) * 1em, 1px) - round(var(--font-descent-serif) * 1em, 1px)) / 2 + round(var(--font-ascent-serif) * 1em, 1px) - var(--font-cap-height-serif-ink) * 1em));

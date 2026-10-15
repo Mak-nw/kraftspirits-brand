@@ -192,6 +192,7 @@
    стоїть на teal кімнати (як текст секції підбору на головній, де фото — смугою під вмістом), а сертифікати — панелі DS (beige + --radius-panel, як
    панелі контактів і товару; рев'ю 2fcd6695 — без подвійної рамки й ромбів). Рев'ю 16270ab4: сертифікати 50 L (першим) і 200 L — один під одним, по
    центру на всі 12 колонок; однакові ширина й вигляд, кнопки одного тону (btn--teal, як «додати в кошик» Bazylsprings на панелі beige).
+   Панель — існуючий клас DS .contacts-panel (FIX-6: computed-вигляд = панель контактів); .bx-cert — лише розкладка.
    Усередині — subgrid тих самих 12 колонок: [назва + ціна 1–4][факти 5–8][«що входить» + кнопка 10–12]: колонки обох сертифікатів на одних
    лініях сітки сторінки. Рядки фактів — hairline-лінії (як рядки акордеона DS), «що входить» — список DS (диск-маркер, як у тілі акордеона товару). */
 .bx-sr { position: absolute; width: var(--size-barrels-sr); height: var(--size-barrels-sr); margin: calc(-1 * var(--size-barrels-sr)); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; } /* лише для читачів екрана */
@@ -206,8 +207,10 @@
 .barrels-price__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos-barrels-price-bg); }
 .barrels-price__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); row-gap: var(--space-barrels-cert-gap); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
 
-/* сертифікат = панель DS: beige, --radius-panel, поле --space-barrels-cert-pad; усередині — subgrid 12 колонок */
-.bx-cert { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: stretch; padding: var(--space-barrels-cert-pad); border-radius: var(--radius-panel); background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
+/* сертифікат = ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі 5u, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель
+   контактів). .bx-cert задає лише розкладку: на всі 12 колонок, усередині — subgrid тих самих колонок; колір тексту — у вмісті (чорнило Bazylsprings) */
+.bx-cert { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; column-gap: var(--space-barrels-grid-gap); align-items: stretch; min-height: 0; }
+.bx-cert__head, .bx-cert__facts, .bx-cert__offer { color: var(--color-barrels-ink-paper); }
 .bx-cert__head { grid-column: 1 / span var(--span-barrels-cert-head); display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-barrels-stack); }
 .bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
 .bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
