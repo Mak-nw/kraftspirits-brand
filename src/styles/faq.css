@@ -12,9 +12,10 @@
 /* вступ і фінальний блок: зелена кімната, 6 середніх колонок, текст по центру */
 .faq-page__intro { padding: var(--space-faq-intro-top) 0 var(--space-faq-room-y); }
 .faq-page__intro:not(.theme-green) { padding-bottom: 0; } /* FAQ (8131e645): без зеленої кімнати — лише h1 темним на beige тлі, далі тіло зі своїм верхнім полем */
-.faq-page__intro:not(.theme-green) > .faq-page__h1 { width: var(--size-faq-w); margin-inline: auto; text-align: center; color: var(--color-green); }
+.faq-page__intro:not(.theme-green) > .faq-page__h1 { width: var(--size-faq-w); margin-inline: auto; text-align: center; color: var(--color-text-on-dark); } /* FAQ на зеленому тлі з візерунком (6064dc8a, правило .page-faq у product.css): заголовки — світлі */
 .page-faq:has(.faq-page__intro:not(.theme-green)) .site-header { background: transparent; } /* 8add73a2: на FAQ без зеленого зверху — зона header прозора, як .page-contacts/.page-product; юридичні сторінки (зелене інтро) без змін */
 .faq-page__more { padding: var(--space-faq-room-y) 0; }
+.faq-page__more:not(.theme-green) { color: var(--color-text-on-dark); } /* FAQ (6064dc8a): фінал без власної зеленої плашки — візерунок сторінки не переривається; текст світлий, кнопка btn--light */
 .faq-page__intro .faq-page__grid, .faq-page__more .faq-page__grid { row-gap: var(--space-faq-head-gap); text-align: center; }
 .faq-page__intro .faq-page__grid > *, .faq-page__more .faq-page__grid > * { grid-column: var(--col-faq-intro); }
 .faq-page__lead { text-wrap: balance; }
@@ -25,7 +26,7 @@
 .faq-page__nav-list { display: flex; flex-wrap: wrap; justify-content: center; column-gap: var(--space-faq-nav-gap); }
 
 /* тіло на beige тлі сторінки: кожна група — рядок сітки «заголовок (колонки 1–4, sticky у межах групи) | рядки питань (колонки 5–12)» */
-.faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-green); }
+.faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-text-on-dark); --btn-row-faq-bg-default: var(--color-beige); } /* FAQ на зеленому (6064dc8a): заголовки груп світлі; рядки — beige-картки (як панелі на contacts/feedback), текст/«+»/рамка зелені, hover → --color-hover-faq */
 .faq-page__group { align-items: start; scroll-margin-top: var(--space-faq-anchor); }
 .faq-page__title { grid-column: var(--col-faq-title); text-indent: var(--shift-faq-title-ink); }
 .faq-page__group:has(> .faq-page__text) > .faq-page__title { position: sticky; top: var(--offset-faq-title-sticky); } /* sticky лишився лише на юридичних сторінках; у FAQ заголовки груп не sticky (72ec664c) */ /* оптика: чорнило першої літери на лінії колонки 1 */
