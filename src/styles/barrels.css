@@ -1,10 +1,11 @@
 /* Сторінка «Ф'ючерсні бочки Bazylsprings» (barrels.html), редизайн «Світло в погребі». Усі значення — токени (блок «Ф'ючерсні бочки» в tokens.css).
-   Кімнати: hero (фото) → S2 анатомія (wood) → S3 від бочки до пляшки (cellar) → S4 арифметика (paper, єдина світла) → S5 подальша витримка (wood)
-   → S6 ціна (cellar). Однотипні плашки — subgrid зі спільними рядками; оптичні поправки — лише токени в em. Гравюри: stroke currentColor, тонкі
+   Кімнати: hero (фото) → S2 що дає бочка (wood, пари кіл) → S3 від бочки до пляшки (cellar, ЄДИНА арка) → S4 арифметика + S5 подальша
+   витримка (одна світла кімната paper, без візерунків і зерна) → S6 ціна (текст на реальному фото). Однотипні плашки — subgrid зі спільними
+   рядками; оптичні поправки — лише токени в em. Гравюри: stroke currentColor, тонкі
    лінії --svg-stroke-hair, заливки лише токенами; анімації — transform / opacity / stroke-dashoffset, без скрол-анімацій. */
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 
-/* ---------- «Світло в погребі»: кімнати, візерунок, зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
+/* ---------- «Світло в погребі»: кімнати й зерно (токени — кінець блоку «Ф'ючерсні бочки» у tokens.css) ----------
    Кімната = секція з власним тлом (wood / cellar / paper). Header — як на всіх сторінках (рішення замовника: без власного тону пілюлі).
    Зерно плівки — лише в темних кімнатах і hero (шар ::after поверх вмісту, без анімації, pointer-events: none); «паперова» кімната — чиста,
    без зерна й візерунків (рішення замовника). */
@@ -13,7 +14,6 @@
 .bx-room--wood { background: var(--color-barrels-room-wood); }
 .bx-room--cellar { background: var(--color-barrels-room-cellar); }
 .bx-room--paper { background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
-.bx-room--pattern::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--color-barrels-pattern); mask: url('/assets/img/barrels-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat; }
 
 /* ?slots=on (barrels.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
 .show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-barrels-accent); outline-offset: calc(-1 * var(--space-10)); }
@@ -23,11 +23,8 @@
 .swatch--bx-wood .swatch__chip { background: var(--color-barrels-room-wood); }
 .swatch--bx-cellar .swatch__chip { background: var(--color-barrels-room-cellar); }
 .swatch--bx-paper .swatch__chip { background: var(--color-barrels-room-paper); }
-.swatch--bx-depth .swatch__chip { background: var(--color-barrels-depth); }
 .swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-barrels-room-cellar); }
 .swatch--bx-lightpool .swatch__chip { background: radial-gradient(ellipse var(--size-barrels-stage-glow) at top, var(--color-barrels-lightpool), transparent), var(--color-barrels-room-wood); }
-.swatch--bx-pattern .swatch__chip { position: relative; isolation: isolate; background: var(--color-barrels-room-cellar); }
-.swatch--bx-pattern .swatch__chip::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--color-barrels-pattern); mask: url('/assets/img/barrels-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat; }
 
 /* ---------- Hero ---------- */
 .hero--barrels { color: var(--color-light); }

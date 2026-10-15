@@ -835,8 +835,8 @@
 }
 
 /* ===================================================================
-   Ф'ючерсні бочки (barrels.html), редизайн «Світло в погребі» (15.10): hero → анатомія бочки (wood) → від бочки до пляшки (cellar) →
-   арифметика (paper) → подальша витримка (wood) → ціна (cellar). Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу.
+   Ф'ючерсні бочки (barrels.html), редизайн «Світло в погребі» (15.10, доопрацювання за рев'ю замовника): hero (фото) → що дає бочка
+   (wood, пари кіл) → від бочки до пляшки (cellar, єдина арка) → арифметика + подальша витримка (одна світла кімната paper) → ціна (текст на фото). Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу.
    Компоненти: barrels-layer (+ barrels-icon-*), barrels-scene, barrels-chapter, barrels-ledger, barrels-finish + barrels-head, barrels-cert, barrels-route (partials/components);
    стилі src/styles/barrels.css; логіка src/js/barrels.js; дані src/data/barrels.js; демо — design-system.html#barrels-components.
    =================================================================== */
@@ -872,11 +872,12 @@
   --size-barrels-gap: 8;                              /* проміжок між штрихами */
 
   /* ---------- «Світло в погребі» (редизайн 15.10, рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
-     Кожна секція — «кімната» зі своїм тлом; світле — лише текст, тонкі лінії та одна «паперова» секція. Нових відтінків немає: лише аліаси й color-mix палітри.
+     Кожна секція — «кімната» зі своїм тлом: hero (фото), «дерево», «погріб» (єдина арка — S3), світла «паперова» S4+S5 (одне тло), «Ціна» — текст на фото.
+     Нових відтінків немає: лише аліаси й color-mix палітри.
      Документація з живими зразками — design-system.html, розділ «Ф'ючерсні бочки». */
-  --color-barrels-room-wood: var(--color-brown);      /* кімната «дерево»: анатомія бочки, подальша витримка */
+  --color-barrels-room-wood: var(--color-brown);      /* кімната «дерево»: що дає бочка */
   --color-barrels-room-cellar: var(--color-teal);     /* кімната «погріб»: від бочки до пляшки, ціна (Bazylsprings) */
-  --color-barrels-room-paper: var(--color-beige);     /* єдина світла кімната: арифметика бочки */
+  --color-barrels-room-paper: var(--color-beige);     /* світла кімната: арифметика бочки + подальша витримка (одне суцільне тло, без візерунка й зерна) */
   --color-barrels-ink: var(--color-light);            /* основний текст на темних кімнатах */
   --color-barrels-ink-muted: var(--color-nav-text);   /* підписи й пояснення на темних кімнатах (контраст на teal/brown ≥ 10:1) */
   --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» */
@@ -884,10 +885,8 @@
   --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* золоті тонкі лінії й рамки */
   --color-barrels-hairline-soft: color-mix(in srgb, var(--color-gold) 26%, transparent);  /* другорядні лінії (підлога сцени, внутрішня рамка) */
   --color-barrels-rule-paper: color-mix(in srgb, var(--color-teal) 28%, transparent);     /* лінії на «папері» */
-  --color-barrels-depth: color-mix(in srgb, var(--color-brown) 55%, var(--color-teal));   /* глибина «вікна» (арки) на коричневій кімнаті: темніша за кімнату */
-  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 18%, transparent);      /* «світло в погребі»: тепла пляма зверху арки/кімнати */
+  --color-barrels-lightpool: color-mix(in srgb, var(--color-gold) 18%, transparent);      /* «світло в погребі»: тепла пляма під склепінням арки S3 */
   --color-barrels-amber: color-mix(in srgb, var(--color-gold) 58%, var(--color-brown));  /* бурштин рідини в гравюрах (бочка, пляшка): НЕпрозорий, бо золото поверх teal дає оливковий сірий */
-  --color-barrels-pattern: color-mix(in srgb, var(--color-light) 3%, transparent);        /* ромб тон-у-тон на темних кімнатах (маска barrels-pattern-diamond.svg) */
   --opacity-barrels-grain: 0.11;                      /* зерно плівки в темних кімнатах і hero (barrels-grain.svg, шар ::after без анімації) */
   --size-barrels-grain-tile: 240px;                   /* фізичний розмір плитки зерна (не масштабується з --u: зерно — властивість «плівки», а не макета) */
   --z-barrels-grain: 3;                               /* шар зерна всередині кімнати/hero: над вмістом (hero__content — 2), нижче пілюлі header */
