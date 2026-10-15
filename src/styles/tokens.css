@@ -935,7 +935,7 @@
   --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками 200 L (фактичний — рівномірний розподіл на всю ширину) */
   --size-barrels-wall-200-w: calc((var(--columns-barrels) - var(--span-barrels-ledger-50)) * var(--size-barrels-col) + (var(--columns-barrels) - var(--span-barrels-ledger-50) - 1) * var(--space-barrels-grid-gap)); /* колонки 4–12 */
   --size-barrels-wall-cell-w: round(down, calc((var(--size-barrels-wall-200-w) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* 4 блоки + 3 мін. проміжки ≤ колонки 4–12 */
-  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція плитки barrels-bottle-tile.svg 22×50 */
+  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція комірки-пляшки 22×50 (маска barrels-bottle-block.svg) */
   --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
   --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
   --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 — чорнило крайніх пляшок на лініях колонок */
@@ -955,6 +955,8 @@
   --space-barrels-chapter-gap: calc(64 * var(--u));   /* проміжок між розділами (рядки однакової висоти): компактний ритм, колонка ≈ висоті арки */
   --space-barrels-chapter-rule: var(--space-30);      /* лінія розділу (hairline зверху, як рядок акордеона DS) → цифра */
   --space-barrels-chapter-title: var(--space-30);     /* цифра → назва (з запасом під нижні виносні old-style цифр) */
+  --span-barrels-chapter-text: 4;                     /* текст розділу — 4 колонки (≈ 60 знаків у рядку; рев'ю 2ee87e84) */
+  --size-barrels-chapter-text-w: calc(var(--span-barrels-chapter-text) * var(--size-barrels-col) + (var(--span-barrels-chapter-text) - 1) * var(--space-barrels-grid-gap));
   --space-barrels-chapter-text: var(--space-10);      /* назва → пояснення */
   --space-barrels-note-gap: var(--space-20);          /* цифра → підпис «орієнтовно» (одна базова лінія) */
   --shift-barrels-numeral-pour: -0.0465em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до лівої осі розділу (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920: */
@@ -976,15 +978,16 @@
   --size-barrels-demo-stage-h: calc(600 * var(--u));
   --size-barrels-demo-w: calc(1408 * var(--u));       /* ширина сітки в демо design-system.html: сторінка DS 1508u − поля демо-панелі 2 × 50u */
 
-  /* S6 «Ціна»: шапка по центру на teal (заголовок, маршрут, застереження), нижче — смуга реального фото днищ БЕЗ затемнення (композиція як у секції
-     підбору на головній: текст на кольорі секції, фото — смугою під вмістом) і на ній два однакові сертифікати — панелі DS (beige + --radius-panel) */
-  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото смуги: ряд днищ */
-  --space-barrels-price-band: var(--space-barrels-section-y); /* фото видно над і під сертифікатами */
-  --space-barrels-cert-gap: var(--space-30);          /* між сертифікатами (стопкою) — крізь проміжок видно фото */
+  /* S6 «Ціна»: фото днищ на всю секцію без затемнення (рев'ю ee14a4bc); поверх — шапка (заголовок, маршрут, застереження) світлим текстом без плашки і два сертифікати-панелі DS поруч
+     (50 L — колонки 1–6, 200 L — 7–12; рев'ю 9f60cafe). Маршрут: два міста, hairline-лінія DS і корабель по центру (рев'ю abe683af) */
+  --scale-barrels-price-bg: 2;                        /* наближення кадру фото (origin праворуч): шапка лягає на темну розмиту частину бочок */
+  --origin-barrels-price-bg: 100% 55%;
+  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото секції: ряд днищ */
+  --space-barrels-cert-gap: var(--space-40);          /* шапка → ряд сертифікатів (було 70u; рев'ю d310ba3f) */
   --space-barrels-cert-row: var(--space-30);          /* «що входить» → кнопка */
-  --span-barrels-cert-head: 4;                        /* сертифікат = subgrid 12 колонок: назва + ціна — колонки 1–4, */
-  --span-barrels-cert-facts: 4;                       /* факти — 5–8, */
-  --col-barrels-cert-offer: 10;                       /* «що входить» + кнопка — 10–12 (колонка 9 — проміжок) */
+  --space-barrels-cert-block: var(--space-40);        /* між частинами сертифіката: назва+ціна, факти, «що входить» */
+  --span-barrels-cert: 6;                             /* сертифікат — 6 колонок: 50 L — 1–6, 200 L — 7–12 */
+  --size-barrels-route-ship: calc(40 * var(--u));     /* корабель на лінії маршруту (іконка DS, 24×24, лінія 1.5) */
   --shift-barrels-cert-title-ink: -0.025em;           /* оптика назви сертифіката «Бочка …»: бокове поле «Б» 30u — на лівій осі панелі */
   --font-size-barrels-price-xl: calc(116 * var(--u)); /* ціна в сертифікаті: «€ 6 000» */
   --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту сертифіката на 2–3px (виміряно чорнилом) — зсув праворуч */
@@ -1002,8 +1005,9 @@
   --shift-barrels-approx-ink: -0.068em;                 /* бокове поле гліфа «≈» EB Garamond: чорнило на 0.068em правіше осі колонки (виміряно) */
   --space-barrels-approx-gap: 0.08em;                   /* «≈» → число (в em знака «≈») */
   --font-size-barrels-ledger-cost: calc(34 * var(--u)); /* «≈ € 20,83» */
-  --space-barrels-ledger-row: var(--space-20);          /* ярлик → число; лінія → вартість */
-  --space-barrels-wall-top: var(--space-30);            /* одиниця → стіна */
+  --space-barrels-ledger-row: var(--space-30);          /* ярлик → число; стіна → вартість (було 20u: рев'ю 45c32ffe «треба більше відступ») */
+  --space-barrels-wall-top: var(--space-50);            /* одиниця → стіна (було 30u) */
+  --space-barrels-profit-head: var(--space-100);        /* шапка «Скільки пляшок…» → групи 50 L / 200 L (було 70u) */
   --shift-barrels-caption-ink: -0.04em;                 /* оптика підписів («пляшок…», «вартість…»): бокове поле першої літери */
 
   /* S2: решта (розміри кіл — у блоці сітки вище) */
@@ -1014,14 +1018,17 @@
 
   /* S5 «Подальша витримка»: продовження світлої кімнати; чотири вина по 3 колонки сітки зі спільними рядками (subgrid: гравюра, назва, регіон, ноти) */
   --span-barrels-finish: 3;
-  --size-barrels-finish-head: 76%;                       /* гравюра днища (одне коло-обідок hairline + клепки) — частка ширини колонки вина */
+  --size-barrels-finish-head: 76cqw;                       /* гравюра днища (одне коло-обідок hairline + клепки в кільці навколо значка) — частка ширини колонки вина */
+  --border-barrels-rim: calc(2 * var(--border-hairline));  /* обідок днища S5 — 2px (клепки лишаються hairline 1px) */
+  --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.2);                      /* значок вина (іконка DS, 24×24, лінія 1.5) у центрі днища — частка ширини гравюри; порожній центр гравюри r 32/100 лишає ≥ 23% простору навколо */
   --font-size-barrels-finish-name: calc(28 * var(--u));
   --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається */
 }
 
 /* ---------- Коктейлі (cocktails.html, partials/components/cocktail.html, lightbox.html) ----------
-   Лише похідні від наявних токенів. Сітка блоку — 12 колонок у ширині сітки каталогу з її ж зазором:
-   (1825 − 11×40)/12 = 115.42u, тож 3 колонки = 3×115.42 + 2×40 = 426.25u = рівно картка каталогу; фото 4 кол. = 581.67u, текст 5 кол. = 737.08u. */
+   Лише похідні від наявних токенів. Блок = панель DS (.contacts-panel, beige) на зеленому тлі сторінки; ЗОВНІШНІ краї панелі — на колонках 1 і 12 сітки каталогу
+   (1825u, зазор 40u), усередині — поле панелі (--space-contacts-pad + --border-frame = 55u) і три доріжки: фото 4 : текст 5 : картка каталогу 426.25u (рівно
+   її ширина; арка картки задана в u). */
 :root {
   --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
   --count-cocktail-cols: 12;
@@ -1032,8 +1039,7 @@
   /* МІНІМАЛЬНА висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
   --size-cocktail-h: var(--size-card-cat2-h);
   --col-cocktails-intro: 4 / span 6;                           /* вступ: 6 середніх колонок — центр = центр екрана */
-  /* метрики EB Garamond (частки em; canvas measureText, wght 600): ascent/descent рядка (hhea); висота капітелі за чорнилом — 0.639
-     (геометрична «Н» 0.654; верхній ряд пікселів згладжений, видимий край чорнила нижче на ≈0.015em — виміряно DPR 2 на 1200–1920) */
+  /* метрики EB Garamond (частки em; hhea ascent/descent при wght 600): ascent/descent рядка; cap-height — висота капітелі за чорнилом великої «Н» (виміряно ink-знімком DPR 4 «з/без» тексту: 0.654 геометрична + 0.004 згладжування верхнього ряду пікселів) */
   --font-ascent-serif: 1.007;
   --font-descent-serif: 0.298;
   --font-cap-height-serif-ink: 0.658;

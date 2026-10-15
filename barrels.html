@@ -57,7 +57,7 @@
         </div>
         <div class="barrels-how__chapters">
           <!--@include components/barrels-chapter step="pour" n="1" value="%barrels.abvIn%" title="Заливка" text="У бочку заливається дистилят міцністю близько 63%"-->
-          <!--@include components/barrels-chapter step="angels" n="2" value="%barrels.angelsShare%" note="%barrels.angelsNote%" title="Витримка" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
+          <!--@include components/barrels-chapter step="angels" n="2" value="%barrels.angelsShare%" title="Витримка" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
           <!--@include components/barrels-chapter step="bottle" n="3" value="%barrels.abvOut%" title="Розлив" text="Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л"-->
         </div>
       </div>
@@ -69,11 +69,9 @@
       <div class="barrels-profit__grid">
         <div class="barrels-profit__head bx-head">
           <h2 class="t-h2" id="profit-title" data-reveal="rise">Скільки пляшок ви отримаєте?</h2>
-          <p class="barrels-profit__legend" aria-hidden="true"><span class="barrels-profit__legend-key"></span>= 1 пляшка 0,7 л</p>
         </div>
         <!--@include components/barrels-ledger size="50 L" mod=" bx-ledger--accent bx-ledger--50" count="%barrels.bottles50%" word="%barrels.bottles50Word%" cost="%barrels.cost50%"-->
         <!--@include components/barrels-ledger size="200 L" mod=" bx-ledger--200" count="%barrels.bottles200%" word="%barrels.bottles200Word%" cost="%barrels.cost200%"-->
-        <span class="barrels-profit__shelf" aria-hidden="true"></span>
       </div>
     </section>
 
@@ -85,29 +83,28 @@
           <h2 class="t-h2" id="next-title" data-reveal="rise">Подальша витримка</h2>
           <p class="barrels-next__lead" data-reveal="rise">Бочки з-під марсали, мадери, портвейну, хересу&nbsp;— кожна додає свій унікальний відтінок смаку</p>
         </div>
-        <!--@include components/barrels-finish orn="marsala" wine="марсали" name="Marsala" origin="Сицилія, Італія" notes="%barrels.notesMarsala%"-->
-        <!--@include components/barrels-finish orn="madeira" wine="мадери" name="Madeira" origin="Мадейра, Португалія" notes="%barrels.notesMadeira%"-->
-        <!--@include components/barrels-finish orn="port" wine="портвейну" name="Port" origin="Долина Дору, Португалія" notes="%barrels.notesPort%"-->
-        <!--@include components/barrels-finish orn="sherry" wine="хересу" name="Sherry" origin="Херес, Іспанія" notes="%barrels.notesSherry%"-->
+        <!--@include components/barrels-finish orn="marsala" icon="grape" wine="марсали" name="Marsala" origin="Сицилія, Італія" notes="%barrels.notesMarsala%"-->
+        <!--@include components/barrels-finish orn="madeira" icon="mountain" wine="мадери" name="Madeira" origin="Мадейра, Португалія" notes="%barrels.notesMadeira%"-->
+        <!--@include components/barrels-finish orn="port" icon="glass" wine="портвейну" name="Port" origin="Долина Дору, Португалія" notes="%barrels.notesPort%"-->
+        <!--@include components/barrels-finish orn="sherry" icon="sun" wine="хересу" name="Sherry" origin="Херес, Іспанія" notes="%barrels.notesSherry%"-->
       </div>
     </section>
 
-    <!-- «Ціна»: шапка по центру на teal кімнати (заголовок, маршрут, застереження); нижче — смуга реального фото днищ БЕЗ затемнення (СЛОТ під нову
-         зйомку) і на ній два однакові сертифікати — панелі DS (beige), 50 L першим, кожен на всі 12 колонок -->
+    <!-- «Ціна»: фото днищ бочок на ВСЮ секцію (від верху), БЕЗ затемнення, без суцільної заливки й без плашки під шапкою (рев'ю ee14a4bc, 8263cbc6; СЛОТ під
+         нову зйомку). Шапка (заголовок, маршрут, застереження) — світлий текст безпосередньо на фото: кадр наближено до темної правої частини (бокеh бочки, L ≤ 0.16),
+         контраст ≥ 4.5:1 виміряно піксельно. Сертифікати — панелі DS, поруч по 6 колонок (1–6 і 7–12), 50 L першим -->
     <section class="barrels-price bx-room bx-room--cellar" id="price" aria-labelledby="price-title">
-      <div class="barrels-price__head bx-head">
-        <h2 class="barrels-price__title t-h2" id="price-title" data-reveal="rise">Ціна</h2>
-        <!--@include components/barrels-route-->
-        <p class="barrels-price__note">%barrels.disclaimer%</p>
-      </div>
-      <div class="barrels-price__band">
-        <figure class="barrels-price__bg" data-parallax="soft" data-slot="Фото смуги «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку">
-          <img src="/assets/img/barrels-price-bg.webp" width="1620" height="1080" alt="" loading="lazy" decoding="async">
-        </figure>
-        <div class="barrels-price__grid">
-          <!--@include components/barrels-cert size="50 L" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50"-->
-          <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200"-->
+      <figure class="barrels-price__bg" data-parallax="soft" data-slot="Фото «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку (≥ 2400 px по довгій стороні, MEDIA.md)">
+        <img src="/assets/img/barrels-price-bg.webp" width="1620" height="1080" alt="" loading="lazy" decoding="async">
+      </figure>
+      <div class="barrels-price__grid">
+        <div class="barrels-price__head bx-head">
+          <h2 class="barrels-price__title t-h2" id="price-title" data-reveal="rise">Ціна</h2>
+          <!--@include components/barrels-route-->
+          <p class="barrels-price__note">%barrels.disclaimer%</p>
         </div>
+        <!--@include components/barrels-cert size="50 L" price="%barrels.price50%" bottles="%barrels.bottles50%" cost="%barrels.cost50%" param="50"-->
+        <!--@include components/barrels-cert size="200 L" price="%barrels.price200%" bottles="%barrels.bottles200%" cost="%barrels.cost200%" param="200"-->
       </div>
     </section>
   </main>
