@@ -947,7 +947,8 @@
   --span-barrels-stage: 5;                            /* арка — колонки 1–5; колонка 6 — проміжок */
   --col-barrels-chapters: 7;                          /* розділи — від колонки 7 до правого краю сітки */
   --offset-barrels-stage-top: var(--offset-product-stage-sticky);                    /* sticky-верх арки: під пілюлею header (як фото товару) */
-  --size-barrels-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки: екран − пілюля − повітря знизу */
+  --size-barrels-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки за екраном: екран − пілюля − повітря знизу */
+  --size-barrels-stage-max: 85%;                      /* …але не вища за 85% колонки розділів (% від рядка сітки): sticky завжди має хід ≥ 15% колонки на 1200–1920 */
   --size-barrels-stage-w: calc(var(--span-barrels-stage) * var(--size-barrels-col) + (var(--span-barrels-stage) - 1) * var(--space-barrels-grid-gap));
   --size-barrels-stage-rise: calc(var(--size-barrels-stage-w) * var(--ratio-barrels-arch-rise));
   --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині арки */
