@@ -193,7 +193,7 @@
 .barrels-next { padding-block: 0 var(--space-barrels-section-y); }
 .barrels-next__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-finish-gap); width: var(--container-barrels); margin-inline: auto; }
 .barrels-next__head { grid-column: 1 / -1; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-barrels-stack); margin-bottom: var(--space-70); }
-.barrels-next__head .t-h2 { margin-top: var(--shift-barrels-cap-top); margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «П» — на лівій осі */
+.barrels-next__head .t-h2 { margin-left: var(--shift-barrels-h2-stem); } /* бокове поле «П» — на лівій осі; без підтягування капітелі вгору — секція продовжує світлу кімнату S4, заголовок не виходить за її верх */
 .barrels-next__lead { max-width: var(--container-barrels-next-lead); margin-left: var(--shift-barrels-lead-stem); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: pretty; }
 .bx-finish { grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; }
 .bx-finish--marsala { --bx-wine: var(--color-barrels-wine-marsala); }
