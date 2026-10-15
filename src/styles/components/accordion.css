@@ -21,8 +21,8 @@
 .acc__body { cursor: auto; margin-top: var(--space-30); max-width: var(--container-faq-body); } /* 194:1216: відповідь без uppercase — роль .t-text (sentence case) у розмітці */
 .acc--faq .acc__body > * + * { margin-top: var(--space-15); } /* відповідь з кількох абзаців (faq-item з параметром aHtml, faq.html): проміжок як у рядку товару */
 
-/* FAQ-рядок (194:1188): рамка (--border-hairline), padding --space-30 */
-.acc--faq { padding: var(--space-30); border: var(--border-hairline) solid var(--color-green); background-color: var(--btn-row-faq-bg-default); transition: background-color var(--duration-base) var(--ease-out); }
+/* FAQ-рядок (194:1188): рамка (--border-hairline), padding --space-30, легке закруглення як у кнопки (--radius-btn, рішення замовника 5e704b57; overflow: clip під час анімації обрізає по заокругленню) */
+.acc--faq { padding: var(--space-30); border: var(--border-hairline) solid var(--color-green); border-radius: var(--radius-btn); background-color: var(--btn-row-faq-bg-default); transition: background-color var(--duration-base) var(--ease-out); }
 /* іконка завжди зверху (flex-start); у закритому рядку опущена до центру першого рядка питання (--acc-faq-icon-drop) і плавно піднімається при відкритті (194:1188) */
 .acc--faq > summary { align-items: flex-start; }
 .acc--faq > summary::after { translate: 0 var(--acc-faq-icon-drop); }
