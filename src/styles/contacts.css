@@ -29,7 +29,7 @@
 
 /* маркер: «крапля» (коло зверху, кінчик униз = координата); іконка pin компенсує поворот */
 .contacts-map__pin { position: relative; width: var(--size-map-pin); height: calc(var(--size-map-pin) * 1.2071); pointer-events: none; } /* 1.2071 = (1 + √2) / 2: коло + кінчик повернутого квадрата */
-.contacts-map__pin-shape { position: absolute; left: 0; top: 0; width: var(--size-map-pin); height: var(--size-map-pin); box-sizing: border-box; background: var(--map-pin-bg); border: var(--border-hairline) solid var(--map-pin-border); border-radius: 50% 50% 0 50%; transform: rotate(45deg); box-shadow: var(--map-pin-shadow); }
+.contacts-map__pin-shape { position: absolute; left: 0; top: 0; width: var(--size-map-pin); height: var(--size-map-pin); box-sizing: border-box; background: var(--map-pin-bg); border: var(--border-hairline) solid var(--map-pin-border); border-radius: 50% 50% 0 50%; transform: rotate(45deg); }
 .contacts-map__pin-icon { --icon-size: var(--size-map-pin-icon); position: absolute; left: calc((var(--size-map-pin) - var(--size-map-pin-icon)) / 2); top: calc((var(--size-map-pin) - var(--size-map-pin-icon)) / 2); color: var(--map-pin-border); }
 
 /* контроли зуму: світлі квадратні кнопки сайту (токени --btn-light-*), EB Garamond; кільце фокуса — глобальне :focus-visible */
@@ -51,7 +51,8 @@
 .contacts-map .maplibregl-ctrl-attrib-inner { display: inline; }
 
 /* підказка «Ctrl + прокрутка» (cooperative gestures) */
-.contacts-map .maplibregl-cooperative-gesture-screen { background: var(--map-overlay-bg); color: var(--map-overlay-text); transition-duration: var(--duration-fast); }
+.contacts-map .maplibregl-cooperative-gesture-screen { background: var(--map-overlay-bg); color: var(--map-overlay-text); transition-duration: var(--duration-fast); transition-timing-function: var(--ease-out); }
+.contacts-map .maplibregl-marker { transition: opacity var(--duration-fast) var(--ease-out); } /* у бібліотеки 0.2s ease — єдині токени руху */
 
 /* заглушка без WebGL / при помилці мережі (і в <noscript>): палітра сайту, без битих елементів */
 .contacts-map__fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-map-fallback-gap); padding: var(--space-contacts-pad); text-align: center; background: var(--map-land); color: var(--map-text); }
@@ -62,6 +63,8 @@
 @media (prefers-reduced-motion: reduce) {
   .contacts-map .contacts-map__zoom-group .contacts-map__zoom, .contacts-map .maplibregl-ctrl.maplibregl-ctrl-attrib a, .contacts-map .maplibregl-cooperative-gesture-screen { transition: none; }
 }
+/* контурна кнопка на бежевій панелі: базова заливка hover (beige) збігається з тлом панелі й не видна — hover/focus/active як у btn--beige (токени --btn-beige-*) */
+.contacts-panel .btn--outline { --btn-bg-hover: var(--btn-beige-bg-hover); --btn-bg-focus: var(--btn-beige-bg-focus); --btn-bg-active: var(--btn-beige-bg-active); }
 /* посилання без підкреслень: hover/focus — колір (як у футері) */
 .contacts-link { transition: color var(--duration-fast) var(--ease-out); }
 a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-duration: var(--duration-focus); }

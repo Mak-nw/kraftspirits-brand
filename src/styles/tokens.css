@@ -523,9 +523,9 @@
 
   /* ---------- Каталог 2 (catalog 204:2221, 1920×949) ---------- */
   --color-card-bg-catalog: #B7BAAC;   /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (Figma 206:2543: #b7baac — збігається; інші картки макета: #dcdbcf / rgba(220,219,207,.8)) */
-  --color-liquid-catalog: #DCDBCF;    /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (у Figma заливки «рідини» немає; значення = --color-beige) */
-  --color-select-bg-hover: #364733;   /* hover-стан, у Figma не намальований (рішення дизайну): плитка фільтра на hover/focus/відкрито; НЕПРОЗОРИЙ = mix in srgb 89% #223520 + 11% #DCDBCF = (54,71,51); контраст beige-тексту ≈ 7.2:1 (макс. при ≥7:1; 16–18% дає 6.2–6.1:1, не проходить) */
-  --color-select-bg: #354632;   /* 204:2333 / 206:2522 / 206:2532 фон поля фільтра; НЕПРОЗОРИЙ = color-mix(in srgb, #223520 90%, #DCDBCF 10%) = (53,70,50); не просвічує візерунок каталогу; контраст beige-тексту ≈ 7.3:1 */
+  --color-liquid-catalog: var(--color-beige);    /* рішення замовника для каталогу; у Figma hex може відрізнятись — звір з get_design_context і зазнач у звіті, якщо Figma має інші значення (у Figma заливки «рідини» немає; значення = --color-beige) */
+  --color-select-bg-hover: color-mix(in srgb, var(--color-green) 83%, var(--color-beige));   /* hover-стан (рішення замовника, питання ae8b39: «16–18% беж» → 17%): плитка фільтра на hover/focus/відкрито = зелений + 17% беж, непрозорий; контраст beige-тексту ≈ 6.1:1 (≥ 4.5 AA) */
+  --color-select-bg: color-mix(in srgb, var(--color-green) 90%, var(--color-beige));   /* 204:2333 / 206:2522 / 206:2532 фон поля фільтра: зелений + 10% беж, непрозорий (не просвічує візерунок каталогу); контраст beige-тексту ≈ 7.3:1 */
   --opacity-crumb-hover: 0.6;         /* семантичний токен, вузла Figma немає (рішення дизайну): hover/focus крихт на сторінці товару — посилання тьмяніє, без підкреслення */
   --opacity-logo-hover: 0.8;          /* семантичний токен, вузла Figma немає (рішення оркестратора): спільний hover пари логотипів YasnoCraft/Bazylsprings у хедері (група .site-header__logos) — обидва зображення тьмяніють 1 → 0.8 за --duration-fast разом, без підкреслення й зміни розміру */
   --size-catalog-grid-w: calc(1825 * var(--u));   /* 204:2222 сітка; 204:2331 панель фільтрів */
@@ -570,7 +570,7 @@
   --size-product-head-bs-w: calc(var(--size-product-panel-w) - 2 * var(--space-product-head-bs-inset)); /* шапка BS на всю ширину панелі за вирахуванням відступів: 910 − 14 = 896 (було 886 при 12u, 813 при старій розкладці, 194:1578) */
   --ratio-product-head-bs: 813 / 313;               /* 194:1578 пропорція SVG product-frame-bazyl.svg; висота шапки = ширина / ratio (896 → ≈345u), без спотворення */
   --space-product-panel-pt-bs: calc(var(--space-product-head-bs-inset) - round(down, var(--border-frame), 1px)); /* pt панелі BS: відступ шапки 7 мінус рамка 5 (у BS вона beige, як тло) = 2 при 1920; рамка у браузері округлюється до цілих px вниз (3.75 → 3), тому віднімаємо округлену: верхній відступ від зовнішнього краю = 7u на 1200–1920 (DPR 1); відмінність BS від YC (там арка впритул) */
-  --color-product-accent: var(--color-green-alt);   /* тема YasnoCraft: рамка панелі 194:1388, текст, кнопка */
+  --color-product-accent: var(--color-green);       /* тема YasnoCraft: рамка панелі, текст, кнопка (= --color-green; раніше --color-green-alt, різниця 1/255) */
   --color-product-accent-line: var(--color-line-soft); /* лінії акордеона YasnoCraft 205:2448 (new design; раніше --color-line-strong 194:1402) */
   --color-product-accent-bs: var(--color-teal);     /* тема Bazylsprings: рамка панелі 194:1523, текст, лінії, кнопка */
   --size-product-focus: var(--border-hairline);     /* рамка активної мініатюри 1px (рішення дизайну: у Figma не намальована) */
@@ -601,7 +601,6 @@
   --header3-group-gap: calc(10 * var(--u));     /* 214:2903 / 214:2917 gap між кнопками групи */
   --header3-burger-w: calc(11.47 * var(--u));   /* 214:2905 іконка «бургер» (public/assets/icons/menu.svg) */
   --header3-burger-h: calc(13 * var(--u));      /* 214:2905 */
-  --color-header3-burger: #D9D9D9;              /* 214:2905 заливка іконки Union */
   --scale-burger-bar: 0.6;                      /* рішення замовника: при hover/focus-visible/відкритому меню крайні смуги бургера (верхня і нижня) звужуються до 60% ширини зліва (transform-origin: left); середня лишається повна */
   --header3-menu-gap: calc(10 * var(--u));      /* рішення дизайну, у Figma немає: відстань панелі випадного меню від пілюлі */
   --header3-menu-w: calc(310 * var(--u));       /* рішення дизайну, у Figma немає: ширина панелі меню = дві кнопки лівої групи (150 + 10 + 150) */
@@ -626,7 +625,6 @@
   --size-product-thumb-h: calc(167 * var(--u));     /* СПІЛЬНЕ YC+BS: 206:2521 */
   --space-product-thumb-inset: calc(15 * var(--u)); /* СПІЛЬНЕ YC+BS: 206:2521 x=65 − 50, y=118 − 103 */
   --space-product-thumb-gap: calc(7 * var(--u));    /* СПІЛЬНЕ YC+BS: 194:1420 y=292 − (118 + 167) */
-  --color-ycp-stage-bg: #dad5c9;                /* середнє по краях hero-фото gin-yasnyi (щоб бокові/верхні поля не мали шва; у Figma 206:2493 заливка #cecbbf, але растр там інший); також поле для вирізів інших товарів */
   --type-spec-font: var(--font-family-serif); --type-spec-weight: var(--fw-semibold); --type-spec-size: var(--font-size-title); --type-spec-lh: var(--lh-none); --type-spec-ls: var(--ls-wide); /* 205:2442 «500 мл» / «40% alc»: EB Garamond SemiBold 20, 0.6px, без uppercase */
 
   /* ---------- Головна, новий макет (224:3966, 1920×6484): hero 224:3617 · бренди 224:3596 · вступ 224:3639 · екскурсії 224:3586 · підбір 224:3732 · футер 224:3700 ---------- */
@@ -762,7 +760,6 @@
   --size-map-pin-icon: calc(24 * var(--u));                                        /* іконка pin всередині маркера */
   --map-pin-bg: var(--color-light);
   --map-pin-border: var(--color-green);
-  --map-pin-shadow: 0 calc(4 * var(--u)) calc(12 * var(--u)) color-mix(in srgb, var(--color-green) 30%, transparent);
   --size-map-ctrl: calc(40 * var(--u));                                            /* кнопки зуму: квадрат */
   --space-map-edge: calc(10 * var(--u));                                           /* відступ контролів і атрибуції від країв карти */
   --map-ctrl-bg: var(--btn-light-bg-default);                                      /* кнопки зуму = світла кнопка сайту */
@@ -847,10 +844,6 @@
   --size-barrels-sr: 1px;                             /* .bx-sr — текст лише для читачів екрана (класичний visually-hidden 1×1px) */
   --container-barrels-slots: calc(560 * var(--u));    /* ?slots=on: ширина переліку місць */
   --size-barrels-slots-max-h: 60vh;                   /* ?slots=on: перелік не вищий за 60% екрана (далі — прокрутка) */
-  --color-barrels-shade-top: color-mix(in srgb, var(--color-teal) 82%, transparent);    /* затемнення hero зверху лише під текстом (читабельність H1 і пілюлі; виміряно пікселями ≥ 4.5:1). Поза словником DS — питання замовнику у формі */
-  --color-barrels-shade-mid: color-mix(in srgb, var(--color-teal) 58%, transparent);    /* середина верхнього затемнення (під заголовком) */
-  --stop-barrels-shade-mid: 38%;                      /* затемнення hero зверху: повна сила → середня (під текстом) → */
-  --stop-barrels-shade-end: 62%;                      /* … прозоре з 62% висоти (нижня частина фото — без затемнення) */
   --space-barrels-section-y: calc(150 * var(--u));    /* вертикальні відступи секцій сторінки */
 
   /* рух: зациклені анімації (SVG-ілюстрації); крок зациклення, швидкі підцикли кратні (синхронні) */
@@ -867,13 +860,6 @@
   /* ---------- Кімнати (рішення замовника: основа сторінки — коричневий + синій Bazylsprings замість зеленого YasnoCraft) ----------
      Кожна секція — «кімната» з суцільним тлом палітри: «дерево» (brown), «погріб» (teal, єдина арка — S3), світла «паперова» S4+S5 (beige, одне тло),
      «Ціна» — teal + смуга фото. Нових відтінків немає: лише аліаси й color-mix палітри. Живі зразки — design-system.html, розділ «Ф'ючерсні бочки». */
-  --color-barrels-room-wood: var(--color-brown);      /* кімната «дерево»: що дає бочка */
-  --color-barrels-room-cellar: var(--color-teal);     /* кімната «погріб»: від бочки до пляшки, ціна (Bazylsprings) */
-  --color-barrels-room-paper: var(--color-beige);     /* світла кімната: арифметика бочки + подальша витримка (одне суцільне тло) */
-  --color-barrels-ink: var(--color-light);            /* основний текст на темних кімнатах */
-  --color-barrels-ink-muted: var(--color-nav-text);   /* підписи й пояснення на темних кімнатах (контраст на teal/brown ≥ 10:1) */
-  --color-barrels-ink-paper: var(--color-teal);       /* текст і графіка на «папері» (і на панелях beige) */
-  --color-barrels-accent: var(--color-gold);          /* цифри-гіганти, гравюри (лише на темному) */
   /* ПОХІДНІ кольори сторінки (дозвіл замовника: лише color-mix палітри; зведено до мінімального набору, задокументовано в design-system.html →
      «Палітра → Похідні кольори: бочки»). Лінії на світлому — токен DS --color-line-soft. */
   --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамка на темному: арка S3, лінії розділів S3 */
@@ -960,7 +946,6 @@
   --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
   --shift-barrels-copy-stem: -0.04em;                 /* оптика пояснення: перша літера зі штамбом (П) — разом ліва вісь розділу ≤1px на 1200–1920 */
   --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між розділами */
-  --opacity-barrels-dim: 0.32;                        /* неактивні частини гравюри */
   --shift-barrels-cask-empty: 200px;                  /* рівень рідини в бочці (одиниці viewBox 600×700): порожня — нижче дна */
   --shift-barrels-cask-angels: 32px;                  /* після витримки (≈15% умовних втрат) */
   --shift-barrels-cask-bottled: 118px;                /* під час розливу */
@@ -1049,11 +1034,6 @@
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
-  --color-cocktail-page-text: var(--color-beige);               /* вступ на зеленому тлі сторінки */
-  --color-cocktail-text: var(--color-green);                    /* текст у блоці-панелі (панель — світла, beige: існуюча .contacts-panel) */
-  --color-cocktail-line: var(--color-line-soft);                /* розділювач рядків = лінії акордеона товару (текст 20%) — на світлій панелі той самий токен, без похідних */
-  --color-cocktail-accent: var(--color-barrels-amber);          /* єдиний акцент: оригінальна назва, кількості, номери кроків. Золото #cbaf86 на beige — 1.6:1; золото 40% + brown (вже в палітрі, «Бочки») — 5.2:1 */
-  --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */
   --space-lightbox-pad: var(--space-50);
 }
 

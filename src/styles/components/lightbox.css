@@ -1,8 +1,8 @@
 /* Повноекранний перегляд фото (partials/components/lightbox.html, src/js/lightbox.js): нативний <dialog> (showModal — фокус усередині, Esc).
-   Тло = тло сторінки (--color-lightbox-bg), фото — та сама сцена .product-stage з cross-fade, але object-fit: contain (кадр цілий);
+   Тло = тло сторінки (--color-green), фото — та сама сцена .product-stage з cross-fade, але object-fit: contain (кадр цілий);
    стрілки — .arrow-btn слайдера, «закрити» — .btn--beige (та сама кнопка, що «додати в кошик» на сторінці). */
-.lightbox { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: var(--space-lightbox-pad); border: 0; background: var(--color-lightbox-bg); color: var(--color-cocktail-text); }
-.lightbox::backdrop { background: var(--color-lightbox-bg); }
+.lightbox { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: var(--space-lightbox-pad); border: 0; background: var(--color-green); color: var(--color-green); }
+.lightbox::backdrop { background: var(--color-green); }
 .lightbox[open] {
   display: grid; grid-template-columns: var(--size-arrow-btn-w) minmax(0, 1fr) var(--size-arrow-btn-w); grid-template-rows: max-content minmax(0, 1fr) max-content;
   grid-template-areas: "close close close" "prev stage next" ". count ."; gap: var(--space-30); align-items: center;

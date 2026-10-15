@@ -8,10 +8,10 @@
 .page-barrels .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 
 /* ---------- Кімнати: секція з суцільним тлом палітри (wood / cellar / paper). Header — як на всіх сторінках ---------- */
-.bx-room { position: relative; isolation: isolate; color: var(--color-barrels-ink); }
-.bx-room--wood { background: var(--color-barrels-room-wood); }
-.bx-room--cellar { background: var(--color-barrels-room-cellar); }
-.bx-room--paper { background: var(--color-barrels-room-paper); color: var(--color-barrels-ink-paper); }
+.bx-room { position: relative; isolation: isolate; color: var(--color-light); }
+.bx-room--wood { background: var(--color-brown); }
+.bx-room--cellar { background: var(--color-teal); }
+.bx-room--paper { background: var(--color-beige); color: var(--color-teal); }
 /* шапка секції (кікер / заголовок / лід / підписи) — по центру сітки (рев'ю e725d1be, a40df587, 73b1b655; так само в S4 і S5) */
 .bx-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-stack); text-align: center; }
 .bx-head > .t-h2 { margin-left: var(--bx-h2-optic, 0em); } /* оптичний центр чорнила H2 (токени --shift-barrels-h2-center-*) */
@@ -21,20 +21,17 @@
 .barrels-price__head { --bx-h2-optic: var(--shift-barrels-h2-center-price); }
 
 /* ?slots=on (barrels.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
-.show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-barrels-accent); outline-offset: calc(-1 * var(--space-10)); }
-.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-barrels-room-cellar); color: var(--color-barrels-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
+.show-slots [data-slot] { outline: var(--size-barrels-slot-outline) dashed var(--color-gold); outline-offset: calc(-1 * var(--space-10)); }
+.bx-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-barrels-slots); max-height: var(--size-barrels-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-teal); color: var(--color-light); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); list-style: none; }
 
 /* зразки похідних кольорів у design-system.html (розділ «Ф'ючерсні бочки») */
-.swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-barrels-room-cellar); } /* напівпрозорі — на своєму тлі */
+.swatch--bx-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-teal); } /* напівпрозорі — на своєму тлі */
 .swatch--bx-amber .swatch__chip { background: var(--color-barrels-amber); }
 .swatch--bx-ink-muted .swatch__chip { background: var(--color-barrels-ink-paper-muted); }
-.swatch--bx-plate .swatch__chip { background: linear-gradient(var(--color-barrels-layer-plate), var(--color-barrels-layer-plate)), var(--color-barrels-room-wood); }
-.swatch--bx-shade-top .swatch__chip { background: linear-gradient(var(--color-barrels-shade-top), var(--color-barrels-shade-top)), var(--color-light); }
-.swatch--bx-shade-mid .swatch__chip { background: linear-gradient(var(--color-barrels-shade-mid), var(--color-barrels-shade-mid)), var(--color-light); }
+.swatch--bx-plate .swatch__chip { background: linear-gradient(var(--color-barrels-layer-plate), var(--color-barrels-layer-plate)), var(--color-brown); }
 
-/* ---------- Hero: фото + затемнення зверху лише під текстом (читабельність H1 і пілюлі header; на головній ту саму роль виконує оброблене фото) ---------- */
+/* ---------- Hero: фото з уже застосованою обробкою (затемнення зверху вшите у barrels-hero.webp, як у home-hero-bg.webp; CSS-оверлея нема) ---------- */
 .hero--barrels { color: var(--color-light); }
-.hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top), var(--color-barrels-shade-mid) var(--stop-barrels-shade-mid), transparent var(--stop-barrels-shade-end)); }
 .hero__content { position: absolute; z-index: 2; top: var(--offset-barrels-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-hero-gap); text-align: center; }
 .hero__title { width: var(--size-barrels-hero-title-w); text-wrap: balance; } /* розмір — роль .t-hero у розмітці (єдиний h1 сайту, рішення замовника) */
 .hero__subtitle { max-width: var(--container-barrels-hero-sub); text-wrap: balance; }
@@ -48,15 +45,15 @@
 .barrels-benefits { padding-block: var(--space-barrels-section-y); }
 .barrels-benefits__grid { width: var(--container-barrels); margin-inline: auto; }
 .barrels-benefits__head { margin-bottom: var(--space-barrels-head); }
-.barrels-benefits__kicker { margin-top: var(--shift-barrels-kicker-cap-top); color: var(--color-barrels-accent); }
+.barrels-benefits__kicker { margin-top: var(--shift-barrels-kicker-cap-top); color: var(--color-gold); }
 .bx-layers { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); }
 .bx-layer { position: relative; isolation: isolate; grid-column: span var(--span-barrels-layer); display: grid; grid-template-rows: var(--size-barrels-layer) auto; }
 .bx-layer__tex { position: relative; display: block; overflow: hidden; border-radius: 50%; background: var(--color-barrels-amber); } /* суцільний тон «віскі» — видно, доки фото вантажиться */
 .bx-layer__tex > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .bx-layer__plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; aspect-ratio: 1; margin-top: calc(-1 * var(--size-barrels-layer-overlap)); padding: calc(var(--size-barrels-layer-overlap) + var(--space-barrels-layer-text-top)) var(--space-barrels-layer-pad) var(--space-barrels-layer-pad); border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50%; background: var(--color-barrels-layer-plate); text-align: center; } /* суцільний тон палітри з простою прозорістю (токен): без розмиття й рамки */
-.bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); position: absolute; top: calc(var(--size-barrels-layer-overlap) / 2); left: 50%; translate: -50% -50%; color: var(--color-barrels-accent); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) — у центрі «лінзи» */
-.bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-barrels-title) * 1em); font: var(--fw-semibold) var(--font-size-barrels-layer-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); text-wrap: balance; }
-.bx-layer__text { margin-top: var(--space-10); color: var(--color-barrels-ink-muted); text-wrap: balance; }
+.bx-layer__icon { --icon-size: var(--size-barrels-layer-icon); position: absolute; top: calc(var(--size-barrels-layer-overlap) / 2); left: 50%; translate: -50% -50%; color: var(--color-gold); } /* іконка DS .icon--barrels-* (CSS-маска, currentColor) — у центрі «лінзи» */
+.bx-layer__title { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--count-barrels-layer-title-lines) * var(--lh-barrels-title) * 1em); font: var(--fw-semibold) var(--font-size-barrels-layer-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-light); text-wrap: balance; }
+.bx-layer__text { margin-top: var(--space-10); color: var(--color-nav-text); text-wrap: balance; }
 /* демо S2 у design-system.html (у ширині демо-панелі: .bx-scope перераховує сітку) */
 .demo-panel.ds-barrels-layers { display: block; padding: var(--space-50); }
 .ds-barrels-layers.bx-scope { --container-barrels: var(--size-barrels-demo-w); }
@@ -75,19 +72,19 @@
 
 /* арка-вікно: ОДНА hairline-рамка (як арка картки каталогу), тло — колір кімнати */
 .bx-arch { --bx-rise: var(--size-barrels-stage-rise); position: relative; overflow: hidden; border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50% 50% 0 0 / var(--bx-rise) var(--bx-rise) 0 0; }
-.bx-arch--stage { height: 100%; color: var(--color-barrels-accent); }
+.bx-arch--stage { height: 100%; color: var(--color-gold); }
 
 /* сцена: SVG 600×700, притиснута донизу (xMidYMax meet) всередині арки */
 .bx-scene2 { position: absolute; inset: var(--space-barrels-scene-inset); width: calc(100% - 2 * var(--space-barrels-scene-inset)); height: calc(100% - 2 * var(--space-barrels-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
 .bx-sc-hair { stroke-width: var(--svg-stroke-hair); }
-.bx-sc-soft { opacity: var(--opacity-barrels-dim); } /* другорядні лінії сцени (стелаж, підлога) — те саме золото, приглушене */
+.bx-sc-soft { opacity: var(--opacity-disabled); } /* другорядні лінії сцени (стелаж, підлога) — те саме золото, приглушене */
 .bx-sc-liquid { fill: var(--color-barrels-amber); stroke: none; }
 .bx-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
 .bx-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
 .bx-sc-wisp { transform-box: fill-box; }
 .bx-sc-part { transition: opacity var(--duration-barrels-step) var(--ease-out); }
 .bx-sc-level { transition: transform var(--duration-barrels-step) var(--ease-out); }
-.js [data-steps] .bx-sc-part { opacity: var(--opacity-barrels-dim); }
+.js [data-steps] .bx-sc-part { opacity: var(--opacity-disabled); }
 .js [data-steps][data-step="1"] .bx-sc-part--pour,
 .js [data-steps][data-step="2"] .bx-sc-part--angels,
 .js [data-steps][data-step="3"] .bx-sc-part--bottle { opacity: 1; }
@@ -110,10 +107,10 @@
 .bx-chapter--pour { border-top-color: transparent; --bx-num-shift: var(--shift-barrels-numeral-pour); --bx-title-shift: var(--shift-barrels-title-round); }
 .bx-chapter--angels { --bx-num-shift: var(--shift-barrels-numeral-angels); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
 .bx-chapter--bottle { --bx-num-shift: var(--shift-barrels-numeral-bottle); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
-.bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-barrels-accent); }
+.bx-chapter__value { display: flex; align-items: baseline; gap: var(--space-barrels-note-gap); color: var(--color-gold); }
 .bx-chapter__num { margin-inline-start: var(--bx-num-shift, 0em); font: var(--fw-regular) var(--font-size-barrels-numeral)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
-.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink); }
-.bx-chapter__text { max-width: var(--size-barrels-chapter-text-w); margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); color: var(--color-barrels-ink-muted); text-wrap: pretty; }
+.bx-chapter__title { margin-top: var(--space-barrels-chapter-title); text-indent: var(--bx-title-shift, 0em); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-light); }
+.bx-chapter__text { max-width: var(--size-barrels-chapter-text-w); margin-top: var(--space-barrels-chapter-text); text-indent: var(--bx-text-shift, 0em); color: var(--color-nav-text); text-wrap: pretty; }
 
 /* демо S3 у design-system.html */
 .demo-panel.ds-barrels-how { align-items: stretch; gap: var(--space-50); padding: var(--space-50); }
@@ -135,7 +132,7 @@
 .bx-ledger--50 { grid-column: 1 / span var(--span-barrels-ledger-50); }
 .bx-ledger--200 { grid-column: calc(var(--span-barrels-ledger-50) + 1) / -1; }
 .bx-ledger__size { text-indent: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
-.bx-ledger--accent .bx-ledger__size { color: var(--color-barrels-amber); }
+.bx-ledger--accent .bx-ledger__size { color: var(--color-teal); }
 /* 200 L: текст групи — по центру її колонок 4–12 (рев'ю a58b6a28: число «≈ 383» з приміткою «приблизно» над своєю групою блоків); оптичні поправки лівого краю тут не потрібні */
 .bx-ledger--200 { text-align: center; }
 .bx-ledger--200 .bx-ledger__size, .bx-ledger--200 .bx-ledger__unit, .bx-ledger--200 .bx-ledger__cost-label { text-indent: 0; }
@@ -146,9 +143,9 @@
 .bx-ledger__approx { position: relative; top: var(--shift-barrels-ledger-approx); margin-left: var(--shift-barrels-approx-ink); margin-right: var(--space-barrels-approx-gap); font-size: var(--font-size-barrels-ledger-approx); } /* «≈» піднято до середини висоти цифр (old-style) */
 .bx-ledger__unit { margin-top: var(--space-15); text-indent: var(--shift-barrels-caption-ink); color: var(--color-barrels-ink-paper-muted); }
 /* стіна: блок 16 × 6 комірок (ціле px); зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок */
-.bx-wall { --bx-wall-color: var(--color-barrels-ink-paper); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-barrels-wall-top); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
-.bx-ledger--50 .bx-wall { --bx-wall-color: var(--color-barrels-amber); justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
-.bx-ledger--200 .bx-wall { margin-inline: var(--shift-barrels-wall-ink); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat, linear-gradient(var(--color-barrels-ink-paper) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; } /* 4 блоки на всю ширину колонок 4–12; верхню праву пляшку стирає другий шар маски */
+.bx-wall { --bx-wall-color: var(--color-teal); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-barrels-wall-top); background: var(--bx-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
+.bx-ledger--50 .bx-wall { --bx-wall-color: var(--color-teal); justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
+.bx-ledger--200 .bx-wall { margin-inline: var(--shift-barrels-wall-ink); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat, linear-gradient(var(--color-teal) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; } /* 4 блоки на всю ширину колонок 4–12; верхню праву пляшку стирає другий шар маски */
 /* поява: стіна «наповнюється» знизу вгору разом із reveal групи (один раз; без JS / reduced-motion — одразу повна) */
 .js-reveal .bx-ledger[data-reveal] .bx-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
 .js-reveal .bx-ledger[data-reveal].is-in .bx-wall { clip-path: inset(0); }
@@ -173,18 +170,18 @@
 .barrels-next__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-barrels-head); }
 .barrels-next__lead { width: var(--size-barrels-text-w); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: balance; }
 .bx-finish { grid-column: span var(--span-barrels-finish); grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; text-align: center; }
-.bx-finish__tile { position: relative; container-type: inline-size; display: flex; justify-content: center; color: var(--color-barrels-ink-paper); transition: scale var(--duration-base) var(--ease-out); } /* місце під фото днища (СЛОТ); зараз — гравюра + значок; cqw = ширина плашки (= колонки) */
+.bx-finish__tile { position: relative; container-type: inline-size; display: flex; justify-content: center; color: var(--color-teal); transition: scale var(--duration-base) var(--ease-out); } /* місце під фото днища (СЛОТ); зараз — гравюра + значок; cqw = ширина плашки (= колонки) */
 .bx-head2 { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; }
 .bx-head2__rim, .bx-head2__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); }
 .bx-head2__rim { stroke-width: var(--border-barrels-rim); } /* обідок днища вдвічі товщий за клепки (рев'ю 3cc0afdd) */ /* одна hairline-лінія DS (1px за будь-якого масштабу) */
-.bx-finish__icon { --icon-size: var(--size-barrels-finish-icon); color: var(--color-barrels-amber); position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* значок вина — іконка DS .icon--barrels-* (CSS-маска, currentColor) у центрі днища */
+.bx-finish__icon { --icon-size: var(--size-barrels-finish-icon); color: var(--color-teal); position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* значок вина — іконка DS .icon--barrels-* (CSS-маска, currentColor) у центрі днища */
 @media (hover: hover) {
   .bx-finish:hover .bx-finish__tile { scale: var(--scale-barrels-finish-hover); }
 }
 .bx-finish__caption { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; }
-.bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-barrels-ink-paper); }
+.bx-finish__name { margin-top: var(--space-30); font: var(--fw-semibold) var(--font-size-barrels-finish-name)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--color-teal); }
 .bx-finish__origin { margin-top: var(--space-10); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
-.bx-finish__notes { margin-top: var(--space-5); color: var(--color-barrels-ink-paper); }
+.bx-finish__notes { margin-top: var(--space-5); color: var(--color-teal); }
 .bx-finish__notes:empty { display: none; }
 /* демо S5 у design-system.html */
 .demo-panel.ds-barrels-finish { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 var(--space-barrels-grid-gap); align-items: stretch; padding: var(--space-50); }
@@ -206,12 +203,12 @@
 /* шапка: на всі 12 колонок, по центру, світлий текст прямо на фото (без плашки й заливки; рев'ю 8263cbc6) */
 .bx-head.barrels-price__head { grid-column: 1 / -1; }
 .barrels-price__title { margin-top: var(--shift-barrels-cap-top); }
-.barrels-price__note { width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-barrels-ink); text-wrap: balance; }
+.barrels-price__note { width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-light); text-wrap: balance; }
 
 /* маршрут «Кентуккі (США) — Київ (Україна)»: на 6 середніх колонках (4–9) — два міста по краях, між ними hairline-лінія DS і корабель по центру (іконка DS
    .icon--barrels-ship; стоїть у проміжку між колонками 6 і 7). Ліва половина — колонки 4–6, права — 7–9: корабель рівно посередині незалежно від довжини назв,
    межі половин лежать на лініях колонок; лінія тягнеться від назви до корабля (з відступом від нього) */
-.bx-route { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); align-items: center; width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-barrels-ink); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); }
+.bx-route { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--space-barrels-grid-gap); align-items: center; width: var(--size-barrels-text-w); max-width: 100%; color: var(--color-light); font: var(--fw-semibold) var(--font-size-title)/var(--lh-normal) var(--font-family-serif); letter-spacing: var(--ls-wide); }
 .bx-route__side { display: flex; align-items: center; gap: var(--space-20); min-width: 0; }
 .bx-route__side--from { grid-column: 1 / span 3; }
 .bx-route__side--to { grid-column: 4 / span 3; }
@@ -223,7 +220,7 @@
 
 /* сертифікат = ІСНУЮЧА панель DS .contacts-panel (beige, рамка кольору панелі 5u, --radius-panel, поле --space-contacts-pad; computed-вигляд = панель
    контактів). .bx-cert задає лише розкладку: 6 колонок, усередині — вертикальна стопка; колір тексту — чорнило Bazylsprings */
-.bx-cert { grid-column: span var(--span-barrels-cert); display: flex; flex-direction: column; gap: var(--space-barrels-cert-block); min-height: 0; color: var(--color-barrels-ink-paper); }
+.bx-cert { grid-column: span var(--span-barrels-cert); display: flex; flex-direction: column; gap: var(--space-barrels-cert-block); min-height: 0; color: var(--color-teal); }
 .bx-cert__head { display: flex; flex-direction: column; gap: var(--space-barrels-stack); }
 .bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
 .bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }

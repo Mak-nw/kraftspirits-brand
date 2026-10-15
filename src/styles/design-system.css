@@ -138,4 +138,4 @@
 /* імітатор focus — та сама тривалість переходу, що й у справжнього :focus-visible (політика --btn-transition-duration-focus) */
 :is(.btn, .nav-cell, .arrow-btn, .chip, .product-volume, .select, .check).is-focus, .btn.is-focus :is(.btn__inner, .btn__arrow), .arrow-btn.is-focus img, .product-volume.is-focus::before, .select.is-focus .select__field, .check.is-focus .check__box, .check.is-focus .check__box::after { transition-duration: var(--btn-transition-duration-focus); }
 /* демо блоку коктейлю в реальній ширині сторінки коктейлів (1825u): виходить за контейнер DS (1508u) симетрично — картка каталогу з аркою потребує рівно 426.25u */
-.ds-cocktail-demo { width: var(--size-cocktails-w); margin-inline: calc((var(--container-wide) - var(--size-cocktails-w)) / 2); color: var(--color-cocktail-text); }
+.ds-cocktail-demo { width: var(--size-cocktails-w); margin-inline: calc((var(--container-wide) - var(--size-cocktails-w)) / 2); color: var(--color-green); }

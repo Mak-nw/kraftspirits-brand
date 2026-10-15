@@ -14,7 +14,7 @@
 .site-header__menu-btn { gap: var(--header3-group-gap); cursor: pointer; }
 .site-header__burger { flex: none; display: block; width: var(--header3-burger-w); height: var(--header3-burger-h); overflow: visible; }
 /* смуги бургера: transform-origin зліва (звужуються до лівого краю); крайні (--edge) на hover/focus/відкритому стискаються до --scale-burger-bar, середня лишається повної ширини */
-.site-header__burger-line { fill: var(--color-header3-burger); transform-box: fill-box; transform-origin: left center; transition: fill var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out); }
+.site-header__burger-line { fill: var(--color-nav-text); transform-box: fill-box; transform-origin: left center; transition: fill var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out); }
 .site-header__menu-btn:focus-visible .site-header__burger-line, .site-header__menu-btn[aria-expanded="true"] .site-header__burger-line { fill: currentColor; }
 .site-header__menu-btn:focus-visible .site-header__burger-line--edge, .site-header__menu-btn[aria-expanded="true"] .site-header__burger-line--edge { transform: scaleX(var(--scale-burger-bar)); }
 .site-header__menu-btn:focus-visible .site-header__burger-line { transition-duration: var(--duration-focus); }

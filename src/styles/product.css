@@ -101,7 +101,7 @@
    YasnoCraft: лише відмінності від спільної розкладки — рамка панелі beige (BS — teal), арка-шапка 900×359.93 з круглим лого,
    фон фрейму для вирізів (резервна гілка .is-cutout).
    ====================================================================== */
-.product[data-brand="yasnocraft"] .product-stage { background: var(--color-ycp-stage-bg); }
+.product[data-brand="yasnocraft"] .product-stage { background: var(--color-beige); }
 .product[data-brand="yasnocraft"] .product-panel { border-color: var(--color-beige); } /* 205:2433: «рамка» 5 того ж кольору, що фон панелі */
 .product-head__logo { position: absolute; max-width: none; object-fit: cover; }
 .product-head--yc { width: var(--size-ycp-head-w); height: var(--size-ycp-head-h); margin-inline: calc(-1 * var(--space-70)); }
