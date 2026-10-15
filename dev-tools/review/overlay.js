@@ -1,7 +1,9 @@
 // DEV-ONLY review overlay (loaded by vite-plugin-review.js, never part of the build).
 // Адаптовано під site_brand (YasnoCraft × Bazylsprings): сітка з реальної розкладки (--u, поля 50u, зазор 5u), вікові ворота, Esc, z-index.
 import css from './overlay.css?raw';
+import editCss from './edit.css?raw';
 import { initInspector } from './inspector.js';
+import { initEdit } from './edit.js';
 
 if (!window.__reviewOverlay) {
   window.__reviewOverlay = true;
@@ -27,7 +29,7 @@ function boot() {
   // z-index 900: вище fixed-хедера (--z-header 100) і dropdown (50), нижче вікових воріт (--z-age-gate 1000); під час воріт оверлей прихований (див. gateOpen)
   host.style.cssText = 'all:initial;position:fixed;inset:0;z-index:900;pointer-events:none;';
   const shadow = host.attachShadow({ mode: 'open' });
-  shadow.innerHTML = `<style>${css}</style>
+  shadow.innerHTML = `<style>${css}${editCss}</style>
     <div class="root">
       <div class="gridlayer" hidden><div class="gridbox"><div class="gridcols"></div></div><div class="gridinfo"></div></div>
       <div class="capture" hidden></div>
@@ -353,6 +355,7 @@ function boot() {
 
   // ---------- mode & mouse ----------
   function setMode(on) {
+    if (on && window.__review?.edit?.isOn()) window.__review.edit.leave(); // Едіт і Коментар взаємовиключні (обидва перехоплюють кліки)
     st.mode = on; capture.hidden = !on; $('.root').classList.toggle('mode', on); // .root.mode shows pins (see overlay.css)
     btnMode.classList.toggle('on', on);
     btnMode.firstChild.textContent = on ? 'Вийти ' : 'Коментар ';
@@ -509,5 +512,11 @@ function boot() {
     shadow, root: $('.root'), beforeLayers: $('.capture'), bar: $('.bar'), beforeButton: btnMode, store,
     blocked: () => !!popState || gateOpen(),
   });
-  window.__review = { state: st, refresh, setMode, setGrid, inspector };
+  // Едіт (E): живий перегляд правок + запис у review/edits.json (dev-tools/review/edit.js)
+  const edit = initEdit({
+    root: $('.root'), bar: $('.bar'), beforeButton: btnMode, host, api, say, mk: el, captureShot, selectorOf, PAGE,
+    blocked: () => !!popState || gateOpen(),
+    leaveOthers: () => { if (st.mode) setMode(false); },
+  });
+  window.__review = { state: st, refresh, setMode, setGrid, inspector, edit };
 }

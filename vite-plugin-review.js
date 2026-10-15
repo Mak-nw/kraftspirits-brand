@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
+import { createEditsApi } from './dev-tools/edit-api.js';
 
 const MAX_BODY = 2 * 1024 * 1024;
 const ID_RE = /^[a-f0-9]{8}$/;
@@ -10,7 +11,9 @@ const TYPES = ['design', 'text', 'bug', 'question'];
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 export function reviewMode({ dir } = {}) {
-  const reviewDir = resolve(dir);
+  // REVIEW_DIR (ENV) — підміна каталогу даних для автотестів (щоб не чіпати справжні comments.json/edits.json)
+  const reviewDir = resolve(process.env.REVIEW_DIR || dir);
+  const editsApi = createEditsApi({ reviewDir, root: process.cwd() }); // API «Едіт» (E): edits.json
   const file = resolve(reviewDir, 'comments.json');
   const shots = resolve(reviewDir, 'shots');
 
@@ -76,6 +79,7 @@ export function reviewMode({ dir } = {}) {
         if (p === '/__review/overlay.js') { req.url = '/dev-tools/review/overlay.js'; return next(); }
 
         try {
+          if (await editsApi(req, res, p, { send, readBody })) return;
           if (p.startsWith('/__review/api/shot/')) {
             const id = p.slice('/__review/api/shot/'.length);
             const f = resolve(shots, `${id}.png`);

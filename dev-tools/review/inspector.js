@@ -76,7 +76,7 @@ export function initInspector({ shadow, root, beforeLayers, bar, beforeButton, s
   }
   const legend = document.createElement('div');
   legend.className = 'legend';
-  legend.textContent = 'C коментар · G сітка · S стиль · T текст · K колір';
+  legend.textContent = 'C коментар · G сітка · S стиль · T текст · K колір · E едіт';
   root.append(legend);
 
   // ---------- colours ----------
