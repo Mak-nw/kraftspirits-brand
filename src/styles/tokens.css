@@ -893,7 +893,7 @@
   --z-barrels-grain: 3;                               /* шар зерна всередині кімнати/hero: над вмістом (hero__content — 2), нижче пілюлі header */
 
   /* типографіка кімнат (EB Garamond / Manrope; нижня межа кеглю — лише для тексту, щоб на 1200 він не падав нижче читабельного) */
-  --font-size-barrels-numeral: calc(240 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» */
+  --font-size-barrels-numeral: calc(200 * var(--u));  /* цифри-гіганти «63%», «≈15%», «40%» (компактний ритм S3) */
   --lh-barrels-numeral: 0.86;
   --font-size-barrels-lead: calc(30 * var(--u));      /* лід у sentence case замість caps-ліда 40u */
   --lh-barrels-lead: 1.25;
@@ -918,13 +918,13 @@
   --size-barrels-stage-glow: 72% 58%;                 /* еліпс «світла» під склепінням арки-сцени (ширина висота, від верху) */
   --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині внутрішньої рамки */
   --size-barrels-lamp-w: calc(56 * var(--u));         /* лампа під склепінням — джерело «світла в погребі» */
-  --size-barrels-chapter-h: calc(var(--size-barrels-stage-h) * 0.78); /* висота розділу: одна цифра на екран */
-  --space-barrels-chapter-top: calc(120 * var(--u));  /* від верху розділу до лінії з ромбом — однаково в усіх розділах (верхнє вирівнювання) */
+  --space-barrels-chapter-gap: calc(64 * var(--u));   /* проміжок між розділами (рядки однакової висоти): компактний ритм, колонка ≈ висоті арки */
+  --space-barrels-how-head: var(--space-70);          /* заголовок S3 (на всю ширину) → арка й розділи */
   --size-barrels-rule-marker: calc(10 * var(--u));    /* ромб-маркер на початку лінії розділу (лівий кут = ліва вісь тексту) */
   --space-barrels-rule-gap: calc(14 * var(--u));      /* ромб → лінія */
-  --space-barrels-chapter-rule: var(--space-40);      /* лінія → цифра */
+  --space-barrels-chapter-rule: var(--space-30);      /* лінія → цифра */
   --space-barrels-chapter-title: var(--space-30);     /* цифра → назва (з запасом під нижні виносні old-style цифр) */
-  --space-barrels-chapter-text: var(--space-15);      /* назва → пояснення */
+  --space-barrels-chapter-text: var(--space-10);      /* назва → пояснення */
   --space-barrels-note-gap: var(--space-20);          /* цифра → підпис «орієнтовно» (одна базова лінія) */
   --container-barrels-copy: calc(560 * var(--u));     /* ширина пояснення */
   --shift-barrels-numeral-pour: -0.0465em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до осі ромба/тексту (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920: */

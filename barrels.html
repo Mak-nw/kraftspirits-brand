@@ -52,10 +52,12 @@
         </ol>
         <p class="bx-strata__edge bx-strata__edge--out" aria-hidden="true">зовні · схема шарів клепки</p>
       </div>
+        <h2 class="barrels-how__title t-h2" id="how-title">Від бочки до вашої пляшки</h2>
     </section>
 
-    <!-- Кімната «погріб» (teal): sticky-арка з гравюрою ліворуч, три розділи-цифри праворуч; активний розділ підсвічує свою частину гравюри (barrels.js, data-step) -->
-    <section class="barrels-how bx-room bx-room--cellar bx-room--pattern" id="how" data-loop data-steps aria-labelledby="how-title">
+    <!-- Кімната «погріб» (teal, без візерунка — рішення замовника): заголовок на всю ширину; нижче sticky-арка з гравюрою ліворуч (ЄДИНА арка
+         сторінки) і три розділи-цифри праворуч у компактному рівному ритмі; активний розділ підсвічує свою частину гравюри (barrels.js, data-step) -->
+    <section class="barrels-how bx-room bx-room--cellar" id="how" data-loop data-steps aria-labelledby="how-title">
       <div class="barrels-how__grid">
         <div class="barrels-how__stage">
           <div class="bx-arch bx-arch--stage">
@@ -64,7 +66,6 @@
           </div>
         </div>
         <div class="barrels-how__chapters">
-          <h2 class="barrels-how__title t-h2" id="how-title">Від бочки до вашої пляшки</h2>
           <!--@include components/barrels-chapter step="pour" n="1" value="%barrels.abvIn%" title="Заливка" text="У бочку заливається дистилят міцністю близько 63%"-->
           <!--@include components/barrels-chapter step="angels" n="2" value="%barrels.angelsShare%" note="%barrels.angelsNote%" title="Витримка" text="Під час витримки частина спирту природно випаровується («частка ангелів»)"-->
           <!--@include components/barrels-chapter step="bottle" n="3" value="%barrels.abvOut%" title="Розлив" text="Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л"-->

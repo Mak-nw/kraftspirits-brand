@@ -83,16 +83,18 @@
 .demo-panel.ds-barrels-strata { display: grid; grid-template-columns: var(--size-barrels-strata-w) var(--space-barrels-leader) minmax(0, 1fr); grid-template-rows: repeat(4, var(--size-barrels-strata-row)); gap: 0; padding: var(--space-50); }
 .ds-barrels-strata .bx-strata { grid-column: 1 / -1; grid-row: 1 / -1; }
 
-/* ---------- S3 «Від бочки до пляшки»: кімната cellar, sticky-арка з гравюрою + три розділи-цифри ----------
-   Внутрішня сітка розділу однакова в усіх трьох: лінія з ромбом → цифра (+ підпис «орієнтовно») → назва → пояснення. Ліві краї чорнила
+/* ---------- S3 «Від бочки до пляшки»: кімната cellar (без візерунка), заголовок на всю ширину + sticky-арка з гравюрою + три розділи-цифри ----------
+   Розділи — рядки однакової висоти (grid-auto-rows: 1fr) з рівним проміжком: компактний ритм, колонка розділів лише трохи вища за арку,
+   тож ліва колонка не порожніє; верх першого розділу = верх арки. Внутрішня сітка розділу однакова в усіх трьох: лінія з ромбом → цифра
+   (+ підпис «орієнтовно») → назва → пояснення. Ліві краї чорнила
    ромба, цифри, назви й пояснення — одна вісь (оптичні поправки цифр — токени --shift-barrels-numeral-*, виміряні по чорнилу).
    Гравюра: активний розділ (data-step на секції, barrels.js) — його частина на повну силу, решта приглушена; рівень рідини в бочці
    й пляшці — СТАН розділу (transition), а не прив'язка до скролу. Нескінченні цикли (струмінь, пара, трубка) — лише в активному
    розділі й лише поки секція у в'юпорті (.is-playing). Без JS — уся сцена видима, бочка й пляшка повні. */
 .barrels-how { padding-block: var(--space-barrels-section-y); }
-.barrels-how__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-barrels-col-gap); align-items: start; width: var(--container-barrels); margin-inline: auto; }
-.barrels-how__stage { position: sticky; top: var(--offset-barrels-stage-top); height: var(--size-barrels-stage-h); }
-.barrels-how__title { margin-top: var(--shift-barrels-cap-top); margin-left: var(--shift-barrels-h2-stem); text-wrap: balance; } /* верх капітелі H2 = верх (склепіння) арки; лівий край чорнила «В» — на осі розділів */
+.barrels-how__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: var(--space-barrels-col-gap); align-items: start; width: var(--container-barrels); margin-inline: auto; }
+.barrels-how__stage { grid-column: 1; grid-row: 2; position: sticky; top: var(--offset-barrels-stage-top); height: var(--size-barrels-stage-h); }
+.barrels-how__title { grid-column: 1 / -1; grid-row: 1; margin-top: var(--shift-barrels-cap-top); margin-bottom: var(--space-barrels-how-head); margin-left: var(--shift-barrels-h2-stem); } /* лівий край чорнила «В» — на осі арки */
 
 /* арка-вікно: подвійна золота рамка (зовнішня + внутрішня через ::after, концентричні: 50% по горизонталі, «підйом» − зазор по вертикалі) */
 .bx-arch { --bx-rise: var(--size-barrels-stage-rise); position: relative; overflow: hidden; border: var(--border-hairline) solid var(--color-barrels-hairline); border-radius: 50% 50% 0 0 / var(--bx-rise) var(--bx-rise) 0 0; }
@@ -128,9 +130,10 @@
 .bx-sc-wisp--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }
 .js [data-loop]:not(.is-playing) *, .js [data-loop]:not(.is-playing) *::before { animation-play-state: paused; }
 
-/* розділ */
-.barrels-how__chapters { display: flex; flex-direction: column; }
-.bx-chapter { display: flex; flex-direction: column; justify-content: flex-start; min-height: var(--size-barrels-chapter-h); padding-top: var(--space-barrels-chapter-top); } /* верхнє вирівнювання: ромб, цифра, назва й текст на однакових відстанях від верху розділу в усіх трьох */
+/* розділи: рядки однакової висоти (1fr = найвищий розділ) з рівним проміжком; усередині — верхнє вирівнювання (ромб, цифра, назва, текст на
+   однакових відстанях від верху розділу в усіх трьох) */
+.barrels-how__chapters { grid-column: 2; grid-row: 2; display: grid; grid-auto-rows: 1fr; row-gap: var(--space-barrels-chapter-gap); }
+.bx-chapter { display: flex; flex-direction: column; justify-content: flex-start; }
 .bx-chapter--pour { --bx-num-shift: var(--shift-barrels-numeral-pour); --bx-title-shift: var(--shift-barrels-title-round); }
 .bx-chapter--angels { --bx-num-shift: var(--shift-barrels-numeral-angels); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
 .bx-chapter--bottle { --bx-num-shift: var(--shift-barrels-numeral-bottle); --bx-title-shift: var(--shift-barrels-title-stem); --bx-text-shift: var(--shift-barrels-copy-stem); }
