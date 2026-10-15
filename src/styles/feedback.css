@@ -32,8 +32,13 @@
 .contact-form__alert[hidden] { display: none; }
 .contact-form__alert a { text-decoration: underline; text-underline-offset: 0.2em; } /* аварійний рядок: посилання підкреслене */
 
-/* низ правого стовпця: «Надіслати» праворуч унизу; згода — у лівому стовпці (.check-field у .feedback-col--aside) */
-.feedback-foot { display: flex; justify-content: flex-end; }
+/* низ форми: ряд «згода (лівий стовпець) — «Надіслати» (правий)» стоїть на одній горизонталі, НИЖНІЙ КРАЙ чекбокса = нижній край кнопки.
+   Обидва стовпці однієї висоти (grid stretch): згода притиснута до низу лівого (margin-top:auto), кнопка — до низу правого. Нижня грань боксу лежить на 10u вище низу .check-field
+   (вертикальний padding .check = --space-10), тож кнопка піднята на той самий --space-10. Рядок помилки згоди виведений із потоку (absolute під ним, у нижньому полі вікна) —
+   поява помилки не змінює висоту стовпця, бокс і кнопка не зсуваються. */
+.feedback-col--aside .check-field { position: relative; margin-top: auto; }
+.feedback-col--aside .check-field .field__error { position: absolute; inset-inline: 0; top: 100%; margin-top: var(--space-field-label-gap); }
+.feedback-foot { display: flex; justify-content: flex-end; padding-bottom: var(--space-10); }
 
 .contact-success { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-30); }
 .contact-success__title:focus { outline: none; }
