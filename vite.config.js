@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
 import { barrels } from './src/data/barrels.js';
+import { excursions } from './src/data/excursions.js';
 import { lpView } from './src/data/lp-schema.js';
 import { COCKTAILS } from './src/data/cocktails.js';
 import { PRODUCTS } from './src/data/products.js';
@@ -34,7 +35,7 @@ const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (k
 // ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (docs/page-template.md): <!--@page name--> у <name>.html -> уся сторінка з partials/lp/page.html і секцій partials/lp/<type>.html
 // за даними src/data/<name>.js (схема й перевірка — src/data/lp-schema.js: збірка падає з поясненням, якщо дані не за схемою).
 // <!--@lp name id--> -> одна секція сторінки (демо в design-system.html). Нова сторінка = файл даних + рядок тут + <name>.html з одним рядком <!--@page name-->.
-const LP = { barrels: lpView(barrels) };
+const LP = { barrels: lpView(barrels), excursions: lpView(excursions) };
 
 // <!--@include name--> -> partials/name.html (вкладені include підтримуються).
 // Параметри: <!--@include cta title="Текст"--> -> у partial {{title}} замінюється значенням;

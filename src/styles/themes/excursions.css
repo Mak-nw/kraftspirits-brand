@@ -1,0 +1,20 @@
+/* ТЕМА «excursions» (excursions.html, YasnoCraft): ролі кольорів шаблону → палітра DS. Лише наявні токени (нових похідних кольорів немає):
+   deep — зелений YasnoCraft (як header/каталог), warm — коричневий (як «Коротко про нас» і панелі екскурсій на головній), paper — beige з зеленим чорнилом. */
+.theme-excursions {
+  /* кімнати */
+  --lp-warm: var(--color-brown);
+  --lp-deep: var(--color-green);
+  --lp-paper: var(--color-beige);
+  /* чорнило */
+  --lp-on-dark: var(--color-light);
+  --lp-on-dark-muted: var(--color-nav-text);
+  --lp-on-paper: var(--color-green);               /* = --color-text-on-light */
+  --lp-on-paper-muted: var(--color-green);         /* окремого «приглушеного» зеленого в DS немає — ієрархію дають ролі .t-* */
+  --lp-hero-ink: var(--color-green);               /* текст hero — зелений на світлому цеху фото (D8 піксельно) */
+  --lp-accent: var(--color-gold);
+  --lp-hairline: var(--color-barrels-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
+  --lp-amber: var(--color-barrels-amber);          /* тло фото, доки вантажиться */
+  --lp-tile-bg: var(--color-black);                /* «студійне» тло плиток дегустації: прозорі фото пляшок каталогу + AI-кадр келиха на чорному */
+}
+/* кадрування фото «Ціни»: темна частина зеленого скла під шапкою (світлий текст ≥ 4.5:1 без затемнення) */
+.theme-excursions #price { --lp-offers-bg-pos: 0% 0%; --lp-offers-bg-scale: 2; --lp-offers-bg-origin: 0% 0%; } /* наближення до темного верхнього лівого кута кадру */
