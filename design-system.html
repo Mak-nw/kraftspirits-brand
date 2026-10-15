@@ -435,6 +435,7 @@
       <div class="demo-panel theme-beige icon-demo">
         <span class="icon icon--arrow-up-right" aria-hidden="true"></span>
         <span class="icon icon--basket" aria-hidden="true"></span>
+        <span class="icon icon--account" aria-hidden="true"></span>
         <span class="icon icon--pin" aria-hidden="true"></span>
         <span class="icon icon--phone" aria-hidden="true"></span>
         <span class="icon icon--mail" aria-hidden="true"></span>
@@ -1180,7 +1181,7 @@
 
     <section class="ds-section" id="header-footer">
       <h2 class="t-h2 ds-section__title">Header / Footer</h2>
-      <p class="ds-note t-body">Єдині partials: header 3 (214:2902, плаваюча пілюля 1216.67×73 по центру, відступ зверху 30; ліворуч «меню» 150×44 (контур + іконка-бургер 11.47×13: інлайн-SVG із трьох смуг; на hover/focus-visible/відкритому меню крайні смуги звужуються зліва до --scale-burger-bar 0.6 за --duration-fast, середня лишається повною) і «каталог» 150×42, по центру два лого, праворуч «Кошик ( 0 )» (контур 150×44) і «підказати?» (заливка 150×44); фон rgba(0,0,0,0.1) + blur 25, радіус 10, бічний padding --header3-pad-x = 15 (у Figma 10, +5 за рішенням замовника; ширина 1216.67 фіксована)), footer 194:1235 (856). Підключаються на кожній сторінці через include. Пілюля position: fixed; зона header у потоці = 103 (30 + 73).</p>
+      <p class="ds-note t-body">Єдині partials: header 3 (214:2902, плаваюча пілюля на ширину 12 колонок сітки каталогу (1825×73, лівий край колонки 1 → правий край колонки 12; рішення замовника 0092bc22, у Figma було 1216.67), відступ зверху 30; ліворуч «меню» 150×44 (контур + іконка-бургер 11.47×13: інлайн-SVG із трьох смуг; на hover/focus-visible/відкритому меню крайні смуги звужуються зліва до --scale-burger-bar 0.6 за --duration-fast, середня лишається повною) і «каталог» 150×42, по центру два лого, праворуч «мій кабінет» (безрамкова .nav-cell--ghost 150×42 + іконка account 22; заглушка href="#", aria-disabled — кабінету ще немає), «Кошик ( 0 )» (безрамкова .nav-cell--ghost 150×42, іконка basket) і «підказати?» (заливка 150×44); фон rgba(0,0,0,0.1) + blur 25, радіус 10, бічний padding --header3-pad-x = 15 (у Figma 10, +5 за рішенням замовника; ширина 1216.67 фіксована)), footer 194:1235 (856). Підключаються на кожній сторінці через include. Пілюля position: fixed; зона header у потоці = 103 (30 + 73).</p>
       <p class="ds-note t-body">Варіанти розташування хедера: (1) стандартний — зона в потоці <code>.site-header</code> висотою <code>--size-header-h</code> (103u, зелена) + пілюля fixed (каталог, товар, ці демо); (2) головна — <code>&lt;body class="page-home"&gt;</code>: зона в потоці = 0 (<code>--size-header-zone-h: 0px</code>), hero починається з y=0, пілюля fixed висить поверх нього. Розмітка partial однакова, токен <code>--size-header-h</code> не змінюється.</p>
       <p class="demo-label t-kicker">Header 3: закритий стан (інтерактивний: «меню» відкриває список)</p>
       <div class="ds-header-demo">

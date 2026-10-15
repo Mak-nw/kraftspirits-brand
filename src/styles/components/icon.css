@@ -11,6 +11,7 @@
 }
 .icon--arrow-up-right { -webkit-mask-image: url('/assets/icons/arrow-up-right.svg'); mask-image: url('/assets/icons/arrow-up-right.svg'); } /* прості кнопки (.btn__arrow) */
 .icon--basket { -webkit-mask-image: url('/assets/icons/basket.svg'); mask-image: url('/assets/icons/basket.svg'); }                         /* кнопка «Кошик» у хедері */
+.icon--account { -webkit-mask-image: url('/assets/icons/account.svg'); mask-image: url('/assets/icons/account.svg'); }                       /* кнопка «мій кабінет» у хедері */
 .icon--headset { -webkit-mask-image: url('/assets/icons/headset.svg'); mask-image: url('/assets/icons/headset.svg'); }                     /* кнопка «підказати?» у хедері */
 .icon--pin { -webkit-mask-image: url('/assets/icons/pin.svg'); mask-image: url('/assets/icons/pin.svg'); }                                 /* контакти: адреса */
 .icon--phone { -webkit-mask-image: url('/assets/icons/phone.svg'); mask-image: url('/assets/icons/phone.svg'); }                         /* контакти: телефон */

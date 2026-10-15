@@ -69,6 +69,8 @@
 
 /* Header 3 в design-system: contain: layout робить контейнер containing block для fixed-пілюлі, тож приклад не «прилипає» до верху вікна */
 .ds-header-demo { contain: layout; background: var(--color-green); }
+/* пілюля = 1825u (12 колонок сітки каталогу), а демо вужче за сторінку (main.ds) — у демо пілюля не вища за контейнер демо (інакше hscroll у design-system) */
+.ds-header-demo .site-header__bar { max-width: 100%; }
 /* Відкрите по hover меню першого демо виходить за межі демо вниз (оверлей під пілюлею): без власного шару його перекривали пілюля й зона другого демо (елемент під курсором — .site-header__bar).
    Закрите демо стоїть вище за наступні: меню лишається клікабельним, вигляд демо не змінюється */
 .ds-header-demo:not(.ds-header-demo--open) { position: relative; z-index: var(--z-dropdown); }
