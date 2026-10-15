@@ -1,0 +1,37 @@
+<article class="cocktail" id="{{slug}}" aria-labelledby="{{slug}}-title" data-cocktail{{#draft}} data-draft{{/draft}}>
+  <div class="cocktail__media" data-gallery>
+    <div class="product-stage cocktail__stage" data-stage data-reveal="fade" data-slot="Фото коктейлю «{{title}}»: 1–4 кадри 4:5, src/data/cocktails.js → photos">
+      <img class="product-stage__img" src="{{photoSrc}}" alt="{{photoAlt}}" loading="{{loading}}" fetchpriority="{{fetchpriority}}" decoding="async">
+    </div>
+    <button class="cocktail__zoom" type="button" data-gallery-open aria-label="Відкрити фото «{{title}}» на весь екран"></button>
+    {{#multi}}<div class="product-thumbs cocktail__thumbs" role="group" aria-label="Фото коктейлю «{{title}}»"><!--@each photos components/cocktail-thumb--></div>{{/multi}}
+  </div>
+  <div class="cocktail__body">
+    <div class="cocktail__head" data-reveal="rise">
+      <h2 class="cocktail__title t-hero" id="{{slug}}-title">{{title}}</h2>
+      {{#original}}<p class="cocktail__original t-desc" lang="en">{{original}}</p>{{/original}}
+      <p class="cocktail__desc t-text">{{description}}</p>
+    </div>
+    <div class="tabs cocktail__tabs" data-tabs data-reveal="rise">
+      <div class="tabs__list t-kicker" role="tablist" aria-label="«{{title}}»: рецепт">
+        <button class="tabs__tab product-volume is-active" type="button" role="tab" id="{{slug}}-tab-ingredients" aria-controls="{{slug}}-panel-ingredients" aria-selected="true">Інгредієнти</button>
+        <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-steps" aria-controls="{{slug}}-panel-steps" aria-selected="false" tabindex="-1">Приготування</button>
+        <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-serve" aria-controls="{{slug}}-panel-serve" aria-selected="false" tabindex="-1">Подача</button>
+      </div>
+      <div class="tabs__panels">
+        <div class="tabs__panel is-active" role="tabpanel" id="{{slug}}-panel-ingredients" aria-labelledby="{{slug}}-tab-ingredients" tabindex="0">
+          <dl class="product-specs cocktail__specs cocktail__specs--amounts t-text"><!--@each ingredients components/cocktail-ingredient--></dl>
+        </div>
+        <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-steps" aria-labelledby="{{slug}}-tab-steps" tabindex="0">
+          <ol class="cocktail__steps t-text"><!--@each steps components/cocktail-step--></ol>
+        </div>
+        <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-serve" aria-labelledby="{{slug}}-tab-serve" tabindex="0">
+          <dl class="product-specs cocktail__specs t-text"><dt>Келих</dt><dd>{{glass}}</dd><dt>Прикраса</dt><dd>{{garnish}}</dd></dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{#hasProduct}}<div class="cocktail__item" data-slot="Товар для коктейлю: product «{{productSlug}}» у src/data/cocktails.js{{#productNote}} ({{productNote}}){{/productNote}}">
+    <!--@include components/product-card mod=" product-card--catalog" slug="{{productSlug}}" name="{{productNameHtml}}" price="{{productPrice}}" image="{{productImage}}" brand="{{productBrand}}"-->
+  </div>{{/hasProduct}}
+</article>

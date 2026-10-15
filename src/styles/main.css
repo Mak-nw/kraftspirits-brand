@@ -21,6 +21,7 @@
 @import './components/topic-tile.css';
 @import './components/age-gate.css';
 @import './components/slider.css';
+@import './components/lightbox.css';
 @import './reveal.css';
 @import './parallax.css';
 @import './sections.css';
@@ -29,5 +30,6 @@
 @import './contacts.css';
 @import './feedback.css';
 @import './barrels.css';
+@import './cocktails.css';
 @import './under-construction.css';
 @import './design-system.css';

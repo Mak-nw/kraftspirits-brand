@@ -73,7 +73,7 @@
 .product-volume { position: relative; font: inherit; letter-spacing: inherit; text-transform: inherit; opacity: var(--btn-volume-opacity-default); transition: opacity var(--btn-transition-duration) var(--btn-transition-ease); }
 .product-volume::before { content: ''; position: absolute; inset: calc(-1 * var(--space-volume-hover-pad)); border-radius: var(--radius-btn); background: currentColor; opacity: var(--btn-volume-plate-opacity-default); transition: opacity var(--btn-transition-duration) var(--btn-transition-ease); } /* м'яка плашка hover: колір тексту × --opacity-volume-hover; не змінює розміри (абсолютна), без підкреслення */
 .product-volume:focus-visible { opacity: var(--btn-volume-opacity-focus); transition-duration: var(--btn-transition-duration-focus); }
-.product-volume[aria-pressed="true"] { opacity: var(--btn-volume-opacity-selected); }
+.product-volume:is([aria-pressed="true"], [aria-selected="true"]) { opacity: var(--btn-volume-opacity-selected); } /* aria-selected — той самий перемикач у ролі вкладки (.tabs на сторінці коктейлів) */
 @media (hover: hover) { .product-volume:hover { opacity: var(--btn-volume-opacity-hover); } .product-volume:hover::before { opacity: var(--btn-volume-plate-opacity-hover); } }
 .product-volume:focus-visible::before { opacity: var(--btn-volume-plate-opacity-focus); transition-duration: var(--btn-transition-duration-focus); }
 /* кнопка «додати в кошик»: колір бренду дає варіант (btn--green / btn--teal: JS product.js), стани — токени --btn-*; disabled/aria-disabled — спільне правило button.css */

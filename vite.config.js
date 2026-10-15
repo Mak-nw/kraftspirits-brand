@@ -4,6 +4,9 @@ import { resolve } from 'node:path';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
 import { barrels, barrelsView } from './src/data/barrels.js';
+import { COCKTAILS } from './src/data/cocktails.js';
+import { PRODUCTS } from './src/data/products.js';
+import { cocktailsView } from './src/data/cocktails-view.js';
 
 const root = import.meta.dirname;
 
@@ -32,19 +35,37 @@ const fillBarrels = (html) => html.replace(/%barrels\.(\w+)%/g, (m, key) => (key
 // {{key|типове}} — значення за замовчуванням; {{#key}}...{{/key}} — блок лише коли key задано.
 const INCLUDE_RE = /<!--@include ([\w/-]+)((?:\s+[\w-]+="[^"]*")*)\s*-->/g;
 const ATTR_RE = /([\w-]+)="([^"]*)"/g;
+// <!--@each list name--> -> partials/name.html для КОЖНОГО елемента списку (параметри = поля елемента, уже екрановані);
+// list — ключ у LISTS (верхній рівень) або поле-масив поточного елемента (вкладений цикл: фото, кроки, інгредієнти коктейлю).
+const EACH_RE = /<!--@each ([\w]+) ([\w/-]+)\s*-->/g;
+// Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
+const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
+const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2) }; // cocktailsDemo — один блок для design-system.html
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
-  const render = (html) =>
-    html.replace(INCLUDE_RE, (_, name, rawAttrs) => {
-      const params = Object.fromEntries([...rawAttrs.matchAll(ATTR_RE)].map((m) => [m[1], m[2]]));
-      const partial = readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8')
-        // {{#key}}...{{/key}} — блок лише якщо параметр key непорожній
-        .replace(/\{\{#([\w-]+)\}\}([\s\S]*?)\{\{\/\1\}\}/g, (__, key, body) => (params[key] ? body : ''))
-        // {{key}} або {{key|типове значення}}
-        .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? def ?? '');
-      return render(partial);
-    });
+  const BLOCK_RE = /\{\{#([\w-]+)\}\}([\s\S]*?)\{\{\/\1\}\}/g;
+  const blocks = (tpl, params) => {
+    // {{#key}}...{{/key}} — блок лише якщо параметр key непорожній; повтор — для вкладених блоків з іншим ключем
+    let prev;
+    do { prev = tpl; tpl = tpl.replace(BLOCK_RE, (__, key, body) => (params[key] && params[key].length !== 0 ? body : '')); } while (tpl !== prev);
+    return tpl;
+  };
+  const fill = (tpl, params) => blocks(tpl, params)
+    // {{key}} або {{key|типове значення}}
+    .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? def ?? '');
+  const readPartial = (name) => readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8');
+  const render = (html, scope = {}) =>
+    html
+      .replace(EACH_RE, (_, key, name) => {
+        const list = Array.isArray(scope[key]) ? scope[key] : LISTS[key] || [];
+        const tpl = readPartial(name);
+        return list.map((item) => render(fill(tpl, item), item)).join('');
+      })
+      .replace(INCLUDE_RE, (_, name, rawAttrs) => {
+        const params = Object.fromEntries([...rawAttrs.matchAll(ATTR_RE)].map((m) => [m[1], m[2]]));
+        return render(fill(readPartial(name), params));
+      });
   return {
     name: 'html-partials',
     configResolved(config) { base = config.base; },

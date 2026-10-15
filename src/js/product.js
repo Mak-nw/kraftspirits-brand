@@ -2,7 +2,7 @@ import { PRODUCTS, BRANDS, CATEGORIES } from '../data/products.js';
 import { PRODUCT_TEXTS, PRODUCT_SERVE, PRODUCT_DELIVERY } from '../data/product-texts.js';
 import { initAccordions } from './accordion.js';
 import { addToCart } from './cart-counter.js';
-import { cssMs } from './duration.js';
+import { createPhotoStage, warm, whenIdle } from './photo-stage.js';
 
 const base = import.meta.env.BASE_URL;
 const main = document.querySelector('#product');
@@ -138,44 +138,9 @@ function renderProduct(p) {
     thumbsNav.append(b);
     return b;
   });
-  // зміна фото — cross-fade: нове <img> з'являється поверх (opacity 0 → 1 за --duration-base), старе лишається під ним
-  // (якщо одне з фото — виріз з прозорістю, старе гаситься одночасно). У DOM не більше трьох шарів; після завершення лишається один.
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const layers = () => [...stage.querySelectorAll('.product-stage__img')];
-  let swapToken = 0;
-  let swapTimer = 0;
-  const setPhoto = (s) => {
-    const url = base + s.large;
-    const my = ++swapToken;
-    clearTimeout(swapTimer);
-    const cur = layers().pop();
-    if (reduceMotion.matches || !cur.getAttribute('src')) {
-      layers().forEach((l) => { if (l !== cur) l.remove(); });
-      cur.classList.remove('is-photo-enter', 'is-photo-leave');
-      cur.classList.toggle('is-cutout', Boolean(s.cutout));
-      cur.src = url;
-      cur.alt = p.name;
-      return;
-    }
-    layers().slice(0, -2).forEach((l) => l.remove());
-    const next = el('img', 'product-stage__img is-photo-enter');
-    next.classList.toggle('is-cutout', Boolean(s.cutout));
-    next.alt = p.name;
-    next.src = url;
-    const go = () => {
-      if (my !== swapToken) { next.remove(); return; }
-      stage.append(next);
-      void next.offsetWidth; // зафіксувати opacity 0 до переходу
-      if (s.cutout || cur.classList.contains('is-cutout')) cur.classList.add('is-photo-leave');
-      next.classList.remove('is-photo-enter');
-      swapTimer = setTimeout(() => {
-        layers().forEach((l) => { if (l !== next) l.remove(); });
-        next.classList.remove('is-photo-leave');
-      }, cssMs('--duration-base') + 100);
-    };
-    // показуємо після завантаження, щоб не було миготіння порожнім шаром
-    next.decode().then(go, go);
-  };
+  // зміна фото — cross-fade (спільний модуль photo-stage.js: нове <img> поверх, старе під ним; reduced-motion — миттєво)
+  const photo = createPhotoStage(stage);
+  const setPhoto = (s) => photo.show({ src: base + s.large, alt: p.name, cutout: s.cutout });
   const show = (i) => {
     active = i;
     const s = i < 0 ? mainSlide : slides[i];
@@ -185,23 +150,9 @@ function renderProduct(p) {
   // повторний клік по активній мініатюрі повертає головне фото
   thumbs.forEach((b, i) => b.addEventListener('click', () => show(active === i ? -1 : i)));
   // Попереднє підвантаження великих кадрів (lg-webp): інакше перша заміна чекає мережу ≈1 с. Не на старті (LCP/пропускна здатність головного фото):
-  // (а) на pointerenter/focus мініатюри — саме її кадр; (б) решта — у простої після події load (requestIdleCallback; запасно setTimeout).
-  // Image + decode() кладе ресурс у пам'ять, тож наступний <img> з тим самим URL у setPhoto показується миттєво; кожен URL — один запит.
-  const warmed = new Map();
-  const warm = (s) => {
-    const url = base + s.large;
-    if (warmed.has(url)) return;
-    const im = new Image();
-    im.fetchPriority = 'low';
-    im.decoding = 'async';
-    im.src = url;
-    warmed.set(url, im); // тримаємо посилання, щоб завантаження не скасувалось
-    im.decode().catch(() => {});
-  };
-  thumbs.forEach((b, i) => { const w = () => warm(slides[i]); b.addEventListener('pointerenter', w); b.addEventListener('focus', w); });
-  const warmAll = () => slides.forEach(warm);
-  const whenIdle = () => ('requestIdleCallback' in window ? requestIdleCallback(warmAll, { timeout: 3000 }) : setTimeout(warmAll, 1500));
-  if (document.readyState === 'complete') whenIdle(); else addEventListener('load', whenIdle, { once: true });
+  // (а) на pointerenter/focus мініатюри — саме її кадр; (б) решта — у простої після події load (photo-stage.js: warm / whenIdle).
+  thumbs.forEach((b, i) => { const w = () => warm(base + slides[i].large); b.addEventListener('pointerenter', w); b.addEventListener('focus', w); });
+  whenIdle(() => slides.forEach((s) => warm(base + s.large)));
   if (!slides.length) thumbsNav.hidden = true;
   show(-1);
 

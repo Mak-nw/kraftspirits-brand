@@ -1039,3 +1039,27 @@
   --shift-barrels-lead-stem: -0.02em;                   /* оптика ліду «Бочки з-під…»: бокове поле «Б» 30u — на лівій осі */
   --font-cap-height-barrels-serif: 0.6745;               /* висота капітелі EB Garamond (частка em, виміряно чорнилом) — центр ромба-легенди = середина капітелі назви */
 }
+
+/* ---------- Коктейлі (cocktails.html, partials/components/cocktail.html, lightbox.html) ----------
+   Лише похідні від наявних токенів. Сітка блоку — 12 колонок у ширині сітки каталогу з її ж зазором:
+   (1825 − 11×40)/12 = 115.42u, тож 3 колонки = 3×115.42 + 2×40 = 426.25u = рівно картка каталогу; фото 4 кол. = 581.67u, текст 5 кол. = 737.08u. */
+:root {
+  --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
+  --count-cocktail-cols: 12;
+  --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор колонок = зазор сітки каталогу */
+  --span-cocktail-media: 4;                                     /* фото-галерея */
+  --span-cocktail-body: 5;                                      /* заголовок, опис, таби */
+  --span-cocktail-item: 3;                                      /* картка каталогу (= 1 колонка сітки каталогу) */
+  /* висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
+  --size-cocktail-h: var(--size-card-cat2-h);
+  /* мін. висота панелі табів: 7 рядків тексту + 6 проміжків — найдовша вкладка (6 кроків / 7 інгредієнтів) не зсуває таби й низ блоку */
+  --size-cocktail-panel-h: calc(7 * var(--type-body-size) * var(--type-body-lh) + 6 * var(--space-10));
+  --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
+  --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
+  --space-cocktails-bottom: var(--space-100);
+  --container-cocktail-text: var(--container-intro-text);       /* 658u: міра опису й вступу (≈70 знаків) */
+  --color-cocktail-text: var(--color-beige);
+  --color-cocktail-accent: var(--color-gold);                   /* єдиний акцент сторінки: оригінальна назва, кількості, номери кроків */
+  --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */
+  --space-lightbox-pad: var(--space-50);
+}
