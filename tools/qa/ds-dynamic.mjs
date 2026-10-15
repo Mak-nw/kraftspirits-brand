@@ -1,4 +1,7 @@
-// Динамічні перевірки check-ds (D1–D10): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
+// Динамічні перевірки check-ds (D1–D12; D12 — сітка колонок — вмикається явно: --rules D12 / npm run qa:grid): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
 import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
@@ -195,6 +198,10 @@ export async function runDynamic(opts, allow, rep) {
   const A = allow.dynamic || {};
   const addV = (v) => rep.add(v);
   const collect = []; // { page, width, sb, data }
+  const want12 = !!(opts.rules?.has('D12') || opts.grid); // D12 — опційно (поки сторінки не приведено до сітки, у загальний прогін не входить)
+  const gcfg = { ...GRID_DEFAULTS, ...(allow.grid || {}), profiles: { ...GRID_DEFAULTS.profiles, ...(allow.grid?.profiles || {}) }, pageProfile: { ...GRID_DEFAULTS.pageProfile, ...(allow.grid?.pageProfile || {}) } };
+  if (opts.gridDeep) gcfg.deep = true;
+  const grid12 = []; // { label, spec, width, sb, gate, data }
   const specs = opts.pagesList.map(pageSpec);
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
   const cfg = { compSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.product-card--catalog'], textMin: A.textMinContrast ?? 4.5, largeMin: A.largeTextMinContrast ?? 3 };
@@ -234,6 +241,7 @@ export async function runDynamic(opts, allow, rep) {
         }
         await page.evaluate(() => document.querySelectorAll('[data-qa-t]').forEach((e) => e.removeAttribute('data-qa-t')));
         collect.push({ label, spec, width: combo.width, sb: combo.scrollbar, data });
+        if (want12) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_GRID, { ...gcfg, root: null }) });
         // D5: підкреслення (лише для першої комбінації ширини/смуги — це не залежить від ширини)
         if (want('D5') && combo === combos[0]) {
           const found = await underlineProbe(page, A.underlineAllowClosest || []);
@@ -257,6 +265,13 @@ export async function runDynamic(opts, allow, rep) {
             }
           }
           if (stops.length < 3) rep.note(`D6 ${label}: лише ${stops.length} Tab-стопів`);
+        }
+        // D12 для воріт 18+: окремо, лише коріння [data-age-gate] (ворота однакові на всіх сторінках → лише перша сторінка)
+        if (want12 && spec === specs[0]) {
+          const gp12 = await openPage(L.browser, pageUrl(opts.url, spec, 'gate'), { width: combo.width, height: opts.height, dpr: 1, settle: false });
+          await waitStable(gp12);
+          grid12.push({ label: `ворота18+@${combo.width}`, spec: { name: 'age-gate', label: 'ворота 18+' }, width: combo.width, sb: combo.scrollbar, gate: true, data: await gp12.evaluate(COLLECT_GRID, { ...gcfg, root: '[data-age-gate]' }) });
+          await gp12.close().catch(() => {});
         }
         // D10: age-gate smoke (лише перша комбінація)
         if ((want('D10') && combo === combos[0]) || want('D11')) { // ворота: D10 — лише перша комбінація; D11 (чекбокс «запам'ятати») — на кожній ширині
@@ -342,6 +357,25 @@ export async function runDynamic(opts, allow, rep) {
     }
     for (const [k, o] of capInfo) if (Math.abs(o.v) > (A.alignIconCapInfoPx ?? 1.5)) rep.info({ rule: 'D11', msg: `${k}: іконка відносно cap-центру тексту ${o.v > 0 ? '+' : ''}${o.v.toFixed(2)}px (інформаційно; за content-area ${o.d.toFixed(2)}; найгірше: ${o.page})` });
     rep.info({ rule: 'D11', msg: `макс. відхилення (layout, Range+метрики): чекбокси ${stats.alignMaxCheck.toFixed(2)}px, іконки (content-area) ${stats.alignMaxIcon.toFixed(2)}px, іконки (cap) ${stats.alignMaxIconCap.toFixed(2)}px; вибірок ${stats.alignSamples}` });
+  }
+  // D12: прив'язка блоків до колонок сітки (tools/qa/grid-d12.mjs)
+  if (want12) {
+    const st = (stats.grid = { pages: 0, blocks: 0, ok: 0, suspect: 0, fail: 0 }); const dump = [];
+    const seen = new Set();
+    for (const g of grid12) {
+      const a = analyzeGrid(g.data, gcfg, g.spec.name === 'age-gate' ? 'default' : g.spec.name);
+      st.pages++; st.blocks += a.counts.total; st.ok += a.counts.ok; st.suspect += a.counts.suspect; st.fail += a.counts.fail;
+      if (g.data.clientW !== g.data.vw) rep.info({ rule: 'D12', msg: `${g.label}: --vw ${g.data.vw}px ≠ clientWidth ${g.data.clientW}px (scrollbar-gutter) — сітку рахуємо за --vw` });
+      dump.push({ label: g.label, page: g.spec.name, width: g.width, gate: g.gate, vw: g.data.vw, clientW: g.data.clientW, u: g.data.u, profile: a.profile, grid: { margin: a.grid.margin, gap: a.grid.gap, col: a.grid.col, starts: a.grid.starts, ends: a.grid.ends }, counts: a.counts, stats: g.data.stats,
+        blocks: a.results.map((r) => ({ region: r.block.region, profile: r.profile, sel: r.block.sel, path: r.block.path.replace(/#[\w-]+/g, ''), tag: r.block.tag, L: r.block.L, R: r.block.R, T: r.block.T, B: r.block.B, W: r.block.W, H: r.block.H, testL: r.block.testL, testR: r.block.testR, leaf: r.block.leaf, text: r.block.text, status: r.ev.status, sides: r.ev.sides, cols: r.ev.cols, alt: r.alt })) });
+      for (const r of a.results) {
+        if (r.ev.status !== 'fail') continue;
+        const path = r.block.path.replace(/#[\w-]+/g, '');
+        addV({ rule: 'D12', page: g.label, selector: path, value: describeGrid(r, a.grids[r.profile]) + (r.profile !== a.profile ? ` (сітка «${r.profile}»)` : ''), msg: 'блок не стоїть на межах колонок сітки (>1px)' });
+      }
+    }
+    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'grid-d12.json'), JSON.stringify({ config: gcfg, results: dump }, null, 1)); } catch {}
+    rep.info({ rule: 'D12', msg: `блоків ${st.blocks} на ${st.pages} сторінко-ширинах: норма ${st.ok}, підозрілі (0.5–1px) ${st.suspect}, порушення (>1px) ${st.fail}; повні дані — ${join(opts.out, 'grid-d12.json')}` });
   }
   return rep;
 }

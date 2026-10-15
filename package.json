@@ -15,7 +15,8 @@
     "qa:arch": "node tools/qa/arch.mjs",
     "qa:cls": "node tools/qa/cls.mjs",
     "qa:hscroll": "node tools/qa/hscroll.mjs",
-    "qa:ink": "node tools/qa/ink-align.mjs"
+    "qa:ink": "node tools/qa/ink-align.mjs",
+    "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none"
   },
   "devDependencies": {
     "html2canvas": "^1.4.1",

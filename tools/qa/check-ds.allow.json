@@ -64,5 +64,30 @@
       "\\.site-footer",
       "\\.age-card__legal"
     ]
+  },
+  "grid": {
+    "_comment": "Правило D12 (tools/qa/grid-d12.mjs): 12 колонок, поле і gap у u (1u = --vw/1920). Профілі — сітки сторінок; pageProfile — яка сітка еталонна для сторінки (default — решта). Нові винятки — лише з рішенням замовника (allow[] нижче з rule:D12).",
+    "okPx": 0.5,
+    "failPx": 1,
+    "minBlockU": 60,
+    "minHeightU": 20,
+    "profiles": {
+      "catalog": {
+        "marginU": 47.5,
+        "gapU": 40,
+        "note": "сітка каталогу 204:2222: 1825u, gap 40u, колонка 115.42u (4 картки = 4×3 колонки; блок коктейлів 4/5/3)"
+      },
+      "product": {
+        "marginU": 50,
+        "gapU": 5,
+        "note": "сторінка товару/контакти/фідбек: поля 50u, gap 5u"
+      }
+    },
+    "pageProfile": {
+      "default": "catalog",
+      "product": "product",
+      "contacts": "product",
+      "feedback": "product"
+    }
   }
 }
