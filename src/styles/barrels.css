@@ -166,24 +166,17 @@
 
 /* ---------- S5 «Подальша витримка»: продовження світлої кімнати S4 (одне тло, без межі), чотири вина по 3 колонки сітки ----------
    Шапка (заголовок + лід) по центру. Кожна .bx-finish — subgrid на 4 спільні рядки (гравюра, назва, регіон, смакові ноти; підпис — теж subgrid),
-   тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Гравюра днища (ілюстрація) — темна на світлому тлі, без плашки, рамки й
-   заливки (рев'ю 45c7d17f, 79b93cfd); підписи — по центру під гравюрою, без маркерів (рев'ю e9a95f10). Тон вина (--bx-wine) — лише орнамент
-   у центрі днища. Ноти — src/data/barrels.js finishNotes: порожні не показуються. */
+   тож назви, регіони й ноти всіх чотирьох — на одних базових лініях. Гравюра днища (тимчасова, СЛОТ під фото IMG-4) — одне коло-обідок hairline
+   і клепки тонкими лініями, темні на світлому тлі; без плашки, рамки, заливки, подвійних кіл, штрихування й значків (рев'ю 45c7d17f, 79b93cfd,
+   FIX-4); підписи — по центру під гравюрою, без маркерів (рев'ю e9a95f10). Ноти — src/data/barrels.js finishNotes: порожні не показуються. */
 .barrels-next { padding-block: 0 var(--space-barrels-section-y); }
 .barrels-next__grid { display: grid; grid-template-columns: repeat(var(--columns-barrels), minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--space-barrels-grid-gap); width: var(--container-barrels); margin-inline: auto; }
 .barrels-next__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-barrels-head); }
 .barrels-next__lead { width: var(--size-barrels-text-w); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); color: var(--color-barrels-ink-paper-muted); text-wrap: balance; }
 .bx-finish { grid-column: span var(--span-barrels-finish); grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; text-align: center; }
-.bx-finish--marsala { --bx-wine: var(--color-barrels-wine-marsala); }
-.bx-finish--madeira { --bx-wine: var(--color-barrels-wine-madeira); }
-.bx-finish--port { --bx-wine: var(--color-barrels-wine-port); }
-.bx-finish--sherry { --bx-wine: var(--color-barrels-wine-sherry); }
 .bx-finish__tile { display: flex; justify-content: center; color: var(--color-barrels-ink-paper); } /* місце під фото днища (СЛОТ); зараз — лише гравюра */
-.bx-head2 { width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; transition: scale var(--duration-base) var(--ease-out); }
-.bx-head2__hair, .bx-head2__shade, .bx-head2__boards { stroke-width: var(--svg-stroke-hair); }
-.bx-head2__boards { opacity: var(--opacity-barrels-head-boards); }
-.bx-head2__shade { opacity: var(--opacity-barrels-head-shade); }
-.bx-head2__orn { color: var(--bx-wine); } /* орнамент — тоном свого вина: єдиний кольоровий акцент (≥ 3:1 на «папері») */
+.bx-head2 { width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; transition: scale var(--duration-base) var(--ease-out); }
+.bx-head2__rim, .bx-head2__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); } /* одна hairline-лінія DS (1px за будь-якого масштабу) */
 @media (hover: hover) {
   .bx-finish:hover .bx-head2 { scale: var(--scale-barrels-finish-hover); }
 }

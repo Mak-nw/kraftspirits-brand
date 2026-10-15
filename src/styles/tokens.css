@@ -1021,17 +1021,9 @@
 
   /* S5 «Подальша витримка»: продовження світлої кімнати; чотири вина по 3 колонки сітки зі спільними рядками (subgrid: гравюра, назва, регіон, ноти) */
   --span-barrels-finish: 3;
-  --size-barrels-finish-head: 76%;                       /* гравюра днища — частка ширини колонки вина */
+  --size-barrels-finish-head: 76%;                       /* гравюра днища (одне коло-обідок hairline + клепки) — частка ширини колонки вина */
   --font-size-barrels-finish-name: calc(28 * var(--u));
   --scale-barrels-finish-hover: 1.03;                    /* hover: гравюра трохи наближається */
-  /* тони вин — лише суміші палітри (золото + коричневий); лише акцент — орнамент у центрі днища (контраст на «папері» ≥ 3:1);
-     у порядку від найсвітлішого до найтемнішого: марсала → мадера → портвейн (тоні) → херес (олоросо) */
-  --color-barrels-wine-marsala: color-mix(in srgb, var(--color-gold) 62%, var(--color-brown)); /* марсала: золотисто-бурштинова */
-  --color-barrels-wine-madeira: color-mix(in srgb, var(--color-gold) 50%, var(--color-brown)); /* мадера: бурштинова */
-  --color-barrels-wine-port: color-mix(in srgb, var(--color-gold) 38%, var(--color-brown));    /* портвейн (тоні): горіхово-коричневий */
-  --color-barrels-wine-sherry: color-mix(in srgb, var(--color-gold) 26%, var(--color-brown));  /* херес (олоросо): найтемніший */
-  --opacity-barrels-head-boards: 0.6;                    /* клепки днища — тонше за обідок */
-  --opacity-barrels-head-shade: 0.6;                     /* штрихування тіні днища */
 }
 
 /* ---------- Коктейлі (cocktails.html, partials/components/cocktail.html, lightbox.html) ----------
@@ -1047,7 +1039,13 @@
   /* МІНІМАЛЬНА висота блоку = висота картки каталогу 547.67u (картка вставлена як є); у фото-фрейм цієї висоти вміщується колонка з 3 мініатюр товару: 3×167 + 2×7 + 2×15 = 545u */
   --size-cocktail-h: var(--size-card-cat2-h);
   --col-cocktails-intro: 4 / span 6;                           /* вступ: 6 середніх колонок — центр = центр екрана */
-  --shift-cocktail-title-cap-top: -0.185em;                     /* оптика: верх чорнила капітелі заголовка (EB Garamond SemiBold, lh 1) = верх фото/картки; виміряно по чорнилу, DPR 2, 1200–1920 (Й/Ґ/апостроф виходять вище капітелі — це надрядкові знаки) */
+  /* метрики EB Garamond (частки em; canvas measureText, wght 600): ascent/descent рядка (hhea) і висота капітелі «Н» */
+  --font-ascent-serif: 1.007;
+  --font-descent-serif: 0.298;
+  --font-cap-height-serif: 0.654;
+  /* оптика заголовка блоку: верх чорнила капітелі = верх фото/картки. Відстань від верху line-box до верху капітелі = півінтерліньяж + ascent − cap;
+     ascent і descent Chrome округлює до цілих px (тому round(…, 1px)) — розрахунок за метриками, а не підібране число */
+  --shift-cocktail-title-cap-top: -0.185em;
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
