@@ -16,14 +16,15 @@
 .cocktails__list { display: grid; row-gap: var(--space-cocktail-block-gap); margin-top: var(--space-cocktail-block-gap); }
 
 /* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною), порядок зліва направо (bb972de6): ТЕКСТ — ІСНУЮЧА панель DS .contacts-panel
-   (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad), СЛАЙДЕР-галерея (ширина 4 колонок сітки каталогу, висота = картка каталогу, кадр cover по центру; e9d6192c) і картка каталогу (426.25u) стоять прямо на зеленому.
+   (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad), СЛАЙДЕР-галерея (ширина 4 колонок сітки каталогу, висота = текстова панель .cocktail__body (stretch), кадр cover по центру; 976a748f) і картка каталогу (426.25u) стоять прямо на зеленому.
    Між трьома плашками ОДНАКОВИЙ проміжок --space-cocktail-plate-gap = 5u (c121e3bf, «4,5» = 4.5px у вікні 1728); панель забирає весь простір, що лишився (колонки 1–5 + 70u).
-   Усі три притиснуті до верху й не розтягуються (897ea0d1): панель — за вмістом (висота табів = найвища панель), слайдер і картка — на одній висоті (--size-cocktail-h); ряд = найвищий із трьох (довша панель з даних збільшує ряд). Порядок у DOM = порядок Tab.
+   Усі три притиснуті до верху й не розтягуються (897ea0d1): панель — за вмістом (висота табів = найвища панель), слайдер і панель — однієї висоти (stretch), картка — своєї висоти до верху; ряд = найвищий із трьох (довша панель з даних збільшує ряд). Порядок у DOM = порядок Tab.
    Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
 .cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-plate-gap); row-gap: 0; align-items: start; }
-.cocktail__media { --accent: var(--color-cocktail-text); position: relative; height: var(--size-cocktail-h); } /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
+.cocktail__media { --accent: var(--color-cocktail-text); position: relative; align-self: stretch; } /* слайдер = висота текстової панелі (нотатка замовника 976a748f «як дів боді»); кадр cover */ /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
 .cocktail__thumbs .product-thumb { width: calc(var(--size-product-thumb-w) * var(--scale-cocktail-thumb)); height: calc(var(--size-product-thumb-h) * var(--scale-cocktail-thumb)); } /* менші мініатюри лише на коктейлях (параметр .product-thumbs; сторінка товару без змін) */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
+.cocktail__zoom:focus-visible { outline-color: var(--color-beige); } /* кільце — поза фото, на зеленому тлі: зелене кільце (колір тла) не видно (D6) */
 /* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
 .cocktail__body { min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
@@ -31,13 +32,20 @@
 .cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-cocktail-accent); }
 .cocktail__desc { margin-top: var(--space-cocktail-head-gap); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
 .cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
+/* картка каталогу в блоці розтягується на висоту ряду (верх і низ = панель і слайдер; нотатка замовника «ітем справа» ): параметр існуючої .product-card--catalog лише на цій сторінці. Ширина 426.25u, арка (маска product-card-arch-full.svg, preserveAspectRatio none) подовжується
+   на ту саму різницю висоти (прямі сторони не змінюються, кути/дуга розтягуються на частки відсотка), пляшка лишається того ж розміру по центру зони фото, назва й ціна притиснуті до низу */
+.cocktail__item { align-self: stretch; align-content: stretch; }
+.cocktail__item .product-card--catalog { height: 100%; }
+.cocktail__item .product-card--catalog::before { height: calc(var(--size-arch-h) + 100% - var(--size-card-cat2-h)); }
+.cocktail__item .product-card--catalog .product-card__media { display: flex; align-items: center; }
+.cocktail__item .product-card--catalog .product-card__media img { flex: none; height: var(--size-cocktail-card-photo-h); }
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
-.tabs__list { display: flex; justify-content: space-between; align-items: center; } /* таби на всю ширину панелі: перший — лівий край поля, останній — правий, проміжки рівні (коментар 580810af); вигляд вкладки як перемикач об'єму товару */
-.tabs__panels { display: grid; padding-top: var(--space-20); }
-/* панелі в одній комірці: висота = найвища панель цього коктейлю, перемикання не змінює висоту; неактивні приховані й від допоміжних технологій. Без JS видно всі панелі одна під одною */
-.js .tabs__panel { grid-area: 1 / 1; }
-.js .tabs__panel:not(.is-active) { visibility: hidden; }
+/* таби згруповані по лівому краю панелі, вертикальний центр; проміжок — один токен --space-cocktail-tabs-gap (коментар 580810af) */
+.tabs__list { display: flex; justify-content: flex-start; align-items: center; gap: var(--space-cocktail-tabs-gap); }
+.tabs__panels { padding-top: var(--space-20); }
+/* висота панелі = за вмістом АКТИВНОЇ вкладки (коментар 14ca6807): неактивні приховані (display:none, і від допоміжних технологій); мін. висота ряду = картка каталогу. Без JS видно всі панелі одна під одною */
+.js .tabs__panel:not(.is-active) { display: none; }
 .tabs__panel:focus-visible { outline-offset: var(--space-5); }
 /* «Інгредієнти» і «Подача» — ОДНА верстка (коментар замовника b1859f76): назва ліворуч, значення за правим краєм у 2 частках з 5 ширини тіла, під кожним рядком hairline-розділювач
    (той самий, що в рядках акордеона товару, колір --accent-line; коментар b60b8cab), однаковий крок рядка; довге значення переноситься в межах своєї колонки,

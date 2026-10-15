@@ -1032,6 +1032,8 @@
   --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
   --count-cocktail-cols: 12;                                    /* колонки сітки сторінки (вступ) */
   --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор доріжок усередині панелі = зазор сітки каталогу */
+  --space-cocktail-tabs-gap: var(--space-15);                    /* проміжок між табами (згруповані зліва; одне значення на всі блоки — підбирається замовником, коментар 580810af) */
+  --size-cocktail-card-photo-h: calc(329.667 * var(--u));        /* висота фото в картці каталогу (як у каталозі): при розтягуванні картки пляшка не змінює розмір */
   --space-cocktail-plate-gap: var(--space-5);                    /* ОДНАКОВИЙ проміжок між трьома плашками: текстова панель | слайдер | картка (коментар c121e3bf «4,5» = 4.5px на вікні 1728 = 5u) */
   --size-cocktail-photo-w: calc((var(--size-cocktails-w) - (var(--count-cocktail-cols) - 1) * var(--space-cocktail-col-gap)) / var(--count-cocktail-cols) * 4 + 3 * var(--space-cocktail-col-gap)); /* слайдер зберігає ширину 4 колонок сітки каталогу (581.67u) */
   --grid-cocktail-block: minmax(0, 1fr) var(--size-cocktail-photo-w) var(--size-card-cat2-w); /* панель тексту забирає ВЕСЬ вільний простір (колонки 1–5 + розширення), слайдер 4 колонки, картка каталогу 426.25u; зазор між ними --space-cocktail-plate-gap */
@@ -1059,4 +1061,26 @@
   --color-cocktail-accent: var(--color-barrels-amber);          /* єдиний акцент: оригінальна назва, кількості, номери кроків. Золото #cbaf86 на beige — 1.6:1; золото 40% + brown (вже в палітрі, «Бочки») — 5.2:1 */
   --color-lightbox-bg: var(--color-green);                      /* повноекранний перегляд: тло сторінки */
   --space-lightbox-pad: var(--space-50);
+}
+
+/* ---------- FAQ (faq.html, partials/sections/faq-group.html, faq-nav.html; рядок — components/faq-item) ----------
+   Лише похідні від наявних токенів (типографіка — ролі .t-*, без сторінкової шкали). Сітка = сітка каталогу (12 колонок, 1825u, зазор 40u; QA D12 профіль catalog).
+   Кімнати: вступ і «Не знайшли відповідь?» — .theme-green (продовження зеленої зони header), питання — beige тло сторінки. */
+:root {
+  --size-faq-w: var(--size-catalog-grid-w);                 /* 1825u: ширина вмісту = сітка каталогу */
+  --count-faq-cols: 12;
+  --space-faq-col-gap: var(--space-catalog-grid-gap);       /* 40u */
+  --col-faq-intro: 4 / span 6;                              /* вступ і фінальний блок: 6 середніх колонок (як вступ коктейлів) — центр = центр екрана */
+  --col-faq-title: 1 / span 4;                              /* заголовок групи (sticky у межах своєї групи): колонки 1–4 */
+  --col-faq-list: 5 / span 8;                               /* рядки питань групи: колонки 5–12 */
+  --space-faq-intro-top: var(--space-catalog-title-top2);   /* 83u: від зони header до заголовка (як каталог/коктейлі) */
+  --space-faq-room-y: var(--space-100);                     /* вертикальне поле кімнат (вступ знизу, тіло, фінальний блок) */
+  --space-faq-group-gap: var(--space-100);                  /* між групами */
+  --space-faq-row-gap: var(--space-10);                     /* між рядками FAQ (як .faq__col на головній) */
+  --space-faq-head-gap: var(--space-30);                    /* заголовок → рядок вступу (як вступ коктейлів) */
+  --space-faq-action-gap: var(--space-50);                  /* рядок → кнопка у фінальному блоці */
+  --space-faq-nav-gap: var(--space-37);                     /* між пунктами навігації розділами (як між пунктами навігації header) */
+  --space-faq-nav-top: var(--space-50);                     /* рядок вступу → навігація розділами */
+  --offset-faq-title-sticky: calc(var(--size-header-h) + var(--space-50)); /* sticky-заголовок групи: під пілюлею header (103u) + 50u */
+  --space-faq-anchor: var(--space-50);                      /* якір групи (#slug): заголовок зупиняється на висоті sticky */
 }
