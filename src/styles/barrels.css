@@ -228,7 +228,6 @@
 .bx-cert__title { margin-left: var(--shift-barrels-cert-title-ink); font: var(--fw-semibold) var(--font-size-barrels-title)/var(--lh-barrels-title) var(--font-family-serif); letter-spacing: var(--ls-wide); text-transform: uppercase; }
 .bx-cert__price { margin-left: var(--shift-barrels-price-ink); font: var(--fw-regular) var(--font-size-barrels-price-xl)/var(--lh-barrels-numeral) var(--font-family-serif); white-space: nowrap; }
 .bx-cert__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
-.bx-cert__fact:first-child { border-top: var(--border-hairline) solid var(--color-line-soft); }
 .bx-cert__fact dt { margin-left: var(--shift-barrels-fact-ink); font: var(--fw-medium) var(--font-size-barrels-caption)/var(--lh-barrels-copy) var(--font-family-sans); letter-spacing: var(--ls-wide); color: var(--color-barrels-ink-paper-muted); }
 .bx-cert__fact dd { font: var(--fw-medium) var(--font-size-barrels-fact)/var(--lh-none) var(--font-family-serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bx-cert__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-barrels-cert-row); margin-top: auto; }
