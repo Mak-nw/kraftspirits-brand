@@ -993,6 +993,7 @@
   --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
   --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 зліва — чорнило першої пляшки блоку на лівій осі колонки */
   --shift-barrels-caption-ink: -0.04em;                 /* оптика підписів («пляшок…», «вартість…»): бокове поле першої літери */
+  --shift-barrels-num-rsb: -0.04em;                     /* оптика числа 200 L (вирівняне праворуч): праве бокове поле «3» EB Garamond (виміряно 0.04em) */
   --shift-barrels-h2-round: -0.012em;                   /* оптика H2 «Скільки…»: бокове поле круглої «С» 67u — на лівій осі */
   --shift-barrels-legend-ink: -0.09em;                  /* оптика легенди: бокове поле «л» + хвостовий letter-spacing — правий край чорнила = правий край сітки */
 
