@@ -18,6 +18,8 @@ const DEFAULTS = {
 };
 
 const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'LINK', 'META', 'TEMPLATE', 'HEAD', 'TITLE', 'BR', 'WBR']);
+const lsGet = (k, d) => { try { return localStorage.getItem(k) ?? d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const r1 = (v) => Math.round(v * 10) / 10;
 const r2 = (v) => Math.round(v * 100) / 100;
@@ -66,7 +68,7 @@ export function initEdit(deps) {
   const ROLE_CLASS = () => new RegExp(CFG.roleClass);
   api('GET', '/edit-config').then((c) => { if (c && typeof c === 'object') for (const k of Object.keys(c)) CFG[k] = (typeof CFG[k] === 'object' && !Array.isArray(CFG[k]) && typeof c[k] === 'object') ? { ...CFG[k], ...c[k] } : c[k]; }).catch(() => {});
 
-  const S = { on: false, el: null, prop: 'padding-top', all: false, scopeAll: false, view: 'after', side: 'right', drag: null, editing: null, ops: [], ptr: 0, changes: new Map(), sent: 0, hover: null, hint: null };
+  const S = { on: false, el: null, prop: 'padding-top', prevProp: 'padding-top', restore: lsGet('__edit_restore', '1') !== '0', parked: 0, confirm: null, base: new Map(), unsynced: 0, all: false, scopeAll: false, view: 'after', side: 'right', drag: null, editing: null, ops: [], ptr: 0, changes: new Map(), sent: 0, hover: null, hint: null };
   let handles = [];
   const shadowActive = () => root.getRootNode().activeElement;
 
@@ -81,13 +83,16 @@ export function initEdit(deps) {
   wrap.append(cap, hoverBox, selBox, zones, ind, tip);
   root.insertBefore(wrap, root.querySelector('.pop'));
   const panelEl = mk('div', { class: 'edpanel', hidden: true });
-  panelEl.innerHTML = '<header></header><div class="ed-info"></div><div class="ed-chg"></div><footer></footer>';
+  panelEl.innerHTML = '<header></header><div class="ed-top"></div><div class="ed-info"></div><div class="ed-chg"></div><footer></footer>';
   root.insertBefore(panelEl, root.querySelector('.bar'));
-  const pHead = panelEl.querySelector('header'), pInfo = panelEl.querySelector('.ed-info'), pChg = panelEl.querySelector('.ed-chg'), pFoot = panelEl.querySelector('footer');
+  const pHead = panelEl.querySelector('header'), pTop = panelEl.querySelector('.ed-top'), pInfo = panelEl.querySelector('.ed-info'), pChg = panelEl.querySelector('.ed-chg'), pFoot = panelEl.querySelector('footer');
   const btn = mk('button', { class: 'btn alt', title: 'Едіт: висота, відступи, gap, текст, порядок, роль, колір — живий перегляд + запис правок у review/edits.json' });
   btn.dataset.act = 'edit';
-  btn.innerHTML = 'Едіт <kbd>E</kbd>';
+  btn.innerHTML = '<span class="ed-bl">Едіт</span> <kbd>E</kbd><span class="ed-cnt"></span><span class="ed-bm"></span>';
   bar.insertBefore(btn, beforeButton);
+  const legend = mk('span', { class: 'ed-leg', hidden: true });
+  legend.innerHTML = '<b>Alt</b>+<b>←↑→↓</b> міняє місцями · <b>M</b> режим (Значення / Позиція) · <b>←↑→↓</b> змінюють значення';
+  bar.insertBefore(legend, beforeButton);
   const probe = mk('div', { style: 'position:absolute;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;overflow:hidden' });
   root.append(probe);
 
@@ -280,6 +285,7 @@ export function initEdit(deps) {
   }
 
   // ---------- spec / touch / ops ----------
+  const newId = () => [...crypto.getRandomValues(new Uint8Array(4))].map((b) => b.toString(16).padStart(2, '0')).join('');
   const keyOf = (n, what) => `${selFor(n)}|${what}`;
   function scopeFor(n, type, prop) {
     if (!S.scopeAll) return { targets: [n], scope: '' };
@@ -318,18 +324,171 @@ export function initEdit(deps) {
       read: () => { const r = roleOf(n); return { k: r || '', role: r ? '.' + r : null, label: r ? '.' + r : '(без ролі)' }; },
       restore: () => ({ kind: 'role', role: roleOf(n) }) };
   }
+  // ---------- порядок / місця (Move) ----------
+  // grid з явними доріжками: переставляються діти І доріжки (ширина йде разом з елементом); flex: inline `order`; інакше — DOM-порядок.
+  const sibsOf = (par) => [...par.children].filter((k) => !SKIP.has(k.tagName));
+  const ordNum = (k) => { const o = parseInt(getComputedStyle(k).order, 10); return Number.isFinite(o) ? o : 0; };
+  const moveMode = (par) => { const d = getComputedStyle(par).display; return d.includes('grid') ? 'grid' : d.includes('flex') ? 'order' : 'dom'; };
+  const ordered = (par) => { const l = sibsOf(par); return moveMode(par) === 'order' ? l.map((k, i) => [k, i]).sort((a, b) => ordNum(a[0]) - ordNum(b[0]) || a[1] - b[1]).map((x) => x[0]) : l; };
   const idxOf = (n) => [...n.parentElement.children].indexOf(n);
-  function moveTo(n, i) {
-    const par = n.parentElement, kids = [...par.children].filter((k) => k !== n);
-    par.insertBefore(n, kids[Math.max(0, Math.min(i, kids.length))] ?? null);
+  function moveTo(n, i) { // застарілі чернетки (restore.index без perm)
+    const par = n.parentElement, kids2 = [...par.children].filter((k) => k !== n);
+    par.insertBefore(n, kids2[Math.max(0, Math.min(i, kids2.length))] ?? null);
+  }
+  function splitTop(str) { const out = []; let d = 0, cur = ''; for (const ch of str) { if (ch === '(') d++; if (ch === ')') d--; if (/\s/.test(ch) && d === 0) { if (cur) out.push(cur); cur = ''; } else cur += ch; } if (cur) out.push(cur); return out; }
+  function eachRule(fn) {
+    const walk = (rules) => { for (const r of rules) { if (r.media && !matchMedia(r.media.mediaText).matches) continue; if (r.style) fn(r); if (r.cssRules) walk(r.cssRules); } };
+    for (const sh of document.styleSheets) { try { walk(sh.cssRules); } catch { /* cross-origin */ } }
+  }
+  function rootRaw(name) { let v = null; eachRule((r) => { if (r.selectorText && /(^|,)\s*(:root|html)\s*(,|$)/.test(r.selectorText)) { const x = r.style.getPropertyValue(name); if (x) v = x.trim(); } }); return v; }
+  function declaredCols(par, skipInline) {
+    if (!skipInline && par.style.getPropertyValue('grid-template-columns')) return par.style.getPropertyValue('grid-template-columns');
+    let raw = null;
+    eachRule((r) => { if (r.selectorText && r.style.getPropertyValue('grid-template-columns')) { try { if (par.matches(r.selectorText)) raw = r.style.getPropertyValue('grid-template-columns').trim(); } catch { /* */ } } });
+    return raw;
+  }
+  // доріжки grid-батька: px, символьний список (токени/minmax) і ім'я токена-«джерела» (`--grid-…`)
+  function trackInfo(par) {
+    const cs = getComputedStyle(par); if (!cs.display.includes('grid')) return null;
+    const px = cs.gridTemplateColumns.split(' ').map(parseFloat);
+    if (px.length < 2 || px.some((v) => !Number.isFinite(v))) return null;
+    let raw = declaredCols(par), token = null, rawNoInl = declaredCols(par, true);
+    for (let i = 0; i < 4 && rawNoInl; i++) { const m = rawNoInl.match(/^var\((--[\w-]+)\)$/); if (!m) break; token = m[1]; rawNoInl = rootRaw(m[1]); }
+    for (let i = 0; i < 4 && raw; i++) { const m = raw.match(/^var\((--[\w-]+)\)$/); if (!m) break; raw = rootRaw(m[1]); }
+    let sym = raw ? splitTop(raw) : null; if (sym && sym.length !== px.length) sym = null;
+    return { px, sym: sym || px.map((v) => `${r2(v)}px`), symbolic: !!sym, token, u: px.map((v) => `${r1(v / unit())}u`) };
+  }
+  // чи діти (у DOM-порядку, у потоці) стоять у доріжках 0..k-1 — лише тоді доріжки можна переставляти разом з дітьми
+  function gridPlan(par) {
+    const ti = trackInfo(par); if (!ti) return null;
+    const cs = getComputedStyle(par), pr = par.getBoundingClientRect(), gap = pxOf(cs.columnGap);
+    let x = pr.left + pxOf(cs.borderLeftWidth) + pxOf(cs.paddingLeft); const cells = [];
+    for (const w of ti.px) { cells.push([x, x + w]); x += w + gap; }
+    const K = sibsOf(par).filter(inflow); if (!K.length || K.length > ti.px.length) return null;
+    const at = K.map((k) => { const r = k.getBoundingClientRect(), c = (r.left + r.right) / 2; return cells.findIndex((q) => c >= q[0] - 0.5 && c <= q[1] + 0.5); });
+    if (!at.every((t, j) => t === j)) return null;
+    return { ti, K };
+  }
+  const tracksNow = (par) => { const t = trackInfo(par); return t ? { sym: t.sym.join(' '), u: t.u.join(' · '), token: declaredToken(par), symbolic: t.symbolic } : null; };
+  const declaredToken = (par) => { let raw = declaredCols(par, true), tok = null; for (let i = 0; i < 4 && raw; i++) { const m = raw.match(/^var\((--[\w-]+)\)$/); if (!m) break; tok = m[1]; raw = rootRaw(m[1]); } return tok; };
+  function layoutSnap(par) { return { dom: [...par.children], gtc: par.style.getPropertyValue('grid-template-columns'), ord: sibsOf(par).map((k) => [k, k.style.getPropertyValue('order')]) }; }
+  function placeDom(par, want) {
+    const cur = sibsOf(par);
+    want.forEach((k, j) => { if (cur[j] !== k) { par.insertBefore(k, cur[j]); cur.splice(cur.indexOf(k), 1); cur.splice(j, 0, k); } });
+  }
+  function restoreLayout(par, s) {
+    s.dom.forEach((k) => par.appendChild(k));
+    if (s.gtc) par.style.setProperty('grid-template-columns', s.gtc); else par.style.removeProperty('grid-template-columns');
+    s.ord.forEach(([k, v]) => { if (v) k.style.setProperty('order', v); else k.style.removeProperty('order'); });
+  }
+  // FLIP: коротка анімація переходу (лише transform, 280 мс) + підсвітка «було → стало» у шарі оверлею
+  const mvLayer = mk('div', { class: 'ed-mvl' }); wrap.append(mvLayer);
+  function withFlip(par, fn, quiet) {
+    const ks = sibsOf(par), r0 = new Map(ks.map((k) => [k, k.getBoundingClientRect()])), was = ordered(par);
+    fn();
+    const now = ordered(par), r1m = ks.map((k) => [k, k.getBoundingClientRect()]);
+    if (quiet) return { was, now };
+    let html = '';
+    for (const [k, r] of r1m) {
+      const o = r0.get(k), dx = o.left - r.left, dy = o.top - r.top, a = was.indexOf(k), b = now.indexOf(k);
+      if (Math.abs(dx) > 1 || Math.abs(dy) > 1) { try { k.animate([{ transform: `translate(${dx}px,${dy}px)` }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.2,.7,.2,1)' }); } catch { /* */ } }
+      if (a !== b && r.width > 0) html += `<div class="ed-mv" style="left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px"><b>${a + 1} → ${b + 1}</b></div>`;
+    }
+    mvLayer.innerHTML = html; clearTimeout(withFlip.t); withFlip.t = setTimeout(() => { mvLayer.innerHTML = ''; }, 2200);
+    return { was, now };
+  }
+  // застосувати нову послідовність newL (елементи sibsOf(par)) — DOM / order / доріжки grid
+  function reorder(par, newL) {
+    sibsOf(par).forEach(selFor); selFor(par); // селектори рахуємо ДО зміни DOM (nth-of-type), інакше відновлення після reload влучить не туди
+    const mode = moveMode(par), plan = mode === 'grid' ? gridPlan(par) : null;
+    return withFlip(par, () => {
+      if (mode === 'order') { newL.forEach((k, i) => k.style.setProperty('order', String(i))); return; }
+      placeDom(par, newL);
+      if (plan) {
+        const K2 = newL.filter(inflow), list = plan.ti.sym.slice();
+        K2.forEach((k, j) => { list[j] = plan.ti.sym[plan.K.indexOf(k)]; });
+        par.style.setProperty('grid-template-columns', list.join(' '));
+      }
+    });
+  }
+  const nm0 = (k) => nameOf(k) + (shortText(k) ? ` «${shortText(k).slice(0, 14)}»` : '');
+  // візуальний сусід у напрямку (за bounding box, не за DOM-порядком)
+  function neighborOf(n, dir) {
+    const par = n.parentElement; if (!par) return null;
+    const nr = n.getBoundingClientRect(); let best = null, bd = Infinity;
+    for (const k of sibsOf(par)) {
+      if (k === n || !inflow(k)) continue;
+      const r = k.getBoundingClientRect(); if (r.width < 1 || r.height < 1) continue;
+      let d, ov;
+      if (dir === 'left') { d = nr.left - r.right; ov = overlap(nr.top, nr.bottom, r.top, r.bottom); if ((r.left + r.right) / 2 >= (nr.left + nr.right) / 2) continue; }
+      else if (dir === 'right') { d = r.left - nr.right; ov = overlap(nr.top, nr.bottom, r.top, r.bottom); if ((r.left + r.right) / 2 <= (nr.left + nr.right) / 2) continue; }
+      else if (dir === 'up') { d = nr.top - r.bottom; ov = overlap(nr.left, nr.right, r.left, r.right); if ((r.top + r.bottom) / 2 >= (nr.top + nr.bottom) / 2) continue; }
+      else { d = r.top - nr.bottom; ov = overlap(nr.left, nr.right, r.left, r.right); if ((r.top + r.bottom) / 2 <= (nr.top + nr.bottom) / 2) continue; }
+      if (ov < 1) continue;
+      d = Math.max(0, d);
+      if (d < bd) { bd = d; best = k; }
+    }
+    return best;
+  }
+  const DIRS_RU = { left: 'ліворуч', right: 'праворуч', up: 'вище', down: 'нижче' };
+  const VALUE_WORD = { spacing: 'відступ', size: 'розмір' };
+  function modeText() { return S.prop === 'move' ? 'Режим: Позиція — стрілки міняють місцями' : `Режим: Значення — стрілки міняють ${VALUE_WORD[PROPS[S.prop]?.type] || 'значення'}`; }
+  function setMode(m) {
+    if (m === 'move') { if (S.prop !== 'move') { S.prevProp = S.prop; S.prop = 'move'; } }
+    else if (S.prop === 'move') S.prop = S.prevProp && S.prevProp !== 'move' && PROPS[S.prevProp] ? S.prevProp : 'padding-top';
+    if (S.el && !available(S.prop)) S.prop = 'padding-top';
+    renderInfo(); say(modeText());
+  }
+  function swapDir(dir) {
+    const n = S.el; if (!n || !guard() || !n.parentElement) return;
+    const x = neighborOf(n, dir);
+    if (!x) return say(`${DIRS_RU[dir][0].toUpperCase()}${DIRS_RU[dir].slice(1)} сусіда немає — міняти нема з чим`);
+    swapWith(n, x);
+  }
+  function swapWith(n, x) {
+    const par = n.parentElement, list = ordered(par), i = list.indexOf(n), j = list.indexOf(x);
+    if (i < 0 || j < 0) return;
+    const nl = list.slice(); nl[i] = x; nl[j] = n;
+    commitMove(n, nl);
+  }
+  function commitMove(n, newL) {
+    if (!guard() || !n.parentElement) return;
+    const par = n.parentElement, was = ordered(par);
+    if (newL.every((k, i) => k === was[i])) return;
+    const spec = moveSpec(n); touch(spec);
+    const before = spec.snap(); let after = null;
+    const op = { specs: [spec], keys: [spec.key],
+      doIt() { if (after) spec.put(after); else { reorder(par, newL); after = layoutSnap(par); } },
+      undoIt() { spec.put(before); } };
+    const info = (() => { const t0 = tracksNow(par); op.doIt(); return { t0, t1: tracksNow(par) }; })();
+    pushOp(op);
+    const now = ordered(par), tr = info.t0 && info.t1 && info.t0.sym !== info.t1.sym ? ` Доріжки: ${info.t0.sym} → ${info.t1.sym}.` : '';
+    S.hint = { kind: 'ok', text: `Було: ${was.map(nm0).join(' · ')} → Стало: ${now.map(nm0).join(' · ')}.${tr}` };
+    renderInfo(); showTip(`позиція ${now.indexOf(n) + 1} з ${now.length}`);
   }
   function moveSpec(n) {
     const par = n.parentElement;
     return { key: keyOf(n, 'move'), el: n, type: 'move', prop: 'move', targets: [n], scope: '', parent: par,
-      snap: () => idxOf(n), put: (s) => moveTo(n, s),
-      read: () => { const sibs = [...par.children].filter((k) => !SKIP.has(k.tagName)); const i = idxOf(n); const nb = (j) => (par.children[j] ? label(par.children[j]) : null);
-        return { k: String(i), index: i, of: par.children.length, before: nb(i - 1), after: nb(i + 1), order: sibs.slice(0, 14).map((k) => nameOf(k) + (shortText(k) ? ` «${shortText(k).slice(0, 14)}»` : '')), label: `позиція ${i + 1} з ${par.children.length}` }; },
-      restore: () => ({ kind: 'move', index: idxOf(n) }) };
+      snap: () => layoutSnap(par), put: (s) => withFlip(par, () => restoreLayout(par, s)),
+      read: () => {
+        const list = ordered(par), i = list.indexOf(n), tr = tracksNow(par), dom = sibsOf(par);
+        return { k: `${list.map((x) => dom.indexOf(x)).join(',')}|${par.style.getPropertyValue('grid-template-columns')}`, index: i, of: list.length, mode: moveMode(par),
+          before: i > 0 ? label(list[i - 1]) : null, after: list[i + 1] ? label(list[i + 1]) : null, order: list.slice(0, 14).map(nm0),
+          tracks: tr ? tr.sym : null, tracksU: tr ? tr.u : null, tracksToken: tr ? tr.token : null, label: `позиція ${i + 1} з ${list.length}` };
+      },
+      restore: () => {
+        const base = S.base.get(par) || sibsOf(par), dom = sibsOf(par);
+        return { kind: 'move', index: idxOf(n), mode: moveMode(par), perm: dom.map((x) => base.indexOf(x)), gtc: par.style.getPropertyValue('grid-template-columns'), orders: dom.map((x) => x.style.getPropertyValue('order')) };
+      } };
+  }
+  function applyMoveRestore(par, R) {
+    const ks = sibsOf(par);
+    if (!Array.isArray(R.perm) || R.perm.length !== ks.length) return false;
+    const want = R.perm.map((i) => ks[i]); if (want.some((x) => !x)) return false;
+    placeDom(par, want);
+    want.forEach((k, j) => { const v = R.orders?.[j]; if (v) k.style.setProperty('order', v); else k.style.removeProperty('order'); });
+    if (R.gtc) par.style.setProperty('grid-template-columns', R.gtc); else par.style.removeProperty('grid-template-columns');
+    return true;
   }
   function hideSpec(n) {
     return { key: keyOf(n, 'hide'), el: n, type: 'hide', prop: 'display', targets: [n], scope: '',
@@ -342,7 +501,8 @@ export function initEdit(deps) {
   function touch(spec) {
     let m = S.changes.get(spec.key);
     if (!m) {
-      m = { ...spec, orig: spec.read(), origSnap: spec.snap(), cur: null, record: null, chain: Promise.resolve(), note: '', timer: 0, shotK: null, parentSel: spec.el.parentElement ? selFor(spec.el.parentElement) : '', elText: (spec.el.innerText || spec.el.getAttribute('alt') || '').replace(/\s+/g, ' ').trim().slice(0, 120), elName: label(spec.el) };
+      if (spec.type === 'move' && ![...S.changes.values()].some((c) => c.type === 'move' && c.parent === spec.parent)) S.base.set(spec.parent, sibsOf(spec.parent)); // базовий порядок батька (для restore.perm)
+      m = { ...spec, id: newId(), dirty: false, tries: 0, orig: spec.read(), origSnap: spec.snap(), cur: null, record: null, chain: Promise.resolve(), note: '', timer: 0, shotK: null, parentSel: spec.el.parentElement ? selFor(spec.el.parentElement) : '', elText: (spec.el.innerText || spec.el.getAttribute('alt') || '').replace(/\s+/g, ' ').trim().slice(0, 120), elName: label(spec.el) };
       m.cur = m.orig;
       S.changes.set(spec.key, m);
     } else { m.targets = spec.targets; m.scope = spec.scope || m.scope; }
@@ -357,12 +517,19 @@ export function initEdit(deps) {
       case 'span': return `ширина «${nm}» у сітці: span ${m.orig.span} → span ${m.cur.span} (з ${m.cur.columns} колонок)`;
       case 'text': return `текст «${nm}»: «${m.orig.text.slice(0, 50)}» → «${m.cur.text.slice(0, 50)}»`;
       case 'role': return `роль тексту «${nm}»: ${m.orig.role || '(без ролі)'} → ${m.cur.role || '(без ролі)'}`;
-      case 'move': return `порядок у «${m.parentSel.split(' > ').pop()}»: «${nm}» позиція ${m.orig.index + 1} → ${m.cur.index + 1} з ${m.cur.of}${m.cur.index > m.orig.index ? `, після «${m.cur.before || ''}»` : `, перед «${m.cur.after || ''}»`}`;
+      case 'move': return `порядок у «${m.parentSel.split(' > ').pop()}»: «${nm}» позиція ${m.orig.index + 1} → ${m.cur.index + 1} з ${m.cur.of} (було: ${(m.orig.order || []).join(' · ')} → стало: ${(m.cur.order || []).join(' · ')})${m.cur.tracks && m.cur.tracks !== m.orig.tracks ? `; доріжки: ${m.orig.tracks} → ${m.cur.tracks}` : ''}`;
       case 'color': return `${m.prop === 'color' ? 'колір тексту' : 'колір фону'} «${nm}»: ${m.orig.token || m.orig.color} → ${m.cur.token || m.cur.color}`;
       case 'align': return m.prop === 'text-align' ? `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}` : `розподіл ${m.prop} «${nm}»: ${m.orig.value} → ${m.cur.value}${m.group && /^dist-/.test(m.group) ? ' (разом з gap)' : ''}`;
       case 'hide': return `прибрати елемент «${nm}»`;
       default: return `${m.type} «${nm}»`;
     }
+  }
+  function moveSource(m) {
+    const tok = m.cur.tracksToken || m.orig.tracksToken, a = m.orig.tracks, b = m.cur.tracks;
+    if (m.cur.mode === 'grid' && tok && a && b && a !== b) return `поміняти порядок у розмітці (partial) і порядок доріжок у токені ${tok}: ${a} → ${b}`;
+    if (m.cur.mode === 'grid' && a && b && a !== b) return `поміняти порядок у розмітці і порядок grid-template-columns у CSS контейнера: ${a} → ${b}`;
+    if (m.cur.mode === 'order') return 'змінити порядок через CSS order дітей flex-контейнера (або порядок у розмітці)';
+    return 'поміняти порядок у розмітці (partial)';
   }
   function bodyOf(m) {
     const strip = ({ k, ...rest }) => rest;
@@ -371,25 +538,34 @@ export function initEdit(deps) {
       selector: selFor(m.el), parentSelector: m.parentSel, elementText: m.elText, type: m.type, prop: m.prop, group: m.group || '',
       from: strip(m.orig), to: strip(m.cur), desc: descOf(m), scope: m.scope || '', scopeCount: m.scope ? m.targets.length : 0, note: m.note || '',
       restore: { ...m.restore(), from: m.orig.k },
+      ...(m.type === 'move' ? { tracks: { mode: m.cur.mode, before: m.orig.tracks, after: m.cur.tracks, beforeU: m.orig.tracksU, afterU: m.cur.tracksU, token: m.cur.tracksToken || m.orig.tracksToken || null, orderBefore: m.orig.order, orderAfter: m.cur.order }, source: moveSource(m) } : {}),
     };
   }
+  const unsyncedN = () => [...S.changes.values()].filter((m) => m.dirty).length;
   function enqueue(m, fn) { m.chain = m.chain.then(fn).catch((e) => { say('Едіт: ' + e.message); }); return m.chain; }
   function syncSoon(m, now = false) {
     clearTimeout(m.timer);
+    m.dirty = true; updateBtn();
     const run = () => { m.timer = 0; return enqueue(m, async () => {
       if (S.changes.get(m.key) !== m) return;
-      const body = bodyOf(m);
-      if (!m.record) m.record = await api('POST', '/edits', body);
-      else m.record = await api('PATCH', '/edits/' + m.record.id, body);
+      const sent = JSON.stringify(m.cur);
+      try {
+        m.record = await api('POST', '/edits', { ...bodyOf(m), id: m.record?.id || m.id }); // upsert за id: ідемпотентно, не залежить від порядку POST/PATCH
+        if (JSON.stringify(m.cur) === sent && !m.timer) m.dirty = false;
+        m.tries = 0;
+      } catch (e) {
+        if (++m.tries <= 5) m.timer = setTimeout(run, 1500 * m.tries); else say('Едіт: не вдалося зберегти правку (' + e.message + ')');
+      }
       renderChanges();
     }); };
     if (now) return run();
-    m.timer = setTimeout(run, 350);
+    m.timer = setTimeout(run, 150);
   }
   function dropRecord(m) {
     clearTimeout(m.timer);
     S.changes.delete(m.key);
-    return enqueue(m, async () => { if (m.record) { await api('DELETE', '/edits/' + m.record.id); m.record = null; } });
+    // видаляємо з файлу лише ЧЕРНЕТКУ; надіслані (open) і виконані (done) записи автоматично не стираються
+    return enqueue(m, async () => { const id = m.record?.id || (m.dirty ? m.id : null); if (id && (!m.record || m.record.status === 'draft')) { try { await api('DELETE', '/edits/' + id); } catch { /* 404 — вже немає */ } } m.record = null; m.dirty = false; updateBtn(); });
   }
   function afterOp(keys) {
     for (const k of keys) {
@@ -398,6 +574,14 @@ export function initEdit(deps) {
       if (m.cur.k === m.orig.k) dropRecord(m); else syncSoon(m);
     }
     renderInfo(); renderChanges(); draw();
+  }
+  // синхронний «останній шанс» перед вивантаженням сторінки: keepalive-fetch переживає reload/закриття
+  function flushBeacon() {
+    for (const m of S.changes.values()) {
+      if (!m.dirty) continue;
+      clearTimeout(m.timer); m.timer = 0;
+      try { api('POST', '/edits', { ...bodyOf(m), id: m.record?.id || m.id }, { keepalive: true }).catch(() => {}); } catch { /* */ }
+    }
   }
   function flush() {
     for (const m of S.changes.values()) if (m.timer) { clearTimeout(m.timer); m.timer = 0; syncSoon(m, true); }
@@ -591,7 +775,7 @@ export function initEdit(deps) {
   function stepProp(dir, n) {
     const el = S.el; if (!el || !guard()) return;
     const P = PROPS[S.prop];
-    if (P.type === 'move') return swap(dir);
+    if (P.type === 'move') return say('Позиція: Alt+←↑→↓ або кнопки «поміняти з…» (у режимі M — голі стрілки)');
     if (P.type === 'role') return cycleRole(dir);
     if (P.type === 'span') { const { span, columns } = spanOf(el); return setSpan(el, Math.min(columns, Math.max(1, span + dir * n))); }
     if (P.type === 'color' || P.type === 'align') return say('Колір і вирівнювання — вибір у панелі');
@@ -631,20 +815,11 @@ export function initEdit(deps) {
     setRole(S.el, roles[(i + dir + roles.length) % roles.length]);
   }
   function setColor(n, p, entry) { applyStyle(n, p, entry.css, false); }
-  function swap(dir) {
-    const el = S.el, par = el.parentElement; if (!par || !guard()) return;
-    const sibs = [...par.children].filter((k) => !SKIP.has(k.tagName)), i = sibs.indexOf(el), j = i + (dir > 0 ? 1 : -1);
-    if (j < 0 || j >= sibs.length) return say('Далі нема куди: це крайній елемент у батька');
-    doMove(el, idxOf(sibs[j]));
-  }
-  function doMove(n, toIndex) {
+  function doMove(n, ref) { // ref — елемент, ПЕРЕД яким вставити n (null — в кінець)
     if (!guard() || !n.parentElement) return;
-    const spec = moveSpec(n); touch(spec);
-    const before = idxOf(n);
-    if (before === toIndex) return;
-    const op = { specs: [spec], keys: [spec.key], doIt() { moveTo(n, toIndex); }, undoIt() { moveTo(n, before); } };
-    op.doIt(); pushOp(op);
-    showTip(`позиція ${idxOf(n) + 1} з ${n.parentElement.children.length}`);
+    const list = ordered(n.parentElement).filter((k) => k !== n), at = ref ? list.indexOf(ref) : list.length;
+    list.splice(at < 0 ? list.length : at, 0, n);
+    commitMove(n, list);
   }
   function hideEl(n) {
     if (!guard()) return;
@@ -665,15 +840,34 @@ export function initEdit(deps) {
     const op = { specs, keys: [m.key], doIt() { m.put(orig); }, undoIt() { m.put(cur); } };
     op.doIt(); pushOp(op);
   }
+  function revertAllDom(ms) { for (const m of [...ms].reverse()) { try { m.put(m.origSnap); } catch { /* елемент зник */ } } S.ops = []; S.ptr = 0; }
+  // «Скинути все»: повертає preview до оригіналу; з файлу видаляються лише ЧЕРНЕТКИ (open/done лишаються)
   function resetAll() {
     if (!guard()) return;
     const ms = [...S.changes.values()];
     if (!ms.length) return say('Правок немає');
-    for (const m of ms.reverse()) { m.put(m.origSnap); }
-    S.ops = []; S.ptr = 0;
+    revertAllDom(ms);
     for (const m of ms) { m.cur = m.read(); dropRecord(m); }
-    S.changes.clear(); S.el = S.el && S.el.isConnected ? S.el : null;
-    renderInfo(); renderChanges(); draw(); say('Усі правки скинуто');
+    S.changes.clear(); S.base.clear(); S.hint = null; S.confirm = null;
+    renderInfo(); renderChanges(); draw(); say(`Скинуто правок: ${ms.length}`);
+  }
+  // «Скасувати останню»: крок undo; після reload (історії операцій нема) — повертає найновішу правку зі списку
+  function undoLast() {
+    if (!guard()) return;
+    if (S.ptr > 0) return undo();
+    const ms = [...S.changes.values()]; if (!ms.length) return say('Немає що скасовувати');
+    revertChange(ms[ms.length - 1]);
+  }
+  // «Очистити чернетки»: preview повертається до оригіналу для чернеток, у файлі видаляються ЛИШЕ draft (open/done не чіпаємо)
+  async function clearDrafts() {
+    if (!guard()) return;
+    const ms = [...S.changes.values()].filter((m) => !m.record || m.record.status === 'draft');
+    await settle();
+    revertAllDom(ms);
+    for (const m of ms) { clearTimeout(m.timer); m.timer = 0; m.dirty = false; S.changes.delete(m.key); }
+    let n = 0; try { n = (await api('POST', '/edits/clear-drafts', { url: PAGE() })).removed.length; } catch (e) { say('Едіт: ' + e.message); }
+    S.parked = 0; S.confirm = null; S.hint = null; if (!S.changes.size) S.base.clear();
+    renderInfo(); renderChanges(); draw(); say(`Чернеток видалено: ${n} (надіслані й виконані не чіпали)`);
   }
 
   // ---------- редагування тексту ----------
@@ -882,8 +1076,8 @@ export function initEdit(deps) {
       onWin('mouseup', () => {
         off.forEach((f) => f()); document.body.style.userSelect = ''; ind.style.display = 'none'; tip.style.display = 'none';
         if (!tgt) return;
-        const list = [...par.children].filter((k) => k !== n);
-        doMove(n, list.indexOf(tgt) + (after ? 1 : 0));
+        const list = ordered(par).filter((k) => k !== n), ti = list.indexOf(tgt);
+        doMove(n, list[ti + (after ? 1 : 0)] || null);
       }),
     ];
   }
@@ -906,6 +1100,7 @@ export function initEdit(deps) {
     if (mod && e.code === 'KeyY') { e.preventDefault(); e.stopPropagation(); redo(); return; }
     if (mod) return;
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (S.el) select(null); else setOn(false); return; }
+    if (e.code === 'KeyM' && !e.altKey) { e.preventDefault(); e.stopPropagation(); setMode(S.prop === 'move' ? 'value' : 'move'); return; }
     if (e.code === 'KeyB' && !e.altKey) { e.preventDefault(); e.stopPropagation(); toggleView(); return; }
     if (e.code === 'KeyA' && !e.altKey) { e.preventDefault(); e.stopPropagation(); S.scopeAll = !S.scopeAll; renderInfo(); say(S.scopeAll ? 'Правка застосується до ВСІХ такого типу (class/роль)' : 'Правка лише для вибраного елемента'); return; }
     if (!S.el) return;
@@ -917,12 +1112,12 @@ export function initEdit(deps) {
     const dirs = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 };
     if (e.key in dirs) {
       e.preventDefault(); e.stopPropagation();
-      const keepAll = S.all; if (e.altKey) S.all = true;
-      // позиція/роль — навігація списком: ↑/← = попередній, ↓/→ = наступний; решта: ↑/→ більше, ↓/← менше
-      const listLike = PROPS[S.prop].type === 'move' || PROPS[S.prop].type === 'role';
-      const dir = listLike ? (e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1) : dirs[e.key];
+      // Alt+стрілка (будь-який режим) і голі стрілки в режимі «Позиція» (M) = swap із візуальним сусідом у напрямку; решта — значення
+      const dn = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' }[e.key];
+      if (e.altKey || S.prop === 'move') { swapDir(dn); return; }
+      // роль — навігація списком: ↑/← = попередній, ↓/→ = наступний; решта: ↑/→ більше, ↓/← менше
+      const dir = PROPS[S.prop].type === 'role' ? (e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1) : dirs[e.key];
       stepProp(dir, e.shiftKey ? CFG.shiftSteps : 1);
-      S.all = keepAll;
     }
   }, true);
 
@@ -937,7 +1132,18 @@ export function initEdit(deps) {
   function readout() {
     const n = S.el; if (!n) return '';
     const P = PROPS[S.prop];
-    if (P.type === 'move') { const v = moveSpec(n).read(); return `<div class="ed-val"><button data-a="mvprev">◀ ↑</button><span>${esc(v.label)}</span><button data-a="mvnext">▶ ↓</button></div><div class="ed-meta">${v.before ? 'перед ним: ' + esc(v.before) : 'перший'}${v.after ? ' · далі: ' + esc(v.after) : ''}</div>`; }
+    if (P.type === 'move') {
+      const par = n.parentElement, list = ordered(par), i = list.indexOf(n), v = moveSpec(n).read();
+      const nb = { left: neighborOf(n, 'left'), right: neighborOf(n, 'right'), up: neighborOf(n, 'up'), down: neighborOf(n, 'down') };
+      const nmx = (k) => (k ? esc(nm0(k)) : '—');
+      const horiz = nb.left || nb.right, vert = nb.up || nb.down;
+      const btns = (a, b, la, lb, d1, d2) => `<div class="ed-val"><button data-a="${a}"${nb[d1] ? '' : ' disabled'}>${la}</button><button data-a="${b}"${nb[d2] ? '' : ' disabled'}>${lb}</button></div>`;
+      return `<div class="ed-val"><span>Позиція ${i + 1}/${list.length}</span></div>`
+        + `<div class="ed-meta">${horiz || !vert ? `ліворуч: ${nmx(nb.left)}, праворуч: ${nmx(nb.right)}` : ''}${vert ? `${horiz ? '<br>' : ''}вище: ${nmx(nb.up)}, нижче: ${nmx(nb.down)}` : ''}</div>`
+        + (horiz || !vert ? btns('mv-left', 'mv-right', '◀ поміняти з лівим', 'поміняти з правим ▶', 'left', 'right') : '')
+        + (vert ? btns('mv-up', 'mv-down', '▲ поміняти з верхнім', 'поміняти з нижнім ▼', 'up', 'down') : '')
+        + `<div class="ed-meta">${v.mode === 'grid' && v.tracks ? `режим: grid — доріжки йдуть разом з елементом<br>доріжки: <code>${esc(v.tracks)}</code> = ${esc(v.tracksU)}` : v.mode === 'order' ? 'режим: flex — міняється CSS order' : 'режим: порядок у розмітці'}<br>Alt+←↑→↓ — поміняти місцями в будь-якому режимі · M — режим · перетягни ⠿ на сторінці</div>`;
+    }
     if (P.type === 'role') {
       const roles = getRoles(), cur = roleOf(n), c = hasOwnText(n) ? contrastOf(n) : null;
       return `<div class="ed-val"><select data-a="role"><option value="">(без ролі)</option>${roles.map((r) => `<option value="${esc(r)}"${r === cur ? ' selected' : ''}>.${esc(r)}</option>`).join('')}</select></div>${c ? `<div class="ed-meta">контраст тексту: ${c.ratio}:1 ${c.img ? '(є фон-зображення — точне значення міряй піксельно)' : c.ratio >= 7 ? 'AAA' : c.ratio >= 4.5 ? 'AA' : c.ratio >= 3 ? 'лише великий текст' : '— недостатньо!'}</div>` : ''}`;
@@ -964,9 +1170,27 @@ export function initEdit(deps) {
     renderFoot();
     persistSoon();
   }
+  const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'правка' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'правки' : 'правок');
+  function updateBtn() {
+    const N = S.changes.size, un = unsyncedN();
+    btn.querySelector('.ed-bl').textContent = S.on ? 'Вийти' : 'Едіт';
+    btn.querySelector('.ed-cnt').textContent = N || S.parked ? ` · ${N} ${plural(N)}${S.parked ? ` (+${S.parked} не застосовано)` : ''}${un ? ' · зберігаю…' : ''}` : '';
+    btn.querySelector('.ed-bm').textContent = S.on ? (S.prop === 'move' ? ' · Позиція' : ' · Значення') : '';
+    legend.hidden = !S.on;
+    btn.title = `Едіт (E): живий перегляд правок. Alt+←↑→↓ — поміняти місцями; M — режим Значення/Позиція; стрілки — значення. Накопичено правок: ${N}`;
+  }
   function renderFoot() {
-    const drafts = [...S.changes.values()].length;
-    pFoot.innerHTML = `<button data-a="view" class="${S.view === 'before' ? 'on' : ''}">До/після <kbd>B</kbd></button><button data-a="reset-all">Скинути все</button><button data-a="copy">Копіювати ТЗ</button><button data-a="send" class="primary">Надіслати правки (${drafts})</button>`;
+    const N = S.changes.size, un = unsyncedN();
+    pFoot.innerHTML = `<button data-a="view" class="${S.view === 'before' ? 'on' : ''}">До/після <kbd>B</kbd></button><button data-a="copy">Копіювати ТЗ</button><button data-a="send" class="primary">Надіслати правки (${N})</button>`;
+    const mv = S.prop === 'move';
+    const conf = S.confirm ? `<div class="ed-conf"><span>${S.confirm === 'reset' ? `Скинути ${N} ${plural(N)}? Перегляд повернеться до оригіналу, чернетки зникнуть із файлу.` : `Видалити чернетки (${N + S.parked})? Надіслані й виконані правки залишаться.`}</span><button data-a="confirm-yes" class="danger">Так</button><button data-a="confirm-no">Ні</button></div>` : '';
+    pTop.innerHTML = `<button class="ed-mode ${mv ? 'move' : 'value'}" data-a="mode-toggle" title="Перемкнути режим (M)"><b>${esc(modeText())}</b><kbd>M</kbd></button>`
+      + `<div class="ed-topb"><button data-a="undo-last"${N || S.ptr ? '' : ' disabled'}>↶ Скасувати останню</button><button data-a="ask-reset" class="danger"${N ? '' : ' disabled'}>Скинути все (${N})</button><button data-a="ask-clear"${N || S.parked ? '' : ' disabled'} title="Видаляє лише чернетки; надіслані й виконані лишаються">Очистити чернетки</button></div>`
+      + conf
+      + `<label class="ed-rest"><input type="checkbox" data-a="restore"${S.restore ? ' checked' : ''}> Відновлювати чернетки після перезавантаження</label>`
+      + (S.parked ? `<div class="ed-warn">У файлі ${S.parked} чернеток цієї сторінки не застосовано до перегляду.<button data-a="apply-parked">Застосувати зараз</button></div>` : '')
+      + (un ? `<div class="ed-meta">Зберігаю правки у файл: ${un}…</div>` : '');
+    updateBtn();
   }
   // Список змін оновлюється точково (рядки за ключем): поле «Нотатка», яке зараз у фокусі, не перестворюється — інакше після кожної синхронізації
   // (syncSoon -> renderChanges) фокус зникав і наступні літери ставали гарячими клавішами (c = Коментар закриває Едіт, e, a, b, g…).
@@ -997,7 +1221,7 @@ export function initEdit(deps) {
   }
   panelEl.addEventListener('click', (e) => {
     const b = e.target.closest('button, [data-sel]'); if (!b || b.disabled) return;
-    if (b.dataset.p) { S.prop = b.dataset.p; renderInfo(); draw(); return; }
+    if (b.dataset.p) { if (b.dataset.p !== 'move') S.prevProp = b.dataset.p; else if (S.prop !== 'move') S.prevProp = S.prop; S.prop = b.dataset.p; renderInfo(); draw(); return; }
     if (b.dataset.sel) { const k = b.dataset.sel; if (k.startsWith('up')) { let a = S.el; for (let i = 0; i < +k.slice(2); i++) a = a.parentElement; select(a); } else select(kids(S.el)[+k.slice(3)]); return; }
     if (b.dataset.color) { const ent = getPalette().find((x) => x.name === b.dataset.color); if (ent && guard()) setColor(S.el, S.prop, ent); return; }
     if (b.dataset.align) { if (guard()) applyStyle(S.el, 'text-align', b.dataset.align, false); return; }
@@ -1009,14 +1233,22 @@ export function initEdit(deps) {
       case 'inc': stepProp(1, 1); break;
       case 'reset': resetProp(S.el, S.prop); break;
       case 'distfix': distFix(S.el); break;
-      case 'mvprev': swap(-1); break;
-      case 'mvnext': swap(1); break;
+      case 'mv-left': swapDir('left'); break;
+      case 'mv-right': swapDir('right'); break;
+      case 'mv-up': swapDir('up'); break;
+      case 'mv-down': swapDir('down'); break;
+      case 'mode-toggle': setMode(S.prop === 'move' ? 'value' : 'move'); break;
+      case 'undo-last': undoLast(); break;
+      case 'ask-reset': S.confirm = 'reset'; clearTimeout(S.confT); S.confT = setTimeout(() => { S.confirm = null; renderFoot(); }, 9000); renderFoot(); break;
+      case 'ask-clear': S.confirm = 'clear'; clearTimeout(S.confT); S.confT = setTimeout(() => { S.confirm = null; renderFoot(); }, 9000); renderFoot(); break;
+      case 'confirm-no': S.confirm = null; renderFoot(); break;
+      case 'confirm-yes': if (S.confirm === 'reset') resetAll(); else if (S.confirm === 'clear') clearDrafts(); break;
+      case 'apply-parked': applyParked(); break;
       case 'text': startText(S.el); break;
       case 'hide': hideEl(S.el); break;
       case 'undo': undo(); break;
       case 'redo': redo(); break;
       case 'view': toggleView(); break;
-      case 'reset-all': resetAll(); break;
       case 'copy': copyBrief(); break;
       case 'send': sendAll(); break;
       default:
@@ -1024,7 +1256,8 @@ export function initEdit(deps) {
   });
   panelEl.addEventListener('change', (e) => {
     const t = e.target;
-    if (t.dataset.a === 'all') { S.all = t.checked; renderInfo(); }
+    if (t.dataset.a === 'restore') { S.restore = t.checked; lsSet('__edit_restore', S.restore ? '1' : '0'); if (S.restore) applyParked(); else say('Після перезавантаження чернетки НЕ застосовуватимуться до перегляду (лишаються у файлі)'); renderFoot(); }
+    else if (t.dataset.a === 'all') { S.all = t.checked; renderInfo(); }
     else if (t.dataset.a === 'scope') { S.scopeAll = t.checked; renderInfo(); }
     else if (t.dataset.lay && S.el) { if (guard()) applyStyle(S.el, t.dataset.lay, t.value, false); }
     else if (t.dataset.a === 'role' && S.el) setRole(S.el, t.value || null);
@@ -1154,12 +1387,13 @@ export function initEdit(deps) {
     if (!pend || (!force && busy())) return;
     const cur = pend; pend = null; pendEl.hidden = true;
     try { await Promise.race([flush(), new Promise((ok) => setTimeout(ok, 1500))]); } catch { /* */ }
+    flushBeacon();
     live && ssSet(snapshot()); cur.done();
   }
   function maybeRelease() { if (pend) setTimeout(() => releasePending(false), 0); }
   if (import.meta.hot) {
     import.meta.hot.on('vite:beforeFullReload', () => {
-      if (!busy()) { persistNow(); return undefined; }
+      if (!busy()) { persistNow(); flushBeacon(); return undefined; }
       if (!pend) { let done; const p = new Promise((ok) => { done = ok; }); pend = { p, done }; pendEl.hidden = false; persistNow(); }
       return pend.p;
     });
@@ -1179,11 +1413,15 @@ export function initEdit(deps) {
     const sv = ssGet();
     try { await restoreDraftsInner(); } finally { try { restoreSession(sv); } catch (e) { console.warn('[edit] restore skipped:', e.message); } live = true; persistSoon(); }
   }
-  async function restoreDraftsInner() {
+  async function restoreDraftsInner(force) {
     let list = [];
     try { list = (await api('GET', '/edits')).edits; } catch { return; }
     S.sent = list.filter((x) => x.url === PAGE() && x.status === 'open').length;
-    const drafts = list.filter((x) => x.url === PAGE() && x.status === 'draft').sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    const known = new Set([...S.changes.values()].map((m) => m.record?.id || m.id));
+    const drafts = list.filter((x) => x.url === PAGE() && x.status === 'draft' && !known.has(x.id)).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    if (!S.restore && !force) { S.parked = drafts.length; renderInfo(); renderChanges(); if (drafts.length) say(`У файлі ${drafts.length} чернеток — не застосовано (вимкнено «Відновлювати чернетки»)`); return; }
+    S.parked = 0;
+    const moves = new Map(); let ok = 0;
     for (const rec of drafts) {
       let n = null; try { n = document.querySelector(rec.selector); } catch { /* */ }
       if (!n) continue;
@@ -1192,21 +1430,32 @@ export function initEdit(deps) {
       if (R.kind === 'style') { spec = styleSpec(n, [n], propByCss(R.css, 'padding-top'), '', rec.group || ''); apply = () => (R.value ? n.style.setProperty(R.css, R.value) : n.style.removeProperty(R.css)); }
       else if (R.kind === 'text') { spec = textSpec(n); apply = () => { n.textContent = R.text; }; }
       else if (R.kind === 'role') { spec = roleSpec(n, [n], ''); apply = () => spec.put([R.role]); }
-      else if (R.kind === 'move') { spec = moveSpec(n); apply = () => moveTo(n, R.index); }
+      else if (R.kind === 'move') {
+        spec = moveSpec(n); const m = touch(spec); m.record = rec; m.id = rec.id; m.note = rec.note || ''; m.shotK = null;
+        const key = rec.parentSelector || selFor(n.parentElement); (moves.get(key) || moves.set(key, { par: n.parentElement, recs: [] }).get(key)).recs.push({ m, rec }); ok++;
+        continue;
+      }
       else if (R.kind === 'hide') { spec = hideSpec(n); apply = () => n.style.setProperty('display', 'none', 'important'); }
       if (!spec) continue;
-      const m = touch(spec); m.record = rec; m.note = rec.note || ''; apply(); m.cur = m.read(); m.shotK = null;
+      const m = touch(spec); m.record = rec; m.id = rec.id; m.note = rec.note || ''; apply(); m.cur = m.read(); m.shotK = null; ok++;
+    }
+    // порядок дітей відновлюється ЦІЛИМ батьком (perm + доріжки + order) за найсвіжішим записом; старі записи (лише index) — по одному
+    for (const { par, recs } of moves.values()) {
+      const fresh = recs.slice().sort((a, b) => (a.rec.updatedAt || '').localeCompare(b.rec.updatedAt || '')).pop();
+      if (fresh.rec.restore?.perm) applyMoveRestore(par, fresh.rec.restore);
+      else for (const { m, rec } of recs) { moveTo(m.el, rec.restore.index); }
+      for (const { m } of recs) m.cur = m.read();
     }
     renderInfo(); renderChanges(); draw();
-    if (drafts.length) say(`Відновлено чернеток правок: ${S.changes.size} (E — Едіт)`);
+    if (ok) say(`Відновлено чернеток правок: ${S.changes.size} (E — Едіт)`);
   }
+  async function applyParked() { await restoreDraftsInner(true); }
 
   // ---------- вмикання ----------
   function setOn(on) {
     if (on && blocked()) return;
     S.on = on; wrap.hidden = !on; panelEl.hidden = !on; btn.classList.toggle('on', on);
-    btn.firstChild.textContent = on ? 'Вийти ' : 'Едіт ';
-    btn.querySelector('kbd').textContent = on ? 'E' : 'E';
+    updateBtn();
     if (on) { leaveOthers(); renderInfo(); renderChanges(); draw(); }
     else { if (S.editing) endText(false); if (S.view === 'before') toggleView(); hoverBox.style.display = 'none'; tip.style.display = 'none'; }
   }
@@ -1219,7 +1468,8 @@ export function initEdit(deps) {
   // поки йде редагування тексту: клацання поза елементом застосовує зміну й не доходить до сайту; посилання всередині не спрацьовують
   window.addEventListener('mousedown', (e) => { if (S.editing && !S.editing.el.contains(e.target)) { endText(true); e.preventDefault(); e.stopPropagation(); } }, true);
   window.addEventListener('click', (e) => { if (S.editing) e.preventDefault(); }, true);
-  addEventListener('beforeunload', () => { if (S.changes.size) flush(); });
+  addEventListener('beforeunload', () => { if (S.changes.size) flushBeacon(); });
+  addEventListener('pagehide', () => { if (S.changes.size) flushBeacon(); });
 
   // панель відкриваємо одразу (не чекаючи 700 мс на відновлення чернеток), якщо перед перезавантаженням Едіт був увімкнений
   { const sv0 = ssGet(); if (sv0 && sv0.v === 1 && sv0.on && sv0.url === PAGE() && Date.now() - sv0.ts <= STATE_TTL) { if (sv0.side === 'left') { S.side = 'left'; panelEl.classList.add('left'); } setOn(true); } }

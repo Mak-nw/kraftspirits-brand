@@ -74,8 +74,8 @@ function boot() {
   const say = (msg) => { toast.textContent = msg; toast.classList.add('show'); clearTimeout(say.t); say.t = setTimeout(() => toast.classList.remove('show'), 3200); };
 
   // ---------- API ----------
-  async function api(method, path, body) {
-    const r = await fetch(API + path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
+  async function api(method, path, body, opts) {
+    const r = await fetch(API + path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, ...(opts || {}) });
     if (!r.ok) throw new Error(`${method} ${path}: ${r.status}`);
     return r.json();
   }

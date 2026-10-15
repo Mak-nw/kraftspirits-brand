@@ -86,6 +86,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       note: str(b.note, 2000),
       restore: clean(b.restore ?? null),
     };
+    if (out.type === 'move') { out.tracks = clean(b.tracks ?? null); out.source = str(b.source, 600); } // tracks: before/after (токени і u), source: підказка виконавцю
     return out;
   };
 
@@ -109,6 +110,13 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       for (const e of all) if (e.status === 'draft' && e.url === str(body.url, 300)) { e.status = 'open'; e.sentAt = now; e.updatedAt = now; changed.push(e.id); }
       save(all); send(res, 200, { sent: changed }); return true;
     }
+    if (p === '/__review/api/edits/clear-drafts' && req.method === 'POST') { // видаляє ЛИШЕ чернетки (draft) сторінки; open/done не чіпає
+      const body = await readBody(req); const u = str(body.url, 300);
+      const all = load(); const gone = all.filter((e) => e.status === 'draft' && (!u || e.url === u));
+      save(all.filter((e) => !gone.includes(e)));
+      for (const e of gone) { const f = resolve(shots, `e-${e.id}.png`); if (existsSync(f)) unlinkSync(f); }
+      send(res, 200, { removed: gone.map((e) => e.id) }); return true;
+    }
     m = p.match(/^\/__review\/api\/edits(?:\/([^/]+)(\/shot)?)?$/);
     if (!m) return false;
     const id = m[1], isShot = !!m[2];
@@ -119,7 +127,15 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
     if (req.method === 'POST' && !id) {
       const body = await readBody(req);
       const now = new Date().toISOString();
-      const rec = { id: randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...sanitize(body), status: 'draft', shot: null };
+      if (typeof body.id === 'string' && ID_RE.test(body.id)) { // upsert за id клієнта (ідемпотентно; keepalive-запити при перезавантаженні)
+        const all0 = load(); const ex = all0.find((x) => x.id === body.id);
+        if (ex) {
+          const s2 = sanitize({ ...ex, ...body });
+          for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx', 'parentSelector', 'selector', 'elementText', 'tracks', 'source']) if (k in s2 && !(k === 'source' && ex.type !== 'move')) ex[k] = s2[k];
+          ex.updatedAt = now; save(all0); send(res, 200, ex); return true;
+        }
+      }
+      const rec = { id: (typeof body.id === 'string' && ID_RE.test(body.id)) ? body.id : randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...sanitize(body), status: 'draft', shot: null };
       if (rec.type === 'text') Object.assign(rec, findSource(rec.from?.text));
       const all = load(); all.push(rec); save(all);
       send(res, 201, rec); return true;
