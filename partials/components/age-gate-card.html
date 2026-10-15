@@ -7,7 +7,7 @@
   <div class="age-card__stack">
     <section class="age-card__panel" data-age-panel="ask"{{#ask-off}} inert aria-hidden="true"{{/ask-off}}>
       <h2 class="age-card__title t-hero" id="{{id|age-gate}}-title" tabindex="-1" data-age-title><span class="age-card__line">Підтвердіть, що вам</span> <span class="age-card__line">виповнилося 18 років</span></h2>
-      <p class="age-card__text t-text" id="{{id|age-gate}}-text">Наш сайт присвячений алкогольним напоям, тож доступ відкритий лише повнолітнім відвідувачам. Будь ласка, вкажіть свій вік, щоб продовжити.</p>
+      <p class="age-card__text t-desc" id="{{id|age-gate}}-text">Наш сайт присвячений алкогольним напоям, тож доступ відкритий лише повнолітнім відвідувачам. Будь ласка, вкажіть свій вік, щоб продовжити.</p>
       <div class="age-card__actions">
         <!--@include components/btn-button variant="btn--green btn--block" action="confirm" text="Так, мені є 18 років"-->
         <!--@include components/btn-button variant="btn--outline btn--block" action="deny" text="Ні, мені ще немає 18"-->
@@ -21,7 +21,7 @@
     </section>
     <section class="age-card__panel age-card__panel--deny" data-age-panel="deny"{{#deny-off}} inert aria-hidden="true"{{/deny-off}}>
       <h2 class="age-card__title t-hero" id="{{id|age-gate}}-deny-title" tabindex="-1" data-age-title>Доступ обмежено</h2>
-      <p class="age-card__text t-text" id="{{id|age-gate}}-deny-text">Вибачте, цей сайт призначений лише для повнолітніх. Повертайтесь, коли вам виповниться 18 років.</p>
+      <p class="age-card__text t-desc" id="{{id|age-gate}}-deny-text">Вибачте, цей сайт призначений лише для повнолітніх. Повертайтесь, коли вам виповниться 18 років.</p>
       <div class="age-card__actions age-card__actions--single">
         <!--@include components/btn-button variant="btn--green" action="back" text="Змінити відповідь"-->
       </div>

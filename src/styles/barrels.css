@@ -37,7 +37,7 @@
 .hero--barrels::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, var(--color-barrels-shade-top), var(--color-barrels-shade-mid) var(--stop-barrels-shade-mid), transparent var(--stop-barrels-shade-end)); }
 .hero__content { position: absolute; z-index: 2; top: var(--offset-barrels-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-hero-gap); text-align: center; }
 .hero__title { width: var(--size-barrels-hero-title-w); font: var(--type-hero-weight) var(--font-size-barrels-hero)/var(--lh-barrels-hero) var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; text-wrap: balance; }
-.hero__subtitle { max-width: var(--container-barrels-hero-sub); font: var(--fw-medium) var(--font-size-barrels-lead)/var(--lh-barrels-lead) var(--font-family-serif); text-wrap: balance; }
+.hero__subtitle { max-width: var(--container-barrels-hero-sub); text-wrap: balance; }
 .hero--barrels .btn { margin-top: var(--space-10); }
 
 /* ---------- S2 «Що дає бочка»: кімната wood, чотири шари клепки — пари кіл з накладанням ----------
