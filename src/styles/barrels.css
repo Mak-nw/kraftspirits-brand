@@ -30,7 +30,7 @@
 .swatch--bx-ink-muted .swatch__chip { background: var(--color-barrels-ink-paper-muted); }
 .swatch--bx-plate .swatch__chip { background: linear-gradient(var(--color-barrels-layer-plate), var(--color-barrels-layer-plate)), var(--color-brown); }
 
-/* ---------- Hero: фото з уже застосованою обробкою (затемнення зверху вшите у barrels-hero.webp, як у home-hero-bg.webp; CSS-оверлея нема) ---------- */
+/* ---------- Hero: чисте фото без градієнта й без CSS-оверлея (рішення замовника a2289410) ---------- */
 .hero--barrels { color: var(--color-light); }
 .hero__content { position: absolute; z-index: 2; top: var(--offset-barrels-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-barrels-hero-gap); text-align: center; }
 .hero__title { width: var(--size-barrels-hero-title-w); text-wrap: balance; } /* розмір — роль .t-hero у розмітці (єдиний h1 сайту, рішення замовника) */
