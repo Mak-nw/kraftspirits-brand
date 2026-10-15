@@ -886,6 +886,7 @@
   --space-barrels-scene-inset: calc(36 * var(--u));   /* сцена всередині внутрішньої рамки */
   --size-barrels-lamp-w: calc(56 * var(--u));         /* лампа під склепінням — джерело «світла в погребі» */
   --size-barrels-chapter-h: calc(var(--size-barrels-stage-h) * 0.78); /* висота розділу: одна цифра на екран */
+  --space-barrels-chapter-top: calc(120 * var(--u));  /* від верху розділу до лінії з ромбом — однаково в усіх розділах (верхнє вирівнювання) */
   --size-barrels-rule-marker: calc(10 * var(--u));    /* ромб-маркер на початку лінії розділу (лівий кут = ліва вісь тексту) */
   --space-barrels-rule-gap: calc(14 * var(--u));      /* ромб → лінія */
   --space-barrels-chapter-rule: var(--space-40);      /* лінія → цифра */
@@ -893,9 +894,13 @@
   --space-barrels-chapter-text: var(--space-15);      /* назва → пояснення */
   --space-barrels-note-gap: var(--space-20);          /* цифра → підпис «орієнтовно» (одна базова лінія) */
   --container-barrels-copy: calc(560 * var(--u));     /* ширина пояснення */
-  --shift-barrels-numeral-pour: -0.044em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до осі ромба/тексту (виміряно по чорнилу, DPR 3, 1920: */
-  --shift-barrels-numeral-angels: -0.0715em;          /* бокові поля гліфів EB Garamond 240u: «6» +11px, «≈» +17.7px, «4» +4.3px; поправка в em — тримається на всіх ширинах) */
-  --shift-barrels-numeral-bottle: -0.016em;
+  --shift-barrels-numeral-pour: -0.0465em;            /* оптичні поправки лівого краю чорнила цифр-гігантів до осі ромба/тексту (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920: */
+  --shift-barrels-numeral-angels: -0.0715em;          /* бокові поля гліфів EB Garamond 240u: «6» ≈0.047em, «≈» ≈0.071em, «4» ≈0.018em; поправка в em — тримається на всіх ширинах) */
+  --shift-barrels-numeral-bottle: -0.0175em;
+  --shift-barrels-title-round: -0.025em;              /* оптика назви розділу: перша капітель з круглим боком (З) має ширше бокове поле */
+  --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
+  --shift-barrels-h2-stem: -0.011em;                  /* оптика H2 «Від бочки…»: бокове поле «В» 67u — на ту саму ліву вісь, що й розділи */
+  --shift-barrels-copy-stem: -0.04em;                 /* оптика пояснення: перша літера зі штамбом (П) — разом ліва вісь розділу ≤1px на 1200–1920 */
   --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між розділами */
   --opacity-barrels-dim: 0.32;                        /* неактивні частини гравюри */
   --shift-barrels-cask-empty: 200px;                  /* рівень рідини в бочці (одиниці viewBox 600×700): порожня — нижче дна */
