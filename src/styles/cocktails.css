@@ -28,6 +28,7 @@
 .cocktail__desc { margin-top: var(--space-30); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
 .cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу як є: ширина 426.25u (доріжка), висота — її токен; арка (::before) зафарбована кольором панелі, не зеленим тлом сторінки */
 .cocktail__item .product-card--catalog::before { background: var(--color-beige); }
+.cocktail__item .product-card--catalog:focus-visible { outline-color: var(--color-green); } /* кільце фокуса — колір тексту панелі (beige-кільце каталогу розраховане на зелене тло: на світлій панелі його не видно) */
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
 .tabs__list { display: flex; gap: var(--space-product-volumes-gap); } /* як ряд об'ємів на товарі (той самий зазор, без лінії) */
