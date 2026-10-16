@@ -69,6 +69,7 @@
 .woocommerce table.woocommerce-checkout-review-order-table .shipping :is(th, td) { vertical-align: top; }
 .woocommerce table.shop_table.woocommerce-checkout-review-order-table tr.shipping td { text-align: start; }
 .woocommerce-checkout-review-order-table .shipping td > * + * { margin-top: var(--space-10); }
+.woocommerce-checkout-review-order-table [data-wc-shipping-note] { min-height: calc(2 * var(--lh-normal) * var(--font-size-text)); } /* резерв 2 рядків: текст про доставку змінюється від способу (JS), висота рядка «Доставка» не стрибає */
 .woocommerce-checkout-review-order-table .product-name .product-quantity { margin-left: var(--space-5); }
 
 /* порожній кошик */
@@ -130,7 +131,7 @@
 .woocommerce-columns--addresses > .woocommerce-column { display: flex; flex-direction: column; gap: var(--space-15); }
 .woocommerce-columns--addresses address { margin: 0; }
 
-/* поки модуль наповнює екран (account.html, атрибут ставить inline-скрипт) — вміст і футер невидимі, але місце зайнято: без стрибка (CLS) */
+/* поки модуль наповнює екран (account.html, cart.html, checkout.html — атрибут ставить inline-скрипт) — вміст і футер невидимі, але місце зайнято: без стрибка (CLS) */
 html[data-wc-pending] :is(.woocommerce, .site-footer) { visibility: hidden; }
 
 /* службове: прихований стан (hidden) сильніше за display компонентів; одна розмітка = один стан (JS показує потрібний) */

@@ -152,3 +152,4 @@ render();
 if (state === 'updated') showNotice(notices, 'message', 'Кошик оновлено.');
 if (state === 'coupon-error') { couponInput.value = 'SALE20'; fail('Купон «SALE20» не існує.', false); }
 if (state === 'coupon-applied') showNotice(notices, 'message', 'Купон застосовано.');
+document.documentElement.removeAttribute('data-wc-pending'); // наповнення готове — вміст і футер показуються (inline-скрипт cart.html ставить атрибут до paint)

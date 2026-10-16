@@ -37,8 +37,10 @@ function fillTotals(root, t, shippingText) {
   if (sh) sh.textContent = shippingText;
 }
 
-if (view === 'form') initForm();
-if (view === 'thanks') initThanks();
+try {
+  if (view === 'form') initForm();
+  if (view === 'thanks') initThanks();
+} finally { document.documentElement.removeAttribute('data-wc-pending'); } // наповнення готове — вміст і футер показуються (inline-скрипт checkout.html ставить атрибут до paint)
 
 function initForm() {
   const form = views.form;

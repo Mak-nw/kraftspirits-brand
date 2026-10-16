@@ -94,6 +94,11 @@
   <template id="wc-tpl-message"><!--@include components/wc-notice cls="woocommerce-message" text=""--></template>
   <template id="wc-tpl-message-link"><!--@include components/wc-notice cls="woocommerce-message" text="" href="#" link=""--></template>
   <template id="wc-tpl-error"><!--@include components/wc-error text=""--></template>
+  <script>
+  /* Рядки кошика й підсумки наповнює модуль після paint — до цього вміст і футер сховано (visibility), щоб висота панелей не стрибала (CLS); модуль знімає атрибут, страховка — 3 с. */
+  document.documentElement.setAttribute('data-wc-pending', '');
+  setTimeout(function () { document.documentElement.removeAttribute('data-wc-pending'); }, 3000);
+  </script>
   <script type="module" src="/src/js/wc-cart.js"></script>
 </body>
 </html>

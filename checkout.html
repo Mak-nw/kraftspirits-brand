@@ -75,7 +75,7 @@
                       <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_courier" value="courier" label="Кур'єр по Києву"--></li>
                       <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_pickup" value="pickup" label="Самовивіз з дистилерії"--></li>
                     </ul>
-                    <p class="t-text" data-wc-shipping-note></p>
+                    <p class="t-text" data-wc-shipping-note>За тарифом перевізника; безкоштовно від 3&nbsp;000 ₴.</p>
                   </td>
                 </tr>
                 <!--@include components/wc-row cls="order-total" label="Разом" value="0 ₴" attr="data-wc-total"-->
@@ -168,6 +168,9 @@
         var demo = /[?&]demo(=|&|$)/.test(q) || /^(updated|coupon-error|coupon-applied|error|thanks)$/.test(st);
         v = st === 'thanks' ? 'thanks' : (st === 'empty' || (!n && !demo) ? 'empty' : 'form');
         document.querySelectorAll('[data-wc-view]').forEach(function (el) { el.hidden = el.getAttribute('data-wc-view') !== v; });
+        /* рядки замовлення й тексти доставки наповнює модуль після paint — до цього сховано (visibility), щоб висота панелей не стрибала (CLS); страховка на випадок збою модуля */
+        document.documentElement.setAttribute('data-wc-pending', '');
+        setTimeout(function () { document.documentElement.removeAttribute('data-wc-pending'); }, 3000);
       } catch (e) {}
     })();
     </script>
