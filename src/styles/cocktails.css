@@ -27,6 +27,7 @@
 .cocktail__zoom:focus-visible { outline-color: var(--color-beige); } /* кільце — поза фото, на зеленому тлі: зелене кільце (колір тла) не видно (D6) */
 /* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
 .cocktail__body { min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
+.cocktail--tall .cocktail__body { min-height: var(--size-cocktail-h-tall); } /* вищий блок за даними (tall: true): панель, слайдер і картка — одна висота ряду; без обрізання вмісту */
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
 .cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
 .cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-green); }

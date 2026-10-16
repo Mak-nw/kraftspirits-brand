@@ -31,6 +31,7 @@ export function cocktailsView(cocktails, products) {
       original: esc(c.original || ''),
       description: esc(c.description),
       draft: c.draft ? 'true' : '',
+      mods: c.tall ? ' cocktail--tall' : '', // tall: вища плашка (рядок = --size-cocktail-h-tall), лише за даними
       // перше фото — на сцені; LCP — лише перший блок сторінки (решта lazy)
       photoSrc: `/${esc(photos[0].src)}`,
       photoAlt: esc(photos[0].alt),
