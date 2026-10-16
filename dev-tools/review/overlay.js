@@ -325,8 +325,8 @@ function boot() {
         list.append(row(thumb, a.name, el('span', { class: 'ref-sub', textContent: a.type === 'link' ? (a.kind || 'link') : fmtSize(a.size || 0) }), '', () => removePersisted(i)));
       });
       for (const it of items) {
-        const thumb = it.type === 'image' && it.blob ? el('span', { class: 'ref-th' }, el('img', { src: it.blob, alt: '' })) : el('span', { class: 'ref-th' }, icon(it.type));
-        const sub = it.state === 'err' ? el('span', { class: 'ref-sub bad', textContent: it.err || 'Помилка' })
+        const thumb = it.type === 'image' && it.blob && it.state !== 'err' ? el('span', { class: 'ref-th' }, el('img', { src: it.blob, alt: '' })) : el('span', { class: 'ref-th' }, icon(it.type));
+        const sub = it.state === 'err' ? el('span', { class: 'ref-sub bad', role: 'alert', textContent: it.err || 'Помилка' })
           : it.state === 'up' ? el('span', { class: 'ref-sub', textContent: `Завантаження ${it.pct}%` }) : el('span', { class: 'ref-sub', textContent: it.type === 'link' ? it.att.kind : fmtSize(it.size) });
         const bar = it.state === 'up' ? el('progress', { class: 'ref-prog', max: 100, value: it.pct, 'aria-label': `Завантаження ${it.name}` }) : '';
         list.append(row(thumb, it.name, sub, bar, () => { const k = items.indexOf(it); if (k >= 0) items.splice(k, 1); if (it.xhr && it.state === 'up') it.xhr.abort(); draw(); }));
@@ -348,10 +348,10 @@ function boot() {
         if (xhr.status === 201 && j.attachment) {
           it.att = j.attachment; it.state = 'done'; it.pct = 100;
           if (mode === 'edit') { c.attachments = j.attachments; const k = items.indexOf(it); if (k >= 0) items.splice(k, 1); renderPanel(); }
-        } else { it.state = 'err'; it.err = j.error || `Помилка ${xhr.status}`; fail(`${file.name}: ${it.err}`); }
+        } else { it.state = 'err'; it.err = j.error || `Помилка ${xhr.status}`; if (it.blob) { URL.revokeObjectURL(it.blob); } }
         draw();
       };
-      xhr.onerror = () => { it.state = 'err'; it.err = 'Немає звʼязку з сервером'; fail(`${file.name}: ${it.err}`); draw(); };
+      xhr.onerror = () => { it.state = 'err'; it.err = 'Немає звʼязку з сервером'; draw(); };
       xhr.send(file);
     }
     async function addFiles(files) {

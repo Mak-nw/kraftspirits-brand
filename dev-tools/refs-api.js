@@ -92,14 +92,39 @@ export function createRefsApi({ reviewDir, load, save, send, ID_MAX_BODY = MAX_F
 
   const readRaw = (req, limit) => new Promise((ok, fail) => {
     let size = 0; const chunks = [];
+    let over = false;
     req.on('data', (c) => {
       size += c.length;
-      if (size > limit) { fail(Object.assign(new Error('Файл завеликий (макс. 25 МБ)'), { code: 413 })); req.destroy(); return; }
+      if (over) return;                              // дочитуємо й скидаємо хвіст, щоб клієнт встиг отримати 413
+      if (size > limit) { over = true; chunks.length = 0; fail(Object.assign(new Error('Файл завеликий (макс. 25 МБ)'), { code: 413 })); return; }
       chunks.push(c);
     });
-    req.on('end', () => ok(Buffer.concat(chunks)));
+    req.on('end', () => { if (!over) ok(Buffer.concat(chunks)); });
     req.on('error', fail);
   });
+
+  // Origin: лише відсутній (curl/скрипти) або same-host/localhost dev-сервера; інакше 403 (CSRF з чужої вкладки)
+  const originOk = (req) => {
+    const o = req.headers.origin;
+    if (o === undefined) return true;
+    try {
+      const u = new URL(o);
+      if (!/^https?:$/.test(u.protocol)) return false;
+      const h = String(req.headers.host || '').toLowerCase();
+      return u.host.toLowerCase() === h && ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
+    } catch { return false; }
+  };
+  const MAX_STAGES = 20, STAGE_TTL = 3600e3;
+  const sweepStage = () => { // чистка _stage старше 1 год; повертає кількість активних
+    const sd = resolve(refs, '_stage'); let n = 0;
+    try {
+      for (const d of readdirSync(sd)) {
+        const p = resolve(sd, d); if (!inside(sd, p)) continue;
+        if (Date.now() - statSync(p).mtimeMs > STAGE_TTL) rmSync(p, { recursive: true, force: true }); else n++;
+      }
+    } catch { /* нема staging */ }
+    return n;
+  };
 
   // збереження одного файла в каталог c (id коментаря або staging-токен); повертає attachment
   function storeFile(c, buf, origName, dim) {
@@ -180,6 +205,8 @@ export function createRefsApi({ reviewDir, load, save, send, ID_MAX_BODY = MAX_F
     }
 
     // POST /__review/ref?c=<id|stage>&name=<файл>[&w=&h=]  — тіло: байти файла; або JSON {c, url, name?} для посилання
+    if ((req.method === 'POST' || req.method === 'DELETE') && !originOk(req)) { send(res, 403, { error: 'forbidden origin' }); req.resume(); return true; }
+
     if (req.method === 'POST' && p === '/__review/ref') {
       const c = url.searchParams.get('c') || '';
       const isLink = (req.headers['content-type'] || '').startsWith('application/json');
@@ -203,7 +230,9 @@ export function createRefsApi({ reviewDir, load, save, send, ID_MAX_BODY = MAX_F
         all = load(); cm = all.find((x) => x.id === c);
         if (!cm) { send(res, 404, { error: 'not found' }); return true; }
       }
-      const buf = await readRaw(req, MAX_FILE);
+      if (STAGE_RE.test(c) && !existsSync(dirOf(c)) && sweepStage() >= MAX_STAGES) { send(res, 429, { error: 'Забагато незавершених завантажень, спробуйте пізніше' }); req.resume(); return true; }
+      let buf;
+      try { buf = await readRaw(req, MAX_FILE); } catch (e) { if (e.code === 413) { send(res, 413, { error: e.message }); return true; } throw e; }
       if (cm) { all = load(); cm = all.find((x) => x.id === c); if (!cm) { send(res, 404, { error: 'not found' }); return true; } }
       const have = cm ? attachmentsOf(cm).length : Math.min(MAX_ATT, Math.max(0, (existsSync(dirOf(c)) ? readdirSync(dirOf(c)).length : 0)));
       if (have >= MAX_ATT) { send(res, 400, { error: `Забагато вкладень (макс. ${MAX_ATT})` }); return true; }
