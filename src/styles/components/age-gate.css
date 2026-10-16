@@ -61,7 +61,7 @@ html:not(.age-ok) .age-gate { display: flex; }
   max-width: var(--size-age-legal-w);
   color: var(--color-age-legal);
 }
-.age-card__legal a { color: var(--color-green); text-decoration: underline; text-underline-offset: 0.2em; transition: color var(--duration-fast) var(--ease-out); }
+.age-card__legal a { color: var(--color-green); transition: color var(--duration-fast) var(--ease-out); }
 @media (hover: hover) { .age-card__legal a:hover { color: var(--color-teal); } }
 .age-card__legal a:focus-visible { transition-duration: var(--duration-focus); }
 

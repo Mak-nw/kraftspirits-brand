@@ -96,9 +96,12 @@
   "dynamic": {
     "underlineAllowClosest": [
       ".site-footer",
-      ".age-card__legal"
+      ".age-card__legal",
+      ".check-field",
+      ".contact-form__alert",
+      ".contact-success"
     ],
-    "underlineReason": "правило проєкту: підкреслень при hover/focus немає, крім футера (.site-footer .nav-link) і юридичного тексту воріт (.age-card__legal a)",
+    "underlineReason": "правило проєкту: підкреслень при hover/focus немає, крім футера (.site-footer .nav-link) і посилань У СУЦІЛЬНОМУ ТЕКСТІ: юридичний текст воріт (.age-card__legal a), згода форми (.check-field .check__label a), повідомлення форми (.contact-form__alert a, .contact-success a); колір посилання збігається з текстом, без підкреслення його не відрізнити (WCAG 1.4.1); одне спільне правило в base.css",
     "hscrollTolerancePx": 1,
     "roleTolerancePx": 0.5,
     "d13": {
@@ -148,7 +151,10 @@
     },
     "underlineAllowSelectors": [
       "\\.site-footer",
-      "\\.age-card__legal"
+      "\\.age-card__legal",
+      "\\.check-field",
+      "\\.contact-form__alert",
+      "\\.contact-success"
     ]
   },
   "grid": {

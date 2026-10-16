@@ -15,6 +15,8 @@ body {
 h1, h2, h3, h4, p, ul, ol, figure { margin: 0; padding: 0; }
 ul, ol { list-style: none; }
 a { color: inherit; text-decoration: none; }
+/* Єдиний виняток із «підкреслень немає, крім футера»: посилання В СУЦІЛЬНОМУ ТЕКСТІ (юридичний текст воріт, згода й повідомлення форми) — підкреслені, інакше їх не відрізнити від тексту (колір той самий). Один раз тут; колір/hover — у компонентах. */
+:is(.age-card__legal, .check-field .check__label, .contact-form__alert, .contact-success) a { text-decoration: underline; text-underline-offset: 0.2em; }
 img, svg { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 /* Глобальне фокус-кільце: товщина/відступ/колір — токени --focus-ring-* (tokens.css); кнопки читають ту саму схему як --btn-focus-ring-* (на темному тлі --btn-focus-ring-color-on-dark, на світлому — -on-light) */
