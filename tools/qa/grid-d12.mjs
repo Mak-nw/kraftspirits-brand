@@ -188,6 +188,35 @@ export function applyPanelPairs(results, grids, cfg) {
 }
 
 /**
+ * Схема «рівний поділ контейнера на n блоків» (поле `cols` шаблону lp, напр. 4 плитки на 10 колонок): РЯД з n ≥ 2 однакових блоків (той самий тег, та сама висота й верх, однакова ширина w) із зазором
+ * колонок (gap, 40u) між сусідніми, що заповнює колонки від ПОЧАТКУ колонки i до КІНЦЯ колонки j: w = (ends[j] − starts[i] − (n−1)·gap) / n. Внутрішні краї блоків ряду (L при k>0, R при k<n−1) не мусять
+ * лежати на межах колонок; зовнішні (початок першого, кінець останнього) мусять — вони перевіряються як звичайно, а тут ряд приймається лише якщо вони на колонках. Ряд, де ширини різні, зазор ≠ gap
+ * або крайній блок не на колонці, схему не задовольняє — порушення лишається (позитивний контроль: tools/qa/lp-cols.mjs і перевірка зламаного ряду).
+ */
+export function applyEqualDivision(results, grids, cfg) {
+  const okPx = cfg.okPx ?? 0.5, tolGap = 0.6;
+  const main = results.filter((r) => r.block.region === 'main');
+  for (const r of main) {
+    if (r.ev.status === 'ok') continue;
+    const g = grids[r.profile]; const B = r.block;
+    const mates = main.filter((m) => m.block.tag === B.tag && Math.abs(m.block.T - B.T) <= 1 && Math.abs(m.block.H - B.H) <= 1 && Math.abs(m.block.W - B.W) <= okPx && m.block.W > 0).sort((a, b) => a.block.L - b.block.L);
+    const idx = mates.indexOf(r); if (idx < 0) continue;
+    let lo = idx, hi = idx;
+    while (lo > 0 && Math.abs(mates[lo].block.L - mates[lo - 1].block.R - g.gap) <= tolGap) lo--;
+    while (hi < mates.length - 1 && Math.abs(mates[hi + 1].block.L - mates[hi].block.R - g.gap) <= tolGap) hi++;
+    const n = hi - lo + 1; if (n < 2) continue;
+    const first = mates[lo].block, last = mates[hi].block;
+    const si = near(g.starts, first.L), ei = near(g.ends, last.R);
+    if (si.ad > okPx || ei.ad > okPx) continue;
+    const via = `рівний поділ колонок ${si.i + 1}–${ei.i + 1} на ${n} блоків (зазор колонок)`;
+    for (const key of ['L', 'R']) { const sd = r.ev.sides[key]; if (!sd || sd.status === 'ok') continue; sd.status = 'ok'; sd.via = via; sd.pair = true; }
+    const order = { ok: 0, suspect: 1, fail: 2 }; let st = 'ok';
+    for (const x of Object.values(r.ev.sides)) if (order[x.status] > order[st]) st = x.status;
+    r.ev.status = st;
+  }
+}
+
+/**
  * Аналіз зібраних даних сторінки. cfg — GRID_DEFAULTS + allow.json.grid; pageName — для вибору профілю.
  * Повертає { profile, results:[{block, ev, evAll:{profile:ev}, alt:[profile...]}], counts }
  */
@@ -202,6 +231,7 @@ export function analyzeGrid(data, cfg, pageName) {
     return { block: b, ev, evAll, alt, profile: pn };
   });
   applyPanelPairs(results, grids, cfg);
+  applyEqualDivision(results, grids, cfg);
   const counts = { total: results.length, ok: 0, suspect: 0, fail: 0 };
   for (const r of results) counts[r.ev.status]++;
   return { profile: profName, grid: grids[profName], grids, results, counts };

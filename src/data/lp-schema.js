@@ -46,14 +46,20 @@ export const wordPattern = (n = MAX_WORD) => `^(?![\\s\\S]*[^ \\n\\r\\t]{${n + 1
 
 const ROOMS = ['warm', 'deep', 'paper'];                    // кімнати: кольори задає тема (warm/deep — темні, paper — світла)
 export const TONES = ['teal', 'green', 'gold', 'light', 'beige'];
-export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 export const TILE_TONES = ['black', 'brown', 'green', 'teal'];  // тло круглого кадру плитки: роль теми --lp-tile-<тон> (значення — токени палітри)
 export const TILE_POS = ['top', 'center', 'bottom'];        // кадрування фото в колі: object-position (верх — пляшка обрізана знизу)
+export const TILE_ZOOM = [1, 1.25, 1.5, 1.75, 2];             // масштаб фото в колі (кроки --scale-lp-zoom-*): 1 — як є; більше — пляшка/келих крупніше, кадр лишається колом
+export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок шкали простору DS (--space-<крок>), однаковий верхній і нижній padding секції замість типових 150u
+// `cols`: ширина вмісту секції в колонках сітки (контейнер = --grid-span-N по центру, по одній вільній колонці з боків для 10). Лише ПАРНА кількість: по центру краї мають лежати на межах колонок (D12).
+// Мінімум залежить від типу (виміряна ємність текстів у вужчому контейнері); нижче мінімуму значення відхиляється збіркою.
+export const COLS_BY_TYPE = { layers: [8, 10, 12], compare: [10, 12], formats: [10, 12], tiles: [6, 8, 10, 12], offers: [10, 12], faq: [8, 10, 12] };
+export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
 const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — підказка «що тут має бути за фото» (режим ?slots=on, data-slot)
 
 // спільні поля секції. Кожен тип бере лише ті, що його partial справді показує (поле в схемі ⇒ воно є на сторінці; перевіряє lp-contract)
-const BASE = { type: { type: 'type', req: true }, id: { type: 'id', req: true }, room: E(ROOMS, false), join: B(), kicker: T(25), title: T(60, true), lead: T(320), caption: T(120) };
+const BASE = { type: { type: 'type', req: true }, id: { type: 'id', req: true }, room: E(ROOMS, false), join: B(), pad: E(PAD_STEPS, false), kicker: T(25), title: T(60, true), lead: T(320), caption: T(120) };
+const COLS = (type) => ({ type: 'enum', values: COLS_BY_TYPE[type], req: false, def: 12, sample: 10 });   // sample — значення для контрактних прогонів (qa:lp)
 const STACK = { stack: B() };   // card / place: «стек великих блоків» — секція стоїть під попередньою card/place в ТІЙ САМІЙ кімнаті, зазор --grid-gap-panels (5u)
 const base = (...omit) => { const b = { ...BASE }; omit.forEach((k) => delete b[k]); return b; };
 
@@ -68,28 +74,28 @@ export const SCHEMA = {
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
-    hero: { ...base('room', 'join', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), cta: { ...CTA, req: true } },
+    hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), cta: { ...CTA, req: true } },
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2, 3, 4 або 6 (ділять 12 колонок)
-    layers: { ...BASE, room: E(ROOMS, false, 'warm'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
+    layers: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри
     steps: { ...BASE, room: E(ROOMS, false, 'deep'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true) }), 2, 5, true) },
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
-    compare: { ...BASE, room: E(ROOMS, false, 'paper'), note: T(200), groups: L(O({
+    compare: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8, 9], true), align: E(['start', 'center'], false, 'start'), accent: B(),
       count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
     // 4б. Формати: дві великі панелі поруч (по 6 колонок, шов 5u): підпис, капсула з великим числом і одиницею, 2–4 колонки (назва + опис), 0–2 факти
-    formats: { ...BASE, room: E(ROOMS, false, 'warm'), items: L(O({
+    formats: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('formats'), items: L(O({
       key: { type: 'id', req: true }, tone: E(PANEL_TONES, true), lead: T(25, true), value: T(5, true), unit: T(25, true),
       items: L(O({ title: T(25, true), text: T(90, true) }), 2, 4, true, { divides: GRID_COLS }),
       facts: L(O({ label: T(30, true), value: T(60, true) }), 0, 2),
     }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
-    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола) і imgPos (кадр) за даними, лід — під рядом плиток
-    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), shape: E(['circle']), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
+    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, лід — під рядом плиток
+    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
-    offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
+    offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true, { divides: GRID_COLS }),
       foot: O({ text: T(160, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green'], true) }), 0, 2), note: T(200) }) },
@@ -98,7 +104,7 @@ export const SCHEMA = {
     // 8. Місце: панель DS з фактами й кнопками + мапа DS (координати — src/data/contacts.js)
     place: { ...base('caption'), ...STACK, room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
-    faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
+    faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), cols: COLS('faq'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
   },
 };
 
@@ -115,8 +121,14 @@ const dependent = (f, req, kf = 'str', kr = 'str') => ({ if: present(f, kf), the
 export const RULES = [
   { id: 'wall-xor-list', types: ['compare'], path: 'groups', doc: 'у групі `wall` і `list` взаємовиключні',
     check: (g) => (g.wall && g.list?.length ? 'wall і list — взаємовиключні' : ''), json: { not: { allOf: [present('wall'), present('list', 'arr')] } } },
-  { id: 'compare-span-sum', types: ['compare'], path: '', doc: 'сума `span` усіх груп = 12',
-    check: (s) => { const sum = s.groups.reduce((a, g) => a + g.span, 0); return sum === GRID_COLS ? '' : `groups: сума span = ${sum}, має бути ${GRID_COLS}`; }, json: null },
+  { id: 'compare-span-sum', types: ['compare'], path: '', doc: 'сума `span` усіх груп = `cols` секції (типово 12)',
+    check: (s) => { const sum = s.groups.reduce((a, g) => a + g.span, 0); const cols = s.cols || GRID_COLS; return sum === cols ? '' : `groups: сума span = ${sum}, має дорівнювати cols = ${cols}`; }, json: null },
+  { id: 'cols-items-divide', types: ['layers', 'formats', 'offers'], path: '', doc: 'кількість пунктів ділить `cols` (пункт = `cols` / кількість колонок): `layers` — 2, 3, 4 або 6, `offers` — 1, 2 або 3, `formats` — 2; при `cols: 10` лишаються 2 (layers, formats) і 1–2 (offers)',
+    check: (s) => { const cols = s.cols || GRID_COLS; return cols % s.items.length === 0 ? '' : `${s.items.length} пунктів не ділять cols = ${cols} (пункт має займати ціле число колонок)`; },
+    json: { allOf: [1, 2, 3, 4, 5, 6].map((n) => ({ if: { properties: { items: { type: 'array', minItems: n, maxItems: n } }, required: ['items'] }, then: { properties: { cols: { type: ['number', 'string', 'null'], multipleOf: n } } } })) } },
+  { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Відступ з боку сусідньої `join`/`stack`-секції лишається за сусідом (нижній відступ перед секцією-стеком = 0)',
+    check: (s) => (has(s.pad) && (s.loose === true || s.join === true || s.stack === true) ? 'pad не задається разом з loose, join або stack' : ''),
+    json: { if: { required: ['pad'], properties: { pad: { type: 'number' } } }, then: { not: { anyOf: ['loose', 'join', 'stack'].map((k) => ({ required: [k], properties: { [k]: { const: true } } })) } } } },
   { id: 'compare-count-capacity', types: ['compare'], path: 'groups', doc: `число не переноситься, тому у вузьких групах воно обмежене: \`span\` 2 — count ≤ ${COUNT_CAP[2].plain} (з \`approx\` ≤ ${COUNT_CAP[2].approx}); \`span\` 3 — з \`approx\` ≤ ${COUNT_CAP[3].approx}; від 4 колонок — без обмеження понад ${COUNT_MAX}`,
     check: (g) => { const cap = COUNT_CAP[g.span]?.[g.approx ? 'approx' : 'plain']; return cap !== undefined && g.count > cap ? `count ${g.count} не вміщується в групу на ${g.span} колонки${g.approx ? ' з «≈»' : ''} (≤ ${cap})` : ''; },
     json: { allOf: Object.entries(COUNT_CAP).flatMap(([sp, c]) => [
@@ -136,9 +148,9 @@ export const RULES = [
   { id: 'tiles-circle-needs-img', types: ['tiles'], path: '', doc: '`shape: circle`: кожна плитка з фото `img` (гравюри в колі немає)',
     check: (s) => (s.shape === 'circle' && s.items.some((it) => !has(it.img)) ? 'shape: circle потребує img у кожній плитці' : ''),
     json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } } } },
-  { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` секції, `tone` і `imgPos` плитки мають сенс лише з `shape: circle`',
-    check: (s) => (!has(s.shape) && (has(s.leadCols) || s.items.some((it) => has(it.tone) || has(it.imgPos))) ? 'leadCols/tone/imgPos — лише з shape: circle' : ''),
-    json: { if: { not: present('shape') }, then: { allOf: [{ not: { properties: { leadCols: { type: 'integer' } }, required: ['leadCols'] } }, { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('tone'), present('imgPos')] } } } } }] } } },
+  { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`',
+    check: (s) => (!has(s.shape) && (has(s.leadCols) || s.items.some((it) => has(it.tone) || has(it.imgPos) || has(it.zoom))) ? 'leadCols/tone/imgPos/zoom — лише з shape: circle' : ''),
+    json: { if: { not: present('shape') }, then: { allOf: [{ not: { properties: { leadCols: { type: 'integer' } }, required: ['leadCols'] } }, { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('tone'), present('imgPos'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
   { id: 'tiles-circle-origin-2lines', types: ['tiles'], path: '', doc: '`shape: circle`: `origin` плитки — рівно два рядки (один переніс `\\n`, кожен ≤ 32 знаки): підпис під колом завжди в 2 рядки по центру',
     check: (s) => { if (s.shape !== 'circle') return ''; const bad = s.items.findIndex((it) => !/^[^\n]{1,32}\n[^\n]{1,32}$/u.test(it.origin)); return bad < 0 ? '' : `items[${bad}].origin: у колі потрібні рівно два рядки (один переніс), кожен ≤ 32 знаки`; },
     json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', properties: { origin: { type: 'string', pattern: '^[^\\n]{1,32}\\n[^\\n]{1,32}$' } } } } } } } },
@@ -272,10 +284,11 @@ const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [.
 const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
 function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), lead: t(s.lead), caption: t(s.caption) }; }
 
+const colsOf = (s) => s.cols || GRID_COLS;   // ширина вмісту секції в колонках (типово 12)
 const VIEW = {
   hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone, panel: s.panel ? '1' : '', mods: s.panel ? ' hero--panel' : '' }),
   layers: (s) => {
-    const span = GRID_COLS / s.items.length;
+    const span = colsOf(s) / s.items.length;
     const cut = s.items.some((it) => it.img);
     return { ...head(s), cut: cut ? '1' : '', noCut: cut ? '' : '1',
       items: s.items.map((it) => ({ key: it.key, span, icon: it.icon || '', title: t(it.title), text: t(it.text), img: it.img || '', slot: t(it.slot) })) };
@@ -290,17 +303,20 @@ const VIEW = {
       label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s),
-    items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: GRID_COLS / s.items.length, lead: t(it.lead), value: t(it.value), unit: t(it.unit),
+    items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), value: t(it.value), unit: t(it.unit),
       cols: it.items.length, drinks: it.items.map((d) => ({ title: t(d.title), text: t(d.text) })), facts: (it.facts || []).map((f) => ({ label: t(f.label), value: t(f.value) })) })) }),
   tiles: (s) => {
     const round = s.shape === 'circle';   // коло: лід не в шапці, а під рядом плиток
+    const n = s.items.length; const cols = colsOf(s);
+    const eq = cols % n !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
     return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
-      items: s.items.map((it) => ({ key: it.key, span: GRID_COLS / s.items.length, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
-        toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: it.imgPos ? ` lp-tile--pos-${it.imgPos}` : '', originRole: round ? 't-desc' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
+      gridMod: eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${n}` : '',
+      items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / n, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
+        toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
   },
-  offers: (s, p) => ({ ...head(s), bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
+  offers: (s, p) => ({ ...head(s), gridMod: ` lp-offers__grid--n${s.items.length}`, bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
-    items: s.items.map((it) => ({ key: it.key, span: GRID_COLS / s.items.length, tone: p.tone, title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
+    items: s.items.map((it) => ({ key: it.key, span: colsOf(s) / s.items.length, tone: p.tone, title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
       facts: (it.facts || []).map((f) => ({ dt: t(f.dt), dd: t(f.dd), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
       includes: li(it.includes), ctaText: t(it.cta.text), ctaHref: esc(it.cta.href) })),
     footText: t(s.foot?.text), footNote: t(s.foot?.note), footCtas: (s.foot?.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant })) }),
@@ -334,7 +350,7 @@ export function lpView(page, env = {}) {
     const room = s.stack ? prevRoom : (s.room || def.room?.def || '');   // стек: кімната попередньої секції (тло одне)
     prevRoom = room;
     const next = page.sections[i + 1];
-    const mods = `${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
+    const mods = `${s.cols && s.cols !== GRID_COLS ? ` lp-cols--${s.cols}` : ''}${s.pad ? ` lp-pad--${s.pad}` : ''}${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
     return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
   });
   return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections };

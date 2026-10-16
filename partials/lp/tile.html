@@ -1,4 +1,4 @@
-<figure class="lp-tile lp-span--{{span}} lp-tile--{{key}}{{toneMod}}{{posMod}}" data-reveal="rise">
+<figure class="lp-tile {{#span}}lp-span--{{span}} {{/span}}lp-tile--{{key}}{{toneMod}}{{posMod}}" data-reveal="rise">
   <div class="lp-tile__media"{{#slot}} data-slot="{{slot}}"{{/slot}}>
     {{#engraving}}<!--@include media/{{engraving}} orn="{{key}}"-->
     {{#icon}}<span class="icon icon--{{icon}} lp-tile__icon" aria-hidden="true"></span>{{/icon}}{{/engraving}}{{#img}}<img class="lp-tile__img" src="{{img}}" alt="{{alt}}" loading="lazy" decoding="async">{{/img}}

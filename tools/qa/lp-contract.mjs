@@ -11,7 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
-import { SCHEMA, RULES, PAGE_RULES, FILE_RULES, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
+import { SCHEMA, RULES, PAGE_RULES, FILE_RULES, COLS_BY_TYPE, PAD_STEPS, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
 import { jsonSchemaText, buildJsonSchema } from '../lp-schema-json.mjs';
 import { loadLpPages } from '../lp-pages.mjs';
 import { checkFiles, themeInfo } from '../lp-files.mjs';
@@ -49,7 +49,7 @@ function fillValue(def, path, o = {}) {
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-one';
     case 'icon': return 'pin';
-    case 'enum': return def.values[0];
+    case 'enum': return def.sample ?? def.values[0];
     case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
     case 'bool': return true;
     case 'list': {
@@ -60,7 +60,7 @@ function fillValue(def, path, o = {}) {
     default: return undefined;
   }
 }
-const fullSection = (type) => { const s = fillValue({ type: 'object', fields: SCHEMA.sections[type] }, type); s.type = type; s.id = `s-${type}`; if ('stack' in s) s.stack = false; return s; }; // stack: true дозволено лише після card/place — перевіряється окремо нижче (блок «стек»)
+const fullSection = (type) => { const s = fillValue({ type: 'object', fields: SCHEMA.sections[type] }, type); s.type = type; s.id = `s-${type}`; if ('stack' in s) s.stack = false; if ('pad' in s) { if ('join' in s) s.join = false; if ('loose' in s) s.loose = false; } return s; }; // pad несумісний з join/loose/stack (правило pad-exclusive) — у повному прикладі вони вимкнені // stack: true дозволено лише після card/place — перевіряється окремо нижче (блок «стек»)
 
 /** повні варіанти секцій: взаємовиключні поля (XOR) розкладено по варіантах, щоб покрити обидві гілки */
 function variantsOf(type) {
@@ -70,19 +70,19 @@ function variantsOf(type) {
     const a = clone(s); delete a.img; delete a.alt; out.push(['scene', a]);
     const b = clone(s); delete b.scene; out.push(['img', b]);
   } else if (type === 'tiles') {
-    const a = clone(s); delete a.shape; delete a.leadCols; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; }); out.push(['engraving+icon', a]);
-    const b = clone(s); delete b.shape; delete b.leadCols; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; }); out.push(['img+alt', b]);
+    const a = clone(s); delete a.shape; delete a.leadCols; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
+    const b = clone(s); delete b.shape; delete b.leadCols; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
     const c = clone(s); c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
     const b = clone(s); delete b.text; out.push(['list', b]);
   } else if (type === 'compare') {
-    const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 9; g.approx = false; });
+    const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 7; g.approx = false; });
     a.groups[0].wall = 'wall-barrels-one'; delete a.groups[0].list; // група 1 — wall
     a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
     out.push(['wall+list', a]);
     const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
-  } else out.push(['', s]);
+  } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
 }
 const pageOf = (sections, extra = {}) => ({ slug: 'qa-x', theme: 'barrels', tone: 'teal', metaTitle: mk(), metaDescription: mk(), sections: [(() => { const h = fullSection('hero'); return h; })(), ...sections], ...extra });
@@ -138,7 +138,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.items.tone', 'tiles.items.imgPos', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -198,6 +198,7 @@ function runMutations(label, page, sectionIndex) {
     for (const [lab, val, exp] of mutantsFor(t.def, t.key, type)) {
       if (skip && (exp || lab === 'false')) continue; // поле з перехресним правилом: валідні/порожні значення — у блоці «правила» нижче
       if (t.key === 'span' && exp) continue;
+      if (t.key === 'cols' && exp) continue;   // cols залежить від кількості пунктів/сум span (правила cols-items-divide, compare-span-sum) — перевіряється в блоці «правила» нижче
       if (t.def.type === 'enum' && lab === 'рядок замість числа' && typeof t.def.values[0] === 'string') continue;
       const p = clone(page); setAt(p, t.path, val);
       const js = jsOk(p) === true; const jn = jsonOk(p) === true;
@@ -241,9 +242,11 @@ cross('layers: 5 пунктів (не ділить 12)', (p) => { S(p).items = A
 for (const k of [2, 3, 4, 6]) cross(`layers: ${k} пунктів ділить 12`, (p) => { S(p).items = Array.from({ length: k }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'layers');
 cross('tiles: 5 пунктів', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving');
 cross('compare: сума span = 11 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [wall+list');
-cross('compare: сума span = 12 (3+9)', (p) => { S(p).groups[1].span = 9; }, true, true, 'compare [wall+list');
+cross('compare: cols 12, сума span = 12 (3+9)', (p) => { delete S(p).cols; S(p).groups[1].span = 9; }, true, true, 'compare [wall+list');
+cross('compare: cols 10, сума span = 10 (3+7)', () => {}, true, true, 'compare [wall+list');
+cross('compare: cols 10, але сума span = 12 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 9; }, false, true, 'compare [wall+list');
 cross('compare: wall і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [wall+list');
-cross('compare: 3 групи, сума 12 (4+4+4)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); g[0].span = 4; g[0].wall = undefined; delete g[0].wall; g[0].list = ['x']; g[1].span = 4; g[2].span = 4; }, true, true, 'compare [wall+list');
+cross('compare: 3 групи, сума 12 (4+4+4)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); delete S(p).cols; g[0].span = 4; g[0].wall = undefined; delete g[0].wall; g[0].list = ['x']; g[1].span = 4; g[2].span = 4; }, true, true, 'compare [wall+list');
 cross('steps: і scene, і img', (p) => { S(p).img = '/q1'; }, false, false, 'steps [scene');
 cross('steps: ні scene, ні img', (p) => { delete S(p).scene; }, false, false, 'steps [scene');
 cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps [scene');
@@ -252,12 +255,15 @@ cross('tiles: ні engraving, ні img', (p) => { delete S(p).items[0].engraving
 cross('tiles: icon без engraving', (p) => { delete S(p).items[0].engraving; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
 cross('tiles: shape circle без img у плитці', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; S(p).items[0].engraving = 'engraving-barrels-head'; }, false, false, 'tiles [circle');
 cross('tiles: shape circle, усі плитки з фото (валідно)', () => {}, true, true, 'tiles [circle');
-cross('tiles: leadCols без shape circle', (p) => { delete S(p).shape; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
+cross('tiles: leadCols без shape circle', (p) => { delete S(p).shape; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
 cross('tiles: circle, origin в один рядок', (p) => { S(p).items[0].origin = 'аб аб'; }, false, false, 'tiles [circle');
 cross('tiles: circle, origin у три рядки', (p) => { S(p).items[0].origin = 'аб\nаб\nаб'; }, false, false, 'tiles [circle');
-cross('tiles: tone без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).items.forEach((t) => delete t.imgPos); }, false, false, 'tiles [circle');
-cross('tiles: imgPos без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => delete t.tone); }, false, false, 'tiles [circle');
-cross('tiles: без shape і без leadCols/tone/imgPos (валідно)', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, true, true, 'tiles [circle');
+cross('tiles: tone без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: imgPos без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: без shape і без leadCols/tone/imgPos/zoom (валідно)', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, true, true, 'tiles [circle');
+cross('tiles: zoom без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
+cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom = 1.3; }, false, false, 'tiles [circle');
+cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
 cross('card: text і list разом', (p) => { S(p).list = ['x']; }, false, false, 'card [text');
@@ -269,7 +275,7 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
 {
   const hero = clone(heroPage.sections[0]); hero.panel = false;
   const card = clone(fullSection('card')); card.id = 'a-card'; delete card.list; delete card.room; card.room = 'warm';
-  const place = clone(fullSection('place')); place.id = 'a-place'; delete place.room; place.join = false; place.stack = true;
+  const place = clone(fullSection('place')); place.id = 'a-place'; delete place.room; place.join = false; place.stack = true; delete place.pad; delete place.cols;
   const stackPage = (mut) => { const pg = pageOf([]); pg.sections = [clone(hero), clone(card), clone(place)]; mut?.(pg); return pg; };
   const both = (label, pg, exp) => { const a = jsOk(pg) === true; const b = jsonOk(pg) === true; note(a === exp, `правило: ${label} (JS)`, String(jsOk(pg))); return b; };
   note(both('stack після card — дозволено', stackPage(), true) === true, 'правило: stack після card — дозволено (JSON)');
@@ -318,12 +324,66 @@ cross('tone відсутній (дозволено: бере тема)', (p) => 
 cross('tone поза переліком', (p) => { p.tone = 'red'; }, false, false, 'layers');
 cross('невідоме поле сторінки', (p) => { p.subtitle = 'x'; }, false, false, 'layers');
 for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { approx: 999 } })) for (const [kind, cap] of Object.entries(c)) {
-  const set = (cnt) => (p) => { const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 12 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
+  const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 12 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
   cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall four-minus-one');
   cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall four-minus-one');
 }
 cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
 cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');
+
+/* поле `cols` (ширина вмісту секції в колонках) і `pad` (вертикальний відступ секції): правила + видимий ефект на сторінці */
+{
+  const byType = (t) => validPages.find(([l]) => l.startsWith(t))?.[1];
+  const sec = (pg) => pg.sections[1];
+  // допустимі значення залежать від типу
+  for (const [type, vals] of Object.entries(COLS_BY_TYPE)) {
+    const base = byType(type); if (!base) continue;
+    for (const c of [2, 4, 6, 8, 10, 12]) {
+      const exp = vals.includes(c);
+      const p = clone(base); sec(p).cols = c;
+      if (type === 'compare') { sec(p).groups[0].span = 3; sec(p).groups[1].span = c - 3; }
+      const a = jsOk(p) === true; const b = jsonOk(p) === true;
+      note(a === exp && b === exp, `cols: ${type}, cols = ${c} — ${exp ? 'дозволено' : 'нижче мінімуму типу'}`, `очікувано ${exp ? 'ВАЛІДНО' : 'НЕВАЛІДНО'}; JS=${a}${a ? '' : ` (${jsOk(p)})`} JSON=${b}`);
+    }
+    for (const c of [3, 9, 11, 13, 1, 0]) { const p = clone(base); sec(p).cols = c; note(jsOk(p) !== true && jsonOk(p) !== true, `cols: ${type}, cols = ${c} (непарне/поза 2–12) — відхиляють JS і JSON`); }
+  }
+  for (const type of ['steps', 'card', 'place', 'hero']) { const base = byType(type) || validPages[0][1]; const p = clone(base); p.sections[type === 'hero' ? 0 : 1].cols = 10; note(jsOk(p) !== true && jsonOk(p) !== true, `cols: ${type} фіксованої композиції — поле не приймається`); }
+  // cols і кількість пунктів: пункт займає ціле число колонок
+  const cnt = (type, n, cols) => { const p = clone(byType(type)); const it = sec(p).items; sec(p).items = Array.from({ length: n }, (_, i) => ({ ...clone(it[0]), key: `k${i}` })); if (cols) sec(p).cols = cols; else delete sec(p).cols; return p; };
+  for (const [type, n, cols, exp] of [['layers', 2, 10, true], ['layers', 3, 10, false], ['layers', 4, 10, false], ['layers', 4, 8, true], ['layers', 3, 12, true], ['layers', 6, 8, false], ['offers', 1, 10, true], ['offers', 2, 10, true], ['offers', 3, 10, false], ['offers', 3, 12, true], ['formats', 2, 10, true]]) {
+    const p = cnt(type, n, cols); const a = jsOk(p) === true; const b = jsonOk(p) === true;
+    note(a === exp && b === exp, `правило cols-items-divide: ${type}, ${n} пунктів на ${cols} колонок`, `очікувано ${exp ? 'ВАЛІДНО' : 'НЕВАЛІДНО'}; JS=${a}${a ? '' : ` (${jsOk(p)})`} JSON=${b}`);
+  }
+  { const p = cnt('tiles', 4, 10); note(jsOk(p) === true && jsonOk(p) === true, 'tiles: 4 плитки на 10 колонок — дозволено (n рівних блоків контейнера)'); }
+  // pad
+  for (const type of ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq']) {
+    const base = byType(type); if (!base) continue;
+    for (const k of PAD_STEPS) { const p = clone(base); sec(p).pad = k; note(jsOk(p) === true && jsonOk(p) === true, `pad: ${type}, pad = ${k} — дозволено`, `${jsOk(p)}`); }
+    const bad = clone(base); sec(bad).pad = 45; note(jsOk(bad) !== true && jsonOk(bad) !== true, `pad: ${type}, pad = 45 (поза кроками шкали) — відхиляють JS і JSON`);
+    for (const other of ['join', 'loose', 'stack']) {
+      if (!(other in SCHEMA.sections[type])) continue;
+      const p = clone(base); sec(p).pad = 40; sec(p)[other] = true;
+      note(jsOk(p) !== true && jsonOk(p) !== true, `правило pad-exclusive: ${type}, pad разом з ${other}: true — відхиляють JS і JSON`);
+    }
+  }
+  { const p = clone(byType('layers')); p.sections[0].pad = 40; note(jsOk(p) !== true && jsonOk(p) !== true, 'pad: hero не приймає'); }
+  // видимий ефект на сторінці: cols → клас lp-cols--N на секції (12 = типово, класу немає), pad → lp-pad--N, tiles на 10 колонок з 4 плитками → рівний поділ (клас сітки lp-tiles__grid--n4, без lp-span)
+  const secTag = (html, id) => (html.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
+  for (const type of Object.keys(COLS_BY_TYPE)) {
+    const base = byType(type); if (!base) continue;
+    const id = sec(base).id;
+    const p10 = clone(base); sec(p10).cols = 10; if (type === 'compare') { sec(p10).groups[0].span = 3; sec(p10).groups[1].span = 7; }
+    note(/lp-cols--10\b/.test(secTag(render(p10), id)), `render ${type}: cols: 10 → клас lp-cols--10 на секції`, secTag(render(p10), id));
+    const p12 = clone(base); sec(p12).cols = 12; if (type === 'compare') { sec(p12).groups[1].span = 9; }
+    note(!/lp-cols--/.test(secTag(render(p12), id)), `render ${type}: cols: 12 (типово) не дає класу`);
+  }
+  for (const type of ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq']) {
+    const base = byType(type); if (!base) continue; const p = clone(base); sec(p).pad = 40; if ('join' in sec(p)) sec(p).join = false; if ('loose' in sec(p)) sec(p).loose = false;
+    note(/lp-pad--40\b/.test(secTag(render(p), sec(p).id)), `render ${type}: pad: 40 → клас lp-pad--40 на секції`);
+  }
+  { const p = cnt('tiles', 4, 10); sec(p).id = 'eq'; const html = render(p); note(/lp-tiles__grid--eq lp-tiles__grid--n4/.test(html) && !/lp-tile lp-span--/.test(html), 'render tiles: 4 плитки на 10 колонок → рівний поділ (lp-tiles__grid--n4), без lp-span'); }
+  { const html = render(byType('tiles [circle')); note(/lp-tile--zoom-100/.test(html) && /t-spec/.test(html), 'render tiles [circle]: zoom → клас lp-tile--zoom-100; підпис — роль .t-spec'); }
+}
 
 /* ------------------------------------------------------------------ файлові перевірки (tools/lp-files.mjs): зіпсуй → падає з поясненням */
 const contactKeys = Object.keys(contactsView(contacts));

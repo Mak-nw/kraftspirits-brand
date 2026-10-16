@@ -23,7 +23,8 @@
     "qa:d18": "node tools/qa/check-ds.mjs --rules D18 --widths 1200,1440,1728,1920 --scrollbar both",
     "qa:d19": "node tools/qa/check-ds.mjs --rules D19 --widths 1200,1440,1728,1920 --scrollbar both",
     "qa:lp": "node tools/qa/lp-contract.mjs",
-    "qa:lp-stack": "node tools/qa/lp-stack.mjs"
+    "qa:lp-stack": "node tools/qa/lp-stack.mjs",
+    "qa:lp-cols": "node tools/qa/lp-cols.mjs"
   },
   "devDependencies": {
     "ajv": "^8.20.0",

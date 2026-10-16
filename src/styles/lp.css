@@ -16,9 +16,16 @@
 .lp-room--warm { background: var(--lp-warm); }
 .lp-room--deep { background: var(--lp-deep); }
 .lp-room--paper { background: var(--lp-paper); color: var(--lp-on-paper); }
+/* поле `cols` секції (рев'ю 6e388014, d632dcfb): ширина ВМІСТУ секції (сітки плиток/панелей) = --grid-span-N по центру (N=10 → колонки 2–11, по одній вільній колонці з боків); краї — на межах колонок.
+   Усередині контейнера сітка з N колонок тієї самої ширини й зазору (--lp-cols), тож пункти по cols/кількість колонок лишаються на колонках сітки; шапка секції (кікер/H2/лід) — за своїми правилами (H2 4 колонки по центру). Без `cols` — 12 колонок (--grid-w), як було. */
+.lp-room { --lp-cols: var(--grid-cols); --lp-w: var(--grid-w); }
+.lp-cols--2 { --lp-cols: 2; --lp-w: var(--grid-span-2); } .lp-cols--4 { --lp-cols: 4; --lp-w: var(--grid-span-4); } .lp-cols--6 { --lp-cols: 6; --lp-w: var(--grid-span-6); }
+.lp-cols--8 { --lp-cols: 8; --lp-w: var(--grid-span-8); } .lp-cols--10 { --lp-cols: 10; --lp-w: var(--grid-span-10); }
 /* вертикальний ритм секцій; join — секція продовжує кімнату попередньої (без межі, лише повітря; бочки: S4 → S5) */
 .lp-sec { padding-block: var(--space-lp-section-y); }
 .lp-sec.lp-sec--loose { padding-block: var(--space-lp-section-y-loose); } /* поле `loose` секції: на один крок шкали вище (150 → 177) */
+.lp-sec.lp-pad--20 { padding-block: var(--space-20); } .lp-sec.lp-pad--30 { padding-block: var(--space-30); } .lp-sec.lp-pad--40 { padding-block: var(--space-40); }
+.lp-sec.lp-pad--50 { padding-block: var(--space-50); } .lp-sec.lp-pad--70 { padding-block: var(--space-70); } .lp-sec.lp-pad--100 { padding-block: var(--space-100); } /* поле `pad` секції: верхній і нижній padding = крок шкали DS замість типових 150u (рев'ю d360474e: #shop — 40); нижче join/stack сусідньої секції мають перевагу (так само як для типового відступу) */
 .lp-sec.lp-sec--join-next { padding-bottom: var(--space-lp-room-join); }
 .lp-sec.lp-sec--join { padding-top: 0; }
 .lp-sec.lp-sec--loose.lp-sec--join-next { padding-bottom: var(--space-lp-section-y); } /* loose + продовження кімнати нижче: 120 → 150u (крок вгору) */
@@ -34,9 +41,9 @@
 .lp-room--paper .lp-head__lead { color: var(--lp-on-paper-muted); }
 .lp-head__caption { color: inherit; }
 /* колонки сітки за даними (span) — однаково для всіх типів */
-.lp-span--2 { grid-column: span 2; } .lp-span--3 { grid-column: span 3; } .lp-span--4 { grid-column: span 4; } .lp-span--5 { grid-column: span 5; }
+.lp-span--1 { grid-column: span 1; } .lp-span--2 { grid-column: span 2; } .lp-span--3 { grid-column: span 3; } .lp-span--4 { grid-column: span 4; } .lp-span--5 { grid-column: span 5; }
 .lp-span--6 { grid-column: span 6; } .lp-span--7 { grid-column: span 7; } .lp-span--8 { grid-column: span 8; } .lp-span--9 { grid-column: span 9; }
-.lp-span--12 { grid-column: span 12; }
+.lp-span--10 { grid-column: span 10; } .lp-span--11 { grid-column: span 11; } .lp-span--12 { grid-column: span 12; }
 /* список DS (як у тілі акордеона товару .acc--product .acc__body ul): диск-маркер, без нових елементів */
 .lp-list { padding-inline-start: var(--space-20); list-style: disc; }
 .lp-list li + li { margin-top: var(--space-5); }
@@ -62,9 +69,9 @@
    межі смуг — на початках колонок. Розріз — декоративний (aria-hidden). Під кожною смугою, по лівому краю її колонок, — підпис у спільній сітці рядків
    (subgrid): іконка DS (акцент) → назва .t-lead (акцент кімнати, як кікер; більша за опис — ієрархія назва/опис, рев'ю 77dd7d09) → пояснення .t-desc (основне чорнило): заголовок і опис відрізняються
    кольором, регістром і накресленням. Без плашок, накладок, рамок і ліній. Без фото (cut: false) — лише підписи. */
-.lp-layers__grid { width: var(--grid-w); margin-inline: auto; }
+.lp-layers__grid { width: var(--lp-w); margin-inline: auto; }
 .lp-layers__head { margin-bottom: var(--space-lp-head); }
-.lp-layers { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); grid-template-rows: var(--size-lp-layer-band-h) repeat(3, auto); column-gap: var(--grid-gap); }
+.lp-layers { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: var(--size-lp-layer-band-h) repeat(3, auto); column-gap: var(--grid-gap); }
 .lp-layers--text { grid-template-rows: repeat(3, auto); }
 .lp-layers__cut { grid-column: 1 / -1; grid-row: 1; display: grid; grid-template-columns: subgrid; grid-template-rows: minmax(0, 1fr); overflow: hidden; border-radius: var(--radius-panel); background: var(--lp-amber); } /* суцільний тон теми — видно, доки вантажаться фото; один рядок на висоту розрізу — смуга = висота розрізу, фото кадрується по центру (cover) */
 .lp-layers__band { display: block; margin-right: calc(-1 * var(--grid-gap)); } /* смуга закриває й зазор до наступної: смуги впритул */
@@ -107,7 +114,7 @@
 /* ---------- compare: групи поруч на 12 колонках (ширина групи = span даних), кожна — subgrid на 5 спільних рядків ----------
    (ярлик, число, одиниця, медіа АБО список, факти), тож однотипні рядки всіх груп на одних базових лініях (рев'ю b9892b9b). Вирівнювання групи —
    start (по лівому краю) або center (рев'ю a58b6a28). «≈» перед числом — approx: true. Лічильник 0 → значення (lp.js). */
-.lp-compare__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
+.lp-compare__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-compare__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-profit-head); }
 .lp-compare__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
 .lp-compare__note { grid-column: 1 / -1; grid-row: 7; margin-top: var(--space-lp-head); text-align: center; color: var(--lp-on-paper-muted); }
@@ -138,11 +145,11 @@
    Елементи — за рефом замовника (2026-10-16, затверджено): панель з hairline-контуром (трохи світліше за тло) і приглушеним візерунком ромбів DS (format-pattern-green.svg / format-pattern-teal.svg — приглушені варіанти візерунка каталогу), підпис, КАПСУЛА (світла hairline-лінія, повне закруглення = половина ширини) з ромбом-маркером (.icon--diamond-mark), числом
    і одиницею, 2–4 колонки напоїв (ромб, назва, опис), роздільник (лінія, що згасає по краях), міні-блоки в hairline-рамках (ромб, підпис, значення). Рядки панелей — subgrid: капсули, колонки,
    роздільники й міні-блоки обох панелей на спільних лініях. Тон панелі — роль теми. Типографіка — лише ролі .t-*. */
-.lp-formats__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
+.lp-formats__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-formats__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-head); }
 .lp-formats__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
-.lp-formats__grid > .lp-format.lp-span--6:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
-.lp-formats__grid > .lp-format.lp-span--6:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
+.lp-formats__grid > .lp-format:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
+.lp-formats__grid > .lp-format:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
 .lp-format { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; justify-items: center; min-width: 0; padding: var(--space-lp-format-pad); border: var(--border-hairline) solid var(--lp-format-line); border-radius: var(--radius-panel); color: var(--lp-on-dark); text-align: center; background: var(--lp-format-teal); }
 .lp-format--green { background: url('/assets/img/format-pattern-green.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--lp-format-green); }
 .lp-format--teal { background: url('/assets/img/format-pattern-teal.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--lp-format-teal); }
@@ -166,7 +173,7 @@
 /* ---------- tiles: плитки по span колонок зі спільними рядками (subgrid: медіа, назва, підпис, ноти) ----------
    Медіа — гравюра (partials/media/*, + іконка DS у центрі) або фото (портрет 3:4 у рамці --radius-panel). Підписи — по центру під медіа, без маркерів
    (рев'ю e9a95f10). Порожні ноти не показуються. */
-.lp-tiles__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
+.lp-tiles__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-tiles__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-head); }
 .lp-tile { grid-row: 2 / span 4; display: grid; grid-template-rows: subgrid; margin: 0; text-align: center; }
 .lp-tile__media { position: relative; container-type: inline-size; display: flex; justify-content: center; color: var(--lp-on-paper); transition: scale var(--duration-base) var(--ease-out); } /* cqw = ширина плитки (= колонок) */
@@ -182,6 +189,24 @@
 .lp-tile__notes:empty { display: none; }
 .lp-room--warm .lp-tile__name, .lp-room--deep .lp-tile__name, .lp-room--warm .lp-tile__notes, .lp-room--deep .lp-tile__notes { color: var(--lp-on-dark); }
 .lp-room--warm .lp-tile__origin, .lp-room--deep .lp-tile__origin { color: var(--lp-on-dark-muted); }
+/* tiles shape: circle — коло замість рамки 3:4: діаметр = ширина плитки (span колонок або 1/n контейнера, див. нижче), кадр фото cover + object-position за даними (`imgPos`) і масштаб `zoom`
+   (кроки --scale-lp-zoom-*; origin — за imgPos (top: фокус на верхній третині — горлечко піднімається до верху кола, плечі й етикетка обрізаються знизу), як у рефі замовника 2026-10-16), тло — роль теми за `tone`.
+   Кільце — ТОВСТЕ (токен --size-lp-tile-ring, колір — роль теми --lp-tile-ring): на самому колі (.lp-tile__media, overflow hidden), а фото зумиться всередині, тож кільце не масштабується. Назва — акцент теми,
+   підпис — чорнило кімнати (.t-spec: напівжирний, щільний); лід — під рядом плиток (рядок 6), по центру */
+.lp-tile--tone-black { --lp-tile-bg: var(--lp-tile-black); } .lp-tile--tone-brown { --lp-tile-bg: var(--lp-tile-brown); } .lp-tile--tone-green { --lp-tile-bg: var(--lp-tile-green); } .lp-tile--tone-teal { --lp-tile-bg: var(--lp-tile-teal); }
+.lp-tiles--circle .lp-tile__media { box-sizing: border-box; width: 100%; aspect-ratio: 1; overflow: hidden; border: var(--size-lp-tile-ring) solid var(--lp-tile-ring, var(--lp-hairline)); border-radius: var(--radius-round); background: var(--lp-tile-bg, var(--lp-amber)); }
+.lp-tiles--circle .lp-tile__img { height: 100%; aspect-ratio: auto; border-radius: 0; background: none; }
+.lp-tile--pos-top .lp-tile__img { object-position: top; transform-origin: 50% 35%; } .lp-tile--pos-center .lp-tile__img { object-position: center; transform-origin: 50% 50%; } .lp-tile--pos-bottom .lp-tile__img { object-position: bottom; transform-origin: 50% 100%; }
+.lp-tile--zoom-100 .lp-tile__img { scale: var(--scale-lp-zoom-100); } .lp-tile--zoom-125 .lp-tile__img { scale: var(--scale-lp-zoom-125); } .lp-tile--zoom-150 .lp-tile__img { scale: var(--scale-lp-zoom-150); }
+.lp-tile--zoom-175 .lp-tile__img { scale: var(--scale-lp-zoom-175); } .lp-tile--zoom-200 .lp-tile__img { scale: var(--scale-lp-zoom-200); }
+.lp-tiles--circle.lp-room--warm .lp-tile__name, .lp-tiles--circle.lp-room--deep .lp-tile__name { color: var(--lp-accent); } /* на світлому золото не тримає контраст — лишається чорнило кімнати */
+.lp-tiles--circle.lp-room--warm .lp-tile__origin, .lp-tiles--circle.lp-room--deep .lp-tile__origin { color: var(--lp-on-dark); }
+.lp-tiles--circle .lp-tile__origin { white-space: pre-line; } /* опис — рівно 2 рядки по центру: перенос задає дані (правило tiles-circle-origin-2lines) */
+/* пунктів не ділять колонок контейнера (4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок (--grid-gap); діаметр = (ширина контейнера − (n−1)·зазор) / n; краї ряду — на межах колонок, внутрішні шви — за цією схемою (D12) */
+.lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-tiles__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tiles__grid--n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.lp-tiles__grid--n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .lp-tiles__grid--n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.lp-tiles__lead--cols-2 { width: var(--grid-span-2); } .lp-tiles__lead--cols-3 { width: var(--grid-span-3); } .lp-tiles__lead--cols-4 { width: var(--grid-span-4); } .lp-tiles__lead--cols-5 { width: var(--grid-span-5); } .lp-tiles__lead--cols-6 { width: var(--grid-span-6); }
+.lp-tiles__lead { grid-column: 1 / -1; grid-row: 6; justify-self: center; width: var(--grid-span-6); margin: var(--space-lp-head) 0 0; text-align: center; } /* по центру контейнера; ширина — leadCols (типово 6 колонок) */
 
 /* ---------- offers: фото на ВСЮ секцію без затемнення (рев'ю 003d2383, ee14a4bc, 8263cbc6); поверх — шапка й панелі-пропозиції ----------
    Контраст світлого тексту шапки дає вибір ділянки кадру (кадрування — змінні теми), а не затемнення (його немає в DS). Пропозиція = ІСНУЮЧА панель DS
@@ -189,15 +214,15 @@
    hairline-лінії (як рядки акордеона DS), «що входить» — список DS. Нижче — необов'язковий рядок контактів (foot). */
 .lp-offers__bg { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
 .lp-offers__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); scale: var(--lp-offers-bg-scale, 1); transform-origin: var(--lp-offers-bg-origin, 50% 50%); }
-.lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
+.lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-head.lp-offers__head { grid-column: 1 / -1; }
 /* панелі-пропозиції — великі блоки: зазор між ними --grid-gap-panels 5u (не 40u колонок). Сітка лишається 12-колонковою (шапка/підвал на всю ширину), кожна панель заходить у зазор колонок
-   на частку --grid-gap-bridge (40u − 5u): n панелей по 12/n колонок; зовнішні краї лишаються на колонках 1 і 12, шви — на -b·i/n зліва та −b·(n−i−1)/n справа */
-.lp-offers__grid > .lp-offer.lp-span--6:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
-.lp-offers__grid > .lp-offer.lp-span--6:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
-.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) * -2 / 3); }
-.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(2) { margin-inline: calc(var(--grid-gap-bridge) / -3); }
-.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(3) { margin-left: calc(var(--grid-gap-bridge) * -2 / 3); }
+   на частку --grid-gap-bridge (40u − 5u): n панелей по cols/n колонок (cols — поле секції, типово 12; клас сітки lp-offers__grid--n<n>); зовнішні краї лишаються на колонках 1 і 12, шви — на -b·i/n зліва та −b·(n−i−1)/n справа */
+.lp-offers__grid--n2 > .lp-offer:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
+.lp-offers__grid--n2 > .lp-offer:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
+.lp-offers__grid--n3 > .lp-offer:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) * -2 / 3); }
+.lp-offers__grid--n3 > .lp-offer:nth-of-type(2) { margin-inline: calc(var(--grid-gap-bridge) / -3); }
+.lp-offers__grid--n3 > .lp-offer:nth-of-type(3) { margin-left: calc(var(--grid-gap-bridge) * -2 / 3); }
 .lp-offers__title { margin-top: var(--shift-lp-cap-top); }
 .lp-offers__note { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
 .lp-offers__fine { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
@@ -212,16 +237,6 @@
 .lp-route__point { min-width: 0; }
 .lp-route__line { flex: 1; height: var(--border-hairline); background: var(--lp-hairline); }
 .lp-route__side--from .lp-route__line { margin-right: var(--space-10); }
-/* tiles shape: circle — коло замість рамки 3:4: діаметр = ширина плитки (span колонок), кадр фото cover + object-position за даними (`imgPos`), тло — роль теми за `tone`,
-   кільце — hairline; назва — акцент теми, підпис — чорнило кімнати; лід — під рядом плиток (рядок 6), по центру */
-.lp-tile--tone-black { --lp-tile-bg: var(--lp-tile-black); } .lp-tile--tone-brown { --lp-tile-bg: var(--lp-tile-brown); } .lp-tile--tone-green { --lp-tile-bg: var(--lp-tile-green); } .lp-tile--tone-teal { --lp-tile-bg: var(--lp-tile-teal); }
-.lp-tiles--circle .lp-tile__img { box-sizing: border-box; aspect-ratio: 1; border: var(--border-hairline) solid var(--lp-hairline); border-radius: var(--radius-round); }
-.lp-tile--pos-top .lp-tile__img { object-position: top; } .lp-tile--pos-bottom .lp-tile__img { object-position: bottom; }
-.lp-tiles--circle.lp-room--warm .lp-tile__name, .lp-tiles--circle.lp-room--deep .lp-tile__name { color: var(--lp-accent); } /* на світлому золото не тримає контраст — лишається чорнило кімнати */
-.lp-tiles--circle.lp-room--warm .lp-tile__origin, .lp-tiles--circle.lp-room--deep .lp-tile__origin { color: var(--lp-on-dark); }
-.lp-tiles--circle .lp-tile__origin { white-space: pre-line; } /* опис — рівно 2 рядки по центру: перенос задає дані (правило tiles-circle-origin-2lines) */
-.lp-tiles__lead--cols-2 { width: var(--grid-span-2); } .lp-tiles__lead--cols-3 { width: var(--grid-span-3); } .lp-tiles__lead--cols-4 { width: var(--grid-span-4); } .lp-tiles__lead--cols-5 { width: var(--grid-span-5); } .lp-tiles__lead--cols-6 { width: var(--grid-span-6); }
-.lp-tiles__lead { grid-column: 4 / span 6; grid-row: 6; justify-self: center; margin: var(--space-lp-head) 0 0; text-align: center; }
 .lp-route__side--to .lp-route__line { margin-left: var(--space-10); }
 .lp-route__icon { --icon-size: var(--size-lp-route-icon); position: absolute; top: 50%; left: 50%; translate: -50% -50%; }
 
@@ -250,6 +265,10 @@
 
 /* ---------- faq: ІСНУЮЧА група FAQ (partials/sections/faq-group + components/faq-item) у тілі FAQ (.faq-page__body) ---------- */
 .lp-faq .faq-page__body { color: var(--lp-on-dark); }
+.lp-faq .faq-page__grid { grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); width: var(--lp-w); } /* `cols`: тіло FAQ у вужчому контейнері (без cols — 12 колонок, як у faq.css); заголовок групи — колонки 1–4, рядки питань — від 5-ї до кінця */
+.lp-faq .faq-page__list { grid-column: 5 / -1; }
+.lp-faq.lp-pad--20 .faq-page__body { padding-block: var(--space-20); } .lp-faq.lp-pad--30 .faq-page__body { padding-block: var(--space-30); } .lp-faq.lp-pad--40 .faq-page__body { padding-block: var(--space-40); }
+.lp-faq.lp-pad--50 .faq-page__body { padding-block: var(--space-50); } .lp-faq.lp-pad--70 .faq-page__body { padding-block: var(--space-70); } .lp-faq.lp-pad--100 .faq-page__body { padding-block: var(--space-100); } /* `pad` для FAQ: відступ тіла (у FAQ власний вертикальний ритм --space-faq-room-y) */
 .lp-room--paper.lp-faq .faq-page__body { color: var(--lp-on-paper); }
 
 /* ---------- демо в design-system.html: справжні секції сторінок (<!--@lp сторінка секція-->) у ширині демо-панелі ---------- */

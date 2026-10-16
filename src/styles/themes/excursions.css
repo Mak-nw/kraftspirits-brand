@@ -24,4 +24,5 @@
   --lp-tile-brown: var(--color-brown);
   --lp-tile-green: var(--color-green);
   --lp-tile-teal: var(--color-teal);
+  --lp-tile-ring: var(--color-lp-tile-ring);       /* кільце кола плитки (товсте, темно-коричневе, трохи світліше за коричневу кімнату) */
 }

@@ -876,6 +876,7 @@
 
   /* ПОХІДНІ кольори (дозвіл замовника: лише color-mix палітри; зведено до мінімального набору, задокументовано в design-system.html →
      «Палітра → Похідні кольори: бочки»). Використовуються темами (src/styles/themes/*) як ролі --lp-*. Лінії на світлому — токен DS --color-line-soft. */
+  --color-lp-tile-ring: color-mix(in srgb, var(--color-gold) 10%, var(--color-brown));    /* кільце кола плитки: коричневе, трохи світліше за фон (виміряно в рефі: #291f16 на #171009; золото 10% на коричневому = #292016) */
   --color-lp-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамка на темному: арка кроків, лінії кроків */
   --color-lp-amber: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));  /* «віскі»: рідина в гравюрі кроків, тло розрізу шарів, доки вантажаться фото */
   --color-lp-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* другорядний текст на «папері» теми бочок: контраст на beige ≈ 5.5:1 */
@@ -949,6 +950,12 @@
   --scale-lp-finish-hover: 1.03;                 /* hover: медіа плитки трохи наближається */
   --ratio-lp-tile-img: 3 / 4;                    /* фото плитки (пляшка/келих) — портрет 3:4 у рамці --radius-panel */
   --space-lp-tile-caption: var(--space-30);      /* медіа → назва */
+  --size-lp-tile-ring: calc(7 * var(--u));       /* shape: circle — товсте кільце навколо кола (реф замовника 2026-10-16: ≈7px на 1920); було hairline */
+  --scale-lp-zoom-100: 1;                        /* tiles zoom: кроки масштабу фото в колі (поле `zoom`) */
+  --scale-lp-zoom-125: 1.25;
+  --scale-lp-zoom-150: 1.5;
+  --scale-lp-zoom-175: 1.75;
+  --scale-lp-zoom-200: 2;
 
   /* place: панель DS (.contacts-panel) і мапа DS (.contacts-map) на сітці: 5 + 7 колонок */
   --size-lp-place-h: calc(640 * var(--u));       /* висота ряду «панель + мапа» (як мінімум панелі контактів) */

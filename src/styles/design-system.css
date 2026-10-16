@@ -150,6 +150,7 @@
 .ds-cocktail-demo { width: var(--grid-w); margin-inline: calc((var(--container-wide) - var(--grid-w)) / 2); color: var(--color-green); }
 
 /* зразки похідних кольорів у design-system.html (розділ «Палітра → Похідні кольори») */
+.swatch--lp-tile-ring .swatch__chip { background: var(--color-lp-tile-ring); }
 .swatch--lp-hairline .swatch__chip { background: linear-gradient(var(--color-lp-hairline), var(--color-lp-hairline)), var(--color-teal); } /* напівпрозорі — на своєму тлі */
 .swatch--lp-amber .swatch__chip { background: var(--color-lp-amber); }
 .swatch--lp-ink-muted .swatch__chip { background: var(--color-lp-ink-paper-muted); }

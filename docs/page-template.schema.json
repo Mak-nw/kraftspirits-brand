@@ -69,7 +69,19 @@
       "id": "compare-span-sum",
       "scope": "compare",
       "expressed": false,
-      "rule": "сума `span` усіх груп = 12"
+      "rule": "сума `span` усіх груп = `cols` секції (типово 12)"
+    },
+    {
+      "id": "cols-items-divide",
+      "scope": "layers, formats, offers",
+      "expressed": true,
+      "rule": "кількість пунктів ділить `cols` (пункт = `cols` / кількість колонок): `layers` — 2, 3, 4 або 6, `offers` — 1, 2 або 3, `formats` — 2; при `cols: 10` лишаються 2 (layers, formats) і 1–2 (offers)"
+    },
+    {
+      "id": "pad-exclusive",
+      "scope": "layers, steps, compare, formats, tiles, offers, card, place, faq",
+      "expressed": true,
+      "rule": "`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Відступ з боку сусідньої `join`/`stack`-секції лишається за сусідом (нижній відступ перед секцією-стеком = 0)"
     },
     {
       "id": "compare-count-capacity",
@@ -117,7 +129,7 @@
       "id": "tiles-circle-fields",
       "scope": "tiles",
       "expressed": true,
-      "rule": "`leadCols` секції, `tone` і `imgPos` плитки мають сенс лише з `shape: circle`"
+      "rule": "`leadCols` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`"
     },
     {
       "id": "tiles-circle-origin-2lines",
@@ -329,6 +341,18 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "kicker": {
               "type": [
                 "string",
@@ -358,6 +382,16 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                8,
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "items": {
               "type": "array",
@@ -441,7 +475,217 @@
             "title",
             "items"
           ],
-          "title": "layers"
+          "title": "layers",
+          "allOf": [
+            {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 2
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 3
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 4
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 5,
+                        "maxItems": 5
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 5
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 6,
+                        "maxItems": 6
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",
@@ -468,6 +712,18 @@
               "type": [
                 "boolean",
                 "null"
+              ]
+            },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
               ]
             },
             "kicker": {
@@ -582,6 +838,54 @@
           "title": "steps",
           "allOf": [
             {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
               "oneOf": [
                 {
                   "allOf": [
@@ -694,6 +998,18 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "kicker": {
               "type": [
                 "string",
@@ -723,6 +1039,15 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "note": {
               "type": [
@@ -1012,7 +1337,57 @@
             "title",
             "groups"
           ],
-          "title": "compare"
+          "title": "compare",
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",
@@ -1039,6 +1414,18 @@
               "type": [
                 "boolean",
                 "null"
+              ]
+            },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
               ]
             },
             "kicker": {
@@ -1070,6 +1457,15 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "items": {
               "type": "array",
@@ -1191,7 +1587,217 @@
             "title",
             "items"
           ],
-          "title": "formats"
+          "title": "formats",
+          "allOf": [
+            {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 2
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 3
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 4
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 5,
+                        "maxItems": 5
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 5
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 6,
+                        "maxItems": 6
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",
@@ -1218,6 +1824,18 @@
               "type": [
                 "boolean",
                 "null"
+              ]
+            },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
               ]
             },
             "kicker": {
@@ -1249,6 +1867,17 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                6,
+                8,
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "shape": {
               "enum": [
@@ -1341,6 +1970,17 @@
                       "top",
                       "center",
                       "bottom",
+                      "",
+                      null
+                    ]
+                  },
+                  "zoom": {
+                    "enum": [
+                      1,
+                      1.25,
+                      1.5,
+                      1.75,
+                      2,
                       "",
                       null
                     ]
@@ -1512,6 +2152,54 @@
           "allOf": [
             {
               "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
                 "properties": {
                   "shape": {
                     "const": "circle"
@@ -1598,6 +2286,16 @@
                                     "minLength": 1
                                   }
                                 }
+                              },
+                              {
+                                "required": [
+                                  "zoom"
+                                ],
+                                "properties": {
+                                  "zoom": {
+                                    "type": "number"
+                                  }
+                                }
                               }
                             ]
                           }
@@ -1665,6 +2363,18 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "kicker": {
               "type": [
                 "string",
@@ -1686,6 +2396,15 @@
               ],
               "maxLength": 320,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "bg": {
               "type": [
@@ -1941,6 +2660,214 @@
               "allOf": [
                 {
                   "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 2
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 3
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 4
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 5,
+                        "maxItems": 5
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 5
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 6,
+                        "maxItems": 6
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "cols": {
+                        "type": [
+                          "number",
+                          "string",
+                          "null"
+                        ],
+                        "multipleOf": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "allOf": [
+                {
+                  "if": {
                     "required": [
                       "bg"
                     ],
@@ -2123,6 +3050,18 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "kicker": {
               "type": [
                 "string",
@@ -2223,6 +3162,54 @@
           ],
           "title": "card",
           "allOf": [
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
             {
               "if": {
                 "properties": {
@@ -2351,6 +3338,18 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "kicker": {
               "type": [
                 "string",
@@ -2473,6 +3472,54 @@
           "allOf": [
             {
               "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
                 "properties": {
                   "stack": {
                     "const": true
@@ -2539,11 +3586,33 @@
                 "null"
               ]
             },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
             "title": {
               "type": "string",
               "maxLength": 60,
               "minLength": 1,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cols": {
+              "enum": [
+                8,
+                10,
+                12,
+                "",
+                null
+              ],
+              "default": 12
             },
             "items": {
               "type": "array",
@@ -2582,7 +3651,57 @@
             "title",
             "items"
           ],
-          "title": "faq"
+          "title": "faq",
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     }
