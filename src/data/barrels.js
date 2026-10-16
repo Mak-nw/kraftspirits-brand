@@ -42,7 +42,7 @@ export const barrels = {
     {
       type: 'steps', id: 'how', room: 'deep',
       title: 'Від бочки до вашої пляшки',
-      scene: 'barrels-scene',
+      scene: 'scene-barrels',
       items: [
         { key: 'pour', value: '63%', title: 'Заливка', text: 'У бочку заливається дистилят міцністю близько 63%' },
         // «частка ангелів» (рішення замовника 15.10): число як приблизне — знак ≈; наближеність пояснює дрібний текст у «Ціні»
@@ -54,9 +54,9 @@ export const barrels = {
       type: 'compare', id: 'profit', room: 'paper',
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
-        { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'one',
+        { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-one',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `Бочка ${B200.size}`, span: 9, align: 'center', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'four-minus-one',
+        { key: 'b200', label: `Бочка ${B200.size}`, span: 9, align: 'center', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-four-minus-one',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },
@@ -65,10 +65,10 @@ export const barrels = {
       title: 'Подальша витримка',
       lead: `Бочки з-під марсали, мадери, портвейну, хересу${NB}— кожна додає свій унікальний відтінок смаку`,
       items: [
-        { key: 'marsala', engraving: 'barrels-head', icon: 'barrels-grape', name: 'Marsala', origin: 'Сицилія, Італія', notes: NOTES.marsala, slot: HEAD('марсали') },
-        { key: 'madeira', engraving: 'barrels-head', icon: 'barrels-mountain', name: 'Madeira', origin: 'Мадейра, Португалія', notes: NOTES.madeira, slot: HEAD('мадери') },
-        { key: 'port', engraving: 'barrels-head', icon: 'barrels-glass', name: 'Port', origin: 'Долина Дору, Португалія', notes: NOTES.port, slot: HEAD('портвейну') },
-        { key: 'sherry', engraving: 'barrels-head', icon: 'barrels-sun', name: 'Sherry', origin: 'Херес, Іспанія', notes: NOTES.sherry, slot: HEAD('хересу') },
+        { key: 'marsala', engraving: 'engraving-barrels-head', icon: 'barrels-grape', name: 'Marsala', origin: 'Сицилія, Італія', notes: NOTES.marsala, slot: HEAD('марсали') },
+        { key: 'madeira', engraving: 'engraving-barrels-head', icon: 'barrels-mountain', name: 'Madeira', origin: 'Мадейра, Португалія', notes: NOTES.madeira, slot: HEAD('мадери') },
+        { key: 'port', engraving: 'engraving-barrels-head', icon: 'barrels-glass', name: 'Port', origin: 'Долина Дору, Португалія', notes: NOTES.port, slot: HEAD('портвейну') },
+        { key: 'sherry', engraving: 'engraving-barrels-head', icon: 'barrels-sun', name: 'Sherry', origin: 'Херес, Іспанія', notes: NOTES.sherry, slot: HEAD('хересу') },
       ],
     },
     {

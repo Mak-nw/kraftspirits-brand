@@ -1,0 +1,41 @@
+/* СТОРІНКА «barrels» (src/data/barrels.js): кадр фото секції «Ціна» й оптичні поправки чорнила, ВИМІРЯНІ під конкретні тексти сторінки (бокові поля перших літер, цифри-гіганти).
+   Це не колір (колір — тема src/styles/themes/barrels.css) і не загальний код шаблону: файл прив'язаний до id секцій і key елементів даних цієї сторінки, тож зміна теми їх не відриває.
+   Нова сторінка файлу не потребує (оптика типово 0, кадр — центр). Клас body.lp-page--<slug> ставить partials/lp/page.html; плагін lp-auto підключає файл сам.
+   Значення — локальні токени сторінки (не tokens.css). */
+.lp-page--barrels {
+  /* кадрування фото «Ціни» */
+  --scale-barrels-price-bg: 2;                        /* наближення кадру (origin праворуч): шапка лягає на темну розмиту частину бочок */
+  --origin-barrels-price-bg: 100% 55%;
+  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото секції: ряд днищ */
+  /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
+     центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
+  --shift-barrels-h2-center-benefits: -0.026em;       /* «Що дає бочка» */
+  --shift-barrels-h2-center-profit: 0.023em;          /* «Скільки пляшок ви отримаєте?» */
+  --shift-barrels-h2-center-next: -0.031em;           /* «Подальша витримка» */
+  --shift-barrels-h2-center-price: -0.030em;          /* «Ціна» */
+  /* оптика кроків: лівий край чорнила цифр-гігантів, назв і пояснень на одній осі (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920) */
+  --shift-barrels-numeral-pour: -0.0465em;            /* бокові поля гліфів EB Garamond 240u: «6» ≈0.047em, «≈» ≈0.071em, «4» ≈0.018em */
+  --shift-barrels-numeral-angels: -0.0715em;
+  --shift-barrels-numeral-bottle: -0.0175em;
+  --shift-barrels-title-round: -0.025em;              /* перша капітель з круглим боком (З) має ширше бокове поле */
+  --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
+  --shift-barrels-copy-stem: -0.04em;                 /* перша літера пояснення зі штамбом (П) */
+  /* оптика груп і пропозицій */
+  --shift-barrels-cert-title-ink: -0.025em;           /* «Бочка …»: бокове поле «Б» — на лівій осі */
+  --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту на 2–3px (виміряно чорнилом) — зсув праворуч */
+  --shift-barrels-fact-ink: -0.06em;                  /* підписи фактів («Пляшок…», «Вартість…»): бокове поле «П»/«В» */
+  --shift-barrels-caption-ink: -0.04em;               /* підписи груп («пляшок…», «вартість…»): бокове поле першої літери */
+}
+/* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
+.lp-page--barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-origin: var(--origin-barrels-price-bg); }
+/* оптика H2 по центру (чорнило «Щ…А», «С…?», «П…А», «Ц…А») */
+.lp-page--barrels #benefits .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-benefits); }
+.lp-page--barrels #profit .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-profit); }
+.lp-page--barrels #next .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-next); }
+.lp-page--barrels #price .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-price); }
+/* оптика кроків: ліва вісь чорнила цифр «63%», «≈15%», «40%», назв «З/В/Р» і пояснень «У/П/П» */
+.lp-page--barrels .lp-step--pour { --lp-num-optic: var(--shift-barrels-numeral-pour); --lp-title-optic: var(--shift-barrels-title-round); }
+.lp-page--barrels .lp-step--angels { --lp-num-optic: var(--shift-barrels-numeral-angels); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
+.lp-page--barrels .lp-step--bottle { --lp-num-optic: var(--shift-barrels-numeral-bottle); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
+/* оптика груп і пропозицій: «Б» назв, «€» цін, «П/В» підписів, «≈» фактів */
+.lp-page--barrels .lp-group, .lp-page--barrels .lp-offer { --lp-label-optic: var(--shift-barrels-cert-title-ink); --lp-price-optic: var(--shift-barrels-price-ink); --lp-fact-optic: var(--shift-barrels-fact-ink); --lp-caption-optic: var(--shift-barrels-caption-ink); --lp-approx-optic: var(--shift-lp-approx-ink); }

@@ -1,0 +1,24 @@
+/* МЕДІА «wall-barrels-*» (partials/media/wall-barrels-one.html, wall-barrels-four-minus-one.html; шаблон lp, тип compare, поле wall групи). Окремий файл ілюстрації (див. scene-barrels.css).
+   Геометрія стіни прив'язана до розкладки «50 L = колонки 1–3, 200 L = колонки 4–12» (--span-barrels-ledger-50): один масштаб для обох груп. Похідні розміри оголошено й на .lp-scope —
+   демо design-system.html перераховує їх у своїй ширині. */
+:root, .lp-scope {
+  /* МЕДІА «стіна пляшок» (compare, тема бочок): 50 L — колонки 1–3, 200 L — 4–12; один масштаб: 50 L = 1 блок 16 × 6 = 96, 200 L = 4 блоки (383 = 4 × 96 − 1).
+     Комірка (одна пляшка) — ціле px, щоб маска лягала на пікселі */
+  --span-barrels-ledger-50: 3;
+  --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
+  --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками 200 L (фактичний — рівномірний розподіл на всю ширину) */
+  --size-barrels-wall-200-w: calc((var(--grid-cols) - var(--span-barrels-ledger-50)) * var(--grid-col) + (var(--grid-cols) - var(--span-barrels-ledger-50) - 1) * var(--grid-gap)); /* колонки 4–12 */
+  --size-barrels-wall-cell-w: round(down, calc((var(--size-barrels-wall-200-w) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* 4 блоки + 3 мін. проміжки ≤ колонки 4–12 */
+  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція комірки-пляшки 22×50 (маска barrels-bottle-block.svg) */
+  --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
+  --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
+  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 — чорнило крайніх пляшок на лініях колонок */
+}
+
+/* ---------- wall «стіна пляшок»: маска-блок barrels-bottle-block.svg (16 × 6 = 96) в ОДНОМУ масштабі ----------
+   one — 1 блок по лівому краю групи; four-minus-one — 4 блоки на всю ширину групи (повтор «space»: перший і останній — на краях), верхню праву
+   пляшку останнього стирає другий шар маски (383 = 4 × 96 − 1). Стіни однакової висоти стоять на спільній нижній межі рядка (без лінії-полиці, рев'ю cf9a7bd2).
+   Зсув на поле плитки (3/22 комірки) — чорнило крайніх пляшок на лініях колонок. */
+.lp-wall { --lp-wall-color: var(--lp-on-paper); align-self: end; display: block; height: var(--size-barrels-block-h); margin-top: var(--space-lp-wall-top); background: var(--lp-wall-color); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat; }
+.lp-wall.lp-wall--one { justify-self: start; width: var(--size-barrels-block-w); margin-left: var(--shift-barrels-wall-ink); }
+.lp-wall.lp-wall--four-minus-one { margin-inline: var(--shift-barrels-wall-ink); mask: url('/assets/img/barrels-bottle-block.svg') 0 0 / var(--size-barrels-block-w) var(--size-barrels-block-h) space no-repeat, linear-gradient(var(--color-teal) 0 0) right top / var(--size-barrels-wall-cell-w) var(--size-barrels-wall-cell-h) no-repeat; mask-composite: subtract; }

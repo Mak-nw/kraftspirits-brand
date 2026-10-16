@@ -39,6 +39,7 @@ export async function createLp({ root, contactKeys }) {
     plugin() {
       const dataRe = /\/src\/data\/[^/]+\.js$/;
       const cssRe = /\/src\/styles\/(?:themes|media|pages)\/[^/]+\.css$/;
+      let isBuild = false;
       return {
         name: 'lp-auto',
         enforce: 'pre',
@@ -47,8 +48,9 @@ export async function createLp({ root, contactKeys }) {
           if (!id.split('?')[0].endsWith('/src/styles/main.css') || !code.includes('/*@lp-auto*/')) return null;
           return { code: code.replace('/*@lp-auto*/', lpCssImports(root)), map: null };
         },
-        // у збірці всі сторінки lp перевіряються до початку (збірка падає з поясненням)
-        async buildStart() { try { await ensure(slugs); } catch (e) { this.error(e.message); } },
+        configResolved(cfg) { isBuild = cfg.command === 'build'; },
+        // у збірці всі сторінки lp перевіряються до початку (збірка падає з поясненням); у dev помилка даних не зупиняє сервер — вона лише на своїй сторінці (оверлей Vite)
+        async buildStart() { if (!isBuild) return; try { await ensure(slugs); } catch (e) { this.error(e.message); } },
         configureServer(server) {
           server.watcher.on('add', (f) => { if (dataRe.test(f) || cssRe.test(f)) server.restart(); });
           server.watcher.on('unlink', (f) => { if (dataRe.test(f) || cssRe.test(f)) server.restart(); });

@@ -12,10 +12,8 @@
   --lp-on-paper-muted: var(--color-green);         /* окремого «приглушеного» зеленого в DS немає — ієрархію дають ролі .t-* */
   --lp-hero-ink: var(--color-green);               /* текст hero — зелений на світлому цеху фото (D8 піксельно) */
   --lp-accent: var(--color-gold);
-  --lp-hairline: var(--color-barrels-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
-  --lp-amber: var(--color-barrels-amber);          /* тло фото, доки вантажиться */
+  --lp-hairline: var(--color-lp-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
+  --lp-amber: var(--color-lp-amber);          /* тло фото, доки вантажиться */
   --lp-tone: green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
   --lp-tile-bg: var(--color-black);                /* «студійне» тло плиток дегустації: прозорі фото пляшок каталогу + AI-кадр келиха на чорному */
 }
-/* кадрування фото «Ціни»: темна частина зеленого скла під шапкою (світлий текст ≥ 4.5:1 без затемнення) */
-.theme-excursions #price { --lp-offers-bg-pos: 0% 0%; --lp-offers-bg-scale: 2; --lp-offers-bg-origin: 0% 0%; } /* наближення до темного верхнього лівого кута кадру */

@@ -11,7 +11,7 @@ const conv = (d) => {
   switch (d.type) {
     case 'text': return { ...nullable({ type: 'string', maxLength: d.max }, d.req), ...(d.req ? { minLength: 1 } : {}), pattern: wordPattern(d.word) };
     case 'url': return nullable({ type: 'string', pattern: d.startsWith ? `^${d.startsWith}[^\\s"<>]*$` : d.req ? `^(?:${URL_SOURCE})$` : `^(?:|${URL_SOURCE})$` }, d.req);
-    case 'id': case 'partial': case 'icon': return nullable({ type: 'string', pattern: d.req ? '^[a-z0-9-]+$' : '^[a-z0-9-]*$' }, d.req);
+    case 'id': case 'partial': case 'icon': { const pre = d.kind ? `${d.kind}-` : ''; return nullable({ type: 'string', pattern: pre ? (d.req ? `^${pre}[a-z0-9-]+$` : `^(?:|${pre}[a-z0-9-]+)$`) : (d.req ? '^[a-z0-9-]+$' : '^[a-z0-9-]*$') }, d.req); }
     case 'enum': return { enum: d.req ? d.values : [...d.values, '', null], ...(d.def !== undefined ? { default: d.def } : {}) };
     case 'number': return nullable({ type: d.int ? 'integer' : 'number', ...(d.min !== undefined ? { minimum: d.min } : {}), ...(d.max !== undefined ? { maximum: d.max } : {}) }, d.req);
     case 'bool': return nullable({ type: 'boolean' }, d.req);

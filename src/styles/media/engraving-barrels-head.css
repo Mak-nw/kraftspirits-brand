@@ -1,0 +1,12 @@
+/* МЕДІА «engraving-barrels-head» (partials/media/engraving-barrels-head.html; шаблон lp, тип tiles, поле engraving). Окремий файл ілюстрації (див. scene-barrels.css). */
+:root {
+  --size-barrels-finish-head: 76cqw;                       /* гравюра днища (одне коло-обідок hairline + клепки в кільці навколо значка) — частка ширини колонки */
+  --border-barrels-rim: calc(2 * var(--border-hairline));  /* обідок днища — 2px (клепки лишаються hairline 1px; рев'ю 3cc0afdd) */
+  --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.2);                      /* значок вина (іконка DS, 24×24, лінія 1.5) у центрі днища */
+}
+
+/* ---------- engraving «engraving-barrels-head» (tiles): днище бочки — одне коло-обідок і клепки тонкими лініями в кільці навколо порожнього центру (іконка DS) ---------- */
+.lp-engraving { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; }
+.lp-engraving__rim, .lp-engraving__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); } /* одна hairline-лінія DS (1px за будь-якого масштабу) */
+.lp-engraving__rim { stroke-width: var(--border-barrels-rim); } /* обідок днища вдвічі товщий за клепки (рев'ю 3cc0afdd) */
+.lp-tile__icon { --icon-size: var(--size-barrels-finish-icon); color: inherit; position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* іконка DS у центрі гравюри (поле icon плитки; розмір — частка гравюри) */

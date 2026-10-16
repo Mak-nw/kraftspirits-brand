@@ -67,16 +67,16 @@ export const SCHEMA = {
     hero: { ...base('room', 'join', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), cta: { ...CTA, req: true } },
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2, 3, 4 або 6 (ділять 12 колонок)
     layers: { ...BASE, room: E(ROOMS, false, 'warm'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
-    // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/<scene>.html АБО img — фото) + кроки-цифри
-    steps: { ...BASE, room: E(ROOMS, false, 'deep'), scene: { type: 'partial' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true) }), 2, 5, true) },
-    // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall АБО list, факти
+    // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри
+    steps: { ...BASE, room: E(ROOMS, false, 'deep'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true) }), 2, 5, true) },
+    // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
     compare: { ...BASE, room: E(ROOMS, false, 'paper'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8, 9], true), align: E(['start', 'center'], false, 'start'), accent: B(),
-      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: E(['one', 'four-minus-one']), list: L(T(90), 0, 8),
+      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
-    // 5. Плитки: медіа (engraving — гравюра partials/media/<engraving>.html + icon АБО img — фото 3:4) + назва, підпис, ноти
-    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial' }, icon: { type: 'icon' }, ...MEDIA_IMG, name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
+    // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти
+    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + рядок контактів (foot)
     offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
@@ -144,7 +144,7 @@ export const PAGE_RULES = [
 /* Перевірки проти файлової системи (tools/lp-files.mjs; збірка падає з поясненням) — у чистій схемі лише опис для docs і x-rules */
 export const FILE_RULES = [
   { id: 'theme-exists', doc: '`theme`: є файл `src/styles/themes/<theme>.css` з роллю `--lp-tone` (або `tone` задано в даних)' },
-  { id: 'media-partials-exist', doc: '`steps.scene` і `tiles.items[].engraving`: є `partials/media/<id>.html`' },
+  { id: 'media-partials-exist', doc: '`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].wall` (`wall-…`): є `partials/media/<id>.html`' },
   { id: 'icons-exist', doc: '`icon` (layers, tiles, place, route): є клас `.icon--<icon>` у `src/styles/`' },
   { id: 'media-files-exist', doc: 'кожен шлях `img` / `bg` веде на наявний файл у `public/` (`card.img` — лише під `/assets/img/`)' },
   { id: 'contacts-keys-exist', doc: '`%contacts.<ключ>%` у посиланнях: ключ є в `src/data/contacts.js`' },
@@ -166,7 +166,10 @@ function check(def, v, path) {
       if (typeof v !== 'string' || !URL_RE.test(v)) fail(path, `некоректне посилання «${String(v).slice(0, 40)}» (допустимо: #якір, /шлях, https://…, tel:, mailto:, %contacts.ключ%, сторінка.html)`);
       if (def.startsWith && !v.startsWith(def.startsWith)) fail(path, `шлях має починатися з ${def.startsWith}`);
       break;
-    case 'id': case 'partial': case 'icon': if (typeof v !== 'string' || !ID_RE.test(v)) fail(path, 'лише латиниця, цифри, дефіс'); break;
+    case 'id': case 'partial': case 'icon':
+      if (typeof v !== 'string' || !ID_RE.test(v)) fail(path, 'лише латиниця, цифри, дефіс');
+      if (def.kind && !v.startsWith(`${def.kind}-`)) fail(path, `назва ілюстрації виду «${def.kind}» має починатися з «${def.kind}-» (partials/media/${def.kind}-<назва>.html)`);
+      break;
     case 'enum': if (!def.values.includes(v)) fail(path, `допустимо: ${def.values.join(' | ')}`); break;
     case 'number':
       if (typeof v !== 'number' || !Number.isFinite(v)) fail(path, 'має бути числом');

@@ -1,5 +1,6 @@
-/* ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (lp): barrels.html, excursions.html. Сторінка = дані (src/data/<сторінка>.js, схема src/data/lp-schema.js) + медіа + тема
-   (src/styles/themes/<тема>.css). Тут — ЛИШЕ загальні блоки шаблону; жодного селектора під конкретну сторінку чи секцію. Кольори — ролі теми --lp-*
+/* ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (lp). Сторінка = дані (src/data/<сторінка>.js, схема src/data/lp-schema.js) + медіа + тема
+   (src/styles/themes/<тема>.css — лише ролі кольорів). Тут — ЛИШЕ загальні блоки шаблону; жодного селектора під конкретну сторінку, секцію чи ілюстрацію
+   (ілюстрації — src/styles/media/<вид>-<назва>.css, оптика й кадр конкретної сторінки — src/styles/pages/<сторінка>.css). Кольори — ролі теми --lp-*
    (тема мапить їх на палітру DS), розміри — токени блоку «Шаблон посадкової сторінки» в tokens.css. Опис схеми — docs/page-template.md.
    Типи секцій (partials/lp/<type>.html): hero · layers · steps · compare · tiles · offers · card · place · faq.
    Словник — лише елементи design-system.html (CLAUDE.md п. 5б): суцільні кольори палітри, типографіка, hairline-лінії й рамки (одна лінія), панель beige
@@ -38,12 +39,7 @@
 
 /* ?slots=on (lp.js): огляд місць під майбутні фото/тексти — пунктир навколо [data-slot] і перелік у кутку; на звичайній сторінці не діє */
 .show-slots [data-slot] { outline: var(--size-lp-slot-outline) dashed var(--color-gold); outline-offset: calc(-1 * var(--space-10)); }
-.lp-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-lp-slots); max-height: var(--size-lp-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-barrels-hairline); background: var(--color-teal); color: var(--color-light); list-style: none; }
-
-/* зразки похідних кольорів у design-system.html (розділ «Палітра → Похідні кольори») */
-.swatch--barrels-hairline .swatch__chip { background: linear-gradient(var(--color-barrels-hairline), var(--color-barrels-hairline)), var(--color-teal); } /* напівпрозорі — на своєму тлі */
-.swatch--barrels-amber .swatch__chip { background: var(--color-barrels-amber); }
-.swatch--barrels-ink-muted .swatch__chip { background: var(--color-barrels-ink-paper-muted); }
+.lp-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-lp-slots); max-height: var(--size-lp-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-lp-hairline); background: var(--color-teal); color: var(--color-light); list-style: none; }
 
 /* ---------- hero: фото на весь екран без градієнта й без CSS-оверлея (рішення замовника a2289410); колір тексту — роль теми --lp-hero-ink (D8 піксельно) ---------- */
 .hero--lp { color: var(--lp-hero-ink); }
@@ -138,7 +134,6 @@
 .lp-tile__media { position: relative; container-type: inline-size; display: flex; justify-content: center; color: var(--lp-on-paper); transition: scale var(--duration-base) var(--ease-out); } /* cqw = ширина плитки (= колонок) */
 .lp-room--warm .lp-tile__media, .lp-room--deep .lp-tile__media { color: var(--lp-on-dark); }
 .lp-tile__img { display: block; width: 100%; aspect-ratio: var(--ratio-lp-tile-img); object-fit: cover; border-radius: var(--radius-panel); background: var(--lp-tile-bg, var(--lp-amber)); } /* тло рамки — роль теми (фото пляшок каталогу прозорі) */
-.lp-tile__icon { --icon-size: var(--size-barrels-finish-icon); color: inherit; position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* іконка DS у центрі гравюри */
 @media (hover: hover) {
   .lp-tile:hover .lp-tile__media { scale: var(--scale-lp-finish-hover); }
 }

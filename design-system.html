@@ -122,11 +122,11 @@
         </div>
       </div>
       </div>
-      <p class="demo-label t-kicker">Похідні кольори: бочки (barrels.html). Дозвіл замовника — лише суміші color-mix кольорів палітри; набір зведено до мінімуму (було 14 похідних, лишилось 3; накладку кіл S2 прибрано разом із колами, рев'ю 77dd7d09). Аліасів ролей сторінки немає: кімнати й чорнило — прямі токени палітри (wood = --color-brown, cellar = --color-teal, paper = --color-beige, текст на темному = --color-light / --color-nav-text, на папері = --color-teal, акцент на темному = --color-gold). Amber — лише на темному (рідина гравюри S3, тло розрізу S2); на світлому акценту нема, текст і графіка — --color-teal. Лінії на світлому — токен DS --color-line-soft (окремого «бочкового» немає).</p>
+      <p class="demo-label t-kicker">Похідні кольори шаблону посадкової сторінки (lp: barrels.html, excursions.html). Дозвіл замовника — лише суміші color-mix кольорів палітри; набір зведено до мінімуму (було 14 похідних, лишилось 3; накладку кіл S2 прибрано разом із колами, рев'ю 77dd7d09). Аліасів ролей сторінки немає: кімнати й чорнило — прямі токени палітри (wood = --color-brown, cellar = --color-teal, paper = --color-beige, текст на темному = --color-light / --color-nav-text, на папері = --color-teal, акцент на темному = --color-gold). Amber — лише на темному (рідина гравюри S3, тло розрізу S2); на світлому акценту нема, текст і графіка — --color-teal. Лінії на світлому — токен DS --color-line-soft (окремого «бочкового» немає).</p>
       <div class="ds-grid">
-        <div class="swatch swatch--barrels-hairline"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-barrels-hairline</span><span class="ds-meta t-text" data-token="--color-barrels-hairline"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-gold) 55%, transparent)</span><span class="ds-meta t-text">hairline-лінії на темному: рамка арки S3, лінії розділів S3 (зразок — на --color-teal)</span></div></div>
-        <div class="swatch swatch--barrels-amber"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-barrels-amber</span><span class="ds-meta t-text" data-token="--color-barrels-amber"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-gold) 40%, var(--color-brown))</span><span class="ds-meta t-text">«віскі»: рідина в гравюрі S3, акцент 50 L у S4 (ярлик і пляшки; текст на beige 5.2:1), тло розрізу S2, доки вантажаться фото</span></div></div>
-        <div class="swatch swatch--barrels-ink-muted"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-barrels-ink-paper-muted</span><span class="ds-meta t-text" data-token="--color-barrels-ink-paper-muted"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-teal) 72%, var(--color-beige))</span><span class="ds-meta t-text">другорядний текст на beige: підписи S4, лід і регіони S5, підписи фактів сертифікатів S6 (5.8:1)</span></div></div>
+        <div class="swatch swatch--lp-hairline"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-lp-hairline</span><span class="ds-meta t-text" data-token="--color-lp-hairline"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-gold) 55%, transparent)</span><span class="ds-meta t-text">hairline-лінії на темному: рамка арки S3, лінії розділів S3 (зразок — на --color-teal)</span></div></div>
+        <div class="swatch swatch--lp-amber"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-lp-amber</span><span class="ds-meta t-text" data-token="--color-lp-amber"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-gold) 40%, var(--color-brown))</span><span class="ds-meta t-text">«віскі»: рідина в гравюрі S3, акцент 50 L у S4 (ярлик і пляшки; текст на beige 5.2:1), тло розрізу S2, доки вантажаться фото</span></div></div>
+        <div class="swatch swatch--lp-ink-muted"><div class="swatch__chip"></div><div class="swatch__info"><span class="t-kicker">--color-lp-ink-paper-muted</span><span class="ds-meta t-text" data-token="--color-lp-ink-paper-muted"></span><span class="ds-meta t-text">color-mix(in srgb, var(--color-teal) 72%, var(--color-beige))</span><span class="ds-meta t-text">другорядний текст на beige: підписи S4, лід і регіони S5, підписи фактів сертифікатів S6 (5.8:1)</span></div></div>
       </div>
     </section>
 
@@ -1117,11 +1117,11 @@
         <tr><td>--lp-deep</td><td>кімната deep</td><td>--color-teal</td><td>--color-green</td></tr>
         <tr><td>--lp-paper</td><td>кімната paper</td><td>--color-beige</td><td>--color-beige</td></tr>
         <tr><td>--lp-on-dark / --lp-on-dark-muted</td><td>текст на warm/deep</td><td>--color-light / --color-nav-text</td><td>--color-light / --color-nav-text</td></tr>
-        <tr><td>--lp-on-paper / --lp-on-paper-muted</td><td>текст на paper, панелі</td><td>--color-teal / --color-barrels-ink-paper-muted</td><td>--color-green / --color-green</td></tr>
+        <tr><td>--lp-on-paper / --lp-on-paper-muted</td><td>текст на paper, панелі</td><td>--color-teal / --color-lp-ink-paper-muted</td><td>--color-green / --color-green</td></tr>
         <tr><td>--lp-hero-ink</td><td>текст hero на фото (D8 піксельно)</td><td>--color-teal</td><td>--color-green</td></tr>
         <tr><td>--lp-accent</td><td>кікер, назви шарів, цифри кроків, іконки</td><td>--color-gold</td><td>--color-gold</td></tr>
-        <tr><td>--lp-hairline</td><td>арка, лінії кроків, маршрут</td><td>--color-barrels-hairline</td><td>--color-barrels-hairline</td></tr>
-        <tr><td>--lp-amber</td><td>тло фото, доки вантажиться; рідина гравюри</td><td>--color-barrels-amber</td><td>--color-barrels-amber</td></tr>
+        <tr><td>--lp-hairline</td><td>арка, лінії кроків, маршрут</td><td>--color-lp-hairline</td><td>--color-lp-hairline</td></tr>
+        <tr><td>--lp-amber</td><td>тло фото, доки вантажиться; рідина гравюри</td><td>--color-lp-amber</td><td>--color-lp-amber</td></tr>
         <tr><td>tone (дані)</td><td>тон кнопок .btn--&lt;tone&gt;</td><td>teal</td><td>green</td></tr>
       </table>
 
@@ -1140,21 +1140,21 @@
       </table>
 
       <p class="demo-label t-kicker">layers — бочки «Що дає бочка» (кімната warm; рев'ю 77dd7d09): розріз із чотирьох фото-текстур (AI-фото IMG-T1…T4, Seedream 5 Pro) смугами впритул — межі смуг на початках колонок 4, 7, 10, фото кадрується по центру; під кожною смугою, по лівому краю її 3 колонок, іконка DS .icon--barrels-* (40u, акцент) → назва .t-product-name (акцент) → пояснення .t-desc (--lp-on-dark). Без плашок, накладок, прозорості, рамок і ліній.</p>
-      <div class="demo-panel ds-lp lp-scope theme-barrels"><!--@lp barrels benefits--></div>
+      <div class="demo-panel ds-lp lp-scope theme-barrels lp-page--barrels"><!--@lp barrels benefits--></div>
 
       <p class="demo-label t-kicker">steps — бочки «Від бочки до вашої пляшки» (кімната deep): ЄДИНА арка сторінки (одна hairline-рамка, як арка картки каталогу) з гравюрою partials/media/barrels-scene (без стелажа з двома бочками зверху, рев'ю 3beda44a): data-step секції (lp.js) — активна частина на повну силу, решта приглушена; рівень рідини — стан кроку; цикли — лише активного кроку й лише у в'юпорті. Кроки — рядки однакової висоти; ліва вісь чорнила цифри, назви й пояснення — оптичні поправки теми (--lp-num-optic / --lp-title-optic / --lp-text-optic).</p>
-      <div class="demo-panel ds-lp lp-scope theme-barrels"><!--@lp barrels how--></div>
+      <div class="demo-panel ds-lp lp-scope theme-barrels lp-page--barrels"><!--@lp barrels how--></div>
 
       <p class="demo-label t-kicker">compare + tiles — бочки «Скільки пляшок…» і «Подальша витримка» (одна кімната paper: друга секція з join: true — без межі). Групи 50 L (span 3, start) і 200 L (span 9, center) — subgrid на 5 спільних рядків; стіна пляшок (медіа wall: one | four-minus-one) — маска barrels-bottle-block.svg в ОДНОМУ масштабі (комірка — ціле px; 383 = 4 × 96 − 1), стіни вирівняні по низу рядка. Плитки — гравюра днища partials/media/barrels-head (одне коло-обідок 2px і клепки hairline) + іконка DS у центрі; назва, регіон, ноти (порожні не показуються).</p>
-      <div class="demo-panel ds-lp lp-scope theme-barrels"><!--@lp barrels profit--><!--@lp barrels next--></div>
+      <div class="demo-panel ds-lp lp-scope theme-barrels lp-page--barrels"><!--@lp barrels profit--><!--@lp barrels next--></div>
 
       <p class="demo-label t-kicker">offers — бочки «Ціна» (кімната deep): фото днищ на ВСЮ секцію без затемнення (кадрування — тема: наближення до темної частини, світлий текст ≥ 4.5:1), шапка зі світлим текстом без плашки, маршрут (hairline-лінія + іконка DS .icon--barrels-ship), дві панелі .contacts-panel поруч по 6 колонок.</p>
-      <div class="demo-panel ds-lp lp-scope theme-barrels"><!--@lp barrels price--></div>
+      <div class="demo-panel ds-lp lp-scope theme-barrels lp-page--barrels"><!--@lp barrels price--></div>
 
       <p class="demo-label t-kicker">Варіанти тих самих типів на екскурсіях (тема excursions: deep = --color-green, тон кнопок green; різниця — лише дані, медіа й тема): steps з фото в арці замість гравюри; tiles з фото 3:4 замість гравюри; compare зі списком замість стіни.</p>
-      <div class="demo-panel ds-lp lp-scope theme-excursions"><!--@lp excursions excursion--></div>
-      <div class="demo-panel ds-lp lp-scope theme-excursions"><!--@lp excursions tasting--></div>
-      <div class="demo-panel ds-lp lp-scope theme-excursions"><!--@lp excursions formats--></div>
+      <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions excursion--></div>
+      <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions tasting--></div>
+      <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions formats--></div>
       <p class="ds-meta t-text">card (ІСНУЮЧА .tour-card), place (ІСНУЮЧІ .contacts-panel + .contacts-map) і faq (ІСНУЮЧИЙ faq-group) показано у своїх розділах вище (Компоненти, Контакти, FAQ) — шаблон лише ставить їх на сітку 12 колонок. Анімації: лише transform / opacity / stroke-dashoffset / clip-path появи; нескінченні цикли — на паузі поза в'юпортом, при prefers-reduced-motion вимкнені. Режим огляду ?slots=on: пунктир навколо всіх [data-slot] і перелік місць під фото.</p>
     </section>
 

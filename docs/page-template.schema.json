@@ -159,7 +159,7 @@
       "id": "media-partials-exist",
       "scope": "files",
       "expressed": false,
-      "rule": "`steps.scene` і `tiles.items[].engraving`: є `partials/media/<id>.html`"
+      "rule": "`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].wall` (`wall-…`): є `partials/media/<id>.html`"
     },
     {
       "id": "icons-exist",
@@ -469,7 +469,7 @@
                 "string",
                 "null"
               ],
-              "pattern": "^[a-z0-9-]*$"
+              "pattern": "^(?:|scene-[a-z0-9-]+)$"
             },
             "img": {
               "type": [
@@ -762,12 +762,11 @@
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "wall": {
-                    "enum": [
-                      "one",
-                      "four-minus-one",
-                      "",
-                      null
-                    ]
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^(?:|wall-[a-z0-9-]+)$"
                   },
                   "list": {
                     "type": [
@@ -1056,7 +1055,7 @@
                       "string",
                       "null"
                     ],
-                    "pattern": "^[a-z0-9-]*$"
+                    "pattern": "^(?:|engraving-[a-z0-9-]+)$"
                   },
                   "icon": {
                     "type": [

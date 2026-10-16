@@ -1,0 +1,41 @@
+/* МЕДІА «scene-barrels» (partials/media/scene-barrels.html; шаблон lp, тип steps, поле scene). Ілюстрація — окремий файл: partials/media/scene-<назва>.html + цей CSS;
+   файл підключає плагін lp-auto (tools/vite-plugin-lp.mjs) сам, у загальних файлах (tokens.css, lp.css, lp-media.css) назв ілюстрацій немає. Значення, що належать лише цій
+   гравюрі, — нижче, тут (не в tokens.css). */
+:root {
+  --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
+  --size-barrels-gap: 8;                              /* проміжок між штрихами */
+  --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між кроками */
+  --shift-barrels-cask-empty: 200px;                  /* рівень рідини в бочці (одиниці viewBox 600×700): порожня — нижче дна */
+  --shift-barrels-cask-angels: 32px;                  /* після витримки (≈15% умовних втрат) */
+  --shift-barrels-cask-bottled: 118px;                /* під час розливу */
+  --shift-barrels-bottle-empty: 104px;                /* пляшка порожня до кроку «Розлив» */
+  --shift-barrels-wisp-from: 10px;                    /* пара «частки ангелів»: підйом вгору й згасання */
+  --shift-barrels-wisp-to: -22px;
+}
+
+/* ---------- scene «barrels-scene» (кроки «від бочки до пляшки»): SVG 600×700, притиснута донизу (xMidYMax meet) всередині арки ----------
+   Активний крок (data-step секції, lp.js) — його частина на повну силу, решта приглушена; рівень рідини — СТАН кроку (transition). */
+.lp-scene { position: absolute; inset: var(--space-lp-scene-inset); width: calc(100% - 2 * var(--space-lp-scene-inset)); height: calc(100% - 2 * var(--space-lp-scene-inset)); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.lp-sc-hair { stroke-width: var(--svg-stroke-hair); }
+.lp-sc-soft { opacity: var(--opacity-disabled); } /* другорядні лінії сцени (підлога, тінь) — те саме золото, приглушене */
+.lp-sc-liquid { fill: var(--lp-amber); stroke: none; }
+.lp-sc-meniscus { stroke-width: var(--svg-stroke-hair); }
+.lp-sc-flow { stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); }
+.lp-sc-wisp { transform-box: fill-box; }
+.lp-sc-part { transition: opacity var(--duration-barrels-step) var(--ease-out); }
+.lp-sc-level { transition: transform var(--duration-barrels-step) var(--ease-out); }
+.js [data-steps] .lp-sc-part { opacity: var(--opacity-disabled); }
+.js [data-steps][data-step="1"] .lp-sc-part--pour,
+.js [data-steps][data-step="2"] .lp-sc-part--angels,
+.js [data-steps][data-step="3"] .lp-sc-part--bottle { opacity: 1; }
+.js [data-steps][data-step="0"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-empty)); }
+.js [data-steps][data-step="2"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-angels)); }
+.js [data-steps][data-step="3"] .lp-sc-level--cask { transform: translateY(var(--shift-barrels-cask-bottled)); }
+.js [data-steps]:not([data-step="3"]) .lp-sc-level--bottle { transform: translateY(var(--shift-barrels-bottle-empty)); }
+@keyframes lp-sc-flow { to { stroke-dashoffset: calc((var(--size-barrels-dash) + var(--size-barrels-gap)) * -1); } }
+@keyframes lp-sc-rise { 0% { transform: translateY(var(--shift-barrels-wisp-from)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(var(--shift-barrels-wisp-to)); opacity: 0; } }
+.js [data-steps].is-playing[data-step="1"] .lp-sc-stream,
+.js [data-steps].is-playing[data-step="3"] .lp-sc-pipe { animation: lp-sc-flow var(--duration-flow) linear infinite; }
+.js [data-steps].is-playing[data-step="2"] .lp-sc-wisp { animation: lp-sc-rise var(--duration-loop-mid) var(--ease-loop) infinite; }
+.lp-sc-wisp--2 { animation-delay: calc(var(--duration-loop-mid) / -3); }
+.lp-sc-wisp--3 { animation-delay: calc(var(--duration-loop-mid) / -3 * 2); }

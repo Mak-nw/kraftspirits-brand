@@ -47,7 +47,7 @@ function fillValue(def, path, o = {}) {
     case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
     case 'url': { const m = `${def.startsWith || '/'}q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
-    case 'partial': return path.endsWith('scene') ? 'barrels-scene' : 'barrels-head';
+    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-one';
     case 'icon': return 'pin';
     case 'enum': return def.values[0];
     case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
@@ -77,10 +77,10 @@ function variantsOf(type) {
     const b = clone(s); delete b.text; out.push(['list', b]);
   } else if (type === 'compare') {
     const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 9; g.approx = false; });
-    a.groups[0].wall = 'one'; delete a.groups[0].list; // група 1 — wall
+    a.groups[0].wall = 'wall-barrels-one'; delete a.groups[0].list; // група 1 — wall
     a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
     out.push(['wall+list', a]);
-    const b = clone(a); b.groups[1].wall = 'four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
+    const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
   } else out.push(['', s]);
   return out;
 }
@@ -154,7 +154,8 @@ function mutantsFor(def, key, type) {
         ['порожній', '', opt], ['відсутнє', DEL, opt]);
       break;
     case 'id': case 'partial': case 'icon':
-      m.push(['велика літера', 'Ab', false], ['пробіл', 'a b', false], ['валідний', 'a-b-1', key === 'key' ? true : true], ['порожній', '', opt], ['відсутнє', DEL, opt]);
+      m.push(['велика літера', 'Ab', false], ['пробіл', 'a b', false], ['валідний', def.kind ? `${def.kind}-x-1` : 'a-b-1', true], ['порожній', '', opt], ['відсутнє', DEL, opt]);
+      if (def.kind) m.push(['без префікса виду', 'a-b-1', false], ['чужий вид', `${def.kind === 'scene' ? 'wall' : 'scene'}-x`, false]);
       break;
     case 'enum':
       m.push(['поза переліком', 'zzz', false], ['рядок замість числа', String(def.values[0]) === def.values[0] ? 5 : String(def.values[0]), false], ['відсутнє', DEL, opt]);
@@ -290,7 +291,7 @@ if (realFiles) {
   fileCase('href на неіснуючу сторінку', (p) => { p.sections[0].cta.href = 'nopage.html'; }, 'nopage.html');
   fileCase('%contacts.ключ% не існує', (p) => { p.sections[0].cta.href = '%contacts.nope%'; }, '%contacts.nope%');
   const withScene = Object.values(real).map((pg) => [pg, pg.sections.find((x) => x.type === 'steps' && x.scene)]).find(([, x]) => x);
-  if (withScene) { const [pg] = withScene; const p = clone(pg); p.sections.find((x) => x.type === 'steps').scene = 'nope'; let msg = ''; try { validatePage(clone(p)); checkFiles(p, { root: ROOT, contactKeys }); } catch (e) { msg = e.message; } note(msg.includes('partials/media/nope.html'), 'файли: scene не існує', msg); }
+  if (withScene) { const [pg] = withScene; const p = clone(pg); p.sections.find((x) => x.type === 'steps').scene = 'scene-nope'; let msg = ''; try { validatePage(clone(p)); checkFiles(p, { root: ROOT, contactKeys }); } catch (e) { msg = e.message; } note(msg.includes('partials/media/scene-nope.html'), 'файли: scene не існує', msg); }
 }
 console.log(`lp-contract: перевірок ${total}, з них мутацій полів ${mutCount}; розбіжностей ${bad}`);
 const inexpressible = RULES.filter((r) => !r.json).map((r) => r.id);

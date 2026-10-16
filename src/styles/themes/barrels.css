@@ -1,4 +1,4 @@
-/* ТЕМА «barrels» (barrels.html, Bazylsprings): ролі кольорів шаблону → палітра DS, кадрування медіа й оптичні поправки, виміряні під текст бочок.
+/* ТЕМА «barrels» (Bazylsprings): ЛИШЕ ролі кольорів шаблону lp → палітра DS (кадр фото й оптика тексту — окремо: src/styles/pages/barrels.css).
    Рішення замовника: основа — коричневий + синій Bazylsprings замість зеленого YasnoCraft. Нових кольорів немає: лише палітра й похідні color-mix DS. */
 .theme-barrels {
   /* кімнати */
@@ -9,23 +9,10 @@
   --lp-on-dark: var(--color-light);
   --lp-on-dark-muted: var(--color-nav-text);
   --lp-on-paper: var(--color-teal);
-  --lp-on-paper-muted: var(--color-barrels-ink-paper-muted);
+  --lp-on-paper-muted: var(--color-lp-ink-paper-muted);
   --lp-hero-ink: var(--color-teal);                 /* текст hero — темний teal на світлому небі чистого фото (D8) */
   --lp-accent: var(--color-gold);                   /* кікер, назви шарів, цифри кроків, іконки на темному */
-  --lp-hairline: var(--color-barrels-hairline);     /* арка, лінії кроків, лінія маршруту */
-  --lp-amber: var(--color-barrels-amber);           /* рідина гравюри, тло розрізу, доки вантажаться фото */
+  --lp-hairline: var(--color-lp-hairline);     /* арка, лінії кроків, лінія маршруту */
+  --lp-amber: var(--color-lp-amber);           /* рідина гравюри, тло розрізу, доки вантажаться фото */
   --lp-tone: teal;                                  /* тон основних кнопок DS (.btn--teal) на світлому/фото; читає збірка (tools/lp-files.mjs); у даних сторінки `tone` необов'язковий */
 }
-/* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
-.theme-barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-origin: var(--origin-barrels-price-bg); }
-/* оптика H2 по центру (чорнило «Щ…А», «С…?», «П…А», «Ц…А») */
-.theme-barrels #benefits .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-benefits); }
-.theme-barrels #profit .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-profit); }
-.theme-barrels #next .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-next); }
-.theme-barrels #price .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-price); }
-/* оптика кроків: ліва вісь чорнила цифр «63%», «≈15%», «40%», назв «З/В/Р» і пояснень «У/П/П» */
-.theme-barrels .lp-step--pour { --lp-num-optic: var(--shift-barrels-numeral-pour); --lp-title-optic: var(--shift-barrels-title-round); }
-.theme-barrels .lp-step--angels { --lp-num-optic: var(--shift-barrels-numeral-angels); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
-.theme-barrels .lp-step--bottle { --lp-num-optic: var(--shift-barrels-numeral-bottle); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
-/* оптика груп і пропозицій: «Б» назв, «€» цін, «П/В» підписів, «≈» фактів */
-.theme-barrels .lp-group, .theme-barrels .lp-offer { --lp-label-optic: var(--shift-barrels-cert-title-ink); --lp-price-optic: var(--shift-barrels-price-ink); --lp-fact-optic: var(--shift-barrels-fact-ink); --lp-caption-optic: var(--shift-barrels-caption-ink); --lp-approx-optic: var(--shift-lp-approx-ink); }

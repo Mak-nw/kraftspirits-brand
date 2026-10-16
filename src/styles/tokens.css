@@ -190,7 +190,7 @@
   --duration-liquid: 1.4s;          /* семантичний токен, вузла Figma немає: підйом/спад «рідини» в картці товару на hover */
   --ease-liquid: cubic-bezier(0.4, 0.1, 0.25, 1);  /* семантичний токен, вузла Figma немає: м'якший (менш різкий старт) підйом/спад «рідини»; --ease-out для неї надто різкий */
   --duration-wave: 4s;            /* семантичний токен, вузла Figma немає: період дрейфу хвилі «рідини» (нескінченний цикл, поки hover) */
-  --duration-count-failsafe: 4s;    /* семантичний токен, вузла Figma немає: страховка лічильників barrels — через стільки число з'являється саме, якщо JS не спрацював */
+  --duration-count-failsafe: 4s;    /* семантичний токен, вузла Figma немає: страховка лічильників lp — через стільки число з'являється саме, якщо JS не спрацював */
   --liquid-wave-h: calc(24 * var(--u));  /* семантичний токен, вузла Figma немає: висота хвилястого краю «рідини» (маска public/assets/img/liquid-wave.svg) */
   --opacity-liquid-back: 0.45;      /* семантичний токен, вузла Figma немає: прозорість заднього шару хвилі */
   --liquid-fill-level: 60%;         /* семантичний токен, вузла Figma немає (рішення замовника): рівень «рідини» на hover — заливка займає 60% висоти картки знизу (верх тіла заливки на 40% від верху; хвиля над ним на --liquid-wave-h) */
@@ -832,10 +832,10 @@
 }
 
 /* ===================================================================
-   ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (lp: barrels.html, excursions.html; docs/page-template.md, design-system.html#page-template).
-   Сторінка = дані (src/data/<сторінка>.js за єдиною схемою src/data/lp-schema.js) + медіа + тема (src/styles/themes/<тема>.css: лише кольори
-   кімнат/чорнила, кадрування медіа й оптичні поправки, виміряні під конкретний текст). Секції — partials/lp/<type>.html, стилі — src/styles/lp.css,
-   ілюстрації-медіа (гравюри SVG, стіна пляшок) — partials/media/* + src/styles/lp-media.css, логіка — src/js/lp.js. Сторінкового CSS на блок немає.
+   ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (lp; docs/page-template.md, design-system.html#page-template).
+   Сторінка = дані (src/data/<сторінка>.js за єдиною схемою src/data/lp-schema.js) + медіа + тема (src/styles/themes/<тема>.css: ЛИШЕ ролі кольорів).
+   Секції — partials/lp/<type>.html, стилі — src/styles/lp.css, логіка — src/js/lp.js. Токени тут — лише загальні для будь-якої сторінки; значення, що належать
+   одній ілюстрації чи сторінці, лежать у її файлі (src/styles/media/<вид>-<назва>.css — гравюри й стіни; src/styles/pages/<сторінка>.css — оптика чорнила й кадр фото).
    Словник — лише елементи design-system.html (CLAUDE.md п. 5б): кольори палітри, типографіка, hairline-лінії й рамки, панель beige + --radius-panel,
    кнопки й список DS. Без ромбів-маркерів, подвійних рамок, світіння, зерна. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12):
    поля 47.5u, зазор 40u, вміст 1825u. Шапки секцій — по центру. Історія рішень — рев'ю бочок (коментарі нижче).
@@ -863,9 +863,9 @@
 
   /* ПОХІДНІ кольори (дозвіл замовника: лише color-mix палітри; зведено до мінімального набору, задокументовано в design-system.html →
      «Палітра → Похідні кольори: бочки»). Використовуються темами (src/styles/themes/*) як ролі --lp-*. Лінії на світлому — токен DS --color-line-soft. */
-  --color-barrels-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамка на темному: арка кроків, лінії кроків */
-  --color-barrels-amber: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));  /* «віскі»: рідина в гравюрі кроків, тло розрізу шарів, доки вантажаться фото */
-  --color-barrels-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* другорядний текст на «папері» теми бочок: контраст на beige ≈ 5.5:1 */
+  --color-lp-hairline: color-mix(in srgb, var(--color-gold) 55%, transparent);       /* hairline-лінії й рамка на темному: арка кроків, лінії кроків */
+  --color-lp-amber: color-mix(in srgb, var(--color-gold) 40%, var(--color-brown));  /* «віскі»: рідина в гравюрі кроків, тло розрізу шарів, доки вантажаться фото */
+  --color-lp-ink-paper-muted: color-mix(in srgb, var(--color-teal) 72%, var(--color-beige)); /* другорядний текст на «папері» теми бочок: контраст на beige ≈ 5.5:1 */
 
   /* шапка секції і ритм */
   --space-lp-stack: var(--space-20);              /* вертикальний ритм шапки секції (кікер → заголовок → лід) */
@@ -883,18 +883,6 @@
   /* layers («розріз»: рев'ю 77dd7d09): фото-текстури смугами впритул в одній рамці на 12 колонок; під кожною смугою — іконка, назва, пояснення */
   --size-lp-layer-band-h: calc(var(--grid-col) + var(--grid-gap)); /* висота розрізу = колонка + зазор (≈155u): смуга, співмірна з підписом під нею (іконка + назва + пояснення ≈ 120u) */
   --size-lp-layer-icon: calc(40 * var(--u));     /* іконка шару (DS .icon--*, 24×24, лінія 1.5) — як іконка маршруту, 40u */
-
-  /* МЕДІА «стіна пляшок» (compare, тема бочок): 50 L — колонки 1–3, 200 L — 4–12; один масштаб: 50 L = 1 блок 16 × 6 = 96, 200 L = 4 блоки (383 = 4 × 96 − 1).
-     Комірка (одна пляшка) — ціле px, щоб маска лягала на пікселі */
-  --span-barrels-ledger-50: 3;
-  --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
-  --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками 200 L (фактичний — рівномірний розподіл на всю ширину) */
-  --size-barrels-wall-200-w: calc((var(--grid-cols) - var(--span-barrels-ledger-50)) * var(--grid-col) + (var(--grid-cols) - var(--span-barrels-ledger-50) - 1) * var(--grid-gap)); /* колонки 4–12 */
-  --size-barrels-wall-cell-w: round(down, calc((var(--size-barrels-wall-200-w) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* 4 блоки + 3 мін. проміжки ≤ колонки 4–12 */
-  --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція комірки-пляшки 22×50 (маска barrels-bottle-block.svg) */
-  --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
-  --size-barrels-block-h: calc(var(--count-barrels-block-rows) * var(--size-barrels-wall-cell-h));
-  --shift-barrels-wall-ink: calc(var(--size-barrels-wall-cell-w) * -3 / 22); /* оптика: поле плитки 3/22 — чорнило крайніх пляшок на лініях колонок */
 }
 
 :root {
@@ -944,46 +932,6 @@
   /* place: панель DS (.contacts-panel) і мапа DS (.contacts-map) на сітці: 5 + 7 колонок */
   --span-lp-place-panel: 5;
   --size-lp-place-h: calc(640 * var(--u));       /* висота ряду «панель + мапа» (як мінімум панелі контактів) */
-}
-
-/* ---------- ТЕМА «бочки» (src/styles/themes/barrels.css): медіа (гравюри, кадрування фото) і оптичні поправки, виміряні під текст бочок ---------- */
-:root {
-  /* гравюра кроків (partials/media/barrels-scene.html) */
-  --size-barrels-dash: 6;                             /* довжина штриха струменя/труби (одиниці viewBox) */
-  --size-barrels-gap: 8;                              /* проміжок між штрихами */
-  --duration-barrels-step: var(--duration-reveal);    /* перехід стану гравюри між кроками */
-  --shift-barrels-cask-empty: 200px;                  /* рівень рідини в бочці (одиниці viewBox 600×700): порожня — нижче дна */
-  --shift-barrels-cask-angels: 32px;                  /* після витримки (≈15% умовних втрат) */
-  --shift-barrels-cask-bottled: 118px;                /* під час розливу */
-  --shift-barrels-bottle-empty: 104px;                /* пляшка порожня до кроку «Розлив» */
-  --shift-barrels-wisp-from: 10px;                    /* пара «частки ангелів»: підйом вгору й згасання */
-  --shift-barrels-wisp-to: -22px;
-  /* гравюра днища плиток (partials/media/barrels-head.html) */
-  --size-barrels-finish-head: 76cqw;                       /* гравюра днища (одне коло-обідок hairline + клепки в кільці навколо значка) — частка ширини колонки */
-  --border-barrels-rim: calc(2 * var(--border-hairline));  /* обідок днища — 2px (клепки лишаються hairline 1px; рев'ю 3cc0afdd) */
-  --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.2);                      /* значок вина (іконка DS, 24×24, лінія 1.5) у центрі днища */
-  /* кадрування фото «Ціни» */
-  --scale-barrels-price-bg: 2;                        /* наближення кадру (origin праворуч): шапка лягає на темну розмиту частину бочок */
-  --origin-barrels-price-bg: 100% 55%;
-  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото секції: ряд днищ */
-  /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
-     центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
-  --shift-barrels-h2-center-benefits: -0.026em;       /* «Що дає бочка» */
-  --shift-barrels-h2-center-profit: 0.023em;          /* «Скільки пляшок ви отримаєте?» */
-  --shift-barrels-h2-center-next: -0.031em;           /* «Подальша витримка» */
-  --shift-barrels-h2-center-price: -0.030em;          /* «Ціна» */
-  /* оптика кроків: лівий край чорнила цифр-гігантів, назв і пояснень на одній осі (виміряно по чорнилу, DPR 3, 1200/1440/1728/1920) */
-  --shift-barrels-numeral-pour: -0.0465em;            /* бокові поля гліфів EB Garamond 240u: «6» ≈0.047em, «≈» ≈0.071em, «4» ≈0.018em */
-  --shift-barrels-numeral-angels: -0.0715em;
-  --shift-barrels-numeral-bottle: -0.0175em;
-  --shift-barrels-title-round: -0.025em;              /* перша капітель з круглим боком (З) має ширше бокове поле */
-  --shift-barrels-title-stem: -0.005em;               /* …перша капітель зі штамбом (В, Р) */
-  --shift-barrels-copy-stem: -0.04em;                 /* перша літера пояснення зі штамбом (П) */
-  /* оптика груп і пропозицій */
-  --shift-barrels-cert-title-ink: -0.025em;           /* «Бочка …»: бокове поле «Б» — на лівій осі */
-  --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту на 2–3px (виміряно чорнилом) — зсув праворуч */
-  --shift-barrels-fact-ink: -0.06em;                  /* підписи фактів («Пляшок…», «Вартість…»): бокове поле «П»/«В» */
-  --shift-barrels-caption-ink: -0.04em;               /* підписи груп («пляшок…», «вартість…»): бокове поле першої літери */
 }
 
 /* ---------- Коктейлі (cocktails.html, partials/components/cocktail.html, lightbox.html) ----------
