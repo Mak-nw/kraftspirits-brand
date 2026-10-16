@@ -78,7 +78,7 @@ export const SCHEMA = {
     }), 2, 3, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти
     tiles: { ...BASE, room: E(ROOMS, false, 'paper'), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
-    // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + рядок контактів (foot)
+    // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
     offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true, { divides: GRID_COLS }),
