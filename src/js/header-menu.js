@@ -97,3 +97,10 @@ function init(header) {
 }
 
 document.querySelectorAll('.site-header').forEach(init);
+
+// те саме для меню футера (partials/footer.html — на кожній сторінці разом із цим скриптом): aria-current="page" на посиланні на поточну сторінку;
+// візуального стану немає (стилів [aria-current] у футері немає) — лише семантика для читачів екрана
+{
+  const here = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.site-footer a[href$=".html"]').forEach((a) => { if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page'); });
+}
