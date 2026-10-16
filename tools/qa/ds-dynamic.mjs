@@ -414,13 +414,13 @@ export async function runDynamic(opts, allow, rep) {
     if (d16ctl !== null && d16ctl === 0) addV({ rule: 'D16', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'зламана ширина кнопок (width:min-content; padding 0) НЕ дала порушень — D16 не працює' });
     rep.info({ rule: 'D16', msg: `кнопки ${d16.reduce((n, c) => n + c.data.length, 0)} записів (default/hover/focus) на ${d16.length} сторінко-ширинах; порушень ${bad.length}; позитивний контроль: ${d16ctl} порушень на зламаній ширині` });
   }
-  // D17: заголовки (.t-hero/.t-h2) по центру = 4 колонки, легальні — лівим краєм ≤ 4 колонки; слова не розриваються + позитивний контроль (12 колонок МАЄ дати порушення)
+  // D17: заголовки (.t-hero/.t-h2) по центру = 4 колонки, легальні — лівим краєм ≤ 4 колонки; слова не розриваються + позитивний контроль (10 колонок МАЄ дати порушення)
   if (want17) {
     const a = analyzeD17(d17, d17cfg);
     for (const v of a.violations) addV({ rule: 'D17', ...v });
     for (const m of [...new Set(a.info)].slice(0, 20)) rep.info({ rule: 'D17', msg: m });
-    if (d17ctl !== null && d17ctl === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'ширина заголовка 12 колонок НЕ дала порушень — D17 не працює' });
-    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (12 колонок): ${d17ctl} порушень` });
+    if (d17ctl !== null && d17ctl === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'ширина заголовка 10 колонок НЕ дала порушень — D17 не працює' });
+    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (10 колонок): ${d17ctl} порушень` });
   }
   // D15: шапка і меню
   if (want15) {

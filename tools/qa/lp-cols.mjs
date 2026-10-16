@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // Поля `cols` (ширина вмісту секції в колонках) і `pad` (вертикальний відступ секції) шаблону lp — геометрія у браузері.  npm run qa:lp-cols
 //   cols: для кожної секції з класом lp-cols--N контейнер вмісту (.lp-*__grid / .faq-page__grid) = --grid-span-N (±1px), стоїть по центру сторінки,
-//     лівий край — на початку колонки (12−N)/2+1, правий — на кінці колонки (12+N)/2 (для 10: колонки 2 і 11). Плитки (tiles), що не діляться на колонки контейнера
+//     лівий край — на початку колонки (10−N)/2+1, правий — на кінці колонки (10+N)/2 (для 8: колонки 2 і 9; 6: 3 і 8). Плитки (tiles), що не діляться на колонки контейнера
 //     (клас lp-tiles__grid--eq, напр. 4 на 10): n рівних блоків із зазором --grid-gap, діаметр кола = (ширина контейнера − (n−1)·зазор)/n.
 //   pad: секція з класом lp-pad--N має padding-top = --space-N; padding-bottom = --space-N, крім випадків, коли наступна секція — стек (padding-bottom 0) або join (--space-lp-room-join).
-//   Позитивні контролі (в тому ж прогоні): (а) контейнер розтягнуто на 12 колонок (--lp-w: --grid-w) — перевірка cols МАЄ дати порушення; (б) плитки зі зміненою шириною (рівний
+//   Позитивні контролі (в тому ж прогоні): (а) контейнер розтягнуто на 10 колонок (повна сітка) (--lp-w: --grid-w) — перевірка cols МАЄ дати порушення; (б) плитки зі зміненою шириною (рівний
 //   поділ зламано) — МАЄ дати порушення; (в) pad перебито на 150u — МАЄ дати порушення.
 // Код виходу: 0 — усе гаразд, 1 — порушення / контроль не спрацював, 2 — збій. Параметри: --url (за замовч. http://localhost:5200/), --widths, --scrollbar, --pages (за замовч. excursions).
+const GRID_COLS = 10; // tokens.css --grid-cols (рішення замовника: весь сайт на 10 колонок)
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, sleep } from './lib.mjs';
 
 const PROBE = () => {
@@ -16,7 +17,7 @@ const PROBE = () => {
   const cols = [...document.querySelectorAll('[class*="lp-cols--"]')].map((sec) => {
     const n = +(sec.className.match(/lp-cols--(\d+)/) || [])[1];
     const c = sec.querySelector(GRIDS); const b = c.getBoundingClientRect(); const sb = sec.getBoundingClientRect();
-    const center = sb.left + sb.width / 2; const k = (12 - n) / 2;
+    const center = sb.left + sb.width / 2; const k = (GRID_COLS - n) / 2;
     const out = { id: sec.id, n, left: b.left, width: b.width, expWidth: px(`var(--grid-span-${n})`), center, cx: b.left + b.width / 2, k, gridLeft: center - gridW / 2, step, gridW };
     const eq = sec.querySelector('.lp-tiles__grid--eq');
     if (eq) {
@@ -65,10 +66,12 @@ await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pag
         const label = `${spec.label}@${combo.width}${combo.scrollbar === 'classic' ? '' : '/' + combo.scrollbar}`;
         const page = await openPage(L.browser, pageUrl(o.url, spec, 'static'), { width: combo.width, height: 1080, dpr: 1 });
         await sleep(400);
+        // у даних сторінок `cols` не задано (10 = уся сітка = типово), тож механізм перевіряється синтетично: клас lp-cols--8 (tiles/offers) і lp-cols--6 (faq) ставимо на справжні секції, якщо реального cols немає
+        await page.evaluate(() => { if (document.querySelector('[class*="lp-cols--"]')) return; for (const g of document.querySelectorAll('.lp-tiles__grid, .lp-offers__grid, .faq-page__grid')) g.closest('.lp-sec')?.classList.add(g.matches('.faq-page__grid') ? 'lp-cols--6' : 'lp-cols--8'); });
         const d = await page.evaluate(PROBE);
         colsCount += d.cols.length; padCount += d.pads.length; eqCount += d.cols.filter((c) => c.eq).length;
         check(d, rep, label);
-        if (d.cols.length && ctl.wide === null) { // (а) контейнер на 12 колонок — має ловитися
+        if (d.cols.length && ctl.wide === null) { // (а) контейнер на 10 колонок — має ловитися
           await page.addStyleTag({ content: '[class*="lp-cols--"] { --lp-w: var(--grid-w) !important; }' });
           const dd = await page.evaluate(PROBE); ctl.wide = check(dd, { add() {} }, 'ctl');
         }
@@ -84,8 +87,8 @@ await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pag
       }
     } finally { await L.close(); }
   }
-  rep.info({ rule: 'COLS', msg: `секцій з cols ${colsCount} (з них рівний поділ ${eqCount}), з pad ${padCount} на ${o.widths.length * o.scrollbar.length} комбінаціях; контролі: «контейнер на 12 колонок» ${ctl.wide} порушень, «зламаний рівний поділ» ${ctl.eq} порушень, «pad 150u» ${ctl.pad} порушень` });
-  if (colsCount && !ctl.wide) rep.add({ rule: 'COLS', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'контейнер завширшки 12 колонок НЕ дав порушення — перевірка cols не працює' });
+  rep.info({ rule: 'COLS', msg: `секцій з cols ${colsCount} (з них рівний поділ ${eqCount}), з pad ${padCount} на ${o.widths.length * o.scrollbar.length} комбінаціях; контролі: «контейнер на 10 колонок» ${ctl.wide} порушень, «зламаний рівний поділ» ${ctl.eq} порушень, «pad 150u» ${ctl.pad} порушень` });
+  if (colsCount && !ctl.wide) rep.add({ rule: 'COLS', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'контейнер завширшки 10 колонок НЕ дав порушення — перевірка cols не працює' });
   if (eqCount && !ctl.eq) rep.add({ rule: 'COLS-EQ', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'зламаний рівний поділ НЕ дав порушення — перевірка не працює' });
   if (padCount && !ctl.pad) rep.add({ rule: 'PAD', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'pad 150u НЕ дав порушення — перевірка не працює' });
   return rep;

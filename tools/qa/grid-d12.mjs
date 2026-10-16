@@ -1,31 +1,32 @@
 // D12: прив'язка блоків до колонок сітки. Збір геометрії — у браузері (COLLECT_GRID), аналіз — у Node (analyzeGrid).
 // Підключається з ds-dynamic.mjs (правило D12) і з tools/qa/grid-overlay.mjs (скрін-оверлей сітки). Опис — tools/qa/README.md.
 //
-// Сітка (профіль): 12 колонок, контейнер = в'юпорт − 2×поле, gap між колонками; усе в u (1u = clientWidth/1920, як у tokens.css).
-//   початок колонки k (0..11) = поле + k·(колонка + gap); кінець = початок + колонка; колонка = (контейнер − 11·gap)/12.
+// Сітка (профіль): 10 колонок (рішення замовника 16.10.2026 «весь сайт на 10 колонок»), контейнер = в'юпорт − 2×поле, gap між колонками; усе в u (1u = clientWidth/1920, як у tokens.css).
+//   початок колонки k (0..9) = поле + k·(колонка + gap); кінець = початок + колонка; колонка = (контейнер − 9·gap)/10 = 115.42u.
 // Лівий край блока має збігатися з ПОЧАТКОМ колонки, правий — з КІНЦЕМ колонки; ширина = n колонок + (n−1)·gap.
 // Допуск: ≤ okPx (0.5) — норма; okPx…failPx (≤1) — «підозріле»; > failPx (1px) — порушення.
 // Виняток-bleed: край блока на краю в'юпорта (0 / clientWidth) — це «на всю ширину», не перевіряється; внутрішній край
 //   блока, що виходить за один із країв (напр. половинка екрана), може лежати на осі в'юпорта або середині gap.
 
 export const GRID_DEFAULTS = {
-  cols: 12,
+  cols: 10,
   okPx: 0.5,
   failPx: 1,
   minBlockU: 60,        // блоки вужчі за 60u не перевіряються (значки, дрібні підписи)
   minHeightU: 20,
   profiles: {
-    catalog: { marginU: 47.5, gapU: 40, panelGapU: 5, note: 'ЄДИНА сітка сайту (tokens.css: --grid-margin/--grid-gap/--grid-col): 12 колонок, поле 47.5u, gap 40u, колонка 115.42u, ширина 1825u' },
+    catalog: { marginU: 202.9, gapU: 40, panelGapU: 5, note: 'ЄДИНА сітка сайту (tokens.css: --grid-margin/--grid-gap/--grid-col): 10 колонок, поле 202.9u, gap 40u, колонка 115.42u, ширина 1514.2u' },
   },
   pageProfile: { default: 'catalog' }, // одна сітка для всіх сторінок (рішення замовника 16.10.2026); окремих профілів 50u/5u більше нема
   regionProfile: { header: 'catalog', footer: 'catalog' }, // header/footer однакові на всіх сторінках → єдина еталонна сітка (не залежить від профілю сторінки)
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', '.nav-link', 'button', 'input', 'select', 'textarea', 'label', '.visually-hidden', '.skip-link', '.hit-area', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs' /* мініатюри — накладка всередині фото з відступом-токеном, не блок сітки */],
   noRecordSelectors: ['dt', 'dd', 'li', 'td', 'th', 'tr', 'option'], // комірки/пункти списків: перевіряється їхній контейнер (ul/dl/table), не кожен пункт
+  recordAlwaysSelectors: ['li.lp-layer'], // виняток із noRecordSelectors: пункти layers — n рівних блоків контейнера (4 на 10 колонок), схема «рівний поділ» (applyEqualDivision) приймає їхні внутрішні шви; діти (назва, текст) успадковують перевірений ліво-край пункту
   deep: false,          // true: заходити всередину карток/панелей із власним фоном/рамкою (за замовч. картка = завершений компонент)
 };
 
 /** Параметри сітки для ширини в'юпорта */
-export function gridFor(profile, vw, u, cols = 12) {
+export function gridFor(profile, vw, u, cols = 10) {
   const margin = profile.marginU * u, gap = profile.gapU * u;
   const inner = vw - 2 * margin;
   const col = (inner - (cols - 1) * gap) / cols;
@@ -57,6 +58,7 @@ export function COLLECT_GRID(cfg) {
   const inkWidth = (el) => { const rg = document.createRange(); rg.selectNodeContents(el); const rs = [...rg.getClientRects()].filter((q) => q.width > 0 && q.height > 0); if (!rs.length) return 0; return Math.max(...rs.map((q) => q.right)) - Math.min(...rs.map((q) => q.left)); };
   const skipSel = cfg.skipSelectors.join(',');
   const noRecSel = (cfg.noRecordSelectors || []).join(',');
+  const recSel = (cfg.recordAlwaysSelectors || []).join(',');
 
   const walk = (el, anc) => {
     for (const c of el.children) {
@@ -83,7 +85,7 @@ export function COLLECT_GRID(cfg) {
       const blockKids = [...c.children].some((k) => { const d = getComputedStyle(k).display; return d !== 'inline' && d !== 'none' && d !== 'contents' && !SKIP_TAGS.has(k.tagName.toUpperCase()); });
       const box = hasBox(cs);
       let rec = null; let nextAnc = anc;
-      const structural = !inline && (media || leaf || blockKids || box) && r.width >= minW && r.height >= minH && !(noRecSel && c.matches(noRecSel) && !box);
+      const structural = !inline && (media || leaf || blockKids || box) && r.width >= minW && r.height >= minH && !(noRecSel && c.matches(noRecSel) && !box && !(recSel && c.matches(recSel)));
       if (!structural) { if (!inline && r.width < minW) out.stats.small++; }
       else {
         const bleedL = r.left <= 1.0, bleedR = r.right >= vw - 1.0;

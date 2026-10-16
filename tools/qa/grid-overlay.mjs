@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Скрін-оверлей сітки: малює 12 колонок (кольорові смуги) поверх сторінки + контури блоків, яких торкається D12
+// Скрін-оверлей сітки: малює 10 колонок (кольорові смуги) поверх сторінки + контури блоків, яких торкається D12
 // (зелений — на межах колонок, жовтий — підозріле 0.5–1px, червоний — порушення >1px). Лише для звіту, у сайт нічого не додає.
 //   node tools/qa/grid-overlay.mjs [--url http://localhost:5200/] [--pages index,catalog,"product?id=gin-yasnyi",contacts,barrels,cocktails]
 //        [--widths 1440] [--profile catalog|product|auto] [--out reports/grid] [--full-page] [--no-blocks]
@@ -56,7 +56,7 @@ export async function runOverlay(o) {
       const profName = o.profile && o.profile !== 'auto' ? o.profile : a.profile;
       const grid = gridFor(cfg.profiles[profName], data.vw, data.u, cfg.cols);
       const blocks = a.results.map((r) => ({ L: r.block.L, T: r.block.T, W: r.block.W, H: r.block.H, status: r.ev.status }));
-      await page.evaluate(DRAW, { grid, blocks, showBlocks: !o.noBlocks, label: `${spec.label} @${w}px · сітка «${profName}»: 12 кол, поле ${cfg.profiles[profName].marginU}u, gap ${cfg.profiles[profName].gapU}u · блоків ${a.counts.total}: ✓${a.counts.ok} ~${a.counts.suspect} ✗${a.counts.fail}` });
+      await page.evaluate(DRAW, { grid, blocks, showBlocks: !o.noBlocks, label: `${spec.label} @${w}px · сітка «${profName}»: 10 кол, поле ${cfg.profiles[profName].marginU}u, gap ${cfg.profiles[profName].gapU}u · блоків ${a.counts.total}: ✓${a.counts.ok} ~${a.counts.suspect} ✗${a.counts.fail}` });
       await sleep(150);
       const file = join(outDir, `${spec.name}${spec.query ? '-' + spec.query.replace(/[^a-z0-9]+/gi, '_') : ''}-${w}.png`);
       await page.screenshot({ path: file, fullPage: o.fullPage !== false });

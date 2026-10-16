@@ -10,7 +10,7 @@
 // Допуск tolPx = 0.6 px (u = --vw/1920, у classic-смуги порахований за --vw).
 
 export const D18_DEFAULTS = {
-  marginU: 47.5, gapU: 40, panelGapU: 5,
+  marginU: 202.9, gapU: 40, panelGapU: 5,
   minCols: 2,          // великий блок: ≥ 2 колонок завширшки
   minHeightU: 150,     // нижче — це рядок/акордеон/лейбл, не великий блок
   tileMaxCols: 3,      // малий елемент: ≤ 3 колонок (4 в ряд, неповний останній ряд теж)
@@ -29,7 +29,7 @@ export function COLLECT_D18(cfg) {
   const vw = Math.min(clientW, vwVar);
   const uVal = Math.min(Math.max(vwVar, 1185), 1920) / 1920;
   const margin = cfg.marginU * uVal, gap = cfg.gapU * uVal;
-  const col = (vw - 2 * margin - 11 * gap) / 12;
+  const col = (vw - 2 * margin - 9 * gap) / 10; // 10 колонок (tokens.css --grid-cols)
   const minW = cfg.minCols * col + (cfg.minCols - 1) * gap - 1;
   const out = { vw, clientW, u: uVal, col, gap, panelGap: cfg.panelGapU * uVal, blocks: [] };
   window.__qaD18 = [];

@@ -2,7 +2,7 @@
 // На кожній сторінці (поза age-gate):
 //   (а) верхній відступ пілюлі (.site-header__bar, position: fixed) = обчислений токен --header3-top (px з calc) ±0.5px,
 //       а сам токен = задана замовником величина `headerTopU`·u (allow.json → dynamic.d15; 15u) — щоб зсув токена не проходив непоміченим;
-//   (б) пілюля стоїть на колонках 1–12 єдиної сітки: лівий край = початок кол. 1, правий = кінець кол. 12 (±0.5px; сітка — профіль `catalog` D12);
+//   (б) пілюля стоїть на колонках 1–10 єдиної сітки: лівий край = початок кол. 1, правий = кінець кол. 10 (±0.5px; сітка — профіль `catalog` D12);
 //   (в) у меню шапки (.site-header__menu .nav-cell--menu; DOM, навіть коли меню закрите) присутні ВСІ пункти зі списку, у тому ж порядку (текст без регістру + href);
 //   (г) футер (.site-footer__col--menu) має ті самі пункти в тому ж порядку (текст без регістру + href).
 // Додаткові пункти меню/футера = теж порушення (список має збігатися точно).
@@ -58,7 +58,7 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
     if (d.barPos !== 'fixed' || Math.abs(d.barTop - d.tokenPx) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `top ${d.barTop?.toFixed(2)}px (${d.barPos}) ≠ --header3-top ${d.tokenPx.toFixed(2)}px`, msg: 'верхній відступ пілюлі ≠ токену --header3-top' });
     const g = gridFor(profile, d.vw, d.u);
     const dl = d.barLeft - g.starts[0], dr = d.barRight - g.ends[g.cols - 1];
-    if (Math.abs(dl) > tol || Math.abs(dr) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `ліво ${dl >= 0 ? '+' : ''}${dl.toFixed(2)}px від поч. кол. 1, право ${dr >= 0 ? '+' : ''}${dr.toFixed(2)}px від кін. кол. 12`, msg: 'пілюля шапки не на колонках 1–12' });
+    if (Math.abs(dl) > tol || Math.abs(dr) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `ліво ${dl >= 0 ? '+' : ''}${dl.toFixed(2)}px від поч. кол. 1, право ${dr >= 0 ? '+' : ''}${dr.toFixed(2)}px від кін. кол. 10`, msg: 'пілюля шапки не на колонках 1–10' });
     const cmp = (kind, got) => {
       const want = C.menu;
       const same = got.length === want.length && want.every((w, i) => nz(got[i].text) === nz(w.text) && got[i].href === w.href);
