@@ -919,8 +919,6 @@
   --size-lp-chapter-text-w: calc(var(--span-lp-chapter-text) * var(--grid-col) + (var(--span-lp-chapter-text) - 1) * var(--grid-gap));
   --space-lp-chapter-text: var(--space-10);      /* назва → пояснення */
   --space-lp-note-gap: var(--space-20);          /* цифра → підпис (одна базова лінія) */
-  --size-lp-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
-  --size-lp-demo-stage-h: calc(600 * var(--u));
   /* steps deck: true — «колода» карток-кроків з фото на тлі (рішення замовника: «зробимо цей фон як стікі карточки… на фоні карточки картинка», реф SOHUB).
      Картка = фото-рамка DS (--radius-panel, як розріз layers) на ширину вмісту секції; sticky під пілюлею header; кожна наступна наїжджає на попередню,
      від попередньої лишається видимою верхня смужка --space-lp-deck-peek. Висота — за екраном (svh): уся колода (n смужок + картка) вміщується у вікно */
@@ -934,6 +932,8 @@
   --size-lp-deck-text-w: calc(var(--span-lp-deck-text) * var(--grid-col) + (var(--span-lp-deck-text) - 1) * var(--grid-gap));
   --space-lp-deck-title: var(--space-30);        /* цифра → назва */
   --space-lp-deck-text: var(--space-20);         /* теги → пояснення; назва → теги */
+  --size-lp-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
+  --size-lp-demo-stage-h: calc(600 * var(--u));
   --size-lp-demo-w: calc(1408 * var(--u));       /* ширина сітки в демо design-system.html: сторінка DS 1508u − поля демо-панелі 2 × 50u */
 
   /* offers: фото на всю секцію без затемнення (рев'ю ee14a4bc); поверх — шапка (заголовок, маршрут, лід) і панелі-пропозиції DS поруч (рев'ю 9f60cafe) */

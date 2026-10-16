@@ -123,8 +123,8 @@ const present = (f, kind = 'str') => (kind === 'arr'
 const has = (v) => (Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null && v !== '');
 const exactlyOne = (a, b, ka = 'str', kb = 'str') => ({ oneOf: [{ allOf: [present(a, ka), { not: present(b, kb) }] }, { allOf: [present(b, kb), { not: present(a, ka) }] }] });
 const dependent = (f, req, kf = 'str', kr = 'str') => ({ if: present(f, kf), then: present(req, kr) });
-
 const DECK_ON = { properties: { deck: { const: true } }, required: ['deck'] };   // steps deck: true
+
 /* path: де застосовується (''=секція; 'groups'/'items' = кожен елемент списку з таким ім'ям). check(target) → повідомлення про помилку або ''. json — фрагмент allOf для JSON Schema (де виразимо). */
 export const RULES = [
   { id: 'wall-xor-list', types: ['compare'], path: 'groups', doc: 'у групі `wall` і `list` взаємовиключні',

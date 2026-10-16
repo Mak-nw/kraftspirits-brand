@@ -117,13 +117,6 @@
 .lp-step__num { margin-inline-start: var(--lp-num-optic, 0em); }
 .lp-step__title { margin-top: var(--space-lp-chapter-title); text-indent: var(--lp-title-optic, 0em); color: var(--lp-on-dark); }
 .lp-step__text { max-width: var(--size-lp-chapter-text-w); margin-top: var(--space-lp-chapter-text); text-indent: var(--lp-text-optic, 0em); color: var(--lp-on-dark-muted); text-wrap: pretty; }
-
-/* ---------- compare: групи поруч на 12 колонках (ширина групи = span даних), кожна — subgrid на 5 спільних рядків ----------
-   (ярлик, число, одиниця, медіа АБО список, факти), тож однотипні рядки всіх груп на одних базових лініях (рев'ю b9892b9b). Вирівнювання групи —
-   start (по лівому краю) або center (рев'ю a58b6a28). «≈» перед числом — approx: true. Лічильник 0 → значення (lp.js). */
-.lp-compare__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
-.lp-compare__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-profit-head); }
-.lp-compare__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
 /* steps deck: true — «колода» замість арки + списку (рішення замовника: «зробимо цей фон як стікі карточки… на фоні карточки картинка»; реф SOHUB).
    Кожен крок — картка на ширину вмісту секції (--lp-w: 12 колонок або `cols`): фото-рамка DS (--radius-panel, тло-заглушка --lp-amber, як розріз layers), фото кроку
    на всю картку (cover; кадр imgPos / zoom з даних) БЕЗ оверлея, градієнта, тіні й блюру — читабельність дає кадр (темна спокійна зона зліва) і світле чорнило теми.
@@ -155,6 +148,13 @@
   .lp-steps__card { position: relative; top: auto; margin-top: var(--grid-gap-panels); margin-bottom: 0; }
   .lp-steps__card:first-child { margin-top: 0; }
 }
+
+/* ---------- compare: групи поруч на 12 колонках (ширина групи = span даних), кожна — subgrid на 5 спільних рядків ----------
+   (ярлик, число, одиниця, медіа АБО список, факти), тож однотипні рядки всіх груп на одних базових лініях (рев'ю b9892b9b). Вирівнювання групи —
+   start (по лівому краю) або center (рев'ю a58b6a28). «≈» перед числом — approx: true. Лічильник 0 → значення (lp.js). */
+.lp-compare__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
+.lp-compare__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-profit-head); }
+.lp-compare__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
 .lp-compare__note { grid-column: 1 / -1; grid-row: 7; margin-top: var(--space-lp-head); text-align: center; color: var(--lp-on-paper-muted); }
 .lp-group { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; }
 .lp-group__size { text-indent: var(--lp-label-optic, 0em); }
