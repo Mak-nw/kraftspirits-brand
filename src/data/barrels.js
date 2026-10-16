@@ -56,7 +56,7 @@ export const barrels = {
       groups: [
         { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-one',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `Бочка ${B200.size}`, span: 9, align: 'center', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-four-minus-one',
+        { key: 'b200', label: `Бочка ${B200.size}`, span: 9, align: 'start', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-four-minus-one',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },
