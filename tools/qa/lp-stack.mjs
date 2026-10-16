@@ -58,7 +58,7 @@ await runMain('lp-stack', { widths: '1200,1440,1728,1920', scrollbar: 'both', pa
       }
     } finally { await L.close(); }
   }
-  rep.info({ rule: 'STACK', msg: `стеків ${stackCount}, панелей hero ${panelCount} на ${o.widths.length * (o.scrollbar.length)} комбінаціях; контроль «розірвати стек» (padding-top 150u): ${ctl} порушень; контроль «оверлей» (градієнт на hero): ${heroCtl} порушень` });
+  rep.info({ rule: 'STACK', msg: `стеків ${stackCount}, панелей hero ${panelCount} на ${o.widths.length * (o.scrollbar.length)} комбінаціях; контроль «розірвати стек» (padding-top 150u): ${ctl} порушень; контроль «оверлей» (градієнт на hero): ${heroCtl === null ? 'н/д — панелі hero зараз немає на жодній сторінці' : `${heroCtl} порушень`}` });
   if (stackCount && !ctl) rep.add({ rule: 'STACK', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'розірваний стек НЕ дав порушення — перевірка не працює' });
   if (panelCount && !heroCtl) rep.add({ rule: 'PANEL', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'градієнт на hero НЕ дав порушення — перевірка не працює' });
   return rep;

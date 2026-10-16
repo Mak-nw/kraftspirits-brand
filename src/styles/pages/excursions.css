@@ -1,3 +1,3 @@
-/* СТОРІНКА «excursions» (src/data/excursions.js): кадр фото секції «Ціна» (id price) — кадр = права нижня темна частина скла з краплями (світлий текст шапки й нижніх рядків ≥ 4.5:1 піксельно, без затемнення; зона відблисків води лишена поза кадром, D8).
+/* СТОРІНКА «excursions» (src/data/excursions.js): кадр фото секції «Ціна» (id price) — AI-кадр цеху з мідними кубами (excursions-price-bg.webp, 2560×1440, Seedream 5 Pro; reports/media-generation.md): кадр зсунуто вліво (куби праворуч частково поза кадром), спокійна темна зона під світлим текстом шапки (без затемнення, D14).
    Кадр — властивість фото, а не колір, тому він тут, а не в темі (src/styles/themes/excursions.css). Див. pages/barrels.css. */
-.lp-page--excursions #price { --lp-offers-bg-pos: 100% 100%; --lp-offers-bg-scale: 2; --lp-offers-bg-origin: 97.5% 95.3%; }
+.lp-page--excursions #price { --lp-offers-bg-pos: 0% 50%; --lp-offers-bg-scale: 1; --lp-offers-bg-origin: 0% 50%; }

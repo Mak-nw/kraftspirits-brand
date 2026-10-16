@@ -3,7 +3,6 @@
 // Медіа: AI-кадри Seedream 5 Pro excursions-*.webp — ЧЕРНЕТКИ до заміни реальною зйомкою (reports/media-generation.md); фото пляшок — з каталогу.
 // Тема — src/styles/themes/excursions.css (YasnoCraft: зелений + коричневий).
 const PHONE = '067 712 59 90';
-const PHONE_HREF = 'tel:+380677125990';
 const AI = (what) => `AI-кадр (Seedream 5 Pro, чернетка): ${what} — замінити реальною зйомкою`;
 
 export const excursions = {
@@ -34,7 +33,6 @@ export const excursions = {
       type: 'steps', id: 'excursion', room: 'deep',
       kicker: 'Екскурсія дистилерією', title: 'Від зерна до пляшки — своїми очима',
       lead: 'Проводимо залами дистилерії та розповідаємо, як працює сучасне виробництво, звідки ми взялися й чому робимо саме так. Без лекції — показуємо, питайте про все.',
-      caption: 'Тривалість — [потрібно уточнити]',
       img: '/assets/img/home-tour-distillery.webp', alt: 'Мідні перегінні куби дистилерії YasnoCraft',
       slot: 'Фото арки: наявний кадр мідного куба (home-tour-distillery.webp); за копірайтом — мідні куби й колони у світлі вітража',
       items: [
@@ -71,8 +69,8 @@ export const excursions = {
     },
     {
       type: 'offers', id: 'price', room: 'deep',
-      bg: '/assets/img/brand-yasnocraft-bg.webp', bgW: 2048, bgH: 2048,
-      bgSlot: 'Фото «Ціна»: наявний кадр YasnoCraft (brand-yasnocraft-bg.webp); за копірайтом — зал дегустації з бочками-столами без затемнення',
+      bg: '/assets/img/excursions-price-bg.webp', bgW: 2560, bgH: 1440,
+      bgSlot: 'Фото «Ціна»: AI-кадр (Seedream 5 Pro, чернетка) — мідні куби в темному цеху, спокійна темна зона під текстом, без затемнення; замінити реальною зйомкою',
       kicker: 'Ціна', title: 'Оберіть формат і забронюйте дату',
       lead: 'Ціна — з людини, уже з екскурсією, дегустацією та закусками. Групи від 6 осіб. Екскурсії проводимо з 24 жовтня.',
       items: [
@@ -86,7 +84,7 @@ export const excursions = {
           cta: { text: 'Забронювати', href: 'feedback.html?topic=excursion&format=8' } },
       ],
       // «Написати в Direct» — сховано, доки немає URL профілю Instagram ([потрібно уточнити])
-      foot: { text: `Забронювати екскурсію можна в Direct або за номером ${PHONE}`, ctas: [{ text: 'Зателефонувати', href: PHONE_HREF, variant: 'light' }],
+      foot: { text: `Забронювати екскурсію можна в Direct або за номером ${PHONE}`,
         note: 'Дегустація — для гостей від 18 років [потрібно уточнити формулювання]. Умови передоплати та скасування — [потрібно уточнити].' },
     },
     {
