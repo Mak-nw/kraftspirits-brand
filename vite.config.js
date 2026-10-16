@@ -4,9 +4,7 @@ import { resolve } from 'node:path';
 import { createRenderer } from './tools/html-partials.mjs';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
-import { barrels } from './src/data/barrels.js';
-import { excursions } from './src/data/excursions.js';
-import { lpView } from './src/data/lp-schema.js';
+import { createLp } from './tools/vite-plugin-lp.mjs';
 import { COCKTAILS } from './src/data/cocktails.js';
 import { PRODUCTS } from './src/data/products.js';
 import { cocktailsView } from './src/data/cocktails-view.js';
@@ -34,9 +32,11 @@ const escapeHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;
 const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? (key.endsWith('Html') ? CONTACTS[key] : escapeHtml(CONTACTS[key])) : m)); // ключі *Html — готова розмітка (екранування в contacts.js)
 
 // ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (docs/page-template.md): <!--@page name--> у <name>.html -> уся сторінка з partials/lp/page.html і секцій partials/lp/<type>.html
-// за даними src/data/<name>.js (схема й перевірка — src/data/lp-schema.js: збірка падає з поясненням, якщо дані не за схемою).
-// <!--@lp name id--> -> одна секція сторінки (демо в design-system.html). Нова сторінка = файл даних + рядок тут + <name>.html з одним рядком <!--@page name-->.
-const LP = { barrels: lpView(barrels), excursions: lpView(excursions) };
+// за даними src/data/<name>.js (схема й перевірка — src/data/lp-schema.js + tools/lp-files.mjs: збірка падає з поясненням, якщо дані не за схемою).
+// <!--@lp name id--> -> одна секція сторінки (демо в design-system.html). Нова сторінка = ЛИШЕ файл даних src/data/<name>.js (+ тема в src/styles/themes/): сторінку, <name>.html і CSS
+// плагін lp-auto (tools/vite-plugin-lp.mjs) підхоплює сам; реєстрації в цьому файлі немає.
+const LP = await createLp({ root, contactKeys: Object.keys(CONTACTS) });
+const LP_NAMES_RE = /<!--@(?:page|lp) ([a-z0-9]+(?:-[a-z0-9]+)*)/g;
 
 // Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
 const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
@@ -52,12 +52,12 @@ LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it,
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
   // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
-  const render = createRenderer({ root, lists: LISTS, getLpPage: (name) => LP[name] });
+  const render = createRenderer({ root, lists: LISTS, getLpPage: (name) => LP.view(name) });
   return {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
     // %BASE_URL% (404.html: <base href>) підставляємо самі, щоб dev і build/preview давали однаковий результат
-    transformIndexHtml: { order: 'pre', handler: (html) => fillContacts(render(html)).replaceAll('%BASE_URL%', base) },
+    transformIndexHtml: { order: 'pre', handler: async (html) => { await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1])); return fillContacts(render(html)).replaceAll('%BASE_URL%', base); } },
     handleHotUpdate({ file, server }) {
       if (file.includes('/partials/')) server.ws.send({ type: 'full-reload' });
     },
@@ -76,6 +76,6 @@ export default defineConfig(({ command, isPreview }) => ({
   optimizeDeps: { exclude: ['maplibre-gl'] }, // maplibre-gl 6 шукає воркер відносно свого файлу (import.meta.url) — у dev без прекомпіляції
   base: command === 'build' || isPreview ? BUILD_BASE : '/',
   // reviewMode (design-machine, модуль 05) — ЛИШЕ dev-сервер: коментарі/сітка/інспектори; дані в ../review (поза репозиторієм). У збірці/preview плагіна немає.
-  plugins: [htmlPartials(), ...(command === 'serve' && !isPreview ? [reviewMode({ dir: resolve(root, '../review') })] : [])],
+  plugins: [LP.plugin(), htmlPartials(), ...(command === 'serve' && !isPreview ? [reviewMode({ dir: resolve(root, '../review') })] : [])],
   build: { rollupOptions: { input: pages }, chunkSizeWarningLimit: 1200 }, // maplibre-gl (~1 МБ, лише чанк сторінки контактів) перевищує типовий поріг 500 кБ
 }));

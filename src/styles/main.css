@@ -31,8 +31,7 @@
 @import './feedback.css';
 @import './lp.css';
 @import './lp-media.css';
-@import './themes/barrels.css';
-@import './themes/excursions.css';
+/*@lp-auto*/
 @import './cocktails.css';
 @import './faq.css';
 @import './under-construction.css';

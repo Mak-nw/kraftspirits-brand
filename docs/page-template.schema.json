@@ -1784,7 +1784,7 @@
             },
             "img": {
               "type": "string",
-              "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+              "pattern": "^/assets/img/[^\\s\"<>]*$"
             },
             "alt": {
               "type": [

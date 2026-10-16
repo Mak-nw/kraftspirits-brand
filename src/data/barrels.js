@@ -18,7 +18,6 @@ const HEAD = (wine) => `Фото: днище бочки з-під ${wine} (зй�
 export const barrels = {
   slug: 'barrels',
   theme: 'barrels',
-  tone: 'teal',
   metaTitle: "Ф'ючерсні бочки Bazylsprings — YasnoCraft × Bazylsprings",
   metaDescription: "Ф'ючерсні бочки Bazylsprings: екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу, 200 L і 50 L. Від бочки до пляшки, орієнтовний вихід пляшок 0,7 л, подальша витримка та ціна.",
   sections: [

@@ -14,6 +14,8 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import { SCHEMA, RULES, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
 import { jsonSchemaText, buildJsonSchema } from '../lp-schema-json.mjs';
 import { loadLpPages } from '../lp-pages.mjs';
+import { checkFiles, themeInfo } from '../lp-files.mjs';
+import { contacts, contactsView } from '../../src/data/contacts.js';
 import { createRenderer } from '../html-partials.mjs';
 import { ROOT } from './lib.mjs';
 
@@ -23,7 +25,8 @@ const maxText = (max, word = 20) => { const w = 'аб'.repeat(10).slice(0, Math.
 const clone = (o) => structuredClone(o);
 let bad = 0; let total = 0;
 const rows = [];
-const note = (ok, label, detail = '') => { total++; if (!ok) { bad++; rows.push(`  ПРОВАЛ  ${label} ${detail}`); } };
+const VERBOSE = !!process.env.LP_CONTRACT_VERBOSE; // LP_CONTRACT_VERBOSE=1 — друкувати кожну перевірку
+const note = (ok, label, detail = '') => { total++; if (VERBOSE) console.log(`${ok ? '  ok     ' : '  ПРОВАЛ '}${label}`); if (!ok) { bad++; rows.push(`  ПРОВАЛ  ${label} ${detail}`); } };
 
 /* ------------------------------------------------------------------ ajv */
 const ajv = new Ajv2020({ strict: true, strictTuples: false, allowUnionTypes: true });
@@ -42,7 +45,7 @@ const markers = []; // { marker, path }
 function fillValue(def, path, o = {}) {
   switch (def.type) {
     case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
-    case 'url': { const m = `/q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
+    case 'url': { const m = `${def.startsWith || '/'}q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'partial': return path.endsWith('scene') ? 'barrels-scene' : 'barrels-head';
     case 'icon': return 'pin';
@@ -122,6 +125,7 @@ for (const [slug, data] of Object.entries(real)) {
   note(jsOk(data) === true, `справжня сторінка ${slug} (JS)`, String(jsOk(data)));
   note(jsonOk(data) === true, `справжня сторінка ${slug} (JSON)`, JSON.stringify(validateJson.errors?.slice(0, 3)));
   try { render({ ...data, tone: data.tone || 'teal' }); note(true, `рендер ${slug}`); } catch (e) { note(false, `рендер ${slug}`, e.message); }
+  try { checkFiles(data, { root: ROOT, contactKeys: Object.keys(contactsView(contacts)) }); note(true, `файли ${slug} (тема, гравюри, іконки, медіа, посилання)`); } catch (e) { note(false, `файли ${slug}`, e.message); }
 }
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
@@ -144,6 +148,7 @@ function mutantsFor(def, key, type) {
       m.push(['відсутнє', DEL, opt]);
       break;
     case 'url':
+      if (def.startsWith) { m.push(['без префікса', '/other/x.webp', false], ['https', 'https://a.b/c.webp', false], ['з префіксом', `${def.startsWith}x.webp`, true], ['javascript:', 'javascript:alert(1)', false], ['//host', '//evil.com/x', false], ['порожній', '', opt], ['відсутнє', DEL, opt]); break; }
       m.push(['javascript:', 'javascript:alert(1)', false], ['//host', '//evil.com/x', false], ['ftp', 'ftp://x.y', false], ['пробіл', '/a b', false], ['лапка', '/a"b', false],
         ['https', 'https://a.b/c?d=1&e=2', true], ['%contacts%', '%contacts.phone%', true], ['сторінка.html?q', 'catalog.html?x=1#y', true], ['tel', 'tel:+380671234567', true],
         ['порожній', '', opt], ['відсутнє', DEL, opt]);
@@ -269,6 +274,24 @@ for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { appro
 cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
 cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');
 
+/* ------------------------------------------------------------------ файлові перевірки (tools/lp-files.mjs): зіпсуй → падає з поясненням */
+const contactKeys = Object.keys(contactsView(contacts));
+const realFiles = Object.values(real)[0];
+if (realFiles) {
+  const fileCase = (label, mut, expect) => {
+    const p = clone(realFiles); mut(p);
+    let msg = ''; try { validatePage(clone(p)); checkFiles(p, { root: ROOT, contactKeys }); } catch (e) { msg = e.message; }
+    note(msg.includes(expect), `файли: ${label}`, msg ? `повідомлення: ${msg.slice(0, 140)}` : 'помилки не було');
+  };
+  const sec = (p, type) => p.sections.find((x) => x.type === type);
+  fileCase('theme не існує', (p) => { p.theme = 'nope'; }, 'themes/nope.css');
+  fileCase('hero.img не існує', (p) => { p.sections[0].img = '/assets/img/nope.webp'; }, 'відсутній у public/');
+  fileCase('icon не існує', (p) => { const t = p.sections.find((x) => x.type === 'layers' || x.type === 'place'); if (t.items) t.items[0].icon = 'bogus'; else t.facts[0].icon = 'bogus'; }, '.icon--bogus');
+  fileCase('href на неіснуючу сторінку', (p) => { p.sections[0].cta.href = 'nopage.html'; }, 'nopage.html');
+  fileCase('%contacts.ключ% не існує', (p) => { p.sections[0].cta.href = '%contacts.nope%'; }, '%contacts.nope%');
+  const withScene = Object.values(real).map((pg) => [pg, pg.sections.find((x) => x.type === 'steps' && x.scene)]).find(([, x]) => x);
+  if (withScene) { const [pg] = withScene; const p = clone(pg); p.sections.find((x) => x.type === 'steps').scene = 'nope'; let msg = ''; try { validatePage(clone(p)); checkFiles(p, { root: ROOT, contactKeys }); } catch (e) { msg = e.message; } note(msg.includes('partials/media/nope.html'), 'файли: scene не існує', msg); }
+}
 console.log(`lp-contract: перевірок ${total}, з них мутацій полів ${mutCount}; розбіжностей ${bad}`);
 const inexpressible = RULES.filter((r) => !r.json).map((r) => r.id);
 console.log(`  правила, яких JSON Schema не виражає (x-rules): ${inexpressible.join(', ')}, ids-unique, keys-unique, anchors-exist + файлові (FILE_RULES)`);

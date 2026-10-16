@@ -14,6 +14,7 @@
   --lp-accent: var(--color-gold);                   /* кікер, назви шарів, цифри кроків, іконки на темному */
   --lp-hairline: var(--color-barrels-hairline);     /* арка, лінії кроків, лінія маршруту */
   --lp-amber: var(--color-barrels-amber);           /* рідина гравюри, тло розрізу, доки вантажаться фото */
+  --lp-tone: teal;                                  /* тон основних кнопок DS (.btn--teal) на світлому/фото; читає збірка (tools/lp-files.mjs); у даних сторінки `tone` необов'язковий */
 }
 /* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
 .theme-barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-origin: var(--origin-barrels-price-bg); }

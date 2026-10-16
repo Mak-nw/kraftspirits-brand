@@ -9,7 +9,6 @@ const AI = (what) => `AI-кадр (Seedream 5 Pro, чернетка): ${what} �
 export const excursions = {
   slug: 'excursions',
   theme: 'excursions',
-  tone: 'green',
   metaTitle: 'Екскурсії та дегустації на дистилерії YasnoCraft',
   metaDescription: 'Екскурсія дистилерією YasnoCraft у Ясногородці та дегустація 4 або 8 напоїв із закусками. 1500 / 3800 грн з людини, групи від 6 осіб, з 24 жовтня.',
   sections: [

@@ -29,7 +29,7 @@ export const COUNT_CAP = { 2: { plain: 999, approx: 99 }, 3: { plain: 99999, app
 export const LABELS = { approx: 'приблизно ' };   // службовий текст для читачів екрана
 
 const T = (max, req = false, extra = {}) => ({ type: 'text', max, req, ...extra });   // текст (екранується)
-const URL_ = (req = false) => ({ type: 'url', req });                                 // посилання або шлях (див. URL_SOURCE)
+const URL_ = (req = false, extra = {}) => ({ type: 'url', req, ...extra });            // посилання або шлях (див. URL_SOURCE); extra.startsWith — обов'язковий префікс шляху
 const E = (values, req = false, def) => ({ type: 'enum', values, req, def });
 const N = (req = false, extra = {}) => ({ type: 'number', req, ...extra });           // extra: int, min, max
 const B = () => ({ type: 'bool' });
@@ -83,7 +83,7 @@ export const SCHEMA = {
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true, { divides: GRID_COLS }),
       foot: O({ text: T(160, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green'], true) }), 0, 2), note: T(200) }) },
     // 7. Картка: ІСНУЮЧА панель tour-card (текст АБО список + фото)
-    card: { ...base('lead', 'caption'), title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true), cta: { ...CTA, req: true } },
+    card: { ...base('lead', 'caption'), title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true, { startsWith: '/assets/img/' }), cta: { ...CTA, req: true } },
     // 8. Місце: панель DS з фактами й кнопками + мапа DS (координати — src/data/contacts.js)
     place: { ...base('caption'), room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
@@ -162,7 +162,10 @@ function check(def, v, path) {
       if ([...v].length > def.max) fail(path, `довжина ${[...v].length} > ${def.max} знаків`);
       if (wordRe(def.word ?? MAX_WORD).test(v)) fail(path, `слово довше ${def.word ?? MAX_WORD} знаків без пробілу (не вміститься в колонку)`);
       break;
-    case 'url': if (typeof v !== 'string' || !URL_RE.test(v)) fail(path, `некоректне посилання «${String(v).slice(0, 40)}» (допустимо: #якір, /шлях, https://…, tel:, mailto:, %contacts.ключ%, сторінка.html)`); break;
+    case 'url':
+      if (typeof v !== 'string' || !URL_RE.test(v)) fail(path, `некоректне посилання «${String(v).slice(0, 40)}» (допустимо: #якір, /шлях, https://…, tel:, mailto:, %contacts.ключ%, сторінка.html)`);
+      if (def.startsWith && !v.startsWith(def.startsWith)) fail(path, `шлях має починатися з ${def.startsWith}`);
+      break;
     case 'id': case 'partial': case 'icon': if (typeof v !== 'string' || !ID_RE.test(v)) fail(path, 'лише латиниця, цифри, дефіс'); break;
     case 'enum': if (!def.values.includes(v)) fail(path, `допустимо: ${def.values.join(' | ')}`); break;
     case 'number':
@@ -189,8 +192,8 @@ function check(def, v, path) {
 /** допустимі кількості елементів списку з def.divides: ті з min…max, що ділять число */
 export const divisors = (def) => { const r = []; for (let n = def.min; n <= def.max; n++) if (def.divides % n === 0) r.push(n); return r; };
 
-/** обходить усі поля даних за схемою: fn(def, value, path) для кожного значення */
-function walk(def, v, path, fn) {
+/** обходить усі поля даних за схемою: fn(def, value, path) для кожного значення (секція: def = { type: 'object', fields: SCHEMA.sections[type] }) */
+export function walk(def, v, path, fn) {
   if (v === undefined || v === null) return;
   fn(def, v, path);
   if (def.type === 'list' && Array.isArray(v) && def.of) v.forEach((x, i) => walk(def.of, x, `${path}[${i}]`, fn));
