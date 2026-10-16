@@ -507,7 +507,7 @@ export async function textPixelContrast(page, handle) {
   try {
     await handle.evaluate((el) => { const r = el.getBoundingClientRect(); scrollTo({ top: Math.max(0, r.top + scrollY - innerHeight * 0.5), behavior: 'instant' }); });
     await sleep(80);
-    const b64 = await handle.screenshot({ encoding: 'base64' });
+    const b64 = await handle.screenshot({ encoding: 'base64', captureBeyondViewport: false }); // captureBeyondViewport:false — інакше у classic-смузі (--vw ≠ ширині захоплення) кліп мазав повз текст (порожній знімок, 1.03:1)
     return await page.evaluate(async (b64s) => {
       const img = new Image(); img.src = `data:image/png;base64,${b64s}`; await img.decode();
       const cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height; const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(img, 0, 0);

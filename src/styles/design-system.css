@@ -146,6 +146,7 @@
 /* імітатор focus — та сама тривалість переходу, що й у справжнього :focus-visible (політика --btn-transition-duration-focus) */
 :is(.btn, .nav-cell, .arrow-btn, .chip, .product-volume, .select, .check).is-focus, .btn.is-focus :is(.btn__inner, .btn__arrow), .arrow-btn.is-focus img, .product-volume.is-focus::before, .select.is-focus .select__field, .check.is-focus .check__box, .check.is-focus .check__box::after { transition-duration: var(--btn-transition-duration-focus); }
 /* демо блоку коктейлю в реальній ширині сторінки коктейлів (1825u): виходить за контейнер DS (1508u) симетрично — картка каталогу з аркою потребує рівно 426.25u */
+.ds-brands-demo { width: calc(1920 * var(--u)); margin-inline: calc((var(--container-wide) - 1920 * var(--u)) / 2); } /* секція «Бренди» — на всю ширину вікна (картки в колонках сітки вікна, а не контейнера .ds): інакше сусідня половина обрізає текст першої (D8) */
 .ds-cocktail-demo { width: var(--grid-w); margin-inline: calc((var(--container-wide) - var(--grid-w)) / 2); color: var(--color-green); }
 
 /* зразки похідних кольорів у design-system.html (розділ «Палітра → Похідні кольори») */
