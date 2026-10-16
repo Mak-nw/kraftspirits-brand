@@ -4,7 +4,7 @@
 // Стани (?state=): login · login-error · lost · lost-sent · register · register-error · logout · dashboard · orders (&page=N) · empty-orders · order-view (&order=№) · tracking · tracking-result (&order=№) · tracking-error ·
 // addresses · addresses-saved · account · account-saved · account-error; &guest=1 (tracking*) — відстеження без входу. Усі стани «усередині кабінету» самі вмикають демо-вхід.
 import { initSelect } from './select.js';
-import { query, state, fmtMoney, fmtVol, qs, qsa, resolveLines, calcTotals, showNotice } from './wc-common.js';
+import { query, state, fmtMoney, fmtVol, qs, qsa, resolveLines, calcTotals, showNotice, syncNativeSelect } from './wc-common.js';
 import { DEMO_USER, ORDERS, STATUS, TRACK_STEPS, NOVA_POSHTA_TRACKING, ORDERS_PER_PAGE } from '../data/account-demo.js';
 import { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
@@ -57,7 +57,7 @@ const noteQuiet = (kind, text) => showNotice(notices, kind, text);
 // список помилок зверху (ul.woocommerce-error: кожен рядок — посилання на поле) + помилки під полями (.field__error), як у checkout
 function createValidator(form, rules) {
   const wrap = (name) => qs(`#${name}_field`, form);
-  const field = (name) => qs(`[name="${name}"]`, form);
+  const field = (name) => qs(`#${name}`, form); // id поля (у реєстрації id=reg_email|reg_password, name=email|password — як у form-login.php WooCommerce; у select-полів це прихований справжній <select>)
   const controlOf = (name) => qs(`#${name}_field .select__button`, form) || field(name);
   const paint = (name, msg, flag = !!msg) => {
     const w = wrap(name);
@@ -270,7 +270,15 @@ const INIT = {
     if (pages < 2) nav.remove();
   },
   'order-view'() {
-    const o = findOrder(query.get('order')) || ORDERS[1];
+    const asked = query.get('order');
+    const o = findOrder(asked) || (asked ? null : ORDERS[1]); // без &order — демо-замовлення; невідомий номер — «не знайдено» (як view-order.php WooCommerce: нотис «Замовлення не знайдено»)
+    if (!o) {
+      qs('h1', section).textContent = 'Замовлення не знайдено';
+      qsa('.woocommerce-order-overview, .wc-actions, [data-wc-notes-wrap], [data-wc-order-details]', section).forEach((el) => el.remove());
+      qs('[data-wc-order-missing]', section).hidden = false;
+      return;
+    }
+    qs('[data-wc-order-missing]', section).remove();
     fillOverview(section, o);
     const track = qs('[data-wc-track-link]', section);
     if (o.status === 'cancelled') track.remove(); else track.href = `account.html?state=tracking-result&order=${o.number}`;
@@ -347,7 +355,7 @@ const INIT = {
     const setSelect = (name, options, value) => {
       const w = qs(`#${name}_field`, form);
       qs('.select', w).replaceWith(pristine[name].cloneNode(true));
-      qs('input[type="hidden"]', w).value = value || '';
+      syncNativeSelect(w, options, value);
       initSelect(qs('.select', w), { options, value });
     };
     const cityOpts = (a) => (NP_CITIES[a] || []).map((c) => ({ value: c, label: c }));
@@ -361,7 +369,7 @@ const INIT = {
     form.addEventListener('select-change', (e) => {
       const w = e.target.closest('.form-row');
       if (!w) return;
-      qs('input[type="hidden"]', w).value = e.detail.value;
+      qs('select', w).value = e.detail.value;
       if (w.dataset.field === 'billing_state') { setSelect('billing_city', cityOpts(e.detail.value)); setSelect('billing_warehouse', []); }
       else if (w.dataset.field === 'billing_city') setSelect('billing_warehouse', npWarehouses());
     });
@@ -389,11 +397,13 @@ const INIT = {
     const u = getUser();
     qs('#account_first_name', form).value = u.first;
     qs('#account_last_name', form).value = u.last;
+    qs('#account_display_name', form).value = u.display || `${u.first} ${u.last}`;
     qs('#account_email', form).value = u.email;
     const pw = () => ['password_current', 'password_1', 'password_2'].some((n) => qs(`#${n}`, form).value);
     const v = createValidator(form, [
       { name: 'account_first_name', label: 'Ім\'я', test: (x) => x.length >= 2 },
       { name: 'account_last_name', label: 'Прізвище', test: (x) => x.length >= 2 },
+      { name: 'account_display_name', label: 'Відображуване ім\'я', test: (x) => x.length >= 2 },
       { name: 'account_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: 'перевірте адресу e-mail' },
       { name: 'password_current', label: 'Поточний пароль', test: (x) => !!x || !pw() },
       { name: 'password_1', label: 'Новий пароль', test: (x) => !!x || !pw(), bad: (x) => !!x && x.length < 8, badMsg: 'не менше 8 символів' },
@@ -403,7 +413,7 @@ const INIT = {
       e.preventDefault();
       if (!v.validate(true)) return;
       if (pw() && qs('#password_1', form).value !== qs('#password_2', form).value) { mismatch(); return; }
-      saveUser({ first: qs('#account_first_name', form).value.trim(), last: qs('#account_last_name', form).value.trim(), email: qs('#account_email', form).value.trim() });
+      saveUser({ first: qs('#account_first_name', form).value.trim(), last: qs('#account_last_name', form).value.trim(), display: qs('#account_display_name', form).value.trim(), email: qs('#account_email', form).value.trim() });
       ['password_current', 'password_1', 'password_2'].forEach((n) => { qs(`#${n}`, form).value = ''; });
       note('message', 'Зміни збережено.');
     });

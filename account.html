@@ -28,15 +28,16 @@
     <div class="woocommerce">
 
       <!-- ===== Гість: вхід / відновлення пароля / реєстрація (myaccount/form-login.php, form-lost-password.php) + панель «без входу» ===== -->
-      <div class="wc-grid" data-wc-layout="guest">
+      <div class="wc-grid u-columns col2-set" id="customer_login" data-wc-layout="guest">
 
-        <section class="contacts-panel wc-main--account-form" data-wc-view="login" aria-labelledby="login-title" hidden>
+        <section class="contacts-panel wc-main--account-form u-column1 col-1" data-wc-view="login" aria-labelledby="login-title" hidden>
           <h1 class="t-hero" id="login-title">Вхід</h1>
           <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
           <form class="woocommerce-form woocommerce-form-login login" action="account.html" method="post" novalidate data-wc-form="login">
             <!--@include components/wc-field name="username" label="Логін або e-mail" req="1" autocomplete="username" placeholder="name@example.com"-->
             <!--@include components/wc-field name="password" label="Пароль" type="password" req="1" autocomplete="current-password" placeholder="Ваш пароль"-->
             <!--@include components/wc-check name="rememberme" label="Запам'ятати мене"-->
+            <!--@include components/wc-nonce name="woocommerce-login-nonce" referer="/account.html"-->
             <div class="form-row wc-actions">
               <button type="submit" class="woocommerce-button button woocommerce-form-login__submit btn btn--green" name="login" value="Увійти"><span class="btn__inner t-btn">Увійти</span></button>
               <a class="woocommerce-LostPassword lost_password button btn btn--outline" href="account.html?state=lost"><span class="btn__inner t-btn">Забули пароль?</span></a>
@@ -56,6 +57,7 @@
             <!--@include components/wc-field name="user_login" label="Логін або e-mail" req="1" autocomplete="username" placeholder="name@example.com"-->
             <div class="form-row wc-actions">
               <input type="hidden" name="wc_reset_password" value="true">
+              <!--@include components/wc-nonce name="woocommerce-lost-password-nonce" referer="/account.html"-->
               <button type="submit" class="woocommerce-Button button btn btn--green" value="Скинути пароль"><span class="btn__inner t-btn">Скинути пароль</span></button>
               <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Назад до входу</span></a>
             </div>
@@ -65,13 +67,14 @@
           </div>
         </section>
 
-        <section class="contacts-panel wc-main--account-form" data-wc-view="register" aria-labelledby="register-title" hidden>
+        <section class="contacts-panel wc-main--account-form u-column2 col-2" data-wc-view="register" aria-labelledby="register-title" hidden>
           <h1 class="t-hero" id="register-title">Створити акаунт</h1>
           <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
           <form class="woocommerce-form woocommerce-form-register register" action="account.html" method="post" novalidate data-wc-form="register">
-            <!--@include components/wc-field name="reg_email" label="E-mail" type="email" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
-            <!--@include components/wc-field name="reg_password" label="Пароль (від 8 символів)" type="password" req="1" autocomplete="new-password" placeholder="Придумайте пароль"-->
+            <!--@include components/wc-field name="email" id="reg_email" label="E-mail" type="email" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
+            <!--@include components/wc-field name="password" id="reg_password" label="Пароль (від 8 символів)" type="password" req="1" autocomplete="new-password" placeholder="Придумайте пароль"-->
             <!--@include components/wc-check name="reg_consent" req="1" label="Погоджуюсь з <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>"-->
+            <!--@include components/wc-nonce name="woocommerce-register-nonce" referer="/account.html"-->
             <div class="form-row wc-actions">
               <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit btn btn--green" name="register" value="Зареєструватися"><span class="btn__inner t-btn">Зареєструватися</span></button>
               <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Вже є акаунт? Увійти</span></a>
@@ -169,9 +172,9 @@
             <h1 class="t-hero" id="order-view-title">Замовлення №<span data-wc-order-number></span></h1>
             <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
             <ul class="woocommerce-order-overview">
-              <li class="woocommerce-order-overview__order t-text">Номер замовлення <strong class="order-number t-spec" data-wc-order-number></strong></li>
-              <li class="woocommerce-order-overview__date t-text">Дата <strong class="order-date t-spec" data-wc-order-date></strong></li>
-              <li class="woocommerce-order-overview__status t-text">Статус <strong class="order-status t-spec" data-wc-order-status></strong></li>
+              <li class="woocommerce-order-overview__order t-text">Номер замовлення <mark class="order-number t-spec" data-wc-order-number></mark></li>
+              <li class="woocommerce-order-overview__date t-text">Дата <mark class="order-date t-spec" data-wc-order-date></mark></li>
+              <li class="woocommerce-order-overview__status t-text">Статус <mark class="order-status t-spec" data-wc-order-status></mark></li>
               <li class="woocommerce-order-overview__total total t-text">Разом <strong class="t-spec" data-wc-order-total></strong></li>
             </ul>
             <div class="wc-actions">
@@ -183,6 +186,10 @@
               <ol class="woocommerce-OrderUpdates commentlist notes" data-wc-notes></ol>
             </section>
             <div class="wc-order-body" data-wc-order-details></div>
+            <div class="wc-cart-empty" data-wc-order-missing hidden>
+              <p class="woocommerce-info woocommerce-Message woocommerce-Message--info t-lead">Замовлення з таким номером у вашому акаунті немає. Перевірте номер у списку замовлень.</p>
+              <p class="return-to-shop"><a class="woocommerce-Button wc-forward button btn btn--green" href="account.html?state=orders"><span class="btn__inner t-btn">До списку замовлень</span></a></p>
+            </div>
           </section>
 
           <!-- Відстеження замовлення: форма (order/form-tracking.php) -->
@@ -193,6 +200,7 @@
               <p class="t-text">Щоб відстежити замовлення, вкажіть його номер і e-mail із листа-підтвердження.</p>
               <!--@include components/wc-field name="orderid" label="Номер замовлення" row="form-row-first" req="1" inputmode="numeric" autocomplete="off" placeholder="Наприклад, 10388"-->
               <!--@include components/wc-field name="order_email" label="E-mail" type="email" row="form-row-last" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
+              <!--@include components/wc-nonce name="woocommerce-order-tracking-nonce" referer="/account.html"-->
               <div class="form-row wc-actions">
                 <button type="submit" class="button btn btn--green" name="track" value="Відстежити"><span class="btn__inner t-btn">Відстежити</span></button>
               </div>
@@ -204,9 +212,9 @@
             <h1 class="t-hero" id="tracking-result-title">Відстеження замовлення</h1>
             <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
             <ul class="woocommerce-order-overview order-info">
-              <li class="woocommerce-order-overview__order t-text">Номер замовлення <strong class="order-number t-spec" data-wc-order-number></strong></li>
-              <li class="woocommerce-order-overview__date t-text">Дата <strong class="order-date t-spec" data-wc-order-date></strong></li>
-              <li class="woocommerce-order-overview__status t-text">Статус <strong class="order-status t-spec" data-wc-order-status></strong></li>
+              <li class="woocommerce-order-overview__order t-text">Номер замовлення <mark class="order-number t-spec" data-wc-order-number></mark></li>
+              <li class="woocommerce-order-overview__date t-text">Дата <mark class="order-date t-spec" data-wc-order-date></mark></li>
+              <li class="woocommerce-order-overview__status t-text">Статус <mark class="order-status t-spec" data-wc-order-status></mark></li>
             </ul>
             <section class="wc-tracking-status" data-wc-timeline-wrap>
               <h2 class="t-lead">Статус доставки</h2>
@@ -238,9 +246,13 @@
               <!--@include components/wc-field name="billing_first_name" label="Ім'я" row="form-row-first" req="1" autocomplete="given-name" placeholder="Ім'я одержувача"-->
               <!--@include components/wc-field name="billing_last_name" label="Прізвище" row="form-row-last" req="1" autocomplete="family-name" placeholder="Прізвище одержувача"-->
               <!--@include components/wc-field name="billing_phone" label="Телефон" type="tel" row="form-row-first" req="1" inputmode="tel" autocomplete="tel" placeholder="+380"-->
-              <!--@include components/wc-select name="billing_state" label="Область&nbsp;*" placeholder="Оберіть область" row="form-row-last" req="1"-->
-              <!--@include components/wc-select name="billing_city" label="Місто&nbsp;*" placeholder="Оберіть місто" row="form-row-first" req="1"-->
-              <!--@include components/wc-select name="billing_warehouse" label="Відділення або поштомат «Нової пошти»&nbsp;*" placeholder="Оберіть відділення або поштомат" row="form-row-last" req="1"-->
+              <!--@include components/wc-select name="billing_state" label="Область" placeholder="Оберіть область" row="form-row-last" req="1"-->
+              <!--@include components/wc-select name="billing_city" label="Місто" placeholder="Оберіть місто" row="form-row-first" req="1"-->
+              <!--@include components/wc-select name="billing_warehouse" label="Відділення або поштомат «Нової пошти»" placeholder="Оберіть відділення або поштомат" row="form-row-last" req="1"-->
+              <input type="hidden" name="billing_country" id="billing_country" value="UA">
+              <input type="hidden" name="billing_postcode" id="billing_postcode" value="">
+              <input type="hidden" name="action" value="edit_address">
+              <!--@include components/wc-nonce name="woocommerce-edit-address-nonce" referer="/account.html"-->
               <div class="form-row wc-actions">
                 <button type="submit" class="button btn btn--green" name="save_address" value="Зберегти адресу"><span class="btn__inner t-btn">Зберегти адресу</span></button>
               </div>
@@ -254,6 +266,7 @@
             <form class="woocommerce-EditAccountForm edit-account" action="account.html" method="post" novalidate data-wc-form="account">
               <!--@include components/wc-field name="account_first_name" label="Ім'я" row="form-row-first" req="1" autocomplete="given-name"-->
               <!--@include components/wc-field name="account_last_name" label="Прізвище" row="form-row-last" req="1" autocomplete="family-name"-->
+              <!--@include components/wc-field name="account_display_name" label="Відображуване ім'я" row="form-row-wide" req="1" autocomplete="nickname" desc="Так ваше ім'я відображатиметься в розділі акаунта."-->
               <!--@include components/wc-field name="account_email" label="E-mail" type="email" row="form-row-wide" req="1" inputmode="email" autocomplete="email"-->
               <fieldset>
                 <legend class="t-lead">Зміна пароля</legend>
@@ -261,6 +274,8 @@
                 <!--@include components/wc-field name="password_1" label="Новий пароль (від 8 символів)" type="password" row="form-row-first" opt="1" autocomplete="new-password"-->
                 <!--@include components/wc-field name="password_2" label="Підтвердьте новий пароль" type="password" row="form-row-last" opt="1" autocomplete="new-password"-->
               </fieldset>
+              <input type="hidden" name="action" value="save_account_details">
+              <!--@include components/wc-nonce name="save-account-details-nonce" referer="/account.html"-->
               <div class="form-row wc-actions">
                 <button type="submit" class="woocommerce-Button button btn btn--green" name="save_account_details" value="Зберегти зміни"><span class="btn__inner t-btn">Зберегти зміни</span></button>
               </div>

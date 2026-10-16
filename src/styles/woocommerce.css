@@ -25,6 +25,9 @@
 .woocommerce-error li + li { margin-top: var(--space-5); }
 .woocommerce-error a { cursor: pointer; }
 
+/* mark.order-number|date|status (як у view-order.php/tracking.php WooCommerce): скидання жовтого маркера браузера — вигляд задає роль .t-spec у розмітці */
+.woocommerce mark { background: none; color: inherit; }
+
 /* таблиці (кошик, підсумок, склад замовлення): рядки = hairline як у акордеона/фактів; ролі — у розмітці */
 .woocommerce table.shop_table { width: 100%; border-collapse: collapse; }
 .woocommerce table.shop_table :is(th, td) { padding: var(--space-15) 0; text-align: start; vertical-align: middle; border-bottom: var(--border-hairline) solid var(--color-line-soft); }
@@ -41,7 +44,7 @@
 .woocommerce .product-thumbnail img { width: auto; max-width: none; height: var(--size-wc-thumb-h); object-fit: contain; }
 .woocommerce .product-name .variation { display: flex; gap: var(--space-5); margin: 0; }
 .woocommerce .product-name .variation :is(dt, dd) { margin: 0; }
-.woocommerce a.remove { display: inline-block; transition: color var(--duration-fast) var(--ease-out); }
+.woocommerce a.remove { display: inline-block; padding: var(--space-5); margin: calc(-1 * var(--space-5)); transition: color var(--duration-fast) var(--ease-out); } /* «×»: роль t-lead (крупніший знак) + поле під палець (компенсоване від'ємним відступом — розкладка колонки та сама) */
 @media (hover: hover) { .woocommerce a.remove:hover, .woocommerce a.woocommerce-remove-coupon:hover { color: var(--color-teal); } }
 .woocommerce a.woocommerce-remove-coupon { transition: color var(--duration-fast) var(--ease-out); }
 

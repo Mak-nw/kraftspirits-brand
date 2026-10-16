@@ -3,7 +3,7 @@
 // очищає кошик і веде на ?state=thanks. Стани: ?state=error (помилки валідації) | thanks (подяка) | empty (порожній кошик); ?demo=1 (демо-позиції). Довідники НП — src/data/checkout-demo.js (демо).
 import { initSelect } from './select.js';
 import {
-  state, FREE_SHIPPING_FROM, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, getCoupon, setCoupon, calcTotals,
+  state, FREE_SHIPPING_FROM, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, getCoupon, setCoupon, calcTotals, syncNativeSelect,
 } from './wc-common.js';
 import { NP_AREAS, NP_CITIES, npWarehouses, npAddress, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
@@ -58,7 +58,7 @@ function initForm() {
     const w = wrap(name);
     const fresh = pristine[name].cloneNode(true);
     qs('.select', w).replaceWith(fresh);
-    qs('input[type="hidden"]', w).value = '';
+    syncNativeSelect(w, options);
     initSelect(fresh, { options });
   };
   setSelect('billing_state', NP_AREAS);
@@ -68,7 +68,7 @@ function initForm() {
     const w = e.target.closest('.form-row');
     if (!w) return;
     const name = w.dataset.field;
-    qs('input[type="hidden"]', w).value = e.detail.value;
+    qs('select', w).value = e.detail.value;
     if (name === 'billing_state') {
       setSelect('billing_city', (NP_CITIES[e.detail.value] || []).map((c) => ({ value: c, label: c })));
       setSelect('billing_warehouse', []);
@@ -105,7 +105,7 @@ function initForm() {
   const PHONE_RE = /^[\d\s()+\-.]+$/;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const digits = (s) => s.replace(/\D/g, '');
-  const field = (name) => qs(`[name="${name}"]`, form); // у select-полів id кнопки = name, тож form.elements[name] дав би список
+  const field = (name) => qs(`#${name}`, form); // id поля = name (у select-полів це прихований справжній <select>; id кнопки — name_button)
   const val = (name) => (field(name)?.value || '').trim();
   const RULES = [
     { name: 'billing_first_name', label: 'Ім\'я', test: (v) => v.length >= 2 },

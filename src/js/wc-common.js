@@ -63,6 +63,15 @@ export function calcTotals(lines, coupon = getCoupon()) {
   return { subtotal, discount, total, free, coupon: discount ? coupon : '' };
 }
 
+// справжній прихований <select name="billing_state|billing_city|billing_warehouse"> (його читають checkout.js WooCommerce і плагін «Нової пошти»; серверні дані підставляються в нього без зміни розмітки):
+// варіанти й вибране значення синхронізуються з кнопкою-select (.select) у тій самій обгортці .form-row; перший варіант (плейсхолдер, value="") лишається
+export function syncNativeSelect(wrapper, options, value = '') {
+  const sel = qs('select', wrapper);
+  sel.replaceChildren(sel.options[0], ...options.map((o) => new Option(o.label, o.value)));
+  sel.value = value;
+  return sel;
+}
+
 // нотис із <template> сторінки (розмітка нотисів — partials/components/wc-notice|wc-error): повністю замінює попередні
 export function showNotice(wrapper, kind, text, opts = {}) {
   const tpl = qs(`#wc-tpl-${kind}${opts.href ? '-link' : ''}`);

@@ -1,6 +1,6 @@
 // Рушій partials сайту (винесено з vite.config.js, щоб його використовували й плагін збірки, й інструменти: контрактна перевірка шаблону lp — tools/qa/lp-contract.mjs).
 // Чистий Node (без vite). Директиви в HTML:
-//   <!--@include name [k="v" …]-->  -> partials/name.html; {{key}} / {{key|типове}} / {{#key}}…{{/key}} (блок лише коли key непорожній)
+//   <!--@include name [k="v" …]-->  -> partials/name.html; {{key}} / {{key|типове}} / {{key|$other}} (типове = параметр other) / {{#key}}…{{/key}} (блок лише коли key непорожній)
 //   <!--@each list name-->          -> partials/name.html для кожного елемента списку (поле-масив поточного елемента або lists[list])
 //   <!--@page name-->               -> уся сторінка шаблону lp: partials/lp/page.html + секції (дані — getLpPage(name))
 //   <!--@lp name id-->              -> одна секція сторінки lp (демо в design-system.html)
@@ -28,8 +28,8 @@ export function createRenderer({ root, lists = {}, getLpPage = () => null }) {
     return tpl;
   };
   const fill = (tpl, params) => blocks(tpl, params)
-    // {{key}} або {{key|типове значення}}
-    .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? def ?? '');
+    // {{key}} або {{key|типове значення}}; {{key|$other}} — типове значення = параметр other (напр. id поля за замовчуванням = name)
+    .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? (def?.startsWith('$') ? params[def.slice(1)] : def) ?? '');
   const readPartial = (name) => readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8');
   const lpPage = (name) => { const pg = getLpPage(name); if (!pg) throw new Error(`@page ${name}: немає даних сторінки (src/data/${name}.js за схемою lp-schema.js)`); return pg; };
   const lpSection = (s) => render(fill(readPartial(`lp/${s.type}`), s), s);
