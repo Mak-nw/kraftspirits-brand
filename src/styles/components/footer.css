@@ -1,26 +1,28 @@
-/* Footer (194:1235): висота і геометрія — токени --footer-* (tokens.css) */
+/* Footer (194:1235) на ЄДИНІЙ СІТЦІ САЙТУ (рішення замовника): 12 колонок --grid-*, усі блоки — на межах колонок (QA D12). Висота — токени --footer-* (tokens.css).
+   «Меню» — колонки 1–3, «Каталог» — 4–6, «Контакти» — 7–9; колонки 10–12 вгорі порожні. Нижній рядок: «©» — 1–3, вордмарк yasnocraft по центру (3–10), юридичні посилання — 10–12;
+   бірюзовий блок: вордмарк bazylsprings по центру (3–10), вікове застереження по центру (4–9). */
 .site-footer { background: var(--color-beige); color: var(--color-green); }
-.site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) var(--grid-margin) 0; } /* 194:1237 top 55 */
-/* колонки: старти x=47 / 518 / 960 (194:1237 / 1244 / 1254), остання — праворуч (194:1262) */
-.site-footer__cols { display: grid; grid-template-columns: var(--footer-col-menu-w) var(--footer-col-catalog-w) 1fr auto; align-items: start; }
+.site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) 0 0; } /* 194:1237 top 55 */
+.site-footer__cols, .site-footer__legal, .site-footer__bottom { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); }
+.site-footer__cols, .site-footer__legal { width: var(--grid-w); margin-inline: auto; }
+.site-footer__cols { align-items: start; }
 .site-footer__col { display: flex; flex-direction: column; gap: var(--space-46); }
-/* «Меню» (194:1237): x=49 у макеті, а колонка стартує з gutter 47 — зсув на різницю */
-/* запас під focus-кільце посилань: бокс колонки розширено на --footer-ring-room в обидва боки (від'ємний margin), padding повертає текст на місце — кільце лишається в межах колонки, позиції тексту не змінюються */
-.site-footer__col { margin-inline: calc(-1 * var(--footer-ring-room)); padding-inline: var(--footer-ring-room); }
-.site-footer__col--menu { padding-left: calc(var(--footer-menu-x) - var(--grid-margin) + var(--footer-ring-room)); }
-.site-footer__col--end { align-self: start; }
-/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-nav (її line-height = --nav-box-h) на посиланні/пункті; регістр — КАПС, як у шапці (рішення замовника) */
+.site-footer__col--menu { grid-column: 1 / span 3; }
+.site-footer__col--catalog { grid-column: 4 / span 3; }
+.site-footer__col--contacts { grid-column: 7 / span 3; }
+/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-nav на посиланні/пункті; регістр — КАПС, як у шапці (рішення замовника) */
 .site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); }
-.site-footer__list a { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом, а не на всю колонку (кільце не заходить у сусідню колонку) */
-/* рядок: © / wordmark по центру / оферта; 194:1260 top 623 → 20 до низу бежевої частини */
-.site-footer__legal { display: grid; grid-template-columns: 1fr var(--container-heading-narrow) 1fr; align-items: end; padding-bottom: var(--space-20); position: relative; }
-.site-footer__legal .site-footer__wordmark { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); }
-.site-footer__copy { justify-self: start; }
-/* юридичні посилання (оферта, конфіденційність, cookies, доставка й оплата, 18+, умови бочок): той самий .nav-link.t-nav; шість посилань не вміщаються в один рядок третьої третини
-   (256px на 1200 / 410px на 1920), тому стоять таблицею 2 колонки × 3 рядки, обидві колонки притиснуті праворуч; нижній рядок на одній лінії з «©» (align-items: end рядка);
-   проміжки як між пунктами навігації header (37u) і списків футера (15u). Тимчасово — до перебудови футера на колонки (рішення замовника) */
-.site-footer__offer { grid-column: 3; justify-self: end; width: var(--size-footer-legal-w); display: grid; grid-template-columns: auto auto; justify-content: end; justify-items: end; column-gap: var(--space-37); row-gap: var(--space-15); } /* ширина = колонки 10–12 сітки каталогу (блок на сітці; третя третина рядка вужча на 16u — блок виступає ліворуч у порожню частину середньої третини, wordmark там не сягає) */
-.site-footer__wordmark { display: flex; justify-content: center; width: var(--container-heading-narrow); white-space: nowrap; }
+.site-footer__list a { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом (кільце виступає в зазор між колонками / поле, не обрізується) */
+/* рядок: © / wordmark по центру / юридичні посилання; 194:1260 top 623 → 20 до низу бежевої частини */
+.site-footer__legal { align-items: end; padding-bottom: var(--space-20); position: relative; }
+.site-footer__legal .site-footer__wordmark { position: absolute; inset-inline: 0; bottom: 0; grid-column: 3 / span 8; } /* абсолютний: висота вордмарка рядок не розтягує; ліво/право — межі колонок 3–10 (парна кількість — центр = центр сторінки), низ — край бежевої частини */
+.site-footer__copy { grid-column: 1 / span 3; grid-row: 1; justify-self: start; }
+/* юридичні посилання (оферта, конфіденційність, cookies, доставка й оплата, 18+, умови бочок): той самий .nav-link.t-nav; шість посилань стоять таблицею 2 колонки × 3 рядки в колонках 10–12 (3 колонки = 426u: найширша пара 133u + 37u + 154u = 324u, перенесень у посиланнях немає), обидві колонки притиснуті до правого краю колонки 12,
+   нижній рядок на лінії «©»; проміжки як між пунктами навігації header (37u) і списків футера (15u) */
+.site-footer__offer { grid-column: 10 / span 3; grid-row: 1; display: grid; grid-template-columns: auto auto; justify-content: end; justify-items: end; column-gap: var(--space-37); row-gap: var(--space-15); }
+.site-footer__offer a { white-space: nowrap; }
+.site-footer__wordmark { display: flex; justify-content: center; white-space: nowrap; }
 /* нижній блок (194:1263) */
-.site-footer__bottom { display: flex; flex-direction: column; align-items: center; gap: var(--space-5); height: var(--footer-h-bottom); overflow: clip; background: var(--color-teal); color: var(--color-gold); }
-.site-footer__age { text-align: center; white-space: nowrap; }
+.site-footer__bottom { padding-inline: calc((100% - var(--grid-w)) / 2); align-content: start; justify-items: center; row-gap: var(--space-5); height: var(--footer-h-bottom); overflow: clip; background: var(--color-teal); color: var(--color-gold); }
+.site-footer__bottom .site-footer__wordmark { grid-column: 3 / span 8; justify-self: stretch; }
+.site-footer__age { grid-column: 4 / span 6; justify-self: stretch; text-align: center; white-space: nowrap; }
