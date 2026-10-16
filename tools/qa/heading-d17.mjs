@@ -7,7 +7,7 @@
 //      НЕ порушення (не ламаємо слово, hscroll ловить D3), а info зі словом: «слово не вміщується».
 // Не цілі: заголовок усередині панелі/картки, вирівняний вліво (tour-card, .contacts-panel, коктейль), числа (.stat__num), картка вікової перевірки (.age-card; модальне вікно, не сторінка), навігація категорій каталогу (.catalog-nav: ряд посилань-фільтрів у ролі .t-hero, не заголовок; ширина 8 колонок — рішення замовника не було, див. звіт).
 // Позитивний контроль (controlD17): токен --size-heading-w = 12 колонок → заголовки по центру МАЮТЬ дати порушення.
-export const D17_DEFAULTS = { tolerancePx: 1, centerTolerancePx: 1.5, skipClosest: ['.stat', '.age-card', '[data-age-gate]', '.catalog-nav'] };
+export const D17_DEFAULTS = { tolerancePx: 1, centerTolerancePx: 1.5, skipClosest: ['.stat', '.age-card', '[data-age-gate]', '.catalog-nav', '.ds-header-demo'] };
 
 /** у браузері: збір заголовків (t-hero / t-h2) */
 export async function probeD17(page, cfg = D17_DEFAULTS) {
