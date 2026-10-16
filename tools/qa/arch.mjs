@@ -48,7 +48,7 @@ export async function runArch(o) {
             const dx = A2.map((v, k) => v - B2[k]); const den = dx.reduce((s, v) => s + v * v, 0);
             const cov = (x, y) => { const d = px(x, y); const p = [d[0] - B2[0], d[1] - B2[1], d[2] - B2[2]]; const t = (p[0] * dx[0] + p[1] * dx[1] + p[2] * dx[2]) / den; return Math.min(1, Math.max(0, t)); };
             // арка зміщена на --offset-arch = 6u від краю картки; ширина 414u, висота 535u
-            const ox = rc.x + 6 * uu2, oy = rc.y + 6 * uu2, aw = rc.w - 12 * uu2, /* арка = ширина картки − 2 відступи по 6u (картка 348.55u → арка 336.55u; було фіксовані 414 на картці 426.25) */ ah = 535 * uu2 + (rc.h - 547.667 * uu2); /* арка подовжується на різницю висоти картки (cocktails) */
+            const ox = rc.x + 6 * uu2, oy = rc.y + 6 * uu2, aw = rc.w - 12 * uu2, /* арка = ширина картки − 2 відступи по 6u (картка 348.55u → арка 336.55u; було фіксовані 414 на картці 426.25) */ ah = rc.h - 12.667 * uu2; /* арка подовжується на різницю висоти картки (cocktails) */
             const band = Math.ceil(5 * uu2 * dpr) + 4; // зона пошуку від зовнішнього краю арки (товщина ~2.5u; 4 — запас на зсув)
             const sumLine = (fixed, from, dir, horiz) => { let s = 0; for (let k = 0; k < band; k++) { const a = Math.round(from * dpr) + dir * k; s += horiz ? cov(a, Math.round(fixed * dpr)) : cov(Math.round(fixed * dpr), a); } return s; };
             // відступ від краю в'юпорта: нижня сторона може бути поза кадром — картка по центру, тож усе в кадрі

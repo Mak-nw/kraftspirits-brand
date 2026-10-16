@@ -1,5 +1,5 @@
-/* Картка каталогу (catalog 204:2223, «Каталог 2»): 348.55×547.67 без рамки (4 рівні блоки на 10 колонок; було 426.25 на 12); фон --color-card-bg-catalog (#B7BAAC, рішення замовника);
-   фото-зона 348.55×329.67 (pt 50), тіло 168 (назва 2 рядки + ціна); поверх — арка 204:2230 (рамка 336.55×535 + «Subtract» кути 204:2231).
+/* Картка каталогу (catalog 204:2223, «Каталог 2»): 348.55×480 без рамки (було 547.67, ef696813) (4 рівні блоки на 10 колонок; було 426.25 на 12); фон --color-card-bg-catalog (#B7BAAC, рішення замовника);
+   фото-зона 348.55×342 (pt 44, пляшка 298), тіло 138 (назва 2 рядки + ціна); поверх — арка 204:2230 (рамка 336.55×467.33 + «Subtract» кути 204:2231).
    «Рідина» на hover — світла (--color-liquid-catalog), тому текст НЕ світлішає: лишається --color-green. */
 .product-card--catalog {
   --color-liquid: var(--color-liquid-catalog); /* локальне перевизначення: глобальний --color-liquid і слайдер .product-card--main не змінюються */
@@ -11,7 +11,7 @@
 .product-card[hidden] { display: none; }
 .product-card--catalog:focus-visible { outline-color: var(--color-beige); } /* сторінка на зеленому тлі */
 
-/* арка: ЄДИНИЙ елемент ::before = маска product-card-arch-full.svg (рамка 336.55×535 + кути «Subtract» в одному path), колір — фон --color-green.
+/* арка: ЄДИНИЙ елемент ::before = маска product-card-arch-full.svg (рамка 336.55×467.33 + кути «Subtract» в одному path), колір — фон --color-green.
    Раніше рамка (border, Chrome округлює товщину до цілого device-піксела) і кути (::after, дробова позиція) стикалися на дробовій межі:
    щілина 1px крізь яку видно фон картки + «сходинка» 414 vs 414.484. Один растр без стику цього не має; кути (Figma 414.484, +0.242 з боків) обрізані viewBox по 414 — без сходинки. Шар між рідиною й фото (z-index 1). */
 .product-card--catalog::before {
@@ -33,7 +33,7 @@
 .product-card--catalog:not(.slider__slide) { border-radius: var(--radius-card-catalog); }
 
 .product-card--catalog .product-card__media { z-index: 2; padding: var(--space-card-cat2-photo-top) 0 0; overflow: visible; }
-.product-card--catalog .product-card__body { z-index: 2; }
+.product-card--catalog .product-card__body { z-index: 2; gap: var(--space-card-cat2-body-gap); padding: var(--space-card-cat2-body-top) 0 var(--space-card-cat2-body-bottom); } /* тіло компактніше (ef696813): токени --space-card-cat2-body-* */
 /* текст не світлішає на hover/focus (рідина світла) */
 @media (hover: hover) {
   .product-card--catalog:hover .product-card__body { color: var(--color-green); transition-delay: 0s; }
