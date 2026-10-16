@@ -2,7 +2,7 @@
 // hero-btn (HB): кнопка CTA у hero шаблону lp має контраст заливки ≥ 3:1 (WCAG 1.4.11, нетекстовий елемент) проти фону hero НАВКОЛО неї — у стані default і hover.
 // Причина: на excursions кнопка за темою (btn--green) зливалась із зеленим градієнтом hero.fade (рішення замовника 16.10.2026: «зроби кнопку hero у excursions світлою»).
 // Метод: заливка = computed background-color .btn__inner (або .btn), тло = медіана пікселів знімка в 4 точках за межами кнопки (±12px від рамки), контраст за WCAG.
-// Позитивний контроль (у тому ж прогоні): примусово --btn-bg = --color-green на кнопці → МАЄ дати порушення. Сторінки за замовч.: excursions (єдиний hero із hero.fade; кнопка barrels стоїть на фото без градієнта — її контраст міряє D14 по тексту, не нетекстовий контраст кнопки: див. звіт).  npm run qa:hero-btn
+// Позитивний контроль (у тому ж прогоні): примусово --btn-bg = --color-green на кнопці → МАЄ дати порушення. Сторінки за замовч.: excursions (hero.fade) і barrels (фото без градієнта: кнопка `cta.variant: 'light'`, інакше темна teal-кнопка давала медіану 3.3:1, p10 2.1:1 — verify-E3-B, дефект 3); позитивний контроль — на excursions.  npm run qa:hero-btn
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, sleep, contrast, waitStable } from './lib.mjs';
 
 const MIN = 3;
@@ -30,7 +30,7 @@ async function measure(page) {
   return out;
 }
 
-await runMain('hero-btn', { widths: '1200,1440,1728,1920', scrollbar: 'both', pages: 'excursions' }, async (o) => {
+await runMain('hero-btn', { widths: '1200,1440,1728,1920', scrollbar: 'both', pages: 'excursions,barrels' }, async (o) => {
   const rep = new Report('hero-btn'); let ctl = null; let n = 0; let minC = Infinity;
   for (const combo of matrix(o, { dprs: [o.dpr[0]] })) {
     const L = await launch({ scrollbar: combo.scrollbar, chrome: o.chrome, out: o.out });
