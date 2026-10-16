@@ -323,6 +323,11 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   note(/contacts-panel[\s\S]*<h1[\s\S]*hero__subtitle[\s\S]*btn[\s\S]*<\/div>\s*<\/div>/.test(heroBlock), 'render: hero.panel → H1, лід і кнопка всередині панелі');
   const hn = pageOf([]); hn.sections[0].panel = false; const nHtml = render(hn);
   note(!/contacts-panel|hero--panel/.test(heroOf(nHtml)), 'render: без hero.panel панелі немає');
+  // hero.fade: значення з переліку → клас hero--fade-<токен>; без поля градієнта немає; не-hero секції поле не приймають (53422015)
+  for (const f of ['green', 'teal', 'brown']) { const fp = pageOf([]); fp.sections[0].fade = f; note(new RegExp(`hero--fade hero--fade-${f}\\b`).test(heroOf(render(fp))), `render: hero.fade=${f} → клас hero--fade-${f}`); }
+  const hf0 = pageOf([]); delete hf0.sections[0].fade; note(!/hero--fade/.test(heroOf(render(hf0))), 'render: без hero.fade градієнта (класу hero--fade) немає');
+  const hf1 = pageOf([]); hf1.sections[0].fade = 'gold'; note(jsOk(hf1) !== true && jsonOk(hf1) !== true, 'hero.fade: значення поза переліком (gold) відхиляється схемою (JS і JSON)');
+  const hf2 = pageOf(withIds([fullSection('layers')])); hf2.sections[1].fade = 'green'; note(jsOk(hf2) !== true && jsonOk(hf2) !== true, 'hero.fade: поле не приймається секцією не-hero (layers)');
   note(/<img class="hero__bg"[^>]*fetchpriority="high"/.test(nHtml), 'render: hero-фото має fetchpriority="high"');
 }
 cross('offers: bg без bgW/bgH', (p) => { delete S(p).bgW; }, false, false, 'offers');

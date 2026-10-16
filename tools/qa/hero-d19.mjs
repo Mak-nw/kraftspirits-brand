@@ -7,6 +7,9 @@
 //   box-shadow ≠ none (крім самих панелей з текстом — .hero__panel, що мають власну рамку/тінь компонента: вони не покривають фото) ·
 //   background-image з gradient(…) · заливка background-color з alpha > 0 у нащадка, що покриває ≥ 50% площі hero (шар-оверлей) ·
 //   ::before / ::after з content і (фон/градієнт/тінь/filter/backdrop-filter).
+// ДОЗВОЛЕНИЙ ВИПАДОК (рішення замовника 53422015, `hero.fade`): рівно ОДИН лінійний градієнт знизу вгору від токен-кольору до transparent на `.hero::after` (клас `hero--fade-<токен>`):
+//   computed background-image = linear-gradient(to top, <rgb токена --color-<fade>> 0%, rgba(…,0) 100%); без filter/backdrop-filter/mask/blend/box-shadow/фону/opacity<1; ::before hero і всі нащадки лишаються під забороною.
+//   Дозвіл дійсний лише коли в даних сторінки є `hero.fade` з тим самим значенням (звіряє ds-dynamic.mjs з src/data/<сторінка>.js); без даних той самий градієнт — порушення.
 // Поруч збирається `inkLight`: чи `--lp-hero-ink` на hero = `--color-light` (умова чинності allow D14/D8 для hero екскурсій).
 
 export const D19_DEFAULTS = {
@@ -17,7 +20,7 @@ export const D19_DEFAULTS = {
 };
 
 export function COLLECT_D19(cfg) {
-  const out = { heroes: [], offenders: [], inkLight: null, ink: null, light: null };
+  const out = { heroes: [], offenders: [], inkLight: null, ink: null, light: null, fade: null };
   const roots = [...document.querySelectorAll(cfg.heroSelectors.join(','))].filter((e) => !e.closest('template'));
   if (!roots.length) return out;
   const nameOf = (el) => { const c = (typeof el.className === 'string' ? el.className.trim().split(/\s+/) : []).filter((x) => !/^(is-|js-|has-|in-view|reveal)/.test(x)).slice(0, 2); return el.tagName.toLowerCase() + (c.length ? `.${c.join('.')}` : ''); };
@@ -47,8 +50,22 @@ export function COLLECT_D19(cfg) {
     for (const ps of ['::before', '::after']) {
       const p = getComputedStyle(el, ps); if (p.content === 'none' || p.content === 'normal' || p.display === 'none') continue;
       const bad = [];
+      // hero.fade: єдиний дозволений градієнт — на `.hero::after` (корінь hero з класом hero--fade-<токен>)
+      let fadeOk = false;
+      if (ps === '::after' && role === 'hero' && el.classList.contains('hero')) {
+        const fm = [...el.classList].map((c) => c.match(/^hero--fade-(\w+)$/)).find(Boolean);
+        const gm = p.backgroundImage.match(/^linear-gradient\(to top, (rgb\([^)]*\)) 0%, (rgba\([^)]*,\s*0\)) 100%\)$/);
+        if (fm && gm) {
+          const tokenRgb = probe(`var(--color-${fm[1]})`);
+          out.fade = { cls: fm[1], from: gm[1], to: gm[2], token: tokenRgb, tokenOk: gm[1] === tokenRgb, single: (p.backgroundImage.match(/gradient\(/g) || []).length === 1 };
+          fadeOk = out.fade.tokenOk && out.fade.single;
+          if (!out.fade.tokenOk) bad.push(`градієнт не від токена --color-${fm[1]} (${gm[1]} ≠ ${tokenRgb})`);
+        }
+      }
       if (alpha(p.backgroundColor) > 0.02) bad.push(`фон ${p.backgroundColor}`);
-      if (/gradient\(/.test(p.backgroundImage)) bad.push('градієнт');
+      if (/gradient\(/.test(p.backgroundImage) && !fadeOk) bad.push('градієнт');
+      if (fadeOk && parseFloat(p.opacity) < 0.999) bad.push(`opacity ${p.opacity}`);
+      if (fadeOk && ((p.maskImage || p.webkitMaskImage || 'none') !== 'none' || p.mixBlendMode !== 'normal')) bad.push('mask/mix-blend-mode');
       if (p.boxShadow !== 'none') bad.push('box-shadow');
       if (p.filter !== 'none') bad.push('filter');
       if ((p.backdropFilter || 'none') !== 'none') bad.push('backdrop-filter');

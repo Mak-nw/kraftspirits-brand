@@ -8,8 +8,9 @@ import { D17_DEFAULTS, probeD17, analyzeD17, controlD17 } from './heading-d17.mj
 import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
 import { COLLECT_D18, analyzeD18, controlD18, D18_DEFAULTS } from './grid-d18.mjs';
 import { COLLECT_D19, D19_DEFAULTS } from './hero-d19.mjs';
+import { loadLpPage } from '../lp-pages.mjs';
 import { measureTextOnImage, D14_PAGES, D14_STATES, D14_DEFAULTS } from './text-on-image.mjs';
-import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, waitLayoutStable, collectStable, evalRetry, sleep, uniq } from './lib.mjs';
+import { ROOT, textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, waitLayoutStable, collectStable, evalRetry, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
 function COLLECT(cfg) {
@@ -487,17 +488,23 @@ export async function runDynamic(opts, allow, rep) {
   // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
   if (wantHeroCtx) {
     const heroNeed = A.d19?.heroPages || ['index', 'barrels', 'excursions'];
-    let off = 0;
+    let off = 0, fadeSeen = 0;
+    const dataFade = {};   // hero.fade із даних сторінки (єдине джерело дозволу градієнта D19); сторінки без файлу даних (index) — без fade
+    for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || null; } catch { dataFade[name] = null; } }
     for (const c of d19) {
       const name = c.spec.name; const h = (rep.ctx.hero[name] ||= { inkLight: null, overlay: false, n: 0 });
       h.n++; if (c.data.inkLight === false) h.inkLight = false; else if (c.data.inkLight === true && h.inkLight !== false) h.inkLight = true;
       if (c.data.offenders.length) h.overlay = true;
       if (want19) {
         for (const o of c.data.offenders) { off++; addV({ rule: 'D19', page: c.label, selector: o.el, value: `${o.prop}: ${o.value}`, msg: `hero з фото: оверлей/ефект поверх фото (${o.role}) заборонено (рішення замовника a2289410); allow не діє` }); }
+        const df = dataFade[name], f = c.data.fade;
+        if (f) fadeSeen++;
+        if (f && f.cls !== df) addV({ rule: 'D19', page: c.label, selector: '.hero::after', value: `градієнт hero--fade-${f.cls}`, msg: df ? `у даних hero.fade = «${df}», а на сторінці градієнт «${f.cls}»` : 'градієнт на hero без hero.fade у даних сторінки (рішення замовника 53422015 дозволяє градієнт лише за полем hero.fade); allow не діє' });
+        if (!f && df && c.data.heroes.length) addV({ rule: 'D19', page: c.label, selector: '.hero::after', value: `hero.fade = ${df}, градієнта немає`, msg: 'у даних hero.fade, але computed .hero::after не є дозволеним градієнтом linear-gradient(to top, <токен> 0%, transparent 100%)' });
         if (heroNeed.includes(name) && !c.data.heroes.length) addV({ rule: 'D19', page: c.label, selector: '.hero', value: 'hero не знайдено', msg: 'охоронець покриття: на сторінці з hero-фото немає .hero (збір D19 зламано або hero перейменовано)' });
       }
     }
-    if (want19) rep.info({ rule: 'D19', msg: `hero перевірено на ${d19.filter((c) => c.data.heroes.length).length} сторінко-ширинах (${[...new Set(d19.filter((c) => c.data.heroes.length).map((c) => c.spec.name))].join(', ')}); оверлей-ознак ${off}; hero-ink=light: ${Object.entries(rep.ctx.hero).filter(([, h]) => h.inkLight !== null).map(([n, h]) => `${n}:${h.inkLight ? 'так' : 'ні'}`).join(' ') || '—'}` });
+    if (want19) rep.info({ rule: 'D19', msg: `hero перевірено на ${d19.filter((c) => c.data.heroes.length).length} сторінко-ширинах (${[...new Set(d19.filter((c) => c.data.heroes.length).map((c) => c.spec.name))].join(', ')}); оверлей-ознак ${off}; дозволений градієнт hero.fade на ${fadeSeen} сторінко-ширинах (дані: ${Object.entries(dataFade).filter(([, v]) => v).map(([n, v]) => `${n}:${v}`).join(' ') || '—'}); hero-ink=light: ${Object.entries(rep.ctx.hero).filter(([, h]) => h.inkLight !== null).map(([n, h]) => `${n}:${h.inkLight ? 'так' : 'ні'}`).join(' ') || '—'}` });
   }
   // D12: прив'язка блоків до колонок сітки (tools/qa/grid-d12.mjs)
   if (want12) {

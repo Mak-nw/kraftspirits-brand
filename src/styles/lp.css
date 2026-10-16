@@ -53,7 +53,7 @@
 .show-slots [data-slot] { outline: var(--size-lp-slot-outline) dashed var(--color-gold); outline-offset: calc(-1 * var(--space-10)); }
 .lp-slots { position: fixed; right: var(--space-20); bottom: var(--space-20); z-index: calc(var(--z-header) + 1); display: flex; flex-direction: column; gap: var(--space-10); width: var(--container-lp-slots); max-height: var(--size-lp-slots-max-h); overflow: auto; padding: var(--space-20); border: var(--border-hairline) solid var(--color-lp-hairline); background: var(--color-teal); color: var(--color-light); list-style: none; }
 
-/* ---------- hero: фото на весь екран без градієнта й без CSS-оверлея (рішення замовника a2289410); колір тексту — роль теми --lp-hero-ink (D8 піксельно) ---------- */
+/* ---------- hero: фото на весь екран без градієнта й без CSS-оверлея (рішення замовника a2289410; єдиний виняток — hero.fade, нижче); колір тексту — роль теми --lp-hero-ink (D8 піксельно) ---------- */
 .hero--lp { color: var(--lp-hero-ink); }
 .hero--lp .hero__content { position: absolute; z-index: 2; top: var(--offset-lp-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-hero-gap); text-align: center; }
 /* H1: розмір — роль .t-hero, ширина 4 колонки по центру — .heading-center (base.css) */
@@ -63,6 +63,13 @@
    при жодному кольорі тексту). Колір тексту — роль панелі (--color-green), не --lp-hero-ink; висота — за вмістом (скинуто мін. висоту панелі контактів). */
 .hero--lp .hero__panel { align-items: center; gap: var(--space-lp-hero-gap); width: var(--grid-span-6); min-height: 0; text-align: center; }
 .hero--lp .hero__panel .btn { margin-top: 0; }
+/* hero.fade (рішення замовника 53422015): градієнт поверх фото — колір кімнати-токен знизу 100% → угорі 0% (лише ця форма; без поля градієнта немає), висота — --size-lp-hero-fade-h від низу hero.
+   Шари: фото (.hero__bg) → градієнт (::after, z 1) → текст (.hero__content, z 2). Текст опущено в нижню зону градієнта (низ = --offset-lp-hero-bottom), верх фото лишається видним. D19 дозволяє рівно цей один градієнт. */
+.hero--fade::after { content: ''; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: var(--size-lp-hero-fade-h); background-image: linear-gradient(to top, var(--lp-fade) 0%, transparent 100%); pointer-events: none; }
+.hero--fade-green { --lp-fade: var(--color-green); }
+.hero--fade-teal { --lp-fade: var(--color-teal); }
+.hero--fade-brown { --lp-fade: var(--color-brown); }
+.hero--fade .hero__content { top: auto; bottom: var(--offset-lp-hero-bottom); }
 
 /* ---------- layers: «розріз» (рев'ю 77dd7d09: без кіл з фото, без розмиття/прозорості на накладанні) ----------
    Фото-текстури смугами впритул в одній рамці на всі 12 колонок (радіус панелі DS --radius-panel, як фото-рамки сайту): смуга = span колонок + зазор,

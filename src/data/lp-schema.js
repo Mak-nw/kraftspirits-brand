@@ -56,6 +56,7 @@ export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок 
 // `cols`: ширина вмісту секції в колонках сітки (контейнер = --grid-span-N по центру, по одній вільній колонці з боків для 10). Лише ПАРНА кількість: по центру краї мають лежати на межах колонок (D12).
 // Мінімум залежить від типу (виміряна ємність текстів у вужчому контейнері); нижче мінімуму значення відхиляється збіркою.
 export const COLS_BY_TYPE = { layers: [8, 10, 12], steps: [10, 12], compare: [10, 12], formats: [10, 12], tiles: [6, 8, 10, 12], offers: [10, 12], faq: [8, 10, 12] };
+export const HERO_FADES = ['green', 'teal', 'brown'];       // `hero.fade`: колір градієнта знизу вгору (токен палітри --color-<значення>; без поля — градієнта немає; рішення замовника 53422015)
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
 const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — підказка «що тут має бути за фото» (режим ?slots=on, data-slot)
@@ -77,7 +78,7 @@ export const SCHEMA = {
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
-    hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), cta: { ...CTA, req: true } },
+    hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), fade: E(HERO_FADES), cta: { ...CTA, req: true } },
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2, 3, 4 або 6 (ділять 12 колонок)
     layers: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
@@ -306,7 +307,7 @@ function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), le
 
 const colsOf = (s) => s.cols || GRID_COLS;   // ширина вмісту секції в колонках (типово 12)
 const VIEW = {
-  hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone, panel: s.panel ? '1' : '', mods: s.panel ? ' hero--panel' : '' }),
+  hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone, panel: s.panel ? '1' : '', mods: (s.panel ? ' hero--panel' : '') + (s.fade ? ` hero--fade hero--fade-${s.fade}` : '') }),
   layers: (s) => {
     const span = colsOf(s) / s.items.length;
     const cut = s.items.some((it) => it.img);

@@ -69,6 +69,7 @@
 .icon-demo { display: flex; gap: var(--space-30); align-items: center; }
 .icon-demo img { width: auto; height: auto; }
 
+.ds-hero-fade { height: var(--ds-hero-fade-h); } /* демо hero.fade: справжній hero (.hero--lp.hero--fade) нижчої висоти */
 .demo-variant { display: flex; flex-direction: column; gap: var(--space-10); }
 
 /* Демо каталогу: картка каталогу займає колонку шириною з Figma (479.75), заголовок без верхнього відступу сторінки */
