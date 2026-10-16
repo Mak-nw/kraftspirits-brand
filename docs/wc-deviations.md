@@ -1,0 +1,38 @@
+# Що змінити розробнику при підключенні WooCommerce
+
+Сторінки `cart.html`, `checkout.html`, `account.html` — статична симуляція шаблонів WooCommerce (лише вигляд; без адмінки, платежів і БД). Розмітка повторює стандартні шаблони WC (`cart/*.php`, `checkout/*.php`, `myaccount/*.php`, `order/*.php`) настільки, наскільки це дозволяють правила дизайн-системи; відхилення навмисні й перелічені нижче. Повна специфікація: `reports/wc-templates-spec.md`; звірка «очікується → є»: `reports/verify-D2.md`.
+
+Правило підключення: шаблони перекриваються в темі (`<theme>/woocommerce/…`), класи WC лишаються на тих самих елементах, а вигляд дають класи теми (`.field`, `.btn`, `.contacts-panel`, `.t-*`). Нижче — що в шаблонах теми НЕ збігається зі стандартним WC і що з цим робити.
+
+## 1. Відхилення в розмітці
+
+| Де | Стандартний WC | У нашій верстці | Чому | Що зробити розробнику |
+|---|---|---|---|---|
+| Заголовки секцій у checkout (`form-checkout.php`, `form-billing.php`, `form-shipping.php`) | `h3` («Платіжні дані», `h3#order_review_heading`) | `h2` (`h2#order_review_heading`, `h2.t-lead`) | check-ds D7 забороняє пропуск рівнів h1 → h3 | Лишити `h2` в перекритих шаблонах (WC не стилізує за тегом; JS WC шукає `#order_review_heading` за id). Лише `h3#ship-to-different-address` лишився `h3` — це внутрішній заголовок з чекбоксом |
+| Заголовки в `cart-totals.php`, `order-details.php`, `my-address.php` | `h2` | `h2` + роль `.t-lead` | роль тексту обов'язкова | Додати клас ролі до `h2` у шаблонах теми |
+| Рядки полів (`woocommerce_form_field()`) | `p.form-row.form-row-first/last/wide` | `p.form-row.form-row-*.field` (збережено) + `label.field__label`, `input.input-text.field__control` | вигляд дають `.field*` | Фільтр `woocommerce_form_field_args` / `woocommerce_form_field` — додати класи `field`, `field__label`, `field__control`. `p.form-row` НЕ міняти |
+| Чекбокси й радіо (`#createaccount`, `ship_to_different_address`, `rememberme`, `terms`, способи доставки/оплати) | `p.form-row` або `label.checkbox` у `p.form-row` | `div.check-field` > `label.check` > `input.check__input` | компонент «чекбокс/радіо» (`wc-check`, `wc-radio`) | Перекрити `form-field` для типів checkbox/radio або обгорнути у `div.check-field`; `name`/`id` не міняти (їх читає `checkout.js`) |
+| Логін-форма (`form-login.php`) | `input#username.woocommerce-Input.woocommerce-Input--text.input-text`, `p.woocommerce-form-row.woocommerce-form-row--wide` | `input#username.input-text` у `p.form-row.form-row-wide.field` | немає класів `woocommerce-Input*`, `woocommerce-form-row*`; посилання «Забули пароль» не в `<p>` | Додати класи у шаблон теми; стилі WC на `woocommerce-Input*` ми не використовуємо, тож це лише сумісність зі сторонніми плагінами |
+| Вхід і реєстрація | одна `div#customer_login.u-columns.col2-set` із `.u-column1.col-1` і `.u-column2.col-2` | окремі екрани (перемикання `data-wc-view`); `.u-column1.col-1` є на вході, `u-column2.col-2` — на реєстрації | дизайн макета | Підключити стандартний `form-login.php`; перемикання екранів — `account.js` (прибрати при підключенні реального WC) |
+| Nonce-поля | `_wpnonce` + `woocommerce-*-nonce` + `_wp_http_referer` | `woocommerce-*-nonce="demo-nonce"` і `_wp_http_referer`; **немає `_wpnonce`**, немає `woocommerce-cart-nonce` | статична симуляція | Видати справжні nonce через `wp_nonce_field()` у перекритих шаблонах (partial `wc-nonce` замінити) |
+| Checkout: «Створити акаунт» | `#createaccount` (гості, якщо ввімкнено) | **немає** | поза обсягом макета | Додати `p.form-row.create-account` з `input#createaccount[name=createaccount]` у `form-billing.php`; використати `wc-check` |
+| Checkout: політика конфіденційності | `.woocommerce-privacy-policy-text` над `#place_order` | **немає** | поза обсягом | Додати текст політики (його видає `wc_get_privacy_policy_text`) |
+| Checkout: купон | `.woocommerce-form-coupon-toggle` + форма купона | **немає** (купон є лише в кошику) | поза обсягом | За потреби додати стандартний шаблон `form-coupon.php` |
+| Адреси (`my-address.php`, `form-edit-address.php`) | `div.u-columns.woocommerce-Addresses.col2-set` > `header.woocommerce-Address-title`; окрема форма редагування | перегляд і редагування на одному екрані; немає `.woocommerce-Addresses`, `.woocommerce-address-fields__field-wrapper`; форма `form.woocommerce-address-fields` + `save_address` + nonce є | дизайн | Перекрити `my-address.php`; ендпоінти `edit-address/billing|shipping` лишити стандартними |
+| Навігація кабінету | `li.woocommerce-MyAccount-navigation-link(--endpoint)[.is-active]` | клас є, `.is-active` немає; активний пункт — `aria-current="page"` | CSS теми ходить по `aria-current` | Додати `.is-active` фільтром `woocommerce_account_menu_item_classes` або лишити як є |
+| Деталі замовлення / order-received | `.woocommerce-columns--addresses`, `strong` у `li.__order` | немає обгортки `.woocommerce-columns--addresses`; номер замовлення в `mark.order-number` | дизайн | Додати обгортку в `order-details-customer.php` |
+| Відстеження замовлення (`order/tracking.php`) | `p.order-info > mark.order-number + mark.order-date + mark.order-status` | `mark.*` є, `p.order-info` немає (на сторінці замовлення `ul.woocommerce-order-overview.order-info`) | дизайн | Додати `p.order-info` у `tracking.php` |
+| Редагування акаунта | `div.clear` в кінці форми | немає | непотрібний на сучасній верстці | Нічого (лише якщо плагіни чекають `.clear`) |
+| Нова пошта (місто / відділення) | `select#billing_state.state_select` / `select2` | три приховані `select` (`billing_state`, `billing_city`, `billing_warehouse`) із `id`/`name`, синхронізовані з кнопкою-селектом (`id=*_button`) | дизайн-компонент `select` | Підключити плагін НП; `checkout.js` WC і плагін бачать `select#billing_state` з валідним значенням; DOM кнопок лишити |
+
+## 2. Що точно збігається з WC (не чіпати)
+
+`form.woocommerce-cart-form`, `table.shop_table.cart`, `tr.cart_item`, `a.remove`, `input.qty[name="cart[ID][qty]"]`, `#coupon_code[name=coupon_code]`, `button[name=apply_coupon|update_cart]`, `.cart_totals`, `a.checkout-button`; `form.checkout[name=checkout]`, `#customer_details.col2-set > .col-1/.col-2`, `.woocommerce-billing-fields(__field-wrapper)`, `#order_review`, `table.woocommerce-checkout-review-order-table`, `#payment.woocommerce-checkout-payment`, `ul.wc_payment_methods`, `#place_order`; `billing_*` / `shipping_*` / `order_comments` (імена полів і id); `form.woocommerce-form-login.login`, `form.woocommerce-form-register.register`, `form.woocommerce-ResetPassword.lost_reset_password`, `form.woocommerce-EditAccountForm.edit-account`, `button[name=login|register|save_account_details|save_address|track]`.
+
+## 3. Чекліст розробника
+
+1. Перекрити шаблони в темі (`woocommerce/cart/*`, `checkout/*`, `myaccount/*`, `order/*`) на основі наших `partials/components/wc-*.html` і сторінок; класи WC не прибирати.
+2. Замінити `demo-nonce` на `wp_nonce_field()`; додати `_wpnonce`, `woocommerce-cart-nonce`.
+3. Додати відсутнє: `#createaccount`, `.woocommerce-privacy-policy-text`, (за потреби) купон на checkout, `p.order-info`, `.woocommerce-Addresses`, `.is-active`.
+4. Прибрати демо-скрипти (`cart.js`, `checkout.js`, `account.js`: демо-стан, `?demo=1`, `?state=…`, перемикання екранів) — їх замінює справжній WC JS і AJAX-фрагменти (`update_order_review`, `checkout`, `wc_fragments`).
+5. Після підключення: прогнати `npm run qa:check-ds` на сторінках з реальною розміткою (особливо D7 — ієрархія заголовків, D13 — ролі `.t-*`, D14 — контраст тексту на зображенні: `qa:img-contrast` додає стани `cart?demo=1`, `checkout?demo=1`, `account?state=…`).
