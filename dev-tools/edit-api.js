@@ -6,7 +6,6 @@ import { resolve, join, relative } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 const ID_RE = /^[a-f0-9]{8}$/;
-const TYPES = ['spacing', 'size', 'text', 'move', 'role', 'span', 'align', 'color', 'opacity', 'hide'];
 const STATUSES = ['draft', 'open', 'done'];
 
 // чистка довільного JSON з клієнта: глибина ≤5, рядки ≤2000 (text — до 8000), масиви ≤40, ключі ≤30
@@ -21,23 +20,183 @@ function clean(v, depth = 0, limit = 2000) {
   }
   return null;
 }
-// Лише токени системи: color — колір з --color-* (опційно color-mix з прозорістю); opacity — --opacity-* або 1. Повертає текст помилки або ''.
-const COLOR_CSS = /^(var\(--color-[\w-]+\)|color-mix\(in srgb, var\(--color-[\w-]+\) [\d.]+%, transparent\))$/;
-export function tokenError(b) {
-  const to = b && b.to;
-  if (b?.type === 'color') {
-    if (!to || typeof to !== 'object') return 'color: потрібне «to»';
-    if (typeof to.token !== 'string' || !/^--color-[\w-]+$/.test(to.token)) return 'color: дозволені лише токени кольору системи (--color-*)';
-    if (to.css != null && !COLOR_CSS.test(String(to.css))) return 'color: значення не з токенів (потрібно var(--color-*) або color-mix з токена)';
-    if (to.alphaToken != null && !/^--opacity-[\w-]+$/.test(String(to.alphaToken))) return 'color: alphaToken має бути --opacity-*';
+// ---------- ЄДИНА серверна валідація «лише токени» ----------
+// Застосовується до ВСІХ шляхів запису (POST новий, POST-upsert за id, PATCH) і до ВСІХ записів. Тип виводиться зі СТРУКТУРИ запису
+// (prop / restore.css / target / to.token / alpha*), а не береться на віру з запиту: прихований hex у запису без type або з type:'spacing' теж відхиляється.
+// color: --color-* (to.token / colorToken / css / restore.value), alphaToken лише --opacity-*, відсотки color-mix — лише дозволений набір
+//   (експериментальні з конфіга <reviewDir>/edit.config.json → opacity.experimental, типово 90/70/50/30/20, плюс відсотки токенів --opacity-* з src/styles);
+// opacity: --opacity-* або 1; spacing/size: --space-* / --size-* / --container-* / --radius-* (або 0).
+const TYPES_ALL = ['spacing', 'size', 'text', 'move', 'role', 'span', 'align', 'color', 'opacity', 'hide'];
+const DEFAULT_EXP = [90, 70, 50, 30, 20];
+const COLOR_PROP = /^(color|background-color|border-color|fill|stroke)$/;
+const SPACE_PROP = /^(padding|margin)(-(top|right|bottom|left))?$|^(row-|column-)?gap$/;
+const SIZE_PROP = /^(min-|max-)?(width|height)$/;
+const RADIUS_PROP = /^border-radius$/;
+const DIM_TOKEN = { space: /^--space-[\w-]+$/, size: /^--(size|container|space)-[\w-]+$/, radius: /^--radius-[\w-]+$/ };
+const DIM_ANY = /^--(space|size|container|radius)-[\w-]+$/;
+const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+const hexToRgbHex = (h) => { const m = /^#([0-9a-f]{3}|[0-9a-f]{6})([0-9a-f]{2})?$/i.exec(h || ''); if (!m) return null; const c = m[1].length === 3 ? m[1].replace(/./g, '$&$&') : m[1]; return `#${c}`.toUpperCase(); };
+const colorMixRe = (tok) => new RegExp(`^color-mix\\(in srgb, var\\((${tok})\\) ([\\d.]+)%, transparent\\)$`);
+
+function propDomain(p) {
+  if (typeof p !== 'string') return null;
+  if (COLOR_PROP.test(p) || /^color-(text|bg|border|icon)$/.test(p)) return 'color';
+  if (p === 'opacity') return 'opacity';
+  if (SPACE_PROP.test(p)) return 'space';
+  if (SIZE_PROP.test(p)) return 'size';
+  if (RADIUS_PROP.test(p)) return 'radius';
+  return null;
+}
+// сигнали структури: яку «предметну область» зачіпає запис (color | opacity | space | size | radius)
+export function domainsOf(r) {
+  const to = isObj(r.to) ? r.to : {}, from = isObj(r.from) ? r.from : {}, rs = isObj(r.restore) ? r.restore : {};
+  const d = new Set();
+  for (const p of [r.prop, rs.css, rs.prop, to.property, from.property]) { const x = propDomain(p); if (x) d.add(x); }
+  if (r.target) d.add('color');
+  for (const o of [to, from]) {
+    if (o.alphaKind !== undefined || o.alphaPct !== undefined || o.alphaToken != null || o.colorToken != null) d.add('color');
+    if (typeof o.token === 'string') {
+      if (o.token.startsWith('--color-')) d.add('color');
+      else if (o.token.startsWith('--opacity-')) d.add('opacity');
+      else if (o.token.startsWith('--space-')) d.add('space');
+      else if (o.token.startsWith('--size-') || o.token.startsWith('--container-')) d.add('size');
+      else if (o.token.startsWith('--radius-')) d.add('radius');
+    }
   }
-  if (b?.type === 'opacity') {
-    if (!to || typeof to !== 'object') return 'opacity: потрібне «to»';
+  return d;
+}
+
+export function createTokenInfo({ root, reviewDir }) {
+  let cache = null;
+  const readCfg = () => { try { return JSON.parse(readFileSync(resolve(reviewDir, 'edit.config.json'), 'utf8')); } catch { return {}; } };
+  function scan() {
+    if (cache && Date.now() - cache.t < 3000) return cache;
+    const files = []; walkCss(resolve(root, 'src/styles'), files);
+    const raw = new Map();
+    for (const f of files) {
+      let c; try { c = readFileSync(f, 'utf8'); } catch { continue; }
+      for (const m of c.matchAll(/(--(?:color|opacity)-[\w-]+)\s*:\s*([^;}]+)[;}]/g)) { const v = m[2].trim().replace(/\/\*.*?\*\//g, '').trim(); (raw.get(m[1]) || raw.set(m[1], new Set()).get(m[1])).add(v); }
+    }
+    const colors = new Map(), opacities = new Map();
+    const resolveColor = (name, depth = 0) => {
+      const vs = raw.get(name); if (!vs || vs.size !== 1 || depth > 4) return null;
+      const v = [...vs][0]; const h = hexToRgbHex(v); if (h && v.length <= 9) return h;
+      const m = /^var\((--color-[\w-]+)\)$/.exec(v); return m ? resolveColor(m[1], depth + 1) : null;
+    };
+    for (const name of raw.keys()) {
+      if (name.startsWith('--color-')) colors.set(name, resolveColor(name));
+      else { const vs = [...raw.get(name)]; const n = vs.length === 1 ? parseFloat(vs[0]) : NaN; opacities.set(name, Number.isFinite(n) && /^[\d.]+%?$/.test(vs[0]) ? (vs[0].endsWith('%') ? n : n * 100) : null); }
+    }
+    cache = { t: Date.now(), colors, opacities };
+    return cache;
+  }
+  function walkCss(dir, out) {
+    let names = []; try { names = readdirSync(dir); } catch { return; }
+    for (const n of names) { const p = join(dir, n); let st; try { st = statSync(p); } catch { continue; } if (st.isDirectory()) walkCss(p, out); else if (/\.css$/.test(n)) out.push(p); }
+  }
+  return {
+    colors: () => scan().colors, opacities: () => scan().opacities,
+    experimental: () => { const e = readCfg()?.opacity?.experimental; return Array.isArray(e) && e.every((x) => typeof x === 'number' && x > 0 && x < 100) ? e : DEFAULT_EXP; },
+    allowedPcts() { return [...this.experimental(), ...[...scan().opacities.values()].filter((x) => x != null)]; },
+  };
+}
+
+// Повертає текст помилки або ''. r — запис (після sanitize/злиття), tk — createTokenInfo(). Тип запису береться з r.type (виведений із структури до виклику).
+export function tokenError(r, tk) {
+  const to = isObj(r.to) ? r.to : null, from = isObj(r.from) ? r.from : {}, rs = isObj(r.restore) ? r.restore : null;
+  const dom = domainsOf(r), t = r.type;
+  const isDim = t === 'spacing' || t === 'size';
+  if (dom.size > 1 && !(dom.size === 2 && dom.has('space') && dom.has('size'))) return `запис змішує різні області (${[...dom].join('+')}) — відхилено`;
+  const d = [...dom][0];
+  const expect = d === 'color' ? 'color' : d === 'opacity' ? 'opacity' : d ? null : undefined;
+  if (d && expect && t !== expect) return `тип «${t}» не відповідає структурі запису (${d})`;
+  if (d && !expect && !isDim) return `тип «${t}» не відповідає структурі запису (${d})`;
+  if (!d && (t === 'color' || t === 'opacity') && !to) return `${t}: потрібне «to»`;
+
+  if (t === 'color') {
+    if (!to) return 'color: потрібне «to»';
+    if (typeof to.token !== 'string' || !/^--color-[\w-]+$/.test(to.token)) return 'color: дозволені лише токени кольору системи (--color-*)';
+    const cols = tk.colors();
+    if (cols.size && !cols.has(to.token)) return `color: токена ${to.token} немає в tokens`;
+    if (to.colorToken != null && to.colorToken !== to.token && !/^--color-[\w-]+$/.test(String(to.colorToken))) return 'color: colorToken має бути --color-*';
+    if (r.prop && !COLOR_PROP.test(r.prop)) return 'color: prop має бути властивістю кольору';
+    if (r.target && !['text', 'background', 'border', 'icon'].includes(r.target)) return 'color: невідомий target';
+    const pcts = tk.allowedPcts();
+    const okPct = (x) => typeof x === 'number' && (Math.abs(x - 100) < 0.01 || pcts.some((p) => Math.abs(p - x) < 0.01));
+    if (to.css != null) {
+      const css = String(to.css); let mm;
+      if (css === `var(${to.token})`) { /* без alpha */ }
+      else if ((mm = colorMixRe(to.token.replace(/[-]/g, '\\-')).exec(css))) { if (!okPct(+mm[2])) return `color: прозорість ${mm[2]}% не з дозволеного набору (експериментальні ${tk.experimental().join('/')} або токени --opacity-*)`; if (to.alphaPct != null && Math.abs(+mm[2] - to.alphaPct) > 0.01) return 'color: alphaPct не збігається з відсотком у css'; }
+      else return 'color: значення не з токенів (потрібно var(--color-*) або color-mix з цього токена)';
+    }
+    if (to.alphaPct != null && !okPct(to.alphaPct)) return `color: alphaPct ${to.alphaPct} не з дозволеного набору`;
+    if (to.alphaToken != null) {
+      if (!/^--opacity-[\w-]+$/.test(String(to.alphaToken))) return 'color: alphaToken має бути --opacity-*';
+      const ops = tk.opacities(); if (ops.size && !ops.has(to.alphaToken)) return `color: токена ${to.alphaToken} немає в tokens`;
+      const pv = ops.get(to.alphaToken); if (pv != null && to.alphaPct != null && Math.abs(pv - to.alphaPct) > 0.6) return 'color: alphaPct не збігається зі значенням alphaToken';
+    }
+    if (to.alphaKind != null && !['none', 'token', 'experimental'].includes(to.alphaKind)) return 'color: невідомий alphaKind';
+    if (to.alphaKind === 'token' && to.alphaToken == null) return 'color: alphaKind=token потребує alphaToken';
+    if (to.alphaKind === 'experimental' && to.alphaToken != null) return 'color: experimental не має alphaToken';
+    if (to.value != null) { // hex ТОКЕНА (не змішаного кольору)
+      const h = hexToRgbHex(String(to.value)); if (!h) return 'color: value має бути hex токена';
+      const th = cols.get(to.token); if (th && th !== h) return `color: value ${to.value} не збігається з hex токена ${to.token} (${th})`;
+    }
+    for (const k of ['token', 'colorToken']) if (typeof from[k] === 'string' && !/^--color-[\w-]+$/.test(from[k])) return `color: from.${k} має бути --color-*`;
+    if (from.alphaToken != null && !/^--opacity-[\w-]+$/.test(String(from.alphaToken))) return 'color: from.alphaToken має бути --opacity-*';
+    if (rs) {
+      if (rs.kind !== 'style') return 'color: restore.kind має бути style';
+      if (rs.css != null && !COLOR_PROP.test(String(rs.css))) return 'color: restore.css має бути властивістю кольору';
+      const v = rs.value == null ? '' : String(rs.value);
+      if (v !== '') {
+        let mm;
+        if (v === `var(${to.token})`) { /* ok */ }
+        else if (/^var\(--color-[\w-]+\)$/.test(v)) { if (cols.size && !cols.has(v.slice(4, -1))) return 'color: restore.value — токена немає в tokens'; }
+        else if ((mm = colorMixRe('--color-[\\w-]+').exec(v))) { if (!okPct(+mm[2])) return `color: restore.value — прозорість ${mm[2]}% не з дозволеного набору`; if (cols.size && !cols.has(v.match(/var\((--color-[\w-]+)\)/)[1])) return 'color: restore.value — токена немає в tokens'; }
+        else return 'color: restore.value не з токенів (var(--color-*) або color-mix з токена)';
+      }
+    }
+    return '';
+  }
+  if (t === 'opacity') {
+    if (!to) return 'opacity: потрібне «to»';
     const ok = (typeof to.token === 'string' && /^--opacity-[\w-]+$/.test(to.token)) || to.value === 1;
     if (!ok) return 'opacity: дозволені лише токени --opacity-* або 1 (без прозорості)';
+    const ops = tk.opacities(); if (typeof to.token === 'string' && ops.size && !ops.has(to.token)) return `opacity: токена ${to.token} немає в tokens`;
+    if (r.prop && r.prop !== 'opacity') return 'opacity: prop має бути opacity';
     if (to.css != null && !/^(var\(--opacity-[\w-]+\)|1)$/.test(String(to.css))) return 'opacity: значення не з токенів';
+    if (typeof from.token === 'string' && !/^--opacity-[\w-]+$/.test(from.token)) return 'opacity: from.token має бути --opacity-*';
+    if (rs) {
+      if (rs.css != null && rs.css !== 'opacity') return 'opacity: restore.css має бути opacity';
+      const v = rs.value == null ? '' : String(rs.value);
+      if (v !== '' && !/^(var\(--opacity-[\w-]+\)|1)$/.test(v)) return 'opacity: restore.value не з токенів';
+    }
+    return '';
+  }
+  if (isDim) { // spacing / size: простір і розмір лише токенами (або 0)
+    const pr = [r.prop, rs?.css].find((x) => typeof x === 'string' && propDomain(x));
+    const kind = pr && DIM_TOKEN[propDomain(pr)] ? propDomain(pr) : null;
+    const re0 = kind ? DIM_TOKEN[kind] : DIM_ANY, re = { test: (x) => x === '0' || re0.test(x) }; // «0» — крок шкали без токена
+    const cssOk = (v) => v === '0' || (/^var\((--[\w-]+)\)$/.test(v) && re.test(v.slice(4, -1)));
+    if (to) {
+      if (to.token != null && !(typeof to.token === 'string' && re.test(to.token))) return `${t}: to.token має бути токеном ${kind === 'space' ? '--space-*' : kind === 'radius' ? '--radius-*' : '--size-*/--container-*/--space-*'}`;
+      if (to.css != null && !cssOk(String(to.css))) return `${t}: to.css не з токенів`;
+    }
+    if (typeof from.token === 'string' && !re.test(from.token)) return `${t}: from.token не з токенів`;
+    if (rs && rs.kind === 'style') { const v = rs.value == null ? '' : String(rs.value); if (v !== '' && !cssOk(v)) return `${t}: restore.value не з токенів`; }
   }
   return '';
+}
+// тип запису: явний (валідний) або виведений зі структури; повертає { type } або { error }
+export function resolveType(declared, r) {
+  if (declared != null && declared !== '' && !TYPES_ALL.includes(declared)) return { error: 'невідомий type' };
+  const dom = domainsOf(r);
+  if (declared) return { type: declared };
+  if (dom.has('color')) return { type: 'color' };
+  if (dom.has('opacity')) return { type: 'opacity' };
+  if (dom.has('size') && !dom.has('space')) return { type: 'size' };
+  if (dom.has('radius')) return { type: 'size' };
+  return { type: 'spacing' };
 }
 const str = (v, n) => (typeof v === 'string' ? v.slice(0, n) : '');
 
@@ -45,6 +204,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
   const file = resolve(reviewDir, 'edits.json');
   const shots = resolve(reviewDir, 'shots');
   const configFile = resolve(reviewDir, 'edit.config.json');
+  const tk = createTokenInfo({ root, reviewDir });
 
   const load = () => { try { return JSON.parse(readFileSync(file, 'utf8')).edits || []; } catch { return []; } };
   const save = (edits) => {
@@ -124,7 +284,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       selector: str(b.selector, 500),
       parentSelector: str(b.parentSelector, 500),
       elementText: str(b.elementText, 120),
-      type: TYPES.includes(b.type) ? b.type : 'spacing',
+      type: typeof b.type === 'string' ? b.type : '',
       prop: str(b.prop, 60),
       target: str(b.target, 20), // color: text | background | border | icon
       group: str(b.group, 60),
@@ -177,16 +337,22 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
     if (req.method === 'POST' && !id) {
       const body = await readBody(req);
       const now = new Date().toISOString();
-      const terr = tokenError(body); if (terr) { send(res, 400, { error: terr }); return true; }
-      if (typeof body.id === 'string' && ID_RE.test(body.id)) { // upsert за id клієнта (ідемпотентно; keepalive-запити при перезавантаженні)
-        const all0 = load(); const ex = all0.find((x) => x.id === body.id);
-        if (ex) {
-          const s2 = sanitize({ ...ex, ...body });
-          for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx', 'parentSelector', 'selector', 'elementText', 'tracks', 'source']) if (k in s2 && !(k === 'source' && ex.type !== 'move')) ex[k] = s2[k];
-          ex.updatedAt = now; save(all0); send(res, 200, ex); return true;
-        }
+      const hasId = typeof body.id === 'string' && ID_RE.test(body.id);
+      const ex = hasId ? load().find((x) => x.id === body.id) : null;
+      if (ex) { // upsert існуючого: тип береться з ЗАПИСУ (з тіла не змінюється), валідується результат злиття
+        const s2 = sanitize({ ...ex, ...body, type: ex.type });
+        const cand = { ...ex };
+        for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx', 'parentSelector', 'selector', 'elementText', 'tracks', 'source']) if (k in s2 && !(k === 'source' && ex.type !== 'move')) cand[k] = s2[k];
+        const terr = ('to' in body || 'restore' in body) ? tokenError(cand, tk) : ''; if (terr) { send(res, 400, { error: terr }); return true; }
+        const all0 = load(); const ex0 = all0.find((x) => x.id === body.id);
+        Object.assign(ex0, cand, { updatedAt: now }); save(all0); send(res, 200, ex0); return true;
       }
-      const rec = { id: (typeof body.id === 'string' && ID_RE.test(body.id)) ? body.id : randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...sanitize(body), status: 'draft', shot: null };
+      const s0 = sanitize(body); const rt = resolveType(s0.type, s0);
+      if (rt.error) { send(res, 400, { error: rt.error }); return true; }
+      s0.type = rt.type;
+      if (s0.type === 'move') { s0.tracks = clean(body.tracks ?? null); s0.source = str(body.source, 600); }
+      const terr = tokenError(s0, tk); if (terr) { send(res, 400, { error: terr }); return true; }
+      const rec = { id: hasId ? body.id : randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...s0, status: 'draft', shot: null };
       if (rec.type === 'text') Object.assign(rec, findSource(rec.from?.text));
       else if (rec.type === 'color' || rec.type === 'opacity') Object.assign(rec, findClassSource(rec.selector));
       const all = load(); all.push(rec); save(all);
@@ -209,9 +375,11 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       const body = await readBody(req);
       const all = load(); const e = all.find((x) => x.id === id);
       if (!e) { send(res, 404, { error: 'not found' }); return true; }
-      const terr = 'to' in body ? tokenError({ type: e.type, to: body.to }) : ''; if (terr) { send(res, 400, { error: terr }); return true; }
-      const s = sanitize({ ...e, ...body });
-      for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx']) if (k in body) e[k] = s[k];
+      const s = sanitize({ ...e, ...body, type: e.type });
+      const cand = { ...e };
+      for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx']) if (k in body) cand[k] = s[k];
+      const terr = ('to' in body || 'restore' in body) ? tokenError(cand, tk) : ''; if (terr) { send(res, 400, { error: terr }); return true; }
+      Object.assign(e, cand);
       if (STATUSES.includes(body.status)) e.status = body.status;
       e.updatedAt = new Date().toISOString();
       save(all); send(res, 200, e); return true;

@@ -9,7 +9,7 @@ const DEFAULTS = {
   size: { prefixes: ['--size-', '--container-'] },              // height / width (+ primary space)
   radius: { prefixes: ['--radius-'] },
   color: { prefix: '--color-', exclude: '^--color-hover-' },
-  opacity: { prefix: '--opacity-' },
+  opacity: { prefix: '--opacity-', experimental: [90, 70, 50, 30, 20] }, // experimental — експериментальні кроки alpha (не токени), якщо відсоток збігається з токеном --opacity-*, показується як токен
   span: { prefixes: ['--span-'] },
   exclude: ['[data-age-gate]'],                                 // селектори, які не можна вибирати
   roles: '^\\.t-[a-z0-9]+(?:-[a-z0-9]+)*$',                    // селектор ролі тексту у таблицях стилів
@@ -259,13 +259,14 @@ export function initEdit(deps) {
     return list;
   }
   // кроки прозорості КОЛЬОРУ (alpha): спершу токени --opacity-*, далі експериментальні 90…10% (які не збігаються з токеном); 100% = без прозорості
-  const EXP_ALPHA = [90, 80, 70, 60, 50, 40, 30, 20, 10];
   function getAlphaSteps() {
     const toks = getOpacities().filter((e) => !e.plain && e.value < 1), out = [];
     for (const e of toks) out.push({ pct: r2(e.value * 100), name: e.name, aliases: e.aliases, token: true });
-    for (const v of EXP_ALPHA) if (!out.some((x) => Math.abs(x.pct - v) < 0.01)) out.push({ pct: v, name: null, aliases: [], token: false });
-    out.push({ pct: 100, name: null, aliases: [], token: false, none: true });
-    return out.sort((a, b) => b.pct - a.pct);
+    out.sort((a, b) => b.pct - a.pct); // токени --opacity-* першими (за спаданням), далі експериментальні, наприкінці 100% (без прозорості)
+    const exp = [];
+    for (const v of CFG.opacity.experimental || []) if (!out.some((x) => Math.abs(x.pct - v) < 0.01)) exp.push({ pct: v, name: null, aliases: [], token: false });
+    exp.sort((a, b) => b.pct - a.pct);
+    return [...out, ...exp, { pct: 100, name: null, aliases: [], token: false, none: true }];
   }
   const alphaStepOf = (pct) => getAlphaSteps().find((x) => Math.abs(x.pct - pct) < 0.6) || null;
   const nearestOpToken = (pct) => { const t = getAlphaSteps().filter((x) => x.token); let b = null; for (const x of t) if (!b || Math.abs(x.pct - pct) < Math.abs(b.pct - pct)) b = x; return b ? { token: b.name, percent: b.pct } : null; };
@@ -344,7 +345,9 @@ export function initEdit(deps) {
       const mm = inl.match(/^color-mix\(in srgb, var\((--[\w-]+)\) ([\d.]+)%, transparent\)$/), vm = inl.match(/^var\((--[\w-]+)\)$/);
       const col = parseColor(v), a = col[3];
       const token = mm ? mm[1] : vm ? vm[1] : (colorToken(v) || colorTokenRgb(col));
-      const raw = a * 100, pct = mm ? r2(+mm[2]) : (alphaStepOf(raw)?.pct ?? Math.round(raw)), hex = toHex([col[0], col[1], col[2], 1]);
+      const raw = a * 100, pct = mm ? r2(+mm[2]) : (alphaStepOf(raw)?.pct ?? Math.round(raw));
+      // hex ТОКЕНА (чистий rgb з палітри), а не змішаного кольору: computed після alpha/canvas-округлення дає хибний hex (#DBDBCF замість #DCDBCF)
+      const pent = token ? getPalette().find((e) => e.name === token || e.aliases.includes(token)) : null, hex = pent ? toHex([pent.rgb[0], pent.rgb[1], pent.rgb[2], 1]) : toHex([col[0], col[1], col[2], 1]);
       const st = alphaStepOf(pct), aTok = st && st.token ? st.name : null;
       const kind = pct >= 99.95 ? 'none' : aTok ? 'token' : 'experimental';
       const ct = P.target === 'text' || P.target === 'background' ? contrastInfo(n) : null;
@@ -649,13 +652,16 @@ export function initEdit(deps) {
     S.changes.delete(m.key);
     // користувач сам скасував правку (×, undo до оригіналу, «Скинути все»): видаляємо запис — і чернетку, і надіслану (open), щоб накладка не повернулась після reload.
     // Виконані (done) у S.changes не тримаються, тож не чіпаються.
-    return enqueue(m, async () => { const id = m.record?.id || (m.dirty ? m.id : null); if (id && (!m.record || m.record.status === 'draft' || m.record.status === 'open')) { try { await api('DELETE', '/edits/' + id); } catch { /* 404 — вже немає */ } } m.record = null; m.dirty = false; updateBtn(); });
+    return enqueue(m, async () => { const id = m.record?.id; if (id && (m.record.status === 'draft' || m.record.status === 'open')) { try { await api('DELETE', '/edits/' + id); } catch { /* 404 — вже немає */ } } m.record = null; m.dirty = false; updateBtn(); });
   }
   function afterOp(keys) {
     for (const k of keys) {
       const m = S.changes.get(k); if (!m) continue;
       m.cur = m.read();
-      if (m.cur.k === m.orig.k) dropRecord(m); else syncSoon(m);
+      if (m.cur.k === m.orig.k) { // повернулись до вихідного: запис видаляється, а inline-накладка (колір/opacity) чиститься як при Esc/«Скинути»
+        if (m.type === 'color' || m.type === 'opacity') { try { m.put(m.origSnap); } catch { /* елемент зник */ } m.cur = m.read(); }
+        dropRecord(m);
+      } else syncSoon(m);
     }
     renderInfo(); renderChanges(); draw();
   }
@@ -1364,7 +1370,8 @@ export function initEdit(deps) {
       const dn = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' }[e.key];
       if (e.altKey || S.prop === 'move') { swapDir(dn); return; }
       // роль — навігація списком: ↑/← = попередній, ↓/→ = наступний; решта: ↑/→ більше, ↓/← менше
-      const dir = PROPS[S.prop].type === 'role' ? (e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1) : dirs[e.key];
+      // колір (без Shift) — як роль: ↑/← = попередній токен, ↓/→ = наступний (збігається з підказками й README); Shift+↑/↓ — alpha: ↑ менш прозоро
+      const T2 = PROPS[S.prop].type, dir = T2 === 'role' || (T2 === 'color' && !e.shiftKey) ? (e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1) : dirs[e.key];
       stepProp(dir, e.shiftKey ? CFG.shiftSteps : 1);
     }
   }, true);
@@ -1668,7 +1675,7 @@ export function initEdit(deps) {
   window.addEventListener('keyup', persistSoon, true);
   addEventListener('pagehide', persistNow);
   addEventListener('beforeunload', persistNow);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistNow(); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistNow(); else pollRemote(); }); // повернення у вкладку: одразу синхронізуємо done/видалені (опитування у прихованій вкладці стоїть)
 
     // ---------- відновлення чернеток після перезавантаження ----------
   async function restoreDrafts() {
