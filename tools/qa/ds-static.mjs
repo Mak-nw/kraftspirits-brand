@@ -30,8 +30,15 @@ export function selectorMatches(allowSel, violationSel) {
   const need = selTokens(allowSel), have = new Set(selTokens(violationSel));
   return need.length > 0 && need.every((t) => have.has(t));
 }
-export function isAllowed(allow, v) {
+/** Умовні винятки: запис allow із `requires` діє, лише поки умова виконана (ctx збирає ds-dynamic).
+ *  'hero-light-no-overlay' — hero сторінки (з v.page) має `--lp-hero-ink` = `--color-light` на всіх замірах І жодного оверлея (D19 чисте); без даних — умова НЕ виконана. */
+const REQUIRES = { 'hero-light-no-overlay': (ctx, v) => { const h = ctx?.hero?.[String(v.page || '').split('@')[0]]; return !!h && h.inkLight === true && !h.overlay; } };
+/** D19 (hero без оверлея) НЕ фільтрується allow.json — інакше виняток D14/D8 заглушив би майбутній оверлей. */
+export const NO_ALLOW_RULES = new Set(['D19']);
+export function isAllowed(allow, v, ctx) {
+  if (NO_ALLOW_RULES.has(v.rule)) return false;
   return allow.allow.some((a) =>
+    (!a.requires || (REQUIRES[a.requires] ? REQUIRES[a.requires](ctx, v) : false)) &&
     (a.rule === '*' || a.rule === v.rule) &&
     (!a.file || (v.file || '').includes(a.file)) &&
     (!a.selector || selectorMatches(a.selector, v.selector || '')) &&

@@ -14,7 +14,7 @@ await runMain('check-ds', { widths: '1920', scrollbar: 'classic', dpr: '1' }, as
   o.rules = o.rules ? new Set(String(o.rules).split(',').map((s) => s.trim().toUpperCase())) : null;
   const want = (set) => !o.rules || [...set].some((r) => o.rules.has(r));
   const doStatic = !o.dynamicOnly && want(['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11']);
-  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D17', 'D16']);
+  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D17', 'D16', 'D18', 'D19']);
 
   if (doStatic) {
     let dist = o.dist ? join(ROOT, o.dist) : join(o.out, 'dist');
@@ -23,12 +23,12 @@ await runMain('check-ds', { widths: '1920', scrollbar: 'classic', dpr: '1' }, as
       if (!b.ok) { rep.note(`vite build не вдалась (S7/S9/S10 пропущено): ${(b.stderr || '').slice(0, 300)}`); dist = null; }
     } else if (o.noBuild) dist = null;
     const s = runStatic({ allow, dist, rules: o.rules });
-    for (const v of s.items) { if (isAllowed(allow, v)) { rep.stats.allowed = (rep.stats.allowed || 0) + 1; continue; } rep.add({ ...v, file: v.line ? `${v.file}:${v.line}` : v.file }); }
+    for (const v of s.items) { if (isAllowed(allow, v, rep.ctx)) { rep.stats.allowed = (rep.stats.allowed || 0) + 1; continue; } rep.add({ ...v, file: v.line ? `${v.file}:${v.line}` : v.file }); }
     for (const i of s.infos) rep.info(i);
     rep.stats.static = s.stats;
   }
   if (doDynamic) await runDynamic(o, allow, rep);
   // винятки також фільтрують динамічні записи
-  rep.items = rep.items.filter((v) => !isAllowed(allow, v));
+  rep.items = rep.items.filter((v) => !isAllowed(allow, v, rep.ctx));
   return rep;
 });

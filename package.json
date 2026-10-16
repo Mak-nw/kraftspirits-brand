@@ -20,6 +20,8 @@
     "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none",
     "qa:img-contrast": "node tools/qa/check-ds.mjs --rules D14 --widths 1200,1440,1728,1920 --scrollbar both",
     "qa:header": "node tools/qa/check-ds.mjs --rules D15 --widths 1200,1440,1728,1920 --scrollbar both",
+    "qa:d18": "node tools/qa/check-ds.mjs --rules D18 --widths 1200,1440,1728,1920 --scrollbar both",
+    "qa:d19": "node tools/qa/check-ds.mjs --rules D19 --widths 1200,1440,1728,1920 --scrollbar both",
     "qa:lp": "node tools/qa/lp-contract.mjs",
     "qa:lp-stack": "node tools/qa/lp-stack.mjs"
   },

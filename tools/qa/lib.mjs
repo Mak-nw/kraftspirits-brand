@@ -85,7 +85,7 @@ export function matrix(o, { dprs = o.dpr, scrollbars = o.scrollbar, widths = o.w
 
 /* ------------------------------------------------------------------ звіт */
 export class Report {
-  constructor(title) { this.title = title; this.items = []; this.infos = []; this.notes = []; this.stats = {}; }
+  constructor(title) { this.title = title; this.items = []; this.infos = []; this.notes = []; this.stats = {}; this.ctx = { hero: {} }; } // ctx — контекст для умовних винятків allow (requires), напр. стан hero (D19)
   /** порушення: { rule, file, selector, page, value, msg } */
   add(v) { this.items.push(v); }
   info(v) { this.infos.push(v); }
@@ -212,6 +212,61 @@ export async function waitStable(page, { selector, timeout = 15000, idle = 400 }
     await page.waitForNetworkIdle({ idleTime: idle, timeout }).catch(() => {});
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   } catch {}
+}
+
+/**
+ * Стабілізація вимірювань геометрії (D12/D18): чекає, поки макет перестане змінюватись. Причина флейка D12 під навантаженням: --vw виставляє viewport.js
+ * асинхронно (ResizeObserver) з ширини html, а смуга прокрутки (classic, 15px) з'являється/зникає, коли довантажуються шрифти/зображення й змінюється висота сторінки;
+ * замір у вікні «смуга вже змінила clientWidth, а --vw ще старий» зсуває всі блоки на 7.5px (половина смуги).
+ * Умови «стабільно» — ПІДРЯД `frames` кадрів rAF (за замовч. 4) без змін: (а) clientWidth, смуга (innerWidth−clientWidth), ширина html, scrollHeight;
+ * (б) `--vw` = round(ширина html) (viewport.js догнав); (в) відбиток геометрії до 80 рівномірно вибраних елементів (left/width/top, 0.01px). Макс. `timeout` мс.
+ * Повертає { stable, frames, waited, clientW, bar }.
+ */
+export async function waitLayoutStable(page, { frames = 4, timeout = 8000, minMs = 120 } = {}) {
+  try {
+    return await page.evaluate((frames, timeout, minMs) => new Promise((resolve) => {
+      const root = document.documentElement; const t0 = performance.now(); let same = 0, last = '';
+      const finger = () => {
+        const r = root.getBoundingClientRect(); const vw = parseFloat(root.style.getPropertyValue('--vw')) || 0;
+        const els = [...document.body.querySelectorAll('*')]; const step = Math.max(1, Math.floor(els.length / 80)); let g = '';
+        for (let i = 0; i < els.length; i += step) { const b = els[i].getBoundingClientRect(); g += `${b.left.toFixed(2)},${b.width.toFixed(2)},${Math.round(b.top)};`; }
+        return { sig: `${root.clientWidth}|${window.innerWidth - root.clientWidth}|${r.width.toFixed(2)}|${root.scrollHeight}|${g}`, vwOk: vw === Math.round(r.width), clientW: root.clientWidth, bar: window.innerWidth - root.clientWidth };
+      };
+      const tick = () => {
+        const f = finger(); const now = performance.now();
+        if (f.sig === last && f.vwOk) same++; else { same = 0; last = f.sig; }
+        if ((same >= frames && now - t0 >= minMs) || now - t0 >= timeout) return resolve({ stable: same >= frames, frames: same, waited: Math.round(now - t0), clientW: f.clientW, bar: f.bar });
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }), frames, timeout, minMs);
+  } catch { return { stable: false, frames: 0, waited: 0 }; }
+}
+
+/** page.evaluate з повтором: dev-сервер може перезавантажити сторінку (HMR від чужих правок) — «Execution context was destroyed» → чекаємо load і міряємо заново */
+export async function evalRetry(page, fn, arg, tries = 4) {
+  for (let i = 0; ; i++) {
+    try { return await page.evaluate(fn, arg); } catch (e) {
+      if (i >= tries - 1 || !/context was destroyed|navigation|Target closed|detached/i.test(String(e.message))) throw e;
+      await sleep(400); await waitStable(page); await waitLayoutStable(page);
+    }
+  }
+}
+
+/**
+ * Стабільний збір геометрії: чекаємо стабільного макета, збираємо `collect(cfg)` і ПОВТОРЮЄМО до збігу двох замірів підряд (підпис `sig(data)`), максимум 3 заміри → голосування 2 з 3
+ * (якщо жодні два не збіглися — береться замір із clientWidth = --vw і note-прапор `unstable`). Повертає дані + `__stab: { samples, agreed, unstable }`.
+ */
+export async function collectStable(page, collect, cfg, sig, { max = 3 } = {}) {
+  const samples = [];
+  for (let i = 0; i < max; i++) {
+    await waitLayoutStable(page);
+    samples.push(await evalRetry(page, collect, cfg));
+    if (i >= 1 && sig(samples[i]) === sig(samples[i - 1])) { const d = samples[i]; d.__stab = { samples: samples.length, agreed: true, unstable: false }; return d; }
+  }
+  const sigs = samples.map(sig); const pick = samples.find((s, i) => sigs.filter((x) => x === sigs[i]).length >= 2) || samples.find((s) => s.clientW === s.vw) || samples[samples.length - 1];
+  pick.__stab = { samples: samples.length, agreed: sigs.some((x, i) => sigs.indexOf(x) !== i), unstable: !sigs.some((x, i) => sigs.indexOf(x) !== i) };
+  return pick;
 }
 
 /** масштаб --u: clientWidth/1920 з обмеженням (як у tokens.css: clamp(1185px, --vw, 1920px) / 1920) */

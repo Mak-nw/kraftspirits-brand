@@ -19,7 +19,7 @@ async function checkDs(o, dynamic) {
   const s = runStatic({ allow, dist: b.ok ? dist : null });
   for (const v of s.items) if (!isAllowed(allow, v)) rep.add({ ...v, file: v.line ? `${v.file}:${v.line}` : v.file });
   for (const i of s.infos) rep.info(i);
-  if (dynamic) { o.rules = null; await runDynamic(o, allow, rep); rep.items = rep.items.filter((v) => !isAllowed(allow, v)); }
+  if (dynamic) { o.rules = null; await runDynamic(o, allow, rep); rep.items = rep.items.filter((v) => !isAllowed(allow, v, rep.ctx)); }
   return rep;
 }
 

@@ -1,4 +1,4 @@
-// Динамічні перевірки check-ds (D1–D16; D12 — сітка колонок — входить у загальний прогін (design-system.html виключено); npm run qa:grid = лише D12): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
+// Динамічні перевірки check-ds (D1–D19; D12 — сітка колонок — входить у загальний прогін (design-system.html виключено); npm run qa:grid = лише D12): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
@@ -6,8 +6,10 @@ import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13
 import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
 import { D17_DEFAULTS, probeD17, analyzeD17, controlD17 } from './heading-d17.mjs';
 import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
+import { COLLECT_D18, analyzeD18, controlD18, D18_DEFAULTS } from './grid-d18.mjs';
+import { COLLECT_D19, D19_DEFAULTS } from './hero-d19.mjs';
 import { measureTextOnImage, D14_PAGES, D14_STATES, D14_DEFAULTS } from './text-on-image.mjs';
-import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
+import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, waitLayoutStable, collectStable, evalRetry, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
 function COLLECT(cfg) {
@@ -198,6 +200,10 @@ async function underlineProbe(page, allowClosest) {
 /**
  * Виконує D1–D10. opts: { url, widths, scrollbar[], chrome, out, pagesList, rules, allow, tabAll }
  */
+/** підписи замірів геометрії для collectStable (збіг двох замірів підряд = стабільний макет) */
+const sigGrid = (d) => `${d.clientW}|${d.vw}|${d.blocks.map((b) => `${b.L.toFixed(1)},${b.R.toFixed(1)},${b.T.toFixed(0)},${b.B.toFixed(0)}`).join(';')}`;
+const sigD18 = (d) => `${d.clientW}|${d.vw}|${d.blocks.map((b) => `${b.L.toFixed(1)},${b.R.toFixed(1)},${b.T.toFixed(0)},${b.H.toFixed(0)}`).join(';')}`;
+
 export async function runDynamic(opts, allow, rep) {
   const want = (r) => !opts.rules || opts.rules.has(r);
   const A = allow.dynamic || {};
@@ -211,6 +217,9 @@ export async function runDynamic(opts, allow, rep) {
   const want16 = want('D16'); const d16 = []; const d16cfg = { ...D16_DEFAULTS, ...(A.d16 || {}), targets: A.d16?.targets || D16_DEFAULTS.targets }; let d16ctl = null; // D16: hug/padding кнопок (hug-d16.mjs)
   const want17 = want('D17'); const d17 = []; let d17ctl = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
   const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
+  const want18 = want('D18'); const d18 = []; const d18cfg = { ...D18_DEFAULTS, ...(A.d18 || {}) }; const d18ctl = []; // D18: зазор великих блоків 5u / малих 40u (grid-d18.mjs)
+  const want19 = want('D19'); const d19 = []; const d19cfg = { ...D19_DEFAULTS, ...(A.d19 || {}) }; const wantHeroCtx = want19 || want('D14') || want('D8'); // D19: hero без оверлея (hero-d19.mjs); стан hero потрібен і для умовних винятків D14/D8 (allow.requires)
+  rep.ctx = rep.ctx || { hero: {} };
   const specs = opts.pagesList.map(pageSpec);
   if (want14 && !opts.pages && opts.rules && opts.rules.size === 1) for (const x of D14_STATES) if (!specs.some((sp) => sp.label === x)) specs.push(pageSpec(x)); // qa:img-contrast: + демо-стани cart/checkout/account
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
@@ -255,7 +264,9 @@ export async function runDynamic(opts, allow, rep) {
         }
         await page.evaluate(() => document.querySelectorAll('[data-qa-t]').forEach((e) => e.removeAttribute('data-qa-t')));
         collect.push({ label, spec, width: combo.width, sb: combo.scrollbar, data });
-        if (want12 && (spec.name !== 'design-system' || opts.d12Ds)) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_GRID, { ...gcfg, root: null }) });
+        if (want12 && (spec.name !== 'design-system' || opts.d12Ds)) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await collectStable(page, COLLECT_GRID, { ...gcfg, root: null }, sigGrid) });
+        if (want18 && spec.name !== 'design-system') d18.push({ label, spec, width: combo.width, data: await collectStable(page, COLLECT_D18, d18cfg, sigD18) });
+        if (wantHeroCtx && spec.name !== 'design-system') d19.push({ label, spec, data: await evalRetry(page, COLLECT_D19, d19cfg) });
         // D5: підкреслення (лише для першої комбінації ширини/смуги — це не залежить від ширини)
         if (want('D5') && combo === combos[0]) {
           const found = await underlineProbe(page, A.underlineAllowClosest || []);
@@ -284,7 +295,7 @@ export async function runDynamic(opts, allow, rep) {
         if (want12 && spec === specs[0]) {
           const gp12 = await openPage(L.browser, pageUrl(opts.url, spec, 'gate'), { width: combo.width, height: opts.height, dpr: 1, settle: false });
           await waitStable(gp12);
-          grid12.push({ label: `ворота18+@${combo.width}`, spec: { name: 'age-gate', label: 'ворота 18+' }, width: combo.width, sb: combo.scrollbar, gate: true, data: await gp12.evaluate(COLLECT_GRID, { ...gcfg, root: '[data-age-gate]' }) });
+          grid12.push({ label: `ворота18+@${combo.width}`, spec: { name: 'age-gate', label: 'ворота 18+' }, width: combo.width, sb: combo.scrollbar, gate: true, data: await collectStable(gp12, COLLECT_GRID, { ...gcfg, root: '[data-age-gate]' }, sigGrid) });
           await gp12.close().catch(() => {});
         }
         // D10: age-gate smoke (лише перша комбінація)
@@ -307,6 +318,21 @@ export async function runDynamic(opts, allow, rep) {
           d14.push({ label, spec, width: combo.width, ...m });
         }
         await page.close().catch(() => {});
+      }
+      // D18: демо-стани, яких немає серед *.html (cart/checkout з товарами, форма входу/кабінет), + позитивний контроль (зазор 40u замість 5u МАЄ дати порушення)
+      if (want18) {
+        const label0 = (n) => `${n}@${combo.width}${combo.scrollbar === 'classic' ? '' : '/' + combo.scrollbar}`;
+        for (const st of (opts.pages ? [] : (d18cfg.states || []))) {
+          if (specs.some((sp) => sp.spec === st)) continue;
+          const sp = pageSpec(st); const pg = await openPage(L.browser, pageUrl(opts.url, sp, 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
+          await waitStable(pg); await sleep(300);
+          d18.push({ label: label0(st), spec: sp, width: combo.width, data: await collectStable(pg, COLLECT_D18, d18cfg, sigD18) });
+          await pg.close().catch(() => {});
+        }
+        const cp = await openPage(L.browser, pageUrl(opts.url, pageSpec('contacts'), 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
+        await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
+        d18ctl.push({ label: label0('contacts'), ...(await controlD18(cp, d18cfg)) });
+        await cp.close().catch(() => {});
       }
     } finally { await L.close(); }
   }
@@ -436,6 +462,43 @@ export async function runDynamic(opts, allow, rep) {
     for (const sm of a.semantic.filter((x) => x.width === opts.widths[Math.min(1, opts.widths.length - 1)] || opts.widths.length === 1)) rep.info({ rule: 'D13', msg: `семантика ${sm.key}@${sm.width}: ${sm.variants.length} різних начерків — ${sm.variants.map((v) => `${v.role} [${v.pages.slice(0, 4).join(',')}${v.pages.length > 4 ? ',…' : ''}]`).join(' ≠ ')}` });
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd13.json'), JSON.stringify({ tolerances: a.tolerances, violations: a.violations, implicit: a.implicit, noClass: a.noClass, semantic: a.semantic, dump: a.dump }, null, 1)); } catch {}
   }
+  // D18: зазор великих блоків = 5u, малих (≤3 кол.) = 40u (tools/qa/grid-d18.mjs)
+  if (want18) {
+    const st = (stats.d18 = { pages: d18.length, big: 0, tile: 0, fused: 0, fail: 0, unstable: 0 }); const dump = [];
+    for (const c of d18) {
+      const a = analyzeD18(c.data, d18cfg); const u = c.data.u;
+      if (c.data.__stab?.unstable) { st.unstable++; rep.note(`D18 ${c.label}: заміри не збіглися за ${c.data.__stab.samples} спроб (нестабільний макет) — взято найближчий до стабільного`); }
+      st.fused += a.fused;
+      for (const p of a.pairs) {
+        st[p.kind]++;
+        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? 'великі блоки --grid-gap-panels' : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? 'великих блоків ≠ 5u' : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
+      }
+      // охоронець покриття: на ключових сторінках пара/склеєний компонент МАЄ бути знайдена (збір не мовчить)
+      for (const [key, min] of Object.entries(d18cfg.required || {})) {
+        if (!(key.includes('?') ? c.spec.spec === key : c.spec.name === key && (key === 'product' ? /^product\?id=/.test(c.spec.spec) : !c.spec.query))) continue;
+        if (a.pairs.length + a.fused < min) addV({ rule: 'D18', page: c.label, selector: key, value: `знайдено пар ${a.pairs.length} + склеєних ${a.fused}, потрібно ≥ ${min}`, msg: 'охоронець покриття: великі блоки на сторінці не знайдено (збір D18 зламано або сторінку змінено)' });
+      }
+      dump.push({ label: c.label, u, blocks: c.data.blocks.length, pairs: a.pairs.map((p) => ({ kind: p.kind, gapU: +(p.gap / u).toFixed(3), ok: p.ok, a: p.a.path, b: p.b.path, cols: p.cols })), fused: a.fused });
+    }
+    for (const k of d18ctl) if (!k.applied || k.fails === 0) addV({ rule: 'D18', page: 'control', selector: `позитивний контроль ${k.label}`, value: k.applied ? '0 порушень' : 'пару великих блоків не знайдено', msg: 'зазор 40u замість 5u між великими блоками МАЄ дати порушення — інакше D18 зламано' });
+    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd18.json'), JSON.stringify({ cfg: d18cfg, results: dump, control: d18ctl }, null, 1)); } catch {}
+    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; позитивний контроль (40u замість 5u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
+  }
+  // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
+  if (wantHeroCtx) {
+    const heroNeed = A.d19?.heroPages || ['index', 'barrels', 'excursions'];
+    let off = 0;
+    for (const c of d19) {
+      const name = c.spec.name; const h = (rep.ctx.hero[name] ||= { inkLight: null, overlay: false, n: 0 });
+      h.n++; if (c.data.inkLight === false) h.inkLight = false; else if (c.data.inkLight === true && h.inkLight !== false) h.inkLight = true;
+      if (c.data.offenders.length) h.overlay = true;
+      if (want19) {
+        for (const o of c.data.offenders) { off++; addV({ rule: 'D19', page: c.label, selector: o.el, value: `${o.prop}: ${o.value}`, msg: `hero з фото: оверлей/ефект поверх фото (${o.role}) заборонено (рішення замовника a2289410); allow не діє` }); }
+        if (heroNeed.includes(name) && !c.data.heroes.length) addV({ rule: 'D19', page: c.label, selector: '.hero', value: 'hero не знайдено', msg: 'охоронець покриття: на сторінці з hero-фото немає .hero (збір D19 зламано або hero перейменовано)' });
+      }
+    }
+    if (want19) rep.info({ rule: 'D19', msg: `hero перевірено на ${d19.filter((c) => c.data.heroes.length).length} сторінко-ширинах (${[...new Set(d19.filter((c) => c.data.heroes.length).map((c) => c.spec.name))].join(', ')}); оверлей-ознак ${off}; hero-ink=light: ${Object.entries(rep.ctx.hero).filter(([, h]) => h.inkLight !== null).map(([n, h]) => `${n}:${h.inkLight ? 'так' : 'ні'}`).join(' ') || '—'}` });
+  }
   // D12: прив'язка блоків до колонок сітки (tools/qa/grid-d12.mjs)
   if (want12) {
     const st = (stats.grid = { pages: 0, blocks: 0, ok: 0, suspect: 0, fail: 0 }); const dump = [];
@@ -443,6 +506,8 @@ export async function runDynamic(opts, allow, rep) {
     for (const g of grid12) {
       const a = analyzeGrid(g.data, gcfg, g.spec.name === 'age-gate' ? 'default' : g.spec.name);
       st.pages++; st.blocks += a.counts.total; st.ok += a.counts.ok; st.suspect += a.counts.suspect; st.fail += a.counts.fail;
+      if (g.data.__stab?.unstable) { st.unstable = (st.unstable || 0) + 1; rep.note(`D12 ${g.label}: заміри геометрії не збіглися за ${g.data.__stab.samples} спроб (нестабільний макет, смуга прокрутки?) — взято найближчий до стабільного`); }
+      else if (g.data.__stab?.samples > 2) st.revoted = (st.revoted || 0) + 1;
       if (g.data.clientW !== g.data.vw) rep.info({ rule: 'D12', msg: `${g.label}: --vw ${g.data.vw}px ≠ clientWidth ${g.data.clientW}px (scrollbar-gutter) — сітку рахуємо за --vw` });
       dump.push({ label: g.label, page: g.spec.name, width: g.width, gate: g.gate, vw: g.data.vw, clientW: g.data.clientW, u: g.data.u, profile: a.profile, grid: { margin: a.grid.margin, gap: a.grid.gap, col: a.grid.col, starts: a.grid.starts, ends: a.grid.ends }, counts: a.counts, stats: g.data.stats,
         blocks: a.results.map((r) => ({ region: r.block.region, profile: r.profile, sel: r.block.sel, path: r.block.path.replace(/#[\w-]+/g, ''), tag: r.block.tag, L: r.block.L, R: r.block.R, T: r.block.T, B: r.block.B, W: r.block.W, H: r.block.H, testL: r.block.testL, testR: r.block.testR, leaf: r.block.leaf, text: r.block.text, status: r.ev.status, sides: r.ev.sides, cols: r.ev.cols, alt: r.alt })) });
@@ -453,7 +518,7 @@ export async function runDynamic(opts, allow, rep) {
       }
     }
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'grid-d12.json'), JSON.stringify({ config: gcfg, results: dump }, null, 1)); } catch {}
-    rep.info({ rule: 'D12', msg: `блоків ${st.blocks} на ${st.pages} сторінко-ширинах: норма ${st.ok}, підозрілі (0.5–1px) ${st.suspect}, порушення (>1px) ${st.fail}; повні дані — ${join(opts.out, 'grid-d12.json')}` });
+    rep.info({ rule: 'D12', msg: `блоків ${st.blocks} на ${st.pages} сторінко-ширинах: норма ${st.ok}, підозрілі (0.5–1px) ${st.suspect}, порушення (>1px) ${st.fail}; повні дані — ${join(opts.out, 'grid-d12.json')}${st.revoted ? `; повторних замірів (голосування) ${st.revoted}` : ''}${st.unstable ? `; НЕСТАБІЛЬНИХ ${st.unstable}` : ''}` });
   }
   return rep;
 }
