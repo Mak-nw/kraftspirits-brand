@@ -99,6 +99,14 @@
       "reason": "пара до tour-card__text: фото = 5 колонок + ½ зазору з внутрішньою рамкою 5u; шов у середині зазору колонок (див. запис tour-card__text), зовнішній край фото на сітці",
       "date": "2026-10-16",
       "decision": "виконавець, під рішення замовника про єдину сітку (16.10.2026); виняток вузький, потребує підтвердження замовником"
+    },
+    {
+      "rule": "D14",
+      "selector": "product-volume",
+      "page": "product",
+      "reason": "відомий відступ бази: неактивний стан перемикача об'єму (напр. «700 мл» на product?id=gin-yasnyi) має opacity .4 за базовим токеном --btn-volume-opacity-default (= --opacity-disabled), контраст ≈2.12:1 < 4.5:1; потребує рішення замовника (підняти opacity неактивного стану); токен виконавець НЕ змінював",
+      "date": "2026-10-16",
+      "decision": "потребує підтвердження замовником"
     }
   ],
   "dynamic": {
@@ -112,7 +120,7 @@
     "underlineReason": "правило проєкту: підкреслень при hover/focus немає, крім футера (.site-footer .nav-link) і посилань У СУЦІЛЬНОМУ ТЕКСТІ: юридичний текст воріт (.age-card__legal a), згода форми (.check-field .check__label a), повідомлення форми (.contact-form__alert a, .contact-success a); колір посилання збігається з текстом, без підкреслення його не відрізнити (WCAG 1.4.1); одне спільне правило в base.css",
     "hscrollTolerancePx": 1,
     "d14": {
-      "_comment": "D14 (tools/qa/text-on-image.mjs): піксельний контраст тексту на зображенні по літерах; пороги = textMinContrast/largeTextMinContrast; сторінки профілю — d14Pages (за замовч. barrels, excursions, index, contacts, about, product, cocktails). Винятків НЕ додавати: FAIL = знахідка для виконавця."
+      "_comment": "D14 (tools/qa/text-on-image.mjs): піксельний контраст тексту на зображенні по літерах; пороги = textMinContrast/largeTextMinContrast; сторінки профілю — d14Pages (за замовч. barrels, excursions, index, contacts, about, product, cocktails). Винятків НЕ додавати: FAIL = знахідка для виконавця. Єдиний відомий виняток — неактивний перемикач об'єму product-volume (запис у allow[], рішення за замовником)."
     },
     "d15": {
       "_comment": "D15 (tools/qa/header-menu.mjs): headerTopU — затверджений замовником верхній відступ пілюлі (u), щоб зсув токена --header3-top не проходив непоміченим; menu — еталонний список пунктів меню шапки/футера (текст без регістру + href) у порядку показу.",
