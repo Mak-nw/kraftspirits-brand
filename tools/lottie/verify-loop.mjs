@@ -45,9 +45,17 @@ try {
     const dSeamA = await diff(fTm1, fT), dSeamB = await diff(f0, f1);
     let maxN = 0, sumN = 0, cnt = 0, prev = f0;
     for (let f = 1; f < T; f += 3) { const cur = await shot(f); const d = await diff(prev, cur); maxN = Math.max(maxN, d.px); sumN += d.px; cnt++; prev = cur; }
-    const ok = seam.px === 0 && seam.mean === 0 && dSeamA.px <= maxN * 1.5 + 5;
+    // метрика шва: середня абсолютна різниця КОЖНОЇ пари сусідніх кадрів (1…T); шов = пари (T−2…T) і (1…3) навколо стику; max шва ≤ 1.5 × середня циклу
+    const dm = []; let pv = f0;
+    for (let f = 1; f <= T; f++) { const cur = await shot(f); dm[f] = (await diff(pv, cur)).mean; pv = cur; }
+    if (args.dump) console.log(dm.slice(1).map((v) => v.toFixed(2)).join(" "));
+    const avgAll = dm.slice(1).reduce((a, b) => a + b, 0) / T;
+    const seamMax = Math.max(dm[T], dm[1]); // пари (T−1→T) і (0→1) — безпосередньо на стику
+    const inner = Math.max(...dm.slice(2, T)); // найгостріший крок усередині циклу (в process-01 тики дають піки ≈0.5 і всередині)
+    const seamOk = seamMax <= Math.max(avgAll * 1.5, inner) + 0.002; // шов не гостріший за 1.5× середню АБО за найгостріший внутрішній крок
+    const ok = seam.px === 0 && seam.mean === 0 && dSeamA.px <= maxN * 1.5 + 5 && seamOk;
     if (!ok) fail++;
-    console.log(`process-${n} T=${T}  seam(0≡T): ${seam.px}px mean=${seam.mean}  | Δ(T-1→T)=${dSeamA.px}px  Δ(0→1)=${dSeamB.px}px  | Δ межі кадрів (крок 3): max=${maxN}px avg=${(sumN / cnt).toFixed(1)}px  ${ok ? 'OK' : 'FAIL'}`);
+    console.log(`process-${n} T=${T}  seam(0≡T): ${seam.px}px mean=${seam.mean}  | Δ(T-1→T)=${dSeamA.px}px  Δ(0→1)=${dSeamB.px}px  | Δ межі кадрів (крок 3): max=${maxN}px avg=${(sumN / cnt).toFixed(1)}px  | шов: max=${seamMax.toFixed(4)} avg=${avgAll.toFixed(4)} inner=${inner.toFixed(4)} ×${(seamMax / (avgAll || 1)).toFixed(2)} ${seamOk ? '' : 'SEAM-FAIL'}  ${ok ? 'OK' : 'FAIL'}`);
     for (const f of sheetFrames) { const b = await shot(f); (await import('node:fs')).writeFileSync(resolve(out, `process-${n}-f${String(f).padStart(3, '0')}.png`), b); }
     (await import('node:fs')).writeFileSync(resolve(out, `process-${n}-seamT.png`), fT);
   }

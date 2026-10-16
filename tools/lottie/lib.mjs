@@ -19,15 +19,15 @@ export const TAU = Math.PI * 2;
 // ---------- властивості ----------
 const E_LIN = { o: { x: 0.167, y: 0.167 }, i: { x: 0.833, y: 0.833 } };
 function samples(fn, step, scale) {
+  if (T % step) throw new Error('T must be divisible by step');
   const kf = [];
+  // Останній ключ = fn(1) (НЕПЕРЕРВНЕ продовження, а не копія fn(0)): для функцій типу 360·u чи (k+u)/n копія першого ключа змушувала
+  // значення різко відкочуватись за останній крок (ривок на шві). Візуально fn(1) ≡ fn(0) (функції періодичні за u), тож шов 0≡T лишається нульовим.
   for (let t = 0; t <= T; t += step) {
-    const v = fn(wrap(t / T) === 0 && t === T ? 0 : t / T);
+    const v = fn(t / T);
     const arr = Array.isArray(v) ? v.map((n) => r2(n * scale)) : [r2(v * scale)];
     kf.push({ t, s: arr, ...E_LIN });
   }
-  // останній ключ строго дорівнює першому
-  kf[kf.length - 1].s = kf[0].s.slice();
-  if (T % step) throw new Error('T must be divisible by step');
   return kf;
 }
 // stat: стала або функція u→значення. scale — множник одиниць (S для координат, 1 для відсотків/градусів)

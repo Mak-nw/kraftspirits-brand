@@ -24,7 +24,7 @@
 .about-story__rings { grid-column: 7 / span 4; grid-row: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); margin: 0; padding: 0; list-style: none; } /* два кола по 2 колонки (кол. 7–8 і 9–10) */
 .about-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-about-ring-gap); text-align: center; }
 .about-ring > .t-stat-label { width: 100%; text-wrap: balance; }
-.about-ring__circle { align-items: center; } /* коло — наявне DS (.lp-tiles--circle .lp-tile__media: діаметр = ширина комірки); усередині значення */
+.about-ring .about-ring__circle { align-items: center; width: var(--size-about-ring); } /* коло — наявне DS (.lp-tiles--circle .lp-tile__media: діаметр = ширина комірки); усередині значення */
 .about-story__milestone { grid-column: 1 / span 6; display: grid; grid-template-columns: subgrid; align-items: start; }
 .about-story__date { grid-column: 1 / span 2; }
 .about-story__photo { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-about-milestone); border-radius: 0; object-fit: cover; }
@@ -36,18 +36,18 @@
 /* ---------- 3. УСЕ ВІДБУВАЄТЬСЯ НА ОДНОМУ МАЙДАНЧИКУ: висота = в'юпорт, sticky (рішення замовника) — наступна секція «15 місяців» (непрозорий фон) заїжджає поверх; праворуч — стрічка арок процесу (T9) ---------- */
 .about-stack { position: relative; } /* межа sticky: секція тримається, поки ця обгортка (3 + 2) прокручується */
 .about-place { position: sticky; top: 0; z-index: 0; overflow: clip; display: grid; align-content: center; height: 100svh; padding-block: 0; }
-.about-place__title { grid-column: 1 / -1; }
-.about-place__lead { grid-column: 4 / span 4; margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; }
+.about-place .about-place__title { grid-column: 1 / span 5; } /* текст — у колонках 1–5, стрічка арок починається з колонки 6: перетину нема за жодного scrollLeft */
+.about-place__lead { grid-column: 1 / span 5; margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; }
 .about-story { z-index: 1; } /* поверх sticky-секції */
 
 /* ---------- 5. ЦИТАТА І ЛЮДИ: цитата (кол. 1–6) · Герман (9–10) · імʼя засновника внизу ліворуч · портрет (4–8) на пагорбах ---------- */
 .about-people { position: relative; overflow: clip; display: flex; flex-direction: column; min-height: var(--size-about-people-h); padding-bottom: var(--space-100); }
 .about-people__grid { position: relative; z-index: 2; flex: 1; grid-template-rows: var(--size-about-people-quote-h) auto 1fr; }
-.about-people__quote { grid-column: 1 / span 6; grid-row: 1; margin: 0; }
+.about-people__quote { grid-column: 1 / span 7; grid-row: 1; margin: 0; }
 .about-people__bq { margin: 0; }
-.about-people__german { grid-column: 9 / span 2; grid-row: 1; display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-20); margin: 0; text-align: end; color: var(--color-teal); }
-.about-people__german figcaption { align-self: stretch; display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-5); }
-.about-people__ava { display: block; width: var(--size-about-avatar); aspect-ratio: 1; border-radius: var(--radius-round); object-fit: cover; }
+.about-people__german { grid-column: 9 / span 2; grid-row: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); margin: 0; text-align: center; color: var(--color-teal); }
+.about-people__german figcaption { align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
+.about-people__ava { display: block; width: var(--size-about-avatar); height: auto; aspect-ratio: 1; border-radius: var(--radius-round); object-fit: cover; }
 .about-people__intro { grid-column: 1 / span 2; grid-row: 2; display: flex; flex-direction: column; gap: var(--space-30); }
 .about-people__dots { display: flex; gap: var(--space-10); margin: 0; color: var(--color-green); } /* два кола-обводки (коло плитки DS, hairline) з іконками колосок / команда */
 .about-people__dots .lp-tile__media { flex: none; align-items: center; justify-content: center; width: var(--size-about-dot); --lp-tile-ring: var(--color-green); }

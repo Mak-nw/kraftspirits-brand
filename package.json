@@ -16,6 +16,7 @@
     "qa:arch:cocktails": "node tools/qa/arch.mjs --page cocktails",
     "qa:cls": "node tools/qa/cls.mjs",
     "qa:hscroll": "node tools/qa/hscroll.mjs",
+    "qa:about-geom": "node tools/qa/about-geom.mjs",
     "qa:ink": "node tools/qa/ink-align.mjs",
     "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none",
     "qa:img-contrast": "node tools/qa/check-ds.mjs --rules D14 --widths 1200,1440,1728,1920 --scrollbar both",
