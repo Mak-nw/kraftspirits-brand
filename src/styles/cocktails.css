@@ -38,6 +38,11 @@
 .cocktail__item { align-self: stretch; align-content: stretch; }
 .cocktail__item .product-card--catalog { height: 100%; }
 .cocktail__item .product-card--catalog::before { height: var(--size-cocktail-arch-h); }
+/* вищий блок (tall, 658u): арка — той самий SVG з довшою прямою частиною (viewBox 414×645.333 = 535 + (658 − 547.667)u: дуга й нижня лінія ті самі, що в каталозі; тому розтяг маски ≈1 і нижня лінія не товщає, як було б при розтягу 535 → 645); якщо вміст вкладки вищий за 658u, розтяг лишається часткою відсотка */
+.cocktail--tall .cocktail__item .product-card--catalog::before {
+  -webkit-mask: url('/assets/img/product-card-arch-full-tall.svg') 0 0 / 100% 100% no-repeat;
+  mask: url('/assets/img/product-card-arch-full-tall.svg') 0 0 / 100% 100% no-repeat;
+}
 .cocktail__item .product-card--catalog .product-card__media { display: flex; align-items: center; }
 .cocktail__item .product-card--catalog .product-card__media img { flex: none; height: var(--size-cocktail-card-photo-h); }
 
