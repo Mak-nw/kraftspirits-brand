@@ -23,14 +23,10 @@
     <div class="faq-page__body" data-acc-keys>
       <!--@each faq sections/faq-group-->
     </div>
-    <script>
-    /* Без JS усі відповіді відкриті (open у розмітці, нативний details). З JS — згортаємо синхронно, до першого paint (без зсуву макета); далі src/js/faq.js (accordion.js). */
-    document.querySelectorAll('[data-faq-list] > details[open]').forEach(function (d) { d.open = false; d.querySelector('summary').setAttribute('aria-expanded', 'false'); });
-    </script>
     <section class="faq-page__more" aria-labelledby="faq-more-title">
       <div class="faq-page__grid" data-reveal="rise">
         <h2 class="faq-page__more-title t-lead" id="faq-more-title">Не знайшли відповідь?</h2>
-        <p class="faq-page__lead t-desc">Напишіть нам через форму зворотного зв'язку. Відповімо протягом одного робочого дня.</p>
+        <p class="faq-page__lead t-desc">Напишіть нам через форму зворотнього зв'язку. Відповімо протягом одного робочого дня.</p>
         <div class="faq-page__action">
           <!--@include components/btn variant="btn--light" href="feedback.html?topic=other" text="Написати нам" arrow="arrow-up-right"-->
         </div>

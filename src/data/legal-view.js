@@ -2,7 +2,7 @@
 // legalLists(LEGAL) → { legalPrivacy: [doc], legalCookies: [doc], … }: для кожного документа список з ОДНОГО елемента
 // під <!--@each legalPrivacy sections/legal-doc--> (ключ = 'legal' + Slug у CamelCase: 'age-policy' → legalAgePolicy).
 // Елемент: { slug, title, lead, updated, sections: [{ slug, title, bodyHtml }] } — рядки екрановані; sections —
-// вкладений цикл <!--@each sections sections/faq-nav--> (навігація, як у FAQ) і <!--@each sections sections/legal-section-->.
+// вкладений цикл <!--@each sections sections/legal-section-->.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const SLUG_RE = /^[a-z0-9-]+$/;
 // id, зайняті хедером/футером/partial-ами на кожній сторінці: розділ з таким slug зламав би якір

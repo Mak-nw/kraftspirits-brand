@@ -1,4 +1,4 @@
-/* Компонент «Згода / перемикач» (.check): спільний для вікових воріт («Запам'ятати мій вибір») і форми зворотного зв'язку (згода на обробку даних).
+/* Компонент «Згода / перемикач» (.check): спільний для вікових воріт («Запам'ятати мій вибір») і форми зворотнього зв'язку (згода на обробку даних).
    Розмітка: <label class="check"><input class="check__input" type="checkbox"><span class="check__box" aria-hidden="true"></span><span class="check__label t-text">…</span></label>.
    Стани — токени --btn-check-* (tokens.css): default / hover / focus-visible (кільце) / checked; розміри --size-age-check*, --border-age-check*. Обгортка форми (.check-field + помилка) — components/field.css. */
 /* Вирівнювання — ОПТИЧНЕ: центр боксу = центр cap-height (висоти великих літер) ПЕРШОГО рядка підпису, за будь-якої кількості рядків і на всіх ширинах.

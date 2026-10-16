@@ -1,5 +1,5 @@
 // Підготовка даних FAQ до шаблону (лише збірка/dev: імпортує vite.config.js; у браузер не потрапляє).
-// Повертає масив груп для <!--@each faq sections/faq-group--> і <!--@each faq sections/faq-nav-->: рядки екрановані,
+// Повертає масив груп для <!--@each faq sections/faq-group-->: рядки екрановані,
 // items — масив параметрів partials/components/faq-item.html (вкладений <!--@each items components/faq-item-->). Дані — src/data/faq.js.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -20,7 +20,7 @@ export function faqView(groups) {
           q: esc(it.q),
           // абзаци відповіді — готова розмітка з екранованого тексту (роль .t-text, як відповідь faq-item)
           aHtml: paras.map((p) => `<p class="t-text">${esc(p)}</p>`).join(''),
-          // без JS усі відповіді відкриті (нативний details); інлайн-скрипт faq.html згортає їх до першого paint
+          // за замовчуванням усі відповіді закриті (без open у розмітці); open — лише у faqDemo для design-system.html
           open: '',
           expanded: 'false',
         };

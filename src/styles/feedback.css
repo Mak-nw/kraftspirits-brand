@@ -1,6 +1,6 @@
-/* Сторінка «Зворотний зв'язок» (feedback.html): ЄДИНЕ вікно-панель (beige, рамка/радіус як на контактах) у контейнері сторінки (поля 47.5u, зона header 103u, відступ 20u — як на товарі і контактах).
+/* Сторінка «Зворотній зв'язок» (feedback.html): ЄДИНЕ вікно-панель (beige, рамка/радіус як на контактах) у контейнері сторінки (поля 47.5u, зона header 103u, відступ 20u — як на товарі і контактах).
    Усередині — форма з двома стовпцями на 12-колонковій решітці: ліворуч 6/12 (заголовок, «Тип звернення», контактні поля без видимого підпису; назва групи — visually-hidden), згода — під полями контактів; праворуч 6/12 («Ваше повідомлення», «Надіслати» внизу праворуч); дві рівні половини, роздільника немає.
-   Фон сторінки — візерунок ромбів (правило .page-feedback поруч із .page-product/.page-contacts у product.css). Значення — токени блоку «Зворотний зв'язок» (tokens.css). Поля — components/field.css, плитки теми — components/topic-tile.css, згода — components/check.css. */
+   Фон сторінки — візерунок ромбів (правило .page-feedback поруч із .page-product/.page-contacts у product.css). Значення — токени блоку «Зворотній зв'язок» (tokens.css). Поля — components/field.css, плитки теми — components/topic-tile.css, згода — components/check.css. */
 .feedback {
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
   padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);

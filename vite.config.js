@@ -41,11 +41,11 @@ const LP_NAMES_RE = /<!--@(?:page|lp) ([a-z0-9]+(?:-[a-z0-9]+)*)/g;
 // Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
 const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
 const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2).map((c) => ({ ...c, loading: 'eager', fetchpriority: 'auto' })) }; // cocktailsDemo — один блок для design-system.html (фото eager: інакше lazy-кадр поза екраном не завантажений, і кільце мініатюр міряється на зеленому тлі панелі)
-// faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group--> і навігація <!--@each faq sections/faq-nav-->; faqDemo — два рядки для design-system.html
+// faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group-->; faqDemo — два рядки для design-system.html
 const FAQ_VIEW = faqView(FAQ);
 LISTS.faq = FAQ_VIEW;
 // юридичні сторінки (src/data/legal.js): legalPrivacy / legalCookies / legalOffer / legalDelivery / legalAgePolicy / legalBarrelsTerms — список з одного документа
-// для <!--@each legalX sections/legal-doc--> (вкладені цикли sections → faq-nav і legal-section)
+// для <!--@each legalX sections/legal-doc--> (вкладений цикл sections → legal-section)
 Object.assign(LISTS, legalLists(LEGAL));
 LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
 
