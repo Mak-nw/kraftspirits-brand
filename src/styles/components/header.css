@@ -30,7 +30,7 @@
 .site-header__menu::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--header3-menu-gap); }
 /* дві кнопки дії внизу меню: хедерна контурна кнопка (як «Кошик», .nav-cell--outline) з модифікатором на всю ширину панелі */
 .site-header__menu-actions { display: flex; flex-direction: column; gap: var(--header3-menu-pad); margin-top: var(--header3-menu-pad); }
-.nav-cell--menu { justify-content: flex-start; width: auto; padding-inline: var(--header3-menu-item-px); }
+.nav-cell--menu { justify-content: flex-start; width: auto; } /* пункт меню: на ширину панелі (виняток із hug); padding-inline — з .nav-cell */
 @media (prefers-reduced-motion: reduce) { .site-header__menu, .site-header__burger-line { transition: none; } }
 /* Логотипи в хедері: кожен у комірці 220.37x63 (206:2504 / 206:2506) */
 .site-header__logo { position: relative; flex: none; width: var(--header-logo-cell-w); height: var(--header-logo-cell-h); overflow: hidden; display: block; }

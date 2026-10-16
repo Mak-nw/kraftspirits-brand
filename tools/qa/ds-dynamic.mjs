@@ -1,9 +1,10 @@
-// Динамічні перевірки check-ds (D1–D15; D12 — сітка колонок — входить у загальний прогін (design-system.html виключено); npm run qa:grid = лише D12): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
+// Динамічні перевірки check-ds (D1–D16; D12 — сітка колонок — входить у загальний прогін (design-system.html виключено); npm run qa:grid = лише D12): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
 import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13.mjs';
 import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
+import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
 import { measureTextOnImage, D14_PAGES, D14_DEFAULTS } from './text-on-image.mjs';
 import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
 
@@ -206,6 +207,7 @@ export async function runDynamic(opts, allow, rep) {
   if (opts.gridDeep) gcfg.deep = true;
   const grid12 = []; // { label, spec, width, sb, gate, data }
   const want13 = want('D13'); const d13 = []; const d13cfg = { roles: want13 ? roleClassesFromBase() : [], root: null };
+  const want16 = want('D16'); const d16 = []; const d16cfg = { ...D16_DEFAULTS, ...(A.d16 || {}), targets: A.d16?.targets || D16_DEFAULTS.targets }; let d16ctl = null; // D16: hug/padding кнопок (hug-d16.mjs)
   const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
   const specs = opts.pagesList.map(pageSpec);
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
@@ -238,6 +240,7 @@ export async function runDynamic(opts, allow, rep) {
         }
         // збір D1/D2/D7/D8/D9
         const data = await page.evaluate(COLLECT, cfg);
+        if (want16) { d16.push({ label, data: await probeD16(page, d16cfg) }); if (!d16ctl && spec.name === 'index') d16ctl = await controlD16(page, d16cfg, A.d16 || {}); }
         if (want15 && (spec.name !== 'design-system' || opts.d15Ds)) d15.push({ label, spec, width: combo.width, data: await page.evaluate(COLLECT_D15) });
         if (want13 && (spec.name !== 'design-system' || opts.d13Ds)) d13.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_D13, d13cfg) });
         // D8: ланцюжок фонів не бачить фонів із псевдоелементів/картинок → для «підозрілих» міряємо піксельно (мода кольору = фон, найдальший = текст)
@@ -372,6 +375,13 @@ export async function runDynamic(opts, allow, rep) {
     }
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd14.json'), JSON.stringify(d14.map((c) => ({ label: c.label, stats: c.stats, hits: c.hits, nodes: c.all.length })), null, 1)); } catch {}
     rep.info({ rule: 'D14', msg: `вузлів з зображенням під текстом ${st.candidates} (без зображення пропущено ${st.noImage}; над <canvas> WebGL-картою не міряється ${st.canvas} — візуально: атрибуція maplibre), виміряно літер ${st.lettersMeasured} на ${st.pageWidths} сторінко-ширинах; FAIL-вузлів ${st.failNodes}` });
+  }
+  // D16: hug/padding кнопок + позитивний контроль (зламана ширина МАЄ дати порушення)
+  if (want16) {
+    const bad = analyzeD16(d16, A.d16 || {});
+    for (const v of bad) addV({ rule: 'D16', ...v });
+    if (d16ctl !== null && d16ctl === 0) addV({ rule: 'D16', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'зламана ширина кнопок (width:min-content; padding 0) НЕ дала порушень — D16 не працює' });
+    rep.info({ rule: 'D16', msg: `кнопки ${d16.reduce((n, c) => n + c.data.length, 0)} записів (default/hover/focus) на ${d16.length} сторінко-ширинах; порушень ${bad.length}; позитивний контроль: ${d16ctl} порушень на зламаній ширині` });
   }
   // D15: шапка і меню
   if (want15) {

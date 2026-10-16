@@ -23,9 +23,9 @@ a.nav-link--on-light:focus-visible { color: var(--btn-navlink-light-text-focus);
   .site-footer a.nav-link:hover { text-decoration-color: currentColor; }
 }
 
-/* Header 3 (214:2902; раніше Header 2 206:2495): комірка-пункт 150×42 по центру; кнопки «Кошик» (контур, 206:2511) і «підказати?» (заливка, 206:2513).
+/* Header 3 (214:2902; раніше Header 2 206:2495): комірка-пункт висотою 42 по центру; ШИРИНА = HUG (рішення замовника: вміст + горизонтальний padding --header3-menu-item-px, а не фіксовані 150, що з'їдали падінги: «мій кабінет» мав ~3px з боків); кнопки «Кошик» (контур, 206:2511) і «підказати?» (заливка, 206:2513).
    Кольори станів — токени --btn-nav-<outline|fill|ghost>-<bg|text|border>-<стан> (tokens.css); варіант виставляє контекстні --btn-bg / --btn-text / --btn-border (+ -hover/-focus/-active/-disabled/-selected), правила станів читають лише їх. */
-.nav-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: var(--header2-cell-w); height: var(--header2-cell-h); white-space: nowrap; color: var(--btn-navlink-text-default); }
+.nav-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; flex: none; width: max-content; height: var(--header2-cell-h); padding-inline: var(--header3-menu-item-px); white-space: nowrap; color: var(--btn-navlink-text-default); }
 .nav-cell--outline {
   --btn-bg: var(--btn-nav-outline-bg-default); --btn-bg-hover: var(--btn-nav-outline-bg-hover); --btn-bg-focus: var(--btn-nav-outline-bg-focus); --btn-bg-active: var(--btn-nav-outline-bg-active); --btn-bg-disabled: var(--btn-nav-outline-bg-disabled); --btn-bg-selected: var(--btn-nav-outline-bg-selected);
   --btn-text: var(--btn-nav-outline-text-default); --btn-text-hover: var(--btn-nav-outline-text-hover); --btn-text-focus: var(--btn-nav-outline-text-focus); --btn-text-active: var(--btn-nav-outline-text-active); --btn-text-disabled: var(--btn-nav-outline-text-disabled); --btn-text-selected: var(--btn-nav-outline-text-selected);
@@ -45,9 +45,9 @@ a.nav-link--on-light:focus-visible { color: var(--btn-navlink-light-text-focus);
   border: var(--border-hairline) solid var(--btn-border);
   transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease);
 }
-.nav-cell--icon { gap: var(--header3-icon-gap); } /* кнопки хедера з брендовою іконкою (basket / headset): ширина 150 і висота не змінюються */
+.nav-cell--icon { gap: var(--header3-icon-gap); } /* кнопки хедера з брендовою іконкою (basket / headset) */
 .nav-cell--icon .icon { --icon-size: var(--header3-icon-size); }
-.nav-cell--block { width: 100%; } /* кнопка на всю ширину контейнера (дії у випадному меню) */
+.nav-cell--block { width: 100%; } /* кнопка на всю ширину контейнера (дії у випадному меню; виняток із hug: ширина = колонка/панель, padding-inline лишається) */
 .nav-cell--outline { height: var(--header2-btn-outline-h); background: var(--btn-bg); color: var(--btn-text); }
 .nav-cell--ghost { height: var(--header2-btn-ghost-h); }
 .nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--btn-bg); color: var(--btn-text); }
@@ -62,7 +62,7 @@ a.nav-cell--fill:focus-visible { outline-color: var(--btn-focus-ring-color-on-da
   a.nav-cell--fill:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); border-color: var(--btn-border-hover); }
 }
 
-/* «каталог» (150×44, як «Кошик»/«підказати?», 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
+/* «каталог» (висота 44, як «Кошик»/«підказати?», 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, висота фіксована, ширина hug (вміст + padding-inline), тож розмір і позиція комірки й іконки на hover/focus не змінюються, а заливка має відступ від тексту й іконки з боків. */
 .nav-cell--ghost { border-radius: var(--radius-btn); background: var(--btn-bg); color: var(--btn-text); transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
 a.nav-cell--ghost:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
