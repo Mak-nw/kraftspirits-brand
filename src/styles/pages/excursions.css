@@ -1,3 +1,4 @@
 /* СТОРІНКА «excursions» (src/data/excursions.js): кадр фото секції «Ціна» (id price) — AI-кадр цеху з мідними кубами (excursions-price-bg.webp, 2560×1440, Seedream 5 Pro; reports/media-generation.md): кадр по центру: мідні куби й колони по боках (видно над і між панелями пропозицій), спокійна темна зона по центру під світлим текстом шапки (без затемнення, D14).
    Кадр — властивість фото, а не колір, тому він тут, а не в темі (src/styles/themes/excursions.css). Див. pages/barrels.css. */
 .lp-page--excursions #price { --lp-offers-bg-pos: 50% 50%; --lp-offers-bg-scale: 1; --lp-offers-bg-origin: 50% 50%; }
+.lp-page--excursions #why { --size-lp-layer-band-h: calc(1.5 * (var(--grid-col) + var(--grid-gap))); } /* фото-смуги секції «Один візит — чотири враження» вищі в 1,5 раза (рев'ю fff84d2e «зробити фотки в карточках вище»): 155u → 233u (токен висоти розрізу layers; решта сторінок шаблону — без змін) */

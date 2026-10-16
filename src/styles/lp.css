@@ -139,7 +139,7 @@
 .lp-steps__card--zoom-175 { --lp-deck-zoom: var(--scale-lp-zoom-175); } .lp-steps__card--zoom-200 { --lp-deck-zoom: var(--scale-lp-zoom-200); }
 .lp-steps__card-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-deck-pos); transform: scale(var(--lp-deck-zoom)); transform-origin: var(--lp-deck-pos); }
 .lp-steps__card-body { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: var(--size-lp-deck-text-w); height: 100%; padding: var(--space-lp-deck-pad); color: var(--lp-on-dark); }
-.lp-steps__card-num { color: var(--lp-accent); }
+.lp-steps__card-num { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--size-lp-deck-num); height: var(--size-lp-deck-num); flex: none; padding-bottom: 0.075em; border: var(--border-hairline) solid var(--lp-hairline); border-radius: var(--radius-round); color: var(--lp-accent); } /* номер кроку: роль .t-lead (було .t-stat) у колі з hairline-обводкою (рішення замовника 938ee99f: «зробити меншим токеном, покласти у круг з обводкою»); обводка — hairline теми (золото 55%, як лінії арки); padding-bottom 0.075em — оптична поправка: чорнило цифри (old-style) лежить нижче центру line-box на 1.3–2.1px (виміряно ink dpr 4), після поправки ≤ 0.7px залежно від цифри */
 .lp-steps__card-title { margin-top: var(--space-lp-deck-title); margin-bottom: var(--space-lp-deck-text); text-wrap: balance; }
 .lp-steps__card-tags { display: flex; flex-wrap: wrap; gap: var(--space-10) var(--space-30); margin: auto 0 0; padding: 0; list-style: none; }
 .lp-steps__card-text { margin-top: auto; text-wrap: pretty; }

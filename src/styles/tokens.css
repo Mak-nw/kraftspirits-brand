@@ -938,6 +938,7 @@
   --ratio-lp-deck-max-h: 0.5;                    /* максимум картки = 0.5 ширини колоди (2:1; високе вікно не робить картку квадратною) */
   --span-lp-deck-text: 4;                        /* текстова колонка картки — колонки 1–4 колоди (було 1–5 з 12) (темна спокійна зона кадру зліва) */
   --size-lp-deck-text-w: calc(var(--span-lp-deck-text) * var(--grid-col) + (var(--span-lp-deck-text) - 1) * var(--grid-gap));
+  --size-lp-deck-num: calc(80 * var(--u));       /* діаметр кола номера кроку (hairline-обводка; номер .t-lead 40u; рев'ю 938ee99f) */
   --space-lp-deck-title: var(--space-30);        /* цифра → назва */
   --space-lp-deck-text: var(--space-20);         /* теги → пояснення; назва → теги */
   --size-lp-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
