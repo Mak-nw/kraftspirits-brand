@@ -24,12 +24,12 @@
   display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: center;
   width: var(--grid-w); margin: var(--space-catalog-bar-top) auto 0; padding: var(--space-catalog-bar-y) 0;
 }
-/* фільтри — колонки 1–5 (притиснуті до колонки 1), сортування — 10–12 (притиснуте до правого краю колонки 12) */
-.catalog-bar__group { grid-column: 10 / span 3; display: flex; align-items: center; justify-content: flex-end; }
+/* фільтри — колонки 1–5 (притиснуті до колонки 1), сортування — 8–10 (притиснуте до правого краю колонки 10) */
+.catalog-bar__group { grid-column: 8 / span 3; display: flex; align-items: center; justify-content: flex-end; }
 .catalog-bar__group--filters { grid-column: 1 / span 5; justify-content: flex-start; gap: var(--space-select-gap); }
 
 .catalog-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: var(--size-card-cat2-h); gap: var(--grid-gap);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: var(--size-card-cat2-h); gap: var(--grid-gap); /* 4 рівні блоки на 10 колонок: по (1514.2u − 3 · 40u) / 4 = 348.55u (--size-card-cat2-w), краї ряду — на колонках 1 і 10 */
   width: var(--grid-w); margin: 0 auto; padding-bottom: var(--space-catalog-bottom);
 }
 /* Резерв висоти до рендеру карток (їх малює catalog.js): повна сітка за замовчуванням (--catalog-grid-reserve-rows рядків), щоб footer не стрибав (CLS) */

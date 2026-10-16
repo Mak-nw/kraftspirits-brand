@@ -1,6 +1,6 @@
 /* Сторінка FAQ (faq.html). Дані — src/data/faq.js, розмітка груп — partials/sections/faq-group.html, рядок питання — ІСНУЮЧИЙ partial
    components/faq-item (.acc.acc--faq, accordion.css, без змін стилю), кнопка — components/btn (btn--light).
-   Нових візуальних елементів немає: лише композиція на сітці каталогу (12 колонок, 1825u, зазор 40u) і кімнати .theme-green / beige тло сторінки (опис — design-system.html#faq). */
+   Нових візуальних елементів немає: лише композиція на єдиній сітці (10 колонок, 1514.2u, зазор 40u) і кімнати .theme-green / beige тло сторінки (опис — design-system.html#faq). */
 /* CLS (як .page-cocktails): body-vw міряє ширину html до розбору вмісту; довгу сторінку Chrome малює частинами, і поява класичної смуги прокрутки зсувала макет.
    body одразу на 1px вищий за вікно — смуга є вже в момент заміру (без смуги нічого не змінюється) */
 .page-faq { min-height: calc(100svh + var(--border-hairline)); }

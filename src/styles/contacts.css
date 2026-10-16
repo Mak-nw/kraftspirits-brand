@@ -1,9 +1,9 @@
-/* Сторінка «Контакти» (contacts.html). Решітка 12 колонок у контейнері сторінки (поля 47.5u, зона header 103u в потоці, відступ 20u — як на товарі):
-   ліворуч 5 колонок — контактна інформація (Адреса, Телефон, E-mail) + кнопки «Написати нам» / «Замовити екскурсію»; праворуч 7 колонок — мапа з посиланнями під нею.
-   Зазор між панеллю й мапою 5u = --grid-gap-panels (як фото ↔ панель товару): мапа лишає край на колонці 6, панель «заходить» у зазор колонок; панелі однакової висоти (карта розтягується). Форма зворотнього зв'язку — окрема сторінка feedback.html (feedback.css).
+/* Сторінка «Контакти» (contacts.html). Решітка 10 колонок у контейнері сторінки (поля 202.9u, зона header 103u в потоці, відступ 20u — як на товарі):
+   ліворуч 4 колонки (+ частина зазору) — контактна інформація (Адреса, Телефон, E-mail) + кнопки «Написати нам» / «Замовити екскурсію»; праворуч 6 колонок — мапа з посиланнями під нею.
+   Зазор між панеллю й мапою 5u = --grid-gap-panels (як фото ↔ панель товару): мапа лишає край на колонці 5, панель «заходить» у зазор колонок; панелі однакової висоти (карта розтягується). Форма зворотнього зв'язку — окрема сторінка feedback.html (feedback.css).
    Фон сторінки — візерунок ромбів (правило .page-contacts у product.css поруч із .page-product / .page-feedback). Усі значення — токени блоку «Контакти». */
 .contacts {
-  display: grid; grid-template-columns: var(--grid-cols-panels-5-7); column-gap: var(--space-contacts-gap); align-items: stretch;
+  display: grid; grid-template-columns: var(--grid-cols-panels-4-6); column-gap: var(--space-contacts-gap); align-items: stretch;
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
   padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
 }
