@@ -6,7 +6,7 @@ import { resolve, join, relative } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 const ID_RE = /^[a-f0-9]{8}$/;
-const TYPES = ['spacing', 'size', 'text', 'move', 'role', 'span', 'align', 'color', 'hide'];
+const TYPES = ['spacing', 'size', 'text', 'move', 'role', 'span', 'align', 'color', 'opacity', 'hide'];
 const STATUSES = ['draft', 'open', 'done'];
 
 // чистка довільного JSON з клієнта: глибина ≤5, рядки ≤2000 (text — до 8000), масиви ≤40, ключі ≤30
@@ -20,6 +20,24 @@ function clean(v, depth = 0, limit = 2000) {
     return Object.fromEntries(Object.entries(v).slice(0, 30).map(([k, x]) => [String(k).slice(0, 40), clean(x, depth + 1, k === 'text' || k === 'value' ? 8000 : limit)]));
   }
   return null;
+}
+// Лише токени системи: color — колір з --color-* (опційно color-mix з прозорістю); opacity — --opacity-* або 1. Повертає текст помилки або ''.
+const COLOR_CSS = /^(var\(--color-[\w-]+\)|color-mix\(in srgb, var\(--color-[\w-]+\) [\d.]+%, transparent\))$/;
+export function tokenError(b) {
+  const to = b && b.to;
+  if (b?.type === 'color') {
+    if (!to || typeof to !== 'object') return 'color: потрібне «to»';
+    if (typeof to.token !== 'string' || !/^--color-[\w-]+$/.test(to.token)) return 'color: дозволені лише токени кольору системи (--color-*)';
+    if (to.css != null && !COLOR_CSS.test(String(to.css))) return 'color: значення не з токенів (потрібно var(--color-*) або color-mix з токена)';
+    if (to.alphaToken != null && !/^--opacity-[\w-]+$/.test(String(to.alphaToken))) return 'color: alphaToken має бути --opacity-*';
+  }
+  if (b?.type === 'opacity') {
+    if (!to || typeof to !== 'object') return 'opacity: потрібне «to»';
+    const ok = (typeof to.token === 'string' && /^--opacity-[\w-]+$/.test(to.token)) || to.value === 1;
+    if (!ok) return 'opacity: дозволені лише токени --opacity-* або 1 (без прозорості)';
+    if (to.css != null && !/^(var\(--opacity-[\w-]+\)|1)$/.test(String(to.css))) return 'opacity: значення не з токенів';
+  }
+  return '';
 }
 const str = (v, n) => (typeof v === 'string' ? v.slice(0, n) : '');
 
@@ -44,7 +62,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       if (n === 'node_modules' || n === 'dist' || n.startsWith('.')) continue;
       const p = join(dir, n);
       let s; try { s = statSync(p); } catch { continue; }
-      if (s.isDirectory()) { if (recursive) walk(p, true, out); } else if (/\.(js|mjs|html|json)$/.test(n)) out.push(p);
+      if (s.isDirectory()) { if (recursive) walk(p, true, out); } else if (/\.(js|mjs|html|json|css)$/.test(n)) out.push(p);
     }
   }
   const escHtml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -66,6 +84,37 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
     return { source: 'html' };
   }
 
+  // --- джерело для color/opacity: перший `class="…cls…"` у partials/*.html або кореневих *.html (source:line) + правило `.cls {` у src/styles (sourceCss) ---
+  function findClassSource(selector) {
+    const last = String(selector || '').split(/\s*>\s*|\s+/).pop() || '';
+    const cls = [...last.matchAll(/\.([A-Za-z_][\w-]*)/g)].map((x) => x[1]).filter((c) => !/^(is-|has-|js-)/.test(c));
+    const id = (last.match(/#([A-Za-z_][\w-]*)/) || [])[1];
+    if (!cls.length && !id) return {};
+    const out = {};
+    const html = []; walk(resolve(root, 'partials'), true, html); walk(root, false, html);
+    const css = []; walk(resolve(root, 'src/styles'), true, css);
+    const hasCls = (line, c) => new RegExp(`class\\s*=\\s*["'][^"']*(?:^|[\\s"'])${c.replace(/[-]/g, '\\-')}(?=[\\s"'])`).test(line) || (id && line.includes(`id="${id}"`));
+    const lineHas = (l, need) => (need.length && need.every((k) => hasCls(l, k))) || (id && l.includes(`id="${id}"`));
+    for (const need of [cls, cls.slice(-1)]) { // спершу рядок з УСІМА класами, потім з останнім (найспецифічнішим)
+      if (out.source || (!need.length && !id)) continue;
+      for (const f of html.filter((x) => /\.html$/.test(x))) {
+        let c; try { c = readFileSync(f, 'utf8'); } catch { continue; }
+        const i = c.split('\n').findIndex((l) => lineHas(l, need));
+        if (i >= 0) { out.source = relative(root, f); out.sourceLine = i + 1; break; }
+      }
+    }
+    for (const k of [...cls].reverse()) {
+      if (out.sourceCss) break;
+      const re = new RegExp(`(^|[\\s,>+~])\\.${k}(?![\\w-])[^{]*\\{`);
+      for (const f of css.filter((x) => /\.css$/.test(x))) {
+        let c; try { c = readFileSync(f, 'utf8'); } catch { continue; }
+        const i = c.split('\n').findIndex((l) => re.test(l));
+        if (i >= 0) { out.sourceCss = `${relative(root, f)}:${i + 1}`; break; }
+      }
+    }
+    return out;
+  }
+
   const sanitize = (b) => {
     const out = {
       url: str(b.url, 300),
@@ -77,6 +126,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       elementText: str(b.elementText, 120),
       type: TYPES.includes(b.type) ? b.type : 'spacing',
       prop: str(b.prop, 60),
+      target: str(b.target, 20), // color: text | background | border | icon
       group: str(b.group, 60),
       from: clean(b.from ?? null),
       to: clean(b.to ?? null),
@@ -127,6 +177,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
     if (req.method === 'POST' && !id) {
       const body = await readBody(req);
       const now = new Date().toISOString();
+      const terr = tokenError(body); if (terr) { send(res, 400, { error: terr }); return true; }
       if (typeof body.id === 'string' && ID_RE.test(body.id)) { // upsert за id клієнта (ідемпотентно; keepalive-запити при перезавантаженні)
         const all0 = load(); const ex = all0.find((x) => x.id === body.id);
         if (ex) {
@@ -137,6 +188,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       }
       const rec = { id: (typeof body.id === 'string' && ID_RE.test(body.id)) ? body.id : randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...sanitize(body), status: 'draft', shot: null };
       if (rec.type === 'text') Object.assign(rec, findSource(rec.from?.text));
+      else if (rec.type === 'color' || rec.type === 'opacity') Object.assign(rec, findClassSource(rec.selector));
       const all = load(); all.push(rec); save(all);
       send(res, 201, rec); return true;
     }
@@ -157,6 +209,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       const body = await readBody(req);
       const all = load(); const e = all.find((x) => x.id === id);
       if (!e) { send(res, 404, { error: 'not found' }); return true; }
+      const terr = 'to' in body ? tokenError({ type: e.type, to: body.to }) : ''; if (terr) { send(res, 400, { error: terr }); return true; }
       const s = sanitize({ ...e, ...body });
       for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx']) if (k in body) e[k] = s[k];
       if (STATUSES.includes(body.status)) e.status = body.status;

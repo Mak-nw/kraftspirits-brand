@@ -9,6 +9,7 @@ const DEFAULTS = {
   size: { prefixes: ['--size-', '--container-'] },              // height / width (+ primary space)
   radius: { prefixes: ['--radius-'] },
   color: { prefix: '--color-', exclude: '^--color-hover-' },
+  opacity: { prefix: '--opacity-' },
   span: { prefixes: ['--span-'] },
   exclude: ['[data-age-gate]'],                                 // селектори, які не можна вибирати
   roles: '^\\.t-[a-z0-9]+(?:-[a-z0-9]+)*$',                    // селектор ролі тексту у таблицях стилів
@@ -45,8 +46,11 @@ Object.assign(PROPS, {
   'span': { css: ['grid-column-end'], type: 'span', chip: 'колонки', needs: 'gi' },
   'move': { type: 'move', chip: 'позиція' },
   'role': { type: 'role', chip: 'роль .t-*' },
-  'color-text': { css: ['color'], type: 'color', chip: 'колір тексту' },
-  'color-bg': { css: ['background-color'], type: 'color', chip: 'колір фону' },
+  'color-text': { css: ['color'], type: 'color', target: 'text', chip: 'текст' },
+  'color-bg': { css: ['background-color'], type: 'color', target: 'background', chip: 'фон' },
+  'color-border': { css: ['border-color'], type: 'color', target: 'border', chip: 'рамка', needs: 'border' },
+  'color-icon': { css: ['fill'], type: 'color', target: 'icon', chip: 'іконка', needs: 'icon' }, // реальна властивість (fill | stroke | color для currentColor) — iconCss(n)
+  'opacity': { css: ['opacity'], type: 'opacity', chip: 'весь елемент (opacity)' },
   'text-align': { css: ['text-align'], type: 'align', chip: 'вирівнювання' },
   // службові (не чіпи): «вимкнути розтягування» — записуються разом із висотою/шириною групою unstretch-*
   'align-self': { css: ['align-self'], type: 'align', chip: 'align-self', hidden: true },
@@ -63,7 +67,8 @@ const GROUPS = [
   ['Margin', ['margin-top', 'margin-right', 'margin-bottom', 'margin-left']],
   ['Gap', ['gap', 'column-gap', 'row-gap']],
   ['Розмір', ['height', 'min-height', 'width', 'max-width', 'span', 'border-radius']],
-  ['Інше', ['move', 'role', 'text-align', 'color-text', 'color-bg']],
+  ['Інше', ['move', 'role', 'text-align']],
+  ['Колір', ['color-text', 'color-bg', 'color-border', 'color-icon', 'opacity']],
 ];
 const propByCss = (css, dflt) => Object.keys(PROPS).find((k) => PROPS[k].css && PROPS[k].css.length === 1 && PROPS[k].css[0] === css) || dflt;
 
@@ -198,13 +203,15 @@ export function initEdit(deps) {
       if (val === 'rgb(1, 2, 3)' && !/rgb\(\s*1\s*,\s*2\s*,\s*3\s*\)|#010203/i.test(raw)) continue;
       const c = parseColor(val), k = ckey(c);
       const same = list.find((e) => e.k === k);
-      if (same) same.aliases.push(name); else list.push({ name, k, rgb: c, css: `var(${name})`, aliases: [] });
+      if (same) same.aliases.push(name); else list.push({ name, k, rk: ckey([c[0], c[1], c[2], 1]), rgb: c, css: `var(${name})`, aliases: [] });
     }
     probe.style.color = '';
     palette = list; paletteKey = key;
     return list;
   }
   const colorToken = (str) => { const c = parseColor(str); const k = ckey(c); return getPalette().find((e) => e.k === k)?.name || null; };
+  // токен за rgb без урахування alpha (колір із прозорістю: color-mix(... N%, transparent) → rgb токена + alpha)
+  const colorTokenRgb = (c) => { const rk = ckey([c[0], c[1], c[2], 1]); return getPalette().find((e) => e.rk === rk)?.name || null; };
   const lum = (c) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   function contrastOf(el) {
     const layers = []; let img = false;
@@ -223,6 +230,62 @@ export function initEdit(deps) {
     const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
     return { ratio: r2(ratio), img };
   }
+
+  const toHex = (c) => `#${[0, 1, 2].map((i) => Math.round(c[i]).toString(16).padStart(2, '0')).join('')}${c[3] < 0.995 ? Math.round(c[3] * 255).toString(16).padStart(2, '0') : ''}`.toUpperCase().replace('#', '#');
+  // WCAG-контраст для пари «текст/фон» (інформаційно, не блокує): ratio, чи великий текст, AA (4.5 / 3 для великого)
+  const textHolder = (n) => { if (hasOwnText(n)) return n; const w = document.createTreeWalker(n, NodeFilter.SHOW_ELEMENT); let x; while ((x = w.nextNode())) if (hasOwnText(x)) return x; return null; };
+  function contrastInfo(n) {
+    const h = textHolder(n); if (!h) return null;
+    const c = contrastOf(h), cs = getComputedStyle(h), fs = pxOf(cs.fontSize), fw = parseInt(cs.fontWeight, 10) || 400;
+    const large = fs >= 24 || (fs >= 18.66 && fw >= 700), need = large ? 3 : 4.5;
+    return { ratio: c.ratio, large, need, pass: c.ratio >= need, img: c.img, holder: nameOf(h) };
+  }
+  const contrastText = (c) => (c ? `контраст ${c.ratio}:1 — ${c.pass ? `AA ✓${c.large ? ' (великий текст, поріг 3)' : ''}` : `НЕ проходить AA (потрібно ${c.need}${c.large ? ', великий текст' : ''})`}${c.img ? '; є фон-зображення — орієнтовно' : ''}` : '');
+  // токени прозорості (--opacity-*), значення динамічно з :root; «1» (без прозорості) — не токен, лише крок
+  let opCache = null;
+  function getOpacities() {
+    const key = String(document.styleSheets.length);
+    if (opCache?.key === key) return opCache.list;
+    const cs = getComputedStyle(document.documentElement), list = [];
+    for (const name of rootVarNames([CFG.opacity.prefix])) {
+      const v = parseFloat(cs.getPropertyValue(name));
+      if (!Number.isFinite(v) || v < 0 || v > 1) continue;
+      const same = list.find((e) => Math.abs(e.value - v) < 0.0005);
+      if (same) same.aliases.push(name); else list.push({ name, value: v, css: `var(${name})`, aliases: [] });
+    }
+    if (!list.some((e) => e.value === 1)) list.push({ name: '1', value: 1, css: '1', aliases: [], plain: true });
+    list.sort((a, b) => a.value - b.value);
+    opCache = { key, list };
+    return list;
+  }
+  // кроки прозорості КОЛЬОРУ (alpha): спершу токени --opacity-*, далі експериментальні 90…10% (які не збігаються з токеном); 100% = без прозорості
+  const EXP_ALPHA = [90, 80, 70, 60, 50, 40, 30, 20, 10];
+  function getAlphaSteps() {
+    const toks = getOpacities().filter((e) => !e.plain && e.value < 1), out = [];
+    for (const e of toks) out.push({ pct: r2(e.value * 100), name: e.name, aliases: e.aliases, token: true });
+    for (const v of EXP_ALPHA) if (!out.some((x) => Math.abs(x.pct - v) < 0.01)) out.push({ pct: v, name: null, aliases: [], token: false });
+    out.push({ pct: 100, name: null, aliases: [], token: false, none: true });
+    return out.sort((a, b) => b.pct - a.pct);
+  }
+  const alphaStepOf = (pct) => getAlphaSteps().find((x) => Math.abs(x.pct - pct) < 0.6) || null;
+  const nearestOpToken = (pct) => { const t = getAlphaSteps().filter((x) => x.token); let b = null; for (const x of t) if (!b || Math.abs(x.pct - pct) < Math.abs(b.pct - pct)) b = x; return b ? { token: b.name, percent: b.pct } : null; };
+  const mixCss = (tok, pct) => (pct >= 99.95 ? `var(${tok})` : `color-mix(in srgb, var(${tok}) ${r2(pct)}%, transparent)`);
+  const opToken = (v) => getOpacities().find((e) => Math.abs(e.value - v) < 0.005) || null;
+  // властивість кольору іконки: SVG-фігура/svg — fill (або stroke, якщо fill none); currentColor-іконка — `color` елемента
+  function iconCss(n) {
+    const svgs = n instanceof SVGElement ? [n] : [...n.querySelectorAll('svg, svg *')].slice(0, 40);
+    if (!svgs.length) return null;
+    const old = n.style.getPropertyValue('color'), oldP = n.style.getPropertyPriority('color');
+    n.style.setProperty('color', 'rgb(1, 2, 3)');
+    const cur = svgs.some((x) => { const c = getComputedStyle(x); return c.fill === 'rgb(1, 2, 3)' || c.stroke === 'rgb(1, 2, 3)'; });
+    if (old) n.style.setProperty('color', old, oldP); else n.style.removeProperty('color');
+    if (cur) return { css: 'color', mode: 'currentColor' };
+    if (!(n instanceof SVGElement)) return null;
+    const cs = getComputedStyle(n);
+    return cs.fill !== 'none' ? { css: 'fill', mode: 'fill' } : cs.stroke !== 'none' ? { css: 'stroke', mode: 'stroke' } : { css: 'fill', mode: 'fill' };
+  }
+  const hasBorder = (n) => { const cs = getComputedStyle(n); return ['Top', 'Right', 'Bottom', 'Left'].some((s) => pxOf(cs[`border${s}Width`]) > 0 && cs[`border${s}Style`] !== 'none'); };
+  const cssFor = (n, p) => (p === 'color-icon' ? (iconCss(n)?.css || 'fill') : p === 'color-border' ? 'border-color' : PROPS[p].css[0]);
 
   // ---------- елементи ----------
   const excluded = (n) => CFG.exclude.some((s) => { try { return n.closest(s); } catch { return false; } });
@@ -273,12 +336,25 @@ export function initEdit(deps) {
     return { px, raw, set };
   }
   function readStyle(n, p) {
-    const P = PROPS[p], css = P.css[0];
+    const P = PROPS[p], css = cssFor(n, p);
     if (P.type === 'color') {
-      const v = getComputedStyle(n).getPropertyValue(css);
-      const inl = n.style.getPropertyValue(css), m = inl.match(/var\((--[\w-]+)\)/);
-      const token = m ? m[1] : colorToken(v);
-      return { k: ckey(parseColor(v)), css: inl || null, token, color: v, label: token || v };
+      const cs = getComputedStyle(n);
+      const v = css === 'border-color' ? cs.borderTopColor : cs.getPropertyValue(css);
+      const inl = n.style.getPropertyValue(css);
+      const mm = inl.match(/^color-mix\(in srgb, var\((--[\w-]+)\) ([\d.]+)%, transparent\)$/), vm = inl.match(/^var\((--[\w-]+)\)$/);
+      const col = parseColor(v), a = col[3];
+      const token = mm ? mm[1] : vm ? vm[1] : (colorToken(v) || colorTokenRgb(col));
+      const raw = a * 100, pct = mm ? r2(+mm[2]) : (alphaStepOf(raw)?.pct ?? Math.round(raw)), hex = toHex([col[0], col[1], col[2], 1]);
+      const st = alphaStepOf(pct), aTok = st && st.token ? st.name : null;
+      const kind = pct >= 99.95 ? 'none' : aTok ? 'token' : 'experimental';
+      const ct = P.target === 'text' || P.target === 'background' ? contrastInfo(n) : null;
+      const alphaTxt = kind === 'none' ? '' : ` · прозорість ${pct}%${kind === 'token' ? ` = ${aTok}` : ' (експериментально)'}`;
+      return { k: ckey(col), property: P.target, css: inl || null, token, colorToken: token, value: hex, color: v, alphaPct: pct, alpha: kind === 'none' ? '100%' : aTok || `${pct}%`, alphaToken: aTok, alphaKind: kind, ...(kind === 'experimental' ? { alphaNearest: nearestOpToken(pct) } : {}), label: token ? `${token} (${hex})${alphaTxt}` : `${hex}${alphaTxt} — не з токенів`, ...(ct ? { contrast: { ratio: ct.ratio, need: ct.need, pass: ct.pass, large: ct.large, text: contrastText(ct) } } : {}) };
+    }
+    if (P.type === 'opacity') {
+      const v = r2(parseFloat(getComputedStyle(n).opacity)), e = opToken(v), inl = n.style.getPropertyValue('opacity'), m = inl.match(/var\((--[\w-]+)\)/);
+      const token = m ? m[1] : e && !e.plain ? e.name : null;
+      return { k: String(v), property: 'opacity', css: inl || null, token, value: v, label: token ? `${token} (${v})` : v === 1 ? '1 (без прозорості)' : `${v} — не з токенів` };
     }
     if (P.type === 'align') { const v = getComputedStyle(n).getPropertyValue(css).trim(); return { k: v, value: v, label: v }; }
     const { px, set } = readLen(n, css);
@@ -303,13 +379,13 @@ export function initEdit(deps) {
     return { targets: list, scope: txt };
   }
   function styleSpec(n, targets, prop, scope, group) {
-    const P = PROPS[prop], css = P.css[0];
+    const P = PROPS[prop], css = cssFor(n, prop);
     return {
-      key: keyOf(n, css), el: n, type: P.type, prop: css, group, targets, scope,
+      key: keyOf(n, prop === 'color-icon' ? 'icon-' + css : css), el: n, type: P.type, prop: css, pkey: prop, target: P.target || '', group, targets, scope,
       snap: () => targets.map((t) => [t.style.getPropertyValue(css), t.style.getPropertyPriority(css)]),
       put: (s) => targets.forEach((t, i) => { if (s[i] && s[i][0]) t.style.setProperty(css, s[i][0], s[i][1]); else t.style.removeProperty(css); }),
       read: () => (P.type === 'span' ? readSpan(n) : readStyle(n, prop)),
-      restore: () => ({ kind: 'style', css, value: n.style.getPropertyValue(css) }),
+      restore: () => ({ kind: 'style', css, prop, value: n.style.getPropertyValue(css) }),
     };
   }
   function readSpan(n) {
@@ -513,7 +589,8 @@ export function initEdit(deps) {
     } else { m.targets = spec.targets; m.scope = spec.scope || m.scope; }
     return m;
   }
-  const typeRu = { spacing: 'відступ', size: 'розмір', text: 'текст', move: 'порядок', role: 'роль', span: 'колонки', align: 'вирівнювання', color: 'колір', hide: 'приховано' };
+  const typeRu = { spacing: 'відступ', size: 'розмір', text: 'текст', move: 'порядок', role: 'роль', span: 'колонки', align: 'вирівнювання', color: 'колір', opacity: 'opacity елемента', hide: 'приховано' };
+  const TARGET_RU = { text: 'тексту', background: 'фону', border: 'рамки', icon: 'іконки' };
   function descOf(m) {
     const a = m.orig.label, b = m.cur.label, nm = m.elName.replace(/ «.*»$/, '');
     const grp = m.group === 'gap-all' ? ' (row+column)' : m.group && /-all$/.test(m.group) ? ' (усі боки)' : '';
@@ -523,7 +600,8 @@ export function initEdit(deps) {
       case 'text': return `текст «${nm}»: «${m.orig.text.slice(0, 50)}» → «${m.cur.text.slice(0, 50)}»`;
       case 'role': return `роль тексту «${nm}»: ${m.orig.role || '(без ролі)'} → ${m.cur.role || '(без ролі)'}`;
       case 'move': return `порядок у «${m.parentSel.split(' > ').pop()}»: «${nm}» позиція ${m.orig.index + 1} → ${m.cur.index + 1} з ${m.cur.of} (було: ${(m.orig.order || []).join(' · ')} → стало: ${(m.cur.order || []).join(' · ')})${m.cur.tracks && m.cur.tracks !== m.orig.tracks ? `; доріжки: ${m.orig.tracks} → ${m.cur.tracks}` : ''}`;
-      case 'color': return `${m.prop === 'color' ? 'колір тексту' : 'колір фону'} «${nm}»: ${m.orig.token || m.orig.color} → ${m.cur.token || m.cur.color}`;
+      case 'color': return `колір ${TARGET_RU[m.target] || ''} «${nm}»: ${m.orig.label} → ${m.cur.label}${m.cur.contrast ? ` · ${m.cur.contrast.text}` : ''}`;
+      case 'opacity': return `opacity ВСЬОГО елемента (з дітьми) «${nm}»: ${m.orig.label} → ${m.cur.label}`;
       case 'align': if (/^(align-self|justify-self|flex-grow|flex-basis)$/.test(m.prop)) return `вимкнено розтягування «${nm}»: ${m.prop} ${m.orig.value} → ${m.cur.value} (разом із розміром: ${m.group})`; return m.prop === 'text-align' ? `вирівнювання тексту «${nm}»: ${m.orig.value} → ${m.cur.value}` : `розподіл ${m.prop} «${nm}»: ${m.orig.value} → ${m.cur.value}${m.group && /^dist-/.test(m.group) ? ' (разом з gap)' : ''}`;
       case 'hide': return `прибрати елемент «${nm}»`;
       default: return `${m.type} «${nm}»`;
@@ -540,7 +618,7 @@ export function initEdit(deps) {
     const strip = ({ k, ...rest }) => rest;
     return {
       url: PAGE(), title: document.title, viewport: { w: innerWidth, h: innerHeight }, uPx: unit(),
-      selector: selFor(m.el), parentSelector: m.parentSel, elementText: m.elText, type: m.type, prop: m.prop, group: m.group || '',
+      selector: selFor(m.el), parentSelector: m.parentSel, elementText: m.elText, type: m.type, prop: m.prop, target: m.target || '', group: m.group || '',
       from: strip(m.orig), to: strip(m.cur), desc: descOf(m), scope: m.scope || '', scopeCount: m.scope ? m.targets.length : 0, note: m.note || '',
       restore: { ...m.restore(), from: m.orig.k },
       ...(m.type === 'move' ? { tracks: { mode: m.cur.mode, before: m.orig.tracks, after: m.cur.tracks, beforeU: m.orig.tracksU, afterU: m.cur.tracksU, token: m.cur.tracksToken || m.orig.tracksToken || null, orderBefore: m.orig.order, orderAfter: m.cur.order }, source: moveSource(m) } : {}),
@@ -569,8 +647,9 @@ export function initEdit(deps) {
   function dropRecord(m) {
     clearTimeout(m.timer);
     S.changes.delete(m.key);
-    // видаляємо з файлу лише ЧЕРНЕТКУ; надіслані (open) і виконані (done) записи автоматично не стираються
-    return enqueue(m, async () => { const id = m.record?.id || (m.dirty ? m.id : null); if (id && (!m.record || m.record.status === 'draft')) { try { await api('DELETE', '/edits/' + id); } catch { /* 404 — вже немає */ } } m.record = null; m.dirty = false; updateBtn(); });
+    // користувач сам скасував правку (×, undo до оригіналу, «Скинути все»): видаляємо запис — і чернетку, і надіслану (open), щоб накладка не повернулась після reload.
+    // Виконані (done) у S.changes не тримаються, тож не чіпаються.
+    return enqueue(m, async () => { const id = m.record?.id || (m.dirty ? m.id : null); if (id && (!m.record || m.record.status === 'draft' || m.record.status === 'open')) { try { await api('DELETE', '/edits/' + id); } catch { /* 404 — вже немає */ } } m.record = null; m.dirty = false; updateBtn(); });
   }
   function afterOp(keys) {
     for (const k of keys) {
@@ -821,12 +900,12 @@ export function initEdit(deps) {
   }
 
   // ---------- застосування змін ----------
-  const propsFor = (p, all) => { const P = PROPS[p]; return all && P.all ? P.all : P.css; };
+  const propsFor = (p, all, n) => { const P = PROPS[p]; return p === 'color-icon' && n ? [cssFor(n, p)] : all && P.all ? P.all : P.css; };
   function beginStyle(n, p, all) {
-    const P = PROPS[p], props = propsFor(p, all);
+    const P = PROPS[p], props = propsFor(p, all, n);
     const { targets, scope } = scopeFor(n, P.type, p);
     const group = all && P.all ? `${P.group}-all` : (p === 'gap' ? 'gap-all' : '');
-    const specs = props.map((css) => { return styleSpec(n, targets, propByCss(css, p), scope, group); });
+    const specs = props.map((css) => { return styleSpec(n, targets, P.type === 'color' || P.type === 'opacity' ? p : propByCss(css, p), scope, group); });
     specs.forEach(touch);
     const before = specs.map((s) => s.snap());
     const set = (css) => { for (const t of targets) for (const c of props) t.style.setProperty(c, css); };
@@ -858,7 +937,9 @@ export function initEdit(deps) {
     if (P.type === 'move') return say('Позиція: Alt+←↑→↓ або кнопки «поміняти з…» (у режимі M — голі стрілки)');
     if (P.type === 'role') return cycleRole(dir);
     if (P.type === 'span') { const { span, columns } = spanOf(el); return setSpan(el, Math.min(columns, Math.max(1, span + dir * n))); }
-    if (P.type === 'color' || P.type === 'align') return say('Колір і вирівнювання — вибір у панелі');
+    if (P.type === 'color') return n > 1 ? stepAlpha(dir) : stepColor(dir, 1); // Shift+стрілка (або PageUp/PageDown) — прозорість кольору
+    if (P.type === 'opacity') return stepOpacity(dir);
+    if (P.type === 'align') return say('Вирівнювання — вибір у панелі');
     if (!available(S.prop)) return say('Для цього елемента ця властивість недоступна');
     S.hint = null;
     const e = stepOn(P.scale, baseOf(el, S.prop), dir, n);
@@ -894,7 +975,85 @@ export function initEdit(deps) {
     const roles = getRoles(), cur = roleOf(S.el), i = roles.indexOf(cur);
     setRole(S.el, roles[(i + dir + roles.length) % roles.length]);
   }
-  function setColor(n, p, entry) { applyStyle(n, p, entry.css, false); }
+  // ---- колір / прозорість кольору (alpha) / opacity елемента: лише токени системи ----
+  const palIndex = (cur) => getPalette().findIndex((e) => cur.token === e.name || e.aliases.includes(cur.token));
+  const TOKEN_CSS = /^(var\(--color-[\w-]+\)|color-mix\(in srgb, var\(--color-[\w-]+\) [\d.]+%, transparent\))$/;
+  function colorApply(n, p, tok, pct) {
+    const css = mixCss(tok, pct);
+    if (!TOKEN_CSS.test(css)) { say('Едіт: колір не з токенів системи — відхилено'); return false; }
+    applyStyle(n, p, css, false);
+    const P = PROPS[p], ent = getPalette().find((e) => e.name === tok), c = P.target === 'text' || P.target === 'background' ? contrastInfo(n) : null;
+    S.cand = tok;
+    showTip(`${P.chip}: ${tok}${ent ? ' · ' + toHex(ent.rgb) : ''}${pct < 99.95 ? ` · ${pct}%` : ''}${c ? ` · ${c.ratio}:1 ${c.pass ? 'AA ✓' : 'нижче AA'}` : ''}`);
+    return true;
+  }
+  function setColor(n, p, entry) { // зберігає поточну прозорість кольору
+    // позитивний контроль: приймається лише запис палітри токенів (--color-*); довільний hex/rgb/назва відхиляється
+    if (!entry || !getPalette().some((e) => e.name === entry.name)) { say('Едіт: колір не з токенів системи — відхилено'); return false; }
+    const cur = readStyle(n, p);
+    return colorApply(n, p, entry.name, entry.rgb[3] < 1 ? 100 : cur.token ? cur.alphaPct : 100);
+  }
+  function setColorToken(n, p, name, pct) { // API для тестів/клавіатури: лише ім'я токена з палітри; pct — опційна прозорість (лише крок із getAlphaSteps)
+    const ent = getPalette().find((e) => e.name === name || e.aliases.includes(name));
+    if (!ent) { say('Едіт: колір не з токенів системи — відхилено'); return false; }
+    if (!guard()) return false;
+    if (pct != null && !alphaStepOf(pct)) { say('Едіт: прозорість не з кроків системи — відхилено'); return false; }
+    if (pct == null) return setColor(n, p, ent);
+    return colorApply(n, p, ent.name, alphaStepOf(pct).pct);
+  }
+  function setAlpha(n, p, step) {
+    if (!step || !getAlphaSteps().some((x) => x.pct === step.pct)) { say('Едіт: прозорість не з кроків системи — відхилено'); return false; }
+    if (!guard()) return false;
+    const cur = readStyle(n, p);
+    if (!cur.token) { say('Спершу оберіть токен кольору — прозорість додається до токена'); return false; }
+    return colorApply(n, p, getPalette().find((e) => e.name === cur.token || e.aliases.includes(cur.token))?.name || cur.token, step.pct);
+  }
+  function setAlphaPct(n, p, pct) { const st = alphaStepOf(pct); if (!st) { say('Едіт: прозорість не з кроків системи — відхилено'); return false; } return setAlpha(n, p, st); }
+  function stepColor(dir, n) {
+    const pal = getPalette(); if (!pal.length) return;
+    const cur = readStyle(S.el, S.prop), i = palIndex(cur);
+    const j = i < 0 ? (dir > 0 ? 0 : pal.length - 1) : (i + dir * n + pal.length * 10) % pal.length;
+    setColor(S.el, S.prop, pal[j]);
+  }
+  function stepAlpha(dir) { // dir>0 — менш прозоро
+    const cur = readStyle(S.el, S.prop), l = getAlphaSteps().slice().sort((a, b) => a.pct - b.pct);
+    const cand = dir > 0 ? l.find((x) => x.pct > cur.alphaPct + 0.05) : [...l].reverse().find((x) => x.pct < cur.alphaPct - 0.05);
+    if (!cand) return say(dir > 0 ? 'Вже без прозорості (100%)' : 'Нижче — немає кроку прозорості');
+    setAlpha(S.el, S.prop, cand);
+  }
+  function setOpacity(n, e) {
+    if (!e || !getOpacities().some((x) => x.name === e.name)) { say('Едіт: прозорість не з токенів системи — відхилено'); return false; }
+    applyStyle(n, 'opacity', e.css, false); S.cand = e.name;
+    showTip(`opacity елемента (разом з дітьми): ${e.plain ? '1 (без прозорості)' : `${e.name} · ${e.value}`}`);
+    return true;
+  }
+  function setOpacityToken(n, name) {
+    const e = getOpacities().find((x) => x.name === name || x.aliases.includes(name));
+    if (!e) { say('Едіт: прозорість не з токенів системи — відхилено'); return false; }
+    if (!guard()) return false;
+    return setOpacity(n, e);
+  }
+  function stepOpacity(dir) {
+    const l = getOpacities(), v = r2(parseFloat(getComputedStyle(S.el).opacity));
+    const cand = dir > 0 ? l.find((e) => e.value > v + 0.0049) : [...l].reverse().find((e) => e.value < v - 0.0049);
+    if (!cand) return say(dir > 0 ? 'Вже без прозорості (1)' : 'Нижче — немає токена прозорості');
+    setOpacity(S.el, cand);
+  }
+  function confirmColor() { // Enter: застосувати вибраний токен (кандидат — з панелі/стрілок) і підтвердити
+    if (!S.el || !guard()) return;
+    const P = PROPS[S.prop];
+    if (P.type === 'color') {
+      const cur = readStyle(S.el, S.prop), ent = getPalette().find((e) => e.name === S.cand) || getPalette()[palIndex(cur)];
+      if (!ent) return say('Оберіть токен кольору (стрілки або клік)');
+      if (cur.token !== ent.name && !ent.aliases.includes(cur.token)) setColor(S.el, S.prop, ent);
+      say(`Застосовано: ${P.chip} = ${ent.name}${readStyle(S.el, S.prop).alphaPct < 99.95 ? ` · ${readStyle(S.el, S.prop).alphaPct}%` : ''}`);
+    } else {
+      const cur = readStyle(S.el, S.prop), ent = getOpacities().find((e) => e.name === S.cand) || opToken(cur.value);
+      if (!ent) return say('Оберіть крок прозорості (стрілки або клік)');
+      if (r2(parseFloat(getComputedStyle(S.el).opacity)) !== ent.value) setOpacity(S.el, ent);
+      say(`Застосовано: opacity елемента = ${ent.plain ? '1' : ent.name}`);
+    }
+  }
   function doMove(n, ref) { // ref — елемент, ПЕРЕД яким вставити n (null — в кінець)
     if (!guard() || !n.parentElement) return;
     const list = ordered(n.parentElement).filter((k) => k !== n), at = ref ? list.indexOf(ref) : list.length;
@@ -910,7 +1069,7 @@ export function initEdit(deps) {
   }
   function resetProp(n, p) {
     // повернути вихідне значення для вибраної властивості (як окрема правка, її можна скасувати)
-    const P = PROPS[p]; const m = S.changes.get(keyOf(n, P.css ? P.css[0] : p));
+    const P = PROPS[p]; const m = S.changes.get(keyOf(n, p === 'color-icon' ? 'icon-' + cssFor(n, p) : P.css ? cssFor(n, p) : p));
     if (!m) return say('Немає правки для цього значення');
     revertChange(m);
   }
@@ -984,14 +1143,16 @@ export function initEdit(deps) {
 
   // ---------- вибір, навігація ----------
   function select(n) {
-    S.el = n && n.isConnected ? n : null; S.hint = null;
-    if (S.el && !available(S.prop)) S.prop = 'padding-top';
+    S.el = n && n.isConnected ? n : null; S.hint = null; S.cand = null;
+    if (S.el && !available(S.prop)) S.prop = PROPS[S.prop]?.type === 'color' ? 'color-text' : 'padding-top';
     renderInfo(); draw();
   }
   function available(p) {
     const n = S.el, P = PROPS[p]; if (!n || !P) return false;
     if (P.needs === 'fg') return isFG(n);
     if (P.needs === 'gi') return !!n.parentElement && isGridItem(n);
+    if (P.needs === 'border') return hasBorder(n);
+    if (P.needs === 'icon') return !!iconCss(n);
     return true;
   }
   const kids = (n) => [...n.children].filter((c) => !SKIP.has(c.tagName) && !excluded(c));
@@ -1179,7 +1340,13 @@ export function initEdit(deps) {
     if (mod && e.code === 'KeyZ') { e.preventDefault(); e.stopPropagation(); if (e.shiftKey) redo(); else undo(); return; }
     if (mod && e.code === 'KeyY') { e.preventDefault(); e.stopPropagation(); redo(); return; }
     if (mod) return;
-    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (S.el) select(null); else setOn(false); return; }
+    if (e.key === 'Escape') {
+      e.preventDefault(); e.stopPropagation();
+      // у режимі колір/прозорість Esc спершу повертає вихідне значення цієї властивості (як «Скинути»), другий Esc знімає вибір
+      const T = S.el && PROPS[S.prop]?.type;
+      if ((T === 'color' || T === 'opacity') && S.changes.has(keyOf(S.el, S.prop === 'color-icon' ? 'icon-' + cssFor(S.el, S.prop) : cssFor(S.el, S.prop)))) { resetProp(S.el, S.prop); S.cand = null; return; }
+      if (S.el) select(null); else setOn(false); return;
+    }
     if (e.code === 'KeyM' && !e.altKey) { e.preventDefault(); e.stopPropagation(); setMode(S.prop === 'move' ? 'value' : 'move'); return; }
     if (e.code === 'KeyB' && !e.altKey) { e.preventDefault(); e.stopPropagation(); toggleView(); return; }
     if (e.code === 'KeyA' && !e.altKey) { e.preventDefault(); e.stopPropagation(); S.scopeAll = !S.scopeAll; renderInfo(); say(S.scopeAll ? 'Правка застосується до ВСІХ такого типу (class/роль)' : 'Правка лише для вибраного елемента'); return; }
@@ -1187,8 +1354,9 @@ export function initEdit(deps) {
     if (e.code === 'BracketLeft') { e.preventDefault(); e.stopPropagation(); nav('up'); return; }
     if (e.code === 'BracketRight') { e.preventDefault(); e.stopPropagation(); nav('down'); return; }
     if (e.key === 'Tab') { e.preventDefault(); e.stopPropagation(); nav(e.shiftKey ? 'prev' : 'next'); return; }
-    if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); startText(S.el); return; }
+    if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); if (['color', 'opacity'].includes(PROPS[S.prop]?.type)) confirmColor(); else startText(S.el); return; }
     if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); e.stopPropagation(); hideEl(S.el); return; }
+    if ((e.key === 'PageUp' || e.key === 'PageDown') && PROPS[S.prop]?.type === 'color') { e.preventDefault(); e.stopPropagation(); stepAlpha(e.key === 'PageUp' ? 1 : -1); return; }
     const dirs = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 };
     if (e.key in dirs) {
       e.preventDefault(); e.stopPropagation();
@@ -1229,8 +1397,14 @@ export function initEdit(deps) {
       return `<div class="ed-val"><select data-a="role"><option value="">(без ролі)</option>${roles.map((r) => `<option value="${esc(r)}"${r === cur ? ' selected' : ''}>.${esc(r)}</option>`).join('')}</select></div>${c ? `<div class="ed-meta">контраст тексту: ${c.ratio}:1 ${c.img ? '(є фон-зображення — точне значення міряй піксельно)' : c.ratio >= 7 ? 'AAA' : c.ratio >= 4.5 ? 'AA' : c.ratio >= 3 ? 'лише великий текст' : '— недостатньо!'}</div>` : ''}`;
     }
     if (P.type === 'color') {
-      const cur = readStyle(n, S.prop), c = hasOwnText(n) && S.prop === 'color-text' ? contrastOf(n) : null;
-      return `<div class="ed-sw">${getPalette().map((e) => `<button class="ed-swb${cur.token === e.name || e.aliases.includes(cur.token) ? ' on' : ''}" data-color="${esc(e.name)}" title="${esc(e.name)}" style="background:rgb(${e.rgb.slice(0, 3).join(',')})"></button>`).join('')}</div><div class="ed-meta">${esc(cur.label)}${c ? ` · контраст ${c.ratio}:1${c.ratio < 4.5 ? ' — недостатньо' : ''}` : ''}</div>`;
+      const cur = readStyle(n, S.prop), pal = getPalette(), ci = palIndex(cur), ic = P.target === 'icon' ? iconCss(n) : null;
+      const sw = pal.map((e) => `<button class="ed-swt${ci >= 0 && pal[ci] === e ? ' on' : ''}" data-color="${esc(e.name)}" title="${esc(e.name)} · ${esc(toHex(e.rgb))}${e.aliases.length ? ' · також ' + esc(e.aliases.join(', ')) : ''}"><i style="background:rgb(${e.rgb.slice(0, 3).join(',')})"></i><span>${esc(e.name.replace(/^--color-/, ''))}<small>${esc(toHex(e.rgb))}</small></span></button>`).join('');
+      const ct = cur.contrast, ctHtml = P.target === 'text' || P.target === 'background' ? (ct ? `<div class="ed-ctr ${ct.pass ? 'ok' : 'bad'}">${esc(ct.text)}</div>` : '<div class="ed-meta">контраст: у елемента немає власного тексту</div>') : '';
+      return `<div class="ed-meta"><b>${esc(PROPS[S.prop].chip)}</b>${ic ? ` · ${ic.mode === 'currentColor' ? 'currentColor (через color)' : ic.css}` : ''}: ${esc(cur.label)}</div><div class="ed-val"><button data-a="color-prev" title="Попередній токен (←/↑)">‹</button><span>${ci >= 0 ? `${ci + 1}/${pal.length}` : `—/${pal.length}`}</span><button data-a="color-next" title="Наступний токен (→/↓)">›</button><button data-a="reset" title="Повернути вихідне (Esc)">↺ Скинути</button></div><div class="ed-swg">${sw}</div><div class="ed-meta"><b>Прозорість кольору (${esc(PROPS[S.prop].chip)})</b>: ${cur.alphaKind === 'none' ? '100% — без прозорості' : `${cur.alphaPct}% — ${cur.alphaKind === 'token' ? 'токен ' + esc(cur.alphaToken) : 'експериментальне значення (не токен)'}`}. Діти не змінюються.</div><div class="ed-ops">${getAlphaSteps().map((x) => `<button class="ed-opb${Math.abs(x.pct - cur.alphaPct) < 0.6 ? ' on' : ''}${x.token || x.none ? '' : ' exp'}" data-alpha="${x.pct}" title="${x.token ? esc([x.name, ...x.aliases].join(', ')) : x.none ? 'без прозорості' : 'експериментальне значення — не токен, потребує рішення'}"><b>${x.pct}%</b><small>${x.none ? 'без' : x.token ? esc(x.name.replace(/^--opacity-/, '')) : 'експ.'}</small></button>`).join('')}</div>${ctHtml}<div class="ed-meta">лише токени --color-* · ←/↑ ‹ ›/→/↓ — інший токен; Shift+↑/↓ або PageUp/PageDown — прозорість кольору (пунктир = експериментальні кроки); Enter — застосувати, Esc — скинути</div>`;
+    }
+    if (P.type === 'opacity') {
+      const cur = readStyle(n, 'opacity'), l = getOpacities(), v = cur.value;
+      return `<div class="ed-meta warn"><b>opacity ВСЬОГО елемента (разом з дітьми)</b>: ${esc(cur.label)}. Для прозорості лише фону/тексту/рамки/іконки — вкладки кольору.</div><div class="ed-val"><button data-a="op-down" title="Прозоріше (↓/←)">−</button><span>${esc(cur.label)}</span><button data-a="op-up" title="Менш прозоро (↑/→)">+</button><button data-a="reset" title="Повернути вихідне (Esc)">↺ Скинути</button></div><div class="ed-ops">${l.map((e) => `<button class="ed-opb${Math.abs(e.value - v) < 0.005 ? ' on' : ''}" data-op="${esc(e.name)}" title="${esc([e.name, ...e.aliases].join(', '))}"><b>${e.value}</b><small>${e.plain ? 'без прозорості' : esc(e.name.replace(/^--opacity-/, ''))}</small></button>`).join('')}</div><div class="ed-meta">лише токени --opacity-* (1 = без прозорості) · ↑/→ менш прозоро, ↓/← прозоріше, Enter — застосувати, Esc — скинути</div>`;
     }
     if (P.type === 'align') return `<div class="ed-val">${['left', 'center', 'right'].map((v) => `<button data-align="${v}"${getComputedStyle(n).textAlign === v ? ' class="on"' : ''}>${v}</button>`).join('')}</div>`;
     if (P.type === 'span') { const v = readSpan(n); return `<div class="ed-val"><button data-a="dec">−</button><span>${esc(v.label)}</span><button data-a="inc">+</button></div>`; }
@@ -1244,8 +1418,9 @@ export function initEdit(deps) {
     pHead.innerHTML = `<b>Едіт</b><span class="ed-sub">${innerWidth}px · 1u=${r2(u)}px${S.view === 'before' ? ' · ДО' : ''}</span><span class="ed-sp"></span><button data-a="flip" title="Панель ліворуч/праворуч">⇄</button><button data-a="close" title="Закрити (E)">×</button>`;
     const chips = GROUPS.map(([g, ps]) => `<div class="ed-grp"><em>${g}</em>${ps.map((p) => `<button class="ed-chip${S.prop === p ? ' on' : ''}" data-p="${p}"${S.el && !available(p) ? ' disabled' : ''}>${esc(PROPS[p].chip)}</button>`).join('')}</div>`).join('');
     const sc = S.el ? scopeFor(S.el, PROPS[S.prop].type, S.prop) : null;
-    pInfo.innerHTML = `${crumbs()}${S.el ? `${hintHtml()}${chips}<div class="ed-tog"><label><input type="checkbox" data-a="all"${S.all ? ' checked' : ''}> усі боки <kbd>Alt</kbd></label><label><input type="checkbox" data-a="scope"${S.scopeAll ? ' checked' : ''}> на всі такого типу <kbd>A</kbd>${S.scopeAll && sc?.scope ? ` <i>${esc(sc.scope)} · ${sc.targets.length}</i>` : ''}</label></div>${readout()}${layoutRows(S.el)}<div class="ed-acts"><button data-a="text">Текст <kbd>Enter</kbd></button><button data-a="hide">Прибрати <kbd>Del</kbd></button><button data-a="undo">↶</button><button data-a="redo">↷</button></div>` : ''}`;
+    pInfo.innerHTML = `${crumbs()}${S.el ? `${hintHtml()}${chips}${['color', 'opacity'].includes(PROPS[S.prop].type) ? readout() : ''}<div class="ed-tog"><label><input type="checkbox" data-a="all"${S.all ? ' checked' : ''}> усі боки <kbd>Alt</kbd></label><label><input type="checkbox" data-a="scope"${S.scopeAll ? ' checked' : ''}> на всі такого типу <kbd>A</kbd>${S.scopeAll && sc?.scope ? ` <i>${esc(sc.scope)} · ${sc.targets.length}</i>` : ''}</label></div>${['color', 'opacity'].includes(PROPS[S.prop].type) ? '' : readout()}${layoutRows(S.el)}<div class="ed-acts"><button data-a="text">Текст <kbd>Enter</kbd></button><button data-a="hide">Прибрати <kbd>Del</kbd></button><button data-a="undo">↶</button><button data-a="redo">↷</button></div>` : ''}`;
     pInfo.scrollTop = keepTop;
+    panelEl.classList.toggle('colorp', !!S.el && ['color', 'opacity'].includes(PROPS[S.prop].type));
     if (aeKey) { const again = [...pInfo.querySelectorAll('[' + aeKey[0] + ']')].find((x) => x.getAttribute(aeKey[0]) === aeKey[1]); if (again && !again.disabled) again.focus({ preventScroll: true }); }
     renderFoot();
     persistSoon();
@@ -1263,7 +1438,7 @@ export function initEdit(deps) {
     const N = S.changes.size, un = unsyncedN();
     pFoot.innerHTML = `<button data-a="view" class="${S.view === 'before' ? 'on' : ''}">До/після <kbd>B</kbd></button><button data-a="copy">Копіювати ТЗ</button><button data-a="send" class="primary">Надіслати правки (${N})</button>`;
     const mv = S.prop === 'move';
-    const conf = S.confirm ? `<div class="ed-conf"><span>${S.confirm === 'reset' ? `Скинути ${N} ${plural(N)}? Перегляд повернеться до оригіналу, чернетки зникнуть із файлу.` : `Видалити чернетки (${N + S.parked})? Надіслані й виконані правки залишаться.`}</span><button data-a="confirm-yes" class="danger">Так</button><button data-a="confirm-no">Ні</button></div>` : '';
+    const conf = S.confirm ? `<div class="ed-conf"><span>${S.confirm === 'reset' ? `Скинути ${N} ${plural(N)}? Перегляд повернеться до оригіналу; чернетки й надіслані (ще не виконані) правки буде відкликано — зникнуть із файлу.` : `Видалити чернетки (${N + S.parked})? Надіслані й виконані правки залишаться.`}</span><button data-a="confirm-yes" class="danger">Так</button><button data-a="confirm-no">Ні</button></div>` : '';
     pTop.innerHTML = `<button class="ed-mode ${mv ? 'move' : 'value'}" data-a="mode-toggle" title="Перемкнути режим (M)"><b>${esc(modeText())}</b><kbd>M</kbd></button>`
       + `<div class="ed-topb"><button data-a="undo-last"${N || S.ptr ? '' : ' disabled'}>↶ Скасувати останню</button><button data-a="ask-reset" class="danger"${N ? '' : ' disabled'}>Скинути все (${N})</button><button data-a="ask-clear"${N || S.parked ? '' : ' disabled'} title="Видаляє лише чернетки; надіслані й виконані лишаються">Очистити чернетки</button></div>`
       + conf
@@ -1290,7 +1465,7 @@ export function initEdit(deps) {
           row = document.createElement('div'); row.className = 'ed-row'; row.dataset.k = m.key;
           row.innerHTML = '<div class="ed-rt"></div><input class="ed-note" placeholder="Нотатка до правки…"><button class="ed-x" title="Скасувати правку">×</button>';
         }
-        row.querySelector('.ed-rt').innerHTML = `<b>${esc(typeRu[m.type] || m.type)}</b>${m.record ? (m.record.status === 'open' ? ' <em>надіслано</em>' : '') : ' <em>…</em>'} ${esc(descOf(m))}${m.scope ? ` <i>[${esc(m.scope)} · ${m.targets.length}]</i>` : ''}${m.record?.source ? ` <i>джерело: ${esc(m.record.source)}</i>` : ''}`;
+        row.querySelector('.ed-rt').innerHTML = `<b>${esc(typeRu[m.type] || m.type)}</b>${m.record ? (m.record.status === 'open' ? ' <em class="ed-sent" title="Правка надіслана оркестратору; поки статус не done, вона лишається накладкою на сторінці">надіслано · чекає виконання</em>' : '') : ' <em>…</em>'} ${esc(descOf(m))}${m.scope ? ` <i>[${esc(m.scope)} · ${m.targets.length}]</i>` : ''}${m.record?.source ? ` <i>джерело: ${esc(m.record.source)}</i>` : ''}`;
         const inp = row.querySelector('.ed-note'); inp.dataset.note = i; row.querySelector('.ed-x').dataset.del = i;
         if (inp !== ae && inp.value !== m.note) inp.value = m.note;
         if (rows.children[i] !== row) rows.insertBefore(row, rows.children[i] || null);
@@ -1304,6 +1479,8 @@ export function initEdit(deps) {
     if (b.dataset.p) { if (b.dataset.p !== 'move') S.prevProp = b.dataset.p; else if (S.prop !== 'move') S.prevProp = S.prop; S.prop = b.dataset.p; renderInfo(); draw(); return; }
     if (b.dataset.sel) { const k = b.dataset.sel; if (k.startsWith('up')) { let a = S.el; for (let i = 0; i < +k.slice(2); i++) a = a.parentElement; select(a); } else select(kids(S.el)[+k.slice(3)]); return; }
     if (b.dataset.color) { const ent = getPalette().find((x) => x.name === b.dataset.color); if (ent && guard()) setColor(S.el, S.prop, ent); return; }
+    if (b.dataset.alpha) { setAlphaPct(S.el, S.prop, +b.dataset.alpha); return; }
+    if (b.dataset.op) { const ent = getOpacities().find((x) => x.name === b.dataset.op); if (ent && guard()) setOpacity(S.el, ent); return; }
     if (b.dataset.align) { if (guard()) applyStyle(S.el, 'text-align', b.dataset.align, false); return; }
     if (b.dataset.del != null) { const m = [...S.changes.values()][+b.dataset.del]; if (m) revertChange(m); return; }
     switch (b.dataset.a) {
@@ -1311,6 +1488,8 @@ export function initEdit(deps) {
       case 'flip': S.side = S.side === 'right' ? 'left' : 'right'; panelEl.classList.toggle('left', S.side === 'left'); break;
       case 'dec': stepProp(-1, 1); break;
       case 'inc': stepProp(1, 1); break;
+      case 'color-next': case 'op-up': stepProp(1, 1); break;
+      case 'color-prev': case 'op-down': stepProp(-1, 1); break;
       case 'reset': resetProp(S.el, S.prop); break;
       case 'distfix': distFix(S.el); break;
       case 'h-fix': hintFix(); break;
@@ -1496,30 +1675,41 @@ export function initEdit(deps) {
     const sv = ssGet();
     try { await restoreDraftsInner(); } finally { try { restoreSession(sv); } catch (e) { console.warn('[edit] restore skipped:', e.message); } live = true; persistSoon(); }
   }
+  const samePage = (u) => String(u || '').split('?')[0] === location.pathname; // накладки діють незалежно від ?query (напр. ?age=ok)
   async function restoreDraftsInner(force) {
     let list = [];
     try { list = (await api('GET', '/edits')).edits; } catch { return; }
-    S.sent = list.filter((x) => x.url === PAGE() && x.status === 'open').length;
+    S.sent = list.filter((x) => samePage(x.url) && x.status === 'open').length;
     const known = new Set([...S.changes.values()].map((m) => m.record?.id || m.id));
-    const drafts = list.filter((x) => x.url === PAGE() && x.status === 'draft' && !known.has(x.id)).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-    if (!S.restore && !force) { S.parked = drafts.length; renderInfo(); renderChanges(); if (drafts.length) say(`У файлі ${drafts.length} чернеток — не застосовано (вимкнено «Відновлювати чернетки»)`); return; }
-    S.parked = 0;
-    const moves = new Map(); let ok = 0;
+    // draft І open (надіслані, ще не done) лишаються живими накладками на кожному завантаженні сторінки; done — ні (код уже змінено)
+    const live0 = list.filter((x) => samePage(x.url) && (x.status === 'draft' || x.status === 'open') && !known.has(x.id)).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    const onlyDrafts = live0.filter((x) => x.status === 'draft');
+    let drafts = live0;
+    if (!S.restore && !force) { drafts = live0.filter((x) => x.status === 'open'); S.parked = onlyDrafts.length; if (onlyDrafts.length) say(`У файлі ${onlyDrafts.length} чернеток — не застосовано (вимкнено «Відновлювати чернетки»); надіслані застосовано`); }
+    else S.parked = 0;
+    const moves = new Map(); let ok = 0, inCode = 0;
     for (const rec of drafts) {
       let n = null; try { n = document.querySelector(rec.selector); } catch { /* */ }
       if (!n) continue;
       const R = rec.restore || {};
       let spec = null, apply = () => {};
-      if (R.kind === 'style') { spec = styleSpec(n, [n], propByCss(R.css, 'padding-top'), '', rec.group || ''); apply = () => (R.value ? n.style.setProperty(R.css, R.value) : n.style.removeProperty(R.css)); }
+      if (R.kind === 'style') { spec = styleSpec(n, [n], R.prop && PROPS[R.prop] ? R.prop : propByCss(R.css, 'padding-top'), '', rec.group || ''); apply = () => (R.value ? n.style.setProperty(R.css, R.value) : n.style.removeProperty(R.css)); }
       else if (R.kind === 'text') { spec = textSpec(n); apply = () => { n.textContent = R.text; }; }
       else if (R.kind === 'role') { spec = roleSpec(n, [n], ''); apply = () => spec.put([R.role]); }
       else if (R.kind === 'move') {
+        // надіслана правка порядку: застосовуємо лише якщо поточний порядок = «було» (інакше код уже змінено або сторінка інша)
+        if (rec.status === 'open' && rec.from?.order && ordered(n.parentElement).slice(0, 14).map(nm0).join('|') !== rec.from.order.join('|')) { inCode++; continue; }
         spec = moveSpec(n); const m = touch(spec); m.record = rec; m.id = rec.id; m.note = rec.note || ''; m.shotK = null;
         const key = rec.parentSelector || selFor(n.parentElement); (moves.get(key) || moves.set(key, { par: n.parentElement, recs: [] }).get(key)).recs.push({ m, rec }); ok++;
         continue;
       }
       else if (R.kind === 'hide') { spec = hideSpec(n); apply = () => n.style.setProperty('display', 'none', 'important'); }
       if (!spec) continue;
+      if (rec.status === 'open') { // не подвоювати: якщо код уже дає ціль (computed не змінюється від накладки) — нічого не робимо
+        const sn = spec.snap(), k0 = spec.read().k; apply();
+        if (spec.read().k === k0) { spec.put(sn); inCode++; continue; }
+        spec.put(sn);
+      }
       const m = touch(spec); m.record = rec; m.id = rec.id; m.note = rec.note || ''; apply(); m.cur = m.read(); m.shotK = null; ok++;
     }
     // порядок дітей відновлюється ЦІЛИМ батьком (perm + доріжки + order) за найсвіжішим записом; старі записи (лише index) — по одному
@@ -1530,9 +1720,27 @@ export function initEdit(deps) {
       for (const { m } of recs) m.cur = m.read();
     }
     renderInfo(); renderChanges(); draw();
-    if (ok) say(`Відновлено чернеток правок: ${S.changes.size} (E — Едіт)`);
+    S.inCode = (S.inCode || 0) + inCode;
+    if (ok) say(`Відновлено правок: ${S.changes.size}${inCode ? `; ще ${inCode} уже є в коді` : ''} (E — Едіт)`);
   }
   async function applyParked() { await restoreDraftsInner(true); }
+  // синхронізація зі файлом: статус done (код уже змінено) або запис видалено (rv.py edits rm / інша вкладка) — накладка знімається
+  async function pollRemote() {
+    if (!live || document.hidden || S.editing) return;
+    let list; try { list = (await api('GET', '/edits')).edits; } catch { return; }
+    const by = new Map(list.map((e) => [e.id, e]));
+    let gone = 0;
+    for (const m of [...S.changes.values()]) {
+      if (!m.record || m.dirty || m.timer) continue;
+      const r = by.get(m.record.id);
+      if (!r || r.status === 'done') { try { m.put(m.origSnap); } catch { /* елемент зник */ } S.changes.delete(m.key); gone++; }
+      else if (r.status !== m.record.status) m.record.status = r.status;
+    }
+    S.sent = list.filter((x) => samePage(x.url) && x.status === 'open').length;
+    if (gone) { S.ops = []; S.ptr = 0; if (!S.changes.size) S.base.clear(); renderInfo(); renderChanges(); draw(); say(`Виконано (done) або відкликано: накладок знято ${gone}`); }
+    else renderChanges();
+  }
+  setInterval(pollRemote, 4000);
 
   // ---------- вмикання ----------
   function setOn(on) {
@@ -1557,10 +1765,10 @@ export function initEdit(deps) {
   // панель відкриваємо одразу (не чекаючи 700 мс на відновлення чернеток), якщо перед перезавантаженням Едіт був увімкнений
   { const sv0 = ssGet(); if (sv0 && sv0.v === 1 && sv0.on && sv0.url === PAGE() && Date.now() - sv0.ts <= STATE_TTL) { if (sv0.side === 'left') { S.side = 'left'; panelEl.classList.add('left'); } setOn(true); } }
   const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise((ok) => addEventListener('load', ok, { once: true }));
-  loaded.then(() => setTimeout(restoreDrafts, 700));
+  loaded.then(() => setTimeout(restoreDrafts, 250));
 
   return {
-    state: S, setOn, leave: () => { if (S.on) setOn(false); }, flush, settle, undo, redo, select, stepProp, toggleView, sendAll, briefText, getScale, getRoles, getPalette, doMove, setRole, startText, endText, handles: () => handles, draw,
+    state: S, setOn, leave: () => { if (S.on) setOn(false); }, flush, settle, undo, redo, select, stepProp, toggleView, sendAll, briefText, getScale, getRoles, getPalette, doMove, setRole, setColor, setColorToken, setAlphaPct, getAlphaSteps, setOpacityToken, getOpacities, contrastInfo, startText, endText, handles: () => handles, draw,
     isOn: () => S.on,
   };
 }

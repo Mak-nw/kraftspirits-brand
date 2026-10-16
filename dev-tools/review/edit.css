@@ -56,6 +56,20 @@
 .ed-sw { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 2px; }
 .ed-swb { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(20, 33, 61, 0.45); padding: 0; }
 .ed-swb.on { outline: 2px solid #f24822; outline-offset: 1px; }
+.ed-swg { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 6px 0 2px; max-height: 190px; overflow: auto; }
+.ed-swt { display: flex; align-items: center; gap: 6px; border: 1px solid #d5dbe8; background: #fff; border-radius: 6px; padding: 2px 6px 2px 3px; color: #14213d; text-align: left; min-width: 0; }
+.ed-swt i { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(20, 33, 61, 0.45); }
+.ed-swt span { display: flex; flex-direction: column; min-width: 0; font: 600 10px/12px ui-monospace, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; }
+.ed-swt small { font-weight: 400; color: #5b6784; font-size: 9px; }
+.ed-swt.on { outline: 2px solid #f24822; outline-offset: 0; background: #fff4f1; }
+.ed-ops { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 2px; }
+.ed-opb { display: flex; flex-direction: column; align-items: center; border: 1px solid #d5dbe8; background: #fff; border-radius: 6px; padding: 2px 8px; color: #14213d; font-size: 10px; line-height: 13px; }
+.ed-opb b { font: 700 12px/14px ui-monospace, Menlo, monospace; }
+.ed-opb small { color: #5b6784; font-size: 9px; }
+.ed-opb.on { outline: 2px solid #f24822; background: #fff4f1; }
+.ed-ctr { font-size: 11px; font-weight: 600; margin: 4px 0; padding: 3px 6px; border-radius: 6px; }
+.ed-ctr.ok { background: #e7f6ec; color: #17653a; }
+.ed-ctr.bad { background: #fdecea; color: #a1281d; }
 .ed-acts { display: flex; gap: 4px; margin: 6px 0 2px; }
 .ed-acts button { flex: 1; border: 1px solid #c8d0e0; background: #fff; border-radius: 6px; padding: 4px 6px; color: #14213d; }
 .edpanel kbd { font: inherit; font-size: 10px; background: rgba(10, 55, 130, .1); border-radius: 3px; padding: 0 4px; }
@@ -124,3 +138,7 @@
 .ed-hacts { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
 .ed-hacts button, .ed-warn > button { border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; padding: 4px 8px; text-align: left; cursor: pointer; }
 .ed-warn > button { display: block; width: 100%; margin-top: 5px; }
+.ed-opb.exp { border-style: dashed; }
+.ed-meta.warn { color: #a1281d; }
+.edpanel.colorp .ed-info { max-height: 68vh; }
+.edpanel.colorp .ed-chg { min-height: 0; max-height: 14vh; }
