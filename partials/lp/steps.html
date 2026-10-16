@@ -1,16 +1,17 @@
-    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}" id="{{id}}" data-loop data-steps aria-labelledby="{{id}}-title">
+    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{deckMod}}" id="{{id}}" data-loop data-steps aria-labelledby="{{id}}-title">
       <div class="lp-steps__grid">
         {{#plainHead}}<h2 class="lp-steps__title t-h2 heading-center" id="{{id}}-title">{{title}}</h2>{{/plainHead}}{{#richHead}}<div class="lp-steps__head lp-head">
           <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" lead="{{lead}}" caption="{{caption}}"-->
         </div>{{/richHead}}
-        <div class="lp-steps__stage">
+        {{#arch}}<div class="lp-steps__stage">
           <div class="lp-arch lp-arch--stage"{{#slot}} data-slot="{{slot}}"{{/slot}}>
             {{#scene}}<!--@include media/{{scene}}-->{{/scene}}{{#img}}<img class="lp-arch__img" src="{{img}}" alt="{{alt}}" loading="lazy" decoding="async">{{/img}}
           </div>
         </div>
         <div class="lp-steps__chapters">
           <!--@each items lp/step-->
-        </div>
+        </div>{{/arch}}{{#deck}}<ol class="lp-steps__deck">
+          <!--@each items lp/step-card-->
+        </ol>{{/deck}}
       </div>
     </section>
-

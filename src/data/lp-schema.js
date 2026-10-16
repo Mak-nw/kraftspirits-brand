@@ -23,6 +23,9 @@ export const CARD_TITLE_MAX = 36;
 export const CARD_TEXT_MAX = 260;
 export const CARD_LIST_MAX = 3;
 export const CARD_ITEM_MAX = 60;
+// steps deck: теги кроку — рядок підписів .t-chip над поясненням (без плашок); кількість і довжина — щоб рядок уміщався в текстову колонку картки (5 колонок) на 1200
+export const DECK_TAGS_MAX = 4;
+export const DECK_TAG_MAX = 20;
 export const COUNT_MAX = 99999;              // лічильник групи compare: ціле 0…99 999
 // число `.t-stat` не переноситься: у вузьких групах (span 2–3) вміщується менше цифр (разом із розділювачем розрядів; з «≈» — ще менше)
 export const COUNT_CAP = { 2: { plain: 999, approx: 99 }, 3: { plain: 99999, approx: 999 } };
@@ -52,7 +55,7 @@ export const TILE_ZOOM = [0.75, 1, 1.25, 1.5, 1.75, 2];             // масш�
 export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок шкали простору DS (--space-<крок>), однаковий верхній і нижній padding секції замість типових 150u
 // `cols`: ширина вмісту секції в колонках сітки (контейнер = --grid-span-N по центру, по одній вільній колонці з боків для 10). Лише ПАРНА кількість: по центру краї мають лежати на межах колонок (D12).
 // Мінімум залежить від типу (виміряна ємність текстів у вужчому контейнері); нижче мінімуму значення відхиляється збіркою.
-export const COLS_BY_TYPE = { layers: [8, 10, 12], compare: [10, 12], formats: [10, 12], tiles: [6, 8, 10, 12], offers: [10, 12], faq: [8, 10, 12] };
+export const COLS_BY_TYPE = { layers: [8, 10, 12], steps: [10, 12], compare: [10, 12], formats: [10, 12], tiles: [6, 8, 10, 12], offers: [10, 12], faq: [8, 10, 12] };
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
 const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — підказка «що тут має бути за фото» (режим ?slots=on, data-slot)
@@ -77,8 +80,11 @@ export const SCHEMA = {
     hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), cta: { ...CTA, req: true } },
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2, 3, 4 або 6 (ділять 12 колонок)
     layers: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
-    // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри
-    steps: { ...BASE, room: E(ROOMS, false, 'deep'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true) }), 2, 5, true) },
+    // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
+    //    deck: true — «колода»: кожен крок = велика картка з фото на тлі (img кроку, cover), картки прилипають під header і наїжджають одна на одну (CSS sticky);
+    //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
+    steps: { ...BASE, room: E(ROOMS, false, 'deep'), deck: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
+      ...MEDIA_IMG, imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
     compare: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8, 9], true), align: E(['start', 'center'], false, 'start'), accent: B(),
@@ -117,6 +123,7 @@ const has = (v) => (Array.isArray(v) ? v.length > 0 : v !== undefined && v !== n
 const exactlyOne = (a, b, ka = 'str', kb = 'str') => ({ oneOf: [{ allOf: [present(a, ka), { not: present(b, kb) }] }, { allOf: [present(b, kb), { not: present(a, ka) }] }] });
 const dependent = (f, req, kf = 'str', kr = 'str') => ({ if: present(f, kf), then: present(req, kr) });
 
+const DECK_ON = { properties: { deck: { const: true } }, required: ['deck'] };   // steps deck: true
 /* path: де застосовується (''=секція; 'groups'/'items' = кожен елемент списку з таким ім'ям). check(target) → повідомлення про помилку або ''. json — фрагмент allOf для JSON Schema (де виразимо). */
 export const RULES = [
   { id: 'wall-xor-list', types: ['compare'], path: 'groups', doc: 'у групі `wall` і `list` взаємовиключні',
@@ -135,8 +142,21 @@ export const RULES = [
       { if: { properties: { span: { const: +sp }, approx: { const: true } }, required: ['span', 'approx'] }, then: { properties: { count: { type: 'integer', maximum: c.approx } } } },
       { if: { properties: { span: { const: +sp } }, required: ['span'], not: { properties: { approx: { const: true } }, required: ['approx'] } }, then: { properties: { count: { type: 'integer', maximum: c.plain } } } },
     ]) } },
-  { id: 'steps-media', types: ['steps'], path: '', doc: 'арка кроків: рівно одне з `scene` (гравюра) або `img` (фото)',
-    check: (s) => (has(s.scene) === has(s.img) ? 'потрібне медіа арки: рівно одне з scene або img' : ''), json: exactlyOne('scene', 'img') },
+  { id: 'steps-media', types: ['steps'], path: '', doc: 'арка кроків: рівно одне з `scene` (гравюра) або `img` (фото); з `deck: true` арки немає — `scene`, `img`, `alt`, `slot` секції не задаються (фото — у кожному кроці)',
+    check: (s) => (s.deck === true
+      ? ([s.scene, s.img, s.alt, s.slot].some(has) ? 'deck: true — арки немає: scene / img / alt / slot секції не задаються (фото — у кроках)' : '')
+      : (has(s.scene) === has(s.img) ? 'потрібне медіа арки: рівно одне з scene або img' : '')),
+    json: { if: DECK_ON, then: { not: { anyOf: [present('scene'), present('img'), present('alt'), present('slot')] } }, else: exactlyOne('scene', 'img') } },
+  { id: 'steps-deck-fields', types: ['steps'], path: '', doc: `\`deck: true\`: кожен крок — з фото \`img\` (тло картки); поля кроку \`img\`, \`alt\`, \`slot\`, \`imgPos\`, \`zoom\`, \`tags\` (до ${DECK_TAGS_MAX} по ≤ ${DECK_TAG_MAX}) і \`cols\` секції — лише з \`deck: true\` (у варіанті з аркою кроки без фото, ширина фіксована)`,
+    check: (s) => {
+      if (s.deck === true) { const bad = s.items.findIndex((it) => !has(it.img)); return bad < 0 ? '' : `items[${bad}].img: deck: true — кожна картка-крок потребує фото img`; }
+      if (has(s.cols)) return 'cols — лише з deck: true (арка + кроки мають фіксовану композицію)';
+      const bad = s.items.findIndex((it) => ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].some((k) => has(it[k])));
+      return bad < 0 ? '' : `items[${bad}]: img / alt / slot / imgPos / zoom / tags кроку — лише з deck: true`;
+    },
+    json: { if: DECK_ON, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } },
+      else: { allOf: [{ not: { required: ['cols'], properties: { cols: { type: 'number' } } } },
+        { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('img'), present('alt'), present('slot'), present('imgPos'), present('tags', 'arr'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
   { id: 'steps-alt-needs-img', types: ['steps'], path: '', doc: '`alt` має сенс лише з `img`',
     check: (s) => (has(s.alt) && !has(s.img) ? 'alt доступний лише разом з img' : ''), json: dependent('alt', 'img') },
   { id: 'tiles-media', types: ['tiles'], path: 'items', doc: 'плитка: рівно одне з `engraving` (гравюра + `icon`) або `img` (фото)',
@@ -295,8 +315,11 @@ const VIEW = {
   },
   steps: (s) => {
     const rich = !!(s.kicker || s.lead || s.caption);
-    return { ...head(s), plainHead: rich ? '' : '1', richHead: rich ? '1' : '', scene: s.scene || '', img: s.img || '', alt: t(s.alt), slot: t(s.slot),
-      items: s.items.map((it, i) => ({ key: it.key, n: i + 1, value: t(it.value), title: t(it.title), text: t(it.text) })) };
+    const deck = s.deck === true;   // колода карток з фото замість арки + списку (lp.css «steps deck»)
+    return { ...head(s), plainHead: rich ? '' : '1', richHead: rich ? '1' : '', arch: deck ? '' : '1', deck: deck ? '1' : '', deckMod: deck ? ` lp-steps--deck lp-steps--n${s.items.length}` : '',
+      scene: s.scene || '', img: s.img || '', alt: t(s.alt), slot: t(s.slot),
+      items: s.items.map((it, i) => ({ key: it.key, n: i + 1, value: t(it.value), title: t(it.title), text: t(it.text),
+        img: it.img || '', alt: t(it.alt), slot: t(it.slot), posMod: `${it.imgPos ? ` lp-steps__card--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-steps__card--zoom-${Math.round(it.zoom * 100)}` : ''}`, tags: li(it.tags) })) };
   },
   compare: (s) => ({ ...head(s), note: t(s.note),
     groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,

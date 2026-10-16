@@ -117,6 +117,37 @@
 .lp-compare__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-compare__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-profit-head); }
 .lp-compare__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
+/* steps deck: true — «колода» замість арки + списку (рішення замовника: «зробимо цей фон як стікі карточки… на фоні карточки картинка»; реф SOHUB).
+   Кожен крок — картка на ширину вмісту секції (--lp-w: 12 колонок або `cols`): фото-рамка DS (--radius-panel, тло-заглушка --lp-amber, як розріз layers), фото кроку
+   на всю картку (cover; кадр imgPos / zoom з даних) БЕЗ оверлея, градієнта, тіні й блюру — читабельність дає кадр (темна спокійна зона зліва) і світле чорнило теми.
+   Поверх фото, у колонках 1–5: цифра .t-stat (акцент), назва .t-hero (як заголовок панелі tour-card), теги .t-chip (рядок підписів, без плашок), пояснення .t-desc внизу.
+   Скрол — лише CSS sticky (без JS): картка i прилипає на --offset-lp-deck-top + i × --space-lp-deck-peek, наступна (пізніша в DOM) наїжджає зверху, від попередньої
+   лишається верхня смужка peek. margin-bottom картки = (n − 1 − i) × peek: межі margin-box усіх карток збігаються з низом колоди, тож коли колода дочитана, картки
+   відходять угору РАЗОМ, зберігаючи смужки (без «схлопування» й без діри); margin-top компенсує його, щоб у потоці між картками був зазор великих блоків (5u, D18).
+   Висота картки — за вікном (svh): уся колода вміщується у вікно від 1200×700 до 1920×1080; межі — мін. / макс. токени. Без масштабування попередніх карток (краї
+   лишаються на колонках, D12). prefers-reduced-motion — звичайні блоки в потоці з тим самим зазором (без прилипання). */
+.lp-steps__deck { --lp-deck-n: 4; grid-column: 1 / -1; grid-row: 2; justify-self: center; display: flex; flex-direction: column; width: var(--lp-w); margin: 0; padding: 0; list-style: none; }
+.lp-steps--n2 .lp-steps__deck { --lp-deck-n: 2; } .lp-steps--n3 .lp-steps__deck { --lp-deck-n: 3; } .lp-steps--n5 .lp-steps__deck { --lp-deck-n: 5; }
+.lp-steps__card { --lp-deck-i: 0; --lp-deck-pos: 50% 50%; --lp-deck-zoom: var(--scale-lp-zoom-100); position: sticky; top: calc(var(--offset-lp-deck-top) + var(--lp-deck-i) * var(--space-lp-deck-peek)); flex: none;
+  height: clamp(var(--size-lp-deck-min-h), calc(100svh - var(--offset-lp-deck-top) - (var(--lp-deck-n) - 1) * var(--space-lp-deck-peek) - var(--space-lp-deck-bottom)), calc(var(--lp-w) * var(--ratio-lp-deck-max-h)));
+  margin-top: calc(var(--grid-gap-panels) - (var(--lp-deck-n) - var(--lp-deck-i)) * var(--space-lp-deck-peek)); margin-bottom: calc((var(--lp-deck-n) - 1 - var(--lp-deck-i)) * var(--space-lp-deck-peek));
+  overflow: hidden; border-radius: var(--radius-panel); background: var(--lp-amber); }
+.lp-steps__card:first-child { margin-top: 0; }
+.lp-steps__card:nth-child(2) { --lp-deck-i: 1; } .lp-steps__card:nth-child(3) { --lp-deck-i: 2; } .lp-steps__card:nth-child(4) { --lp-deck-i: 3; } .lp-steps__card:nth-child(5) { --lp-deck-i: 4; }
+.lp-steps__card--pos-top { --lp-deck-pos: 50% 0%; } .lp-steps__card--pos-bottom { --lp-deck-pos: 50% 100%; }
+.lp-steps__card--zoom-125 { --lp-deck-zoom: var(--scale-lp-zoom-125); } .lp-steps__card--zoom-150 { --lp-deck-zoom: var(--scale-lp-zoom-150); }
+.lp-steps__card--zoom-175 { --lp-deck-zoom: var(--scale-lp-zoom-175); } .lp-steps__card--zoom-200 { --lp-deck-zoom: var(--scale-lp-zoom-200); }
+.lp-steps__card-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-deck-pos); transform: scale(var(--lp-deck-zoom)); transform-origin: var(--lp-deck-pos); }
+.lp-steps__card-body { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: var(--size-lp-deck-text-w); height: 100%; padding: var(--space-lp-deck-pad); color: var(--lp-on-dark); }
+.lp-steps__card-num { color: var(--lp-accent); }
+.lp-steps__card-title { margin-top: var(--space-lp-deck-title); margin-bottom: var(--space-lp-deck-text); text-wrap: balance; }
+.lp-steps__card-tags { display: flex; flex-wrap: wrap; gap: var(--space-10) var(--space-30); margin: auto 0 0; padding: 0; list-style: none; }
+.lp-steps__card-text { margin-top: auto; text-wrap: pretty; }
+.lp-steps__card-tags + .lp-steps__card-text { margin-top: var(--space-lp-deck-text); }
+@media (prefers-reduced-motion: reduce) {
+  .lp-steps__card { position: relative; top: auto; margin-top: var(--grid-gap-panels); margin-bottom: 0; }
+  .lp-steps__card:first-child { margin-top: 0; }
+}
 .lp-compare__note { grid-column: 1 / -1; grid-row: 7; margin-top: var(--space-lp-head); text-align: center; color: var(--lp-on-paper-muted); }
 .lp-group { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; }
 .lp-group__size { text-indent: var(--lp-label-optic, 0em); }

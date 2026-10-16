@@ -67,8 +67,10 @@ function variantsOf(type) {
   const s = fullSection(type);
   const out = [];
   if (type === 'steps') {
-    const a = clone(s); delete a.img; delete a.alt; out.push(['scene', a]);
-    const b = clone(s); delete b.scene; out.push(['img', b]);
+    const arch = (x) => { delete x.deck; delete x.cols; x.items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].forEach((k) => delete it[k]); }); return x; }; // арка + список: полів колоди немає
+    const a = arch(clone(s)); delete a.img; delete a.alt; out.push(['scene', a]);
+    const b = arch(clone(s)); delete b.scene; out.push(['img', b]);
+    const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; out.push(['deck', c]); // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
     const a = clone(s); delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
     const b = clone(s); delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
@@ -113,7 +115,12 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
     const page = pageOf(withIds([s]));
     const html = render(page);
     shownCheck(type, label, html, s);
-    if (type === 'tiles') { // enum-поля, що не маркуються текстом: shape → клас секції, tone/imgPos → модифікатори плитки, лід круглого варіанта — під рядом
+    if (type === 'steps') { // deck: колода карток замість арки; imgPos/zoom → модифікатори картки
+      const deck = s.deck === true;
+      note(html.includes('lp-steps--deck') === deck && html.includes('lp-steps__card ') === deck && html.includes('lp-arch') === !deck, `render steps [${label}]: deck ${deck ? 'дає колоду карток без арки' : 'не дає колоди (арка + список)'}`);
+      if (deck) note(/lp-steps__card--pos-\w+/.test(html) && /lp-steps__card--zoom-\d+/.test(html) && /lp-steps--n\d/.test(html), 'render steps [deck]: imgPos / zoom → модифікатори картки, кількість → lp-steps--nN');
+    }
+    if (type === 'tiles') { // enum-поля, що не маркуються текстом: shape → клас секції, tone/imgPos → модифікатори плитки, лід у шапці
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
@@ -138,7 +145,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -250,6 +257,19 @@ cross('compare: 3 групи, сума 12 (4+4+4)', (p) => { const g = S(p).grou
 cross('steps: і scene, і img', (p) => { S(p).img = '/q1'; }, false, false, 'steps [scene');
 cross('steps: ні scene, ні img', (p) => { delete S(p).scene; }, false, false, 'steps [scene');
 cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps [scene');
+cross('steps deck: валідна колода', () => {}, true, true, 'steps [deck');
+cross('steps deck: разом зі scene арки', (p) => { S(p).scene = 'scene-barrels'; }, false, false, 'steps [deck');
+cross('steps deck: разом з img арки', (p) => { S(p).img = '/q1'; }, false, false, 'steps [deck');
+cross('steps deck: slot секції (арки немає)', (p) => { S(p).slot = 'x'; }, false, false, 'steps [deck');
+cross('steps deck: крок без img', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; }, false, false, 'steps [deck');
+cross('steps deck: крок без tags/imgPos/zoom/alt/slot (валідно)', (p) => { S(p).items.forEach((it) => { delete it.tags; delete it.imgPos; delete it.zoom; delete it.alt; delete it.slot; }); }, true, true, 'steps [deck');
+cross('steps deck: без cols (12 колонок, валідно)', (p) => { delete S(p).cols; }, true, true, 'steps [deck');
+cross('steps deck: tags 5 шт.', (p) => { S(p).items[0].tags = ['а', 'б', 'в', 'г', 'ґ']; }, false, false, 'steps [deck');
+cross('steps deck: deck: false з фото в кроках', (p) => { S(p).deck = false; S(p).scene = 'scene-barrels'; }, false, false, 'steps [deck');
+cross('steps арка: img у кроці', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'steps [scene');
+cross('steps арка: tags у кроці', (p) => { S(p).items[0].tags = ['а']; }, false, false, 'steps [scene');
+cross('steps арка: zoom у кроці', (p) => { S(p).items[0].zoom = 1.5; }, false, false, 'steps [scene');
+cross('steps арка: cols', (p) => { S(p).cols = 10; }, false, false, 'steps [scene');
 cross('tiles: і engraving, і img', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
 cross('tiles: ні engraving, ні img', (p) => { delete S(p).items[0].engraving; delete S(p).items[0].icon; }, false, false, 'tiles [engraving');
 cross('tiles: icon без engraving', (p) => { delete S(p).items[0].engraving; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
@@ -338,7 +358,7 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
   const sec = (pg) => pg.sections[1];
   // допустимі значення залежать від типу
   for (const [type, vals] of Object.entries(COLS_BY_TYPE)) {
-    const base = byType(type); if (!base) continue;
+    const base = byType(type === 'steps' ? 'steps [deck' : type); if (!base) continue; // steps: cols — лише колода (deck: true; без неї — правило steps-deck-fields)
     for (const c of [2, 4, 6, 8, 10, 12]) {
       const exp = vals.includes(c);
       const p = clone(base); sec(p).cols = c;
@@ -371,7 +391,7 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
   // видимий ефект на сторінці: cols → клас lp-cols--N на секції (12 = типово, класу немає), pad → lp-pad--N, tiles на 10 колонок з 4 плитками → рівний поділ (клас сітки lp-tiles__grid--n4, без lp-span)
   const secTag = (html, id) => (html.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
   for (const type of Object.keys(COLS_BY_TYPE)) {
-    const base = byType(type); if (!base) continue;
+    const base = byType(type === 'steps' ? 'steps [deck' : type); if (!base) continue; // steps: cols — лише колода (deck: true)
     const id = sec(base).id;
     const p10 = clone(base); sec(p10).cols = 10; if (type === 'compare') { sec(p10).groups[0].span = 3; sec(p10).groups[1].span = 7; }
     note(/lp-cols--10\b/.test(secTag(render(p10), id)), `render ${type}: cols: 10 → клас lp-cols--10 на секції`, secTag(render(p10), id));

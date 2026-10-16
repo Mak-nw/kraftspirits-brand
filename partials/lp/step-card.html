@@ -1,0 +1,9 @@
+<li class="lp-steps__card lp-step--{{key}}{{posMod}}" data-step="{{n}}"{{#slot}} data-slot="{{slot}}"{{/slot}}>
+  <img class="lp-steps__card-img" src="{{img}}" alt="{{alt}}" loading="lazy" decoding="async">
+  <article class="lp-steps__card-body">
+    <p class="lp-steps__card-num t-stat">{{value}}</p>
+    <h3 class="lp-steps__card-title t-hero">{{title}}</h3>
+    {{#tags}}<ul class="lp-steps__card-tags t-chip"><!--@each tags lp/li--></ul>{{/tags}}
+    <p class="lp-steps__card-text t-desc">{{text}}</p>
+  </article>
+</li>
