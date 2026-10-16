@@ -70,8 +70,8 @@ function variantsOf(type) {
     const a = clone(s); delete a.img; delete a.alt; out.push(['scene', a]);
     const b = clone(s); delete b.scene; out.push(['img', b]);
   } else if (type === 'tiles') {
-    const a = clone(s); delete a.shape; delete a.leadCols; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
-    const b = clone(s); delete b.shape; delete b.leadCols; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
+    const a = clone(s); delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
+    const b = clone(s); delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
     const c = clone(s); c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
@@ -138,7 +138,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -255,13 +255,14 @@ cross('tiles: ні engraving, ні img', (p) => { delete S(p).items[0].engraving
 cross('tiles: icon без engraving', (p) => { delete S(p).items[0].engraving; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
 cross('tiles: shape circle без img у плитці', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; S(p).items[0].engraving = 'engraving-barrels-head'; }, false, false, 'tiles [circle');
 cross('tiles: shape circle, усі плитки з фото (валідно)', () => {}, true, true, 'tiles [circle');
-cross('tiles: leadCols без shape circle', (p) => { delete S(p).shape; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: leadCols без shape circle', (p) => { delete S(p).shape; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
 cross('tiles: circle, origin в один рядок', (p) => { S(p).items[0].origin = 'аб аб'; }, false, false, 'tiles [circle');
 cross('tiles: circle, origin у три рядки', (p) => { S(p).items[0].origin = 'аб\nаб\nаб'; }, false, false, 'tiles [circle');
-cross('tiles: tone без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
-cross('tiles: imgPos без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.zoom; }); }, false, false, 'tiles [circle');
-cross('tiles: без shape і без leadCols/tone/imgPos/zoom (валідно)', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, true, true, 'tiles [circle');
-cross('tiles: zoom без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
+cross('tiles: tone без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: imgPos без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: без shape і без leadCols/tone/imgPos/zoom (валідно)', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, true, true, 'tiles [circle');
+cross('tiles: captionOver без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: zoom без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
 cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom = 1.3; }, false, false, 'tiles [circle');
 cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
@@ -382,7 +383,7 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
     note(/lp-pad--40\b/.test(secTag(render(p), sec(p).id)), `render ${type}: pad: 40 → клас lp-pad--40 на секції`);
   }
   { const p = cnt('tiles', 4, 10); sec(p).id = 'eq'; const html = render(p); note(/lp-tiles__grid--eq lp-tiles__grid--n4/.test(html) && !/lp-tile lp-span--/.test(html), 'render tiles: 4 плитки на 10 колонок → рівний поділ (lp-tiles__grid--n4), без lp-span'); }
-  { const html = render(byType('tiles [circle')); note(/lp-tile--zoom-100/.test(html) && /t-spec/.test(html), 'render tiles [circle]: zoom → клас lp-tile--zoom-100; підпис — роль .t-spec'); }
+  { const html = render(byType('tiles [circle')); note(/lp-tile--zoom-75/.test(html) && /t-spec/.test(html), 'render tiles [circle]: zoom → клас lp-tile--zoom-75; підпис — роль .t-spec'); note(/lp-tiles--over/.test(html), 'render tiles [circle]: captionOver → клас lp-tiles--over'); const p2 = clone(byType('tiles [circle')); sec(p2).captionOver = false; note(!/lp-tiles--over/.test(render(p2)), 'render tiles [circle]: captionOver: false (типово) не дає класу'); }
 }
 
 /* ------------------------------------------------------------------ файлові перевірки (tools/lp-files.mjs): зіпсуй → падає з поясненням */

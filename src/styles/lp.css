@@ -197,12 +197,17 @@
 .lp-tiles--circle .lp-tile__media { box-sizing: border-box; width: 100%; aspect-ratio: 1; overflow: hidden; border: var(--size-lp-tile-ring) solid var(--lp-tile-ring, var(--lp-hairline)); border-radius: var(--radius-round); background: var(--lp-tile-bg, var(--lp-amber)); }
 .lp-tiles--circle .lp-tile__img { height: 100%; aspect-ratio: auto; border-radius: 0; background: none; }
 .lp-tile--pos-top .lp-tile__img { object-position: top; transform-origin: 50% 35%; } .lp-tile--pos-center .lp-tile__img { object-position: center; transform-origin: 50% 50%; } .lp-tile--pos-bottom .lp-tile__img { object-position: bottom; transform-origin: 50% 100%; }
-.lp-tile--zoom-100 .lp-tile__img { scale: var(--scale-lp-zoom-100); } .lp-tile--zoom-125 .lp-tile__img { scale: var(--scale-lp-zoom-125); } .lp-tile--zoom-150 .lp-tile__img { scale: var(--scale-lp-zoom-150); }
+.lp-tile--pos-whole .lp-tile__img { object-fit: contain; object-position: center; transform-origin: 50% 0; } /* фото цілком (без кропа), зменшення zoom 0.75 тягне його вгору */
+.lp-tile--zoom-75 .lp-tile__img { scale: var(--scale-lp-zoom-75); } .lp-tile--zoom-100 .lp-tile__img { scale: var(--scale-lp-zoom-100); } .lp-tile--zoom-125 .lp-tile__img { scale: var(--scale-lp-zoom-125); } .lp-tile--zoom-150 .lp-tile__img { scale: var(--scale-lp-zoom-150); }
 .lp-tile--zoom-175 .lp-tile__img { scale: var(--scale-lp-zoom-175); } .lp-tile--zoom-200 .lp-tile__img { scale: var(--scale-lp-zoom-200); }
 .lp-tiles--circle.lp-room--warm .lp-tile__name, .lp-tiles--circle.lp-room--deep .lp-tile__name { color: var(--lp-accent); } /* на світлому золото не тримає контраст — лишається чорнило кімнати */
 .lp-tiles--circle.lp-room--warm .lp-tile__origin, .lp-tiles--circle.lp-room--deep .lp-tile__origin { color: var(--lp-on-dark); }
 .lp-tiles--circle .lp-tile__origin { white-space: pre-line; } /* опис — рівно 2 рядки по центру: перенос задає дані (правило tiles-circle-origin-2lines) */
 /* пунктів не ділять колонок контейнера (4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок (--grid-gap); діаметр = (ширина контейнера − (n−1)·зазор) / n; краї ряду — на межах колонок, внутрішні шви — за цією схемою (D12) */
+/* captionOver: назва й опис ПОВЕРХ фото, всередині кола, внизу по центру (рев'ю 7002baaa); без оверлея, градієнта й тіні — читається завдяки темному низу кола (кроп/tone), колір — чорнило кімнати/акцент */
+.lp-tiles--over .lp-tile__media, .lp-tiles--over .lp-tile__caption { grid-row: 1; grid-column: 1; }
+.lp-tiles--over .lp-tile__caption { z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: var(--space-lp-tile-over-bottom); pointer-events: none; }
+.lp-tiles--over .lp-tile__name { margin-top: 0; }
 .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-tiles__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tiles__grid--n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .lp-tiles__grid--n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .lp-tiles__grid--n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .lp-tiles__lead--cols-2 { width: var(--grid-span-2); } .lp-tiles__lead--cols-3 { width: var(--grid-span-3); } .lp-tiles__lead--cols-4 { width: var(--grid-span-4); } .lp-tiles__lead--cols-5 { width: var(--grid-span-5); } .lp-tiles__lead--cols-6 { width: var(--grid-span-6); }

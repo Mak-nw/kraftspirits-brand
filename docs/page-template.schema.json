@@ -129,7 +129,7 @@
       "id": "tiles-circle-fields",
       "scope": "tiles",
       "expressed": true,
-      "rule": "`leadCols` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`"
+      "rule": "`leadCols` і `captionOver` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`"
     },
     {
       "id": "tiles-circle-origin-2lines",
@@ -1886,6 +1886,12 @@
                 null
               ]
             },
+            "captionOver": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "leadCols": {
               "enum": [
                 2,
@@ -1970,12 +1976,14 @@
                       "top",
                       "center",
                       "bottom",
+                      "whole",
                       "",
                       null
                     ]
                   },
                   "zoom": {
                     "enum": [
+                      0.75,
                       1,
                       1.25,
                       1.5,
@@ -2254,6 +2262,18 @@
                       },
                       "required": [
                         "leadCols"
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "properties": {
+                        "captionOver": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "captionOver"
                       ]
                     }
                   },

@@ -47,8 +47,8 @@ export const wordPattern = (n = MAX_WORD) => `^(?![\\s\\S]*[^ \\n\\r\\t]{${n + 1
 const ROOMS = ['warm', 'deep', 'paper'];                    // кімнати: кольори задає тема (warm/deep — темні, paper — світла)
 export const TONES = ['teal', 'green', 'gold', 'light', 'beige'];
 export const TILE_TONES = ['black', 'brown', 'green', 'teal'];  // тло круглого кадру плитки: роль теми --lp-tile-<тон> (значення — токени палітри)
-export const TILE_POS = ['top', 'center', 'bottom'];        // кадрування фото в колі: object-position (верх — пляшка обрізана знизу)
-export const TILE_ZOOM = [1, 1.25, 1.5, 1.75, 2];             // масштаб фото в колі (кроки --scale-lp-zoom-*): 1 — як є; більше — пляшка/келих крупніше, кадр лишається колом
+export const TILE_POS = ['top', 'center', 'bottom', 'whole'];        // кадрування фото в колі: object-position (верх — пляшка обрізана знизу)
+export const TILE_ZOOM = [0.75, 1, 1.25, 1.5, 1.75, 2];             // масштаб фото в колі (кроки --scale-lp-zoom-*): 1 — як є; більше — пляшка/келих крупніше, кадр лишається колом
 export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок шкали простору DS (--space-<крок>), однаковий верхній і нижній padding секції замість типових 150u
 // `cols`: ширина вмісту секції в колонках сітки (контейнер = --grid-span-N по центру, по одній вільній колонці з боків для 10). Лише ПАРНА кількість: по центру краї мають лежати на межах колонок (D12).
 // Мінімум залежить від типу (виміряна ємність текстів у вужчому контейнері); нижче мінімуму значення відхиляється збіркою.
@@ -92,8 +92,8 @@ export const SCHEMA = {
       facts: L(O({ label: T(30, true), value: T(60, true) }), 0, 2),
     }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
-    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, лід — під рядом плиток
-    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
+    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — під рядом плиток
+    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
     offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
@@ -148,9 +148,9 @@ export const RULES = [
   { id: 'tiles-circle-needs-img', types: ['tiles'], path: '', doc: '`shape: circle`: кожна плитка з фото `img` (гравюри в колі немає)',
     check: (s) => (s.shape === 'circle' && s.items.some((it) => !has(it.img)) ? 'shape: circle потребує img у кожній плитці' : ''),
     json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } } } },
-  { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`',
-    check: (s) => (!has(s.shape) && (has(s.leadCols) || s.items.some((it) => has(it.tone) || has(it.imgPos) || has(it.zoom))) ? 'leadCols/tone/imgPos/zoom — лише з shape: circle' : ''),
-    json: { if: { not: present('shape') }, then: { allOf: [{ not: { properties: { leadCols: { type: 'integer' } }, required: ['leadCols'] } }, { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('tone'), present('imgPos'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
+  { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` і `captionOver` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`',
+    check: (s) => (!has(s.shape) && (has(s.leadCols) || s.captionOver === true || s.items.some((it) => has(it.tone) || has(it.imgPos) || has(it.zoom))) ? 'leadCols/captionOver/tone/imgPos/zoom — лише з shape: circle' : ''),
+    json: { if: { not: present('shape') }, then: { allOf: [{ not: { properties: { leadCols: { type: 'integer' } }, required: ['leadCols'] } }, { not: { properties: { captionOver: { const: true } }, required: ['captionOver'] } }, { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('tone'), present('imgPos'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
   { id: 'tiles-circle-origin-2lines', types: ['tiles'], path: '', doc: '`shape: circle`: `origin` плитки — рівно два рядки (один переніс `\\n`, кожен ≤ 32 знаки): підпис під колом завжди в 2 рядки по центру',
     check: (s) => { if (s.shape !== 'circle') return ''; const bad = s.items.findIndex((it) => !/^[^\n]{1,32}\n[^\n]{1,32}$/u.test(it.origin)); return bad < 0 ? '' : `items[${bad}].origin: у колі потрібні рівно два рядки (один переніс), кожен ≤ 32 знаки`; },
     json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', properties: { origin: { type: 'string', pattern: '^[^\\n]{1,32}\\n[^\\n]{1,32}$' } } } } } } } },
@@ -309,7 +309,7 @@ const VIEW = {
     const round = s.shape === 'circle';   // коло: лід не в шапці, а під рядом плиток
     const n = s.items.length; const cols = colsOf(s);
     const eq = cols % n !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
-    return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
+    return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
       gridMod: eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${n}` : '',
       items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / n, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
         toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
