@@ -1107,6 +1107,92 @@
       </div>
     </section>
 
+    <section class="ds-section" id="wc-templates">
+      <h2 class="t-h2 ds-section__title">Шаблони WooCommerce</h2>
+      <p class="ds-note t-body">Сторінки <code>cart.html</code> (кошик) і <code>checkout.html</code> (оформлення; подяка — <code>?state=thanks</code>): статична симуляція класичних шаблонів WooCommerce — шорткоди <code>[woocommerce_cart]</code> / <code>[woocommerce_checkout]</code>, шаблони <code>cart/cart.php</code>, <code>cart-totals.php</code>, <code>cart-empty.php</code>, <code>checkout/form-checkout.php</code>, <code>form-billing.php</code>, <code>review-order.php</code>, <code>payment.php</code>, <code>thankyou.php</code>, <code>notices/*.php</code> (специфікація — <code>reports/wc-templates-spec.md</code>). Розмітка й класи <code>woocommerce-*</code>, id <code>#customer_details #order_review #payment #place_order</code> і імена полів (<code>billing_*</code>, <code>coupon_code</code>, <code>cart[…][qty]</code>) лишаються стандартними — розробник підставляє справжні шаблони або підключає наш CSS до тих самих класів. Різниця зі стандартним виглядом — лише колір, шрифт і відступи з токенів. Кошик — РЕАЛЬНИЙ кошик сайту (<code>localStorage ks_cart</code>, лічильник «Кошик ( N )» у header), товари — <code>src/data/products.js</code>.</p>
+      <p class="ds-note t-body"><strong>Нових візуальних елементів, компонентів і значень немає.</strong> Усе скомпоновано з наявних: панель <code>.contacts-panel</code> (beige, рамка 5u, радіус 10u), кнопки <code>.btn--green</code> / <code>.btn--outline</code>, поле <code>.field</code>, список <code>.select--light.select--field</code>, згода/радіо <code>.check</code> (у <code>.check-field</code>), стрілки <code>.arrow-btn</code>, успіх <code>.contact-success</code>, помилка <code>.contact-form__alert</code> і <code>.field.is-invalid</code>, hairline-рядки як у <code>.lp-offer__fact</code>/<code>.acc</code> (<code>--border-hairline</code> + <code>--color-line-soft</code>). Текст — лише ролі <code>.t-*</code> (h1 <code>t-hero</code>, підзаголовок панелі <code>t-lead</code>, шапка таблиці й підписи полів <code>t-btn</code>, назва позиції <code>t-product-name</code>, об'єм <code>t-spec</code>, ціна/сума <code>t-price</code>, решта <code>t-text</code>). Стилі — <code>src/styles/woocommerce.css</code> (лише розкладка й застосування правил наявних компонентів до класів WooCommerce); токени — блок «WooCommerce-сторінки» в tokens.css (спани колонок 8+4 / 7+5, розмір фото = 2 висоти контролу, ширина поля кількості).</p>
+      <p class="ds-note t-body"><strong>Нові КОМПОЗИЦІЇ (без нових стилів):</strong> (1) <em>таблиця кошика / замовлення / підсумку</em> — <code>table.shop_table</code>: рядок = hairline знизу (як факт у <code>.lp-offer__fact</code>), шапка <code>t-btn</code>, ліва назва / права сума; (2) <em>степпер кількості</em> — <code>.quantity</code>: <code>.arrow-btn--prev</code> · <code>.field__control</code> (число по центру) · <code>.arrow-btn</code>; на світлій панелі <code>.arrow-btn</code> показує ті самі токени <code>--btn-outline-*</code> / <code>--btn-green-*</code> / <code>--btn-arrow-icon-filter-*</code>, що й на темному, але «навиворіт» (контур green, на hover заливка green) — так само, як <code>.contacts-panel .btn--outline</code> змінює лише hover; (3) <em>нотис успіху/інфо</em> — <code>.contact-success</code> (текст + кнопка <code>.btn--outline</code>) на hairline-рядку; (4) <em>рядок «ключ — значення»</em> (<code>.woocommerce-order-overview</code>: номер, дата, e-mail, сума, оплата) = рядок факту; (5) <em>методи доставки/оплати</em> — <code>.check</code> у режимі radio (квадратний бокс із галочкою, як у «Згоди»; окремого radio у словнику немає). Статусів замовлення, пагінації й вертикального меню кабінету в цих сторінках немає.</p>
+
+      <p class="demo-label t-kicker">Нотиси: успіх (partial wc-notice cls="woocommerce-message"), інфо (cls="woocommerce-info") і помилка (partial wc-error: ul.woocommerce-error.contact-form__alert)</p>
+      <div class="demo-panel demo-panel--start theme-beige">
+        <div class="woocommerce">
+          <!--@include components/wc-notice cls="woocommerce-message" text="Кошик оновлено." href="#wc-templates" link="Переглянути кошик"-->
+          <!--@include components/wc-notice cls="woocommerce-info" text="Безкоштовна доставка «Новою поштою» — від 3 000 ₴." role="status"-->
+          <!--@include components/wc-error text="Купон «SALE20» не існує."-->
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Рядок кошика (tr.cart_item: remove · thumbnail · name + variation · price · quantity · subtotal) і степпер кількості (partial wc-qty)</p>
+      <div class="demo-panel demo-panel--start theme-beige">
+        <div class="woocommerce">
+          <table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents">
+            <thead><tr><th class="product-remove"><span class="visually-hidden">Видалити</span></th><th class="product-thumbnail"><span class="visually-hidden">Фото</span></th><th class="product-name t-btn" scope="col">Товар</th><th class="product-price t-btn" scope="col">Ціна</th><th class="product-quantity t-btn" scope="col">Кількість</th><th class="product-subtotal t-btn" scope="col">Разом</th></tr></thead>
+            <tbody>
+              <tr class="woocommerce-cart-form__cart-item cart_item">
+                <td class="product-remove"><a class="remove t-price" href="#wc-templates" role="button" aria-label="Видалити «Джин Ясногородський»">&times;</a></td>
+                <td class="product-thumbnail"><a href="#wc-templates" aria-hidden="true" tabindex="-1"><img src="/assets/img/products/gin-yasnyi.webp" alt="" width="800" height="1060"></a></td>
+                <td class="product-name" data-title="Товар"><a class="t-product-name" href="#wc-templates">Джин Ясногородський</a><dl class="variation"><dt class="variation-Obyem t-spec">Об'єм:</dt><dd class="variation-Obyem t-spec"><p class="t-spec">0,7 л</p></dd></dl></td>
+                <td class="product-price t-price" data-title="Ціна">1 150 ₴</td>
+                <td class="product-quantity" data-title="Кількість"><!--@include components/wc-qty id="ds_qty" name="ds_qty" label="Кількість" value="2"--></td>
+                <td class="product-subtotal t-price" data-title="Разом">2 300 ₴</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Підсумок кошика (div.cart_totals: рядки cart-subtotal / cart-discount / shipping / order-total, partial wc-row) і «Перейти до оформлення» (a.checkout-button.button.alt → .btn--green.btn--block)</p>
+      <div class="demo-panel demo-panel--start theme-beige">
+        <div class="woocommerce">
+          <div class="cart_totals">
+            <table class="shop_table shop_table_responsive"><tbody>
+              <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="5 480 ₴"-->
+              <!--@include components/wc-row cls="shipping" label="Доставка" value="Безкоштовно"-->
+              <!--@include components/wc-row cls="order-total" label="Разом" value="5 480 ₴"-->
+            </tbody></table>
+            <div class="wc-proceed-to-checkout"><a class="checkout-button button alt wc-forward btn btn--green btn--block" href="#wc-templates"><span class="btn__inner t-btn">Перейти до оформлення</span></a></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Поля оформлення: p.form-row → .field (partial wc-field; <code>.is-invalid.woocommerce-invalid</code> = помилка під полем), список «Нової пошти» (wc-select = .select--light.select--field), згода й вік 18+ (wc-check), радіо доставки/оплати (wc-radio = .check)</p>
+      <div class="demo-panel demo-panel--start theme-beige">
+        <div class="woocommerce woocommerce-checkout">
+          <div class="woocommerce-billing-fields__field-wrapper">
+            <!--@include components/wc-field name="ds_first_name" label="Ім'я" row="form-row-first" req="1" placeholder="Ім'я одержувача"-->
+            <p class="form-row form-row-last field validate-required is-invalid woocommerce-invalid woocommerce-invalid-required-field" id="ds_phone_field"><label class="field__label t-btn" for="ds_phone">Телефон&nbsp;<span class="required" aria-hidden="true">*</span></label><span class="woocommerce-input-wrapper"><input class="input-text field__control t-text" type="tel" name="ds_phone" id="ds_phone" aria-required="true" aria-invalid="true" placeholder="+380"></span><span class="field__error" role="alert"><span class="t-text">Обов'язкове поле</span></span></p>
+            <!--@include components/wc-select name="ds_warehouse" label="Відділення або поштомат «Нової пошти»&nbsp;*" placeholder="Оберіть відділення або поштомат" row="form-row-wide" req="1"-->
+          </div>
+          <!--@include components/wc-check name="ds_terms" label="Погоджуюсь з <a href='offer.html'>публічною офертою</a>"-->
+          <ul class="woocommerce-shipping-methods">
+            <li><!--@include components/wc-radio name="ds_shipping" id="ds_shipping_np" value="np" label="Нова пошта: відділення або поштомат" checked="1"--></li>
+            <li><!--@include components/wc-radio name="ds_shipping" id="ds_shipping_courier" value="courier" label="Кур'єр по Києву"--></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="demo-label t-kicker">Відповідність класів WooCommerce → компоненти дизайн-системи (кошик і оформлення)</p>
+      <table class="ds-table t-text">
+        <thead><tr><th class="t-nav">WooCommerce (шаблон / клас)</th><th class="t-nav">Наш компонент</th><th class="t-nav">Примітка</th></tr></thead>
+        <tbody>
+          <tr><td><code>button.button</code>, <code>a.button</code> (apply_coupon, update_cart, wc-forward, wc-backward)</td><td><code>.btn.btn--outline</code> (вторинні), <code>.btn.btn--green</code> (головні)</td><td><code>.alt</code> = головна дія: «Перейти до оформлення», «Підтвердити замовлення», «Повернутись до каталогу»; <code>update_cart</code> disabled, поки не змінено кількість</td></tr>
+          <tr><td><code>.shop_table</code> (cart, cart_totals, review-order, order_details)</td><td>hairline-рядки (як <code>.lp-offer__fact</code>), ролі <code>.t-*</code></td><td>композиція; шапка <code>t-btn</code>, ціна <code>t-price</code>, назва <code>t-product-name</code>, об'єм (<code>dl.variation</code>) <code>t-spec</code></td></tr>
+          <tr><td><code>.quantity input.qty</code></td><td><code>.arrow-btn</code> ×2 + <code>.field__control</code></td><td>стрілки замість ± (рішення замовника); мін. 1, макс. 99</td></tr>
+          <tr><td><code>.coupon</code>, <code>input#coupon_code</code></td><td><code>.field__control</code> + <code>.btn--outline</code></td><td>помилка купона — <code>ul.woocommerce-error</code> + рамка поля (<code>.is-invalid</code>)</td></tr>
+          <tr><td><code>.cart_totals</code>, <code>.cart-collaterals</code>, <code>#order_review</code>, <code>.woocommerce-order-overview</code></td><td><code>.contacts-panel</code></td><td>кошик: таблиця 8 колонок + підсумок 4; оформлення: форма 7 + замовлення/оплата 5; подяка 8 + 4</td></tr>
+          <tr><td><code>p.form-row</code> (+ <code>-first/-last/-wide</code>), <code>input.input-text</code>, <code>textarea</code></td><td><code>.field</code> / <code>.field__label</code> / <code>.field__control</code></td><td>пари first/last — дві колонки (5u, як у зворотному зв'язку); <code>.woocommerce-invalid</code> = <code>.is-invalid</code></td></tr>
+          <tr><td><code>select</code> / select2 (область, місто, відділення НП)</td><td><code>.select.select--light.select--field</code></td><td>власний список сайту; прихований <code>input[name]</code> несе значення; залежність область → місто → відділення (демо-довідник)</td></tr>
+          <tr><td><code>label.checkbox</code>, <code>input.input-radio</code> (terms, age_confirm, shipping_method, payment_method)</td><td><code>.check</code> у <code>.check-field</code></td><td>згода з оферою/конфіденційністю/умовами, підтвердження 18+ (Дія), методи доставки й оплати</td></tr>
+          <tr><td><code>.woocommerce-message</code>, <code>.woocommerce-info</code>, <code>.woocommerce-notice--success</code></td><td><code>.contact-success</code> на hairline-рядку</td><td>композиція; кнопка в нотисі — <code>.btn--outline</code> (<code>a.restore-item</code> «Повернути»)</td></tr>
+          <tr><td><code>ul.woocommerce-error</code>, <code>.woocommerce-NoticeGroup-checkout</code></td><td><code>.contact-form__alert</code> + <code>.field.is-invalid</code></td><td>перелік помилок зверху; кожен рядок — посилання на поле</td></tr>
+          <tr><td><code>a.remove</code> (×)</td><td>текст ролі <code>t-price</code></td><td>hover — колір <code>--color-teal</code>, як посилання згоди</td></tr>
+        </tbody>
+      </table>
+
+      <p class="demo-label t-kicker">Стани через параметри URL (службові, не безпека): кошик — <code>cart.html?demo=1</code> (демо-позиції в порожній кошик), <code>?state=empty</code>, <code>?state=updated</code>, <code>?state=coupon-error</code>, <code>?state=coupon-applied</code> (демо-купон DEMO10 = −10%); оформлення — <code>checkout.html?demo=1</code>, <code>?state=error</code> (помилки валідації), <code>?state=thanks</code> (подяка), <code>?state=empty</code></p>
+      <p class="ds-meta t-text">Дані демо: способи оплати («карткою онлайн», «за реквізитами») і довідники «Нової пошти» — заглушки (перелік способів оплати в оферті ще не затверджено: legal.js, [ПЕРЕЛІК СПОСОБІВ]); номер замовлення, дата, e-mail подяки — з форми або демо. Справжні дані віддасть WooCommerce і плагін доставки.</p>
+    </section>
+
     <section class="ds-section" id="page-template">
       <h2 class="t-h2 ds-section__title">Шаблон сторінки</h2>
       <p class="ds-note t-body">Шаблон посадкової (продажної) сторінки: barrels.html (Ф'ючерсні бочки) і excursions.html (Екскурсії). Сторінка = ДАНІ + МЕДІА + ТЕМА, сторінкового CSS на блок немає. Дані — src/data/&lt;сторінка&gt;.js за єдиною схемою src/data/lp-schema.js (поля = поля адмінки один-в-один: той самий перелік полів, типи, обов'язковість, ліміти, перехресні правила; їх перевіряє збірка, JSON Schema docs/page-template.schema.json генерується з тих самих правил; опис і «додаткові перевірки» — docs/page-template.md; контракт «JS ≡ JSON, кожне поле показується» — npm run qa:lp). Розмітку будує плагін lp-auto (tools/vite-plugin-lp.mjs): сторінка з'являється від файлу даних, &lt;сторінка&gt;.html (один рядок &lt;!--@page сторінка--&gt;) він створює сам → partials/lp/page.html + секції partials/lp/&lt;type&gt;.html у порядку даних. Стилі блоків — src/styles/lp.css (кольори — лише ролі теми --lp-*), ілюстрації-медіа (гравюри SVG, стіна пляшок) — пари файлів partials/media/&lt;вид&gt;-&lt;назва&gt;.html + src/styles/media/&lt;вид&gt;-&lt;назва&gt;.css (вид: scene · engraving · wall; обираються в даних), загальне для них — src/styles/lp-media.css, логіка — src/js/lp.js (лічильники, стани гравюри, ?slots=on, FAQ, мапа — лише якщо секція є). Тема — src/styles/themes/&lt;тема&gt;.css (body.theme-&lt;тема&gt;): ЛИШЕ ролі кольорів кімнат і чорнила → палітра DS (+ тон кнопок --lp-tone). Кадр фото й оптичні поправки чорнила, виміряні під конкретний текст (типово 0), — окремо: src/styles/pages/&lt;сторінка&gt;.css (body.lp-page--&lt;сторінка&gt;). Нова сторінка = файл даних + тема (CSS-файл ролей); реєстрації у vite.config.js, main.css і &lt;сторінка&gt;.html немає — усе підхоплюється автоматично (вручну — лише посилання в меню/футері). Словник — ЛИШЕ елементи цієї дизайн-системи (CLAUDE.md п. 5б): суцільні кольори палітри, типографіка .t-*, hairline-лінії й рамки (одна лінія), панель .contacts-panel (beige + --radius-panel), кнопки, список DS, арка, картка .tour-card, мапа .contacts-map, рядок FAQ; ромбів-маркерів, подвійних рамок, світіння, тіней і зерна немає. Сітка всіх секцій — 12 колонок сітки каталогу (еталон D12): поля 47.5u, зазор 40u, колонка 115.42u, вміст --grid-w 1825u; кожен блок — від початку до кінця колонки (span з даних). Шапки секцій — по центру. Однотипні елементи — subgrid зі спільними рядками.</p>
