@@ -926,7 +926,7 @@
         </div>
       </div>
 
-      <p class="ds-meta t-text">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid; ціна — роль <span class="ds-meta t-text">.t-price</span> (EB Garamond Medium 500, токени --type-price-*; без перевизначень у компоненті)) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
+      <p class="ds-meta t-text">Картка товару (фото легко збільшується, картка заливається «рідиною» --color-liquid; ціна — роль <code>.t-price</code> (EB Garamond Medium 500, токени --type-price-*; без перевизначень у компоненті)) — приклади в секції «Компоненти» (.product-card); навігація header (колір) і footer (підкреслення + колір) — у секції «Header / Footer» нижче; бренд-блоки (zoom фону) — на головній.</p>
     </section>
 
     <section class="ds-section" id="partials">
@@ -993,7 +993,6 @@
       </div>
     </section>
 
-    <section class="ds-section" id="catalog-components">
     <section class="ds-section" id="legal">
       <h2 class="t-h2 ds-section__title">Юридичні сторінки</h2>
       <p class="ds-note t-body">Сторінки privacy.html (конфіденційність і персональні дані), cookies.html, offer.html (публічна оферта + розділ «Правила користування сайтом» <code>#rules</code>, на який ведуть вікові ворота і згода форми), delivery.html (доставка, оплата, повернення), age-policy.html (18+ і відповідальне споживання), barrels-terms.html (умови програми «Ф'ючерсні бочки»). Тексти — ЧЕРНЕТКИ до юридичної вичитки; реквізити — плейсхолдери <code>[ТАК]</code> (перелік — <code>reports/legal-placeholders.md</code>).</p>
@@ -1002,6 +1001,7 @@
       <p class="ds-note t-body"><strong>Футер:</strong> юридичні посилання — <code>nav.site-footer__offer</code> (той самий <code>.nav-link.nav-link--on-light.t-nav</code>) таблицею 2 колонки × 3 рядки в колонках 10–12 (<code>white-space: nowrap</code>), обидві колонки притиснуті до правого краю колонки 12, нижній рядок на лінії «©» (колонки 1–3). У формі зворотнього зв'язку згода посилається на privacy.html і offer.html#rules.</p>
     </section>
 
+    <section class="ds-section" id="catalog-components">
       <h2 class="t-h2 ds-section__title">Каталог (194:1443)</h2>
       <p class="ds-note t-body">Нові компоненти сторінки каталогу: картка каталогу, випадний список фільтра, заголовок-навігація категорій. Рендер карток із даних — src/data/products.js + src/js/catalog.js (див. README). Перехід при зміні фільтра/сортування — плавний (src/js/catalog-motion.js): картки, що відпали, гаснуть на місці (--duration-fast, scale 0.98), решта переїжджає на нові місця FLIP-ом (--duration-base, --ease-out, легкий stagger --catalog-move-stagger), нові з'являються (opacity + --reveal-shift, stagger --reveal-stagger), футер плавно їде на нове місце (transform), порожній стан з'являється fade; prefers-reduced-motion і ?reveal=off — миттєво. Розкладка після переходу ідентична попередній.</p>
 
@@ -1304,6 +1304,7 @@
         <tr><td>hero</td><td>фото на весь екран, h1 .t-hero (4 колонки по центру), лід .t-desc, кнопка .btn--&lt;tone&gt;; з <code>panel: true</code> текст стоїть у світлій панелі ІСНУЮЧОГО .contacts-panel по центру (6 колонок, 4–9), фото лишається чистим; з <code>fade: green|teal|brown</code> поверх фото лягає один градієнт знизу вгору від кольору-токена до transparent (<code>.hero::after</code>), текст внизу кадру</td><td>фото, колір тексту (тема); panel — коли кадр не дає вільної зони під текст (опція вимкнена на всіх сторінках); fade — градієнт під текст (excursions: green; рішення замовника 53422015; барелі — без градієнта)</td></tr>
         <tr><td>layers</td><td>«розріз»: фото-смуги впритул в одній рамці --radius-panel на 12 колонок + під кожною іконка DS, назва .t-lead (акцент), пояснення .t-desc (рев'ю 77dd7d09)</td><td>2/3/4/6 пунктів; без фото — лише підписи; іконка необов'язкова; кімната</td></tr>
         <tr><td>steps</td><td>sticky-арка (одна hairline-рамка, колонки 1–5) + кроки (колонки 7–12): hairline зверху, цифра .t-stat (акцент), назва .t-product-name, пояснення .t-desc</td><td>медіа арки: гравюра (scene) або фото (img); 2–5 кроків; шапка з кікером/лідом/підписом</td></tr>
+        <tr><td>steps · deck: true</td><td>«колода» стікі-карток замість арки + списку: картка на ширину вмісту секції (12 колонок або cols 10), радіус --radius-panel (фото-рамка, як розріз layers), фото кроку на всю картку без оверлея/градієнта/тіні; поверх (колонки 1–5): цифра .t-stat (акцент), назва .t-hero (як у панелі tour-card), теги .t-chip (рядок без плашок), пояснення .t-desc унизу; sticky під header зі зсувом кроку --space-lp-deck-peek (70u), наступна наїжджає на попередню; reduced-motion — звичайні блоки</td><td>img у кожному кроці (кадр 2:1…21:9 з темною зоною зліва), alt, slot, imgPos, zoom, tags (до 4 × 20); cols 10 · 12; scene/img арки не задаються</td></tr>
         <tr><td>compare</td><td>групи поруч на спільних рядках (subgrid): ярлик .t-product-name, число .t-stat (+ «≈»), одиниця .t-desc, медіа «стіна» або список DS, факти .t-chip + .t-desc</td><td>span груп (сума 12), вирівнювання start/center, wall або list</td></tr>
         <tr><td>formats</td><td>(елементи за рефом замовника 2026-10-16, погоджені) дві великі панелі поруч (по 6 колонок, шов --grid-gap-panels 5u, hairline-контур --lp-format-line, радіус --radius-panel, приглушений візерунок ромбів): підпис .t-chip, КАПСУЛА (hairline --lp-format-line-strong, повне закруглення) з ромбом-маркером .icon--diamond-mark, числом .t-h2 і одиницею .t-chip, 2–4 колонки напоїв (ромб, назва .t-product-name, опис .t-desc), роздільник-лінія, що згасає по краях, міні-блоки в hairline-рамці (--radius-btn): ромб, підпис .t-desc, значення .t-product-name</td><td>тон панелі <code>green</code> / <code>teal</code> — ролі теми --lp-format-green / --lp-format-teal; 2–4 колонки напоїв, 0–2 факти</td></tr>
         <tr><td>tiles</td><td>плитки на спільних рядках: медіа, назва .t-product-name, підпис .t-text (в колі — .t-spec), ноти .t-desc</td><td>медіа: гравюра + іконка DS або фото 3:4 у рамці --radius-panel; <code>shape: circle</code> — фото в колі (--radius-round, ТОВСТЕ кільце --size-lp-tile-ring в кольорі ролі --lp-tile-ring, тло за <code>tone</code> = роль теми --lp-tile-&lt;тон&gt;, кадр <code>imgPos</code>, масштаб фото <code>zoom</code> 0.75–2 кроками --scale-lp-zoom-*; <code>captionOver</code> — назва й опис поверх фото всередині кола, без оверлея), назва — акцент теми, підпис — .t-spec, лід у шапці під H2 (leadCols — його ширина); кімната</td></tr>
@@ -1313,7 +1314,6 @@
         <tr><td>faq</td><td>ІСНУЮЧА група FAQ (faq-group + faq-item) у тілі .faq-page__body</td><td>питання/відповіді</td></tr>
       </table>
 
-      <p class="demo-label t-kicker">Ємність блоків (зафіксовано в схемі; вихід за межі = помилка збірки з поясненням, не зламана верстка)</p>
       <p class="demo-label t-kicker">hero.fade — градієнт знизу вгору (рішення замовника 53422015: «знизу зелений 100%, уверх 0%, текст посунемо вниз»)</p>
       <p class="ds-note t-body">Нових елементів немає: один лінійний градієнт з наявного токена палітри (<code>--color-green</code> / <code>--color-teal</code> / <code>--color-brown</code>) до transparent поверх фото, на <code>.hero::after</code> (<code>linear-gradient(to top, var(--color-X) 0%, transparent 100%)</code>, висота <code>--size-lp-hero-fade-h</code> = 100% кадру). Шари: фото → градієнт → текст; текст притиснуто до низу (<code>--offset-lp-hero-bottom</code>). Поле <code>hero.fade</code> у даних сторінки; без поля градієнта немає (барелі). Контраст тексту — D14 піксельно по літерах (без винятків), D19 дозволяє лише цей градієнт і лише за полем <code>fade</code>. Нижче — справжній hero excursions у зменшеній висоті.</p>
       <section class="hero hero--lp hero--fade hero--fade-green ds-hero-fade theme-excursions">
@@ -1323,6 +1323,7 @@
         </div>
       </section>
 
+      <p class="demo-label t-kicker">Ємність блоків (зафіксовано в схемі; вихід за межі = помилка збірки з поясненням, не зламана верстка)</p>
       <table class="ds-table t-text">
         <tr><th>де</th><th>межа</th><th>чому</th></tr>
         <tr><td>offers.items[].price (.t-stat не вужчає)</td><td>1 пропозиція ≤ 21, 2 ≤ 10, 3 ≤ 6 знаків; одиниця («грн», «з людини») — у priceNote</td><td>ціна 122px/1440: виміряна ємність панелі; довше слово переноситься, а не виходить за панель</td></tr>
