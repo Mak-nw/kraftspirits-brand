@@ -37,7 +37,7 @@ const DECK_GEOM = () => {
   const px = (expr) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;visibility:hidden;height:0;width:${expr}`; document.body.appendChild(d); const w = d.getBoundingClientRect().width; d.remove(); return w; };
   const deck = document.querySelector('.lp-steps__deck'); const sec = deck.closest('section'); const cards = [...deck.children];
   const r = (el) => { const b = el.getBoundingClientRect(); return { top: b.top, bottom: b.bottom, left: b.left, right: b.right }; };
-  return { vh: innerHeight, peek: px('var(--space-lp-deck-peek)'), offset: px('var(--offset-lp-deck-top)'), gap5: px('var(--grid-gap-panels)'), cards: cards.map(r), sec: r(sec), secPadB: parseFloat(getComputedStyle(sec).paddingBottom),
+  return { vh: innerHeight, minH: px('var(--size-lp-deck-min-h)'), peek: px('var(--space-lp-deck-peek)'), offset: px('var(--offset-lp-deck-top)'), gap5: px('var(--grid-gap-panels)'), cards: cards.map(r), sec: r(sec), secPadB: parseFloat(getComputedStyle(sec).paddingBottom),
     next: sec.nextElementSibling ? r(sec.nextElementSibling) : null, pos: cards.map((c) => getComputedStyle(c).position), scrollY };
 };
 // хто зверху в смужці перекриття: точка трохи нижче верху картки i+1 (в межах картки i) має належати картці i+1
@@ -58,7 +58,11 @@ async function deckCheck(page, label, add) {
       if (strip < g.peek - 1) add('DECK-PEEK', `картка ${i + 1} (зібрано ${j + 1})`, `видима смужка ${strip.toFixed(1)}px < peek ${g.peek.toFixed(1)}px`, 'колода: видно верхню смужку попередньої картки');
       const top = await page.evaluate(DECK_TOPMOST, i); if (top !== i + 1) add('DECK-OVER', `картка ${i + 2}`, `у смужці перекриття зверху картка ${top + 1}`, 'колода: наступна картка накладається на попередню');
     }
-    if (j === n - 1 && g.cards[j].bottom > g.vh + 1) add('DECK-FIT', 'колода', `низ останньої картки ${g.cards[j].bottom.toFixed(1)} > вікно ${g.vh}`, 'колода вміщується у вікно (висота картки за svh)');
+    if (j === n - 1 && g.cards[j].bottom > g.vh + 1) { // колода не вмістилась: порушення, якщо картка НЕ на мінімумі (висота за svh мала б вмістити); на мінімумі (дуже низьке широке вікно) — інфо
+      const h = g.cards[j].bottom - g.cards[j].top;
+      if (h > g.minH + 1) add('DECK-FIT', 'колода', `низ останньої картки ${g.cards[j].bottom.toFixed(1)} > вікно ${g.vh}`, 'колода вміщується у вікно (висота картки за svh)');
+      else res.fitInfo = `картка на мінімумі ${h.toFixed(0)}px (вікно ${g.vh}): колода виступає на ${(g.cards[j].bottom - g.vh).toFixed(0)}px — вікно нижче за межу шаблону`;
+    }
     res.moments.push(m);
   }
   // (3) вихід: прокрутити ще на висоту вікна — картки йдуть угору разом, смужки збережено, секція закінчується нормально
@@ -103,7 +107,7 @@ await runMain('lp-stack', { widths: '1200,1440,1728,1920', scrollbar: 'both', pa
           for (const h of deckHeights) {
             const dl = `${label}×${h}`; const add = (rule, selector, value, msg) => rep.add({ rule, page: dl, selector, value, msg });
             await page.setViewport({ width: combo.width, height: h, deviceScaleFactor: 1 }); await sleep(250);
-            const r = await deckCheck(page, dl, add); deckRuns++; deckLog.push(`${dl}: прилипання ${JSON.stringify(r.moments.at(-1).tops)} смужки ${JSON.stringify(r.moments.at(-1).strips)} вихід ${JSON.stringify(r.exit)}`);
+            const r = await deckCheck(page, dl, add); deckRuns++; deckLog.push(`${dl}${r.fitInfo ? ` [${r.fitInfo}]` : ''}: прилипання ${JSON.stringify(r.moments.at(-1).tops)} смужки ${JSON.stringify(r.moments.at(-1).strips)} вихід ${JSON.stringify(r.exit)}`);
             // (4) prefers-reduced-motion: картки в потоці
             await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]); await sleep(150);
             { const g = await page.evaluate(DECK_GEOM); if (g.pos.some((p) => p === 'sticky')) add('DECK-RM', 'картки', `position: ${[...new Set(g.pos)].join(',')}`, 'reduced-motion: без прилипання (звичайні блоки)');
@@ -126,7 +130,7 @@ await runMain('lp-stack', { widths: '1200,1440,1728,1920', scrollbar: 'both', pa
   }
   rep.info({ rule: 'STACK', msg: `стеків ${stackCount}, панелей hero ${panelCount} на ${o.widths.length * (o.scrollbar.length)} комбінаціях; контроль «розірвати стек» (padding-top 150u): ${ctl} порушень; контроль «оверлей» (градієнт на hero): ${heroCtl === null ? 'н/д — панелі hero зараз немає на жодній сторінці' : `${heroCtl} порушень`}` });
   rep.info({ rule: 'DECK', msg: `колода steps: прогонів ${deckRuns} (висоти ${deckHeights.join(', ')}); контролі: ${deckCtl ? Object.entries(deckCtl).map(([k, v]) => `${k} → ${v} порушень`).join('; ') : 'н/д — колоди немає'}` });
-  if (process.env.QA_DECK_LOG) deckLog.forEach((x) => console.log(`  ${x}`));
+  deckLog.filter((x) => process.env.QA_DECK_LOG || x.includes('[')).forEach((x) => console.log(`  ${x}`));
   if (deckCtl) for (const [k, v] of Object.entries(deckCtl)) if (!v) rep.add({ rule: 'DECK', page: 'control', selector: 'контроль', value: k, msg: 'поломка колоди НЕ дала порушення — перевірка не працює' });
   if (stackCount && !ctl) rep.add({ rule: 'STACK', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'розірваний стек НЕ дав порушення — перевірка не працює' });
   if (panelCount && !heroCtl) rep.add({ rule: 'PANEL', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'градієнт на hero НЕ дав порушення — перевірка не працює' });
