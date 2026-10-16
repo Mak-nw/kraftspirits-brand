@@ -275,6 +275,23 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
     return out;
   }
 
+  // --- джерело для span на сторінках lp: елемент усередині секції lp (id секції = `id: '…'` у src/data/<сторінка>.js) → sourceData (файл даних), sourceKey (id секції),
+  //     sourceField: 'cols' — елемент на всю ширину сітки секції (span = колонок секції → міняється `cols` секції); 'span' — вужчий елемент (span пункту/групи).
+  //     Хук друкує: «змінити cols секції X у src/data/<page>.js: було → стало». Не lp-сторінка (немає src/data/<page>.js із цим id) → поля не додаються. ---
+  function findSectionSource(rec) {
+    const page = (String(rec.url || '').split(/[?#]/)[0].match(/\/?([\w-]+)\.html$/) || [])[1];
+    if (!page) return {};
+    const rel = `src/data/${page}.js`; let c; try { c = readFileSync(resolve(root, rel), 'utf8'); } catch { return {}; }
+    const ids = [...String(rec.selector || '').matchAll(/#([A-Za-z_][\w-]*)/g)].map((x) => x[1]);
+    for (const id of ids) {
+      const m = new RegExp(`\\bid:\\s*['"\`]${id}['"\`]`).exec(c); if (!m) continue;
+      const fr = isObj(rec.from) ? rec.from : {};
+      const full = Number.isFinite(fr.span) && Number.isFinite(fr.columns) && fr.span === fr.columns;
+      return { sourceData: rel, sourceKey: id, sourceField: full ? 'cols' : 'span', sourceLine: c.slice(0, m.index).split('\n').length };
+    }
+    return {};
+  }
+
   const sanitize = (b) => {
     const out = {
       url: str(b.url, 300),
@@ -344,6 +361,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
         const cand = { ...ex };
         for (const k of ['to', 'desc', 'scope', 'scopeCount', 'note', 'restore', 'viewport', 'uPx', 'parentSelector', 'selector', 'elementText', 'tracks', 'source']) if (k in s2 && !(k === 'source' && ex.type !== 'move')) cand[k] = s2[k];
         const terr = ('to' in body || 'restore' in body) ? tokenError(cand, tk) : ''; if (terr) { send(res, 400, { error: terr }); return true; }
+        if (ex.type === 'span') Object.assign(cand, findSectionSource(cand));
         const all0 = load(); const ex0 = all0.find((x) => x.id === body.id);
         Object.assign(ex0, cand, { updatedAt: now }); save(all0); send(res, 200, ex0); return true;
       }
@@ -355,6 +373,7 @@ export function createEditsApi({ reviewDir, root, sourceDirs = ['src/data', 'par
       const rec = { id: hasId ? body.id : randomBytes(4).toString('hex'), createdAt: now, updatedAt: now, ...s0, status: 'draft', shot: null };
       if (rec.type === 'text') Object.assign(rec, findSource(rec.from?.text));
       else if (rec.type === 'color' || rec.type === 'opacity') Object.assign(rec, findClassSource(rec.selector));
+      else if (rec.type === 'span') Object.assign(rec, findSectionSource(rec));
       const all = load(); all.push(rec); save(all);
       send(res, 201, rec); return true;
     }
