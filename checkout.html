@@ -25,7 +25,7 @@
   <main class="wc-page" id="checkout">
     <div class="woocommerce">
 
-      <form name="checkout" method="post" class="checkout woocommerce-checkout wc-grid" action="checkout.html" enctype="multipart/form-data" aria-labelledby="checkout-title" novalidate data-wc-view="form">
+      <form name="checkout" method="post" class="checkout woocommerce-checkout wc-grid wc-grid--checkout" action="checkout.html" enctype="multipart/form-data" aria-labelledby="checkout-title" novalidate data-wc-view="form">
         <div class="col2-set contacts-panel wc-main wc-main--checkout" id="customer_details">
           <h1 class="t-hero" id="checkout-title">Оформлення замовлення</h1>
           <div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout" data-wc-notices></div>
@@ -112,7 +112,7 @@
         </div>
       </form>
 
-      <div class="wc-grid" data-wc-view="empty" hidden>
+      <div class="wc-grid wc-grid--cart" data-wc-view="empty" hidden>
         <section class="contacts-panel wc-main wc-main--cart" aria-labelledby="checkout-empty-title">
           <h1 class="t-hero" id="checkout-empty-title">Оформлення замовлення</h1>
           <div class="wc-cart-empty">
@@ -122,7 +122,7 @@
         </section>
       </div>
 
-      <div class="woocommerce-order wc-grid" data-wc-view="thanks" hidden>
+      <div class="woocommerce-order wc-grid wc-grid--cart" data-wc-view="thanks" hidden>
         <section class="contacts-panel wc-main wc-main--cart wc-order-main" aria-labelledby="thanks-title">
           <h1 class="t-hero" id="thanks-title">Дякуємо за замовлення</h1>
           <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received contact-success t-lead">Ваше замовлення отримано.</p>
