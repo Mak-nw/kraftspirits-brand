@@ -1,9 +1,10 @@
 /* Сторінка «Про дім» (about.html) — рукописна авторська сторінка (не шаблон lp). Підключення: плагін lp-auto імпортує src/styles/pages/*.css у main.css.
    Усе на єдиній сітці (10 колонок, --grid-*), значення — токени блоку «Сторінка «Про дім»» у tokens.css, текст — лише ролі .t-*.
    Наявні компоненти: .hero/.hero__bg/.hero--fade-green (hero.fade), .btn, .icon, .contacts-panel/.contacts-item/.contacts-map, faq-item (.acc--faq), кімнати .theme-*.
-   Нове (описано в design-system.html#about-page): векторні ілюстрації (кристали, шлях-вісь, силуети установок) і композиції блоків. */
+   Ілюстрації — ЛІНІЙНІ (обводка currentColor) з тональними півтінями, як іконки DS і іконки процесу з брендбука. Опис — design-system.html#about-page. */
 
-.page-about .site-header { --size-header-zone-h: 0px; } /* як .page-home/.page-lp: hero з y = 0, пілюля fixed поверх */
+.page-about .site-header { --size-header-zone-h: 0px; }
+.page-about { min-height: calc(100svh + var(--border-hairline)); } /* CLS (як .page-faq): смуга прокрутки є вже в момент заміру body-vw, тож довга сторінка не зсувається, коли Chrome домальовує її частинами */ /* як .page-home/.page-lp: hero з y = 0, пілюля fixed поверх */
 
 .about__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
 .about-sec { padding-block: var(--space-about-sec-y); }
@@ -11,112 +12,80 @@
 
 /* ---------- 1. HERO: фото + hero.fade (зелений знизу 100% → угорі 0%); факти — у небі під header (темно-зелений текст на світлому небі), H1 і кнопка — у нижній зоні градієнта ---------- */
 .about-hero { height: var(--size-sec-hero); }
-.about-hero__facts { position: absolute; z-index: 2; top: var(--offset-about-facts-top); left: 0; right: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); color: var(--color-green); } /* три рівні частини сітки (рівний поділ 10 колонок; D12 «рівний поділ») */
-.about-fact { display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; }
-.about-fact__title { display: flex; align-items: center; gap: var(--space-about-fact-gap); } /* іконка поруч із назвою факту; підпис під ними — на всю ширину частини */
+.about-hero__facts { position: absolute; z-index: 2; top: var(--offset-about-facts-top); left: 0; right: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; color: var(--color-green); } /* три РІВНІ частини сітки (рівний поділ 10 колонок; D12 «рівний поділ») */
+.about-fact { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-about-fact-gap); min-width: 0; text-align: center; } /* вертикальне вирівнювання: іконка над назвою, усе по центру; однакова висота частин (stretch) */
+.about-fact > p { width: 100%; }
 .about-fact__icon { --icon-size: var(--size-about-fact-icon); }
 .about-hero__content { position: absolute; z-index: 2; left: 0; right: 0; bottom: var(--offset-about-hero-bottom); display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-hero-gap); text-align: center; color: var(--color-light); }
 
-/* ---------- 2. ЧОТИРИ КРИСТАЛИ ---------- */
-.about-pillars__title { grid-column: 1 / -1; }
-.about-pillars__lead { grid-column: 4 / span 4; margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; }
-.about-pillars__stage { position: relative; width: var(--grid-w); height: var(--size-about-stage-h); margin: var(--space-about-head) auto 0; }
-.about-pillars__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.about-pillars__list { position: absolute; inset: 0; pointer-events: none; }
-.about-pillar { position: absolute; display: flex; flex-direction: column; gap: var(--space-about-fact-gap); width: var(--grid-span-3); pointer-events: auto; }
-.about-pillar__name { color: var(--color-gold); }
-.about-pillar--a { left: 0; top: var(--pos-about-pillar-top); }
-.about-pillar--b { right: 0; top: var(--pos-about-pillar-top); }
-.about-pillar--c { left: 0; top: var(--pos-about-pillar-low); }
-.about-pillar--d { right: 0; top: var(--pos-about-pillar-mid); }
-/* грані (класи в partials/about/*.html): палітра та її суміші */
-.about .f-light { fill: var(--color-light); }
-.about .f-beige { fill: var(--color-beige); }
-.about .f-gold { fill: var(--color-gold); }
-.about .f-goldlt { fill: var(--color-about-facet-gold-lt); }
-.about .f-amber { fill: var(--color-about-facet-amber); }
-.about .f-amberdk { fill: var(--color-about-facet-amber-dk); }
-.about .f-brown { fill: var(--color-brown); }
-.about .f-greenlt { fill: var(--color-about-facet-green-lt); }
-.about .f-greenmd { fill: var(--color-about-facet-green-md); }
-.about .f-greendk { fill: var(--color-about-facet-green-dk); }
-.about .f-teal { fill: var(--color-teal); } /* синій — лише грань двійника «Два бренди» (Bazylsprings) */
-.about .f-shade { fill: var(--color-about-facet-shade); }
-.about-pillars__line { fill: none; stroke: var(--color-about-line); stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; transition: stroke var(--duration-fast) var(--ease-out), stroke-dashoffset var(--duration-reveal) var(--ease-out); stroke-dasharray: 1; stroke-dashoffset: 0; }
-.about-crystal { transform-box: fill-box; transform-origin: 50% 100%; transition: translate var(--duration-base) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
-/* поява: кристали виростають з основи по черзі, потім проводяться виноски (лише коли reveal.js активний; reduced-motion — усе одразу, reveal.css) */
-.js-reveal .about-pillars__stage:not(.is-in) .about-crystal:not(.about-crystal--rock) { opacity: 0; translate: 0 var(--shift-about-crystal); }
-.js-reveal .about-pillars__stage:not(.is-in) .about-pillars__line { stroke-dashoffset: 1; }
-.js-reveal .about-pillars__stage:not(.is-in) .about-pillar { opacity: 0; }
-.js-reveal .about-pillars__stage:not(.is-done) .about-crystal--a { transition-delay: calc(1 * var(--reveal-stagger)); }
-.js-reveal .about-pillars__stage:not(.is-done) .about-crystal--c { transition-delay: calc(2 * var(--reveal-stagger)); }
-.js-reveal .about-pillars__stage:not(.is-done) .about-crystal--b { transition-delay: calc(3 * var(--reveal-stagger)); }
-.js-reveal .about-pillars__stage:not(.is-done) .about-crystal--d { transition-delay: calc(4 * var(--reveal-stagger)); }
-.js-reveal .about-pillars__stage:not(.is-done) .about-pillars__line { transition-delay: calc(6 * var(--reveal-stagger)); }
-.about-pillar { transition: opacity var(--duration-reveal) var(--ease-out); }
-.js-reveal .about-pillars__stage:not(.is-done) .about-pillar { transition-delay: calc(7 * var(--reveal-stagger)); }
-/* стан «активний кристал» (about.js: наведення на підпис або кристал) */
-.about-pillars__stage[data-active="a"] .about-crystal--a, .about-pillars__stage[data-active="b"] .about-crystal--b,
-.about-pillars__stage[data-active="c"] .about-crystal--c, .about-pillars__stage[data-active="d"] .about-crystal--d { translate: 0 var(--shift-about-crystal-hover); }
-.about-pillars__stage[data-active="a"] [data-line="a"], .about-pillars__stage[data-active="b"] [data-line="b"],
-.about-pillars__stage[data-active="c"] [data-line="c"], .about-pillars__stage[data-active="d"] [data-line="d"] { stroke: var(--color-about-line-active); }
+/* ---------- 2. ВІД ЗЕРНА ДО ПЛЯШКИ: вісім етапів (іконки процесу з брендбука YasnoCraft — обводка) ---------- */
+.about-process__title { grid-column: 1 / -1; }
+.about-process__lead { grid-column: 4 / span 4; margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; }
+.about-process__steps { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); column-gap: var(--grid-gap); width: var(--grid-w); margin: var(--space-about-head) auto 0; } /* рівний поділ сітки на 8 (D12 «рівний поділ») */
+.about-step { display: flex; flex-direction: column; align-items: center; gap: var(--space-about-step-gap); min-width: 0; text-align: center; color: var(--color-light); transition: opacity var(--duration-reveal) var(--ease-out), translate var(--duration-reveal) var(--ease-out); }
+.about-step > p { width: 100%; min-height: 2em; text-wrap: balance; } /* однакова висота підписів (до 2 рядків ролі t-stat-label, lh 1): вісім рівних блоків (D12 «рівний поділ») */
+.about-step__icon { width: 100%; height: var(--size-about-step-icon); object-fit: contain; } /* бокс іконки = ширина етапу (рівний поділ), гліф 96u по центру */
+/* поява зліва направо — порядок етапів (сам рух і є зміст: шлях від зерна до пляшки) */
+.js-reveal .about-process__steps:not(.is-in) .about-step { opacity: 0; translate: 0 var(--reveal-shift); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(2) { transition-delay: calc(1 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(3) { transition-delay: calc(2 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(4) { transition-delay: calc(3 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(5) { transition-delay: calc(4 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(6) { transition-delay: calc(5 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(7) { transition-delay: calc(6 * var(--reveal-stagger)); }
+.js-reveal .about-process__steps:not(.is-done) .about-step:nth-child(8) { transition-delay: calc(7 * var(--reveal-stagger)); }
 
-/* ---------- 3. ІСТОРІЯ: шлях 15 місяців ---------- */
-.about-story__head > * { grid-column: 1 / span 4; }
-.about-story__lead { margin-top: var(--space-about-stack); }
-.about-story__path { margin-top: var(--space-about-head); }
-.about-story__ends { align-items: end; }
-.about-story__end, .about-story__span { display: flex; flex-direction: column; gap: var(--space-10); }
-.about-story__end--start { grid-column: 1 / span 3; }
-.about-story__span { grid-column: 4 / span 4; align-items: center; text-align: center; }
-.about-story__end--finish { grid-column: 8 / span 3; align-items: flex-end; text-align: right; }
-.about-timeline { position: relative; width: var(--grid-w); height: var(--size-about-timeline-h); margin: var(--space-30) auto 0; color: var(--color-about-line); }
-.about-timeline__svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.about-timeline__axis, .about-timeline__tick { stroke: currentColor; stroke-width: var(--border-hairline); vector-effect: non-scaling-stroke; }
-.about-timeline__tick--end, .about-timeline__tick--year { stroke: var(--color-gold); }
-.about-timeline__axis { transform-box: fill-box; transform-origin: 0 50%; transition: scale var(--duration-reveal) var(--ease-out); }
-.about-timeline__tick, .about-timeline__year { transition: opacity var(--duration-reveal) var(--ease-out); }
-.about-timeline__year { position: absolute; top: 100%; left: var(--pos-about-year); translate: -50% 0; margin-top: var(--space-5); color: var(--color-gold); }
-.js-reveal .about-story__path:not(.is-in) .about-timeline__axis { scale: 0 1; }
-.js-reveal .about-story__path:not(.is-in) :is(.about-timeline__tick, .about-timeline__year) { opacity: 0; }
-.js-reveal .about-story__path:not(.is-done) :is(.about-timeline__tick, .about-timeline__year) { transition-delay: calc(3 * var(--reveal-stagger)); }
-.about-story__body { margin-top: var(--space-about-head); align-items: start; }
-.about-story__moment { display: flex; flex-direction: column; gap: var(--space-20); }
-.about-story__moment img { aspect-ratio: var(--ratio-about-moment); }
-.about-story__moment--start { grid-column: 1 / span 3; }
-.about-story__moment--finish { grid-column: 8 / span 3; }
-.about-story__numbers { grid-column: 4 / span 4; display: flex; flex-direction: column; gap: var(--space-about-head); text-align: center; }
-.about-story__number { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); }
-.about-story__number .t-text { margin-top: var(--space-10); text-wrap: balance; color: var(--color-light); }
-.about-story__moment figcaption { color: var(--color-light); }
+/* ---------- 3. 15 МІСЯЦІВ (реф замовника b7d0c39c): фото-фон (розмите й затемнене в самому файлі, без CSS-оверлея), віхи в шаховому порядку, кола-обводки ---------- */
+.about-story { position: relative; overflow: hidden; background: var(--color-brown); color: var(--color-light); } /* тло-колір під фото (поки фото вантажиться) — коричневий палітри */
+.about-story__bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.about-story__grid { position: relative; row-gap: var(--space-about-story-row); align-items: start; }
+.about-story__head { grid-column: 3 / span 4; display: flex; flex-direction: column; gap: var(--space-about-stack); }
+.about-story__milestone { grid-column: 1 / span 6; display: grid; grid-template-columns: subgrid; align-items: start; }
+.about-story__date { grid-column: 1 / span 2; }
+.about-story__photo { aspect-ratio: var(--ratio-about-photo); }
+.about-story__milestone--start .about-story__photo { grid-column: 3 / span 2; }
+.about-story__milestone--start .about-story__text { grid-column: 5 / span 2; }
+.about-story__milestone--finish .about-story__text { grid-column: 3 / span 2; grid-row: 1; }
+.about-story__milestone--finish .about-story__photo { grid-column: 5 / span 2; grid-row: 1; }
+.about-story__rings { grid-column: 9 / span 2; grid-row: 2 / span 2; display: flex; flex-direction: column; gap: var(--space-about-story-row); }
+.about-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-about-ring-gap); text-align: center; }
+.about-ring > .t-stat-label { width: 100%; }
+.about-ring__circle { display: grid; place-items: center; width: var(--size-about-ring); max-width: 100%; aspect-ratio: 1; border: var(--border-hairline) solid var(--color-about-line); border-radius: var(--radius-round); } /* коло-обводка, як кругла плитка DS (lp tiles shape: circle) */
+.about-ring .t-stat-label { text-wrap: balance; }
 
-/* ---------- 4. ЗАСНОВНИК І ВИРОБНИЦТВО (beige тло сторінки) ---------- */
-.about-people { color: var(--color-green); }
-.about-people .about__grid { align-items: start; }
-.about-portrait { grid-column: 1 / span 3; padding: var(--space-about-portrait-pad); border-radius: var(--radius-panel); background: var(--color-light); }
-.about-portrait__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--radius-btn); }
-.about-portrait__cap { display: flex; flex-direction: column; gap: var(--space-10); margin-top: var(--space-20); }
-.about-people__text { grid-column: 5 / span 6; display: flex; flex-direction: column; gap: var(--space-30); }
-.about-people__text > .t-desc { max-width: var(--grid-span-5); }
-.about-voice { display: grid; grid-template-columns: var(--size-about-mono) minmax(0, 1fr); column-gap: var(--grid-gap); margin-top: var(--space-about-head); padding-top: var(--space-about-head); border-top: var(--border-hairline) solid var(--color-line-soft); }
-.about-voice__mono { display: grid; place-items: center; width: var(--size-about-mono); height: var(--size-about-mono); border: var(--border-hairline) solid currentColor; border-radius: var(--radius-round); }
-.about-voice__quote { margin: 0; }
-.about-voice__who { display: flex; flex-direction: column; gap: var(--space-10); margin-top: var(--space-30); }
+/* ---------- 4. ЗАСНОВНИК (beige тло сторінки): фото без збільшення (2 колонки ≤ 280 px кадру) і текст ---------- */
+.about-people { color: var(--color-green); padding-bottom: 0; }
+.about-people__grid { align-items: center; }
+.about-portrait { grid-column: 1 / span 2; display: flex; flex-direction: column; gap: var(--space-20); }
+.about-portrait__img { aspect-ratio: var(--ratio-about-photo); }
+.about-portrait__cap { display: flex; flex-direction: column; gap: var(--space-10); }
+.about-people__text { grid-column: 4 / span 5; display: flex; flex-direction: column; gap: var(--space-30); }
 
-/* ---------- 5. ТРИ УСТАНОВКИ ---------- */
+/* ---------- 4б. ЦИТАТА (реф замовника e6908955): великий рядок по центру, фото в розриві останнього рядка ---------- */
+.about-quote { color: var(--color-green); }
+.about-quote__grid { margin-block: 0; row-gap: var(--space-30); text-align: center; }
+.about-quote__grid > * { grid-column: 1 / -1; }
+.about-quote__text { margin: 0; }
+.about-quote__tail { white-space: nowrap; } /* «різною [фото] сировиною»» — завжди в одному (останньому) рядку: фото «звисає» під рядок, як на рефі */
+.about-quote__photo { display: inline-block; width: var(--size-about-quote-photo-w); height: var(--size-about-quote-photo-h); margin-inline: var(--space-about-quote-photo-x); vertical-align: top; border-radius: var(--radius-panel); object-fit: cover; }
+.about-quote__cap { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); }
+
+/* ---------- 5. ТРИ УСТАНОВКИ: обводка + тональні півтіні ---------- */
 .about-stills__head > * { grid-column: 1 / -1; }
 .about-stills__lead { grid-column: 4 / span 4; margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; color: var(--color-light); }
 .about-stills__scheme { margin: var(--space-about-head) 0 0; }
 .about-stills__row { align-items: end; }
-.about-still { display: flex; justify-content: center; }
+.about-still { display: flex; justify-content: center; color: var(--color-gold); }
 .about-still--wash { grid-column: 1 / span 4; }
 .about-still--spirit { grid-column: 5 / span 3; }
 .about-still--vac { grid-column: 8 / span 3; }
-.about-still__svg { flex: none; transform-origin: 50% 100%; transition: translate var(--duration-reveal) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
+.about-still__svg { flex: none; overflow: visible; transition: translate var(--duration-reveal) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
 .about-still--wash .about-still__svg { width: var(--size-about-still-wash-w); height: var(--size-about-still-wash-h); }
 .about-still--spirit .about-still__svg { width: var(--size-about-still-spirit-w); height: var(--size-about-still-spirit-h); }
 .about-still--vac .about-still__svg { width: var(--size-about-still-vac-w); height: var(--size-about-still-vac-h); }
-.js-reveal .about-stills__scheme:not(.is-in) .about-still__svg { opacity: 0; translate: 0 var(--shift-about-crystal); }
+.about-still .about-ln { fill: none; stroke: currentColor; stroke-width: var(--size-about-line); stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.about-still .about-ht { fill: var(--color-about-halftone); stroke: none; }
+.js-reveal .about-stills__scheme:not(.is-in) .about-still__svg { opacity: 0; translate: 0 var(--shift-about-rise); }
 .js-reveal .about-stills__scheme:not(.is-done) .about-still--spirit .about-still__svg { transition-delay: calc(1 * var(--reveal-stagger)); }
 .js-reveal .about-stills__scheme:not(.is-done) .about-still--vac .about-still__svg { transition-delay: calc(2 * var(--reveal-stagger)); }
 .about-stills__floor { width: var(--grid-w); margin-inline: auto; border-top: var(--border-hairline) solid var(--color-about-line); } /* підлога схеми: спільна для трьох силуетів (частина ілюстрації) */
@@ -125,7 +94,7 @@
 .about-still__label:nth-child(1) { grid-column: 1 / span 4; }
 .about-still__label:nth-child(2) { grid-column: 5 / span 3; }
 .about-still__label:nth-child(3) { grid-column: 8 / span 3; }
-.about-still__label .t-text { margin-top: var(--space-10); color: var(--color-light); text-wrap: balance; }
+.about-still__label .t-text { color: var(--color-light); text-wrap: balance; }
 .about-stills__note { grid-column: 1 / -1; text-align: center; color: var(--color-light); }
 .about-stills__photos { display: grid; grid-template-columns: var(--grid-cols-panels-4-6); column-gap: var(--grid-gap-panels); width: var(--grid-w); margin: var(--space-about-sec-y) auto 0; } /* пара великих блоків: шов 5u (D18), правий — від колонки 5 */
 .about-stills__photo { height: var(--size-about-photo-h); }
@@ -143,19 +112,18 @@
 .about-brand--bs .about-brand__logo img { width: var(--size-about-logo-bs-w); }
 .about-brand__motto { color: var(--color-gold); }
 .about-brand__text { max-width: var(--grid-span-3); text-wrap: balance; }
-.about-brand__shelf { display: flex; justify-content: center; align-items: flex-end; margin-top: auto; padding-top: var(--space-20); }
-.about-brand__shelf { gap: var(--space-about-bottle-gap); }
+.about-brand__shelf { display: flex; justify-content: center; align-items: flex-end; gap: var(--space-about-bottle-gap); }
 .about-brand__shelf img { width: var(--size-about-bottle-w); height: var(--size-about-bottle-h); object-fit: cover; transition: translate var(--duration-base) var(--ease-out); } /* фото пляшок каталогу 800×1060 з прозорими полями: кадр звужено до пляшки (cover), панель не переповнюється */
-.about-brand__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-30); align-self: stretch; padding-top: var(--space-30); border-top: var(--border-hairline) solid var(--color-about-line); text-align: left; }
+.about-brand__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-30); align-self: stretch; margin-top: auto; padding-top: var(--space-30); border-top: var(--border-hairline) solid var(--color-about-line); text-align: left; }
 .about-brand__count { display: flex; align-items: baseline; gap: var(--space-20); color: var(--color-gold); }
-@media (hover: hover) {
-  .about-brand:hover .about-brand__shelf img { translate: 0 var(--shift-about-bottle-hover); }
-  .about-brand:hover .about-brand__shelf img:nth-child(2) { transition-delay: calc(0.5 * var(--reveal-stagger)); }
-  .about-brand:hover .about-brand__shelf img:nth-child(3) { transition-delay: calc(1 * var(--reveal-stagger)); }
-  .about-brand:hover .about-brand__shelf img:nth-child(4) { transition-delay: calc(1.5 * var(--reveal-stagger)); }
-}
+/* пляшки піднімаються при наведенні на панель і при фокусі кнопки в ній (клавіатура) */
+.about-brand:focus-within .about-brand__shelf img { translate: 0 var(--shift-about-bottle-hover); }
+@media (hover: hover) { .about-brand:hover .about-brand__shelf img { translate: 0 var(--shift-about-bottle-hover); } }
+.about-brand .about-brand__shelf img:nth-child(2) { transition-delay: calc(0.5 * var(--reveal-stagger)); }
+.about-brand .about-brand__shelf img:nth-child(3) { transition-delay: calc(1 * var(--reveal-stagger)); }
+.about-brand .about-brand__shelf img:nth-child(4) { transition-delay: calc(1.5 * var(--reveal-stagger)); }
 
-/* ---------- 7. ПРИНЦИПИ: типографічний маніфест ---------- */
+/* ---------- 7. ПРИНЦИПИ: типографічний маніфест (брендбуки) ---------- */
 .about-principles__head { align-items: end; }
 .about-principles__head > .t-h2 { grid-column: 1 / span 4; }
 .about-principles__lead { grid-column: 6 / span 5; }
@@ -170,6 +138,7 @@
 .about-place__panel { min-width: 0; min-height: 0; } /* висота — за вмістом (не 100svh, як на контактах): мапа тягнеться на висоту панелі */
 .about-place__map { display: flex; flex-direction: column; }
 .about-place .contacts-data { display: flex; flex-direction: column; gap: var(--space-contacts-item-gap); }
+.about-place__cta { margin-top: auto; } /* одна кнопка внизу панелі, ширина за вмістом (hug, D16) */
 
 /* ---------- 9. FAQ (рядки — наявний faq-item на зеленому, як faq.html) + фінальний заклик ---------- */
 .about-faq { padding-top: 0; }
@@ -177,4 +146,3 @@
 .about-final > * { grid-column: var(--col-faq-intro); }
 .about-final__lead { text-wrap: balance; }
 .about-final__action { display: flex; justify-content: center; margin-top: calc(var(--space-faq-action-gap) - var(--space-faq-head-gap)); }
-.about-place__cta { margin-top: auto; } /* одна кнопка внизу панелі, ширина за вмістом (hug, D16) */

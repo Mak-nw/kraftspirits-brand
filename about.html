@@ -21,122 +21,105 @@
   <!--@include header-->
   <main class="about">
 
-    <!-- 1. HERO: фото будівлі, градієнт зеленого знизу 100% → угорі 0%; угорі (небо) три факти з іконками, унизу H1 і кнопка -->
+    <!-- 1. HERO: фото будівлі, градієнт зеленого знизу 100% → угорі 0%; угорі (небо) три факти рівної ширини (іконка над назвою, усе по центру), унизу H1 і кнопка. Джерела: reports/about-sources.md -->
     <section class="hero about-hero hero--fade hero--fade-green" data-reveal-load data-parallax="soft" aria-labelledby="about-title">
       <img class="hero__bg" data-reveal="fade" src="/assets/img/about-hero-distillery.webp" width="2000" height="1116" alt="Будівля дистилерії YasnoCraft × Bazylsprings у Ясногородці з висоти: хвилястий дах, скляний фасад, поле й ставок" fetchpriority="high">
       <ul class="about-hero__facts about__grid" aria-label="Коротко про дім">
         <li class="about-fact" data-reveal="rise">
-          <p class="t-lead about-fact__title"><span class="icon icon--distillery about-fact__icon" aria-hidden="true"></span>Повний цикл</p>
+          <span class="icon icon--distillery about-fact__icon" aria-hidden="true"></span>
+          <p class="t-product-name">Повний цикл</p>
           <p class="t-text">Дистилерія в Ясногородці на Київщині</p>
         </li>
         <li class="about-fact" data-reveal="rise">
-          <p class="t-lead about-fact__title"><span class="icon icon--two-brands about-fact__icon" aria-hidden="true"></span>2 бренди</p>
+          <span class="icon icon--two-brands about-fact__icon" aria-hidden="true"></span>
+          <p class="t-product-name">2 бренди</p>
           <p class="t-text">YasnoCraft і Bazylsprings під одним дахом</p>
         </li>
         <li class="about-fact" data-reveal="rise">
-          <p class="t-lead about-fact__title"><span class="icon icon--calendar about-fact__icon" aria-hidden="true"></span>15 місяців</p>
-          <p class="t-text">Стільки тривало будівництво. Працює з 8 серпня 2026</p>
+          <span class="icon icon--calendar about-fact__icon" aria-hidden="true"></span>
+          <p class="t-product-name">15 місяців</p>
+          <p class="t-text">Збудована за 15 місяців, працює з 8 серпня 2026</p>
         </li>
       </ul>
       <div class="about-hero__content">
-        <h1 class="t-hero heading-center" id="about-title" data-reveal="rise">Дім, у якому зерно стає дистилятом</h1>
-        <!--@include components/btn variant="btn--light" href="#pillars" text="Як влаштований дім" reveal="rise"-->
+        <h1 class="t-hero heading-center heading-wide" id="about-title" data-reveal="rise">Сучасна українська дистилерія повного циклу</h1>
+        <!--@include components/btn variant="btn--light" href="#process" text="Як ми працюємо" reveal="rise"-->
       </div>
     </section>
 
-    <!-- 2. ЧОТИРИ КРИСТАЛИ: одна основа (майданчик) і чотири кристали-опори, підписи з лініями-виносками -->
-    <section class="about-sec theme-green about-pillars" id="pillars" aria-labelledby="pillars-title">
+    <!-- 2. ВІД ЗЕРНА ДО ПЛЯШКИ (зелений): етапи повного циклу зі статті Forbes.ua, іконки процесу з брендбука YasnoCraft (обводка, public/assets/brand-icons/process-*.svg) -->
+    <section class="about-sec theme-green about-process" id="process" aria-labelledby="process-title">
       <div class="about__grid">
-        <h2 class="t-h2 heading-center heading-wide about-pillars__title" id="pillars-title" data-reveal="rise">Чотири речі, на яких тримається дім</h2>
-        <p class="t-desc about-pillars__lead" data-reveal="rise">Чотири кристали на одній основі: усе, що ми робимо, росте з одного майданчика в Ясногородці.</p>
+        <h2 class="t-h2 heading-center about-process__title" id="process-title" data-reveal="rise">Від зерна до пляшки</h2>
+        <p class="t-desc about-process__lead" data-reveal="rise">Усі етапи проходять на одному майданчику в Ясногородці. Дистилерію одразу проєктували так, щоб гості бачили виробництво від сировини до розливу.</p>
       </div>
-      <div class="about-pillars__stage" data-reveal="fade">
-        <!--@include about/crystals-->
-        <ul class="about-pillars__list">
-          <li class="about-pillar about-pillar--a" data-pillar="a">
-            <h3 class="t-lead about-pillar__name">Власна дистилерія</h3>
-            <p class="t-text">Найвищий кристал, у центрі. Увесь шлях продукту проходить на нашому майданчику і на нашому обладнанні.</p>
-          </li>
-          <li class="about-pillar about-pillar--b" data-pillar="b">
-            <h3 class="t-lead about-pillar__name">Повний цикл</h3>
-            <p class="t-text">Кристал з двома вершинами: зерно на одному кінці, пляшка на іншому. Між ними осолодження, варіння, бродіння, дистиляція, витримка, купаж, фільтрація й розлив.</p>
-          </li>
-          <li class="about-pillar about-pillar--c" data-pillar="c">
-            <h3 class="t-lead about-pillar__name">Два бренди</h3>
-            <p class="t-text">Два кристали-двійники ростуть з однієї точки. YasnoCraft робить джин, дистиляти й настоянки, Bazylsprings — віскі та витримку в бочці.</p>
-          </li>
-          <li class="about-pillar about-pillar--d" data-pillar="d">
-            <h3 class="t-lead about-pillar__name">Відкриті двері</h3>
-            <p class="t-text">Розколотий камінь, у якому видно все всередині. Виробництво спроєктоване так, щоб гості бачили кожен етап, від сировини до розливу.</p>
-          </li>
+      <ol class="about-process__steps" data-reveal="fade">
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-01-malting.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Осолодження й подрібнення</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-02-brewing.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Варіння</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-03-fermenting.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Бродіння</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-04-distilling.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Дистиляція</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-05-aging.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Витримка в бочках</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-06-blending.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Купажування</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-07-filtering.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Фільтрація</p></li>
+        <li class="about-step"><img class="about-step__icon" src="/assets/brand-icons/process-08-bottling.svg" width="64" height="64" alt="" loading="lazy"><p class="t-stat-label">Розлив</p></li>
+      </ol>
+    </section>
+
+    <!-- 3. 15 МІСЯЦІВ (реф замовника b7d0c39c): фон — розмите затемнене фото будівлі (обробка в самому файлі, без CSS-оверлея), заголовок і лід, дві віхи в шаховому порядку, праворуч два кола-обводки з числами -->
+    <section class="about-sec about-story" id="story" aria-labelledby="story-title">
+      <img class="about-story__bg" src="/assets/img/about-story-bg.webp" width="1600" height="1012" alt="" loading="lazy">
+      <div class="about__grid about-story__grid">
+        <div class="about-story__head">
+          <h2 class="t-h2 heading-start" id="story-title" data-reveal="rise">15 місяців від першого дня будівництва до запуску</h2>
+          <p class="t-desc" data-reveal="rise">Будували під час війни. Найважче давались логістика, постачання складових, безпека й нестабільна електрика.</p>
+        </div>
+        <div class="about-story__milestone about-story__milestone--start" data-reveal="rise">
+          <p class="t-lead about-story__date">1.05.2025</p>
+          <img class="about__photo about-story__photo" src="/assets/img/about-build.webp" width="720" height="900" loading="lazy" alt="Корпус дистилерії з хвилястим дахом на етапі будівництва: риштування, кран, ставок поруч" data-slot="AI-чернетка (Seedream 5 Pro за фото будівлі з hero): замінити реальним фото будівництва травня 2025">
+          <p class="t-text about-story__text">Будівництво почалося 1 травня 2025 року. Ідея засновника Віктора Базильчука: власне виробництво повного циклу зі зрозумілим походженням продукту.</p>
+        </div>
+        <div class="about-story__milestone about-story__milestone--finish" data-reveal="rise">
+          <p class="t-lead about-story__date">8.08.2026</p>
+          <p class="t-text about-story__text">8 серпня 2026 року відкрили першу чергу. На відкритті зібрали 585 000 грн для Центру масштабування технологічних рішень військової частини А4753.</p>
+          <img class="about__photo about-story__photo" src="/assets/img/about-opening.webp" width="960" height="1200" loading="lazy" alt="Відкриття дистилерії 8 серпня 2026 року: гості біля бочок у залі витримки">
+        </div>
+        <ul class="about-story__rings">
+          <li class="about-ring" data-reveal="rise"><p class="about-ring__circle"><span class="t-lead">95%</span></p><p class="t-stat-label">Складових проєкту забезпечили в Україні</p></li>
+          <li class="about-ring" data-reveal="rise"><p class="about-ring__circle"><span class="t-lead">400 л</span></p><p class="t-stat-label">Напоїв за одну зміну</p></li>
         </ul>
       </div>
     </section>
 
-    <!-- 3. ІСТОРІЯ: шлях-вісь 15 місяців (1.05.2025 → 8.08.2026), числа шляху посередині, два кадри на кінцях -->
-    <section class="about-sec theme-brown about-story" id="story" aria-labelledby="story-title">
-      <div class="about__grid about-story__head">
-        <h2 class="t-h2 heading-start about-story__title" id="story-title" data-reveal="rise">15 місяців від першого дня будівництва до запуску</h2>
-        <p class="t-desc about-story__lead" data-reveal="rise">Будували під час війни. Найважче давались логістика, постачання складових, безпека й нестабільна електрика.</p>
-      </div>
-      <div class="about-story__path" data-reveal="fade">
-        <div class="about__grid about-story__ends">
-          <p class="about-story__end about-story__end--start"><span class="t-lead">1.05.2025</span><span class="t-caption">почали будувати</span></p>
-          <p class="about-story__span"><span class="t-stat">15</span><span class="t-stat-label">місяців</span></p>
-          <p class="about-story__end about-story__end--finish"><span class="t-lead">8.08.2026</span><span class="t-caption">відкрили першу чергу</span></p>
-        </div>
-        <!--@include about/timeline-->
-      </div>
-      <div class="about__grid about-story__body">
-        <figure class="about-story__moment about-story__moment--start" data-reveal="rise">
-          <img class="about__photo" src="/assets/img/about-arch-build.webp" width="1200" height="1800" loading="lazy" alt="Корпус дистилерії на етапі будівництва: бетонний каркас і риштування" data-slot="AI-чернетка (Seedream 5 Pro): кадр будівництва, замінити реальним фото травня 2025 — серпня 2026">
-          <figcaption class="t-text">Будівництво почалося 1 травня 2025 року. Ідея засновника Віктора Базильчука: власне виробництво повного циклу, де зрозуміло, звідки взявся кожен продукт.</figcaption>
-        </figure>
-        <div class="about-story__numbers">
-          <div class="about-story__number" data-reveal="rise">
-            <p class="t-stat">95%</p>
-            <p class="t-stat-label">складових проєкту забезпечили в Україні</p>
-            <p class="t-text">Частину капіталу на запуск залучили від іноземних інвесторів.</p>
-          </div>
-          <div class="about-story__number" data-reveal="rise">
-            <p class="t-stat">400 л</p>
-            <p class="t-stat-label">напоїв за одну зміну</p>
-            <p class="t-text">Стільки дають лінії першої черги. Основне обладнання вже працює, фінальне дооснащення триває.</p>
-          </div>
-        </div>
-        <figure class="about-story__moment about-story__moment--finish" data-reveal="rise">
-          <img class="about__photo" src="/assets/img/about-opening.webp" width="960" height="1200" loading="lazy" alt="Відкриття дистилерії 8 серпня 2026 року: гості біля бочок у залі витримки">
-          <figcaption class="t-text">8 серпня 2026 року відкрили першу чергу. На відкритті зібрали 585 000 грн для Центру масштабування технологічних рішень військової частини А4753.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- 4. ЗАСНОВНИК І ВИРОБНИЦТВО: реальне фото Віктора (400 px, без збільшення) у панелі; Герман Марущак без фото — монограма в hairline-колі, його цитата веде до установок -->
+    <!-- 4. ЗАСНОВНИК: реальне фото Віктора (кроп 280×350 з наданих 400×400, без збільшення) + текст статті -->
     <section class="about-sec about-people" id="people" aria-labelledby="people-title">
-      <div class="about__grid">
+      <div class="about__grid about-people__grid">
         <figure class="about-portrait" data-reveal="rise">
-          <img class="about-portrait__img" src="/assets/img/about-viktor.webp" width="400" height="400" loading="lazy" alt="Віктор Базильчук, засновник дистилерії">
-          <figcaption class="about-portrait__cap"><span class="t-lead">Віктор Базильчук</span><span class="t-caption">засновник</span></figcaption>
+          <img class="about__photo about-portrait__img" src="/assets/img/about-viktor.webp" width="280" height="350" loading="lazy" alt="Віктор Базильчук, засновник дистилерії">
+          <figcaption class="about-portrait__cap"><span class="t-product-name">Віктор Базильчук</span><span class="t-caption">засновник</span></figcaption>
         </figure>
         <div class="about-people__text">
           <h2 class="t-h2 heading-start" id="people-title" data-reveal="rise">Засновник і виробництво</h2>
-          <p class="t-desc" data-reveal="rise">Віктор Базильчук сформував концепцію дистилерії, виробничу модель і команду. За плечима в нього аграрний сектор, виробництво, робота із зерном та експорт.</p>
-          <div class="about-voice" data-reveal="rise">
-            <p class="about-voice__mono t-lead" aria-hidden="true">ГМ</p>
-            <div class="about-voice__body">
-              <blockquote class="about-voice__quote"><p class="t-lead">«Поєднання традиційної та вакуумної дистиляції дає нам більше можливостей для роботи з різною сировиною»</p></blockquote>
-              <p class="about-voice__who"><span class="t-product-name">Герман Марущак</span><span class="t-caption">директор виробництва, Forbes.ua</span></p>
-            </div>
-          </div>
+          <p class="t-desc" data-reveal="rise">Віктор Базильчук сформував концепцію дистилерії, виробничу модель і команду. За плечима в нього аграрний сектор, виробництво, робота із зерном та експорт. Виробництвом керує Герман Марущак.</p>
         </div>
       </div>
     </section>
 
-    <!-- 5. ТРИ УСТАНОВКИ: силуети в масштабі робочого об'єму (√³ V), спільна підлога; реальні фото цеху -->
+    <!-- 4б. ЦИТАТА (реф замовника e6908955): великий засічковий рядок по центру, у розриві останнього рядка — вертикальне фото куба (цитата про дистиляцію; фото Германа Марущака немає), надзаголовок і підпис по центру -->
+    <section class="about-sec about-quote" aria-labelledby="quote-kicker">
+      <figure class="about__grid about-quote__grid">
+        <p class="t-kicker about-quote__kicker" id="quote-kicker" data-reveal="rise">Традиційна й вакуумна дистиляція</p>
+        <blockquote class="about-quote__text" data-reveal="rise">
+          <p class="t-h2 heading-center heading-wide">«Поєднання традиційної та вакуумної дистиляції дає нам більше можливостей для роботи з <span class="about-quote__tail">різною<img class="about-quote__photo" src="/assets/img/about-quote-still.webp" width="600" height="800" loading="lazy" alt="" aria-hidden="true">сировиною»</span></p>
+        </blockquote>
+        <figcaption class="about-quote__cap" data-reveal="rise"><span class="t-product-name">Герман Марущак</span><span class="t-caption">директор виробництва · Forbes.ua, серпень 2026</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 5. ТРИ УСТАНОВКИ: обводкові силуети (stroke + тональні півтіні), ширина куба ∝ ∛V; реальні фото цеху -->
     <section class="about-sec theme-brown about-stills" id="stills" aria-labelledby="stills-title">
       <div class="about__grid about-stills__head">
         <h2 class="t-h2 heading-center about-stills__title" id="stills-title" data-reveal="rise">Три установки під одним дахом</h2>
-        <p class="t-desc about-stills__lead" data-reveal="rise">Традиційна перегонка працює із зерновими дистилятами, які далі йдуть у бочку. Вакуумна знижує температуру, тож фрукти й ботанікали зберігають аромат.</p>
+        <p class="t-desc about-stills__lead" data-reveal="rise">Вакуумна дистиляція працює з фруктами й ботанікалами за нижчої температури, традиційна — із зерновими дистилятами для витримки.</p>
       </div>
       <figure class="about-stills__scheme" data-reveal="fade">
         <div class="about__grid about-stills__row">
@@ -146,10 +129,10 @@
         </div>
         <div class="about-stills__floor" aria-hidden="true"></div>
         <figcaption class="about__grid about-stills__labels">
-          <div class="about-still__label"><p class="t-stat">3660</p><p class="t-stat-label">літрів · бражна установка</p><p class="t-text">Установка для браги з робочим об'ємом 3660 л.</p></div>
-          <div class="about-still__label"><p class="t-stat">2420</p><p class="t-stat-label">літрів · спиртова установка</p><p class="t-text">Традиційна перегонка зернових дистилятів, що йдуть на витримку.</p></div>
-          <div class="about-still__label"><p class="t-stat">410</p><p class="t-stat-label">літрів · вакуумна установка</p><p class="t-text">Режим куба або сім тарілок, джин-кошик для ботанікалів.</p></div>
-          <p class="t-caption about-stills__note">Силуети намальовано в одному масштабі за робочим об'ємом</p>
+          <div class="about-still__label"><p class="t-stat">3660</p><p class="t-stat-label">літрів · бражна установка</p></div>
+          <div class="about-still__label"><p class="t-stat">2420</p><p class="t-stat-label">літрів · спиртова установка</p><p class="t-text">Традиційна перегонка зернових дистилятів, які йдуть на витримку</p></div>
+          <div class="about-still__label"><p class="t-stat">410</p><p class="t-stat-label">літрів · вакуумна установка</p><p class="t-text">Режим куба або сім тарілок, джин-кошик</p></div>
+          <p class="t-caption about-stills__note">Схема: ширина кубів у масштабі робочого об'єму, решта деталей умовна</p>
         </figcaption>
       </figure>
       <div class="about__grid about-stills__photos">
@@ -196,29 +179,29 @@
       </div>
     </section>
 
-    <!-- 7. ПРИНЦИПИ: типографічний «маніфест»: великі слова й пояснення; у рядку «Поважати час» — вставка-запрошення до ф'ючерсних бочок -->
+    <!-- 7. ПРИНЦИПИ (брендбуки YasnoCraft і Bazylsprings, «Принципи діяльності»): великі слова й пояснення; у рядку «Поважати час» — вставка-запрошення до ф'ючерсних бочок -->
     <section class="about-sec theme-green about-principles" id="principles" aria-labelledby="principles-title">
       <div class="about__grid about-principles__head">
-        <h2 class="t-h2 heading-start" id="principles-title" data-reveal="rise">Що для нас означає «чистий дистилят»</h2>
+        <h2 class="t-h2 heading-start" id="principles-title" data-reveal="rise">Наші принципи</h2>
         <p class="t-desc about-principles__lead" data-reveal="rise">Крафт для нас означає ступінь контролю над продуктом, а не розмір виробництва. Малі партії, свобода змінювати сировину, бочки й купажі.</p>
       </div>
       <ol class="about-principles__list">
         <li class="about__grid about-principle" data-reveal="rise">
           <h3 class="t-h2 heading-start about-principle__word">Не поспішати</h3>
-          <p class="t-desc about-principle__text">Нова позиція з'являється, коли має чіткий характер і роль. Асортимент росте поступово.</p>
+          <p class="t-desc about-principle__text">Асортимент росте поступово: нова позиція з'являється, коли має чіткий характер і роль.</p>
         </li>
         <li class="about__grid about-principle" data-reveal="rise">
           <h3 class="t-h2 heading-start about-principle__word">Контролювати шлях</h3>
-          <p class="t-desc about-principle__text">Від сировини до пляшки на одному майданчику. Ми бачимо продукт на кожному етапі.</p>
+          <p class="t-desc about-principle__text">Від зерна до пляшки на одному майданчику в Ясногородці.</p>
         </li>
         <li class="about__grid about-principle" data-reveal="rise">
-          <h3 class="t-h2 heading-start about-principle__word">Говорити чесно</h3>
-          <p class="t-desc about-principle__text">Розповідаємо лише те, що можемо підтвердити на виробництві.</p>
+          <h3 class="t-h2 heading-start about-principle__word">Без перебільшень</h3>
+          <p class="t-desc about-principle__text">Говоримо лише про те, що можемо підтвердити.</p>
         </li>
         <li class="about__grid about-principle" data-reveal="rise">
           <h3 class="t-h2 heading-start about-principle__word">Поважати час</h3>
           <div class="about-principle__text">
-            <p class="t-desc">Для Bazylsprings витримка є основою характеру, а бочка головним інструментом смаку.</p>
+            <p class="t-desc">Для Bazylsprings час є частиною виробництва, а бочка — ключовим інструментом смаку.</p>
             <p class="t-text about-principle__invite">Власну бочку можна купити: ф'ючерсні бочки Bazylsprings на 50 і 200 л переходять у вашу власність разом із сертифікатом.</p>
             <!--@include components/btn variant="btn--light" href="barrels.html" text="Ф'ючерсні бочки" arrow="arrow-up-right"-->
           </div>

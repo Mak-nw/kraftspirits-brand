@@ -1052,48 +1052,40 @@
 }
 
 /* ---------- Сторінка «Про дім» (about.html — рукописна, не шаблон lp; стилі src/styles/pages/about-page.css; ілюстрації partials/about/*.html) ----------
-   Лише похідні від наявних токенів: кольори граней ілюстрацій = палітра (--color-*) і її суміші color-mix (як --color-lp-amber), розміри — u-масштаб,
-   відступи — кроки шкали DS. Типографіка — тільки ролі .t-*. Опис — design-system.html#about-page. */
+   Лише похідні від наявних токенів: розміри — u-масштаб і сітка, відступи — кроки шкали DS, кольори — палітра (півтінь — color-mix від токена).
+   Типографіка — тільки ролі .t-*. Ілюстрації ЛІНІЙНІ (обводка) з тональними півтінями, як іконки DS. Опис — design-system.html#about-page. */
 :root {
   --space-about-sec-y: var(--space-lp-section-y);          /* вертикальне поле кімнат сторінки (150u, як секції lp) */
   --space-about-head: var(--space-lp-head);                /* шапка секції → вміст (70u) */
-  --space-about-stack: var(--space-lp-stack);              /* кікер/заголовок → лід (20u) */
+  --space-about-stack: var(--space-lp-stack);              /* заголовок → лід (20u) */
   --offset-about-facts-top: calc(var(--size-header-h) + var(--space-60));  /* hero: ряд трьох фактів — під пілюлею header, у зоні неба (163u від верху) */
   --offset-about-hero-bottom: var(--space-100);            /* H1 і кнопка: відступ від низу hero (у суцільній зеленій зоні градієнта) */
-  --size-about-fact-icon: calc(40 * var(--u));             /* іконка факту hero (DS .icon, 24×24, лінія 1.5) — як іконка маршруту lp, 40u */
-  --space-about-fact-gap: var(--space-20);                 /* іконка → текст факту; назва → підпис */
-  --size-about-stage-h: calc(760 * var(--u));              /* сцена кристалів: viewBox 1514.2 × 760 на ширину сітки (1u = 1 одиниця viewBox) */
-  --pos-about-pillar-top: calc(50 * var(--u));             /* підписи верхніх кристалів (лінії-виноски на y 70) */
-  --pos-about-pillar-mid: calc(500 * var(--u));            /* підпис «Відкриті двері» (виноска на y 520) */
-  --pos-about-pillar-low: calc(580 * var(--u));            /* підпис «Два бренди» (виноска на y 600) */
-  --shift-about-crystal: calc(60 * var(--u));              /* поява кристала: підйом знизу з основи */
-  --shift-about-crystal-hover: calc(-14 * var(--u));       /* наведення на підпис: кристал трохи піднімається */
-  --size-about-timeline-h: calc(60 * var(--u));            /* вісь «15 місяців»: висота SVG (тики 20 / рік 44 / кінці 60 одиниць) */
-  --pos-about-year: 52.802%;                               /* 1 січня 2026 на осі 1.05.2025 → 8.08.2026 (245 з 464 днів) */
-  --ratio-about-moment: 4 / 5;                             /* кадри на кінцях шляху і високе фото цеху */
-  --size-about-still-wash-w: calc(359.6 * var(--u));  --size-about-still-wash-h: calc(454.7 * var(--u));   /* бражна 3660 л: силует ∝ ∛V (ширина куба 232u) */
-  --size-about-still-spirit-w: calc(313.1 * var(--u)); --size-about-still-spirit-h: calc(395.9 * var(--u)); /* спиртова 2420 л: куб 202u */
-  --size-about-still-vac-w: calc(216.2 * var(--u));   --size-about-still-vac-h: calc(311.4 * var(--u));    /* вакуумна 410 л: куб 112u + колона 7 тарілок і джин-кошик */
+  --size-about-fact-icon: var(--size-contacts-icon);       /* іконка факту hero = іконка контактного рядка (24u, як іконки хедера), не збільшена */
+  --space-about-fact-gap: var(--space-10);                 /* іконка → назва → підпис факту */
+  --size-about-step-icon: calc(96 * var(--u));             /* іконка етапу процесу (брендбук YasnoCraft, process-*.svg 64×64, лінія 1.07) */
+  --space-about-step-gap: var(--space-20);                 /* іконка етапу → назва */
+  --ratio-about-photo: 4 / 5;                              /* вертикальні кадри: віхи «15 місяців», високе фото цеху */
+  --space-about-story-row: var(--space-100);               /* між віхами «15 місяців» */
+  --size-about-ring: var(--grid-span-2);                   /* коло-обводка з числом на 2 колонки (краї на сітці, D12) — як кругла плитка DS (shape: circle); реф замовника b7d0c39c */
+  --space-about-ring-gap: var(--space-30);                 /* коло → підпис; між колами */
+  --size-about-quote-photo-w: calc(150 * var(--u));        /* фото в розриві рядка цитати (вертикальне 3:4) */
+  --size-about-quote-photo-h: calc(200 * var(--u));
+  --space-about-quote-photo-x: var(--space-10);            /* повітря між словом і фото в рядку */
+  --size-about-line: calc(1.5 * var(--u));                 /* товщина обводки ілюстрацій установок (як лінія іконок DS 1.5 на 24) */
+  --size-about-still-wash-w: calc(389.8 * var(--u));  --size-about-still-wash-h: calc(396.4 * var(--u));   /* бражна 3660 л: ширина куба 232u */
+  --size-about-still-spirit-w: calc(339.4 * var(--u)); --size-about-still-spirit-h: calc(406 * var(--u));  /* спиртова 2420 л: куб 202u (∛V) */
+  --size-about-still-vac-w: calc(248.6 * var(--u));   --size-about-still-vac-h: calc(315.6 * var(--u));    /* вакуумна 410 л: куб 112u + колона 7 тарілок і джин-кошик */
   --size-about-photo-h: calc(var(--grid-span-4) * 5 / 4);  /* висота пари фото цеху = висота кадру 4:5 на 4 колонки */
-  --space-about-portrait-pad: var(--space-30);             /* поле панелі портрета (фото ≤ 366u: 400-піксельне фото ніколи не збільшується) */
-  --size-about-mono: var(--size-lp-deck-num);              /* монограма в hairline-колі (як номер кроку deck), 80u */
   --space-about-brand-pad: var(--space-70);                /* поле панелі бренду */
   --size-about-logo-yc-w: calc(420 * var(--u));            /* логотип YasnoCraft у панелі (3824×560) */
   --size-about-logo-bs-w: calc(300 * var(--u));            /* логотип Bazylsprings у панелі (2172×724) */
-  --size-about-logo-box-h: calc(110 * var(--u));           /* рядок логотипа в панелі бренду (вищий з двох логотипів = 100u)*/
-  --size-about-bottle-h: calc(380 * var(--u));             /* пляшки з каталогу на «полиці» панелі бренду */
-  --size-about-bottle-w: calc(var(--size-about-bottle-h) * 0.32);  /* кадр пляшки: прозорі бічні поля фото обрізані (пляшка ≈ 26% ширини фото) */
-  --space-about-bottle-gap: var(--space-30);               /* між пляшками на полиці */
-  --shift-about-bottle-hover: calc(-10 * var(--u));        /* наведення на панель: пляшки трохи піднімаються */
+  --size-about-logo-box-h: calc(110 * var(--u));           /* рядок логотипа в панелі бренду (вищий з двох логотипів = 100u) */
+  --size-about-bottle-h: calc(480 * var(--u));             /* пляшки з каталогу на «полиці» панелі бренду (×1.26 до попередньої версії) */
+  --size-about-bottle-w: calc(var(--size-about-bottle-h) * 0.29);  /* кадр пляшки: прозорі бічні поля фото обрізані (пляшка ≈ 26% ширини фото) */
+  --space-about-bottle-gap: var(--space-10);               /* між пляшками на полиці */
+  --shift-about-rise: calc(40 * var(--u));                 /* поява силуетів установок: підйом знизу */
+  --shift-about-bottle-hover: calc(-10 * var(--u));        /* наведення/фокус у панелі: пляшки трохи піднімаються */
   --space-about-row-y: var(--space-40);                    /* рядок принципу: поле зверху/знизу */
-  --color-about-line: var(--color-lp-hairline);            /* hairline на темному: виноски кристалів, вісь шляху, підлога установок, рядки принципів (= --lp-hairline) */
-  --color-about-line-active: var(--color-gold);            /* виноска активного кристала */
-  /* грані ілюстрацій (кристали, установки): палітра + суміші */
-  --color-about-facet-gold-lt: color-mix(in srgb, var(--color-gold) 55%, var(--color-light));
-  --color-about-facet-amber: var(--color-lp-amber);
-  --color-about-facet-amber-dk: color-mix(in srgb, var(--color-gold) 22%, var(--color-brown));
-  --color-about-facet-green-lt: color-mix(in srgb, var(--color-light) 48%, var(--color-green));
-  --color-about-facet-green-md: color-mix(in srgb, var(--color-light) 28%, var(--color-green));
-  --color-about-facet-green-dk: color-mix(in srgb, var(--color-brown) 55%, var(--color-green));
-  --color-about-facet-shade: color-mix(in srgb, var(--color-brown) 30%, transparent);
+  --color-about-line: var(--color-lp-hairline);            /* hairline на темному: кола «15 місяців», підлога установок, рядки принципів (= --lp-hairline) */
+  --color-about-halftone: color-mix(in srgb, var(--color-gold) 16%, transparent);  /* півтінь ілюстрацій: тіньовий бік куба, шолома, колони (тональний крок золота) */
 }
