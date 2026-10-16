@@ -16,7 +16,7 @@
   --lp-amber: var(--color-lp-amber);          /* тло фото, доки вантажиться */
   --lp-format-green: var(--color-green);             /* панель formats тону green: суцільна заливка + приглушений візерунок ромбів поверх (format-pattern-green.svg); текст — --lp-on-dark */
   --lp-format-teal: var(--color-teal);               /* панель formats тону teal (Bazylsprings) */
-  --lp-format-fill-green: var(--color-lp-format-fill-green);   /* заливка капсули «4 напої» і міні-блоків: тон панелі з підмішуванням коричневого (на ступінь темніша за панель) */
+  --lp-format-fill-green: var(--color-lp-format-fill-green);   /* заливка капсули «4 напої» і міні-блоків: тон панелі з малою часткою світлого (світліша за панель, лишається зеленою/синьою) */
   --lp-format-fill-teal: var(--color-lp-format-fill-teal);     /* заливка капсули «8 напоїв» і міні-блоків */
   --lp-format-line: var(--color-lp-format-line);       /* контур панелі, міні-блоків, роздільник formats */
   --lp-format-line-strong: var(--color-lp-format-line-strong); /* контур капсули */

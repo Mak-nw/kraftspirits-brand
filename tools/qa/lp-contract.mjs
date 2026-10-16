@@ -297,7 +297,7 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
 /* стек великих блоків (stack) і hero.panel: правила + видимий ефект на сторінці (поле схеми ⇒ вигляд) */
 {
   const hero = clone(heroPage.sections[0]); hero.panel = false;
-  const card = clone(fullSection('card')); card.id = 'a-card'; delete card.list; delete card.room; card.room = 'warm';
+  const card = clone(fullSection('card')); card.id = 'a-card'; delete card.list; delete card.room; card.room = 'warm'; delete card.pad;
   const place = clone(fullSection('place')); place.id = 'a-place'; delete place.room; place.join = false; place.stack = true; delete place.pad; delete place.cols;
   const stackPage = (mut) => { const pg = pageOf([]); pg.sections = [clone(hero), clone(card), clone(place)]; mut?.(pg); return pg; };
   const both = (label, pg, exp) => { const a = jsOk(pg) === true; const b = jsonOk(pg) === true; note(a === exp, `правило: ${label} (JS)`, String(jsOk(pg))); return b; };
@@ -315,6 +315,11 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   const sec = (id) => (htmlStack.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
   note(/lp-sec--stack\b/.test(sec('a-place')) && /lp-room--warm/.test(sec('a-place')) && !/lp-room--deep/.test(sec('a-place')), 'render: stack → секція має lp-sec--stack і кімнату попередньої (warm), а не свою типову (deep)', sec('a-place'));
   note(/lp-sec--stack-next/.test(sec('a-card')), 'render: попередня секція стека має lp-sec--stack-next', sec('a-card'));
+  { // pad перемагає stack (рев'ю d360474e): нижній відступ pad лишається, верх стекової = 0
+    const htmlPad = render(stackPage((pg) => { pg.sections[1].pad = 40; }));
+    const secP = (id) => (htmlPad.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
+    note(!/lp-sec--stack-next/.test(secP('a-card')) && /lp-pad--40/.test(secP('a-card')) && /lp-sec--stack-after-pad/.test(secP('a-place')), 'render: stack після секції з pad → без stack-next, стекова має lp-sec--stack-after-pad', secP('a-card') + secP('a-place'));
+  }
   const htmlPlain = render(stackPage((pg) => { pg.sections[2].stack = false; }));
   note(!/lp-sec--stack/.test(htmlPlain) && /lp-room--deep/.test((htmlPlain.match(/<section[^>]*id="a-place"[^>]*>/) || [''])[0]), 'render: без stack класів стека немає, кімната — власна (deep)');
   // hero.panel: панель DS з H1, лідом і кнопкою всередині; без panel — панелі в hero немає

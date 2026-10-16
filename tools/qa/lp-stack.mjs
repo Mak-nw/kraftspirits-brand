@@ -21,7 +21,7 @@ const PROBE = () => {
   const bgOf = (el) => getComputedStyle(el).backgroundColor;
   const lastBlockBottom = (sec) => { const kids = [...sec.querySelectorAll('.tour-card, .lp-place__grid')]; return kids.length ? Math.max(...kids.map((k) => k.getBoundingClientRect().bottom)) : sec.getBoundingClientRect().bottom; };
   const firstBlockTop = (sec) => { const kids = [...sec.querySelectorAll('.tour-card, .lp-place__grid')]; return kids.length ? Math.min(...kids.map((k) => k.getBoundingClientRect().top)) : sec.getBoundingClientRect().top; };
-  const stacks = [...document.querySelectorAll('.lp-sec--stack')].map((el) => { const prev = el.previousElementSibling; return { id: el.id, prevId: prev?.id || '', bg: bgOf(el), prevBg: prev ? bgOf(prev) : '', gap: firstBlockTop(el) - lastBlockBottom(prev), padTop: parseFloat(getComputedStyle(el).paddingTop), prevPadBottom: prev ? parseFloat(getComputedStyle(prev).paddingBottom) : -1, prevIsStackNext: !!prev?.classList.contains('lp-sec--stack-next') }; });
+  const stacks = [...document.querySelectorAll('.lp-sec--stack')].map((el) => { const prev = el.previousElementSibling; return { id: el.id, prevId: prev?.id || '', bg: bgOf(el), prevBg: prev ? bgOf(prev) : '', gap: firstBlockTop(el) - lastBlockBottom(prev), padTop: parseFloat(getComputedStyle(el).paddingTop), prevPadBottom: prev ? parseFloat(getComputedStyle(prev).paddingBottom) : -1, prevIsStackNext: !!prev?.classList.contains('lp-sec--stack-next'), afterPad: el.classList.contains('lp-sec--stack-after-pad') }; });
   const hp = document.querySelector('.hero__panel'); let panel = null;
   if (hp) {
     const hero = hp.closest('.hero'); const b = hp.getBoundingClientRect(); const cs = getComputedStyle(hp); const h1 = hp.querySelector('h1');
@@ -90,8 +90,8 @@ await runMain('lp-stack', { widths: '1200,1440,1728,1920', scrollbar: 'both', pa
         for (const s of d.stacks) {
           stackCount++;
           if (s.bg !== s.prevBg) rep.add({ rule: 'STACK', page: label, selector: `#${s.id}`, value: `тло ${s.bg} ≠ тло попередньої #${s.prevId} ${s.prevBg}`, msg: 'стек: те саме тло (кімната)' });
-          if (Math.abs(s.gap - d.gap5) > 1) rep.add({ rule: 'STACK', page: label, selector: `#${s.id}`, value: `зазор ${s.gap.toFixed(1)}px ≠ 5u (${d.gap5.toFixed(1)}px)`, msg: 'стек: зазор між блоками = --grid-gap-panels' });
-          if (!s.prevIsStackNext || s.prevPadBottom !== 0) rep.add({ rule: 'STACK', page: label, selector: `#${s.prevId}`, value: `padding-bottom ${s.prevPadBottom}, stack-next ${s.prevIsStackNext}`, msg: 'стек: попередня секція без нижнього відступу' });
+          if (Math.abs(s.gap - (s.afterPad ? s.prevPadBottom : d.gap5)) > 1) rep.add({ rule: 'STACK', page: label, selector: `#${s.id}`, value: `зазор ${s.gap.toFixed(1)}px ≠ ${s.afterPad ? 'pad попередньої ' + s.prevPadBottom.toFixed(1) : '5u (' + d.gap5.toFixed(1)}px)`, msg: 'стек: зазор між блоками = --grid-gap-panels' });
+          if (s.afterPad ? (s.prevIsStackNext || s.padTop !== 0 || s.prevPadBottom <= 0) : (!s.prevIsStackNext || s.prevPadBottom !== 0)) rep.add({ rule: 'STACK', page: label, selector: `#${s.prevId}`, value: `padding-bottom ${s.prevPadBottom}, stack-next ${s.prevIsStackNext}`, msg: 'стек: попередня секція без нижнього відступу' });
         }
         if (d.panel) {
           panelCount++;

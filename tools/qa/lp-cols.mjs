@@ -30,7 +30,7 @@ const PROBE = (GRID_COLS) => {
   const pads = [...document.querySelectorAll('[class*="lp-pad--"]')].map((sec) => {
     const n = +(sec.className.match(/lp-pad--(\d+)/) || [])[1]; const cs = getComputedStyle(sec); const next = sec.nextElementSibling;
     const nextStack = !!next && /\blp-sec--stack\b/.test(next.className); const nextJoin = !!next && /\blp-sec--join\b/.test(next.className);
-    return { id: sec.id, n, top: parseFloat(cs.paddingTop), bottom: parseFloat(cs.paddingBottom), exp: px(`var(--space-${n})`), expBottom: nextStack ? 0 : nextJoin ? px('var(--space-lp-room-join)') : px(`var(--space-${n})`), nextStack, nextJoin };
+    return { id: sec.id, n, top: parseFloat(cs.paddingTop), bottom: parseFloat(cs.paddingBottom), exp: px(`var(--space-${n})`), expBottom: nextJoin ? px('var(--space-lp-room-join)') : px(`var(--space-${n})`), nextStack, nextJoin };
   });
   return { cols, pads };
 };
@@ -51,7 +51,7 @@ const check = (d, rep, label) => {
   }
   for (const p of d.pads) {
     if (Math.abs(p.top - p.exp) > 0.6) add({ rule: 'PAD', selector: `#${p.id}`, value: `padding-top ${p.top.toFixed(1)}px ≠ --space-${p.n} (${p.exp.toFixed(1)}px)`, msg: 'pad: верхній відступ = крок шкали' });
-    if (Math.abs(p.bottom - p.expBottom) > 0.6) add({ rule: 'PAD', selector: `#${p.id}`, value: `padding-bottom ${p.bottom.toFixed(1)}px ≠ ${p.expBottom.toFixed(1)}px (${p.nextStack ? 'далі стек' : p.nextJoin ? 'далі join' : `--space-${p.n}`})`, msg: 'pad: нижній відступ = крок шкали (перед стеком 0, перед join — повітря кімнати)' });
+    if (Math.abs(p.bottom - p.expBottom) > 0.6) add({ rule: 'PAD', selector: `#${p.id}`, value: `padding-bottom ${p.bottom.toFixed(1)}px ≠ ${p.expBottom.toFixed(1)}px (${p.nextStack ? 'далі стек' : p.nextJoin ? 'далі join' : `--space-${p.n}`})`, msg: 'pad: нижній відступ = крок шкали (перед стеком pad лишається — він і є зазор, перед join — повітря кімнати)' });
   }
   return bad;
 };

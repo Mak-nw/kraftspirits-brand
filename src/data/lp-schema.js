@@ -135,7 +135,7 @@ export const RULES = [
     check: (g) => (g.wall && g.list?.length ? 'wall і list — взаємовиключні' : ''), json: { not: { allOf: [present('wall'), present('list', 'arr')] } } },
   { id: 'compare-span-sum', types: ['compare'], path: '', doc: 'сума `span` усіх груп = `cols` секції (типово 10)',
     check: (s) => { const sum = s.groups.reduce((a, g) => a + g.span, 0); const cols = s.cols || GRID_COLS; return sum === cols ? '' : `groups: сума span = ${sum}, має дорівнювати cols = ${cols}`; }, json: null },
-  { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Відступ з боку сусідньої `join`/`stack`-секції лишається за сусідом (нижній відступ перед секцією-стеком = 0)',
+  { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)',
     check: (s) => (has(s.pad) && (s.loose === true || s.join === true || s.stack === true) ? 'pad не задається разом з loose, join або stack' : ''),
     json: { if: { required: ['pad'], properties: { pad: { type: 'number' } } }, then: { not: { anyOf: ['loose', 'join', 'stack'].map((k) => ({ required: [k], properties: { [k]: { const: true } } })) } } } },
   { id: 'compare-count-capacity', types: ['compare'], path: 'groups', doc: `число не переноситься, тому у вузьких групах воно обмежене: \`span\` 2 — count ≤ ${COUNT_CAP[2].plain} (з \`approx\` ≤ ${COUNT_CAP[2].approx}); \`span\` 3 — з \`approx\` ≤ ${COUNT_CAP[3].approx}; від 4 колонок — без обмеження понад ${COUNT_MAX}`,
@@ -376,7 +376,7 @@ export function lpView(page, env = {}) {
     const room = s.stack ? prevRoom : (s.room || def.room?.def || '');   // стек: кімната попередньої секції (тло одне)
     prevRoom = room;
     const next = page.sections[i + 1];
-    const mods = `${s.cols && s.cols !== GRID_COLS ? ` lp-cols--${s.cols}` : ''}${s.pad ? ` lp-pad--${s.pad}` : ''}${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
+    const mods = `${s.cols && s.cols !== GRID_COLS ? ` lp-cols--${s.cols}` : ''}${s.pad ? ` lp-pad--${s.pad}` : ''}${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? (s.pad ? '' : ' lp-sec--stack-next') : ''}${s.stack && page.sections[i - 1]?.pad ? ' lp-sec--stack-after-pad' : ''}`;
     return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
   });
   return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections };
