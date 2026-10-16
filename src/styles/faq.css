@@ -32,13 +32,13 @@
 
 /* Юридичні сторінки (privacy, cookies, offer, delivery, age-policy, barrels-terms; partials/sections/legal-doc + legal-section, дані src/data/legal.js):
    світла сторінка (beige тло, зелений текст), ОДИН вертикальний стовпець без sticky і без бічної колонки; усе вирівняно по лівому краю в 6 середніх колонках 4–9
-   (--col-faq-intro). Вступ = лише h1 + кнопка «Повернутись додому» (btn--green); дата редакції — звичайний рядок на початку тіла. Нових візуальних елементів немає (design-system.html#legal). */
+   (--col-faq-intro). Вступ = лише h1; кнопка «Повернутись додому» (btn--green з іконкою дистилерії) — у самому низу, після тексту; дата редакції — звичайний рядок на початку тіла. Нових візуальних елементів немає (design-system.html#legal). */
 .page-legal { min-height: calc(100svh + var(--border-hairline)); } /* CLS — як .page-faq вище */
 .faq-page--legal { color: var(--color-green); } /* текст — завжди темний на світлому тлі: колір задано на самій сторінці, а не успадковано від зеленої кімнати/тіла FAQ (там --color-text-on-dark) */
 .faq-page__intro--legal .faq-page__grid { text-align: left; }
 .faq-page__intro--legal .faq-page__grid > * { grid-column: var(--col-faq-intro); }
-.faq-page__intro--legal .faq-page__action { justify-content: flex-start; }
 .faq-page__body--legal { color: var(--color-green); }
+.faq-page__body--legal .faq-page__action { grid-column: var(--col-faq-intro); justify-content: flex-start; margin-top: 0; } /* кнопка «Повернутись додому» — у самому низу, лівим краєм колонок 4–9 як текст */
 .faq-page__body--legal .faq-page__title, .faq-page__text { grid-column: var(--col-faq-intro); }
 .faq-page__text { display: grid; row-gap: var(--space-15); min-width: 0; }
 .faq-page__body--legal .faq-page__group { row-gap: var(--space-30); }

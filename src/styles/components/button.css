@@ -58,6 +58,7 @@
 .btn--block .btn__inner { width: 100%; }
 
 /* стрілка ↗ всередині кнопки: бокс-розкладка 11.948 (194:1354) не змінюється; сама іконка — брендова arrow-up-right.svg (маска, колір = колір тексту кнопки), центрована в боксі, видимий знак ≈ 12u */
+.btn__inner > .icon { --icon-size: var(--size-icon-arrow-glyph); } /* іконка ліворуч від тексту (partial btn, параметр icon) */
 .btn__arrow { position: relative; flex: none; transition: transform var(--btn-transition-duration-base) var(--btn-transition-ease); width: var(--size-icon-arrow); height: var(--size-icon-arrow); }
 .btn__arrow .icon { --icon-size: var(--size-icon-arrow-glyph); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--btn-icon-color); }
 
