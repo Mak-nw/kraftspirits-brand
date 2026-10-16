@@ -15,7 +15,7 @@ export const GRID_DEFAULTS = {
   minBlockU: 60,        // блоки вужчі за 60u не перевіряються (значки, дрібні підписи)
   minHeightU: 20,
   profiles: {
-    catalog: { marginU: 47.5, gapU: 40, note: 'ЄДИНА сітка сайту (tokens.css: --grid-margin/--grid-gap/--grid-col): 12 колонок, поле 47.5u, gap 40u, колонка 115.42u, ширина 1825u' },
+    catalog: { marginU: 47.5, gapU: 40, panelGapU: 5, note: 'ЄДИНА сітка сайту (tokens.css: --grid-margin/--grid-gap/--grid-col): 12 колонок, поле 47.5u, gap 40u, колонка 115.42u, ширина 1825u' },
   },
   pageProfile: { default: 'catalog' }, // одна сітка для всіх сторінок (рішення замовника 16.10.2026); окремих профілів 50u/5u більше нема
   regionProfile: { header: 'catalog', footer: 'catalog' }, // header/footer однакові на всіх сторінках → єдина еталонна сітка (не залежить від профілю сторінки)
@@ -31,7 +31,8 @@ export function gridFor(profile, vw, u, cols = 12) {
   const col = (inner - (cols - 1) * gap) / cols;
   const starts = [], ends = [];
   for (let k = 0; k < cols; k++) { starts.push(margin + k * (col + gap)); ends.push(margin + k * (col + gap) + col); }
-  return { margin, gap, col, cols, starts, ends, inner, vw };
+  const panelGap = (profile.panelGapU || 0) * u;
+  return { margin, gap, col, cols, starts, ends, inner, vw, panelGap };
 }
 
 /* ------------------------------------------------------------------ збір у браузері */
@@ -149,6 +150,44 @@ export function evalBlock(b, g, cfg) {
 }
 
 /**
+ * Профіль «великі блоки»: два (і більше) великих блоки-панелі, що стоять ПОРЯД із зазором --grid-gap-panels (5u, не 40u колонок), мають внутрішній шов не на межі колонки.
+ * Це не «масове allow», а перевірка схеми шва — вона приймає внутрішні краї пари (A.права ↔ B.ліва, B.ліва − A.права = panelGap ±0.6px, однакова висота-зона):
+ *   (а) A закінчується на кінці колонки, B починається через panelGap (менший блок B заходить у зазор колонок);
+ *   (б) B починається на початку колонки, A закінчується за panelGap до неї (менший блок A заходить у зазор);
+ *   (в) рівний поділ сітки на n = 2…4 панелі (шов — k·(w+gap) від поля, w = (контейнер − (n−1)·panelGap)/n; для n=2 — центр ± panelGap/2).
+ * Зовнішні краї пари (ті, що не приймаються цим правилом) і далі мусять лежати на колонках. Пара без зазору panelGap (напр. 40u) схему не задовольняє — лишається порушенням.
+ */
+export function applyPanelPairs(results, grids, cfg) {
+  const okPx = cfg.okPx ?? 0.5, tolGap = 0.6;
+  const rs = results.filter((r) => r.block.region === 'main');
+  for (const a of rs) for (const b of rs) {
+    if (a === b) continue;
+    const A = a.block, B = b.block, g = grids[a.profile];
+    if (!g.panelGap) continue;
+    const gapPx = B.L - A.R;
+    if (Math.abs(gapPx - g.panelGap) > tolGap) continue;
+    const ov = Math.min(A.B, B.B) - Math.max(A.T, B.T);
+    if (ov < 0.5 * Math.min(A.H, B.H)) continue; // не в одному ряду
+    const nearEnd = near(g.ends, A.R).ad <= okPx, nearStart = near(g.starts, B.L).ad <= okPx;
+    let via = '';
+    if (nearEnd) via = `шов великих блоків: A на кінці кол.${near(g.ends, A.R).i + 1} + ${(g.panelGap / (g.vw / 1920)).toFixed(1)}u`;
+    else if (nearStart) via = `шов великих блоків: B на початку кол.${near(g.starts, B.L).i + 1} − ${(g.panelGap / (g.vw / 1920)).toFixed(1)}u`;
+    else for (let n = 2; n <= 4 && !via; n++) {
+      const w = (g.inner - (n - 1) * g.panelGap) / n;
+      for (let k = 1; k < n; k++) if (Math.abs(A.R - (g.margin + k * w + (k - 1) * g.panelGap)) <= okPx) { via = `шов великих блоків: рівний поділ на ${n}, шов ${k}`; break; }
+    }
+    if (!via) continue;
+    for (const [res, key, blk] of [[a, 'R', A], [b, 'L', B]]) {
+      const sd = res.ev.sides[key]; if (!sd || sd.status === 'ok') continue;
+      sd.status = 'ok'; sd.via = via; sd.pair = true;
+      const order = { ok: 0, suspect: 1, fail: 2 }; let st = 'ok';
+      for (const x of Object.values(res.ev.sides)) if (order[x.status] > order[st]) st = x.status;
+      res.ev.status = st;
+    }
+  }
+}
+
+/**
  * Аналіз зібраних даних сторінки. cfg — GRID_DEFAULTS + allow.json.grid; pageName — для вибору профілю.
  * Повертає { profile, results:[{block, ev, evAll:{profile:ev}, alt:[profile...]}], counts }
  */
@@ -162,6 +201,7 @@ export function analyzeGrid(data, cfg, pageName) {
     const alt = ev.status === 'ok' ? [] : Object.keys(grids).filter((k) => k !== pn && evAll[k].status === 'ok');
     return { block: b, ev, evAll, alt, profile: pn };
   });
+  applyPanelPairs(results, grids, cfg);
   const counts = { total: results.length, ok: 0, suspect: 0, fail: 0 };
   for (const r of results) counts[r.ev.status]++;
   return { profile: profName, grid: grids[profName], grids, results, counts };

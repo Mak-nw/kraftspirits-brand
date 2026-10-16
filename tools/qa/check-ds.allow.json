@@ -205,6 +205,7 @@
       }
     },
     "pageProfile": {
+        "panelGapU": 5,
       "default": "catalog"
     }
   }
