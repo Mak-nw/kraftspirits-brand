@@ -99,7 +99,7 @@ export const excursions = {
       cta: { text: 'Дивитися каталог', href: 'catalog.html' },
     },
     {
-      type: 'place', id: 'location', room: 'deep',
+      type: 'place', id: 'location', stack: true,
       kicker: 'Наша локація', title: 'Ясногородка, екопарк',
       lead: 'Дистилерія стоїть на території сімейного екопарку Ясногородка — можна поєднати екскурсію з прогулянкою й відпочинком.',
       facts: [

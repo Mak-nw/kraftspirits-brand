@@ -120,6 +120,12 @@
       "rule": "довжина `price` залежить від кількості пропозицій: 1 — ≤ 21, 2 — ≤ 10, 3 — ≤ 6 знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у `priceNote`)"
     },
     {
+      "id": "stack-exclusive",
+      "scope": "card, place",
+      "expressed": true,
+      "rule": "`stack: true` бере кімнату попередньої секції, тож `room` і `join` разом з ним не задаються"
+    },
+    {
       "id": "card-text-xor-list",
       "scope": "card",
       "expressed": true,
@@ -142,6 +148,12 @@
       "scope": "page",
       "expressed": false,
       "rule": "`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `offers.items`) — з нього будується CSS-клас"
+    },
+    {
+      "id": "stack-after-block",
+      "scope": "page",
+      "expressed": false,
+      "rule": "`stack: true` дозволено лише секції, перед якою стоїть `card` або `place` (стек = ряд великих блоків; після hero чи інших типів стека немає)"
     },
     {
       "id": "anchors-exist",
@@ -1757,6 +1769,12 @@
               "minLength": 1,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "stack": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "text": {
               "type": [
                 "string",
@@ -1837,6 +1855,45 @@
           ],
           "title": "card",
           "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "stack": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "stack"
+                ]
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "room"
+                      ],
+                      "properties": {
+                        "room": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "join"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
             {
               "oneOf": [
                 {
@@ -1948,6 +2005,12 @@
               "maxLength": 320,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "stack": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "facts": {
               "type": "array",
               "minItems": 1,
@@ -2038,7 +2101,48 @@
             "title",
             "facts"
           ],
-          "title": "place"
+          "title": "place",
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "stack": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "stack"
+                ]
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "room"
+                      ],
+                      "properties": {
+                        "room": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "join"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",

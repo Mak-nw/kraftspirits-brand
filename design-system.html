@@ -1298,8 +1298,8 @@
         <tr><td>compare</td><td>групи поруч на спільних рядках (subgrid): ярлик .t-product-name, число .t-stat (+ «≈»), одиниця .t-desc, медіа «стіна» або список DS, факти .t-chip + .t-desc</td><td>span груп (сума 12), вирівнювання start/center, wall або list</td></tr>
         <tr><td>tiles</td><td>плитки на спільних рядках: медіа, назва .t-product-name, підпис .t-text, ноти .t-desc</td><td>медіа: гравюра + іконка DS або фото 3:4 у рамці --radius-panel; кімната</td></tr>
         <tr><td>offers</td><td>фото на всю секцію без затемнення; шапка (маршрут — hairline + іконка DS); панелі .contacts-panel: назва, ціна .t-stat, факти (hairline-рядки), список DS, кнопка</td><td>1–3 панелі; маршрут; підпис до ціни; рядок контактів (foot)</td></tr>
-        <tr><td>card</td><td>ІСНУЮЧА панель .tour-card (головна) на сітці 12 колонок</td><td>фото ліворуч/праворуч, список (параметр list), тон кнопки (параметр tone)</td></tr>
-        <tr><td>place</td><td>ІСНУЮЧІ .contacts-panel (5 колонок, факти .contacts-item) + мапа .contacts-map (7 колонок) зі сторінки контактів</td><td>факти, кнопки</td></tr>
+        <tr><td>card</td><td>ІСНУЮЧА панель .tour-card (головна) на сітці 12 колонок</td><td>фото ліворуч/праворуч, список (параметр list), тон кнопки (параметр tone); <code>stack: true</code> — стек великих блоків (нижче)</td></tr>
+        <tr><td>place</td><td>ІСНУЮЧІ .contacts-panel (5 колонок, факти .contacts-item) + мапа .contacts-map (7 колонок) зі сторінки контактів</td><td>факти, кнопки; <code>stack: true</code> — стек великих блоків (нижче)</td></tr>
         <tr><td>faq</td><td>ІСНУЮЧА група FAQ (faq-group + faq-item) у тілі .faq-page__body</td><td>питання/відповіді</td></tr>
       </table>
 
@@ -1313,6 +1313,8 @@
         <tr><td>steps.items[].value</td><td>≤ 5 знаків</td><td>цифра-гігант .t-stat у колонках 7–12</td></tr>
         <tr><td>layers / tiles / offers.items</td><td>кількість ділить 12 (2·3·4·6; offers 1·2·3); compare: сума span = 12</td><td>сітка 12 колонок</td></tr>
       </table>
+
+      <p class="ds-note t-body"><strong>Стек великих блоків (<code>stack: true</code> у card / place; рішення замовника: «між цими блоками непотрібно такий великий відступ і окрема секція — як на головній вкінці»).</strong> Секція зі <code>stack: true</code> стоїть під попередньою card/place у ТІЙ САМІЙ кімнаті (тло береться з попередньої, власного <code>room</code>/<code>join</code> немає), без верхнього відступу секції; зазор між блоками — <code>--grid-gap-panels</code> (5u), як між панелями на головній (<code>.tours</code>) і в парі великих блоків. Нових елементів немає: відступ секції (150u) замінено токеном зазору. Приклад — excursions: «Магазин» (tour-card) + «Наша локація» (панель + мапа) на одному фоні; barrels може користуватись так само (поле в даних). Правила: <code>stack-exclusive</code>, <code>stack-after-block</code> (docs/page-template.md).</p>
 
       <p class="demo-label t-kicker">Медіа-ілюстрації (обираються в даних; нова = partials/media/&lt;вид&gt;-&lt;назва&gt;.html + src/styles/media/&lt;вид&gt;-&lt;назва&gt;.css, підключається автоматично)</p>
       <table class="ds-table t-text">

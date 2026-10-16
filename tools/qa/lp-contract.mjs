@@ -60,7 +60,7 @@ function fillValue(def, path, o = {}) {
     default: return undefined;
   }
 }
-const fullSection = (type) => { const s = fillValue({ type: 'object', fields: SCHEMA.sections[type] }, type); s.type = type; s.id = `s-${type}`; return s; };
+const fullSection = (type) => { const s = fillValue({ type: 'object', fields: SCHEMA.sections[type] }, type); s.type = type; s.id = `s-${type}`; if ('stack' in s) s.stack = false; return s; }; // stack: true дозволено лише після card/place — перевіряється окремо нижче (блок «стек»)
 
 /** повні варіанти секцій: взаємовиключні поля (XOR) розкладено по варіантах, щоб покрити обидві гілки */
 function variantsOf(type) {
@@ -248,8 +248,29 @@ cross('card: ні text, ні list', (p) => { delete S(p).text; }, false, false, 
 cross(`card: text = ${CARD_TEXT_MAX} знаків`, (p) => { S(p).text = 'а '.repeat(CARD_TEXT_MAX / 2).trim().padEnd(CARD_TEXT_MAX, 'б'); }, true, true, 'card [text');
 cross(`card: list = ${CARD_LIST_MAX + 1} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX + 1).fill('x'); }, false, false, 'card [list');
 cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX).fill('x'); }, true, true, 'card [list');
-/* hero.panel: видимий ефект на сторінці (поле схеми ⇒ вигляд) */
+/* стек великих блоків (stack) і hero.panel: правила + видимий ефект на сторінці (поле схеми ⇒ вигляд) */
 {
+  const hero = clone(heroPage.sections[0]); hero.panel = false;
+  const card = clone(fullSection('card')); card.id = 'a-card'; delete card.list; delete card.room; card.room = 'warm';
+  const place = clone(fullSection('place')); place.id = 'a-place'; delete place.room; place.join = false; place.stack = true;
+  const stackPage = (mut) => { const pg = pageOf([]); pg.sections = [clone(hero), clone(card), clone(place)]; mut?.(pg); return pg; };
+  const both = (label, pg, exp) => { const a = jsOk(pg) === true; const b = jsonOk(pg) === true; note(a === exp, `правило: ${label} (JS)`, String(jsOk(pg))); return b; };
+  note(both('stack після card — дозволено', stackPage(), true) === true, 'правило: stack після card — дозволено (JSON)');
+  note(both('stack після hero — відхиляє (JS; JSON не виражає)', stackPage((pg) => { pg.sections = [pg.sections[0], pg.sections[2]]; }), false) === true, 'правило: stack після hero — JSON не виражає (очікувана асиметрія)');
+  note(both('stack на першій після place — дозволено (place → place)', stackPage((pg) => { const c2 = clone(pg.sections[2]); c2.id = 'a-place2'; pg.sections.push(c2); }), true) === true, 'правило: place → place stack (JSON)');
+  const withRoom = stackPage((pg) => { pg.sections[2].room = 'deep'; });
+  note(jsOk(withRoom) !== true && jsonOk(withRoom) !== true, 'правило: stack разом з room — відхиляють і JS, і JSON');
+  const withJoin = stackPage((pg) => { pg.sections[2].join = true; });
+  note(jsOk(withJoin) !== true && jsonOk(withJoin) !== true, 'правило: stack разом з join: true — відхиляють і JS, і JSON');
+  const noStack = stackPage((pg) => { pg.sections[2].stack = false; pg.sections[2].room = 'deep'; });
+  note(jsOk(noStack) === true && jsonOk(noStack) === true, 'правило: без stack room задається як звичайно');
+  // видимий ефект: клас стека, спільна кімната попередньої, відсутність власної
+  const htmlStack = render(stackPage());
+  const sec = (id) => (htmlStack.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
+  note(/lp-sec--stack\b/.test(sec('a-place')) && /lp-room--warm/.test(sec('a-place')) && !/lp-room--deep/.test(sec('a-place')), 'render: stack → секція має lp-sec--stack і кімнату попередньої (warm), а не свою типову (deep)', sec('a-place'));
+  note(/lp-sec--stack-next/.test(sec('a-card')), 'render: попередня секція стека має lp-sec--stack-next', sec('a-card'));
+  const htmlPlain = render(stackPage((pg) => { pg.sections[2].stack = false; }));
+  note(!/lp-sec--stack/.test(htmlPlain) && /lp-room--deep/.test((htmlPlain.match(/<section[^>]*id="a-place"[^>]*>/) || [''])[0]), 'render: без stack класів стека немає, кімната — власна (deep)');
   // hero.panel: панель DS з H1, лідом і кнопкою всередині; без panel — панелі в hero немає
   const hp = pageOf([]); hp.sections[0].panel = true; const hHtml = render(hp);
   const heroOf = (h) => { const i = h.indexOf('<section class="hero'); return h.slice(i, h.indexOf('</section>', i)); };
@@ -325,6 +346,6 @@ if (realFiles) {
 
 console.log(`lp-contract: перевірок ${total}, з них мутацій полів ${mutCount}; розбіжностей ${bad}`);
 const inexpressible = RULES.filter((r) => !r.json).map((r) => r.id);
-console.log(`  правила, яких JSON Schema не виражає (x-rules): ${inexpressible.join(', ')}, ids-unique, keys-unique, anchors-exist + файлові (FILE_RULES)`);
+console.log(`  правила, яких JSON Schema не виражає (x-rules): ${inexpressible.join(', ')}, ids-unique, keys-unique, anchors-exist, stack-after-block + файлові (FILE_RULES)`);
 if (rows.length) console.log(rows.slice(0, 80).join('\n') + (rows.length > 80 ? `\n  … ще ${rows.length - 80}` : ''));
 process.exit(bad ? 1 : 0);

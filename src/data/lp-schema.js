@@ -84,9 +84,9 @@ export const SCHEMA = {
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true, { divides: GRID_COLS }),
       foot: O({ text: T(160, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green'], true) }), 0, 2), note: T(200) }) },
     // 7. Картка: ІСНУЮЧА панель tour-card (текст АБО список + фото)
-    card: { ...base('lead', 'caption'), title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true, { startsWith: '/assets/img/' }), cta: { ...CTA, req: true } },
+    card: { ...base('lead', 'caption'), ...STACK, title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true, { startsWith: '/assets/img/' }), cta: { ...CTA, req: true } },
     // 8. Місце: панель DS з фактами й кнопками + мапа DS (координати — src/data/contacts.js)
-    place: { ...base('caption'), room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
+    place: { ...base('caption'), ...STACK, room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
     faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
   },
@@ -130,6 +130,9 @@ export const RULES = [
   { id: 'offers-price-capacity', types: ['offers'], path: '', doc: `довжина \`price\` залежить від кількості пропозицій: 1 — ≤ ${PRICE_MAX[1]}, 2 — ≤ ${PRICE_MAX[2]}, 3 — ≤ ${PRICE_MAX[3]} знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у \`priceNote\`)`,
     check: (s) => { const cap = PRICE_MAX[s.items.length]; const bad = s.items.findIndex((it) => [...it.price].length > cap); return bad < 0 ? '' : `items[${bad}].price: довжина ${[...s.items[bad].price].length} > ${cap} знаків при ${s.items.length} пропозиціях (одиницю виміру — в priceNote)`; },
     json: { allOf: Object.entries(PRICE_MAX).map(([n, cap]) => ({ if: { properties: { items: { type: 'array', minItems: +n, maxItems: +n } }, required: ['items'] }, then: { properties: { items: { type: 'array', items: { type: 'object', properties: { price: { type: 'string', maxLength: cap } } } } } } })) } },
+  { id: 'stack-exclusive', types: ['card', 'place'], path: '', doc: '`stack: true` бере кімнату попередньої секції, тож `room` і `join` разом з ним не задаються',
+    check: (s) => (s.stack === true && (has(s.room) || s.join === true) ? 'stack: true бере кімнату попередньої секції — room і join не задаються' : ''),
+    json: { if: { properties: { stack: { const: true } }, required: ['stack'] }, then: { not: { anyOf: [present('room'), { properties: { join: { const: true } }, required: ['join'] }] } } } },
   { id: 'card-text-xor-list', types: ['card'], path: '', doc: `панель має фіксовану висоту: заголовок ≤ ${CARD_TITLE_MAX}; рівно одне з \`text\` (≤ ${CARD_TEXT_MAX}) або \`list\` (≤ ${CARD_LIST_MAX} пунктів по ≤ ${CARD_ITEM_MAX}) — разом не вміщуються`,
     check: (s) => (has(s.text) === has(s.list) ? 'потрібне рівно одне з text або list (разом не вміщуються у панель)' : ''), json: exactlyOne('text', 'list', 'str', 'arr') },
 ];
@@ -139,6 +142,7 @@ export const PAGE_RULES = [
   { id: 'hero-first', doc: 'перша секція — `hero`, і вона єдина (без неї немає `<h1>`)', json: true },
   { id: 'ids-unique', doc: '`id` секцій унікальні в межах сторінки', json: null },
   { id: 'keys-unique', doc: '`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `offers.items`) — з нього будується CSS-клас', json: null },
+  { id: 'stack-after-block', doc: '`stack: true` дозволено лише секції, перед якою стоїть `card` або `place` (стек = ряд великих блоків; після hero чи інших типів стека немає)', json: null },
   { id: 'anchors-exist', doc: 'посилання-якір `#id` (у кнопках, `place.facts[].href` тощо) має вести на `id` секції цієї сторінки', json: null },
 ];
 
@@ -219,6 +223,7 @@ export function validatePage(page) {
     if (i > 0 && s.type === 'hero') fail(path, 'hero може бути лише першою (і єдиною) секцією');
     if (s.id) { if (ids.has(s.id)) fail(path, `id «${s.id}» повторюється`); ids.add(s.id); }
     check({ type: 'object', fields: def }, s, path);
+    if (s.stack === true && !['card', 'place'].includes(sections[i - 1]?.type)) fail(path, 'stack: true дозволено лише після секції card або place (стек великих блоків)');
     // key унікальні в межах списку
     walk({ type: 'object', fields: def }, s, path, (d, v, p) => {
       if (d.type === 'list' && d.of?.type === 'object' && d.of.fields.key && Array.isArray(v)) {
@@ -296,9 +301,11 @@ export function lpView(page, env = {}) {
   if (!tone) fail(`${page.slug}.tone`, `не задано: вкажіть tone у даних або роль --lp-tone у src/styles/themes/${page.theme}.css`);
   if (!TONES.includes(tone)) fail(`${page.slug}.tone`, `тон теми «${tone}» поза переліком: ${TONES.join(' | ')}`);
   const p = { ...page, tone };
+  let prevRoom = '';
   const sections = page.sections.map((s, i) => {
     const def = SCHEMA.sections[s.type];
-    const room = s.room || def.room?.def || '';
+    const room = s.stack ? prevRoom : (s.room || def.room?.def || '');   // стек: кімната попередньої секції (тло одне)
+    prevRoom = room;
     const next = page.sections[i + 1];
     const mods = `${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
     return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
