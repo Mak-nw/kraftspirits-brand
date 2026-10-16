@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync, unlinkS
 import { resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { createEditsApi } from './dev-tools/edit-api.js';
+import { createRefsApi } from './dev-tools/refs-api.js'; // медіа-реф вкладення до коментарів: review/refs/<id>/
 
 const MAX_BODY = 2 * 1024 * 1024;
 const ID_RE = /^[a-f0-9]{8}$/;
@@ -42,6 +43,7 @@ export function reviewMode({ dir } = {}) {
     req.on('end', () => { try { ok(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}')); } catch { fail(Object.assign(new Error('bad json'), { code: 400 })); } });
     req.on('error', fail);
   });
+  const refsApi = createRefsApi({ reviewDir, load, save, send });
   const str = (v, n) => (typeof v === 'string' ? v.slice(0, n) : '');
   const num = (v) => (Number.isFinite(v) ? Math.round(v * 1000) / 1000 : 0);
   const sanitize = (b) => ({
@@ -80,6 +82,7 @@ export function reviewMode({ dir } = {}) {
 
         try {
           if (await editsApi(req, res, p, { send, readBody })) return;
+          if (await refsApi.handle(req, res, p, { readBody })) return;
           if (p.startsWith('/__review/api/shot/')) {
             const id = p.slice('/__review/api/shot/'.length);
             const f = resolve(shots, `${id}.png`);
@@ -102,6 +105,10 @@ export function reviewMode({ dir } = {}) {
               writeFileSync(resolve(shots, `${c.id}.png`), Buffer.from(m2[1], 'base64'));
               c.shot = `review/shots/${c.id}.png`;
             }
+            // медіа-реф вкладення: файли зі staging (завантажені з форми) + посилання (type:'link'); старі коментарі без поля лишаються як є
+            const att = refsApi.adoptStage(body.stage, body.stageFiles, c.id);
+            for (const l of (Array.isArray(body.links) ? body.links : [])) { const a = refsApi.linkAttachment(l); if (a && att.length < refsApi.MAX_ATT) att.push(a); }
+            c.attachments = att.slice(0, refsApi.MAX_ATT);
             const all = load(); all.push(c); save(all);
             return send(res, 201, c);
           }
@@ -123,11 +130,12 @@ export function reviewMode({ dir } = {}) {
             save(all.filter((x) => x.id !== id));
             const f = resolve(shots, `${id}.png`);
             if (existsSync(f)) unlinkSync(f);
+            refsApi.removeAll(id);
             return send(res, 200, { ok: true });
           }
           return send(res, 405, { error: 'method not allowed' });
         } catch (e) {
-          return send(res, e.code === 413 || e.code === 400 ? e.code : 500, { error: e.message });
+          return send(res, [400, 404, 413, 415].includes(e.code) ? e.code : 500, { error: e.message });
         }
       });
     },

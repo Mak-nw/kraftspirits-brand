@@ -21,7 +21,7 @@ function boot() {
     set(k, v) { try { localStorage.setItem(k, v); } catch { /* ignore */ } },
   };
 
-  const st = { comments: [], mode: false, panel: false, filter: 'open', draft: null, openId: null, drag: null, flashId: null, grid: false };
+  const st = { comments: [], mode: false, panel: false, filter: 'open', draft: null, openId: null, drag: null, flashId: null, grid: false, refs: null };
 
   // ---------- DOM ----------
   const host = document.createElement('div');
@@ -75,7 +75,7 @@ function boot() {
 
   // ---------- API ----------
   async function api(method, path, body, opts) {
-    const r = await fetch(API + path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, ...(opts || {}) });
+    const r = await fetch((path.startsWith('/ref') ? '/__review' : API) + path, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, ...(opts || {}) });
     if (!r.ok) throw new Error(`${method} ${path}: ${r.status}`);
     return r.json();
   }
@@ -205,7 +205,8 @@ function boot() {
       el('div', { class: 'tabs' }, ...[['open', 'Відкриті'], ['done', 'Виконані'], ['all', 'Усі']].map(([k, t]) => el('button', { class: 'tab' + (st.filter === k ? ' on' : ''), textContent: t, on: { click: () => { st.filter = k; render(); } } }))),
       el('div', { class: 'list' }, list.length ? list.map((c) => el('div', { class: 'row ' + c.status, on: { click: () => goTo(c) } },
         el('div', { class: 'n', textContent: String(numOf(c)) }),
-        el('div', { class: 't' }, el('b', { textContent: `${TYPES[c.type] || c.type}${c.status === 'done' ? ' · виконано' : ''}` }), el('span', { textContent: c.text || '(без тексту)' })))) : el('div', { class: 'empty', textContent: 'Немає коментарів' })),
+        el('div', { class: 't' }, el('b', { textContent: `${TYPES[c.type] || c.type}${c.status === 'done' ? ' · виконано' : ''}` }), el('span', { textContent: c.text || '(без тексту)' }), attachStrip(c)),
+        c.status === 'open' ? el('button', { class: 'row-add', type: 'button', textContent: '📎', title: 'Додати реф до коментаря', 'aria-label': `Додати реф до коментаря ${numOf(c)}`, on: { click: (e) => { e.stopPropagation(); goTo(c); openEdit(c.id, { focusRefs: true }); } } }) : '')) : el('div', { class: 'empty', textContent: 'Немає коментарів' })),
     );
   }
   function goTo(c) {
@@ -257,7 +258,7 @@ function boot() {
     pop.style.left = x + 'px'; pop.style.top = y + 'px';
   }
   function closePop() {
-    clearDraft(); popTa = null;
+    clearDraft(); popTa = null; if (st.refs) { st.refs.destroy(); st.refs = null; }
     pop.classList.remove('open'); pop.textContent = ''; popState = null; st.openId = null;
     if (st.draft) { st.draft = null; selBox.style.display = 'none'; selBox.classList.remove('draft'); }
     layout();
@@ -267,6 +268,156 @@ function boot() {
     const draw = (v) => { wrap.textContent = ''; for (const [k, t] of Object.entries(TYPES)) wrap.append(el('button', { class: 'tab' + (v === k ? ' on' : ''), textContent: t, on: { click: () => { onPick(k); draw(k); } } })); };
     draw(cur); return wrap;
   }
+
+  // ---------- медіа-реф вкладення до коментаря ----------
+  // Вставка з буфера (Cmd/Ctrl+V), drag&drop на форму, кнопка «Додати реф», поле посилань. Ліміти дублюються на сервері (dev-tools/refs-api.js).
+  const REF_MAX_FILE = 25 * 1024 * 1024, REF_MAX = 8;
+  const REF_EXT = { png: 'image', jpg: 'image', jpeg: 'image', webp: 'image', gif: 'image', avif: 'image', svg: 'image', pdf: 'pdf', mp4: 'video', webm: 'video', mov: 'video' };
+  const REF_ACCEPT = Object.keys(REF_EXT).map((e) => '.' + e).join(',');
+  const REF_ICON = { pdf: 'PDF', video: 'VID', link: 'URL', image: 'IMG' };
+  const fmtSize = (b) => (b < 1024 ? `${b} Б` : b < 1048576 ? `${Math.round(b / 1024)} КБ` : `${(b / 1048576).toFixed(1)} МБ`);
+  const attsOf = (c) => (Array.isArray(c?.attachments) ? c.attachments : []);
+  const refUrl = (id, a) => `/__review/ref/${id}/${encodeURIComponent(a.file)}`;
+  const extOfName = (n) => { const m = /\.([A-Za-z0-9]{1,6})$/.exec(n || ''); return m ? m[1].toLowerCase() : ''; };
+  let pasteSeq = 0;
+  function imgSize(url) {
+    return new Promise((ok) => {
+      const im = new Image(); const t = setTimeout(() => ok(null), 4000);
+      im.onload = () => { clearTimeout(t); ok(im.naturalWidth > 0 ? { w: im.naturalWidth, h: im.naturalHeight } : null); };
+      im.onerror = () => { clearTimeout(t); ok(null); };
+      im.src = url;
+    });
+  }
+  // mode 'new': файли летять у staging (прогрес), на «Зберегти» коментар забирає їх; mode 'edit': прямо в refs/<id>/ і в comments.json
+  function makeRefs({ mode, c }) {
+    const stage = 's' + [...crypto.getRandomValues(new Uint8Array(8))].map((b) => b.toString(16).padStart(2, '0')).join('');
+    const items = []; // new: усі; edit: лише завантажувані/з помилкою
+    const blobs = [];
+    const err = el('div', { class: 'ref-err', role: 'alert', 'aria-live': 'assertive' });
+    const list = el('ul', { class: 'ref-list', 'aria-label': 'Вкладені реф-матеріали' });
+    const count = el('span', { class: 'ref-count' });
+    const input = el('input', { type: 'file', multiple: true, accept: REF_ACCEPT, class: 'ref-file', tabindex: -1, 'aria-hidden': 'true' });
+    const addBtn = el('button', { class: 'ref-add', type: 'button', textContent: 'Додати реф', 'aria-label': 'Додати реф: вибрати файли', on: { click: () => input.click() } });
+    const linkIn = el('input', { type: 'text', class: 'ref-link', placeholder: 'Посилання: YouTube, Figma, сайт, картинка', 'aria-label': 'Посилання на реф (Enter, щоб додати)', on: {
+      keydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); addLinks(linkIn.value); } },
+      paste: (e) => { const t = e.clipboardData?.getData('text') || ''; if (/\s/.test(t.trim())) { e.preventDefault(); e.stopPropagation(); addLinks(t); } },
+    } });
+    const linkBtn = el('button', { class: 'ref-add', type: 'button', textContent: 'Додати', 'aria-label': 'Додати посилання', on: { click: () => addLinks(linkIn.value) } });
+    const hint = el('div', { class: 'ref-hint', textContent: `Вставте ⌘/Ctrl+V, перетягніть файли сюди або «Додати реф». Файл до 25 МБ, до ${REF_MAX} вкладень. png, jpg, webp, gif, avif, svg, pdf, mp4, webm, mov` });
+    const node = el('div', { class: 'refs', role: 'group', 'aria-label': 'Реф-медіа до коментаря' },
+      el('div', { class: 'ref-row' }, addBtn, count), list, el('div', { class: 'ref-row' }, linkIn, linkBtn), err, hint, input);
+    let errT = 0;
+    const fail = (msg) => { err.textContent = msg; clearTimeout(errT); errT = setTimeout(() => { err.textContent = ''; }, 7000); };
+    const persisted = () => (mode === 'edit' ? attsOf(c) : []);
+    const total = () => persisted().length + items.filter((i) => i.state !== 'err').length;
+    const busy = () => items.some((i) => i.state === 'up');
+
+    function row(thumb, name, sub, extra, remove) {
+      return el('li', { class: 'ref-item' }, thumb, el('div', { class: 'ref-meta' }, el('span', { class: 'ref-name', textContent: name, title: name }), sub, extra || ''),
+        el('button', { class: 'ref-x', type: 'button', textContent: '×', 'aria-label': `Видалити реф ${name}`, on: { click: remove } }));
+    }
+    const icon = (t) => el('span', { class: 'ref-ic', textContent: REF_ICON[t] || 'REF', 'aria-hidden': 'true' });
+    function draw() {
+      list.textContent = '';
+      persisted().forEach((a, i) => {
+        const href = a.type === 'link' ? a.url : refUrl(c.id, a);
+        const thumb = el('a', { class: 'ref-th', href, target: '_blank', rel: 'noopener noreferrer', 'aria-label': `Відкрити ${a.name}` }, a.type === 'image' ? el('img', { src: href, alt: '' }) : icon(a.type));
+        list.append(row(thumb, a.name, el('span', { class: 'ref-sub', textContent: a.type === 'link' ? (a.kind || 'link') : fmtSize(a.size || 0) }), '', () => removePersisted(i)));
+      });
+      for (const it of items) {
+        const thumb = it.type === 'image' && it.blob ? el('span', { class: 'ref-th' }, el('img', { src: it.blob, alt: '' })) : el('span', { class: 'ref-th' }, icon(it.type));
+        const sub = it.state === 'err' ? el('span', { class: 'ref-sub bad', textContent: it.err || 'Помилка' })
+          : it.state === 'up' ? el('span', { class: 'ref-sub', textContent: `Завантаження ${it.pct}%` }) : el('span', { class: 'ref-sub', textContent: it.type === 'link' ? it.att.kind : fmtSize(it.size) });
+        const bar = it.state === 'up' ? el('progress', { class: 'ref-prog', max: 100, value: it.pct, 'aria-label': `Завантаження ${it.name}` }) : '';
+        list.append(row(thumb, it.name, sub, bar, () => { const k = items.indexOf(it); if (k >= 0) items.splice(k, 1); if (it.xhr && it.state === 'up') it.xhr.abort(); draw(); }));
+      }
+      count.textContent = `${total()}/${REF_MAX}`;
+      addBtn.disabled = linkBtn.disabled = total() >= REF_MAX;
+      positionPop();
+    }
+    async function removePersisted(i) {
+      try { const r = await api('DELETE', `/ref/${c.id}?i=${i}`); c.attachments = r.attachments; draw(); renderPanel(); } catch (e) { fail('Не вдалося видалити реф: ' + e.message); }
+    }
+    function upload(it, file) {
+      const xhr = new XMLHttpRequest(); it.xhr = xhr;
+      const q = `c=${mode === 'edit' ? c.id : stage}&name=${encodeURIComponent(file.name)}${it.w ? `&w=${it.w}&h=${it.h}` : ''}`;
+      xhr.open('POST', `/__review/ref?${q}`);
+      xhr.upload.onprogress = (e) => { if (e.lengthComputable) { it.pct = Math.min(99, Math.round((e.loaded / e.total) * 100)); draw(); } };
+      xhr.onload = () => {
+        let j = {}; try { j = JSON.parse(xhr.responseText); } catch { /* not json */ }
+        if (xhr.status === 201 && j.attachment) {
+          it.att = j.attachment; it.state = 'done'; it.pct = 100;
+          if (mode === 'edit') { c.attachments = j.attachments; const k = items.indexOf(it); if (k >= 0) items.splice(k, 1); renderPanel(); }
+        } else { it.state = 'err'; it.err = j.error || `Помилка ${xhr.status}`; fail(`${file.name}: ${it.err}`); }
+        draw();
+      };
+      xhr.onerror = () => { it.state = 'err'; it.err = 'Немає звʼязку з сервером'; fail(`${file.name}: ${it.err}`); draw(); };
+      xhr.send(file);
+    }
+    async function addFiles(files) {
+      const rejected = [];
+      for (const f0 of Array.from(files || [])) {
+        let f = f0;
+        const ext = extOfName(f.name), type = REF_EXT[ext];
+        if (!type) { rejected.push(`Тип не підтримується: ${f.name || 'файл'}`); continue; }
+        if (f.size > REF_MAX_FILE) { rejected.push(`Файл завеликий (макс. 25 МБ): ${f.name}`); continue; }
+        if (f.size === 0) { rejected.push(`Порожній файл: ${f.name}`); continue; }
+        if (total() >= REF_MAX) { rejected.push(`Забагато вкладень (макс. ${REF_MAX})`); break; }
+        if (/^image\.\w+$/i.test(f.name)) f = new File([f], `paste-${Date.now().toString(36)}-${++pasteSeq}.${ext}`, { type: f.type });
+        const it = { name: f.name, size: f.size, type, state: 'up', pct: 0 };
+        if (type === 'image') { it.blob = URL.createObjectURL(f); blobs.push(it.blob); const d = await imgSize(it.blob); if (d) { it.w = d.w; it.h = d.h; } }
+        items.push(it); draw(); upload(it, f);
+      }
+      if (rejected.length) { fail(rejected.join('. ')); say(rejected[0]); }
+    }
+    async function addLinks(text) {
+      const urls = String(text || '').split(/[\s,]+/).filter(Boolean);
+      if (!urls.length) return;
+      const bad = [];
+      for (const u of urls) {
+        if (total() >= REF_MAX) { bad.push(`Забагато вкладень (макс. ${REF_MAX})`); break; }
+        let url; try { url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(u) ? u : 'https://' + u); } catch { bad.push(`Некоректне посилання: ${u}`); continue; }
+        if (!/^https?:$/.test(url.protocol) || !url.hostname.includes('.')) { bad.push(`Некоректне посилання (потрібен http/https): ${u}`); continue; }
+        if (mode === 'edit') {
+          try { const r = await api('POST', '/ref', { c: c.id, url: url.href }); c.attachments = r.attachments; renderPanel(); } catch (e) { bad.push('Не вдалося додати посилання: ' + e.message); }
+        } else {
+          const host = url.hostname.replace(/^www\./, '');
+          const kind = /(^|\.)(youtube\.com|youtu\.be|vimeo\.com)$/.test(host) ? 'video' : /(^|\.)figma\.com$/.test(host) ? 'figma' : /\.(png|jpe?g|webp|gif|avif|svg)$/i.test(url.pathname) ? 'image' : 'site';
+          items.push({ name: host, type: 'link', state: 'done', pct: 100, att: { type: 'link', url: url.href, name: host, kind } });
+        }
+      }
+      linkIn.value = ''; draw();
+      if (bad.length) fail(bad.join('. '));
+    }
+    input.addEventListener('change', () => { addFiles(input.files); input.value = ''; });
+    draw();
+    return {
+      node, addFiles, addLinks, busy, addBtn,
+      payload: () => ({
+        stage,
+        stageFiles: items.filter((i) => i.state === 'done' && i.type !== 'link').map((i) => ({ file: i.att.file, name: i.att.name, w: i.att.w, h: i.att.h })),
+        links: items.filter((i) => i.type === 'link').map((i) => ({ url: i.att.url })),
+      }),
+      destroy: () => { for (const x of items) if (x.xhr && x.state === 'up') x.xhr.abort(); blobs.forEach((b) => URL.revokeObjectURL(b)); },
+    };
+  }
+  // drag&drop на форму й Cmd/Ctrl+V: працюють, поки відкрита форма з реф-блоком
+  const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes('Files');
+  ['dragenter', 'dragover'].forEach((t) => pop.addEventListener(t, (e) => { if (!st.refs || !hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; pop.classList.add('drop'); }));
+  pop.addEventListener('dragleave', (e) => { if (!pop.contains(e.relatedTarget) && e.relatedTarget !== null) pop.classList.remove('drop'); else if (e.relatedTarget === null) pop.classList.remove('drop'); });
+  pop.addEventListener('drop', (e) => { if (!st.refs || !hasFiles(e)) return; e.preventDefault(); pop.classList.remove('drop'); st.refs.addFiles(e.dataTransfer.files); });
+  document.addEventListener('paste', (e) => {
+    if (!st.refs || !pop.classList.contains('open')) return;
+    const files = Array.from(e.clipboardData?.files || []);
+    if (!files.length) return; // текст вставляється як звичайно
+    e.preventDefault(); e.stopPropagation(); st.refs.addFiles(files);
+  }, true);
+  function attachStrip(c) { // мініатюри в списку коментарів
+    const a = attsOf(c); if (!a.length) return '';
+    return el('div', { class: 'row-refs', 'aria-label': `Реф-вкладень: ${a.length}` },
+      ...a.slice(0, 4).map((x) => (x.type === 'image' ? el('img', { src: refUrl(c.id, x), alt: '', title: x.name }) : el('span', { class: 'ref-ic', textContent: REF_ICON[x.type] || 'REF', title: x.name }))),
+      a.length > 4 ? el('span', { class: 'row-more', textContent: `+${a.length - 4}` }) : '', el('span', { class: 'row-more', textContent: `📎 ${a.length}` }));
+  }
   function openNew(initial) {
     popState = { mode: 'new', type: initial?.type || 'design' };
     const ta = el('textarea', { placeholder: 'Що змінити?', rows: 4, value: initial?.text || '', on: {
@@ -274,9 +425,11 @@ function boot() {
       input: () => saveDraft(),
     } });
     popTa = ta;
+    if (st.refs) st.refs.destroy();
+    st.refs = makeRefs({ mode: 'new' });
     const save = el('button', { class: 'primary', textContent: 'Зберегти', on: { click: () => saveNew(ta, save) } });
     pop.textContent = '';
-    pop.append(el('h4', {}, el('span', { textContent: 'Новий коментар' })), ta, typePicker(popState.type, (k) => { popState.type = k; saveDraft(); }),
+    pop.append(el('h4', {}, el('span', { textContent: 'Новий коментар' })), ta, typePicker(popState.type, (k) => { popState.type = k; saveDraft(); }), st.refs.node,
       el('div', { class: 'meta', textContent: `Вікно ${innerWidth}×${innerHeight} · ${st.draft.info.elementText ? '«' + st.draft.info.elementText.slice(0, 50) + '»' : st.draft.info.anchor.selector.slice(-60)}` }),
       initial ? restoredHint() : '',
       el('div', { class: 'acts' }, el('button', { textContent: 'Скасувати', on: { click: closePop } }), save));
@@ -318,11 +471,13 @@ function boot() {
   async function saveNew(ta, btn) {
     const text = ta.value.trim();
     if (!text) { ta.focus(); return say('Додай текст коментаря'); }
+    if (st.refs?.busy()) return say('Дочекайся завантаження рефів');
+    const refs = st.refs ? st.refs.payload() : {};
     btn.disabled = true; btn.textContent = 'Зберігаю…';
     const d = st.draft;
     const shot = await captureShot(d.rect);
     try {
-      const body = { url: PAGE(), title: document.title, viewport: { w: innerWidth, h: innerHeight }, scrollY: sy(), rect: d.rect, anchor: d.info.anchor, elementText: d.info.elementText, computed: d.info.computed, text, type: popState.type, shot };
+      const body = { url: PAGE(), title: document.title, viewport: { w: innerWidth, h: innerHeight }, scrollY: sy(), rect: d.rect, anchor: d.info.anchor, elementText: d.info.elementText, computed: d.info.computed, text, type: popState.type, shot, ...refs };
       const c = await api('POST', '/comments', body);
       st.comments.push(c); closePop(); render(); say('Коментар збережено' + (shot ? '' : ' (без скриншота)'));
     } catch (e) { btn.disabled = false; btn.textContent = 'Зберегти'; say('Помилка збереження: ' + e.message); }
@@ -333,6 +488,8 @@ function boot() {
     popState = { mode: 'edit', id, type: initial?.type || c.type }; st.openId = id;
     const ta = el('textarea', { value: initial?.text ?? c.text, rows: 4, on: { input: () => saveDraft() } });
     popTa = ta;
+    if (st.refs) st.refs.destroy();
+    st.refs = c.status === 'open' || attsOf(c).length ? makeRefs({ mode: 'edit', c }) : null;
     const act = async (patch, msg) => { try { const u = await api('PATCH', '/comments/' + id, patch); Object.assign(c, u); closePop(); render(); if (msg) say(msg); } catch (e) { say('Помилка: ' + e.message); } };
     let armed = false;
     const del = el('button', { class: 'danger', textContent: 'Видалити', on: { click: async () => {
@@ -342,15 +499,16 @@ function boot() {
     pop.textContent = '';
     pop.append(el('h4', {}, el('span', { textContent: `№${numOf(c)} · ${c.status === 'done' ? 'виконано' : 'відкрито'}` }), el('button', { class: 'link', textContent: 'Закрити', on: { click: closePop } })),
       c.shot ? el('img', { src: `${API}/shot/${c.id}?t=${Date.now()}`, alt: '' }) : '',
-      ta, typePicker(popState.type, (k) => { popState.type = k; saveDraft(); }),
+      ta, typePicker(popState.type, (k) => { popState.type = k; saveDraft(); }), st.refs ? st.refs.node : '',
       el('div', { class: 'meta', textContent: `Вікно ${c.viewport.w}×${c.viewport.h}${c.elementText ? ' · «' + c.elementText.slice(0, 50) + '»' : ''}` }),
       initial ? restoredHint() : '',
       el('div', { class: 'acts' }, del,
         el('button', { textContent: c.status === 'done' ? 'Відкрити знову' : 'Виконано', on: { click: () => act({ status: c.status === 'done' ? 'open' : 'done' }) } }),
         el('button', { class: 'primary', textContent: 'Зберегти', on: { click: () => act({ text: ta.value.trim(), type: popState.type }, 'Збережено') } })));
     pop.classList.add('open'); layout(); positionPop();
-    if (initial) ta.setSelectionRange(ta.value.length, ta.value.length); // restored draft: caret at the end
-    else saveDraft(true);
+    if (initial?.focusRefs && st.refs) st.refs.addBtn.focus();
+    else if (initial?.text !== undefined) ta.setSelectionRange(ta.value.length, ta.value.length); // restored draft: caret at the end
+    if (!initial?.focusRefs && initial?.text === undefined) saveDraft(true);
   }
 
   // ---------- mode & mouse ----------

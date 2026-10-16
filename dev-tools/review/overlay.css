@@ -51,7 +51,7 @@ button { font: inherit; cursor: pointer; }
 .empty { padding: 18px 14px; color: #5b6784; }
 .link { border: 0; background: none; color: var(--a); padding: 0; }
 
-.pop { position: fixed; width: 320px; background: #fff; border-radius: 12px; box-shadow: 0 8px 36px rgba(0,0,0,.34); padding: 12px; pointer-events: auto; display: none; }
+.pop { position: fixed; width: 320px; max-height: calc(100vh - 24px); overflow-y: auto; background: #fff; border-radius: 12px; box-shadow: 0 8px 36px rgba(0,0,0,.34); padding: 12px; pointer-events: auto; display: none; }
 .pop.open { display: block; }
 .pop h4 { margin: 0 0 8px; font-size: 13px; display: flex; justify-content: space-between; }
 .pop textarea { width: 100%; min-height: 84px; resize: vertical; border: 1px solid #c8d0e0; border-radius: 8px; padding: 8px; font-size: 13px; color: #14213d; background: #fff; }
@@ -91,3 +91,37 @@ button { font: inherit; cursor: pointer; }
 .sw { position: static !important; display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(20, 33, 61, 0.45); flex: none; }
 .insp-more { position: fixed; left: 8px; bottom: 36px; font: 500 11px/14px ui-monospace, Menlo, monospace; color: #fff; background: rgba(20, 33, 61, 0.85); padding: 1px 6px; border-radius: 3px; }
 .legend { position: fixed; right: 20px; bottom: 8px; font-size: 10px; line-height: 14px; color: #fff; background: rgba(20, 33, 61, 0.78); padding: 0 8px; border-radius: 3px; pointer-events: none; }
+
+/* медіа-реф вкладення: форма коментаря, список, перетягування */
+.pop.drop { outline: 2px dashed var(--a); outline-offset: -4px; background: #eef4ff; }
+.refs { margin: 4px 0 8px; display: flex; flex-direction: column; gap: 6px; }
+.ref-row { display: flex; gap: 6px; align-items: center; }
+.ref-file { display: none; }
+.ref-add { border: 1px solid var(--a); background: #fff; color: var(--a); border-radius: 8px; padding: 4px 10px; font-weight: 600; flex: none; }
+.ref-add:disabled { opacity: .5; cursor: default; }
+.ref-add:focus-visible, .ref-x:focus-visible, .ref-th:focus-visible, .row-add:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
+.ref-count { color: #5b6784; font-size: 11px; margin-left: auto; }
+.ref-link { flex: 1; min-width: 0; border: 1px solid #c8d0e0; border-radius: 8px; padding: 4px 8px; font-size: 12px; color: #14213d; background: #fff; }
+.ref-link:focus { outline: 2px solid var(--a); outline-offset: 0; }
+.ref-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.ref-list:empty { display: none; }
+.ref-item { display: flex; align-items: center; gap: 8px; border: 1px solid #e5e9f2; border-radius: 8px; padding: 4px 6px; }
+.ref-th { flex: none; width: 36px; height: 36px; border-radius: 6px; overflow: hidden; background: #eef1f7; display: grid; place-items: center; }
+.ref-th img { width: 100%; height: 100%; object-fit: cover; max-height: none; margin: 0; border: 0; border-radius: 0; }
+.ref-ic { font-size: 10px; font-weight: 700; color: var(--a); background: #eef1f7; border-radius: 4px; padding: 2px 4px; }
+.ref-th .ref-ic { background: none; }
+.ref-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ref-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+.ref-sub { font-size: 11px; color: #5b6784; }
+.ref-sub.bad, .ref-err { color: #b91c1c; }
+.ref-err { font-size: 11px; word-break: break-word; }
+.ref-err:empty { display: none; }
+.ref-prog { width: 100%; height: 4px; }
+.ref-x { flex: none; border: 0; background: none; color: #5b6784; font-size: 18px; line-height: 1; padding: 2px 6px; border-radius: 6px; }
+.ref-x:hover { color: #b91c1c; background: #fdecec; }
+.ref-hint { color: #5b6784; font-size: 10.5px; line-height: 1.35; }
+.row-refs { display: flex; gap: 4px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+.row-refs img { width: 28px; height: 28px; object-fit: cover; border-radius: 4px; border: 1px solid #d5dbe8; }
+.row-more { font-size: 11px; color: #5b6784; }
+.row-add { flex: none; align-self: flex-start; border: 1px solid #d5dbe8; background: #fff; border-radius: 8px; padding: 2px 6px; font-size: 13px; line-height: 1.4; }
+.row-add:hover { background: #eef4ff; border-color: var(--a); }
