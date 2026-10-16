@@ -40,3 +40,10 @@
 |---|---|---|---|
 | `excursions-price-bg.webp` (q80, 143 КБ) | 2560×1440 | wide interior of a modern craft whisky distillery, copper pot stills and column stills on the right, deep dark brown shadows, calm dark empty area left/center/top; no people, no text, no logos (Seedream 5 Pro, 16:9, 2 варіанти, обрано 1-й) | 200 (2 × 100) |
 Кадр (`pages/excursions.css`): `--lp-offers-bg-pos: 0% 50%`, масштаб 1. Піксельний D14 по літерах без затемнення: 0 порушень на 1200/1440/1728/1920 × classic/none (на варіанті кадру «100% 50%» 2–6 літер ліда падали — тому зсув вліво). ЧЕРНЕТКА (AI) до заміни реальною зйомкою; `data-slot` у `bgSlot`.
+
+### Фон «Ціна» екскурсій — перегенерація (16.10.2026, правка за verify-E1 дефект 3)
+Попередній кадр (середня яскравість ≈20/255, куби лише вузькою смугою праворуч) не читався як «фото виробництва». Нова генерація (1 спроба, запасна не знадобилась):
+| Файл | Розмір | Промпт (скорочено) | Кредити |
+|---|---|---|---|
+| `excursions-price-bg.webp` (q80, 368 КБ; перезаписано) | 2560×1440 | wide interior of a modern craft whisky distillery, symmetrical: tall polished copper pot/column stills brightly visible on far left and far right rising to top of frame, warm golden light, calm evenly lit warm dark-brown empty centre; no people/text/logos/bottles (Seedream 5 Pro, 16:9, 1 варіант) | 100 |
+Кадр (`pages/excursions.css`): `--lp-offers-bg-pos: 50% 50%` (було `0% 50%`): куби по боках видно над і між панелями пропозицій, центр (під заголовком і лідом) — спокійна темно-коричнева стіна. Без overlay/filter/градієнта. ЧЕРНЕТКА (AI) до заміни реальною зйомкою; людей/текстів/логотипів на кадрі нема. Попередній файл збережено лише у scratchpad (не в репо).
