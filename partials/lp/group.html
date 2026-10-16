@@ -1,6 +1,6 @@
 <article class="lp-group lp-span--{{span}}{{mods}}" data-reveal="rise">
   <h3 class="lp-group__size t-product-name">{{label}}</h3>
-  <p class="lp-group__num t-stat">{{#approx}}<span class="lp-group__approx" aria-hidden="true">≈</span><span class="lp-sr">приблизно </span>{{/approx}}<span data-count-to="{{count}}">{{count}}</span></p>
+  <p class="lp-group__num t-stat">{{#approx}}<span class="lp-group__approx" aria-hidden="true">≈</span><span class="lp-sr">{{approxLabel}}</span>{{/approx}}<span data-count-to="{{count}}">{{countText}}</span></p>
   <p class="lp-group__unit t-desc">{{unit}}</p>
   {{#wall}}<span class="lp-wall lp-wall--{{wall}}" aria-hidden="true"></span>{{/wall}}{{#list}}<ul class="lp-group__list lp-list t-desc"><!--@each list lp/li--></ul>{{/list}}
   <div class="lp-group__facts"><!--@each facts lp/group-fact--></div>

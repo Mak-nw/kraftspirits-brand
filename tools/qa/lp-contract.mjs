@@ -1,0 +1,276 @@
+#!/usr/bin/env node
+// Контрактна перевірка шаблону посадкової сторінки (lp): «поля адмінки = поля фронту» без браузера.  npm run qa:lp
+//   1. JS ≡ JSON: validatePage (збірка) і docs/page-template.schema.json (ajv) дають ОДНАКОВИЙ вердикт на корпусі «справжні сторінки + мутації кожного поля»
+//      (ліміти max / max+1, порожні, типи, enum, посилання, довге слово, кількість пунктів, зайві поля) і на перехресних правилах; правила, яких JSON Schema
+//      не виражає (x-rules: сума span, унікальність id/key, якорі), — JS відхиляє, JSON приймає (очікувана асиметрія, перелічена в звіті).
+//   2. Файл docs/page-template.schema.json = свіжа генерація з lp-schema.js (нічого не забули перегенерувати).
+//   3. Маркерний прогін: у кожне поле кожного типу секції кладеться унікальний маркер, секція рендериться тим самим рушієм partials (tools/html-partials.mjs),
+//      і кожен маркер має бути в HTML — поле, що є в схемі (адмінці), але не показується на сторінці, = помилка.
+//   4. Справжні сторінки (src/data/*.js, автовиявлення tools/lp-pages.mjs) проходять і JS, і JSON, і render.
+// Код виходу: 0 — усе гаразд, 1 — розбіжності. Без аргументів. Залежність: ajv (devDependency).
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import Ajv2020 from 'ajv/dist/2020.js';
+import { SCHEMA, RULES, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
+import { jsonSchemaText, buildJsonSchema } from '../lp-schema-json.mjs';
+import { loadLpPages } from '../lp-pages.mjs';
+import { createRenderer } from '../html-partials.mjs';
+import { ROOT } from './lib.mjs';
+
+const DEL = Symbol('delete');
+// текст рівно max знаків зі словами по 20 (слово ≤ MAX_WORD)
+const maxText = (max, word = 20) => { const w = 'аб'.repeat(10).slice(0, Math.min(20, word)); let t = ''; while (t.length < max) t += (t ? ' ' : '') + w; t = t.slice(0, max); return t.endsWith(' ') ? `${t.slice(0, -1)}б` : t; };
+const clone = (o) => structuredClone(o);
+let bad = 0; let total = 0;
+const rows = [];
+const note = (ok, label, detail = '') => { total++; if (!ok) { bad++; rows.push(`  ПРОВАЛ  ${label} ${detail}`); } };
+
+/* ------------------------------------------------------------------ ajv */
+const ajv = new Ajv2020({ strict: true, strictTuples: false, allowUnionTypes: true });
+ajv.addKeyword('x-rules');
+const jsonSchema = buildJsonSchema();
+const validateJson = ajv.compile(jsonSchema);
+const jsOk = (p) => { try { validatePage(clone(p)); return true; } catch (e) { return e.message; } };
+const jsonOk = (p) => validateJson(clone(p));
+
+note(readFileSync(resolve(ROOT, 'docs/page-template.schema.json'), 'utf8') === jsonSchemaText(), 'docs/page-template.schema.json = генерація з lp-schema.js', '(запусти node tools/lp-schema-json.mjs)');
+
+/* ------------------------------------------------------------------ генератор повних даних (кожне поле заповнене) */
+let n = 0;
+const mk = () => `Q${(++n).toString(36)}`;
+const markers = []; // { marker, path }
+function fillValue(def, path, o = {}) {
+  switch (def.type) {
+    case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
+    case 'url': { const m = `/q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
+    case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
+    case 'partial': return path.endsWith('scene') ? 'barrels-scene' : 'barrels-head';
+    case 'icon': return 'pin';
+    case 'enum': return def.values[0];
+    case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
+    case 'bool': return true;
+    case 'list': {
+      const count = def.divides ? divisors(def)[0] : Math.max(def.min, 1);
+      return Array.from({ length: o.count ?? count }, (_, i) => fillValue(def.of, `${path}[${i}]`));
+    }
+    case 'object': return Object.fromEntries(Object.entries(def.fields).map(([k, d]) => [k, fillValue(d, `${path}.${k}`)]));
+    default: return undefined;
+  }
+}
+const fullSection = (type) => { const s = fillValue({ type: 'object', fields: SCHEMA.sections[type] }, type); s.type = type; s.id = `s-${type}`; return s; };
+
+/** повні варіанти секцій: взаємовиключні поля (XOR) розкладено по варіантах, щоб покрити обидві гілки */
+function variantsOf(type) {
+  const s = fullSection(type);
+  const out = [];
+  if (type === 'steps') {
+    const a = clone(s); delete a.img; delete a.alt; out.push(['scene', a]);
+    const b = clone(s); delete b.scene; out.push(['img', b]);
+  } else if (type === 'tiles') {
+    const a = clone(s); a.items.forEach((t) => { delete t.img; delete t.alt; }); out.push(['engraving+icon', a]);
+    const b = clone(s); b.items.forEach((t) => { delete t.engraving; delete t.icon; }); out.push(['img+alt', b]);
+  } else if (type === 'card') {
+    const a = clone(s); delete a.list; out.push(['text', a]);
+    const b = clone(s); delete b.text; out.push(['list', b]);
+  } else if (type === 'compare') {
+    const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 9; g.approx = false; });
+    a.groups[0].wall = 'one'; delete a.groups[0].list; // група 1 — wall
+    a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
+    out.push(['wall+list', a]);
+    const b = clone(a); b.groups[1].wall = 'four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
+  } else out.push(['', s]);
+  return out;
+}
+const pageOf = (sections, extra = {}) => ({ slug: 'qa-x', theme: 'barrels', tone: 'teal', metaTitle: mk(), metaDescription: mk(), sections: [(() => { const h = fullSection('hero'); return h; })(), ...sections], ...extra });
+const withIds = (sections) => sections.map((s, i) => ({ ...s, id: `s${i}-${s.type}` }));
+
+/* ------------------------------------------------------------------ 3. маркерний прогін + валідні варіанти */
+const render = (page) => { const view = lpView(clone(page), {}); return createRenderer({ root: ROOT, getLpPage: () => view })('<!--@page qa-x-->'); };
+const heroPage = pageOf([]);
+// кожне поле з текстовим/посилальним значенням має бути в HTML секції (інакше адмінка покаже поле, якого на сторінці немає)
+function shownCheck(type, label, html, sec) {
+  const vals = [];
+  (function collect(def, v, path) {
+    if (v === undefined || v === null) return;
+    if (['text', 'url', 'id'].includes(def.type)) vals.push([path, v]);
+    else if (def.type === 'list') v.forEach((x, i) => collect(def.of, x, `${path}[${i}]`));
+    else if (def.type === 'object') for (const [k, d] of Object.entries(def.fields)) collect(d, v[k], `${path}.${k}`);
+  }({ type: 'object', fields: SCHEMA.sections[type] }, sec, type));
+  for (const [path, v] of vals) {
+    if (path === `${type}.type` || path === `${type}.id`) continue;
+    const shown = path === `${type}.img` && type === 'card' ? html.includes(v.replace(/^\/assets\/img\//, '')) : html.includes(v);
+    note(shown, `render ${type}${label ? ` [${label}]` : ''}: поле ${path.slice(type.length + 1)} показується`, `значення «${v}» відсутнє в HTML`);
+  }
+}
+shownCheck('hero', '', render(heroPage), heroPage.sections[0]);
+const validPages = [['hero', heroPage]];
+for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
+  for (const [label, s] of variantsOf(type)) {
+    const page = pageOf(withIds([s]));
+    shownCheck(type, label, render(page), s);
+    validPages.push([`${type}${label ? ` [${label}]` : ''}`, page]);
+  }
+}
+for (const [label, p] of validPages) {
+  note(jsOk(p) === true, `валідна сторінка (JS): ${label}`, String(jsOk(p)));
+  note(jsonOk(p) === true, `валідна сторінка (JSON): ${label}`, JSON.stringify(validateJson.errors?.slice(0, 2)));
+}
+
+/* ------------------------------------------------------------------ 4. справжні сторінки */
+const real = await loadLpPages(ROOT);
+for (const [slug, data] of Object.entries(real)) {
+  note(jsOk(data) === true, `справжня сторінка ${slug} (JS)`, String(jsOk(data)));
+  note(jsonOk(data) === true, `справжня сторінка ${slug} (JSON)`, JSON.stringify(validateJson.errors?.slice(0, 3)));
+  try { render({ ...data, tone: data.tone || 'teal' }); note(true, `рендер ${slug}`); } catch (e) { note(false, `рендер ${slug}`, e.message); }
+}
+
+/* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
+// поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const setAt = (obj, path, value) => { // path: масив ключів
+  let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
+  const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
+};
+const getAt = (obj, path) => path.reduce((o, k) => o?.[k], obj);
+function mutantsFor(def, key, type) {
+  const m = []; // [label, value, expectedValid]
+  const opt = !def.req;
+  switch (def.type) {
+    case 'text':
+      m.push(['max', maxText(def.max, def.word ?? 20), true], ['max+1', maxText(def.max + 1, def.word ?? 20), false]);
+      const w = def.word ?? MAX_WORD; if (def.max > w) m.push(['слово>ліміту слова', 'в'.repeat(w + 1), false], ['слово = ліміт слова', 'в'.repeat(w), true]);
+      m.push(['число замість тексту', 5, false]);
+      m.push(['порожній рядок', '', opt]);
+      m.push(['відсутнє', DEL, opt]);
+      break;
+    case 'url':
+      m.push(['javascript:', 'javascript:alert(1)', false], ['//host', '//evil.com/x', false], ['ftp', 'ftp://x.y', false], ['пробіл', '/a b', false], ['лапка', '/a"b', false],
+        ['https', 'https://a.b/c?d=1&e=2', true], ['%contacts%', '%contacts.phone%', true], ['сторінка.html?q', 'catalog.html?x=1#y', true], ['tel', 'tel:+380671234567', true],
+        ['порожній', '', opt], ['відсутнє', DEL, opt]);
+      break;
+    case 'id': case 'partial': case 'icon':
+      m.push(['велика літера', 'Ab', false], ['пробіл', 'a b', false], ['валідний', 'a-b-1', key === 'key' ? true : true], ['порожній', '', opt], ['відсутнє', DEL, opt]);
+      break;
+    case 'enum':
+      m.push(['поза переліком', 'zzz', false], ['рядок замість числа', String(def.values[0]) === def.values[0] ? 5 : String(def.values[0]), false], ['відсутнє', DEL, opt]);
+      break;
+    case 'number':
+      m.push(['рядок', '4', false], ['NaN-подібне', 'x', false]);
+      if (def.int) m.push(['дробове', 1.5, false]);
+      if (def.min !== undefined) m.push(['менше min', def.min - 1, false], ['min', def.min, true]);
+      if (def.max !== undefined) m.push(['більше max', def.max + 1, false], ['max', def.max, true]);
+      m.push(['відсутнє', DEL, opt]);
+      break;
+    case 'bool': m.push(['рядок', 'yes', false], ['false', false, true], ['відсутнє', DEL, opt]); break;
+    case 'list': m.push(['не масив', 'x', false], ['елемент не того типу', 5, false]); break;
+    case 'object': m.push(['зайве поле', { __x: 1 }, false]); break;
+    default: break;
+  }
+  return m;
+}
+let mutCount = 0;
+function runMutations(label, page, sectionIndex) {
+  const s = page.sections[sectionIndex]; const type = s.type;
+  const defs = SCHEMA.sections[type];
+  const targets = []; // { path, def, key, scopeKey }
+  (function walk(def, path, scopeKey) {
+    if (def.type === 'object') for (const [k, d] of Object.entries(def.fields)) { if (k === 'type') continue; const sk = `${scopeKey}.${k}`; targets.push({ path: [...path, k], def: d, key: k, scopeKey: sk }); walk(d, [...path, k], sk); }
+    else if (def.type === 'list' && def.of.type === 'object') walk(def.of, [...path, 0], scopeKey);
+    else if (def.type === 'list') { /* список скалярів: елемент перевіряємо окремо нижче */ }
+  }({ type: 'object', fields: defs }, ['sections', sectionIndex], type));
+  for (const t of targets) {
+    if (t.key === 'id' && t.path.length === 3) continue; // id секції: унікальність/якорі — окремо
+    const skip = XOR_FIELDS.has(t.scopeKey);
+    for (const [lab, val, exp] of mutantsFor(t.def, t.key, type)) {
+      if (skip && (exp || lab === 'false')) continue; // поле з перехресним правилом: валідні/порожні значення — у блоці «правила» нижче
+      if (t.key === 'span' && exp) continue;
+      if (t.def.type === 'enum' && lab === 'рядок замість числа' && typeof t.def.values[0] === 'string') continue;
+      const p = clone(page); setAt(p, t.path, val);
+      const js = jsOk(p) === true; const jn = jsonOk(p) === true;
+      mutCount++;
+      note(js === exp && jn === exp, `${label}: ${t.scopeKey} — ${lab}`, `очікувано ${exp ? 'ВАЛІДНО' : 'НЕВАЛІДНО'}; JS=${js ? 'валідно' : 'ні'}, JSON=${jn ? 'валідно' : 'ні'}${js ? '' : ` (${jsOk(p)})`}`);
+    }
+    // списки: min-1, max+1, кожна кількість
+    if (t.def.type === 'list') {
+      const base = getAt(page, t.path); const proto = (Array.isArray(base) && base[0] !== undefined) ? base[0] : undefined;
+      if (proto !== undefined) {
+        for (let k = 0; k <= t.def.max + 1; k++) {
+          if (k > 14) break;
+          const arr = Array.from({ length: k }, (_, i) => { const e = clone(proto); if (e && typeof e === 'object' && 'key' in e) e.key = `k${i}`; return e; });
+          const okLen = k >= t.def.min && k <= t.def.max && (!t.def.divides || t.def.divides % k === 0) && !(t.def.req === false && k === 0 && false);
+          const emptyOk = k === 0 && !t.def.req;
+          if (skip && k === 0) continue;
+          if (t.scopeKey === 'compare.groups' || t.scopeKey === 'offers.items' || t.scopeKey === 'card.list' || t.scopeKey === 'offers.items.facts') { /* залежності правил (сума span, ціна): перевіряємо лише невалідні межі */ if (okLen || emptyOk) continue; }
+          const p = clone(page); setAt(p, t.path, arr);
+          const exp = okLen || emptyOk;
+          const js = jsOk(p) === true; const jn = jsonOk(p) === true;
+          mutCount++;
+          note(js === exp && jn === exp, `${label}: ${t.scopeKey} — елементів ${k}`, `очікувано ${exp ? 'ВАЛІДНО' : 'НЕВАЛІДНО'}; JS=${js ? 'валідно' : 'ні'}, JSON=${jn ? 'валідно' : 'ні'}${js ? '' : ` (${jsOk(p)})`}`);
+        }
+      }
+    }
+  }
+}
+for (const [label, p] of validPages.slice(1)) runMutations(label, p, 1);
+// hero
+runMutations('hero', validPages[0][1], 0);
+
+/* ------------------------------------------------------------------ перехресні правила: JS і JSON за очікуванням */
+function cross(label, mut, js, json = js, base = 'type') {
+  const src = validPages.find(([l]) => l.startsWith(base))?.[1];
+  const p = clone(src); mut(p);
+  const a = jsOk(p) === true; const b = jsonOk(p) === true;
+  note(a === js && b === json, `правило: ${label}`, `очікувано JS=${js ? 'валідно' : 'ні'} JSON=${json ? 'валідно' : 'ні'}; фактично JS=${a ? 'валідно' : 'ні'}${a ? '' : ` (${jsOk(p)})`} JSON=${b ? 'валідно' : 'ні'}`);
+}
+const S = (p, i = 1) => p.sections[i];
+cross('layers: 5 пунктів (не ділить 12)', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'layers');
+for (const k of [2, 3, 4, 6]) cross(`layers: ${k} пунктів ділить 12`, (p) => { S(p).items = Array.from({ length: k }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'layers');
+cross('tiles: 5 пунктів', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving');
+cross('compare: сума span = 11 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [wall+list');
+cross('compare: сума span = 12 (3+9)', (p) => { S(p).groups[1].span = 9; }, true, true, 'compare [wall+list');
+cross('compare: wall і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [wall+list');
+cross('compare: 3 групи, сума 12 (4+4+4)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); g[0].span = 4; g[0].wall = undefined; delete g[0].wall; g[0].list = ['x']; g[1].span = 4; g[2].span = 4; }, true, true, 'compare [wall+list');
+cross('steps: і scene, і img', (p) => { S(p).img = '/q1'; }, false, false, 'steps [scene');
+cross('steps: ні scene, ні img', (p) => { delete S(p).scene; }, false, false, 'steps [scene');
+cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps [scene');
+cross('tiles: і engraving, і img', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
+cross('tiles: ні engraving, ні img', (p) => { delete S(p).items[0].engraving; delete S(p).items[0].icon; }, false, false, 'tiles [engraving');
+cross('tiles: icon без engraving', (p) => { delete S(p).items[0].engraving; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
+cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
+cross('card: text і list разом', (p) => { S(p).list = ['x']; }, false, false, 'card [text');
+cross('card: ні text, ні list', (p) => { delete S(p).text; }, false, false, 'card [text');
+cross(`card: text = ${CARD_TEXT_MAX} знаків`, (p) => { S(p).text = 'а '.repeat(CARD_TEXT_MAX / 2).trim().padEnd(CARD_TEXT_MAX, 'б'); }, true, true, 'card [text');
+cross(`card: list = ${CARD_LIST_MAX + 1} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX + 1).fill('x'); }, false, false, 'card [list');
+cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX).fill('x'); }, true, true, 'card [list');
+cross('offers: bg без bgW/bgH', (p) => { delete S(p).bgW; }, false, false, 'offers');
+cross('offers: bgW без bg', (p) => { delete S(p).bg; }, false, false, 'offers');
+for (const [cnt, cap] of Object.entries(PRICE_MAX)) {
+  const setN = (p, c, len) => { const it = S(p).items; S(p).items = Array.from({ length: +c }, (_, i) => ({ ...clone(it[0]), key: `p${i}`, price: '0'.repeat(len) })); };
+  cross(`offers: ${cnt} пропозицій, price = ${cap} знаків`, (p) => setN(p, cnt, cap), true, true, 'offers');
+  if (cap < SCHEMA.sections.offers.items.of.fields.price.max) cross(`offers: ${cnt} пропозицій, price = ${cap + 1} знаків`, (p) => setN(p, cnt, cap + 1), false, false, 'offers');
+}
+cross('hero не першою', (p) => { p.sections.reverse(); }, false, false, 'layers');
+cross('два hero', (p) => { p.sections.push({ ...clone(p.sections[0]), id: 'h2' }); }, false, false, 'layers');
+cross('без hero', (p) => { p.sections.shift(); }, false, false, 'layers');
+cross('hero.id = "" (як у barrels.js)', (p) => { p.sections[0].id = ''; }, true, true, 'layers');
+cross('hero.room не існує в схемі', (p) => { p.sections[0].room = 'warm'; }, false, false, 'layers');
+cross('дубль id секцій (JS відхиляє; JSON не виражає)', (p) => { p.sections.push({ ...clone(p.sections[1]) }); }, false, true, 'layers');
+cross('дубль key у списку (JS відхиляє; JSON не виражає)', (p) => { S(p).items[1].key = S(p).items[0].key; }, false, true, 'layers');
+cross('якір на неіснуючу секцію (JS відхиляє; JSON не виражає)', (p) => { p.sections[0].cta.href = '#nope'; }, false, true, 'layers');
+cross('якір на наявну секцію', (p) => { p.sections[0].cta.href = `#${p.sections[1].id}`; }, true, true, 'layers');
+cross('tone відсутній (дозволено: бере тема)', (p) => { delete p.tone; }, true, true, 'layers');
+cross('tone поза переліком', (p) => { p.tone = 'red'; }, false, false, 'layers');
+cross('невідоме поле сторінки', (p) => { p.subtitle = 'x'; }, false, false, 'layers');
+for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { approx: 999 } })) for (const [kind, cap] of Object.entries(c)) {
+  const set = (cnt) => (p) => { const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 12 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
+  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall four-minus-one');
+  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall four-minus-one');
+}
+cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
+cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');
+
+console.log(`lp-contract: перевірок ${total}, з них мутацій полів ${mutCount}; розбіжностей ${bad}`);
+const inexpressible = RULES.filter((r) => !r.json).map((r) => r.id);
+console.log(`  правила, яких JSON Schema не виражає (x-rules): ${inexpressible.join(', ')}, ids-unique, keys-unique, anchors-exist + файлові (FILE_RULES)`);
+if (rows.length) console.log(rows.slice(0, 80).join('\n') + (rows.length > 80 ? `\n  … ще ${rows.length - 80}` : ''));
+process.exit(bad ? 1 : 0);

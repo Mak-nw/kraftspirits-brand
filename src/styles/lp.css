@@ -7,6 +7,7 @@
    (еталон D12): вміст 1825u, зазор 40u; кожен блок — від початку колонки до кінця колонки. Шапки секцій — по центру. Оптичні поправки тексту — text-indent
    / margin у em (бокс блока лишається на лініях колонок); поправки, що залежать від конкретного тексту, — у темі (змінні --lp-*-optic, типово 0).
    Однотипні плашки — subgrid зі спільними рядками. Ролі тексту — лише .t-* у розмітці (п. 5в). Історія рішень — рев'ю бочок (коментарі нижче). */
+.page-lp main { overflow-wrap: anywhere; } /* довге слово/число переноситься всередині колонки, а не виступає за неї (ліміт слова — MAX_WORD у схемі); звичайні слова не змінюються */
 .page-lp .site-header { --size-header-zone-h: 0px; } /* як .page-home: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 
 /* ---------- Кімнати: секція з суцільним тлом (ролі теми: warm / deep / paper). Header — як на всіх сторінках ---------- */
@@ -94,7 +95,7 @@
 .lp-step { display: flex; flex-direction: column; justify-content: flex-start; padding-top: var(--space-lp-chapter-rule); border-top: var(--border-hairline) solid var(--lp-hairline); }
 .lp-step:first-child { border-top-color: transparent; }
 .lp-step__value { display: flex; align-items: baseline; gap: var(--space-lp-note-gap); color: var(--lp-accent); }
-.lp-step__num { margin-inline-start: var(--lp-num-optic, 0em); white-space: nowrap; }
+.lp-step__num { margin-inline-start: var(--lp-num-optic, 0em); }
 .lp-step__title { margin-top: var(--space-lp-chapter-title); text-indent: var(--lp-title-optic, 0em); color: var(--lp-on-dark); }
 .lp-step__text { max-width: var(--size-lp-chapter-text-w); margin-top: var(--space-lp-chapter-text); text-indent: var(--lp-text-optic, 0em); color: var(--lp-on-dark-muted); text-wrap: pretty; }
 
@@ -168,7 +169,7 @@
 .lp-route__side { display: flex; align-items: center; gap: var(--space-20); min-width: 0; }
 .lp-route__side--from { grid-column: 1 / span 3; }
 .lp-route__side--to { grid-column: 4 / span 3; }
-.lp-route__point { white-space: nowrap; }
+.lp-route__point { min-width: 0; }
 .lp-route__line { flex: 1; height: var(--border-hairline); background: var(--lp-hairline); }
 .lp-route__side--from .lp-route__line { margin-right: var(--space-10); }
 .lp-route__side--to .lp-route__line { margin-left: var(--space-10); }
@@ -177,7 +178,7 @@
 .lp-offer { display: flex; flex-direction: column; gap: var(--space-lp-cert-block); min-height: 0; color: var(--lp-on-paper); }
 .lp-offer__head { display: flex; flex-direction: column; gap: var(--space-lp-stack); }
 .lp-offer__title { margin-left: var(--lp-label-optic, 0em); }
-.lp-offer__price { margin-left: var(--lp-price-optic, 0em); white-space: nowrap; }
+.lp-offer__price { margin-left: var(--lp-price-optic, 0em); } /* ціна переноситься по пробілах, якщо не вміщується (ємність — PRICE_MAX у схемі); nbsp не розриває */
 .lp-offer__price-note { margin-top: calc(var(--space-lp-stack) * -1 + var(--space-5)); color: var(--lp-on-paper-muted); }
 .lp-offer__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
 .lp-offer__fact dt { margin-left: var(--lp-fact-optic, 0em); color: var(--lp-on-paper-muted); }

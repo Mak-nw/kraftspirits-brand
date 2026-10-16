@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "page-template.schema.json",
   "title": "Шаблон посадкової сторінки (lp) — дані сторінки",
-  "description": "Згенеровано з src/data/lp-schema.js (node tools/lp-schema-json.mjs). Додаткові правила (сума span = 12, кількість пунктів ділить 12, wall/list взаємовиключні, медіа арки/плитки обовʼязкове) — у validatePage().",
+  "description": "Згенеровано з src/data/lp-schema.js (node tools/lp-schema-json.mjs) — те саме джерело, що й перевірка збірки (validatePage). Порожнє значення необов'язкового поля ('' / null / відсутнє) = поле не задано. Ліміти — у кодових точках; слово без пробілу ≤ 30 (у тексті кнопки ≤ 16); кількість пунктів layers/tiles/offers ділить 12. Правила з \"expressed\": false JSON Schema виразити не може — їх треба реалізувати в адмінці окремо (див. \"x-rules\" і docs/page-template.md → «Додаткові перевірки»).",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -20,21 +20,32 @@
         "green",
         "gold",
         "light",
-        "beige"
+        "beige",
+        "",
+        null
       ]
     },
     "metaTitle": {
       "type": "string",
-      "maxLength": 70
+      "maxLength": 70,
+      "minLength": 1,
+      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
     },
     "metaDescription": {
       "type": "string",
-      "maxLength": 200
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
     },
     "sections": {
       "type": "array",
       "minItems": 1,
       "maxItems": 20,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/hero"
+        }
+      ],
       "items": {
         "$ref": "#/$defs/section"
       }
@@ -43,86 +54,218 @@
   "required": [
     "slug",
     "theme",
-    "tone",
     "metaTitle",
     "metaDescription",
     "sections"
   ],
+  "x-rules": [
+    {
+      "id": "wall-xor-list",
+      "scope": "compare",
+      "expressed": true,
+      "rule": "у групі `wall` і `list` взаємовиключні"
+    },
+    {
+      "id": "compare-span-sum",
+      "scope": "compare",
+      "expressed": false,
+      "rule": "сума `span` усіх груп = 12"
+    },
+    {
+      "id": "compare-count-capacity",
+      "scope": "compare",
+      "expressed": true,
+      "rule": "число не переноситься, тому у вузьких групах воно обмежене: `span` 2 — count ≤ 999 (з `approx` ≤ 99); `span` 3 — з `approx` ≤ 999; від 4 колонок — без обмеження понад 99999"
+    },
+    {
+      "id": "steps-media",
+      "scope": "steps",
+      "expressed": true,
+      "rule": "арка кроків: рівно одне з `scene` (гравюра) або `img` (фото)"
+    },
+    {
+      "id": "steps-alt-needs-img",
+      "scope": "steps",
+      "expressed": true,
+      "rule": "`alt` має сенс лише з `img`"
+    },
+    {
+      "id": "tiles-media",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "плитка: рівно одне з `engraving` (гравюра + `icon`) або `img` (фото)"
+    },
+    {
+      "id": "tiles-icon-needs-engraving",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`icon` плитки показується лише в гравюрі (`engraving`)"
+    },
+    {
+      "id": "tiles-alt-needs-img",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`alt` плитки має сенс лише з `img`"
+    },
+    {
+      "id": "offers-bg-size",
+      "scope": "offers",
+      "expressed": true,
+      "rule": "з `bg` потрібні `bgW` і `bgH` (розміри файлу в пікселях; без них зсув макета при завантаженні)"
+    },
+    {
+      "id": "offers-price-capacity",
+      "scope": "offers",
+      "expressed": true,
+      "rule": "довжина `price` залежить від кількості пропозицій: 1 — ≤ 21, 2 — ≤ 10, 3 — ≤ 6 знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у `priceNote`)"
+    },
+    {
+      "id": "card-text-xor-list",
+      "scope": "card",
+      "expressed": true,
+      "rule": "панель має фіксовану висоту: заголовок ≤ 36; рівно одне з `text` (≤ 260) або `list` (≤ 3 пунктів по ≤ 60) — разом не вміщуються"
+    },
+    {
+      "id": "hero-first",
+      "scope": "page",
+      "expressed": true,
+      "rule": "перша секція — `hero`, і вона єдина (без неї немає `<h1>`)"
+    },
+    {
+      "id": "ids-unique",
+      "scope": "page",
+      "expressed": false,
+      "rule": "`id` секцій унікальні в межах сторінки"
+    },
+    {
+      "id": "keys-unique",
+      "scope": "page",
+      "expressed": false,
+      "rule": "`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `offers.items`) — з нього будується CSS-клас"
+    },
+    {
+      "id": "anchors-exist",
+      "scope": "page",
+      "expressed": false,
+      "rule": "посилання-якір `#id` (у кнопках, `place.facts[].href` тощо) має вести на `id` секції цієї сторінки"
+    },
+    {
+      "id": "theme-exists",
+      "scope": "files",
+      "expressed": false,
+      "rule": "`theme`: є файл `src/styles/themes/<theme>.css` з роллю `--lp-tone` (або `tone` задано в даних)"
+    },
+    {
+      "id": "media-partials-exist",
+      "scope": "files",
+      "expressed": false,
+      "rule": "`steps.scene` і `tiles.items[].engraving`: є `partials/media/<id>.html`"
+    },
+    {
+      "id": "icons-exist",
+      "scope": "files",
+      "expressed": false,
+      "rule": "`icon` (layers, tiles, place, route): є клас `.icon--<icon>` у `src/styles/`"
+    },
+    {
+      "id": "media-files-exist",
+      "scope": "files",
+      "expressed": false,
+      "rule": "кожен шлях `img` / `bg` веде на наявний файл у `public/` (`card.img` — лише під `/assets/img/`)"
+    },
+    {
+      "id": "contacts-keys-exist",
+      "scope": "files",
+      "expressed": false,
+      "rule": "`%contacts.<ключ>%` у посиланнях: ключ є в `src/data/contacts.js`"
+    },
+    {
+      "id": "slug-matches-file",
+      "scope": "files",
+      "expressed": false,
+      "rule": "`slug` = ім'я файлу даних `src/data/<slug>.js`"
+    }
+  ],
   "$defs": {
-    "section": {
-      "oneOf": [
-        {
+    "hero": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "hero"
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 60,
+          "minLength": 1,
+          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+        },
+        "lead": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160,
+          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+        },
+        "img": {
+          "type": "string",
+          "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+        },
+        "alt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 140,
+          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+        },
+        "slot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 240,
+          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+        },
+        "cta": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "type": {
-              "const": "hero"
-            },
-            "id": {
+            "text": {
               "type": "string",
-              "pattern": "^[a-z0-9-]+$"
+              "maxLength": 24,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
             },
-            "room": {
-              "enum": []
-            },
-            "join": {
-              "type": "boolean"
-            },
-            "kicker": {
+            "href": {
               "type": "string",
-              "maxLength": 25
-            },
-            "title": {
-              "type": "string",
-              "maxLength": 60
-            },
-            "lead": {
-              "type": "string",
-              "maxLength": 160
-            },
-            "caption": {
-              "type": "string",
-              "maxLength": 120
-            },
-            "img": {
-              "type": "string",
-              "pattern": "^[^\"<>\\s]+$"
-            },
-            "alt": {
-              "type": "string",
-              "maxLength": 140
-            },
-            "slot": {
-              "type": "string",
-              "maxLength": 240
-            },
-            "cta": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "text": {
-                  "type": "string",
-                  "maxLength": 24
-                },
-                "href": {
-                  "type": "string",
-                  "pattern": "^[^\"<>\\s]+$"
-                }
-              },
-              "required": [
-                "text",
-                "href"
-              ]
+              "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
             }
           },
           "required": [
-            "type",
-            "title",
-            "img",
-            "cta"
-          ],
-          "title": "hero"
-        },
+            "text",
+            "href"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "title",
+        "img",
+        "cta"
+      ],
+      "title": "hero"
+    },
+    "section": {
+      "oneOf": [
         {
           "type": "object",
           "additionalProperties": false,
@@ -138,35 +281,57 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "warm"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "items": {
               "type": "array",
               "minItems": 2,
               "maxItems": 6,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "key": {
@@ -174,24 +339,38 @@
                     "pattern": "^[a-z0-9-]+$"
                   },
                   "icon": {
-                    "type": "string",
-                    "pattern": "^[a-z0-9-]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-z0-9-]*$"
                   },
                   "title": {
                     "type": "string",
-                    "maxLength": 25
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "text": {
                     "type": "string",
-                    "maxLength": 90
+                    "maxLength": 90,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "img": {
-                    "type": "string",
-                    "pattern": "^[^\"<>\\s]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                   },
                   "slot": {
-                    "type": "string",
-                    "maxLength": 240
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 240,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   }
                 },
                 "required": [
@@ -199,7 +378,25 @@
                   "title",
                   "text"
                 ]
-              }
+              },
+              "anyOf": [
+                {
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                {
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                {
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                {
+                  "minItems": 6,
+                  "maxItems": 6
+                }
+              ]
             }
           },
           "required": [
@@ -225,51 +422,87 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "deep"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "scene": {
-              "type": "string",
-              "pattern": "^[a-z0-9-]+$"
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-z0-9-]*$"
             },
             "img": {
-              "type": "string",
-              "pattern": "^[^\"<>\\s]+$"
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
             },
             "alt": {
-              "type": "string",
-              "maxLength": 140
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 140,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "slot": {
-              "type": "string",
-              "maxLength": 240
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 240,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "items": {
               "type": "array",
               "minItems": 2,
               "maxItems": 5,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "key": {
@@ -278,15 +511,21 @@
                   },
                   "value": {
                     "type": "string",
-                    "maxLength": 8
+                    "maxLength": 5,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "title": {
                     "type": "string",
-                    "maxLength": 25
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "text": {
                     "type": "string",
-                    "maxLength": 160
+                    "maxLength": 160,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   }
                 },
                 "required": [
@@ -304,7 +543,93 @@
             "title",
             "items"
           ],
-          "title": "steps"
+          "title": "steps",
+          "allOf": [
+            {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "required": [
+                        "scene"
+                      ],
+                      "properties": {
+                        "scene": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "img"
+                        ],
+                        "properties": {
+                          "img": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "required": [
+                        "img"
+                      ],
+                      "properties": {
+                        "img": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "scene"
+                        ],
+                        "properties": {
+                          "scene": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "if": {
+                "required": [
+                  "alt"
+                ],
+                "properties": {
+                  "alt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "img"
+                ],
+                "properties": {
+                  "img": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",
@@ -321,39 +646,65 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "paper"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "note": {
-              "type": "string",
-              "maxLength": 200
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 200,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "groups": {
               "type": "array",
               "minItems": 2,
               "maxItems": 3,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "key": {
@@ -362,7 +713,9 @@
                   },
                   "label": {
                     "type": "string",
-                    "maxLength": 25
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "span": {
                     "enum": [
@@ -379,53 +732,84 @@
                   "align": {
                     "enum": [
                       "start",
-                      "center"
+                      "center",
+                      "",
+                      null
                     ],
                     "default": "start"
                   },
                   "accent": {
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "count": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 99999
                   },
                   "approx": {
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "unit": {
                     "type": "string",
-                    "maxLength": 40
+                    "maxLength": 40,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "wall": {
                     "enum": [
                       "one",
-                      "four-minus-one"
+                      "four-minus-one",
+                      "",
+                      null
                     ]
                   },
                   "list": {
-                    "type": "array",
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "minItems": 0,
                     "maxItems": 8,
                     "items": {
-                      "type": "string",
-                      "maxLength": 90
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 90,
+                      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                     }
                   },
                   "facts": {
-                    "type": "array",
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "minItems": 0,
                     "maxItems": 3,
                     "items": {
-                      "type": "object",
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "additionalProperties": false,
                       "properties": {
                         "value": {
                           "type": "string",
-                          "maxLength": 60
+                          "maxLength": 60,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                         },
                         "label": {
                           "type": "string",
-                          "maxLength": 60
+                          "maxLength": 60,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                         }
                       },
                       "required": [
@@ -441,6 +825,148 @@
                   "span",
                   "count",
                   "unit"
+                ],
+                "allOf": [
+                  {
+                    "not": {
+                      "allOf": [
+                        {
+                          "required": [
+                            "wall"
+                          ],
+                          "properties": {
+                            "wall": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "required": [
+                            "list"
+                          ],
+                          "properties": {
+                            "list": {
+                              "type": "array",
+                              "minItems": 1
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "span": {
+                              "const": 2
+                            },
+                            "approx": {
+                              "const": true
+                            }
+                          },
+                          "required": [
+                            "span",
+                            "approx"
+                          ]
+                        },
+                        "then": {
+                          "properties": {
+                            "count": {
+                              "type": "integer",
+                              "maximum": 99
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "span": {
+                              "const": 2
+                            }
+                          },
+                          "required": [
+                            "span"
+                          ],
+                          "not": {
+                            "properties": {
+                              "approx": {
+                                "const": true
+                              }
+                            },
+                            "required": [
+                              "approx"
+                            ]
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "count": {
+                              "type": "integer",
+                              "maximum": 999
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "span": {
+                              "const": 3
+                            },
+                            "approx": {
+                              "const": true
+                            }
+                          },
+                          "required": [
+                            "span",
+                            "approx"
+                          ]
+                        },
+                        "then": {
+                          "properties": {
+                            "count": {
+                              "type": "integer",
+                              "maximum": 999
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "span": {
+                              "const": 3
+                            }
+                          },
+                          "required": [
+                            "span"
+                          ],
+                          "not": {
+                            "properties": {
+                              "approx": {
+                                "const": true
+                              }
+                            },
+                            "required": [
+                              "approx"
+                            ]
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "count": {
+                              "type": "integer",
+                              "maximum": 99999
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
                 ]
               }
             }
@@ -468,35 +994,57 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "paper"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "items": {
               "type": "array",
               "minItems": 2,
               "maxItems": 6,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "key": {
@@ -504,44 +1052,197 @@
                     "pattern": "^[a-z0-9-]+$"
                   },
                   "engraving": {
-                    "type": "string",
-                    "pattern": "^[a-z0-9-]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-z0-9-]*$"
                   },
                   "icon": {
-                    "type": "string",
-                    "pattern": "^[a-z0-9-]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-z0-9-]*$"
                   },
                   "img": {
-                    "type": "string",
-                    "pattern": "^[^\"<>\\s]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                   },
                   "alt": {
-                    "type": "string",
-                    "maxLength": 140
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 140,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "slot": {
-                    "type": "string",
-                    "maxLength": 240
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 240,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "name": {
                     "type": "string",
-                    "maxLength": 25
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "origin": {
                     "type": "string",
-                    "maxLength": 60
+                    "maxLength": 60,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "notes": {
-                    "type": "string",
-                    "maxLength": 60
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 60,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   }
                 },
                 "required": [
                   "key",
                   "name",
                   "origin"
+                ],
+                "allOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "allOf": [
+                          {
+                            "required": [
+                              "engraving"
+                            ],
+                            "properties": {
+                              "engraving": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          },
+                          {
+                            "not": {
+                              "required": [
+                                "img"
+                              ],
+                              "properties": {
+                                "img": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "required": [
+                              "img"
+                            ],
+                            "properties": {
+                              "img": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          },
+                          {
+                            "not": {
+                              "required": [
+                                "engraving"
+                              ],
+                              "properties": {
+                                "engraving": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "if": {
+                      "required": [
+                        "icon"
+                      ],
+                      "properties": {
+                        "icon": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "then": {
+                      "required": [
+                        "engraving"
+                      ],
+                      "properties": {
+                        "engraving": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "if": {
+                      "required": [
+                        "alt"
+                      ],
+                      "properties": {
+                        "alt": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "then": {
+                      "required": [
+                        "img"
+                      ],
+                      "properties": {
+                        "img": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
                 ]
-              }
+              },
+              "anyOf": [
+                {
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                {
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                {
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                {
+                  "minItems": 6,
+                  "maxItems": 6
+                }
+              ]
             }
           },
           "required": [
@@ -567,54 +1268,89 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "deep"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
-            },
-            "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "bg": {
-              "type": "string",
-              "pattern": "^[^\"<>\\s]+$"
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
             },
             "bgW": {
-              "type": "number"
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 10000
             },
             "bgH": {
-              "type": "number"
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 10000
             },
             "bgSlot": {
-              "type": "string",
-              "maxLength": 240
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 240,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "route": {
-              "type": "object",
+              "type": [
+                "object",
+                "null"
+              ],
               "additionalProperties": false,
               "properties": {
                 "from": {
                   "type": "string",
-                  "maxLength": 30
+                  "maxLength": 30,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                 },
                 "to": {
                   "type": "string",
-                  "maxLength": 30
+                  "maxLength": 30,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                 },
                 "icon": {
                   "type": "string",
@@ -632,7 +1368,10 @@
               "minItems": 1,
               "maxItems": 3,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "key": {
@@ -641,31 +1380,49 @@
                   },
                   "title": {
                     "type": "string",
-                    "maxLength": 25
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "price": {
                     "type": "string",
-                    "maxLength": 14
+                    "maxLength": 21,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "priceNote": {
-                    "type": "string",
-                    "maxLength": 20
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 20,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "facts": {
-                    "type": "array",
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "minItems": 0,
                     "maxItems": 4,
                     "items": {
-                      "type": "object",
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "additionalProperties": false,
                       "properties": {
                         "dt": {
                           "type": "string",
-                          "maxLength": 40
+                          "maxLength": 40,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                         },
                         "dd": {
                           "type": "string",
-                          "maxLength": 60
+                          "maxLength": 60,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                         }
                       },
                       "required": [
@@ -675,12 +1432,19 @@
                     }
                   },
                   "includes": {
-                    "type": "array",
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "minItems": 0,
                     "maxItems": 5,
                     "items": {
-                      "type": "string",
-                      "maxLength": 90
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 90,
+                      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                     }
                   },
                   "cta": {
@@ -689,11 +1453,13 @@
                     "properties": {
                       "text": {
                         "type": "string",
-                        "maxLength": 24
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
                       },
                       "href": {
                         "type": "string",
-                        "pattern": "^[^\"<>\\s]+$"
+                        "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                       }
                     },
                     "required": [
@@ -711,28 +1477,41 @@
               }
             },
             "foot": {
-              "type": "object",
+              "type": [
+                "object",
+                "null"
+              ],
               "additionalProperties": false,
               "properties": {
                 "text": {
                   "type": "string",
-                  "maxLength": 160
+                  "maxLength": 160,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                 },
                 "ctas": {
-                  "type": "array",
+                  "type": [
+                    "array",
+                    "null"
+                  ],
                   "minItems": 0,
                   "maxItems": 2,
                   "items": {
-                    "type": "object",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                       "text": {
                         "type": "string",
-                        "maxLength": 24
+                        "maxLength": 24,
+                        "minLength": 1,
+                        "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
                       },
                       "href": {
                         "type": "string",
-                        "pattern": "^[^\"<>\\s]+$"
+                        "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                       },
                       "variant": {
                         "enum": [
@@ -752,8 +1531,12 @@
                   }
                 },
                 "note": {
-                  "type": "string",
-                  "maxLength": 200
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                 }
               },
               "required": [
@@ -767,7 +1550,166 @@
             "title",
             "items"
           ],
-          "title": "offers"
+          "title": "offers",
+          "allOf": [
+            {
+              "allOf": [
+                {
+                  "if": {
+                    "required": [
+                      "bg"
+                    ],
+                    "properties": {
+                      "bg": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "bgW",
+                      "bgH"
+                    ],
+                    "properties": {
+                      "bgW": {
+                        "type": "integer"
+                      },
+                      "bgH": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "not": {
+                      "required": [
+                        "bg"
+                      ],
+                      "properties": {
+                        "bg": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "bgW": {
+                        "type": "null"
+                      },
+                      "bgH": {
+                        "type": "null"
+                      },
+                      "bgSlot": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 0
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "price": {
+                              "type": "string",
+                              "maxLength": 21
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "price": {
+                              "type": "string",
+                              "maxLength": 10
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3
+                      }
+                    },
+                    "required": [
+                      "items"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "price": {
+                              "type": "string",
+                              "maxLength": 6
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "object",
@@ -784,56 +1726,81 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "warm"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
-            },
-            "lead": {
-              "type": "string",
-              "maxLength": 320
-            },
-            "caption": {
-              "type": "string",
-              "maxLength": 120
+              "maxLength": 36,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "text": {
-              "type": "string",
-              "maxLength": 320
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 260,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "list": {
-              "type": "array",
+              "type": [
+                "array",
+                "null"
+              ],
               "minItems": 0,
-              "maxItems": 4,
+              "maxItems": 3,
               "items": {
-                "type": "string",
-                "maxLength": 90
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 60,
+                "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
               }
             },
             "photoFirst": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "img": {
               "type": "string",
-              "pattern": "^[^\"<>\\s]+$"
+              "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
             },
             "alt": {
-              "type": "string",
-              "maxLength": 140
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 140,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "slot": {
-              "type": "string",
-              "maxLength": 240
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 240,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "cta": {
               "type": "object",
@@ -841,11 +1808,13 @@
               "properties": {
                 "text": {
                   "type": "string",
-                  "maxLength": 24
+                  "maxLength": 24,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
                 },
                 "href": {
                   "type": "string",
-                  "pattern": "^[^\"<>\\s]+$"
+                  "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                 }
               },
               "required": [
@@ -861,7 +1830,69 @@
             "img",
             "cta"
           ],
-          "title": "card"
+          "title": "card",
+          "allOf": [
+            {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "required": [
+                        "text"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "list"
+                        ],
+                        "properties": {
+                          "list": {
+                            "type": "array",
+                            "minItems": 1
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "required": [
+                        "list"
+                      ],
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "minItems": 1
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "required": [
+                          "text"
+                        ],
+                        "properties": {
+                          "text": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "object",
@@ -878,52 +1909,76 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "deep"
             },
             "join": {
-              "type": "boolean"
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "title": {
               "type": "string",
-              "maxLength": 60
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "lead": {
-              "type": "string",
-              "maxLength": 320
-            },
-            "caption": {
-              "type": "string",
-              "maxLength": 120
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "facts": {
               "type": "array",
               "minItems": 1,
               "maxItems": 5,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "label": {
                     "type": "string",
-                    "maxLength": 30
+                    "maxLength": 30,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "value": {
                     "type": "string",
-                    "maxLength": 90
+                    "maxLength": 90,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "icon": {
-                    "type": "string",
-                    "pattern": "^[a-z0-9-]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-z0-9-]*$"
                   },
                   "href": {
-                    "type": "string",
-                    "pattern": "^[^\"<>\\s]+$"
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                   }
                 },
                 "required": [
@@ -933,20 +1988,28 @@
               }
             },
             "ctas": {
-              "type": "array",
+              "type": [
+                "array",
+                "null"
+              ],
               "minItems": 0,
               "maxItems": 2,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "text": {
                     "type": "string",
-                    "maxLength": 24
+                    "maxLength": 24,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
                   },
                   "href": {
                     "type": "string",
-                    "pattern": "^[^\"<>\\s]+$"
+                    "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
                   },
                   "variant": {
                     "enum": [
@@ -987,44 +2050,46 @@
               "enum": [
                 "warm",
                 "deep",
-                "paper"
+                "paper",
+                "",
+                null
               ],
               "default": "deep"
             },
             "join": {
-              "type": "boolean"
-            },
-            "kicker": {
-              "type": "string",
-              "maxLength": 25
+              "type": [
+                "boolean",
+                "null"
+              ]
             },
             "title": {
               "type": "string",
-              "maxLength": 60
-            },
-            "lead": {
-              "type": "string",
-              "maxLength": 320
-            },
-            "caption": {
-              "type": "string",
-              "maxLength": 120
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
             "items": {
               "type": "array",
               "minItems": 1,
               "maxItems": 12,
               "items": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "q": {
                     "type": "string",
-                    "maxLength": 90
+                    "maxLength": 90,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "a": {
                     "type": "string",
-                    "maxLength": 600
+                    "maxLength": 600,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   }
                 },
                 "required": [

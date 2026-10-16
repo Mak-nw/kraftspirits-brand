@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { createRenderer } from './tools/html-partials.mjs';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
 import { barrels } from './src/data/barrels.js';
@@ -37,18 +38,6 @@ const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (k
 // <!--@lp name id--> -> одна секція сторінки (демо в design-system.html). Нова сторінка = файл даних + рядок тут + <name>.html з одним рядком <!--@page name-->.
 const LP = { barrels: lpView(barrels), excursions: lpView(excursions) };
 
-// <!--@include name--> -> partials/name.html (вкладені include підтримуються).
-// Параметри: <!--@include cta title="Текст"--> -> у partial {{title}} замінюється значенням;
-// {{key|типове}} — значення за замовчуванням; {{#key}}...{{/key}} — блок лише коли key задано.
-const INCLUDE_RE = /<!--@include ([\w/-]+)((?:\s+[\w-]+="[^"]*")*)\s*-->/g;
-const ATTR_RE = /([\w-]+)="([^"]*)"/g;
-// <!--@each list name--> -> partials/name.html для КОЖНОГО елемента списку (параметри = поля елемента, уже екрановані);
-// list — ключ у LISTS (верхній рівень) або поле-масив поточного елемента (вкладений цикл: фото, кроки, інгредієнти коктейлю).
-const EACH_RE = /<!--@each ([\w]+) ([\w/-]+)\s*-->/g;
-// шаблон lp: сторінка, секції сторінки (у partials/lp/page.html — зі scope сторінки) і одна секція для демо
-const PAGE_RE = /<!--@page ([\w-]+)\s*-->/g;
-const SECTIONS_RE = /<!--@sections\s*-->/g;
-const LPSEC_RE = /<!--@lp ([\w-]+) ([\w-]+)\s*-->/g;
 // Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
 const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
 const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2) }; // cocktailsDemo — один блок для design-system.html
@@ -62,33 +51,8 @@ LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it,
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
-  const BLOCK_RE = /\{\{#([\w-]+)\}\}([\s\S]*?)\{\{\/\1\}\}/g;
-  const blocks = (tpl, params) => {
-    // {{#key}}...{{/key}} — блок лише якщо параметр key непорожній; повтор — для вкладених блоків з іншим ключем
-    let prev;
-    do { prev = tpl; tpl = tpl.replace(BLOCK_RE, (__, key, body) => (params[key] && params[key].length !== 0 ? body : '')); } while (tpl !== prev);
-    return tpl;
-  };
-  const fill = (tpl, params) => blocks(tpl, params)
-    // {{key}} або {{key|типове значення}}
-    .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? def ?? '');
-  const readPartial = (name) => readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8');
-  const lpPage = (name) => { const pg = LP[name]; if (!pg) throw new Error(`@page ${name}: немає даних у LP (vite.config.js)`); return pg; };
-  const lpSection = (s) => render(fill(readPartial(`lp/${s.type}`), s), s);
-  const render = (html, scope = {}) =>
-    html
-      .replace(PAGE_RE, (_, name) => { const pg = lpPage(name); return render(fill(readPartial('lp/page'), pg), pg); })
-      .replace(SECTIONS_RE, () => (scope.sections || []).map(lpSection).join(''))
-      .replace(LPSEC_RE, (_, name, id) => { const s = lpPage(name).sections.find((x) => x.id === id); if (!s) throw new Error(`@lp ${name} ${id}: немає секції`); return lpSection(s); })
-      .replace(EACH_RE, (_, key, name) => {
-        const list = Array.isArray(scope[key]) ? scope[key] : LISTS[key] || [];
-        const tpl = readPartial(name);
-        return list.map((item) => render(fill(tpl, item), item)).join('');
-      })
-      .replace(INCLUDE_RE, (_, name, rawAttrs) => {
-        const params = Object.fromEntries([...rawAttrs.matchAll(ATTR_RE)].map((m) => [m[1], m[2]]));
-        return render(fill(readPartial(name), params));
-      });
+  // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
+  const render = createRenderer({ root, lists: LISTS, getLpPage: (name) => LP[name] });
   return {
     name: 'html-partials',
     configResolved(config) { base = config.base; },

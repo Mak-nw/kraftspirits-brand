@@ -17,9 +17,11 @@
     "qa:cls": "node tools/qa/cls.mjs",
     "qa:hscroll": "node tools/qa/hscroll.mjs",
     "qa:ink": "node tools/qa/ink-align.mjs",
-    "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none"
+    "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none",
+    "qa:lp": "node tools/qa/lp-contract.mjs"
   },
   "devDependencies": {
+    "ajv": "^8.20.0",
     "html2canvas": "^1.4.1",
     "puppeteer-core": "^25.14.0",
     "vite": "^8.3.3"

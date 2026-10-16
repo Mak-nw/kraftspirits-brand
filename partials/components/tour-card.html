@@ -1,7 +1,7 @@
 <article{{#id}} id="{{id}}"{{/id}} class="tour-card{{mod|}}">
     <div class="tour-card__text">
       <div class="tour-card__head">
-        <p class="t-kicker" data-reveal="rise">{{kicker}}</p>
+        {{#kicker}}<p class="t-kicker" data-reveal="rise">{{kicker}}</p>{{/kicker}}
         <h2 class="t-hero" data-reveal="rise">{{title}}</h2>
         {{#text}}<p class="tour-card__body t-desc" data-reveal="rise">{{text}}</p>{{/text}}{{#list}}
         <ul class="tour-card__body lp-list t-desc" data-reveal="rise">{{list}}</ul>{{/list}}

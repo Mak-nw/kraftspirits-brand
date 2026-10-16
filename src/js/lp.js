@@ -36,7 +36,7 @@ if ('IntersectionObserver' in window) {
       const t0 = performance.now();
       const tick = (now) => {
         const k = Math.min((now - t0) / dur, 1);
-        el.textContent = String(Math.round(to * easeOut(k)));
+        el.textContent = Math.round(to * easeOut(k)).toLocaleString('uk-UA'); // 1 234: ті самі розряди, що в HTML (lpView, fmt)
         if (k < 1) requestAnimationFrame(tick); else el.dataset.count = 'done';
       };
       el.textContent = '0';
