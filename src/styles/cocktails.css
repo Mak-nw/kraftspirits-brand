@@ -2,14 +2,14 @@
    Тло сторінки — суцільний --color-green (як зона header на всіх сторінках; без візерунка ромбів); світла панель DS — лише під текстовою частиною блоку. Блоки однакові: фото 4 / текст 5 / картка товару (колонки),
    висота ряду = найвищий із трьох (фото 4:5), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
    перемикач .product-volume (таби), .product-specs (інгредієнти, подача), картка каталогу (partial product-card + .product-card--catalog без змін). */
-.cocktails { width: var(--size-cocktails-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-beige); }
+.cocktails { width: var(--grid-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-beige); }
 /* CLS: partials/body-vw.html міряє ширину html на самому початку <body>, коли вмісту ще немає. Короткі сторінки Chrome малює після повного розбору (до того
    viewport.js уточнює --vw), а довгий HTML коктейлів (≈110 КБ) малює частинами — з --vw без смуги прокрутки, і поява смуги зсувала макет (CLS ≈0.01 на 1200).
    body одразу на 1px вищий за вікно: класична смуга є вже в момент заміру (у режимі без смуги — нічого не змінюється); на розкладку не впливає (сторінка й так ≈10 вікон) */
 .page-cocktails { min-height: calc(100svh + var(--border-hairline)); background: var(--color-green); }
 
 /* вступ: заголовок і рядок по центру екрана (коментар замовника 23941060) — 6 середніх колонок сітки (4–9), текст центрований; між вступом і блоками та між блоками — лише відступ */
-.cocktails__intro { display: grid; grid-template-columns: repeat(var(--count-cocktail-cols), minmax(0, 1fr)); column-gap: var(--space-cocktail-col-gap); }
+.cocktails__intro { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); }
 .cocktails__intro { row-gap: var(--space-30); text-align: center; }
 .cocktails__intro > * { grid-column: var(--col-cocktails-intro); }
 .cocktails__lead { text-wrap: balance; }
@@ -52,7 +52,7 @@
    висота панелей не змінюється (вони в одній комірці). Колонки без зазору: проміжок між ними — padding-left у dd (всередині комірки), тож лінія суцільна */
 .cocktail__specs { margin: 0; --accent-line: var(--color-line-soft); column-gap: 0; row-gap: 0; grid-template-columns: minmax(0, 1fr) calc(100% * var(--span-cocktail-specs-value) / var(--span-cocktail-body)); }
 .cocktail__specs > :is(dt, dd) { padding-block: var(--space-5); border-bottom: var(--border-hairline) solid var(--accent-line); }
-.cocktail__specs > dd { padding-left: var(--space-cocktail-col-gap); color: var(--color-green); text-align: right; }
+.cocktail__specs > dd { padding-left: var(--grid-gap); color: var(--color-green); text-align: right; }
 .cocktail__specs > dt { font-weight: inherit; }
 .cocktail__steps { display: grid; grid-template-columns: max-content minmax(0, 1fr); row-gap: 0; text-align: left; margin: 0; padding: 0; list-style: none; } /* ритм рядків = «Інгредієнти»/«Подача»: padding-block --space-5 + hairline під кожним рядком (коментар 0bea51f5) */
 /* колонки номерів і тексту спільні для всіх кроків (subgrid): номери й текст стоять в одній лівій осі (6661d10c) */

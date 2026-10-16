@@ -111,7 +111,6 @@
   --space-50: calc(50 * var(--u));   /* 194:1275 gap блоків */
   --space-70: calc(70 * var(--u));   /* 194:1388 gap/padding товарної панелі */
   --space-37: calc(37 * var(--u));   /* 194:1375 gap між пунктами навігації */
-  --gutter: calc(47 * var(--u));     /* 194:1375 лівий відступ хедера/футера; 194:1295 (FAQ-сітка 48 — розбіжність 1px) */
 
   /* ---------- Радіуси / рамки ---------- */
   --radius-btn: calc(5 * var(--u));      /* 194:1372 внутрішня кнопка */
@@ -122,7 +121,6 @@
   /* тіней у макетах немає (перевірено у всіх фреймах) */
 
   /* ---------- Контейнери / розміри блоків ---------- */
-  --container-full: calc(1826 * var(--u));     /* 194:1295 (1920 − 2×47) */
   --container-wide: calc(1508 * var(--u));     /* 194:1275 / 194:1185 (1920 − 2×206) */
   --container-heading: calc(1162 * var(--u));  /* 194:1292 блок заголовка методу підбору */
   --container-heading-narrow: calc(1006 * var(--u)); /* 194:1186, 194:1236 */
@@ -499,6 +497,7 @@
   --footer-col-menu-w: calc(471 * var(--u));      /* 194:1237 ширина колонки «Меню» (старт x=47) */
   --footer-col-catalog-w: calc(442 * var(--u));   /* 194:1244 ширина колонки «Каталог» (старт x=518) */
   --footer-menu-x: calc(49 * var(--u));           /* 194:1237 x колонки «Меню» у макеті (gutter 47 + 2) */
+  --size-footer-legal-w: calc((var(--grid-w) - 11 * var(--grid-gap)) / 12 * 3 + 2 * var(--grid-gap)); /* блок юридичних посилань у рядку «© / wordmark / документи» = 3 колонки сітки каталогу (10–12, 426.25u): лівий край на лінії колонки 10 (QA D12), правий — на кінці колонки 12 */
 
   /* ---------- Головна сторінка (main page 194:1514) ---------- */
   --space-85: calc(85 * var(--u));    /* 194:1326 top 596 − низ рядка чіпів 511: відступ чіпи → картка */
@@ -527,13 +526,11 @@
   --color-select-bg: color-mix(in srgb, var(--color-green) 90%, var(--color-beige));   /* 204:2333 / 206:2522 / 206:2532 фон поля фільтра: зелений + 10% беж, непрозорий (не просвічує візерунок каталогу); контраст beige-тексту ≈ 7.3:1 */
   --opacity-crumb-hover: 0.6;         /* семантичний токен, вузла Figma немає (рішення дизайну): hover/focus крихт на сторінці товару — посилання тьмяніє, без підкреслення */
   --opacity-logo-hover: 0.8;          /* семантичний токен, вузла Figma немає (рішення оркестратора): спільний hover пари логотипів YasnoCraft/Bazylsprings у хедері (група .site-header__logos) — обидва зображення тьмяніють 1 → 0.8 за --duration-fast разом, без підкреслення й зміни розміру */
-  --size-catalog-grid-w: calc(1825 * var(--u));   /* 204:2222 сітка; 204:2331 панель фільтрів */
   --space-catalog-title-top2: calc(83 * var(--u));/* 204:2351 y=156 − висота хедера 73 */
   --space-catalog-title-row: calc(6 * var(--u));  /* 204:2351 row-gap між рядками заголовка */
   --size-catalog-title-w2: calc(1132 * var(--u)); /* 204:2351 ширина заголовка-навігації */
   --space-catalog-bar-top: calc(43 * var(--u));   /* 204:2331 y=376 − низ заголовка (156+177=333) */
   --space-catalog-bar-y: calc(30 * var(--u));     /* 204:2331 py панелі */
-  --space-catalog-grid-gap: calc(40 * var(--u));  /* 204:2222 gap сітки */
   --catalog-grid-reserve-rows: 4;                 /* семантичний токен, вузла Figma немає: рядків сітки (14 позицій / 4 колонки), що резервуються до рендеру карток (проти CLS) */
   --space-catalog-bottom: calc(48 * var(--u));    /* семантичний токен, вузла Figma немає: відступ сітка → футер (= бокове поле 48) */
   --size-card-cat2-w: calc(426.25 * var(--u));    /* 204:2223 ширина картки (демо в design-system; у сітці — колонка 1fr) */
@@ -589,7 +586,7 @@
 
   /* ---------- Header 3 (214:2902 «Frame 125», 1216.67×73): плаваюча «пілюля» по центру 1920, x=352 y=30 ---------- */
   --header3-top: calc(15 * var(--u));           /* рішення замовника (хедер, «від хедеру до верху екрану вдвічі менше відступ»): відступ пілюлі від верху 15u = 30u/2 (у Figma 214:2902 / 209:2874 було 30); зона header у потоці --size-header-h = 15 + 73 = 88u */
-  --header3-w: var(--size-catalog-grid-w);      /* рішення замовника (0092bc22 «хедер на всю ширину колонок»): пілюля = 12 колонок сітки каталогу, 1825u (лівий край колонки 1 → правий край колонки 12); у Figma 214:2902 було 1216.67 */
+  --header3-w: var(--grid-w);      /* рішення замовника (0092bc22 «хедер на всю ширину колонок»): пілюля = 12 колонок сітки каталогу, 1825u (лівий край колонки 1 → правий край колонки 12); у Figma 214:2902 було 1216.67 */
   --header3-h: calc(73 * var(--u));             /* 214:2902 висота пілюлі = 5 + лого 63 + 5 */
   --header3-pad-x: calc(15 * var(--u));         /* 214:2902 padding-x у Figma 10; за рішенням замовника +5 (15): відступ крайніх кнопок «меню»/«підказати?» від краю пілюлі; ширина пілюлі 1216.67 фіксована */
   --header3-pad-y: calc(5 * var(--u));          /* 214:2902 padding-y */
@@ -692,6 +689,33 @@
   --color-hover-btn-beige: var(--color-light);    /* hover-стан, у Figma не намальований (рішення дизайну: найближчий колір палітри): заливка кнопки beige на коричневому */
 }
 
+/* ---------- ЄДИНА СІТКА САЙТУ (рішення замовника, 16.10.2026) ----------
+   12 колонок на всіх сторінках, у header і footer: поле від краю вікна до контенту 47.5u, зазор між колонками 40u, колонка 115.42u, ширина 12 колонок 1825u
+   (= 1920u − 2 × поле). Усі розкладки беруть ЛИШЕ ці токени; власних полів/зазорів/ширин колонок на сторінках немає (QA D12 міряє збіг країв блоків з колонками).
+   Блок із n колонок = --grid-span-n (n·колонка + (n−1)·зазор); початок колонки k = --grid-margin + (k−1)·--grid-step; відстань від краю колонки k до краю колонки k+n = n·--grid-step.
+   Блок по центру — лише парна кількість колонок (2/4/6/8/10). Токени оголошено й на .lp-scope: демо design-system.html перевизначає --grid-w і похідні перераховуються. */
+
+:root, .lp-scope {
+  --grid-cols: 12;                                                    /* кількість колонок */
+  --grid-margin: calc(47.5 * var(--u));                               /* поле: від краю вікна до лівого краю колонки 1 (і від правого краю колонки 12 до краю вікна) */
+  --grid-gap: calc(40 * var(--u));                                    /* зазор між колонками */
+  --grid-w: calc(1920 * var(--u) - 2 * var(--grid-margin));           /* ширина 12 колонок = 1825u */
+  --grid-col: calc((var(--grid-w) - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols)); /* одна колонка = 115.42u */
+  --grid-step: calc(var(--grid-col) + var(--grid-gap));               /* відстань між однаковими краями сусідніх колонок (155.42u) */
+  --grid-span-1: var(--grid-col);
+  --grid-span-2: calc(2 * var(--grid-col) + 1 * var(--grid-gap));
+  --grid-span-3: calc(3 * var(--grid-col) + 2 * var(--grid-gap));
+  --grid-span-4: calc(4 * var(--grid-col) + 3 * var(--grid-gap));
+  --grid-span-5: calc(5 * var(--grid-col) + 4 * var(--grid-gap));
+  --grid-span-6: calc(6 * var(--grid-col) + 5 * var(--grid-gap));
+  --grid-span-7: calc(7 * var(--grid-col) + 6 * var(--grid-gap));
+  --grid-span-8: calc(8 * var(--grid-col) + 7 * var(--grid-gap));
+  --grid-span-9: calc(9 * var(--grid-col) + 8 * var(--grid-gap));
+  --grid-span-10: calc(10 * var(--grid-col) + 9 * var(--grid-gap));
+  --grid-span-11: calc(11 * var(--grid-col) + 10 * var(--grid-gap));
+  --grid-span-12: var(--grid-w);
+}
+
 /* ===================================================================
    Вікова верифікація (age-gate): повноекранний світлий оверлей з карткою 18+.
    Вузлів Figma немає — усе рішення дизайну (світлий мокап за проханням замовника), значення з палітри/масштабу.
@@ -728,7 +752,6 @@
    Компоненти: src/styles/contacts.css (сторінка), components/field.css (поля форми), select--light у components/select.css.
    =================================================================== */
 :root {
-  --columns-contacts: 12;                                       /* сітка сторінки: 12 колонок у контейнері (поля 50u, як на товарі) */
   --span-contacts-main: 5;                                      /* ліва частина (контактна інформація) ≈ 5/12 */
   --span-contacts-aside: 7;                                     /* права частина (мапа) ≈ 7/12 */
   --space-contacts-gap: var(--space-product-col-gap);           /* зазор між колонками/частинами 5u, як між фото й панеллю товару */
@@ -790,7 +813,6 @@
    Вузлів Figma немає — рішення дизайну за ТЗ замовника, значення з палітри/масштабу. Стилі: src/styles/feedback.css, components/topic-tile.css, components/field.css, components/check.css.
    =================================================================== */
 :root {
-  --columns-feedback: 12;                                       /* сітка вікна: 12 колонок */
   --span-feedback-aside: 6;                                     /* лівий стовпець (тип звернення + контакти) = 6/12 */
   --span-feedback-main: 6;                                      /* правий стовпець (повідомлення) = 6/12: дві рівні половини */
   --space-feedback-pad: var(--space-contacts-pad);              /* внутрішній відступ вікна 50u */
@@ -834,7 +856,7 @@
    =================================================================== */
 :root {
   --offset-lp-hero-top: calc(215 * var(--u));    /* відступ тексту hero від верху секції: нижче пілюлі header (103u), над предметом кадру */
-  --container-lp-hero-sub: calc(4 * var(--size-lp-col) + 3 * var(--space-lp-grid-gap));    /* субхедер hero — 4 колонки по центру (колонки 5–8), текст по центру з переносами (1825e97a) */
+  --container-lp-hero-sub: calc(4 * var(--grid-col) + 3 * var(--grid-gap));    /* субхедер hero — 4 колонки по центру (колонки 5–8), текст по центру з переносами (1825e97a) */
   --space-lp-hero-gap: var(--space-30);          /* відступ H1 → лід → кнопка */
   --size-lp-slot-outline: 2px;                   /* ?slots=on: пунктир навколо місць під фото/тексти (лише режим огляду) */
   --size-lp-sr: 1px;                             /* .lp-sr — текст лише для читачів екрана (класичний visually-hidden 1×1px) */
@@ -869,15 +891,11 @@
 /* Сітка — 12 колонок сітки каталогу (рев'ю a1c08ac0, 16270ab4): поля 47.5u, зазор 40u, колонка 115.42u → вміст 1825u (як каталог і коктейлі).
    Блок по центру — лише парна кількість колонок (2/4/6/8). Похідні розміри оголошено й на .lp-scope — демо design-system.html перераховує їх у своїй ширині. */
 :root, .lp-scope {
-  --columns-lp: 12;                              /* 12 колонок сітки каталогу */
-  --space-lp-grid-gap: var(--space-catalog-grid-gap); /* 40u */
-  --container-lp: var(--size-catalog-grid-w);    /* 1825u: від лівого краю колонки 1 до правого краю колонки 12 */
-  --size-lp-col: calc((var(--container-lp) - (var(--columns-lp) - 1) * var(--space-lp-grid-gap)) / var(--columns-lp)); /* одна колонка (115.42u) */
-  --size-lp-hero-title-w: calc(8 * var(--size-lp-col) + 7 * var(--space-lp-grid-gap)); /* H1 hero — 8 колонок по центру (колонки 3–10), два рядки */
-  --size-lp-text-w: calc(6 * var(--size-lp-col) + 5 * var(--space-lp-grid-gap));       /* лід / застереження по центру — 6 колонок (4–9) */
+  --size-lp-hero-title-w: calc(8 * var(--grid-col) + 7 * var(--grid-gap)); /* H1 hero — 8 колонок по центру (колонки 3–10), два рядки */
+  --size-lp-text-w: calc(6 * var(--grid-col) + 5 * var(--grid-gap));       /* лід / застереження по центру — 6 колонок (4–9) */
 
   /* layers («розріз»: рев'ю 77dd7d09): фото-текстури смугами впритул в одній рамці на 12 колонок; під кожною смугою — іконка, назва, пояснення */
-  --size-lp-layer-band-h: calc(var(--size-lp-col) + var(--space-lp-grid-gap)); /* висота розрізу = колонка + зазор (≈155u): смуга, співмірна з підписом під нею (іконка + назва + пояснення ≈ 120u) */
+  --size-lp-layer-band-h: calc(var(--grid-col) + var(--grid-gap)); /* висота розрізу = колонка + зазор (≈155u): смуга, співмірна з підписом під нею (іконка + назва + пояснення ≈ 120u) */
   --size-lp-layer-icon: calc(40 * var(--u));     /* іконка шару (DS .icon--*, 24×24, лінія 1.5) — як іконка маршруту, 40u */
 
   /* МЕДІА «стіна пляшок» (compare, тема бочок): 50 L — колонки 1–3, 200 L — 4–12; один масштаб: 50 L = 1 блок 16 × 6 = 96, 200 L = 4 блоки (383 = 4 × 96 − 1).
@@ -885,7 +903,7 @@
   --span-barrels-ledger-50: 3;
   --count-barrels-block-cols: 16; --count-barrels-block-rows: 6;                   /* блок barrels-bottle-block.svg: 16 × 6 = 96 пляшок */
   --space-barrels-block-gap: calc(24 * var(--u));       /* МІНІМАЛЬНИЙ проміжок між блоками 200 L (фактичний — рівномірний розподіл на всю ширину) */
-  --size-barrels-wall-200-w: calc((var(--columns-lp) - var(--span-barrels-ledger-50)) * var(--size-lp-col) + (var(--columns-lp) - var(--span-barrels-ledger-50) - 1) * var(--space-lp-grid-gap)); /* колонки 4–12 */
+  --size-barrels-wall-200-w: calc((var(--grid-cols) - var(--span-barrels-ledger-50)) * var(--grid-col) + (var(--grid-cols) - var(--span-barrels-ledger-50) - 1) * var(--grid-gap)); /* колонки 4–12 */
   --size-barrels-wall-cell-w: round(down, calc((var(--size-barrels-wall-200-w) - 3 * var(--space-barrels-block-gap)) / (4 * var(--count-barrels-block-cols))), 1px); /* 4 блоки + 3 мін. проміжки ≤ колонки 4–12 */
   --size-barrels-wall-cell-h: round(calc(var(--size-barrels-wall-cell-w) * 50 / 22), 1px); /* пропорція комірки-пляшки 22×50 (маска barrels-bottle-block.svg) */
   --size-barrels-block-w: calc(var(--count-barrels-block-cols) * var(--size-barrels-wall-cell-w));
@@ -901,14 +919,14 @@
   --offset-lp-stage-top: var(--offset-product-stage-sticky);                    /* sticky-верх арки: під пілюлею header (як фото товару) */
   --size-lp-stage-h: calc(var(--size-product-frame-h) - var(--space-40));       /* висота арки за екраном: екран − пілюля − повітря знизу */
   --size-lp-stage-max: 85%;                      /* …але не вища за 85% колонки кроків (% від рядка сітки): sticky завжди має хід ≥ 15% колонки на 1200–1920 */
-  --size-lp-stage-w: calc(var(--span-lp-stage) * var(--size-lp-col) + (var(--span-lp-stage) - 1) * var(--space-lp-grid-gap));
+  --size-lp-stage-w: calc(var(--span-lp-stage) * var(--grid-col) + (var(--span-lp-stage) - 1) * var(--grid-gap));
   --size-lp-stage-rise: calc(var(--size-lp-stage-w) * var(--ratio-lp-arch-rise));
   --space-lp-scene-inset: calc(36 * var(--u));   /* гравюра всередині арки (фото — впритул) */
   --space-lp-chapter-gap: calc(64 * var(--u));   /* проміжок між кроками (рядки однакової висоти): компактний ритм, колонка ≈ висоті арки */
   --space-lp-chapter-rule: var(--space-30);      /* лінія кроку (hairline зверху, як рядок акордеона DS) → цифра */
   --space-lp-chapter-title: var(--space-30);     /* цифра → назва (з запасом під нижні виносні old-style цифр) */
   --span-lp-chapter-text: 4;                     /* текст кроку — 4 колонки (≈ 60 знаків у рядку; рев'ю 2ee87e84) */
-  --size-lp-chapter-text-w: calc(var(--span-lp-chapter-text) * var(--size-lp-col) + (var(--span-lp-chapter-text) - 1) * var(--space-lp-grid-gap));
+  --size-lp-chapter-text-w: calc(var(--span-lp-chapter-text) * var(--grid-col) + (var(--span-lp-chapter-text) - 1) * var(--grid-gap));
   --space-lp-chapter-text: var(--space-10);      /* назва → пояснення */
   --space-lp-note-gap: var(--space-20);          /* цифра → підпис (одна базова лінія) */
   --size-lp-demo-stage-w: calc(480 * var(--u));  /* демо арки в design-system.html */
@@ -986,13 +1004,10 @@
    Лише похідні від наявних токенів. Блок на зеленому тлі сторінки (ширина 1825u = сітка каталогу): три плашки з однаковим проміжком 5u — світла панель DS (.contacts-panel, beige) лише під текстом
    (весь вільний простір), слайдер-галерея (4 колонки сітки, висота = картка), картка каталогу 426.25u (арка картки задана в u). Висота панелі за вмістом; висота ряду = найвищий із трьох. */
 :root {
-  --size-cocktails-w: var(--size-catalog-grid-w);               /* 1825u: ширина сторінки = сітка каталогу */
-  --count-cocktail-cols: 12;                                    /* колонки сітки сторінки (вступ) */
-  --space-cocktail-col-gap: var(--space-catalog-grid-gap);      /* 40u: зазор доріжок усередині панелі = зазор сітки каталогу */
   --space-cocktail-tabs-gap: var(--space-30);                    /* проміжок між табами (згруповані зліва; одне значення на всі блоки — підбирається замовником, коментар 580810af) */
   --size-cocktail-card-photo-h: calc(329.667 * var(--u));        /* висота фото в картці каталогу (як у каталозі): при розтягуванні картки пляшка не змінює розмір */
   --space-cocktail-plate-gap: var(--space-5);                    /* ОДНАКОВИЙ проміжок між трьома плашками: текстова панель | слайдер | картка (коментар c121e3bf «4,5» = 4.5px на вікні 1728 = 5u) */
-  --size-cocktail-photo-w: calc((var(--size-cocktails-w) - (var(--count-cocktail-cols) - 1) * var(--space-cocktail-col-gap)) / var(--count-cocktail-cols) * 4 + 3 * var(--space-cocktail-col-gap)); /* слайдер зберігає ширину 4 колонок сітки каталогу (581.67u) */
+  --size-cocktail-photo-w: calc((var(--grid-w) - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols) * 4 + 3 * var(--grid-gap)); /* слайдер зберігає ширину 4 колонок сітки каталогу (581.67u) */
   --grid-cocktail-block: minmax(0, 1fr) var(--size-cocktail-photo-w) var(--size-card-cat2-w); /* панель тексту забирає ВЕСЬ вільний простір (колонки 1–5 + розширення), слайдер 4 колонки, картка каталогу 426.25u; зазор між ними --space-cocktail-plate-gap */
   --scale-cocktail-thumb: 0.7;                                   /* мініатюри слайдера коктейлів = 70% мініатюр товару (коментар ccbb0483), пропорція та відступ від рамки (15u) без змін */
   --span-cocktail-body: 5;                                      /* частки тіла (знаменник): списки «Інгредієнти»/«Подача» */
@@ -1019,9 +1034,6 @@
    Лише похідні від наявних токенів (типографіка — ролі .t-*, без сторінкової шкали). Сітка = сітка каталогу (12 колонок, 1825u, зазор 40u; QA D12 профіль catalog).
    Кімнати: вступ і «Не знайшли відповідь?» — .theme-green (продовження зеленої зони header), питання — beige тло сторінки. */
 :root {
-  --size-faq-w: var(--size-catalog-grid-w);                 /* 1825u: ширина вмісту = сітка каталогу */
-  --count-faq-cols: 12;
-  --space-faq-col-gap: var(--space-catalog-grid-gap);       /* 40u */
   --col-faq-intro: 4 / span 6;                              /* вступ і фінальний блок: 6 середніх колонок (як вступ коктейлів) — центр = центр екрана */
   --col-faq-title: 1 / span 4;                              /* заголовок групи (sticky у межах своєї групи): колонки 1–4 */
   --col-faq-list: 5 / span 8;                               /* рядки питань групи: колонки 5–12 */

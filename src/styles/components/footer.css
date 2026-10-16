@@ -1,13 +1,13 @@
 /* Footer (194:1235): висота і геометрія — токени --footer-* (tokens.css) */
 .site-footer { background: var(--color-beige); color: var(--color-green); }
-.site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) var(--gutter) 0; } /* 194:1237 top 55 */
+.site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) var(--grid-margin) 0; } /* 194:1237 top 55 */
 /* колонки: старти x=47 / 518 / 960 (194:1237 / 1244 / 1254), остання — праворуч (194:1262) */
 .site-footer__cols { display: grid; grid-template-columns: var(--footer-col-menu-w) var(--footer-col-catalog-w) 1fr auto; align-items: start; }
 .site-footer__col { display: flex; flex-direction: column; gap: var(--space-46); }
 /* «Меню» (194:1237): x=49 у макеті, а колонка стартує з gutter 47 — зсув на різницю */
 /* запас під focus-кільце посилань: бокс колонки розширено на --footer-ring-room в обидва боки (від'ємний margin), padding повертає текст на місце — кільце лишається в межах колонки, позиції тексту не змінюються */
 .site-footer__col { margin-inline: calc(-1 * var(--footer-ring-room)); padding-inline: var(--footer-ring-room); }
-.site-footer__col--menu { padding-left: calc(var(--footer-menu-x) - var(--gutter) + var(--footer-ring-room)); }
+.site-footer__col--menu { padding-left: calc(var(--footer-menu-x) - var(--grid-margin) + var(--footer-ring-room)); }
 .site-footer__col--end { align-self: start; }
 /* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-nav (її line-height = --nav-box-h) на посиланні/пункті; регістр — КАПС, як у шапці (рішення замовника) */
 .site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); }

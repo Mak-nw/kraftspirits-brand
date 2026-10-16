@@ -15,7 +15,7 @@
 .feedback-stack > * { grid-area: 1 / 1; transition: opacity var(--duration-base) var(--ease-out), visibility 0s linear 0s; }
 .feedback-stack > [inert] { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity var(--duration-base) var(--ease-out), visibility 0s linear var(--duration-base); }
 
-.feedback-form { display: grid; grid-template-columns: repeat(var(--columns-feedback), minmax(0, 1fr)); column-gap: var(--space-feedback-col-gap); }
+.feedback-form { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-feedback-col-gap); }
 /* Розкладка: стовпці-обгортки прозорі (display: contents) — їхні діти стають комірками ОДНІЄЇ сітки форми (DOM і Tab-порядок не змінено).
    Рядки: 1 заголовок, 2 «Тип звернення», 3 контактні поля (Ім'я + Телефон/E-mail) — ліворуч; «Ваше повідомлення» праворуч займає ті самі рядки 1–3 (grid-row: span 3),
    тому нижній край textarea = нижній край поля E-mail (останнього інпута ліворуч). Рядок 4 (вільний, 1fr) — «згода | Надіслати» внизу вікна. */

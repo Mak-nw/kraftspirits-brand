@@ -36,8 +36,14 @@
 .space-bar--15 { width: var(--space-15); } .space-bar--20 { width: var(--space-20); } .space-bar--26 { width: var(--space-26); }
 .space-bar--30 { width: var(--space-30); } .space-bar--37 { width: var(--space-37); } .space-bar--40 { width: var(--space-40); }
 .space-bar--46 { width: var(--space-46); } .space-bar--50 { width: var(--space-50); } .space-bar--70 { width: var(--space-70); }
-.space-bar--gutter { width: var(--gutter); } .space-bar--container-text { width: var(--container-text); }
-.space-bar--container-wide { width: var(--container-wide); } .space-bar--container-full { width: var(--container-full); }
+.space-bar--grid-margin { width: var(--grid-margin); } .space-bar--container-text { width: var(--container-text); }
+.space-bar--container-wide { width: var(--container-wide); } .space-bar--grid-w { width: var(--grid-w); }
+/* демо єдиної сітки: 12 колонок із токенів --grid-* (кольори й роль тексту — наявні, як у .space-row__bar) */
+.grid-demo { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); row-gap: var(--space-10); width: var(--grid-w); margin: var(--space-20) calc((var(--container-wide) - var(--grid-w)) / 2); }
+.grid-demo__cols, .grid-demo__row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; }
+.grid-demo__col { display: flex; justify-content: center; padding-block: var(--space-10); background: var(--color-green); color: var(--color-text-on-dark); }
+.grid-demo__bar { display: block; padding-block: var(--space-5); background: var(--color-green); color: var(--color-text-on-dark); }
+.grid-demo__bar--3 { grid-column: span 3; } .grid-demo__bar--4 { grid-column: span 4; } .grid-demo__bar--6 { grid-column: span 6; } .grid-demo__bar--8 { grid-column: span 8; }
 
 .radius-demo { display: flex; gap: var(--space-30); align-items: flex-end; }
 .radius-demo__box { width: var(--ds-radius-box-w); height: var(--ds-radius-box-h); background: var(--color-green); }
@@ -138,4 +144,4 @@
 /* імітатор focus — та сама тривалість переходу, що й у справжнього :focus-visible (політика --btn-transition-duration-focus) */
 :is(.btn, .nav-cell, .arrow-btn, .chip, .product-volume, .select, .check).is-focus, .btn.is-focus :is(.btn__inner, .btn__arrow), .arrow-btn.is-focus img, .product-volume.is-focus::before, .select.is-focus .select__field, .check.is-focus .check__box, .check.is-focus .check__box::after { transition-duration: var(--btn-transition-duration-focus); }
 /* демо блоку коктейлю в реальній ширині сторінки коктейлів (1825u): виходить за контейнер DS (1508u) симетрично — картка каталогу з аркою потребує рівно 426.25u */
-.ds-cocktail-demo { width: var(--size-cocktails-w); margin-inline: calc((var(--container-wide) - var(--size-cocktails-w)) / 2); color: var(--color-green); }
+.ds-cocktail-demo { width: var(--grid-w); margin-inline: calc((var(--container-wide) - var(--grid-w)) / 2); color: var(--color-green); }

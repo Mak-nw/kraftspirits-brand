@@ -34,7 +34,7 @@ npm run preview  # http://localhost:5190
 ## Токени (скорочено)
 Кольори: `--color-green #223520`, `--color-teal #041e27`, `--color-gold #cbaf86`, `--color-light #eae9e8`, `--color-beige #dcdbcf`, `--color-brown #21170e`, `--color-nav-text #ceccc5`, `--color-green-alt #223521`, `--color-black`, `--color-line`, `--color-line-strong`.
 Шрифти: `--font-family-serif/sans/display`, `--font-size-*`, `--lh-*`, `--ls-wide`. Ціна на ітемі (картка товару в каталозі й слайдері підбору) — EB Garamond Medium: `--type-price-card-font` (= `--font-family-serif`) + `--type-price-card-weight` (= `--fw-medium`), правило `.product-card .t-price`; `.t-price` базово лишається Manrope, ціна всередині кнопки «додати в кошик» — правило `.btn .t-price` (ті ж токени `--type-price-card-*`). Ролі: `--type-*` та класи `.t-hero .t-h2 .t-stat .t-kicker .t-lead .t-chip .t-body .t-nav .t-btn .t-price .t-product-name .t-caption .t-breadcrumb .t-faq .t-acc .t-footer-head .t-wordmark`.
-Інше: `--space-*`, `--gutter`, `--radius-*`, `--border-*`, `--container-*`, `--size-*`.
+Інше: `--space-*`, `--grid-margin`, `--radius-*`, `--border-*`, `--container-*`, `--size-*`.
 
 ## Правило
 Нові блоки будуються лише з токенів і компонентів. Новий компонент спершу додається в `design-system.html` (+ `src/styles/components/`), потім використовується на сторінках. Жодного хардкоду кольорів/px поза `tokens.css`, жодних inline-стилів, жодних посилань на figma.com.

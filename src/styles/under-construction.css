@@ -5,7 +5,7 @@
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   gap: var(--space-50);
   min-height: calc(100svh - var(--size-header-h));
-  padding: var(--space-85) var(--gutter);
+  padding: var(--space-85) var(--grid-margin);
 }
 .under-construction__title { max-width: 100%; text-wrap: balance; }
 .under-construction__text { max-width: calc(600 * var(--u)); }
