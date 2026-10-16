@@ -194,33 +194,48 @@
       "id": "catalog",
       "label": "каталог",
       "purpose": "Пункт «каталог» у хедері (ліворуч від тексту)",
-      "semantics": "Каталог-буклет: вертикальний прямокутник із закругленими кутами, з «корінцем» (вертикальна лінія зліва) і двома короткими горизонтальними рядками «змісту» на обкладинці.",
+      "semantics": "Каталог/товари: сітка 2×2 з чотирьох квадратів із закругленими кутами (6×6, rx 1.25, проміжок 3.5).",
       "width": 24,
       "height": 24,
       "elements": [
         {
           "type": "rect",
-          "role": "обкладинка",
-          "x": 4.75,
-          "y": 3.25,
-          "width": 14.5,
-          "height": 17.5,
+          "role": "плитка 1",
+          "x": 4.25,
+          "y": 4.25,
+          "width": 6,
+          "height": 6,
           "rx": 1.25
         },
         {
-          "type": "path",
-          "role": "корінець",
-          "d": "M8.75 3.25V20.75",
-          "note": "вертикаль на повну висоту, крок від лівого краю 4"
+          "type": "rect",
+          "role": "плитка 2",
+          "x": 13.75,
+          "y": 4.25,
+          "width": 6,
+          "height": 6,
+          "rx": 1.25
         },
         {
-          "type": "path",
-          "role": "рядки",
-          "d": "M12.25 8H15.75M12.25 11.5H15.75",
-          "note": "2 горизонталі довжиною 3.5, відстань 3.5"
+          "type": "rect",
+          "role": "плитка 3",
+          "x": 4.25,
+          "y": 13.75,
+          "width": 6,
+          "height": 6,
+          "rx": 1.25
+        },
+        {
+          "type": "rect",
+          "role": "плитка 4",
+          "x": 13.75,
+          "y": 13.75,
+          "width": 6,
+          "height": 6,
+          "rx": 1.25
         }
       ],
-      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4.75\" y=\"3.25\" width=\"14.5\" height=\"17.5\" rx=\"1.25\"/><path d=\"M8.75 3.25V20.75\"/><path d=\"M12.25 8H15.75M12.25 11.5H15.75\"/></svg>",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#223420\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4.25\" y=\"4.25\" width=\"6\" height=\"6\" rx=\"1.25\"/><rect x=\"13.75\" y=\"4.25\" width=\"6\" height=\"6\" rx=\"1.25\"/><rect x=\"4.25\" y=\"13.75\" width=\"6\" height=\"6\" rx=\"1.25\"/><rect x=\"13.75\" y=\"13.75\" width=\"6\" height=\"6\" rx=\"1.25\"/></svg>",
       "file": "/assets/icons/catalog.svg",
       "siteUsage": "хедер: 22u, gap 8u, ліворуч від «каталог»"
     },
