@@ -58,6 +58,7 @@ export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок 
 export const COLS_BY_TYPE = { layers: [6, 8, 10], steps: [8, 10], compare: [8, 10], formats: [8, 10], tiles: [6, 8, 10], offers: [8, 10], faq: [6, 8, 10] };
 export const HEAD_COLS = [4, 6];   // `titleCols`: ширина заголовка по центру в колонках (4 — типово, --size-heading-w; 6 — широкий, --size-heading-w-wide: довгий заголовок в 2 рядки, рев'ю d0234bbc, 58f675f7)
 export const HERO_TITLE_SIZES = ['large'];   // `hero.titleSize`: 'large' — H1 hero роллю .t-h2 (67u) замість .t-hero (55u; рев'ю 1574e475); без поля — .t-hero
+export const PLACE_TITLE_SIZES = ['small'];   // `place.titleSize`: 'small' — H2 панелі роллю .t-lead (40u) замість .t-h2 (67u): довге слово («Ясногородка») вміщується в панель цілим, не розривається дефісом (дефект E3-B); без поля — .t-h2
 export const HERO_FADES = ['green', 'teal', 'brown'];       // `hero.fade`: колір градієнта знизу вгору (токен палітри --color-<значення>; без поля — градієнта немає; рішення замовника 53422015)
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
@@ -112,7 +113,7 @@ export const SCHEMA = {
     // 7. Картка: ІСНУЮЧА панель tour-card (текст АБО список + фото)
     card: { ...base('lead', 'caption'), ...STACK, title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true, { startsWith: '/assets/img/' }), cta: { ...CTA, req: true } },
     // 8. Місце: панель DS з фактами й кнопками + мапа DS (координати — src/data/contacts.js)
-    place: { ...base('caption'), ...STACK, room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
+    place: { ...base('caption'), ...STACK, titleSize: E(PLACE_TITLE_SIZES), room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
     faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), cols: COLS('faq'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
   },
@@ -348,7 +349,7 @@ const VIEW = {
   card: (s, p) => ({ ...head(s), text: t(s.text), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone,
     photo: (s.img || '').replace(/^\/assets\/img\//, ''), alt: t(s.alt), slot: t(s.slot), cardMod: s.photoFirst ? ' tour-card--photo-first' : '',
     listHtml: (s.list || []).map((x) => `<li>${t(x)}</li>`).join('') }),
-  place: (s) => ({ ...head(s),
+  place: (s) => ({ ...head(s), titleRole: s.titleSize === 'small' ? 't-lead' : 't-h2',
     facts: s.facts.map((f) => ({ label: t(f.label), value: t(f.value), icon: f.icon || '', href: f.href ? esc(f.href) : '', plain: f.href ? '' : '1', external: /^https?:/.test(f.href || '') || /^%contacts\.gmaps/.test(f.href || '') ? '1' : '' })),
     ctas: (s.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant, arrow: c.variant === 'outline' ? '' : '1' })) }),
   faq: (s) => {

@@ -3228,6 +3228,13 @@
                 "null"
               ]
             },
+            "titleSize": {
+              "enum": [
+                "small",
+                "",
+                null
+              ]
+            },
             "facts": {
               "type": "array",
               "minItems": 1,

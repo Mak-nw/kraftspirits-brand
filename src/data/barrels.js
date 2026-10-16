@@ -27,7 +27,7 @@ export const barrels = {
       lead: 'Екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу',
       img: '/assets/img/barrels-hero.webp', alt: '',
       slot: 'Фото hero: наявний AI-кадр barrels-hero.webp; за ТЗ IMG-1 — асиметричний кадр (бочки праворуч) або нова зйомка',
-      cta: { text: 'Переглянути ціни', href: '#price' },
+      cta: { text: 'Переглянути ціни', href: '#price', variant: 'light' },   // світла кнопка: темна (тон сторінки, teal) на фото без градієнта давала нетекстовий контраст медіана 3.3:1 / p10 2.1:1 (verify-E3-B, дефект 3)
     },
     {
       type: 'layers', id: 'benefits', room: 'warm',
