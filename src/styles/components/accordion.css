@@ -28,6 +28,12 @@
 .acc--faq > summary::after { translate: 0 var(--acc-faq-icon-drop); }
 .acc--faq[open]:not(.is-closing) > summary::after { translate: none; }
 
+/* Вигляд «картка» (.acc--card + обгортка .acc-frame, partial faq-item з параметром card="1" rv=""; макет About Us p10): кремова закруглена картка всередині
+   тонкої зовнішньої hairline-рамки (прямі кути), відступ між ними --space-faq-card-inset. Питання ліворуч, «+» праворуч (механіка іконки та відкриття — як у .acc--faq);
+   висота закритого рядка = padding 30u + рядок 28u + 30u = 88u у всіх рядків. Усе клікабельне (details), фокус-кільце — глобальне :focus-visible у summary. */
+.acc-frame { padding: var(--space-faq-card-inset); border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-none); }
+.acc--card { --btn-row-faq-bg-default: var(--btn-row-faq-card-bg-default); --btn-row-faq-bg-hover: var(--btn-row-faq-card-bg-hover); border: 0; border-radius: var(--radius-faq-card); }
+
 /* рядок сторінки товару (194:1402): лише нижня лінія, px 20 py 15 */
 .acc--product { padding: var(--space-15) var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-strong); background-color: var(--btn-row-product-bg-default); transition: background-color var(--duration-fast) var(--ease-out); }
 .acc--teal { color: var(--color-teal); border-bottom-color: var(--color-teal); } /* 194:1537 */

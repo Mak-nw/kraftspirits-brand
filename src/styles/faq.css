@@ -29,6 +29,9 @@
 .faq-page__body:not(.faq-page__body--legal) .faq-page__title { max-width: var(--grid-span-2); text-wrap: balance; } /* d0838707: довгі назви груп — у 2 рядки (balance дає рівні рядки); бокс заголовка = 2 колонки сітки (270.8u ≈ 6.8em; було 8em); юридичні сторінки без змін */
 .faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-row-gap); align-items: start; } /* проміжок між двома колонками = вертикальному (--space-faq-row-gap) за рішенням замовника e71b1181; виняток із D12 — check-ds.allow.json */
 .faq-page__col { display: grid; row-gap: var(--space-faq-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки по 4 колонки сітки (5–8 і 9–12): розкриття питання зсуває лише свою колонку */
+/* вигляд «картка» (faq-item card="1", .acc-frame): колонки розсунуті на 40u (--grid-gap), рядки — на 5u (--space-faq-card-row-gap) */
+.faq-page__list:has(.acc-frame) { column-gap: var(--grid-gap); }
+.faq-page__col:has(.acc-frame) { row-gap: var(--space-faq-card-row-gap); }
 
 /* Юридичні сторінки (privacy, cookies, offer, delivery, age-policy, barrels-terms; partials/sections/legal-doc + legal-section, дані src/data/legal.js):
    світла сторінка (beige тло, зелений текст), ОДИН вертикальний стовпець без sticky і без бічної колонки; усе вирівняно по лівому краю в 6 середніх колонках 4–9
