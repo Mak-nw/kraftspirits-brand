@@ -1,9 +1,9 @@
 /* Сторінка «Контакти» (contacts.html). Решітка 12 колонок у контейнері сторінки (поля 47.5u, зона header 103u в потоці, відступ 20u — як на товарі):
    ліворуч 5 колонок — контактна інформація (Адреса, Телефон, E-mail) + кнопки «Написати нам» / «Замовити екскурсію»; праворуч 7 колонок — мапа з посиланнями під нею.
-   Зазор між панелями 40u = зазор єдиної сітки (як фото ↔ панель товару); панелі однакової висоти (карта розтягується). Форма зворотнього зв'язку — окрема сторінка feedback.html (feedback.css).
+   Зазор між панеллю й мапою 5u = --grid-gap-panels (як фото ↔ панель товару): мапа лишає край на колонці 6, панель «заходить» у зазор колонок; панелі однакової висоти (карта розтягується). Форма зворотнього зв'язку — окрема сторінка feedback.html (feedback.css).
    Фон сторінки — візерунок ромбів (правило .page-contacts у product.css поруч із .page-product / .page-feedback). Усі значення — токени блоку «Контакти». */
 .contacts {
-  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-contacts-gap); align-items: stretch;
+  display: grid; grid-template-columns: var(--grid-cols-panels-5-7); column-gap: var(--space-contacts-gap); align-items: stretch;
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
   padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
 }
@@ -13,8 +13,8 @@
   background: var(--color-beige); color: var(--color-green);
   border: var(--border-frame) solid var(--color-beige); border-radius: var(--radius-panel); /* рамка = колір панелі (як YC на товарі): геометрія 5u + 10u радіус */
 }
-.contacts-info { grid-column: span var(--span-contacts-main); }
-.contacts-map-panel { grid-column: span var(--span-contacts-aside); padding: 0; border: 0; background: none; } /* карта = сам блок: без відступів і рамки */
+.contacts-info { min-width: 0; }
+.contacts-map-panel { min-width: 0; padding: 0; border: 0; background: none; } /* карта = сам блок: без відступів і рамки */
 .contacts-info h1 { margin: 0; }
 .contacts-cta { display: flex; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
 .contacts-cta .btn { flex: 1 1 0; min-width: 0; }
