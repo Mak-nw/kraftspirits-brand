@@ -487,10 +487,14 @@ export async function runDynamic(opts, allow, rep) {
   }
   // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
   if (wantHeroCtx) {
-    const heroNeed = A.d19?.heroPages || ['index', 'barrels', 'excursions'];
+    const heroNeed = A.d19?.heroPages || ['index', 'barrels', 'excursions', 'about'];
+    // Рукописні сторінки без файлу даних lp: дозвіл hero.fade зафіксовано ТУТ, вузько (одна сторінка, один токен). about.html («Про дім») — вимога замовника:
+    // «на херо … фотка [будівлі]. Поверх неї градієнт кольором зеленого фону, знизу 100, зверху 0 прозорості» (сторінку перероблено з шаблону lp на рукописну, src/data/about.js видалено).
+    // Перевірка градієнта та сама (рівно один linear-gradient(to top, <токен --color-green> 0%, transparent 100%) на .hero::after, без filter/mask/тіні/opacity); інший тон чи інша сторінка — порушення.
+    const HAND_FADE = { about: 'green' };
     let off = 0, fadeSeen = 0;
     const dataFade = {};   // hero.fade із даних сторінки (єдине джерело дозволу градієнта D19); сторінки без файлу даних (index) — без fade
-    for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || null; } catch { dataFade[name] = null; } }
+    for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || HAND_FADE[name] || null; } catch { dataFade[name] = HAND_FADE[name] || null; } }
     for (const c of d19) {
       const name = c.spec.name; const h = (rep.ctx.hero[name] ||= { inkLight: null, overlay: false, n: 0 });
       h.n++; if (c.data.inkLight === false) h.inkLight = false; else if (c.data.inkLight === true && h.inkLight !== false) h.inkLight = true;

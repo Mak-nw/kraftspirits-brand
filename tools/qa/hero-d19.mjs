@@ -39,7 +39,10 @@ export function COLLECT_D19(cfg) {
     const isImg = el.tagName === 'IMG';
     if (cs.filter !== 'none') add('filter', cs.filter);
     if ((cs.backdropFilter || cs.webkitBackdropFilter || 'none') !== 'none') add('backdrop-filter', cs.backdropFilter || cs.webkitBackdropFilter);
-    const mk = cs.maskImage || cs.webkitMaskImage || 'none'; if (mk !== 'none') add('mask', mk);
+    // іконка DS (.icon — CSS-маска за визначенням, components/icon.css) — не шар поверх фото, якщо мала (≤ 1% площі hero): напр. факти hero «Про дім»; велика .icon лишається порушенням
+    const mk = cs.maskImage || cs.webkitMaskImage || 'none';
+    const smallIcon = el.classList.contains('icon') && (() => { const r = el.getBoundingClientRect(); return r.width * r.height <= 0.01 * heroArea; })();
+    if (mk !== 'none' && !smallIcon) add('mask', mk);
     if (cs.mixBlendMode !== 'normal') add('mix-blend-mode', cs.mixBlendMode);
     if (parseFloat(cs.opacity) < 0.999) add('opacity', cs.opacity);
     if (cs.boxShadow !== 'none' && !(pnl && el.matches(pnl)) && role !== 'ancestor') add('box-shadow', cs.boxShadow);
