@@ -412,47 +412,33 @@ function boot() {
     layout(); openNew();
   }, true);
 
-  // ---------- grid overlay (dev): реальна розкладка site_brand ----------
-  // Масштаб --u (1u = 1px макета 1920; на 1200 = 0.625px). Поле сторінки --space-product-page-x (50u), зазор --space-product-col-gap (5u),
-  // ширина сторінки --size-product-page-w (1920u, по центру), 12 колонок --columns-contacts. Якщо на сторінці є реальний grid-контейнер
-  // (.product: фото 905u + панель 910u; .contacts: 12 колонок) — беремо його фактичні колонки (computed grid-template-columns) і його поля.
-  // Інші сторінки: 12 колонок за токенами сторінки.
+  // ---------- grid overlay (dev): АКТУАЛЬНА сітка site_brand ----------
+  // Єдина сітка сайту береться з токенів (computed, без зашитих чисел): --grid-cols (кількість колонок), --grid-margin (поле від краю вікна до колонки 1),
+  // --grid-gap (зазор між колонками), --grid-w (ширина всіх колонок = 1920u − 2 поля). Одиниця --u (1u = 1px макета 1920; на 1200 = 0.625px).
+  // Зараз: 10 колонок, зазор 40u, поле 202.9u, колонка 115.42u, ширина сітки 1514.2u. Токен змінився → оверлей оновлюється сам.
   const probe = document.createElement('div');
   probe.style.cssText = 'position:absolute;left:0;top:0;height:0;visibility:hidden;pointer-events:none;';
   $('.root').append(probe);
   const lenPx = (expr, d) => { probe.style.width = ''; probe.style.width = expr; const w = probe.getBoundingClientRect().width; return w > 0 ? w : d; };
   const token = (cs, name, d) => { const v = parseFloat(cs.getPropertyValue(name)); return Number.isFinite(v) ? v : d; };
   const r1 = (v) => Math.round(v * 10) / 10;
-  const REAL = '.product, .contacts';
+  const r2 = (v) => Math.round(v * 100) / 100;
   function drawGrid() {
     if (!st.grid) return;
     const cs = getComputedStyle(document.documentElement);
     const cw = document.documentElement.clientWidth;
     const u = lenPx('calc(1 * var(--u))', 1);
-    const pageW = Math.min(cw, lenPx('var(--size-product-page-w)', 1920 * u));
-    let padX = lenPx('var(--space-product-page-x)', 50 * u), gap = lenPx('var(--space-product-col-gap)', 5 * u);
-    let cols = Math.max(1, Math.round(token(cs, '--columns-contacts', 12)));
-    let tpl = null, src = 'токени сторінки';
-    const real = document.querySelector(REAL);
-    if (real) {
-      const rcs = getComputedStyle(real), list = rcs.gridTemplateColumns.split(' ').map(parseFloat).filter((v) => v > 0);
-      if (rcs.display === 'grid' && list.length) {
-        tpl = list.map((v) => v + 'px').join(' '); cols = list.length; gap = parseFloat(rcs.columnGap) || 0; padX = parseFloat(rcs.paddingLeft) || padX;
-        src = real.classList.contains('product') ? '.product' : '.contacts';
-      }
-    }
+    const cols = Math.max(1, Math.round(token(cs, '--grid-cols', 10)));
+    const padX = lenPx('var(--grid-margin)', 0), gap = lenPx('var(--grid-gap)', 0), gridW = lenPx('var(--grid-w)', cw - 2 * padX);
     gridLayer.style.width = cw + 'px';
-    gridBox.style.maxWidth = pageW + 'px';
+    gridBox.style.maxWidth = (gridW + 2 * padX) + 'px';
     gridBox.style.paddingInline = padX + 'px';
-    gridCols.style.gridTemplateColumns = tpl || `repeat(${cols}, minmax(0, 1fr))`;
+    gridCols.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
     gridCols.style.gap = gap + 'px';
     if (gridCols.children.length !== cols) { gridCols.textContent = ''; for (let i = 0; i < cols; i++) gridCols.append(el('div', { class: 'gcol' })); }
-    const widths = [...gridCols.children].map((n) => n.getBoundingClientRect().width);
-    const uniq = []; // унікальні колонки за значенням у u (0.1u)
-    for (const w of widths) if (!uniq.some((x) => r1(x / u) === r1(w / u))) uniq.push(w);
-    const both = (px) => `${r1(px / u)}u (${r1(px)}px)`;
-    const colTxt = uniq.length === 1 ? `колонка ${both(uniq[0])}` : `колонки ${uniq.map((w) => r1(w / u) + 'u').join(' + ')} (${uniq.map((w) => r1(w) + 'px').join(' + ')})`;
-    gridInfo.textContent = `${cols} кол · ${colTxt} · зазор ${both(gap)} · поле ${both(padX)} · сторінка ${both(pageW)} · 1u=${r1(u * 1000) / 1000}px · ${src}`;
+    const colW = gridCols.firstElementChild ? gridCols.firstElementChild.getBoundingClientRect().width : 0;
+    const both = (px) => `${r2(px / u)}u (${r1(px)}px)`;
+    gridInfo.textContent = `${cols} кол · колонка ${both(colW)} · зазор ${both(gap)} · поле ${both(padX)} · сітка ${both(gridW)} · 1u=${r1(u * 1000) / 1000}px`;
   }
   function setGrid(on) {
     st.grid = on; store.set('review.grid', on ? '1' : '0');
