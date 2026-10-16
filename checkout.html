@@ -95,8 +95,8 @@
               </ul>
               <div class="form-row place-order">
                 <div class="woocommerce-terms-and-conditions-wrapper">
-                  <!--@include components/wc-check name="terms" label="Погоджуюсь з <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>, <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='delivery.html' target='_blank' rel='noopener'>умовами доставки й оплати</a>"-->
-                  <!--@include components/wc-check name="age_confirm" label="Мені виповнилося 18 років. Вік підтверджується через застосунок «Дія» перед оплатою та під час отримання (<a href='age-policy.html' target='_blank' rel='noopener'>як це працює</a>)"-->
+                  <!--@include components/wc-check name="terms" req="1" label="Погоджуюсь з <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>, <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='delivery.html' target='_blank' rel='noopener'>умовами доставки й оплати</a>"-->
+                  <!--@include components/wc-check name="age_confirm" req="1" label="Мені виповнилося 18 років. Вік підтверджується через застосунок «Дія» перед оплатою та під час отримання (<a href='age-policy.html' target='_blank' rel='noopener'>як це працює</a>)"-->
                 </div>
                 <button type="submit" class="button alt btn btn--green btn--block" name="woocommerce_checkout_place_order" id="place_order" value="Підтвердити замовлення"><span class="btn__inner t-btn">Підтвердити замовлення</span></button>
               </div>
@@ -153,7 +153,7 @@
           <section class="wc-order-track">
             <h2 class="t-lead">Відстежити замовлення</h2>
             <p class="t-text">Номер експрес-накладної надішлемо на телефон або e-mail. Статус замовлення — у кабінеті.</p>
-            <a class="button btn btn--green btn--block" href="#" data-soon><span class="btn__inner t-btn">Відстежити замовлення</span></a>
+            <a class="button btn btn--green btn--block" href="account.html?state=tracking"><span class="btn__inner t-btn">Відстежити замовлення</span></a>
           </section>
         </aside>
       </div>

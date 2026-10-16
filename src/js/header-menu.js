@@ -91,9 +91,6 @@ function init(header) {
     }, 0);
   });
 
-  // заглушки (href="#", напр. «мій кабінет» до появи cabinet.html): клік не стрибає нагору сторінки
-  header.querySelectorAll('a[href="#"]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
-
   // поточна сторінка: aria-current для посилання на неї (візуального стану в Figma немає)
   const here = location.pathname.split('/').pop() || 'index.html';
   header.querySelectorAll('a[href$=".html"]').forEach((a) => { if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page'); });

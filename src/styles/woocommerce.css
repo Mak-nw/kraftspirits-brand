@@ -5,8 +5,8 @@
    Текст — лише ролі .t-* у розмітці (п. 5в). Сітка: 12 колонок єдиної сітки; кошик 8 + 4, оформлення 7 + 5. Композиції описані в design-system.html, розділ «Шаблони WooCommerce». */
 
 /* фон сторінок — той самий візерунок ромбів, що на каталозі/товарі/контактах (product.css); зона header прозора */
-.page-cart, .page-checkout { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
-.page-cart .site-header, .page-checkout .site-header { background: transparent; }
+.page-cart, .page-checkout, .page-account { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.page-cart .site-header, .page-checkout .site-header, .page-account .site-header { background: transparent; }
 
 .wc-page { width: 100%; max-width: var(--size-product-page-w); margin-inline: auto; padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom); }
 .wc-grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-contacts-gap); align-items: stretch; }
@@ -80,9 +80,9 @@
 .woocommerce-billing-fields, .woocommerce-additional-fields { display: flex; flex-direction: column; gap: var(--space-30); }
 .woocommerce-billing-fields__field-wrapper, .woocommerce-additional-fields__field-wrapper { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); row-gap: var(--space-15); align-items: start; }
 .woocommerce-billing-fields__field-wrapper > .form-row-wide, .woocommerce-additional-fields__field-wrapper > .form-row-wide { grid-column: 1 / -1; }
-.woocommerce-checkout .form-row { position: relative; margin: 0; }
-.woocommerce-checkout .woocommerce-input-wrapper { display: contents; }
-.woocommerce-checkout .form-row .optional { color: inherit; }
+:is(.woocommerce-checkout, .woocommerce-account) .form-row { position: relative; margin: 0; }
+:is(.woocommerce-checkout, .woocommerce-account) .woocommerce-input-wrapper { display: contents; }
+:is(.woocommerce-checkout, .woocommerce-account) .form-row .optional { color: inherit; }
 .woocommerce-checkout .woocommerce-shipping-methods { display: flex; flex-direction: column; }
 .woocommerce-checkout textarea.field__control { min-height: calc(var(--size-btn-h) * 2); }
 #order_review, #payment { display: flex; flex-direction: column; gap: var(--space-30); }
@@ -93,11 +93,45 @@
 
 /* подяка */
 .wc-order-main { display: flex; flex-direction: column; gap: var(--space-30); }
-.woocommerce-order-overview { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-.woocommerce-order-overview > li { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+:is(.woocommerce-order-overview, .woocommerce-OrderUpdates) { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+:is(.woocommerce-order-overview, .woocommerce-OrderUpdates) > li { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
 .woocommerce-order-details, .woocommerce-customer-details { display: flex; flex-direction: column; gap: var(--space-20); }
 .woocommerce-customer-details address { margin: 0; }
 .woocommerce-customer-details > div, .wc-order-track { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-15); }
+
+/* ---------- Мій кабінет (account.html): сітка 12 колонок — меню 3 + вміст 9; вхід — 6 + 6. Усе з наявного: .contacts-panel, .nav-cell, .field, .btn, .cocktail__steps, hairline-рядки таблиць (вище) ---------- */
+.wc-main--account-form { grid-column: span var(--span-wc-account-form); min-width: 0; }
+.woocommerce-MyAccount-navigation { grid-column: span var(--span-wc-account-nav); min-width: 0; }
+.woocommerce-MyAccount-navigation ul { display: flex; flex-direction: column; gap: var(--space-10); } /* меню = стопка .nav-cell--outline.nav-cell--block, як дії випадного меню header */
+.woocommerce-MyAccount-content { grid-column: span var(--span-wc-account-main); min-width: 0; }
+.woocommerce-MyAccount-content > [data-wc-view] { display: flex; flex-direction: column; gap: var(--space-30); }
+.woocommerce-MyAccount-content > [data-wc-view]:focus { outline: none; }
+.woocommerce-account [data-wc-view] section { display: flex; flex-direction: column; gap: var(--space-20); } /* підрозділ: заголовок t-lead + вміст */
+.woocommerce-account [data-wc-view] .wc-order-body { display: flex; flex-direction: column; gap: var(--space-30); }
+
+/* форми кабінету: p.form-row-first/-last — дві колонки (5u, як feedback-pair), решта — на всю ширину */
+.woocommerce-account [data-wc-view] form,
+.woocommerce-account [data-wc-view] fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); row-gap: var(--space-15); align-items: start; margin: 0; padding: 0; border: 0; min-width: 0; } /* fieldset: скидання рамки браузера (рамки в DS немає), не нова лінія */
+.woocommerce-account [data-wc-view] :is(form, fieldset) > :not(.form-row-first, .form-row-last, legend) { grid-column: 1 / -1; }
+.woocommerce-account [data-wc-view] fieldset > legend { padding: 0; margin-bottom: var(--space-15); }
+.woocommerce-account .wc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-10); }
+
+/* таблиця замовлень: кнопка дії в останній колонці; пагінація «Попередні / Наступні» = .btn--outline */
+.woocommerce-orders-table .woocommerce-orders-table__cell-order-actions .btn { white-space: nowrap; }
+.woocommerce-pagination { display: flex; justify-content: space-between; gap: var(--space-10); }
+.woocommerce-pagination .woocommerce-button--next { margin-inline-start: auto; }
+.wc-orders-list { display: flex; flex-direction: column; gap: var(--space-30); }
+
+/* значення підсумків в один рядок (спосіб оплати не ламається на 3 рядки) */
+.woocommerce table.order_details tfoot td { white-space: nowrap; }
+
+/* склад замовлення: дві колонки «Одержувач / Доставка» */
+.woocommerce-account [data-wc-view] .woocommerce-columns--addresses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-contacts-gap); }
+.woocommerce-columns--addresses > .woocommerce-column { display: flex; flex-direction: column; gap: var(--space-15); }
+.woocommerce-columns--addresses address { margin: 0; }
+
+/* поки модуль наповнює екран (account.html, атрибут ставить inline-скрипт) — вміст і футер невидимі, але місце зайнято: без стрибка (CLS) */
+html[data-wc-pending] :is(.woocommerce, .site-footer) { visibility: hidden; }
 
 /* службове: прихований стан (hidden) сильніше за display компонентів; одна розмітка = один стан (JS показує потрібний) */
 .woocommerce [hidden], .wc-grid[hidden] { display: none; }

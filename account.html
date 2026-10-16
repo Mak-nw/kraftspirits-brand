@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--@include head-icons-->
+  <!--@include head-fonts price="1"-->
+  <!--@include head-age-->
+  <title>Мій кабінет — YasnoCraft × Bazylsprings</title>
+  <meta name="description" content="Мій кабінет YasnoCraft × Bazylsprings: вхід, архів замовлень, відстеження замовлення й посилки «Нової пошти», адреси та дані акаунта.">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script type="module" src="/src/js/viewport.js"></script>
+  <script type="module" src="/src/js/header-menu.js"></script>
+</head>
+<!-- СИМУЛЯЦІЯ шаблонів WooCommerce «Мій кабінет» (шорткод [woocommerce_my_account] + [woocommerce_order_tracking]): myaccount/form-login.php, form-lost-password.php, my-account.php, navigation.php,
+     dashboard.php, orders.php, view-order.php, my-address.php + form-edit-address.php, form-edit-account.php, order/form-tracking.php, tracking.php, order-details.php, order-details-customer.php (reports/wc-templates-spec.md, розділи 1.1–1.3).
+     Бекенду немає: вхід — демо (будь-які непорожні логін і пароль → стан «увійшов» у sessionStorage ks_account), замовлення/адреси/дані — src/data/account-demo.js. Справжній вхід, замовлення й ТТН віддасть WooCommerce.
+     Класи й імена полів woocommerce-* лишаються стандартними (JS/CSS WooCommerce їх шукає); поверх — наші компоненти (partials/components/wc-*.html, .btn, .field, .check, .nav-cell, .cocktail__steps, .contacts-panel; стилі src/styles/woocommerce.css).
+     Стани (?state=): login · login-error · lost · lost-sent · register · register-error · logout · dashboard · orders · empty-orders · order-view (&order=№) · tracking · tracking-result (&order=№) · tracking-error · addresses · addresses-saved · account · account-saved · account-error.
+     Стани «усередині кабінету» самі вмикають демо-вхід. &guest=1 (tracking*) — відстеження без входу. Одна розмітка = один стан: вибір ДО першого paint — inline-скрипт нижче; решту прибирає src/js/wc-account.js. -->
+<body class="page-account woocommerce-account woocommerce-page">
+  <!--@include body-vw-->
+  <!--@include components/age-gate-->
+  <!--@include header-->
+  <!--@include cart-label-init-->
+  <main class="wc-page" id="account">
+    <div class="woocommerce">
+
+      <!-- ===== Гість: вхід / відновлення пароля / реєстрація (myaccount/form-login.php, form-lost-password.php) + панель «без входу» ===== -->
+      <div class="wc-grid" data-wc-layout="guest">
+
+        <section class="contacts-panel wc-main--account-form" data-wc-view="login" aria-labelledby="login-title" hidden>
+          <h1 class="t-hero" id="login-title">Вхід</h1>
+          <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+          <form class="woocommerce-form woocommerce-form-login login" action="account.html" method="post" novalidate data-wc-form="login">
+            <!--@include components/wc-field name="username" label="Логін або e-mail" req="1" autocomplete="username" placeholder="name@example.com"-->
+            <!--@include components/wc-field name="password" label="Пароль" type="password" req="1" autocomplete="current-password" placeholder="Ваш пароль"-->
+            <!--@include components/wc-check name="rememberme" label="Запам'ятати мене"-->
+            <div class="form-row wc-actions">
+              <button type="submit" class="woocommerce-button button woocommerce-form-login__submit btn btn--green" name="login" value="Увійти"><span class="btn__inner t-btn">Увійти</span></button>
+              <a class="woocommerce-LostPassword lost_password button btn btn--outline" href="account.html?state=lost"><span class="btn__inner t-btn">Забули пароль?</span></a>
+            </div>
+          </form>
+          <div class="wc-actions">
+            <p class="t-text">Немає акаунта?</p>
+            <a class="button btn btn--outline" href="account.html?state=register"><span class="btn__inner t-btn">Створити акаунт</span></a>
+          </div>
+        </section>
+
+        <section class="contacts-panel wc-main--account-form" data-wc-view="lost" aria-labelledby="lost-title" hidden>
+          <h1 class="t-hero" id="lost-title">Відновлення пароля</h1>
+          <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+          <form class="woocommerce-ResetPassword lost_reset_password" action="account.html" method="post" novalidate data-wc-form="lost">
+            <p class="t-text">Загубили пароль? Вкажіть логін або e-mail — ми надішлемо посилання для створення нового пароля.</p>
+            <!--@include components/wc-field name="user_login" label="Логін або e-mail" req="1" autocomplete="username" placeholder="name@example.com"-->
+            <div class="form-row wc-actions">
+              <input type="hidden" name="wc_reset_password" value="true">
+              <button type="submit" class="woocommerce-Button button btn btn--green" value="Скинути пароль"><span class="btn__inner t-btn">Скинути пароль</span></button>
+              <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Назад до входу</span></a>
+            </div>
+          </form>
+          <div data-wc-lost-done hidden>
+            <!--@include components/wc-notice cls="woocommerce-message" text="Лист із посиланням для відновлення пароля надіслано. Перевірте поштову скриньку (і папку «Спам»)." href="account.html?state=login" link="Повернутись до входу"-->
+          </div>
+        </section>
+
+        <section class="contacts-panel wc-main--account-form" data-wc-view="register" aria-labelledby="register-title" hidden>
+          <h1 class="t-hero" id="register-title">Створити акаунт</h1>
+          <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+          <form class="woocommerce-form woocommerce-form-register register" action="account.html" method="post" novalidate data-wc-form="register">
+            <!--@include components/wc-field name="reg_email" label="E-mail" type="email" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
+            <!--@include components/wc-field name="reg_password" label="Пароль (від 8 символів)" type="password" req="1" autocomplete="new-password" placeholder="Придумайте пароль"-->
+            <!--@include components/wc-check name="reg_consent" req="1" label="Погоджуюсь з <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>"-->
+            <div class="form-row wc-actions">
+              <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit btn btn--green" name="register" value="Зареєструватися"><span class="btn__inner t-btn">Зареєструватися</span></button>
+              <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Вже є акаунт? Увійти</span></a>
+            </div>
+          </form>
+        </section>
+
+        <aside class="contacts-panel wc-main--account-form" aria-labelledby="guest-track-title" data-wc-guest-aside>
+          <h2 class="t-hero" id="guest-track-title">Відстеження</h2>
+          <p class="t-text">Відстежити замовлення можна й без акаунта: потрібні лише номер замовлення та e-mail із листа-підтвердження.</p>
+          <div class="wc-actions">
+            <a class="button btn btn--green" href="account.html?state=tracking&amp;guest=1"><span class="btn__inner t-btn">Відстежити замовлення</span></a>
+          </div>
+        </aside>
+      </div>
+
+      <!-- ===== Кабінет: меню (myaccount/navigation.php) + вміст (my-account.php) ===== -->
+      <div class="wc-grid" data-wc-layout="account" hidden>
+        <nav class="woocommerce-MyAccount-navigation" aria-label="Кабінет">
+          <ul data-wc-nav="user" hidden>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--dashboard" data-wc-endpoint="dashboard"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=dashboard">Огляд</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--orders" data-wc-endpoint="orders"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=orders">Замовлення</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--track-order" data-wc-endpoint="tracking"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=tracking">Відстеження</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-address" data-wc-endpoint="addresses"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=addresses">Адреси</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-account" data-wc-endpoint="account"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=account">Дані акаунта</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout" data-wc-endpoint="logout"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=logout">Вийти</a></li>
+          </ul>
+          <ul data-wc-nav="guest" hidden>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--login" data-wc-endpoint="login"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=login">Увійти</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--register" data-wc-endpoint="register"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=register">Створити акаунт</a></li>
+            <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--track-order" data-wc-endpoint="tracking"><a class="nav-cell nav-cell--outline nav-cell--block t-btn" href="account.html?state=tracking&amp;guest=1">Відстеження</a></li>
+          </ul>
+        </nav>
+
+        <div class="woocommerce-MyAccount-content contacts-panel">
+
+          <!-- Огляд (myaccount/dashboard.php) -->
+          <section data-wc-view="dashboard" aria-labelledby="dashboard-title" hidden>
+            <h1 class="t-hero" id="dashboard-title">Мій кабінет</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <p class="t-text">Вітаємо, <strong class="t-spec" data-wc-user-name>Олено</strong>! З кабінету можна переглянути архів замовлень, відстежити посилку, змінити адресу доставки та дані акаунта.</p>
+            <section class="wc-recent-orders">
+              <h2 class="t-lead">Останні замовлення</h2>
+              <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+                <thead>
+                  <tr>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number t-btn" scope="col">Замовлення</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date t-btn" scope="col">Дата</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status t-btn" scope="col">Статус</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total t-btn" scope="col">Сума</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions t-btn" scope="col"><span class="visually-hidden">Дії</span></th>
+                  </tr>
+                </thead>
+                <tbody data-wc-orders-rows></tbody>
+              </table>
+            </section>
+            <div class="wc-actions">
+              <a class="button btn btn--outline" href="account.html?state=orders"><span class="btn__inner t-btn">Усі замовлення</span></a>
+              <a class="button btn btn--outline" href="account.html?state=tracking"><span class="btn__inner t-btn">Відстежити замовлення</span></a>
+              <a class="button btn btn--outline" href="account.html?state=addresses"><span class="btn__inner t-btn">Адреси</span></a>
+              <a class="button btn btn--outline" href="account.html?state=account"><span class="btn__inner t-btn">Дані акаунта</span></a>
+            </div>
+          </section>
+
+          <!-- Архів замовлень (myaccount/orders.php) -->
+          <section data-wc-view="orders" aria-labelledby="orders-title" hidden>
+            <h1 class="t-hero" id="orders-title">Замовлення</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <div class="wc-orders-list" data-wc-orders-list>
+              <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+                <thead>
+                  <tr>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number t-btn" scope="col">Замовлення</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date t-btn" scope="col">Дата</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status t-btn" scope="col">Статус</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total t-btn" scope="col">Сума</th>
+                    <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions t-btn" scope="col"><span class="visually-hidden">Дії</span></th>
+                  </tr>
+                </thead>
+                <tbody data-wc-orders-rows></tbody>
+              </table>
+              <div class="woocommerce-pagination woocommerce-pagination--without-numbers woocommerce-Pagination" data-wc-pagination>
+                <a class="woocommerce-button woocommerce-button--previous woocommerce-Button woocommerce-Button--previous button btn btn--outline" href="account.html?state=orders" data-wc-prev><span class="btn__inner t-btn">Попередні</span></a>
+                <a class="woocommerce-button woocommerce-button--next woocommerce-Button woocommerce-Button--next button btn btn--outline" href="account.html?state=orders" data-wc-next><span class="btn__inner t-btn">Наступні</span></a>
+              </div>
+            </div>
+            <div class="wc-cart-empty" data-wc-orders-empty hidden>
+              <p class="woocommerce-info woocommerce-Message woocommerce-Message--info t-lead">Замовлень ще немає.</p>
+              <p class="return-to-shop"><a class="woocommerce-Button wc-forward button btn btn--green" href="catalog.html"><span class="btn__inner t-btn">Перейти до каталогу</span></a></p>
+            </div>
+          </section>
+
+          <!-- Перегляд замовлення (myaccount/view-order.php + order/order-details.php + order-details-customer.php) -->
+          <section data-wc-view="order-view" aria-labelledby="order-view-title" hidden>
+            <h1 class="t-hero" id="order-view-title">Замовлення №<span data-wc-order-number></span></h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <ul class="woocommerce-order-overview">
+              <li class="woocommerce-order-overview__order t-text">Номер замовлення <strong class="order-number t-spec" data-wc-order-number></strong></li>
+              <li class="woocommerce-order-overview__date t-text">Дата <strong class="order-date t-spec" data-wc-order-date></strong></li>
+              <li class="woocommerce-order-overview__status t-text">Статус <strong class="order-status t-spec" data-wc-order-status></strong></li>
+              <li class="woocommerce-order-overview__total total t-text">Разом <strong class="t-spec" data-wc-order-total></strong></li>
+            </ul>
+            <div class="wc-actions">
+              <a class="button btn btn--green" href="account.html?state=tracking-result" data-wc-track-link><span class="btn__inner t-btn">Відстежити</span></a>
+              <a class="button btn btn--outline" href="account.html?state=orders"><span class="btn__inner t-btn">До списку замовлень</span></a>
+            </div>
+            <section class="woocommerce-order-updates" data-wc-notes-wrap>
+              <h2 class="t-lead">Оновлення замовлення</h2>
+              <ol class="woocommerce-OrderUpdates commentlist notes" data-wc-notes></ol>
+            </section>
+            <div class="wc-order-body" data-wc-order-details></div>
+          </section>
+
+          <!-- Відстеження замовлення: форма (order/form-tracking.php) -->
+          <section data-wc-view="tracking" aria-labelledby="tracking-title" hidden>
+            <h1 class="t-hero" id="tracking-title">Відстеження замовлення</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <form class="woocommerce-form woocommerce-form-track-order track_order" action="account.html" method="post" novalidate data-wc-form="tracking">
+              <p class="t-text">Щоб відстежити замовлення, вкажіть його номер і e-mail із листа-підтвердження.</p>
+              <!--@include components/wc-field name="orderid" label="Номер замовлення" row="form-row-first" req="1" inputmode="numeric" autocomplete="off" placeholder="Наприклад, 10388"-->
+              <!--@include components/wc-field name="order_email" label="E-mail" type="email" row="form-row-last" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
+              <div class="form-row wc-actions">
+                <button type="submit" class="button btn btn--green" name="track" value="Відстежити"><span class="btn__inner t-btn">Відстежити</span></button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Відстеження замовлення: результат (order/tracking.php): статус, таймлайн, ТТН «Нової пошти», склад -->
+          <section data-wc-view="tracking-result" aria-labelledby="tracking-result-title" hidden>
+            <h1 class="t-hero" id="tracking-result-title">Відстеження замовлення</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <ul class="woocommerce-order-overview order-info">
+              <li class="woocommerce-order-overview__order t-text">Номер замовлення <strong class="order-number t-spec" data-wc-order-number></strong></li>
+              <li class="woocommerce-order-overview__date t-text">Дата <strong class="order-date t-spec" data-wc-order-date></strong></li>
+              <li class="woocommerce-order-overview__status t-text">Статус <strong class="order-status t-spec" data-wc-order-status></strong></li>
+            </ul>
+            <section class="wc-tracking-status" data-wc-timeline-wrap>
+              <h2 class="t-lead">Статус доставки</h2>
+              <ol class="cocktail__steps wc-tracking-steps" data-wc-steps></ol>
+            </section>
+            <div class="woocommerce-info t-lead" data-wc-cancelled hidden>Замовлення скасовано, відправлення не створювалось.</div>
+            <section class="wc-order-track" data-wc-ttn-wrap>
+              <h2 class="t-lead">Посилка «Нової пошти»</h2>
+              <p class="t-text" data-wc-ttn-text></p>
+              <a class="button btn btn--green" href="https://novaposhta.ua/tracking/" target="_blank" rel="noopener" data-wc-ttn-link hidden><span class="btn__inner t-btn">Відстежити посилку</span></a>
+            </section>
+            <section class="woocommerce-order-updates" data-wc-notes-wrap>
+              <h2 class="t-lead">Оновлення замовлення</h2>
+              <ol class="woocommerce-OrderUpdates commentlist notes" data-wc-notes></ol>
+            </section>
+            <div class="wc-order-body" data-wc-order-details></div>
+            <div class="wc-actions">
+              <a class="button btn btn--outline" href="account.html?state=tracking" data-wc-track-again><span class="btn__inner t-btn">Інше замовлення</span></a>
+            </div>
+          </section>
+
+          <!-- Адреси (myaccount/my-address.php + form-edit-address.php; адреса одна — доставка «Новою поштою», тому перегляд і редагування на одному екрані) -->
+          <section data-wc-view="addresses" aria-labelledby="addresses-title" hidden>
+            <h1 class="t-hero" id="addresses-title">Адреси</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <form class="woocommerce-address-fields" action="account.html" method="post" novalidate data-wc-form="addresses">
+              <h2 class="t-lead">Адреса доставки</h2>
+              <p class="t-text">Ці дані підставляються під час оформлення замовлення.</p>
+              <!--@include components/wc-field name="billing_first_name" label="Ім'я" row="form-row-first" req="1" autocomplete="given-name" placeholder="Ім'я одержувача"-->
+              <!--@include components/wc-field name="billing_last_name" label="Прізвище" row="form-row-last" req="1" autocomplete="family-name" placeholder="Прізвище одержувача"-->
+              <!--@include components/wc-field name="billing_phone" label="Телефон" type="tel" row="form-row-first" req="1" inputmode="tel" autocomplete="tel" placeholder="+380"-->
+              <!--@include components/wc-select name="billing_state" label="Область&nbsp;*" placeholder="Оберіть область" row="form-row-last" req="1"-->
+              <!--@include components/wc-select name="billing_city" label="Місто&nbsp;*" placeholder="Оберіть місто" row="form-row-first" req="1"-->
+              <!--@include components/wc-select name="billing_warehouse" label="Відділення або поштомат «Нової пошти»&nbsp;*" placeholder="Оберіть відділення або поштомат" row="form-row-last" req="1"-->
+              <div class="form-row wc-actions">
+                <button type="submit" class="button btn btn--green" name="save_address" value="Зберегти адресу"><span class="btn__inner t-btn">Зберегти адресу</span></button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Дані акаунта (myaccount/form-edit-account.php) -->
+          <section data-wc-view="account" aria-labelledby="account-title" hidden>
+            <h1 class="t-hero" id="account-title">Дані акаунта</h1>
+            <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
+            <form class="woocommerce-EditAccountForm edit-account" action="account.html" method="post" novalidate data-wc-form="account">
+              <!--@include components/wc-field name="account_first_name" label="Ім'я" row="form-row-first" req="1" autocomplete="given-name"-->
+              <!--@include components/wc-field name="account_last_name" label="Прізвище" row="form-row-last" req="1" autocomplete="family-name"-->
+              <!--@include components/wc-field name="account_email" label="E-mail" type="email" row="form-row-wide" req="1" inputmode="email" autocomplete="email"-->
+              <fieldset>
+                <legend class="t-lead">Зміна пароля</legend>
+                <!--@include components/wc-field name="password_current" label="Поточний пароль" type="password" row="form-row-wide" opt="1" autocomplete="current-password" placeholder="Залиште порожнім, щоб не змінювати"-->
+                <!--@include components/wc-field name="password_1" label="Новий пароль (від 8 символів)" type="password" row="form-row-first" opt="1" autocomplete="new-password"-->
+                <!--@include components/wc-field name="password_2" label="Підтвердьте новий пароль" type="password" row="form-row-last" opt="1" autocomplete="new-password"-->
+              </fieldset>
+              <div class="form-row wc-actions">
+                <button type="submit" class="woocommerce-Button button btn btn--green" name="save_account_details" value="Зберегти зміни"><span class="btn__inner t-btn">Зберегти зміни</span></button>
+              </div>
+            </form>
+          </section>
+
+        </div>
+      </div>
+
+    </div>
+    <script>
+    /* Вибір стану ДО першого paint (інакше висота сторінки стрибає: CLS). Єдине місце логіки «який екран»; src/js/wc-account.js читає результат з data-атрибутів .woocommerce. */
+    (function () {
+      try {
+        var q = location.search, root = document.querySelector('.woocommerce');
+        var get = function (k) { var m = new RegExp('[?&]' + k + '=([^&]*)').exec(q); return m ? decodeURIComponent(m[1]) : ''; };
+        var st = get('state'), guest = get('guest') === '1', auth = false;
+        try { auth = !!sessionStorage.getItem('ks_account'); } catch (e) {}
+        var GUEST = { login: 'login', 'login-error': 'login', logout: 'login', lost: 'lost', 'lost-sent': 'lost', register: 'register', 'register-error': 'register' };
+        var CAB = { dashboard: 'dashboard', orders: 'orders', 'empty-orders': 'orders', 'order-view': 'order-view', tracking: 'tracking', 'tracking-result': 'tracking-result', 'tracking-error': 'tracking', addresses: 'addresses', 'addresses-saved': 'addresses', account: 'account', 'account-saved': 'account', 'account-error': 'account' };
+        var view, layout, nav = 'user';
+        if (GUEST[st]) { view = GUEST[st]; layout = 'guest'; }
+        else if (CAB[st]) { view = CAB[st]; layout = 'account'; if (guest && /^tracking/.test(view)) nav = 'guest'; }
+        else { view = auth ? 'dashboard' : 'login'; layout = auth ? 'account' : 'guest'; }
+        var endpoint = { 'order-view': 'orders', 'tracking-result': 'tracking' }[view] || view;
+        root.setAttribute('data-wc-active-layout', layout);
+        root.setAttribute('data-wc-active-view', view);
+        root.setAttribute('data-wc-active-nav', nav);
+        root.setAttribute('data-wc-state', st);
+        root.querySelectorAll('[data-wc-layout]').forEach(function (el) { el.hidden = el.getAttribute('data-wc-layout') !== layout; });
+        root.querySelectorAll('[data-wc-view]').forEach(function (el) { el.hidden = el.getAttribute('data-wc-view') !== view; });
+        root.querySelectorAll('[data-wc-nav]').forEach(function (el) { el.hidden = el.getAttribute('data-wc-nav') !== nav; });
+        var a = root.querySelector('[data-wc-nav="' + nav + '"] [data-wc-endpoint="' + endpoint + '"] a');
+        if (a && layout === 'account') a.setAttribute('aria-current', 'page');
+        /* вміст екранів (таблиці, таймлайн) наповнює модуль після paint — до цього сховано (visibility), щоб сторінка й футер не стрибали; страховка на випадок збою модуля */
+        document.documentElement.setAttribute('data-wc-pending', '');
+        setTimeout(function () { document.documentElement.removeAttribute('data-wc-pending'); }, 3000);
+      } catch (e) {}
+    })();
+    </script>
+  </main>
+  <!--@include footer-->
+
+  <!-- шаблони для JS (src/js/wc-account.js) -->
+  <template id="wc-tpl-order-row">
+    <tr class="woocommerce-orders-table__row order">
+      <th class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Замовлення" scope="row"><a class="t-product-name" href="account.html?state=order-view" data-wc-number></a></th>
+      <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date t-text" data-title="Дата"><time datetime="" data-wc-date></time></td>
+      <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status t-text" data-title="Статус" data-wc-status></td>
+      <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Сума"><span class="t-price" data-wc-total></span> <span class="t-spec" data-wc-count></span></td>
+      <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Дії"><a class="woocommerce-button button view btn btn--outline" href="account.html?state=order-view" data-wc-view-link><span class="btn__inner t-btn">Переглянути</span></a></td>
+    </tr>
+  </template>
+  <template id="wc-tpl-order-item">
+    <tr class="woocommerce-table__line-item order_item">
+      <td class="woocommerce-table__product-name product-name" data-title="Товар"><a class="t-product-name" href="catalog.html" data-wc-link data-wc-name></a> <strong class="product-quantity t-spec">&times;&nbsp;<span data-wc-qty></span></strong><dl class="variation"><dt class="variation-Obyem t-spec">Об'єм:</dt><dd class="variation-Obyem t-spec"><p class="t-spec" data-wc-volume></p></dd></dl></td>
+      <td class="woocommerce-table__product-total product-total t-price" data-title="Разом" data-wc-line-total></td>
+    </tr>
+  </template>
+  <template id="wc-tpl-note"><li class="woocommerce-OrderUpdate comment note"><div class="woocommerce-OrderUpdate-description description t-text" data-wc-note-text></div><p class="woocommerce-OrderUpdate-meta meta t-spec" data-wc-note-date></p></li></template>
+  <template id="wc-tpl-step"><li class="cocktail__step"><span class="cocktail__step-n t-kicker" aria-hidden="true"></span><span><span class="t-text" data-wc-step-label></span> <span class="t-spec" data-wc-step-when></span></span></li></template>
+  <template id="wc-tpl-order-details">
+    <section class="woocommerce-order-details">
+      <h2 class="woocommerce-order-details__title t-lead">Деталі замовлення</h2>
+      <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
+        <thead>
+          <tr>
+            <th class="woocommerce-table__product-name product-name t-btn" scope="col">Товар</th>
+            <th class="woocommerce-table__product-table product-total t-btn" scope="col">Разом</th>
+          </tr>
+        </thead>
+        <tbody data-wc-rows></tbody>
+        <tfoot>
+          <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="" attr="data-wc-subtotal"-->
+          <!--@include components/wc-row cls="cart-discount" label="Купон" value="" attr="data-wc-discount" hidden="1"-->
+          <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
+          <!--@include components/wc-row cls="payment_method" label="Спосіб оплати" value="" attr="data-wc-payment"-->
+          <!--@include components/wc-row cls="order-total" label="Разом" value="" attr="data-wc-total"-->
+        </tfoot>
+      </table>
+    </section>
+    <section class="woocommerce-customer-details">
+      <section class="woocommerce-columns woocommerce-columns--2 woocommerce-columns--addresses col2-set addresses">
+        <div class="woocommerce-column woocommerce-column--1 woocommerce-column--billing-address col-1">
+          <h2 class="woocommerce-column__title t-lead">Одержувач</h2>
+          <address class="t-text" data-wc-customer></address>
+        </div>
+        <div class="woocommerce-column woocommerce-column--2 woocommerce-column--shipping-address col-2">
+          <h2 class="woocommerce-column__title t-lead">Доставка</h2>
+          <address class="t-text" data-wc-delivery></address>
+        </div>
+      </section>
+    </section>
+  </template>
+  <template id="wc-tpl-message"><!--@include components/wc-notice cls="woocommerce-message" text=""--></template>
+  <template id="wc-tpl-error"><!--@include components/wc-error text=""--></template>
+  <script type="module" src="/src/js/wc-account.js"></script>
+</body>
+</html>
