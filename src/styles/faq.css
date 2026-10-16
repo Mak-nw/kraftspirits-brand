@@ -12,7 +12,7 @@
 /* вступ і фінальний блок: зелена кімната, 6 середніх колонок, текст по центру */
 .faq-page__intro { padding: var(--space-faq-intro-top) 0 var(--space-faq-room-y); }
 .faq-page__intro { padding-bottom: 0; } /* FAQ (8131e645): без зеленої кімнати — лише h1 темним на beige тлі, далі тіло зі своїм верхнім полем */
-.faq-page__intro > .faq-page__h1 { width: var(--grid-w); margin-inline: auto; text-align: center; color: var(--color-text-on-dark); } /* FAQ на зеленому тлі з візерунком (6064dc8a, правило .page-faq у product.css): заголовки — світлі */
+.faq-page__intro > .faq-page__h1 { color: var(--color-text-on-dark); } /* FAQ на зеленому тлі з візерунком (6064dc8a, правило .page-faq у product.css): заголовки — світлі */
 .page-faq:has(.faq-page__intro) .site-header { background: transparent; } /* 8add73a2: на FAQ без зеленого зверху — зона header прозора, як .page-contacts/.page-product; юридичні сторінки (зелене інтро) без змін */
 .faq-page__more { padding: var(--space-faq-room-y) 0; }
 .faq-page__more { color: var(--color-text-on-dark); } /* FAQ (6064dc8a): фінал без власної зеленої плашки — візерунок сторінки не переривається; текст світлий, кнопка btn--light */

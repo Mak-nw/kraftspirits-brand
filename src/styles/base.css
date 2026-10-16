@@ -27,6 +27,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---- Типографічні ролі ---- */
 .t-hero { font: var(--type-hero-weight) var(--type-hero-size)/var(--type-hero-lh) var(--type-hero-font); letter-spacing: var(--type-hero-ls); text-transform: uppercase; } /* 194:1370 */
 .t-h2 { font: var(--type-h2-weight) var(--type-h2-size)/var(--type-h2-lh) var(--type-h2-font); letter-spacing: var(--type-h2-ls); text-transform: uppercase; } /* 194:1278 */
+/* Заголовок display (.t-hero / .t-h2) = 4 КОЛОНКИ сітки (токен --size-heading-w; рішення замовника): .heading-center — по центру, .heading-start — лівим краєм (юридичні сторінки).
+   Рядки рівні (balance); слово НЕ розривається (overflow-wrap/hyphens нормальні, на відміну від .page-lp main { overflow-wrap: anywhere }): найдовше слово має вміщатись у ширину. Перевірка — check-ds D17. */
+.heading-center, .heading-start { width: var(--size-heading-w); max-width: 100%; text-wrap: balance; overflow-wrap: normal; word-break: normal; hyphens: manual; }
+.heading-center { margin-inline: auto; text-align: center; }
 .t-stat { font: var(--type-stat-weight) var(--type-stat-size)/var(--type-stat-lh) var(--type-stat-font); letter-spacing: var(--type-stat-ls); text-transform: uppercase; } /* 194:1282 */
 .t-stat-label { font: var(--type-stat-label-weight) var(--type-stat-label-size)/var(--type-stat-label-lh) var(--type-stat-label-font); letter-spacing: var(--type-stat-label-ls); } /* 194:1283 */
 .t-kicker { font: var(--type-kicker-weight) var(--type-kicker-size)/var(--type-kicker-lh) var(--type-kicker-font); letter-spacing: var(--type-kicker-ls); } /* 194:1369 */

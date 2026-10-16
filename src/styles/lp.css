@@ -22,7 +22,7 @@
 .lp-sec.lp-sec--join { padding-top: 0; }
 /* шапка секції (кікер / заголовок / лід / підписи) — по центру сітки (рев'ю e725d1be, a40df587, 73b1b655) */
 .lp-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-stack); text-align: center; }
-.lp-head > .t-h2 { margin-left: var(--lp-h2-optic, 0em); } /* оптичний центр чорнила H2 — змінна теми (виміряно під текст), типово 0 */
+.lp-head > .t-h2 { position: relative; left: calc(var(--lp-h2-optic, 0em) / 2); } /* оптичний центр чорнила H2 — змінна теми (виміряно під текст), типово 0; зсув центру = половина значення (було margin-left у flex-колонці); ширина — .heading-center (4 колонки) */
 .lp-head__kicker { margin-top: var(--shift-lp-kicker-cap-top); color: var(--lp-accent); }
 .lp-room--paper .lp-head__kicker { color: var(--lp-on-paper); } /* на світлому акцент-золото не тримає контраст (D8) — кікер чорнилом кімнати */
 .lp-head__lead { width: var(--size-lp-text-w); max-width: 100%; text-wrap: balance; }
@@ -44,7 +44,7 @@
 /* ---------- hero: фото на весь екран без градієнта й без CSS-оверлея (рішення замовника a2289410); колір тексту — роль теми --lp-hero-ink (D8 піксельно) ---------- */
 .hero--lp { color: var(--lp-hero-ink); }
 .hero--lp .hero__content { position: absolute; z-index: 2; top: var(--offset-lp-hero-top); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-hero-gap); text-align: center; }
-.hero--lp .hero__title { width: var(--size-lp-hero-title-w); text-wrap: balance; } /* розмір — роль .t-hero у розмітці (єдиний h1 сторінки) */
+/* H1: розмір — роль .t-hero, ширина 4 колонки по центру — .heading-center (base.css) */
 .hero--lp .hero__subtitle { width: var(--container-lp-hero-sub); text-wrap: balance; }
 .hero--lp .btn { margin-top: var(--space-10); }
 
