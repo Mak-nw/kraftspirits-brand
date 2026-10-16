@@ -24,6 +24,11 @@
   <!--@include cart-label-init-->
   <main class="wc-page" id="checkout">
     <div class="woocommerce">
+      <noscript>
+        <section class="contacts-panel wc-main wc-main--cart">
+          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="Для оформлення замовлення потрібен JavaScript. Увімкніть його в браузері або перегляньте товари в каталозі." href="catalog.html" link="До каталогу"-->
+        </section>
+      </noscript>
 
       <form name="checkout" method="post" class="checkout woocommerce-checkout wc-grid wc-grid--checkout" action="checkout.html" enctype="multipart/form-data" aria-labelledby="checkout-title" novalidate data-wc-view="form">
         <div class="col2-set contacts-panel wc-main wc-main--checkout" id="customer_details">

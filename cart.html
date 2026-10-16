@@ -23,6 +23,11 @@
   <!--@include cart-label-init-->
   <main class="wc-page" id="cart">
     <div class="woocommerce wc-grid wc-grid--cart">
+      <noscript>
+        <section class="contacts-panel wc-main wc-main--cart">
+          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="Для роботи кошика потрібен JavaScript. Увімкніть його в браузері або перегляньте товари в каталозі." href="catalog.html" link="До каталогу"-->
+        </section>
+      </noscript>
       <section class="contacts-panel wc-main wc-main--cart" aria-labelledby="cart-title">
         <h1 class="t-hero" id="cart-title">Кошик</h1>
         <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>

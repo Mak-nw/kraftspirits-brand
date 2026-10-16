@@ -6,7 +6,7 @@ import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13
 import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
 import { D17_DEFAULTS, probeD17, analyzeD17, controlD17 } from './heading-d17.mjs';
 import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
-import { measureTextOnImage, D14_PAGES, D14_DEFAULTS } from './text-on-image.mjs';
+import { measureTextOnImage, D14_PAGES, D14_STATES, D14_DEFAULTS } from './text-on-image.mjs';
 import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
@@ -212,6 +212,7 @@ export async function runDynamic(opts, allow, rep) {
   const want17 = want('D17'); const d17 = []; let d17ctl = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
   const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
   const specs = opts.pagesList.map(pageSpec);
+  if (want14 && !opts.pages && opts.rules && opts.rules.size === 1) for (const x of D14_STATES) if (!specs.some((sp) => sp.label === x)) specs.push(pageSpec(x)); // qa:img-contrast: + демо-стани cart/checkout/account
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
   const cfg = { compSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.product-card--catalog'], textMin: A.textMinContrast ?? 4.5, largeMin: A.largeTextMinContrast ?? 3 };
   const stats = (rep.stats.dynamic = { pages: specs.length, combos: combos.length, tabStops: 0 });

@@ -44,7 +44,7 @@
 .woocommerce .product-thumbnail img { width: auto; max-width: none; height: var(--size-wc-thumb-h); object-fit: contain; }
 .woocommerce .product-name .variation { display: flex; gap: var(--space-5); margin: 0; }
 .woocommerce .product-name .variation :is(dt, dd) { margin: 0; }
-.woocommerce a.remove { display: inline-block; padding: var(--space-5); margin: calc(-1 * var(--space-5)); transition: color var(--duration-fast) var(--ease-out); } /* «×»: роль t-lead (крупніший знак) + поле під палець (компенсоване від'ємним відступом — розкладка колонки та сама) */
+.woocommerce a.remove { --wc-remove-pad-x: max(var(--space-5), calc(var(--size-touch-target) - var(--size-wc-remove-glyph) - var(--space-15))); --wc-remove-pad-y: max(var(--space-5), calc((var(--size-touch-target) - 1lh) / 2)); display: inline-block; padding: var(--wc-remove-pad-y) var(--space-15) var(--wc-remove-pad-y) var(--wc-remove-pad-x); margin: calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--space-15)) calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--wc-remove-pad-x)); transition: color var(--duration-fast) var(--ease-out); } /* «×»: роль t-lead + поле під палець: область дотику ≥ --size-touch-target (44px) по обох осях; поле компенсоване від'ємним відступом — знак і розкладка колонки ті самі; праворуч поле = --space-15 (≤ порожнього padding комірки, до фото не заходить), решту дає ліве поле (порожня ділянка панелі) */
 @media (hover: hover) { .woocommerce a.remove:hover, .woocommerce a.woocommerce-remove-coupon:hover { color: var(--color-teal); } }
 .woocommerce a.woocommerce-remove-coupon { transition: color var(--duration-fast) var(--ease-out); }
 

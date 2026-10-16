@@ -26,6 +26,12 @@
   <!--@include cart-label-init-->
   <main class="wc-page" id="account">
     <div class="woocommerce">
+      <noscript>
+        <section class="contacts-panel wc-main wc-main--cart" aria-labelledby="account-noscript-title">
+          <h1 class="t-hero" id="account-noscript-title">Мій кабінет</h1>
+          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="Для роботи кабінету потрібен JavaScript. Увімкніть його в браузері або перегляньте товари в каталозі." href="catalog.html" link="До каталогу"-->
+        </section>
+      </noscript>
 
       <!-- ===== Гість: вхід / відновлення пароля / реєстрація (myaccount/form-login.php, form-lost-password.php) + панель «без входу» ===== -->
       <div class="wc-grid wc-grid--guest u-columns col2-set" id="customer_login" data-wc-layout="guest">

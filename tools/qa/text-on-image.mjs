@@ -7,7 +7,9 @@
 //   4) частка пікселів літери нижче порога (4.5; великий текст ≥24px або ≥18.66px bold — 3). ЛІТЕРА «погана», якщо >50% її пікселів нижче порога.
 //      Вузол = FAIL, якщо погана хоч одна літера. Літери, перекриті іншим елементом (fixed-хедер, оверлей), не рахуються.
 // Прокрутка тайлами по висоті в'юпорта (кожна літера міряється в тайлі, де вона повністю видима). Профіль сторінок — D14_PAGES.
-export const D14_PAGES = ['barrels', 'excursions', 'index', 'contacts', 'about', 'product', 'cocktails'];
+export const D14_PAGES = ['barrels', 'excursions', 'index', 'contacts', 'about', 'product', 'cocktails', 'cart', 'checkout', 'account'];
+// Стани WooCommerce-сторінок, які `qa:img-contrast` (лише D14, без --pages) додає до сторінок за замовчуванням: у порожньому кошику/без входу нічого не міряється (verify-D2) — демо-стани мають позиції, disabled-кнопку, форми
+export const D14_STATES = ['cart?demo=1', 'checkout?demo=1', 'account?state=login', 'account?state=dashboard'];
 export const D14_DEFAULTS = { textMin: 4.5, largeMin: 3, badLetterShare: 0.5, covCore: 0.6, covFallback: 0.3, minPixels: 3 };
 
 /** виконується в браузері: аналіз одного тайла (3 знімка в base64) */
