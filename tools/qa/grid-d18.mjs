@@ -19,7 +19,7 @@ export const D18_DEFAULTS = {
   fusedSelectors: ['.tour-card'],
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', 'button', 'input', 'select', 'textarea', 'label', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs', '.age-card', '[data-age-gate]'],
   // сторінки (специфікації), де великі пари МАЮТЬ бути знайдені (охоронець: збір не мовчить): мін. кількість перевірених великих пар + склеєних
-  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, 'account?state=login': 1, 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'index': 1 },
+  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'index': 1 },
   states: ['cart?demo=1', 'checkout?demo=1', 'account?state=login', 'account?state=dashboard'], // демо-стани, яких немає серед *.html
 };
 
