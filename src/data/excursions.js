@@ -114,7 +114,7 @@ export const excursions = {
         { label: 'Як дістатися', value: 'Авто / громадський транспорт, парковка — [потрібно уточнити]' },
         { label: 'Графік', value: 'Дні тижня, години — [потрібно уточнити]' },
       ],
-      ctas: [{ text: 'Прокласти маршрут', href: '%contacts.gmapsView%', variant: 'green' }, { text: 'Забронювати', href: '#price', variant: 'outline' }],
+      ctas: [{ text: 'Забронювати', href: '#price', variant: 'green' }],   // одна основна кнопка (рев'ю 29f1be2a «забрати кнопку» «Прокласти маршрут», 2a622988 «зробити основною»)
     },
     {
       type: 'faq', id: 'questions', room: 'paper',
