@@ -348,12 +348,13 @@
     <section class="ds-section" id="radius">
       <h2 class="t-h2 ds-section__title">Радіуси та рамки</h2>
       <div class="radius-demo">
-        <div><div class="radius-demo__box radius-demo__box--none"></div><p class="ds-meta demo-label t-text">--radius-none · картки, FAQ, зовнішня рамка кнопки</p></div>
-        <div><div class="radius-demo__box radius-demo__box--btn"></div><p class="ds-meta demo-label t-text">--radius-btn 5px · 194:1372</p></div>
+        <div><div class="radius-demo__box radius-demo__box--none"></div><p class="ds-meta demo-label t-text">--radius-none · зовнішня рамка .btn</p></div>
+        <div><div class="radius-demo__box radius-demo__box--btn"></div><p class="ds-meta demo-label t-text">--radius-btn 5u · 194:1372 · кнопки, FAQ, поля, мініатюри</p></div>
+        <div><div class="radius-demo__box radius-demo__box--panel"></div><p class="ds-meta demo-label t-text">--radius-panel 10u · панелі, карта, картка каталогу, фрейм товару</p></div>
         <div><div class="radius-demo__box radius-demo__box--pill"></div><p class="ds-meta demo-label t-text">--radius-pill 45px · 194:1333</p></div>
         <div><div class="radius-demo__box radius-demo__box--frame"></div><p class="ds-meta demo-label t-text">--border-frame 5px · 194:1388</p></div>
       </div>
-      <p class="ds-meta demo-label t-text">Тіней у макетах немає.</p>
+      <p class="ds-meta demo-label t-text">Тіней немає. Єдиний box-shadow — кільце 1px помилки поля (.field.is-invalid). Інші форми — лише через маску/клип з токенами: арка картки каталогу (50% 50% 0 0), «крапля» маркера карти (50% 50% 0 50%), пілюля стрілок слайдера (--radius-pill).</p>
     </section>
 
     <section class="ds-section" id="components">
@@ -375,7 +376,7 @@
         <a class="nav-cell nav-cell--outline t-btn" href="#">Кошик ( 0 )</a>
         <a class="nav-cell nav-cell--fill t-btn" href="feedback.html?topic=other">підказати?</a>
       </div>
-      <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline) і «підказати?» (.nav-cell--fill) — beige (--color-beige) незалежно від предка; логотипи в хедері: спільний hover пари (група .site-header__logos) — обидва opacity 1 → --opacity-logo-hover (0.8) разом, --duration-fast; футер: кільце посилань виступає в зазор між колонками (--grid-gap) і поле</p>
+      <p class="demo-label t-kicker">Фокус-кільце кнопок «Кошик» (.nav-cell--outline), «підказати?» (.nav-cell--fill) і «каталог» (.nav-cell--ghost) — beige (--color-beige) незалежно від предка; логотипи в хедері: спільний hover пари (група .site-header__logos) — обидва opacity 1 → --opacity-logo-hover (0.8) разом, --duration-fast; футер: кільце посилань виступає в зазор між колонками (--grid-gap) і поле</p>
       <p class="demo-label t-kicker">Навігація футера (.nav-link--on-light .t-nav, 194:1240); підкреслення на hover/focus — лише тут (демо-футер, .site-footer)</p>
       <div class="demo-panel theme-beige site-footer">
         <a class="nav-link nav-link--on-light t-nav" href="#">Головна</a>
@@ -529,7 +530,7 @@
                 <tr><td>«додати в кошик» (btn--green / --teal, product)</td><td>колір бренду: green (YC) / teal (BS)</td><td>заливка green → teal; teal → green (раніше задавалося в product.css, тепер у токенах варіанта)</td><td>= hover</td><td>як btn</td><td>aria-disabled: opacity 0.4, без hover (раніше cursor default)</td><td>0.45s</td></tr>
         <tr><td>nav-cell--outline («меню», «Кошик»)</td><td>прозора заливка, рамка beige, текст nav-text</td><td>заливка → beige, текст → green</td><td>= hover; 0.15s; кільце beige (токен on-dark)</td><td>заливка beige ×0.92 (нове)</td><td>selected (aria-expanded): = hover; disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
         <tr><td>nav-cell--fill («підказати?»)</td><td>заливка beige, текст green, рамка beige</td><td>заливка → light</td><td>= hover; 0.15s; кільце beige</td><td>заливка light ×0.92 (нове)</td><td>disabled — нове: opacity 0.4</td><td>0.45s</td></tr>
-        <tr><td>nav-cell--ghost («каталог»)</td><td>без заливки й рамки; текст і іконка nav-text</td><td>заливка → beige, текст/іконка → green</td><td>= hover; 0.15s</td><td>заливка beige ×0.92 (нове)</td><td>disabled — нове</td><td>0.45s</td></tr>
+        <tr><td>nav-cell--ghost («каталог»)</td><td>без заливки й рамки; текст і іконка nav-text</td><td>заливка → beige, текст/іконка → green</td><td>= hover; 0.15s; кільце beige (як у «Кошик»/«підказати?»)</td><td>заливка beige ×0.92 (нове)</td><td>disabled — нове</td><td>0.45s</td></tr>
         <tr><td>nav-link (меню, футер)</td><td>текст nav-text (на світлому — green)</td><td>текст → light (на світлому → teal); у футері підкреслення з’являється</td><td>= hover; 0.15s</td><td>—</td><td>—</td><td>0.45s</td></tr>
         <tr><td>arrow-btn (стрілки слайдера)</td><td>прозора заливка, рамка light, іконка світла</td><td>заливка → light, іконка invert(1)</td><td>= hover; 0.15s; кільце currentColor</td><td>заливка light ×0.92 (нове)</td><td>aria-disabled: opacity 0.4, прозора, іконка без інверсії (було)</td><td>0.45s</td></tr>
         <tr><td>chip (подія)</td><td>текст/ромби gold (picker: beige)</td><td>текст → light (picker: gold)</td><td>= hover; 0.15s</td><td>—</td><td>selected (.is-active / aria-pressed) = hover</td><td>0.45s</td></tr>

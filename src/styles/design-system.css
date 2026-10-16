@@ -48,6 +48,7 @@
 .radius-demo { display: flex; gap: var(--space-30); align-items: flex-end; }
 .radius-demo__box { width: var(--ds-radius-box-w); height: var(--ds-radius-box-h); background: var(--color-green); }
 .radius-demo__box--btn { border-radius: var(--radius-btn); }
+.radius-demo__box--panel { border-radius: var(--radius-panel); }
 .radius-demo__box--pill { border-radius: var(--radius-pill); }
 .radius-demo__box--none { border-radius: var(--radius-none); }
 .radius-demo__box--frame { background: none; border: var(--border-frame) solid var(--color-green-alt); }
