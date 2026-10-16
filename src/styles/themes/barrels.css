@@ -14,5 +14,9 @@
   --lp-accent: var(--color-gold);                   /* кікер, назви шарів, цифри кроків, іконки на темному */
   --lp-hairline: var(--color-lp-hairline);     /* арка, лінії кроків, лінія маршруту */
   --lp-amber: var(--color-lp-amber);           /* рідина гравюри, тло розрізу, доки вантажаться фото */
+  --lp-format-green: var(--color-green);             /* панель formats тону green (з візерунком ромбів DS); текст — --lp-on-dark */
+  --lp-format-teal: var(--color-teal);
+  --lp-format-line: var(--color-lp-format-line);       /* контур панелі, міні-блоків, роздільник formats */
+  --lp-format-line-strong: var(--color-lp-format-line-strong); /* контур капсули */
   --lp-tone: btn--teal;                                  /* тон основних кнопок DS (.btn--teal) на світлому/фото; читає збірка (tools/lp-files.mjs); у даних сторінки `tone` необов'язковий */
 }

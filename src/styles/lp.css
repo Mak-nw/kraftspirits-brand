@@ -134,6 +134,35 @@
 .js .page-lp [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
 @keyframes count-failsafe { to { opacity: 1; } }
 
+/* ---------- formats: дві великі панелі поруч (по 6 колонок; шов — зазор великих блоків --grid-gap-panels 5u, зовнішні краї на колонках 1 і 12, як панелі offers) ----------
+   Елементи — за рефом замовника (2026-10-16, затверджено): панель з hairline-контуром (трохи світліше за тло) і приглушеним візерунком ромбів DS (format-pattern-green.svg / format-pattern-teal.svg — приглушені варіанти візерунка каталогу), підпис, КАПСУЛА (світла hairline-лінія, повне закруглення = половина ширини) з ромбом-маркером (.icon--diamond-mark), числом
+   і одиницею, 2–4 колонки напоїв (ромб, назва, опис), роздільник (лінія, що згасає по краях), міні-блоки в hairline-рамках (ромб, підпис, значення). Рядки панелей — subgrid: капсули, колонки,
+   роздільники й міні-блоки обох панелей на спільних лініях. Тон панелі — роль теми. Типографіка — лише ролі .t-*. */
+.lp-formats__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
+.lp-formats__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-head); }
+.lp-formats__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
+.lp-formats__grid > .lp-format.lp-span--6:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
+.lp-formats__grid > .lp-format.lp-span--6:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
+.lp-format { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; justify-items: center; min-width: 0; padding: var(--space-lp-format-pad); border: var(--border-hairline) solid var(--lp-format-line); border-radius: var(--radius-panel); color: var(--lp-on-dark); text-align: center; background: var(--lp-format-teal); }
+.lp-format--green { background: url('/assets/img/format-pattern-green.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--lp-format-green); }
+.lp-format--teal { background: url('/assets/img/format-pattern-teal.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--lp-format-teal); }
+.lp-format__lead { margin: 0; }
+.lp-format__mark { --icon-size: var(--size-lp-format-mark); }
+.lp-format__mark--lg { --icon-size: var(--size-lp-format-mark-lg); }
+.lp-format__badge { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-10); box-sizing: border-box; width: var(--size-lp-format-capsule-w); height: var(--size-lp-format-capsule-h); margin: var(--space-30) 0 0; border: var(--border-hairline) solid var(--lp-format-line-strong); border-radius: calc(var(--size-lp-format-capsule-w) / 2); }
+.lp-format__drinks { align-self: start; display: grid; width: 100%; margin: var(--space-lp-format-gap) 0 0; padding: 0; list-style: none; column-gap: var(--space-20); text-align: start; }
+.lp-format__drinks--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lp-format__drinks--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lp-format__drinks--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.lp-format__drink-title { margin: var(--space-20) 0 0; }
+.lp-format__drink-text { margin: var(--space-10) 0 0; color: var(--lp-on-dark); }
+.lp-format__rule { width: 100%; height: var(--border-hairline); margin: var(--space-lp-format-gap) 0 0; border: 0; background: linear-gradient(to right, transparent, var(--lp-format-line-strong), transparent); } /* лінія згасає по краях */
+.lp-format__facts { align-self: start; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; margin: var(--space-lp-format-gap) 0 0; column-gap: var(--space-20); text-align: start; }
+.lp-format__facts:empty { display: none; }
+.lp-format__fact { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-15); padding: var(--space-30); border: var(--border-hairline) solid var(--lp-format-line); border-radius: var(--radius-btn); }
+.lp-format__fact-label { margin: 0; }
+.lp-format__fact-value { margin: 0; text-wrap: balance; }
+
 /* ---------- tiles: плитки по span колонок зі спільними рядками (subgrid: медіа, назва, підпис, ноти) ----------
    Медіа — гравюра (partials/media/*, + іконка DS у центрі) або фото (портрет 3:4 у рамці --radius-panel). Підписи — по центру під медіа, без маркерів
    (рев'ю e9a95f10). Порожні ноти не показуються. */

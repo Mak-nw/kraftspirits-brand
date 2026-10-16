@@ -46,6 +46,7 @@ export const wordPattern = (n = MAX_WORD) => `^(?![\\s\\S]*[^ \\n\\r\\t]{${n + 1
 
 const ROOMS = ['warm', 'deep', 'paper'];                    // кімнати: кольори задає тема (warm/deep — темні, paper — світла)
 export const TONES = ['teal', 'green', 'gold', 'light', 'beige'];
+export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 export const TILE_TONES = ['black', 'brown', 'green', 'teal'];  // тло круглого кадру плитки: роль теми --lp-tile-<тон> (значення — токени палітри)
 export const TILE_POS = ['top', 'center', 'bottom'];        // кадрування фото в колі: object-position (верх — пляшка обрізана знизу)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
@@ -78,6 +79,12 @@ export const SCHEMA = {
       count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
+    // 4б. Формати: дві великі панелі поруч (по 6 колонок, шов 5u): підпис, капсула з великим числом і одиницею, 2–4 колонки (назва + опис), 0–2 факти
+    formats: { ...BASE, room: E(ROOMS, false, 'warm'), items: L(O({
+      key: { type: 'id', req: true }, tone: E(PANEL_TONES, true), lead: T(25, true), value: T(5, true), unit: T(25, true),
+      items: L(O({ title: T(25, true), text: T(90, true) }), 2, 4, true, { divides: GRID_COLS }),
+      facts: L(O({ label: T(30, true), value: T(60, true) }), 0, 2),
+    }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
     //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола) і imgPos (кадр) за даними, лід — під рядом плиток
     tiles: { ...BASE, room: E(ROOMS, false, 'paper'), shape: E(['circle']), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
@@ -153,7 +160,7 @@ export const RULES = [
 export const PAGE_RULES = [
   { id: 'hero-first', doc: 'перша секція — `hero`, і вона єдина (без неї немає `<h1>`)', json: true },
   { id: 'ids-unique', doc: '`id` секцій унікальні в межах сторінки', json: null },
-  { id: 'keys-unique', doc: '`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `offers.items`) — з нього будується CSS-клас', json: null },
+  { id: 'keys-unique', doc: '`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `formats.items`, `offers.items`) — з нього будується CSS-клас', json: null },
   { id: 'stack-after-block', doc: '`stack: true` дозволено лише секції, перед якою стоїть `card` або `place` (стек = ряд великих блоків; після hero чи інших типів стека немає)', json: null },
   { id: 'anchors-exist', doc: 'посилання-якір `#id` (у кнопках, `place.facts[].href` тощо) має вести на `id` секції цієї сторінки', json: null },
 ];
@@ -282,6 +289,9 @@ const VIEW = {
     groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
       label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
+  formats: (s) => ({ ...head(s),
+    items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: GRID_COLS / s.items.length, lead: t(it.lead), value: t(it.value), unit: t(it.unit),
+      cols: it.items.length, drinks: it.items.map((d) => ({ title: t(d.title), text: t(d.text) })), facts: (it.facts || []).map((f) => ({ label: t(f.label), value: t(f.value) })) })) }),
   tiles: (s) => {
     const round = s.shape === 'circle';   // коло: лід не в шапці, а під рядом плиток
     return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.loose ? ' lp-sec--loose' : ''}`,

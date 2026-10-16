@@ -108,6 +108,24 @@
       "rule": "`alt` плитки має сенс лише з `img`"
     },
     {
+      "id": "tiles-circle-needs-img",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`shape: circle`: кожна плитка з фото `img` (гравюри в колі немає)"
+    },
+    {
+      "id": "tiles-circle-fields",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`leadCols` секції, `tone` і `imgPos` плитки мають сенс лише з `shape: circle`"
+    },
+    {
+      "id": "tiles-circle-origin-2lines",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`shape: circle`: `origin` плитки — рівно два рядки (один переніс `\\n`, кожен ≤ 32 знаки): підпис під колом завжди в 2 рядки по центру"
+    },
+    {
       "id": "offers-bg-size",
       "scope": "offers",
       "expressed": true,
@@ -147,7 +165,7 @@
       "id": "keys-unique",
       "scope": "page",
       "expressed": false,
-      "rule": "`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `offers.items`) — з нього будується CSS-клас"
+      "rule": "`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `formats.items`, `offers.items`) — з нього будується CSS-клас"
     },
     {
       "id": "stack-after-block",
@@ -1001,6 +1019,185 @@
           "additionalProperties": false,
           "properties": {
             "type": {
+              "const": "formats"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "room": {
+              "enum": [
+                "warm",
+                "deep",
+                "paper",
+                "",
+                null
+              ],
+              "default": "warm"
+            },
+            "join": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "kicker": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 25,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "lead": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "caption": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "tone": {
+                    "enum": [
+                      "green",
+                      "teal"
+                    ]
+                  },
+                  "lead": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "value": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 4,
+                    "items": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "maxLength": 25,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 90,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                        }
+                      },
+                      "required": [
+                        "title",
+                        "text"
+                      ]
+                    }
+                  },
+                  "facts": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "minItems": 0,
+                    "maxItems": 2,
+                    "items": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "maxLength": 30,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                        },
+                        "value": {
+                          "type": "string",
+                          "maxLength": 60,
+                          "minLength": 1,
+                          "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "value"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "key",
+                  "tone",
+                  "lead",
+                  "value",
+                  "unit",
+                  "items"
+                ]
+              }
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "title",
+            "items"
+          ],
+          "title": "formats"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
               "const": "tiles"
             },
             "id": {
@@ -1053,6 +1250,30 @@
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "shape": {
+              "enum": [
+                "circle",
+                "",
+                null
+              ]
+            },
+            "leadCols": {
+              "enum": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                "",
+                null
+              ]
+            },
+            "loose": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "items": {
               "type": "array",
               "minItems": 2,
@@ -1104,6 +1325,25 @@
                     ],
                     "maxLength": 240,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "tone": {
+                    "enum": [
+                      "black",
+                      "brown",
+                      "green",
+                      "teal",
+                      "",
+                      null
+                    ]
+                  },
+                  "imgPos": {
+                    "enum": [
+                      "top",
+                      "center",
+                      "bottom",
+                      "",
+                      null
+                    ]
                   },
                   "name": {
                     "type": "string",
@@ -1268,7 +1508,135 @@
             "title",
             "items"
           ],
-          "title": "tiles"
+          "title": "tiles",
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "shape": {
+                    "const": "circle"
+                  }
+                },
+                "required": [
+                  "shape"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "img"
+                      ],
+                      "properties": {
+                        "img": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "required": [
+                    "shape"
+                  ],
+                  "properties": {
+                    "shape": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "then": {
+                "allOf": [
+                  {
+                    "not": {
+                      "properties": {
+                        "leadCols": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "leadCols"
+                      ]
+                    }
+                  },
+                  {
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "tone"
+                                ],
+                                "properties": {
+                                  "tone": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "imgPos"
+                                ],
+                                "properties": {
+                                  "imgPos": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "shape": {
+                    "const": "circle"
+                  }
+                },
+                "required": [
+                  "shape"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "origin": {
+                          "type": "string",
+                          "pattern": "^[^\\n]{1,32}\\n[^\\n]{1,32}$"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
         },
         {
           "type": "object",

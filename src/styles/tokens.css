@@ -931,6 +931,15 @@
   --space-lp-ledger-row: var(--space-30);          /* ярлик → число; медіа → факти; між фактами (рев'ю 45c32ffe) */
   --space-lp-wall-top: var(--space-50);            /* одиниця → медіа/список */
   --space-lp-profit-head: var(--space-100);        /* шапка → групи */
+  /* formats (елементи погоджені рефом замовника 2026-10-16): дві великі панелі (910u кожна, шов 5u) з hairline-контуром, капсула з числом, ромби-маркери, міні-блоки, роздільник */
+  --color-lp-format-line: color-mix(in srgb, var(--color-light) 22%, transparent);        /* контур панелі, міні-блоків і лінія-роздільник: трохи світліше за тло панелі */
+  --color-lp-format-line-strong: color-mix(in srgb, var(--color-light) 65%, transparent); /* контур капсули: тонка світла лінія */
+  --size-lp-format-capsule-w: calc(205 * var(--u));   /* ширина капсули (реф ≈ 205 на панелі 870) */
+  --size-lp-format-capsule-h: calc(270 * var(--u));   /* висота капсули */
+  --size-lp-format-mark: calc(16 * var(--u));         /* ромб-маркер: капсула, над назвами напоїв */
+  --size-lp-format-mark-lg: calc(24 * var(--u));      /* ромб-маркер у міні-блоках */
+  --space-lp-format-pad: var(--space-70);             /* внутрішній відступ панелі */
+  --space-lp-format-gap: var(--space-50);             /* ритм усередині панелі: підпис → капсула → колонки → роздільник → міні-блоки */
 
   /* layers: ритм тексту під розрізом */
   --space-lp-layer-text: var(--space-40);        /* низ розрізу → іконка */
