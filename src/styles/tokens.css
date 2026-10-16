@@ -455,6 +455,11 @@
   /* рядки-акордеони (summary як кнопка-рядок): фон на hover; default = прозорий */
   --btn-row-faq-bg-default:            transparent;
   --btn-row-faq-bg-hover:              var(--color-hover-faq);
+  --btn-row-faq-card-bg-default:       var(--color-light);            /* вигляд «картка» (.acc--card, макет About Us p10): кремова картка всередині рамки .acc-frame; найближчий колір палітри до крему макета */
+  --btn-row-faq-card-bg-hover:         var(--color-hover-acc-product); /* hover картки: теплий беж DS (як рядок акордеона товару) */
+  --space-faq-card-row-gap:            var(--space-5);               /* вертикальний відступ між картками-рядками .acc-frame (макет p10: майже впритул; рішення замовника); горизонтальний між колонками = --grid-gap (40u) */
+  --space-faq-card-inset:              var(--space-5);                /* відступ між зовнішньою hairline-рамкою .acc-frame і карткою (макет: ~5u) */
+  --radius-faq-card:                   var(--radius-panel);           /* закруглення картки; зовнішня рамка .acc-frame — прямі кути (--radius-none), як на макеті */
   --btn-row-product-bg-default:        transparent;
   --btn-row-product-bg-hover:          var(--color-hover-acc-product);
 
@@ -654,10 +659,6 @@
   --size-brand-logo-bs-w: calc(263 * var(--u));   /* 224:3609 */
   --size-brand-logo-bs-h: calc(152 * var(--u));   /* 224:3609 */
   --offset-brand-cta-top: calc(786 * var(--u));   /* 224:3813 y 1028 − 242: кнопка від верху картки */
-
-  --size-sec-intro: calc(984 * var(--u));         /* 224:3639 */
-  --space-100: calc(100 * var(--u));              /* 224:3639 gap блоків; 224:3586 */
-  --space-intro-pad-y: calc(70 * var(--u));       /* 224:3639 py */
   /* Вибір бренду (.brand-panel / .brand-choice; макет «About Us» стор. 4, панель 770×674, масштаб макета 1920) */
   --ratio-brand-panel: 805 / 540;                 /* пропорція панелі (еталон brand-picker-new: 805×540; ширина = 5 колонок сітки, висота за пропорцією) */
   --space-brand-panel-pt: calc(70 * var(--u));    /* відступ зверху до боксу логотипа */
@@ -667,6 +668,10 @@
   --size-brand-panel-text-w: calc(520 * var(--u));     /* опис під панеллю: ≈ 70% панелі, рівно 2 рядки (еталон: 538/805 для 1-го рядка) */
   --size-brand-panel-band-h: calc(181 * var(--u));     /* смуга-фотофон внизу панелі */
   --size-brand-panel-bottle-w: calc(217 * var(--u));   /* пляшка (bottle.png 234×290), нижня частина обрізана внутрішньою рамкою */
+
+  --size-sec-intro: calc(984 * var(--u));         /* 224:3639 */
+  --space-100: calc(100 * var(--u));              /* 224:3639 gap блоків; 224:3586 */
+  --space-intro-pad-y: calc(70 * var(--u));       /* 224:3639 py */
 
   --size-sec-tours: calc(1303 * var(--u));        /* 224:3586 */
   /* Панелі екскурсій: геометрія — цілі CSS-px (round), щоб краї, рамка фото і стик «текст/фото» лягали на пікселі пристрою
@@ -1060,38 +1065,29 @@
   --size-wc-qty-w: calc(var(--size-control-h) * 1.25);      /* поле кількості між двома стрілками: 70u */
 }
 
-/* ---------- Сторінка «Про дім» (about.html — рукописна, не шаблон lp; стилі src/styles/pages/about-page.css; ілюстрації partials/about/*.html) ----------
-   Лише похідні від наявних токенів: розміри — u-масштаб і сітка, відступи — кроки шкали DS, кольори — палітра (півтінь — color-mix від токена).
-   Типографіка — тільки ролі .t-*. Ілюстрації ЛІНІЙНІ (обводка) з тональними півтінями, як іконки DS. Опис — design-system.html#about-page. */
+/* ---------- Сторінка «Про дім» (about.html — рукописна, 1:1 за макетом ref/About Us.pdf; стилі src/styles/pages/about-page.css) ----------
+   Лише похідні від наявних токенів: розміри — u-масштаб і сітка (макет 1920 = 1920u, 10 колонок), відступи — кроки шкали DS, кольори — палітра.
+   Типографіка — тільки ролі .t-*. Опис — design-system.html#about-page. */
 :root {
   --space-about-sec-y: var(--space-lp-section-y);          /* вертикальне поле кімнат сторінки (150u, як секції lp) */
   --space-about-head: var(--space-lp-head);                /* шапка секції → вміст (70u) */
   --space-about-stack: var(--space-lp-stack);              /* заголовок → лід (20u) */
-  --offset-about-facts-top: calc(var(--size-header-h) + var(--space-60));  /* hero: ряд трьох фактів — під пілюлею header, у зоні неба (163u від верху) */
-  --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero «Про нас»: 140u від низу hero до низу контенту (рішення замовника e3214221; у суцільній зеленій зоні градієнта) */
-  --size-about-fact-icon: var(--size-contacts-icon);       /* іконка факту hero = іконка контактного рядка (24u, як іконки хедера), не збільшена */
-  --space-about-fact-gap: var(--space-10);                 /* іконка → назва → підпис факту */
-  --size-about-step-icon: calc(96 * var(--u));             /* іконка етапу процесу (брендбук YasnoCraft, process-*.svg 64×64, лінія 1.07) */
-  --space-about-step-gap: var(--space-20);                 /* іконка етапу → назва */
-  --ratio-about-photo: 4 / 5;                              /* вертикальні кадри: віхи «15 місяців», високе фото цеху */
-  --space-about-story-row: var(--space-100);               /* між віхами «15 місяців» */
-  --size-about-ring: var(--grid-span-2);                   /* коло-обводка з числом на 2 колонки (краї на сітці, D12) — як кругла плитка DS (shape: circle); реф замовника b7d0c39c */
-  --space-about-ring-gap: var(--space-30);                 /* коло → підпис; між колами */
-  --size-about-line: calc(1.5 * var(--u));                 /* товщина обводки ілюстрацій установок (як лінія іконок DS 1.5 на 24) */
-  --size-about-still-wash-w: calc(389.8 * var(--u));  --size-about-still-wash-h: calc(396.4 * var(--u));   /* бражна 3660 л: ширина куба 232u */
-  --size-about-still-spirit-w: calc(339.4 * var(--u)); --size-about-still-spirit-h: calc(406 * var(--u));  /* спиртова 2420 л: куб 202u (∛V) */
-  --size-about-still-vac-w: calc(248.6 * var(--u));   --size-about-still-vac-h: calc(315.6 * var(--u));    /* вакуумна 410 л: куб 112u + колона 7 тарілок і джин-кошик */
-  --size-about-photo-h: calc(var(--grid-span-4) * 5 / 4);  /* висота пари фото цеху = висота кадру 4:5 на 4 колонки */
-  --space-about-brand-pad: var(--space-70);                /* поле панелі бренду */
-  --size-about-logo-yc-w: calc(420 * var(--u));            /* логотип YasnoCraft у панелі (3824×560) */
-  --size-about-logo-bs-w: calc(300 * var(--u));            /* логотип Bazylsprings у панелі (2172×724) */
-  --size-about-logo-box-h: calc(110 * var(--u));           /* рядок логотипа в панелі бренду (вищий з двох логотипів = 100u) */
-  --size-about-bottle-h: calc(480 * var(--u));             /* пляшки з каталогу на «полиці» панелі бренду (×1.26 до попередньої версії) */
-  --size-about-bottle-w: calc(var(--size-about-bottle-h) * 0.29);  /* кадр пляшки: прозорі бічні поля фото обрізані (пляшка ≈ 26% ширини фото) */
-  --space-about-bottle-gap: var(--space-10);               /* між пляшками на полиці */
-  --shift-about-rise: calc(40 * var(--u));                 /* поява силуетів установок: підйом знизу */
-  --shift-about-bottle-hover: calc(-10 * var(--u));        /* наведення/фокус у панелі: пляшки трохи піднімаються */
-  --space-about-row-y: var(--space-40);                    /* рядок принципу: поле зверху/знизу */
-  --color-about-line: var(--color-lp-hairline);            /* hairline на темному: кола «15 місяців», підлога установок, рядки принципів (= --lp-hairline) */
-  --color-about-halftone: color-mix(in srgb, var(--color-gold) 16%, transparent);  /* півтінь ілюстрацій: тіньовий бік куба, шолома, колони (тональний крок золота) */
+  --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero: 140u від низу hero до низу контенту (рішення замовника e3214221) */
+  --space-about-story-top: calc(240 * var(--u));           /* «15 місяців»: верх секції → верх заголовка/кіл (макет p2: 243) */
+  --space-about-story-row: var(--space-100);               /* між шапкою й віхами, між віхами (макет p2: 89 / 102) */
+  --ratio-about-milestone: 17 / 20;                        /* фото віх на 2 колонки: макет p2 288×332 / 304×332 */
+  --space-about-ring-gap: var(--space-30);                 /* коло → підпис */
+  --size-about-ring-line: var(--border-hairline);          /* лінія кола-обводки: hairline (макет p2/p8 — тонка обводка; DS-товсте кільце плитки тут не підходить) */
+  --size-about-people-h: calc(1311 * var(--u));            /* «Цитата + люди»: висота секції (макет p5) */
+  --size-about-people-quote-h: calc(483 * var(--u));       /* верх секції → ряд кіл (макет p5: 633 − 150) */
+  --size-about-avatar: var(--grid-span-1);                 /* портрет Германа = 1 колонка (край колонки 10; макет p5: 157u ≈ 1.3 кол — на колонку, правило сітки) */
+  --size-about-dot: calc(60 * var(--u));                   /* кола-обводки з іконками біля імені засновника (реф about-circles-icons-ref: ≈60u) */
+  --size-about-dot-icon: 50%;                              /* іконка (24×24, лінія 1.5) всередині кола = половина діаметра */
+  --offset-about-founder-note: calc(195 * var(--u));       /* дрібний текст праворуч нижче кіл (макет p5: 828 − 633) */
+  --size-about-hills-w: calc(900 * var(--u));              /* графіка пагорбів (940 з прозорим полем, 0.958 масштабу сітки) */
+  --ratio-about-arch: 13 / 14;                             /* арки-фото установок (макет p6: 497×536) */
+  --ratio-about-arch-tall: 7 / 8;                          /* центральна арка вища (макет p6: 497×571) */
+  --ratio-about-principle: 33 / 50;                        /* картка принципу (макет p8: 356×540) */
+  --size-about-principle-ring: 82%;                        /* кільце принципу = 84% внутрішньої ширини картки = 60% картки (макет p8: 215 з 356) */
+  --size-about-principle-icon: 36%;                        /* іконка в порожньому центрі кільця (центр = 66% діаметра; іконка 24×24, лінія 0.6 → читається при збільшенні) */
 }
