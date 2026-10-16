@@ -409,6 +409,16 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
     const base = byType(type); if (!base) continue; const p = clone(base); sec(p).pad = 40; if ('join' in sec(p)) sec(p).join = false; if ('loose' in sec(p)) sec(p).loose = false;
     note(/lp-pad--40\b/.test(secTag(render(p), sec(p).id)), `render ${type}: pad: 40 → клас lp-pad--40 на секції`);
   }
+  // titleCols (4 типово / 6) → клас .heading-wide на заголовку; hero.titleSize large → H1 роллю .t-h2; formats без lead → панель без підпису і без порожнього h3
+  for (const type of ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers']) {
+    const base = byType(type === 'steps' ? 'steps [deck' : type); if (!base) continue;
+    const p6 = clone(base); sec(p6).titleCols = 6; const h6 = render(p6); const p4 = clone(base); sec(p4).titleCols = 4; const h4 = render(p4);
+    note(/<h2 class="[^"]*heading-wide/.test(h6) && !/heading-wide/.test(h4), `render ${type}: titleCols 6 → .heading-wide на H2; 4 — без класу`);
+  }
+  { const p = clone(validPages[0][1]); p.sections[0].titleSize = 'large'; p.sections[0].titleCols = 6; const h = render(p); note(/<h1 class="hero__title t-h2 heading-center heading-wide"/.test(h), 'render hero: titleSize large → H1 .t-h2, titleCols 6 → .heading-wide');
+    const q = clone(validPages[0][1]); delete q.sections[0].titleSize; delete q.sections[0].titleCols; delete q.sections[0].lead; const h2 = render(q); note(/<h1 class="hero__title t-hero heading-center"/.test(h2) && !/hero__subtitle/.test(h2), 'render hero: без titleSize — .t-hero; без lead — підзаголовка немає'); }
+  { const p = clone(byType('formats')); sec(p).items.forEach((it) => delete it.lead); const h = render(p); note(!/lp-format__lead/.test(h), 'render formats: без lead — підпису над капсулою немає'); jsOk(p) === true || note(false, 'formats без lead валідні (JS)'); note(jsonOk(p) === true, 'formats без lead валідні (JSON)');
+    const p1 = clone(byType('formats')); delete sec(p1).items[1].lead; note(/aria-hidden="true">&nbsp;<\/span>/.test(render(p1)), 'render formats: lead лише в одній панелі — у другій резерв рядка (спільні рядки subgrid)'); }
   { const p = cnt('tiles', 4, 10); sec(p).id = 'eq'; const html = render(p); note(/lp-tiles__grid--eq lp-tiles__grid--n4/.test(html) && !/lp-tile lp-span--/.test(html), 'render tiles: 4 плитки на 10 колонок → рівний поділ (lp-tiles__grid--n4), без lp-span'); }
   { const html = render(byType('tiles [circle')); note(/lp-tile--zoom-75/.test(html) && /t-spec/.test(html), 'render tiles [circle]: zoom → клас lp-tile--zoom-75; підпис — роль .t-spec'); note(/lp-tiles--over/.test(html), 'render tiles [circle]: captionOver → клас lp-tiles--over'); const p2 = clone(byType('tiles [circle')); sec(p2).captionOver = false; note(!/lp-tiles--over/.test(render(p2)), 'render tiles [circle]: captionOver: false (типово) не дає класу'); }
 }

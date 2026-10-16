@@ -257,6 +257,21 @@
           "maxLength": 160,
           "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
         },
+        "titleCols": {
+          "enum": [
+            4,
+            6,
+            "",
+            null
+          ]
+        },
+        "titleSize": {
+          "enum": [
+            "large",
+            "",
+            null
+          ]
+        },
         "img": {
           "type": "string",
           "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
@@ -402,6 +417,14 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
             },
             "cols": {
               "enum": [
@@ -597,6 +620,14 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
             },
             "deck": {
               "type": [
@@ -1146,6 +1177,14 @@
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 8,
@@ -1563,6 +1602,14 @@
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 8,
@@ -1594,9 +1641,11 @@
                     ]
                   },
                   "lead": {
-                    "type": "string",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "maxLength": 25,
-                    "minLength": 1,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "value": {
@@ -1678,7 +1727,6 @@
                 "required": [
                   "key",
                   "tone",
-                  "lead",
                   "value",
                   "unit",
                   "items"
@@ -1812,6 +1860,14 @@
               ],
               "maxLength": 120,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
             },
             "cols": {
               "enum": [
@@ -2342,6 +2398,14 @@
               ],
               "maxLength": 320,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
             },
             "cols": {
               "enum": [
