@@ -1,0 +1,103 @@
+/* WooCommerce-сторінки (cart.html, checkout.html — кошик, оформлення, подяка): розмітка = класичні шаблони WooCommerce (reports/wc-templates-spec.md), вигляд = ЛИШЕ наявні компоненти
+   дизайн-системи на токенах. Цей файл нічого не вигадує: він застосовує правила наявних компонентів до класів woocommerce-* (спека, розділ 2.4):
+   button.button → .btn (+ тон) · p.form-row → .field · select → .select--light.select--field · checkbox/radio → .check · блок → .contacts-panel · помилка → .contact-form__alert / .field.is-invalid ·
+   успіх/інфо → .contact-success · ± кількості → .arrow-btn. Рядки таблиць — hairline як рядки акордеона/фактів (.lp-offer__fact): жодних нових ліній, тіней, плашок.
+   Текст — лише ролі .t-* у розмітці (п. 5в). Сітка: 12 колонок єдиної сітки; кошик 8 + 4, оформлення 7 + 5. Композиції описані в design-system.html, розділ «Шаблони WooCommerce». */
+
+/* фон сторінок — той самий візерунок ромбів, що на каталозі/товарі/контактах (product.css); зона header прозора */
+.page-cart, .page-checkout { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
+.page-cart .site-header, .page-checkout .site-header { background: transparent; }
+
+.wc-page { width: 100%; max-width: var(--size-product-page-w); margin-inline: auto; padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom); }
+.wc-grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-contacts-gap); align-items: stretch; }
+.wc-main--cart { grid-column: span var(--span-wc-cart-main); }
+.wc-aside { grid-column: span var(--span-wc-cart-aside); }
+.wc-main--checkout { grid-column: span var(--span-wc-checkout-main); }
+.wc-aside--checkout { grid-column: span var(--span-wc-checkout-aside); }
+.wc-aside > .cart_totals { display: flex; flex-direction: column; gap: var(--space-30); }
+.wc-aside .wc-proceed-to-checkout { margin-top: auto; }
+
+/* нотиси: успіх/інфо — .contact-success (текст, під ним кнопка) на hairline-рядку; помилка — .contact-form__alert (рамка кольору помилки); порожня обгортка не займає місця */
+.woocommerce-notices-wrapper, .woocommerce-NoticeGroup { display: flex; flex-direction: column; gap: var(--space-15); }
+.woocommerce-notices-wrapper:empty, .woocommerce-NoticeGroup:empty { display: none; }
+.woocommerce-notices-wrapper:focus { outline: none; } /* програмний фокус для озвучення нотису (tabindex -1), як .contact-success__title:focus */
+.woocommerce-message, .woocommerce-info { padding-bottom: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+.woocommerce-error li + li { margin-top: var(--space-5); }
+.woocommerce-error a { cursor: pointer; }
+
+/* таблиці (кошик, підсумок, склад замовлення): рядки = hairline як у акордеона/фактів; ролі — у розмітці */
+.woocommerce table.shop_table { width: 100%; border-collapse: collapse; }
+.woocommerce table.shop_table :is(th, td) { padding: var(--space-15) 0; text-align: start; vertical-align: middle; border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+.woocommerce table.shop_table :is(th, td):not(:last-child) { padding-inline-end: var(--space-20); }
+.woocommerce table.shop_table td:last-child:not(.product-name) { text-align: end; }
+.woocommerce table.shop_table :is(.product-price, .product-subtotal, .product-quantity, .product-total) { white-space: nowrap; }
+.woocommerce table.cart :is(.product-quantity) { text-align: start; }
+.woocommerce table.shop_table .product-name { width: 100%; }
+.woocommerce table.shop_table thead th:last-child { text-align: end; }
+.woocommerce table.cart td.actions { padding-block: var(--space-30) 0; border-bottom: 0; text-align: start; }
+.woocommerce table.cart td.actions::after { content: ''; display: block; clear: both; }
+.woocommerce table.cart td.actions .coupon { float: left; }
+.woocommerce table.cart td.actions > .btn { float: right; }
+.woocommerce .product-thumbnail img { width: auto; max-width: none; height: var(--size-wc-thumb-h); object-fit: contain; }
+.woocommerce .product-name .variation { display: flex; gap: var(--space-5); margin: 0; }
+.woocommerce .product-name .variation :is(dt, dd) { margin: 0; }
+.woocommerce a.remove { display: inline-block; transition: color var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .woocommerce a.remove:hover, .woocommerce a.woocommerce-remove-coupon:hover { color: var(--color-teal); } }
+.woocommerce a.woocommerce-remove-coupon { transition: color var(--duration-fast) var(--ease-out); }
+
+/* кількість: стрілки = .arrow-btn (на світлій панелі кольори словника інвертовано — так само, як контактна панель перемикає hover .btn--outline у contacts.css); поле — .field__control між ними */
+.quantity { display: flex; align-items: center; gap: var(--space-5); }
+.quantity .qty { width: var(--size-wc-qty-w); text-align: center; appearance: textfield; -moz-appearance: textfield; }
+.quantity .qty::-webkit-inner-spin-button, .quantity .qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.woocommerce .quantity .arrow-btn {
+  --btn-bg: var(--btn-outline-bg-default); --btn-bg-hover: var(--btn-green-bg-default); --btn-bg-focus: var(--btn-green-bg-default); --btn-bg-active: var(--btn-green-bg-active); --btn-bg-disabled: var(--btn-outline-bg-default);
+  --btn-border: var(--btn-outline-border-default); --btn-border-hover: var(--btn-green-border-default); --btn-border-focus: var(--btn-green-border-default); --btn-border-active: var(--btn-green-border-default); --btn-border-disabled: var(--btn-outline-border-default);
+  --btn-icon-filter: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-default); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-default); --btn-icon-filter-active: var(--btn-arrow-icon-filter-default); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-hover);
+}
+
+/* вимкнена «Оновити кошик»: контурна кнопка на панелі отримує hover/focus/active-заливку з contacts.css (.contacts-panel .btn--outline) — для disabled повертаємо заливку стану disabled (як у решти кнопок: стани не змінюються) */
+.contacts-panel .btn:is(:disabled, [aria-disabled="true"]) { --btn-bg-hover: var(--btn-bg-disabled); --btn-bg-focus: var(--btn-bg-disabled); --btn-bg-active: var(--btn-bg-disabled); }
+
+/* купон: поле + кнопка в ряд */
+.woocommerce .coupon { display: flex; flex-direction: row; align-items: center; gap: var(--space-10); }
+.woocommerce .coupon .field__control { width: calc(var(--size-wc-qty-w) * 3); }
+
+/* підсумки: назва ліворуч, сума праворуч */
+.cart_totals table.shop_table :is(td) { text-align: end; }
+.woocommerce table.woocommerce-checkout-review-order-table { table-layout: fixed; } /* колонки 55/45: методи доставки в правій колонці переносяться, а не стискаються до слова */
+.woocommerce table.woocommerce-checkout-review-order-table .product-name { width: 55%; }
+.woocommerce table.woocommerce-checkout-review-order-table .shipping :is(th, td) { vertical-align: top; }
+.woocommerce table.shop_table.woocommerce-checkout-review-order-table tr.shipping td { text-align: start; }
+.woocommerce-checkout-review-order-table .shipping td > * + * { margin-top: var(--space-10); }
+.woocommerce-checkout-review-order-table .product-name .product-quantity { margin-left: var(--space-5); }
+
+/* порожній кошик */
+.wc-cart-empty { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-30); }
+.wc-cart-empty .woocommerce-info { align-self: stretch; }
+
+/* оформлення: форма на сітці (панель 7 колонок + панель 5 колонок); поля — .field, пари «ім'я/прізвище», «телефон/e-mail», «область/місто» — як feedback-pair (5u) */
+.woocommerce-checkout .wc-main--checkout, .woocommerce-checkout .wc-aside--checkout { min-width: 0; }
+.woocommerce-billing-fields, .woocommerce-additional-fields { display: flex; flex-direction: column; gap: var(--space-30); }
+.woocommerce-billing-fields__field-wrapper, .woocommerce-additional-fields__field-wrapper { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); row-gap: var(--space-15); align-items: start; }
+.woocommerce-billing-fields__field-wrapper > .form-row-wide, .woocommerce-additional-fields__field-wrapper > .form-row-wide { grid-column: 1 / -1; }
+.woocommerce-checkout .form-row { position: relative; margin: 0; }
+.woocommerce-checkout .woocommerce-input-wrapper { display: contents; }
+.woocommerce-checkout .form-row .optional { color: inherit; }
+.woocommerce-checkout .woocommerce-shipping-methods { display: flex; flex-direction: column; }
+.woocommerce-checkout textarea.field__control { min-height: calc(var(--size-btn-h) * 2); }
+#order_review, #payment { display: flex; flex-direction: column; gap: var(--space-30); }
+.wc_payment_methods { display: flex; flex-direction: column; gap: var(--space-5); }
+.wc_payment_method .payment_box { padding-bottom: var(--space-10); }
+.place-order { display: flex; flex-direction: column; gap: var(--space-20); }
+.woocommerce-terms-and-conditions-wrapper { display: flex; flex-direction: column; gap: var(--space-5); }
+
+/* подяка */
+.wc-order-main { display: flex; flex-direction: column; gap: var(--space-30); }
+.woocommerce-order-overview { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.woocommerce-order-overview > li { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+.woocommerce-order-details, .woocommerce-customer-details { display: flex; flex-direction: column; gap: var(--space-20); }
+.woocommerce-customer-details address { margin: 0; }
+.woocommerce-customer-details > div, .wc-order-track { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-15); }
+
+/* службове: прихований стан (hidden) сильніше за display компонентів; одна розмітка = один стан (JS показує потрібний) */
+.woocommerce [hidden], .wc-grid[hidden] { display: none; }

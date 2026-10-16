@@ -18,6 +18,13 @@ export function addToCart(slug, volume, qty = 1) {
   return list;
 }
 
+// Запис усього списку (кошик: зміна кількості, видалення, очищення після замовлення). Формат рядка — той самий { slug, volume, qty }.
+export function writeCart(list) {
+  try { localStorage.setItem(CART_KEY, JSON.stringify(list)); } catch { /* приватний режим: без збереження */ }
+  renderCartCount(list);
+  return list;
+}
+
 export function renderCartCount(list = readCart()) {
   const n = list.reduce((s, r) => s + (Number(r.qty) || 0), 0);
   document.querySelectorAll('.site-header a[href$="cart.html"]').forEach((a) => { (a.querySelector('[data-cart-label]') || a).textContent = `Кошик ( ${n} )`; });
