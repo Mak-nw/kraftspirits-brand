@@ -67,7 +67,7 @@
 
     <!-- 3. 15 МІСЯЦІВ (реф замовника b7d0c39c): фон — розмите затемнене фото будівлі (обробка в самому файлі, без CSS-оверлея), заголовок і лід, дві віхи в шаховому порядку, праворуч два кола-обводки з числами -->
     <section class="about-sec about-story" id="story" aria-labelledby="story-title">
-      <img class="about-story__bg" src="/assets/img/about-story-bg.webp" width="1600" height="1012" alt="" loading="lazy">
+      <img class="about-story__bg" src="/assets/img/about-story-bg.webp" width="1920" height="1574" alt="" loading="lazy">
       <div class="about__grid about-story__grid">
         <div class="about-story__head">
           <h2 class="t-h2 heading-start" id="story-title" data-reveal="rise">15 місяців від першого дня будівництва до запуску</h2>
@@ -90,27 +90,21 @@
       </div>
     </section>
 
-    <!-- 4. ЗАСНОВНИК: реальне фото Віктора (кроп 280×350 з наданих 400×400, без збільшення) + текст статті -->
-    <section class="about-sec about-people" id="people" aria-labelledby="people-title">
-      <div class="about__grid about-people__grid">
-        <figure class="about-portrait" data-reveal="rise">
-          <img class="about__photo about-portrait__img" src="/assets/img/about-viktor.webp" width="280" height="350" loading="lazy" alt="Віктор Базильчук, засновник дистилерії">
-          <figcaption class="about-portrait__cap"><span class="t-product-name">Віктор Базильчук</span><span class="t-caption">засновник</span></figcaption>
-        </figure>
-        <div class="about-people__text">
-          <h2 class="t-h2 heading-start" id="people-title" data-reveal="rise">Засновник і виробництво</h2>
-          <p class="t-desc" data-reveal="rise">Віктор Базильчук сформував концепцію дистилерії, виробничу модель і команду. За плечима в нього аграрний сектор, виробництво, робота із зерном та експорт. Виробництвом керує Герман Марущак.</p>
-        </div>
+    <!-- 4. ЗАСНОВНИК (реф замовника 6e9f7ed9) — композиція-реф: надзаголовок; заголовок у 2 рядки (1: одне слово, 2: слово + вертикальне фото + слово); текст під ним по центру. Той самий компонент .about-quote, що й цитата 4б. Портрет — кроп 280×350 з наданих 400×400, без збільшення -->
+    <section class="about-sec about-people about-quote" id="people" aria-labelledby="people-title">
+      <div class="about__grid about-quote__grid">
+        <p class="t-kicker about-quote__kicker" data-reveal="rise">Засновник і виробництво</p>
+        <h2 class="t-h2 heading-center heading-wide" id="people-title" data-reveal="rise"><span class="about-quote__line">Засновник</span><span class="about-quote__line about-quote__tail"><span class="about-quote__word">Віктор</span><img class="about-quote__photo about-quote__photo--person" src="/assets/img/about-viktor.webp" width="280" height="350" loading="lazy" alt="Віктор Базильчук, засновник дистилерії"><span class="about-quote__word">Базильчук</span></span></h2>
+        <p class="t-text about-quote__body" data-reveal="rise">Віктор Базильчук сформував концепцію дистилерії, виробничу модель і команду. За плечима в нього аграрний сектор, виробництво, робота із зерном та експорт. Виробництвом керує Герман Марущак.</p>
       </div>
     </section>
 
-    <!-- 4б. ЦИТАТА (реф замовника e6908955): великий засічковий рядок по центру, у розриві останнього рядка — вертикальне фото куба (цитата про дистиляцію; фото Германа Марущака немає), надзаголовок і підпис по центру -->
-    <section class="about-sec about-quote" aria-labelledby="quote-kicker">
+    <!-- 4б. ЦИТАТА (реф замовника e6908955, та сама композиція): надзаголовок; заголовок у 2 рядки з вертикальним фото куба посередині другого; повна цитата абзацом під ним; підпис -->
+    <section class="about-sec about-quote" aria-labelledby="quote-title">
       <figure class="about__grid about-quote__grid">
-        <p class="t-kicker about-quote__kicker" id="quote-kicker" data-reveal="rise">Традиційна й вакуумна дистиляція</p>
-        <blockquote class="about-quote__text" data-reveal="rise">
-          <p class="t-h2 heading-center heading-wide">«Поєднання традиційної та вакуумної дистиляції дає нам більше можливостей для роботи з <span class="about-quote__tail">різною<img class="about-quote__photo" src="/assets/img/about-quote-still.webp" width="600" height="800" loading="lazy" alt="" aria-hidden="true">сировиною»</span></p>
-        </blockquote>
+        <p class="t-kicker about-quote__kicker" data-reveal="rise">Директор виробництва</p>
+        <h2 class="t-h2 heading-center heading-wide" id="quote-title" data-reveal="rise"><span class="about-quote__line">Традиційна та</span><span class="about-quote__line about-quote__tail"><span class="about-quote__word">вакуумна</span><img class="about-quote__photo" src="/assets/img/about-quote-still.webp" width="600" height="800" loading="lazy" alt="" aria-hidden="true"><span class="about-quote__word">дистиляція</span></span></h2>
+        <blockquote class="about-quote__text" data-reveal="rise"><p class="t-text about-quote__body">«Поєднання традиційної та вакуумної дистиляції дає нам більше можливостей для роботи з різною сировиною»</p></blockquote>
         <figcaption class="about-quote__cap" data-reveal="rise"><span class="t-product-name">Герман Марущак</span><span class="t-caption">директор виробництва · Forbes.ua, серпень 2026</span></figcaption>
       </figure>
     </section>
