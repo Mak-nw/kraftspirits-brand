@@ -5,9 +5,9 @@ Vite (vanilla), багатосторінковий: кожен `*.html` у ко�
 ## Запуск
 ```
 npm install
-npm run dev      # http://localhost:5190
+npm run dev      # http://localhost:5200 (--strictPort: якщо порт зайнятий, команда падає, а не бере інший)
 npm run build    # dist/, base /kraftspirits/ (або BASE_PATH, див. «Деплой»)
-npm run preview  # http://localhost:5190
+npm run preview  # http://localhost:5200
 ```
 Живий опис дизайн-системи: `/design-system.html`.
 
@@ -256,7 +256,7 @@ hero (фото + паралакс, затемнення лише зверху п
 
 | Що | Де лежить | Адреса / запуск |
 |---|---|---|
-| Сайт (dev) | `site_brand/` | http://localhost:5200 (порт задає оркестратор: `npx vite --port 5200`; скрипт `npm run dev` має 5190 — це порт чужого проєкту OSTA, не використовувати) |
+| Сайт (dev) | `site_brand/` | http://localhost:5200 (`npm run dev` = `vite --port 5200 --strictPort`; 5190 — порт чужого проєкту OSTA, не використовувати) |
 | Review-оверлей (модуль 05) | `dev-tools/review/*`, `vite-plugin-review.js`; підключено в `vite.config.js` лише для `command === 'serve'` | вмикається разом із dev-сервером, кнопки внизу праворуч |
 
 Інспектор «Стиль» (`S`, dev-only): зелений — padding, помаранчевий — CSS `gap`, фіолетовий — виміряна відстань між сусідніми блоками (margin, виліт панелі за колонку, вільні доріжки; підпис `px · u`), при наведенні — червоний redline: розмір елемента й відстані до найближчих сусідів і краю батька. Інші режими: `L` список, `G` сітка, `T` текст, `K` колір, `C` коментар.

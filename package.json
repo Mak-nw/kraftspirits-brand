@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5190",
+    "dev": "vite --port 5200 --strictPort",
     "build": "vite build",
-    "preview": "vite preview --port 5190",
+    "preview": "vite preview --port 5200 --strictPort",
     "qa": "node tools/qa/run.mjs",
     "qa:full": "node tools/qa/run.mjs --full",
     "qa:check-ds": "node tools/qa/check-ds.mjs",
