@@ -5,7 +5,7 @@
       <div class="lp-offers__grid{{gridMod}}">
         <div class="lp-offers__head lp-head">
           {{#kicker}}<p class="lp-head__kicker t-kicker" data-reveal="rise">{{kicker}}</p>{{/kicker}}
-          <h2 class="lp-offers__title t-h2 heading-center" id="{{id}}-title" data-reveal="rise">{{title}}</h2>
+          <h2 class="lp-offers__title t-h2 heading-center{{titleMod}}" id="{{id}}-title" data-reveal="rise">{{title}}</h2>
           {{#routeFrom}}<!--@include lp/route from="{{routeFrom}}" to="{{routeTo}}" icon="{{routeIcon}}"-->{{/routeFrom}}
           {{#lead}}<p class="lp-offers__note t-desc">{{lead}}</p>{{/lead}}
         </div>

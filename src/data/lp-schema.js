@@ -56,6 +56,8 @@ export const PAD_STEPS = [20, 30, 40, 50, 70, 100];          // `pad`: крок 
 // `cols`: ширина вмісту секції в колонках сітки (контейнер = --grid-span-N по центру, 8 → колонки 2–9, 6 → 3–8; 10 = уся сітка = типово, поле не задають). Лише ПАРНА кількість ≤ 10: по центру краї мають лежати на межах колонок (D12).
 // Мінімум залежить від типу (виміряна ємність текстів у вужчому контейнері); нижче мінімуму значення відхиляється збіркою.
 export const COLS_BY_TYPE = { layers: [6, 8, 10], steps: [8, 10], compare: [8, 10], formats: [8, 10], tiles: [6, 8, 10], offers: [8, 10], faq: [6, 8, 10] };
+export const HEAD_COLS = [4, 6];   // `titleCols`: ширина заголовка по центру в колонках (4 — типово, --size-heading-w; 6 — широкий, --size-heading-w-wide: довгий заголовок в 2 рядки, рев'ю d0234bbc, 58f675f7)
+export const HERO_TITLE_SIZES = ['large'];   // `hero.titleSize`: 'large' — H1 hero роллю .t-h2 (67u) замість .t-hero (55u; рев'ю 1574e475); без поля — .t-hero
 export const HERO_FADES = ['green', 'teal', 'brown'];       // `hero.fade`: колір градієнта знизу вгору (токен палітри --color-<значення>; без поля — градієнта немає; рішення замовника 53422015)
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
@@ -64,6 +66,7 @@ const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — під
 // спільні поля секції. Кожен тип бере лише ті, що його partial справді показує (поле в схемі ⇒ воно є на сторінці; перевіряє lp-contract)
 const BASE = { type: { type: 'type', req: true }, id: { type: 'id', req: true }, room: E(ROOMS, false), join: B(), pad: E(PAD_STEPS, false), kicker: T(25), title: T(60, true), lead: T(320), caption: T(120) };
 const COLS = (type) => ({ type: 'enum', values: COLS_BY_TYPE[type], req: false, def: 10, sample: 10 });   // sample — значення для контрактних прогонів (qa:lp): 10 = типова повна ширина (збігається з типовим; видимий ефект cols перевіряється окремо зі значенням 8)
+const TITLE = { titleCols: E(HEAD_COLS) };   // ширина центрованого заголовка секції (H1/H2): 4 колонки типово, 6 — широкий варіант
 const STACK = { stack: B() };   // card / place: «стек великих блоків» — секція стоїть під попередньою card/place в ТІЙ САМІЙ кімнаті, зазор --grid-gap-panels (5u)
 const base = (...omit) => { const b = { ...BASE }; omit.forEach((k) => delete b[k]); return b; };
 
@@ -78,16 +81,16 @@ export const SCHEMA = {
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
-    hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), fade: E(HERO_FADES), cta: { ...O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green']) }), req: true } },   // cta.variant — тон кнопки hero (типово — тон сторінки): на градієнті hero.fade кнопка тону сторінки зливається з тлом — задають світлу (beige)
+    hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), ...TITLE, titleSize: E(HERO_TITLE_SIZES), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), fade: E(HERO_FADES), cta: { ...O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green']) }), req: true } },   // cta.variant — тон кнопки hero (типово — тон сторінки): на градієнті hero.fade кнопка тону сторінки зливається з тлом — задають світлу (beige)
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2–6 (n рівних блоків контейнера; 4 на 10 колонок — по 348.55u)
-    layers: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },
+    layers: { ...BASE, ...TITLE, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
     //    deck: true — «колода»: кожен крок = велика картка з фото на тлі (img кроку, cover), картки прилипають під header і наїжджають одна на одну (CSS sticky);
     //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
-    steps: { ...BASE, room: E(ROOMS, false, 'deep'), deck: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
+    steps: { ...BASE, ...TITLE, room: E(ROOMS, false, 'deep'), deck: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
       ...MEDIA_IMG, imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
-    compare: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
+    compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8], true), align: E(['start', 'center'], false, 'start'), accent: B(),
       count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
@@ -100,9 +103,9 @@ export const SCHEMA = {
     }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
     //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — у шапці під H2 (ширина leadCols)
-    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true) },
+    tiles: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
-    offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
+    offers: { ...base('caption'), ...TITLE, room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true),
       foot: O({ text: T(160, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green'], true) }), 0, 2), note: T(200) }) },
@@ -300,11 +303,12 @@ const t = (v) => esc(v).replace(/%(?=(?:contacts\.\w+|BASE_URL)%)/g, '&#37;');
 const li = (arr) => (arr || []).map((x) => ({ text: t(x) }));
 const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [...w].length)); // найдовший непереносний відрізок (nbsp не розриває)
 const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
-function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), lead: t(s.lead), caption: t(s.caption) }; }
+const titleMod = (s) => (s.titleCols === 6 ? ' heading-wide' : '');   // клас-модифікатор ширини заголовка (base.css .heading-wide)
+function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), titleMod: titleMod(s), lead: t(s.lead), caption: t(s.caption) }; }
 
 const colsOf = (s) => s.cols || GRID_COLS;   // ширина вмісту секції в колонках (типово 10)
 const VIEW = {
-  hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: s.cta.variant || p.tone, panel: s.panel ? '1' : '', mods: (s.panel ? ' hero--panel' : '') + (s.fade ? ` hero--fade hero--fade-${s.fade}` : '') }),
+  hero: (s, p) => ({ id: s.id, title: t(s.title), titleRole: s.titleSize === 'large' ? 't-h2' : 't-hero', titleMod: titleMod(s), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: s.cta.variant || p.tone, panel: s.panel ? '1' : '', mods: (s.panel ? ' hero--panel' : '') + (s.fade ? ` hero--fade hero--fade-${s.fade}` : '') }),
   layers: (s) => {
     const cut = s.items.some((it) => it.img);
     return { ...head(s), cut: cut ? '1' : '', noCut: cut ? '' : '1', nMod: ` lp-layers--n${s.items.length}`,   // n рівних блоків контейнера (lp.css): 2, 5 лягають на колонки, 3, 4, 6 — рівний поділ

@@ -1,7 +1,7 @@
     <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{deckMod}}" id="{{id}}" data-loop data-steps aria-labelledby="{{id}}-title">
       <div class="lp-steps__grid">
-        {{#plainHead}}<h2 class="lp-steps__title t-h2 heading-center" id="{{id}}-title">{{title}}</h2>{{/plainHead}}{{#richHead}}<div class="lp-steps__head lp-head">
-          <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" lead="{{lead}}" caption="{{caption}}"-->
+        {{#plainHead}}<h2 class="lp-steps__title t-h2 heading-center{{titleMod}}" id="{{id}}-title">{{title}}</h2>{{/plainHead}}{{#richHead}}<div class="lp-steps__head lp-head">
+          <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" titleMod="{{titleMod}}" lead="{{lead}}" caption="{{caption}}"-->
         </div>{{/richHead}}
         {{#arch}}<div class="lp-steps__stage">
           <div class="lp-arch lp-arch--stage"{{#slot}} data-slot="{{slot}}"{{/slot}}>

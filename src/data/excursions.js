@@ -22,7 +22,7 @@ export const excursions = {
     },
     {
       type: 'layers', id: 'why', room: 'deep',
-      kicker: 'Що на вас чекає', title: 'Один візит — чотири враження',
+      kicker: 'Що на вас чекає', title: 'Один візит — чотири враження', titleCols: 6,   // 6 колонок: заголовок у 2 рядки (рев'ю d0234bbc)
       items: [
         { key: 'tour', title: 'Екскурсія дистилерією', text: 'Процес виробництва, обладнання та філософія YasnoCraft', img: '/assets/img/excursions-tex-copper.webp', slot: AI('мідь перегінного куба') },
         { key: 'tasting', title: 'Дегустація 4 або 8 напоїв', text: 'Ньюмейк, гарбузівка, джин і віскі — у двох форматах', img: '/assets/img/excursions-tex-glass.webp', slot: AI('келих на бочці') },
@@ -60,7 +60,7 @@ export const excursions = {
     },
     {
       type: 'formats', id: 'formats', room: 'warm', join: true,
-      kicker: 'Формати', title: 'Який формат екскурсії обрати?',
+      kicker: 'Формати', title: 'Який формат дегустації обрати?', titleCols: 6,   // текст і 2 рядки — рев'ю 58f675f7, 28fcde83
       lead: 'Обидва формати — з екскурсією і закусками, для групи від 6 осіб. Різниця — у глибині: у великому форматі чотири віскі з різними характерами й два джини, а до столу додаються м\'ясні та сирні делікатеси.',
       items: [
         { key: 'f4', tone: 'green', lead: 'Екскурсія +', value: '4', unit: 'напої',
