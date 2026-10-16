@@ -96,8 +96,8 @@ export const SCHEMA = {
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
     // 4б. Формати: дві великі панелі поруч (по 5 колонок, шов 5u): підпис, капсула з великим числом і одиницею, 2–4 колонки (назва + опис), 0–2 факти
-    formats: { ...BASE, room: E(ROOMS, false, 'warm'), cols: COLS('formats'), items: L(O({
-      key: { type: 'id', req: true }, tone: E(PANEL_TONES, true), lead: T(25, true), value: T(5, true), unit: T(25, true),
+    formats: { ...BASE, ...TITLE, room: E(ROOMS, false, 'warm'), cols: COLS('formats'), items: L(O({
+      key: { type: 'id', req: true }, tone: E(PANEL_TONES, true), lead: T(25), value: T(5, true), unit: T(25, true),
       items: L(O({ title: T(25, true), text: T(90, true) }), 2, 4, true),
       facts: L(O({ label: T(30, true), value: T(60, true) }), 0, 2),
     }), 2, 2, true) },
@@ -327,7 +327,8 @@ const VIEW = {
       label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s),
-    items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), value: t(it.value), unit: t(it.unit),
+    items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), leadGap: !it.lead && s.items.some((x) => x.lead) ? '1' : '',   // lead у ОДНІЙ панелі: у другій — порожній рядок тієї ж висоти (спільні рядки subgrid)
+      value: t(it.value), unit: t(it.unit),
       cols: it.items.length, drinks: it.items.map((d) => ({ title: t(d.title), text: t(d.text) })), facts: (it.facts || []).map((f) => ({ label: t(f.label), value: t(f.value) })) })) }),
   tiles: (s) => {
     const round = s.shape === 'circle';   // коло: лід — у шапці під H2, як в інших секціях (рев'ю ce0223c5); раніше стояв під рядом плиток
