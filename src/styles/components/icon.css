@@ -17,7 +17,8 @@
 .icon--phone { -webkit-mask-image: url('/assets/icons/phone.svg'); mask-image: url('/assets/icons/phone.svg'); }                         /* контакти: телефон */
 .icon--mail { -webkit-mask-image: url('/assets/icons/mail.svg'); mask-image: url('/assets/icons/mail.svg'); }                             /* контакти: e-mail */
 .icon--catalog { -webkit-mask-image: url('/assets/icons/catalog.svg'); mask-image: url('/assets/icons/catalog.svg'); }                   /* пункт «каталог» у хедері */
-.icon--distillery { -webkit-mask-image: url('/assets/icons/distillery.svg'); mask-image: url('/assets/icons/distillery.svg'); }           /* будівля дистилерії з хвилястим дахом: кнопка «про дім» у хедері, «Повернутись додому» на юридичних сторінках */
+.icon--distillery { -webkit-mask-image: url('/assets/icons/distillery.svg'); mask-image: url('/assets/icons/distillery.svg'); }           /* будівля дистилерії з хвилястим дахом: лише «Повернутись додому» на юридичних сторінках */
+.icon--home { -webkit-mask-image: url('/assets/icons/home.svg'); mask-image: url('/assets/icons/home.svg'); }                             /* будинок (дах + стіни + двері): кнопка «про дім» у хедері */
 .icon--diamond-mark { -webkit-mask-image: url('/assets/icons/diamond-mark.svg'); mask-image: url('/assets/icons/diamond-mark.svg'); }   /* ромб-маркер з внутрішнім ромбом (реф замовника 2026-10-16): капсула, назви й міні-блоки formats */
 .icon--strength { -webkit-mask-image: url('/assets/icons/strength.svg'); mask-image: url('/assets/icons/strength.svg'); }                /* міцність поруч з «42% alc» (товар YC) */
 .icon--bottle-0-5 { --icon-ratio: calc(40 / 24); -webkit-mask-image: url('/assets/icons/bottle-0-5.svg'); mask-image: url('/assets/icons/bottle-0-5.svg'); } /* 0,5 л, 24x40 */
