@@ -25,3 +25,8 @@ export const npWarehouses = () => [
 ];
 export const SHIPPING_LABELS = { np: 'Нова пошта: відділення або поштомат', courier: 'Кур\'єр по Києву', pickup: 'Самовивіз з дистилерії' };
 export const PAYMENT_LABELS = { card: 'Оплата карткою онлайн', bacs: 'Оплата за реквізитами' };
+// Рядок адреси відділення: «м. Київ» + місто «Київ» не дублюємо (область збігається з містом без префікса «м. »)
+export const npAddress = (area, city, warehouse) => {
+  const bare = (x) => String(x).replace(/^м\.\s*/, '').trim();
+  return [area, bare(area) === bare(city) ? '' : city, warehouse].filter(Boolean).join(', ');
+};

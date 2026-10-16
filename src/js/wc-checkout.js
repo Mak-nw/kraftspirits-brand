@@ -5,7 +5,7 @@ import { initSelect } from './select.js';
 import {
   state, FREE_SHIPPING_FROM, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, getCoupon, setCoupon, calcTotals,
 } from './wc-common.js';
-import { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
+import { NP_AREAS, NP_CITIES, npWarehouses, npAddress, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
 const ORDER_KEY = 'ks_order'; // те саме значення — у wc-common.js (seedDemoIfNeeded)
 seedDemoIfNeeded();
@@ -182,7 +182,7 @@ function initForm() {
     const area = qs('#billing_state_field .select__value', form)?.textContent;
     const city = qs('#billing_city_field .select__value', form)?.textContent;
     const wh = qs('#billing_warehouse_field .select__value', form)?.textContent;
-    const delivery = m === 'np' ? `${area}, ${city}, ${wh}` : m === 'courier' ? `Київ, ${val('billing_address_1')}` : SHIPPING_LABELS.pickup;
+    const delivery = m === 'np' ? npAddress(area, city, wh) : m === 'courier' ? `Київ, ${val('billing_address_1')}` : SHIPPING_LABELS.pickup;
     const order = {
       number: String(10000 + Math.floor(Math.random() * 9000)),
       date: new Date().toISOString(),
