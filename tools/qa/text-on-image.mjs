@@ -110,3 +110,44 @@ export async function measureTextOnImage(page, cfgIn = {}) {
   await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
   return { hits: all.filter((e) => e.bad > 0), all, stats };
 }
+
+/**
+ * D14, профіль parallax=on: сторінка відкрита БЕЗ `parallax=off` (паралакс живий). Фото в [data-parallax] зсувається/масштабується від прокрутки, тому текст на ньому
+ * міряється у ТРЬОХ позиціях прокрутки секції `sel` (секція входить / мітка біля верху вікна / секція виходить): статичний профіль (parallax=off) цього не бачить.
+ * Перед кожним заміром чекаємо, поки інерція паралакса згасне (--parallax-y не змінюється). `css` — необов'язкова накладка (для позитивного контролю).
+ * Повертає { hits, all, stats, positions }.
+ */
+export const D14_PARALLAX = [{ page: 'barrels', sel: '#price' }];
+export async function measureTextOnImageParallax(page, sel, cfgIn = {}, css = '') {
+  const cfg = { ...D14_DEFAULTS, ...cfgIn };
+  const vh = page.viewport()?.height || 1080;
+  const g = await page.evaluate((s) => { const r = document.querySelector(s)?.getBoundingClientRect(); return r ? { top: r.top + scrollY, h: r.height } : null; }, sel);
+  if (!g) throw new Error(`D14 parallax: немає ${sel}`);
+  if (css) await page.evaluate((c) => { const st = document.createElement('style'); st.id = 'qa-d14-par-css'; st.textContent = c; document.head.appendChild(st); }, css);
+  const settle = () => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const shot = async (c) => {
+    await page.evaluate((x) => { let s = document.getElementById('qa-d14-style'); if (!s) { s = document.createElement('style'); s.id = 'qa-d14-style'; document.head.appendChild(s); } s.textContent = x; }, c);
+    await settle();
+    return page.screenshot({ encoding: 'base64', captureBeyondViewport: false });
+  };
+  const positions = [Math.max(0, g.top - vh * 0.45), Math.max(0, g.top + 110), Math.max(0, g.top + g.h - vh)];
+  const stats = { tiles: 0, canvas: 0, candidates: 0, noImage: 0, covered: 0, lettersMeasured: 0 }; const all = []; const par = [];
+  for (const y of positions) {
+    await page.evaluate((yy) => scrollTo({ top: yy, behavior: 'instant' }), y);
+    for (let i = 0, prev = ''; i < 60; i++) { // чекаємо згасання інерції паралакса (до ~6 с)
+      await new Promise((r) => setTimeout(r, 100));
+      const cur = await page.evaluate(() => [...document.querySelectorAll('[data-parallax]')].map((e) => e.style.getPropertyValue('--parallax-y')).join('|'));
+      if (cur === prev && i > 3) break; prev = cur;
+    }
+    par.push(await page.evaluate((s) => document.querySelector(`${s} [data-parallax]`)?.style.getPropertyValue('--parallax-y') || '', sel));
+    await page.evaluate(() => { window.__d14 = undefined; });
+    const k = await shot(STYLE('#000')), w = await shot(STYLE('#fff')), bg = await shot(STYLE('transparent'));
+    await page.evaluate(() => document.getElementById('qa-d14-style')?.remove());
+    await settle();
+    const r = await page.evaluate(EVAL_TILE, { k, w, bg }, cfg);
+    stats.tiles++; stats.candidates += r.candidates; stats.canvas += r.canvas; stats.noImage += r.noImage; stats.covered += r.covered; stats.lettersMeasured += r.measured;
+    all.push(...r.els.map((e) => ({ ...e, scrollY: Math.round(y) })));
+  }
+  await page.evaluate(() => { document.getElementById('qa-d14-par-css')?.remove(); scrollTo({ top: 0, behavior: 'instant' }); });
+  return { hits: all.filter((e) => e.bad > 0), all, stats, positions: positions.map((y, i) => `${Math.round(y)}px (parallax-y ${par[i]})`) };
+}

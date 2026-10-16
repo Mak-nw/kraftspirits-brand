@@ -257,7 +257,8 @@
    .contacts-panel (computed-вигляд = панель контактів); .lp-offer — лише розкладка (стопка: назва, ціна, факти, «що входить», кнопка); рядки фактів —
    hairline-лінії (як рядки акордеона DS), «що входить» — список DS. Нижче — необов'язковий рядок контактів (foot). */
 .lp-offers__bg { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
-.lp-offers__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); scale: var(--lp-offers-bg-scale, 1); transform-origin: var(--lp-offers-bg-origin, 50% 50%); }
+/* кадр-наближення (--lp-offers-bg-scale, точка закріплення --lp-offers-bg-ox/oy 0…1) задано РОЗМІРОМ і положенням img, а не `scale`/`transform-origin`: ті належать паралаксу (parallax.css) і з data-parallax перезаписували б кадр — світла стіна фото опинялась під білою міткою маршруту (контраст 1.4:1) */
+.lp-offers__bg > img { position: absolute; display: block; max-width: none; width: calc(100% * var(--lp-offers-bg-scale, 1)); height: calc(100% * var(--lp-offers-bg-scale, 1)); left: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-ox, 0.5)); top: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-oy, 0.5)); object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); }
 .lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-head.lp-offers__head { grid-column: 1 / -1; }
 /* панелі-пропозиції — великі блоки: зазор між ними --grid-gap-panels 5u (не 40u колонок). n панелей = n РІВНИХ блоків контейнера (--lp-w) із зазором 5u (клас сітки lp-offers__grid--n<n>): n = 2 — шов посередині (5 + 5 колонок),

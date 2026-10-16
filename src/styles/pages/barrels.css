@@ -5,7 +5,8 @@
 .lp-page--barrels {
   /* кадрування фото «Ціни» */
   --scale-barrels-price-bg: 2;                        /* наближення кадру (origin праворуч): шапка лягає на темну розмиту частину бочок */
-  --origin-barrels-price-bg: 100% 55%;
+  --ox-barrels-price-bg: 1;                            /* точка закріплення наближення: правий край… */
+  --oy-barrels-price-bg: 0.55;                         /* …на 55% висоти */
   --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото секції: ряд днищ */
   /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
      центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
@@ -27,7 +28,7 @@
   --shift-barrels-caption-ink: -0.04em;               /* підписи груп («пляшок…», «вартість…»): бокове поле першої літери */
 }
 /* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
-.lp-page--barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-origin: var(--origin-barrels-price-bg); }
+.lp-page--barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-ox: var(--ox-barrels-price-bg); --lp-offers-bg-oy: var(--oy-barrels-price-bg); }
 /* оптика H2 по центру (чорнило «Щ…А», «С…?», «П…А», «Ц…А») */
 .lp-page--barrels #benefits .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-benefits); }
 .lp-page--barrels #profit .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-profit); }

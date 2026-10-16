@@ -9,7 +9,7 @@ import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
 import { COLLECT_D18, analyzeD18, controlD18, D18_DEFAULTS } from './grid-d18.mjs';
 import { COLLECT_D19, D19_DEFAULTS } from './hero-d19.mjs';
 import { loadLpPage } from '../lp-pages.mjs';
-import { measureTextOnImage, D14_PAGES, D14_STATES, D14_DEFAULTS } from './text-on-image.mjs';
+import { measureTextOnImage, measureTextOnImageParallax, D14_PAGES, D14_STATES, D14_DEFAULTS, D14_PARALLAX } from './text-on-image.mjs';
 import { ROOT, textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, waitLayoutStable, collectStable, evalRetry, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
@@ -217,7 +217,7 @@ export async function runDynamic(opts, allow, rep) {
   const want13 = want('D13'); const d13 = []; const d13cfg = { roles: want13 ? roleClassesFromBase() : [], root: null };
   const want16 = want('D16'); const d16 = []; const d16cfg = { ...D16_DEFAULTS, ...(A.d16 || {}), targets: A.d16?.targets || D16_DEFAULTS.targets }; let d16ctl = null; // D16: hug/padding кнопок (hug-d16.mjs)
   const want17 = want('D17'); const d17 = []; let d17ctl = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
-  const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
+  const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; let d14parCtl = null; /* D14 профіль parallax=on: позитивний контроль */ // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
   const want18 = want('D18'); const d18 = []; const d18cfg = { ...D18_DEFAULTS, ...(A.d18 || {}) }; const d18ctl = []; // D18: зазор великих блоків 5u / малих 40u (grid-d18.mjs)
   const want19 = want('D19'); const d19 = []; const d19cfg = { ...D19_DEFAULTS, ...(A.d19 || {}) }; const wantHeroCtx = want19 || want('D14') || want('D8'); // D19: hero без оверлея (hero-d19.mjs); стан hero потрібен і для умовних винятків D14/D8 (allow.requires)
   rep.ctx = rep.ctx || { hero: {} };
@@ -317,6 +317,18 @@ export async function runDynamic(opts, allow, rep) {
             try { m = await measureTextOnImage(page, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin }); } catch (e) { if (attempt === 2) throw e; rep.note(`D14 ${label}: ${String(e.message).slice(0, 80)} — повтор ${attempt + 1}`); await waitStable(page); await sleep(500); }
           }
           d14.push({ label, spec, width: combo.width, ...m });
+          // профіль parallax=on: паралакс фото живий, текст секції міряється у 3 позиціях прокрутки (статичний профіль parallax=off цього не бачить)
+          for (const pp of D14_PARALLAX.filter((x) => x.page === spec.name)) {
+            const pg = await openPage(L.browser, `${opts.url}${spec.path}?age=ok&reveal=off`, { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
+            await waitStable(pg); await sleep(300);
+            const mp = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin });
+            d14.push({ label: `${label}/parallax`, spec, width: combo.width, ...mp });
+            if (d14parCtl === null) { // контроль: те саме з вимкненим наближенням кадру (--lp-offers-bg-scale:1 — стара поведінка, коли паралакс перезаписував кадр) МАЄ дати порушення
+              const mc = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin }, `${pp.sel} .lp-offers__bg{--lp-offers-bg-scale:1 !important}`);
+              d14parCtl = mc.hits.length;
+            }
+            await pg.close().catch(() => {});
+          }
         }
         await page.close().catch(() => {});
       }
@@ -405,6 +417,7 @@ export async function runDynamic(opts, allow, rep) {
       for (const h of c.hits) { st.failNodes++; addV({ rule: 'D14', page: c.label, selector: h.el, value: `«${h.text}» ${h.bad}/${h.measured} літер нижче ${h.thr}:1 (мін. ${h.minRatio}:1; найгірша ${Math.round(h.worst * 100)}% пікселів; ${h.size}px${h.large ? ' великий' : ''}; під текстом: ${h.layer}; y=${h.y}; погані: «${h.badCh}»)`, msg: 'текст на зображенні: контраст по літерах нижче порога' }); }
     }
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd14.json'), JSON.stringify(d14.map((c) => ({ label: c.label, stats: c.stats, hits: c.hits, nodes: c.all.length })), null, 1)); } catch {}
+    if (d14parCtl === 0) addV({ rule: 'D14', page: 'control', selector: 'позитивний контроль parallax=on', value: '0 порушень', msg: 'кадр «Ціни» без наближення має давати контраст < 4.5:1 під міткою маршруту — перевірка профілю parallax=on сліпа' });
     rep.info({ rule: 'D14', msg: `вузлів з зображенням під текстом ${st.candidates} (без зображення пропущено ${st.noImage}; над <canvas> WebGL-картою не міряється ${st.canvas} — візуально: атрибуція maplibre), виміряно літер ${st.lettersMeasured} на ${st.pageWidths} сторінко-ширинах; FAIL-вузлів ${st.failNodes}` });
   }
   // D16: hug/padding кнопок + позитивний контроль (зламана ширина МАЄ дати порушення)
