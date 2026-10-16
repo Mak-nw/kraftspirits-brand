@@ -11,11 +11,11 @@
 | `excursions-tex-glass.webp` | 1024² | смуга «Дегустація» | amber whisky in tulip nosing glass on dark oak barrel, warm low light | 75 |
 | `excursions-tex-snacks.webp` | 1024² | смуга «Закуски» | overhead wooden board with walnuts, hazelnuts, crackers, candied dried fruit | 75 |
 | `excursions-tex-group.webp` | 1024² | смуга «Група від 6 осіб» | tasting table, row of glasses, hands raising glasses, faces out of frame | 75 |
-| `excursions-pumpkin.webp` | 900×1192 | «Дегустація» — плитка «Гарбузівка» (пляшки в каталозі немає) | glass of golden-orange pumpkin spirit + small pumpkin on pure black, no bottle | 75 |
+| `excursions-pumpkin.webp` | 900×1200 | «Дегустація» — плитка «Гарбузівка» (пляшки в каталозі немає) | glass of golden-orange pumpkin spirit + small pumpkin on pure black, no bottle | 75 |
 | `excursions-shop.webp` | 1600×1207 | «Магазин при дистилерії» (tour-card) | distillery shop: arched illuminated niches with UNLABELED bottles, wooden gift boxes | 75 |
 | `excursions-hero.webp` | 2400×1350 | hero | modern distillery building with copper stills behind glass, green park, golden hour, clear upper sky, no people/text | 100 |
 
-Разом: **7 зображень, 550 кредитів** (баланс 23 569 → 23 019). Ще один запит (темний зал дегустації з бочками-столами для тла «Ціни») відхилив класифікатор дозволів середовища — не повторювався; тло «Ціни» — наявне фото `brand-yasnocraft-bg.webp`.
+Разом: **7 зображень, 750 кредитів** = 550 за початкові генерації (6×75 + 100 у таблиці) + 200 за перегенерацію `pumpkin` після перевірки (2 спроби × 100, див. «Правки після незалежної перевірки»; у таблиці лишено початкові 75). Баланс 23 569 → 22 819 (спершу 23 019 після початкових, далі −200). Ще один запит (темний зал дегустації з бочками-столами для тла «Ціни») відхилив класифікатор дозволів середовища — не повторювався; тло «Ціни» — наявне фото `brand-yasnocraft-bg.webp`.
 
 ## Перевикористано наявні фото сайту
 - `home-tour-distillery.webp` (мідний куб, реальне фото головної) — арка «Від зерна до пляшки».

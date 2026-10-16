@@ -62,7 +62,7 @@
 .lp-layers__band:last-child { margin-right: 0; }
 .lp-layers__band > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .lp-layers__list { display: contents; }
-.lp-layer { grid-row: 2 / span 3; display: grid; grid-template-rows: subgrid; justify-items: start; }
+.lp-layer { grid-row: 2 / span 3; display: grid; grid-template-rows: auto auto 1fr; justify-items: start; } /* не subgrid: опис одразу під назвою (однаковий проміжок у всіх колонках), різна кількість рядків назви лишає порожнє місце ПІД описом */
 .lp-layers--text .lp-layer { grid-row: 1 / span 3; }
 .lp-layer__icon { --icon-size: var(--size-lp-layer-icon); margin-top: var(--space-lp-layer-text); color: var(--lp-accent); } /* іконка DS .icon--* (CSS-маска, currentColor) */
 .lp-layer__title { margin-top: var(--space-lp-layer-title); color: var(--lp-accent); text-wrap: balance; }
