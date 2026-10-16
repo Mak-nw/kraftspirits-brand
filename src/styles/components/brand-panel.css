@@ -1,0 +1,19 @@
+/* Вибір бренду (макет «About Us» стор. 4): секція .brand-choice = H2 + пара панелей .brand-panel 5+5 (зазор великих блоків --grid-gap-panels),
+   під кожною панеллю кнопка btn--gold. Панель: бежева рамка --border-frame, усередині заокруглений бокс з hairline-обводкою
+   (логотип, заголовок .t-lead, опис .t-desc), знизу смуга-фотофон і пляшка. Partial: components/brand-panel; секція: sections/brand-choice. */
+.brand-choice { display: flex; flex-direction: column; align-items: center; gap: var(--space-70); padding: var(--space-100) var(--grid-margin); background: var(--color-brown); color: var(--color-beige); }
+.brand-choice__grid { display: grid; grid-template-columns: var(--grid-cols-panels-5-5); gap: var(--grid-gap-panels); width: var(--grid-w); max-width: 100%; }
+.brand-choice__item { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
+.brand-choice__item > .brand-panel { width: 100%; margin-bottom: var(--space-30); }
+.brand-choice__title { margin-bottom: var(--space-20); }
+.brand-choice__text { width: var(--size-brand-panel-text-w); max-width: 100%; margin-bottom: var(--space-40); }
+.brand-panel { aspect-ratio: var(--ratio-brand-panel); padding: var(--border-frame); background: var(--color-beige); border-radius: var(--radius-panel); color: var(--color-green); }
+.brand-panel__box { position: relative; display: flex; flex-direction: column; align-items: center; height: 100%; padding-top: var(--space-brand-panel-pt); overflow: clip; border: var(--border-hairline) solid var(--color-brown); border-radius: var(--radius-panel); text-align: center; }
+.brand-panel__logo { display: flex; align-items: center; justify-content: center; flex: none; height: var(--size-brand-panel-logo-box-h); }
+.brand-panel__logo img { display: block; max-width: none; height: auto; width: var(--size-brand-panel-logo-w); }
+.brand-panel--yasnocraft { --size-brand-panel-logo-w: var(--size-brand-panel-logo-yc-w); }
+.brand-panel--bazylsprings { --size-brand-panel-logo-w: var(--size-brand-panel-logo-bs-w); }
+.brand-panel__band { position: absolute; left: 0; right: 0; bottom: 0; height: var(--size-brand-panel-band-h); overflow: hidden; background: var(--color-green); }
+.brand-panel--bazylsprings .brand-panel__band { background: var(--color-brown); }
+.brand-panel__band img { width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.brand-panel__bottle { position: absolute; left: 50%; bottom: 0; width: var(--size-brand-panel-bottle-w); max-width: none; height: auto; transform: translateX(-50%); }

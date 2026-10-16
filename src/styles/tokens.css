@@ -658,6 +658,15 @@
   --size-sec-intro: calc(984 * var(--u));         /* 224:3639 */
   --space-100: calc(100 * var(--u));              /* 224:3639 gap блоків; 224:3586 */
   --space-intro-pad-y: calc(70 * var(--u));       /* 224:3639 py */
+  /* Вибір бренду (.brand-panel / .brand-choice; макет «About Us» стор. 4, панель 770×674, масштаб макета 1920) */
+  --ratio-brand-panel: 805 / 540;                 /* пропорція панелі (еталон brand-picker-new: 805×540; ширина = 5 колонок сітки, висота за пропорцією) */
+  --space-brand-panel-pt: calc(70 * var(--u));    /* відступ зверху до боксу логотипа */
+  --size-brand-panel-logo-box-h: calc(120 * var(--u)); /* бокс логотипа: вищий із двох (BS 118) */
+  --size-brand-panel-logo-yc-w: calc(290 * var(--u));  /* YC лого 402×106 → 290×76 */
+  --size-brand-panel-logo-bs-w: calc(205 * var(--u));  /* BS лого 263×152 → 205×118 */
+  --size-brand-panel-text-w: calc(520 * var(--u));     /* опис під панеллю (2 рядки) */
+  --size-brand-panel-band-h: calc(181 * var(--u));     /* смуга-фотофон внизу панелі */
+  --size-brand-panel-bottle-w: calc(217 * var(--u));   /* пляшка (bottle.png 234×290), нижня частина обрізана внутрішньою рамкою */
 
   --size-sec-tours: calc(1303 * var(--u));        /* 224:3586 */
   /* Панелі екскурсій: геометрія — цілі CSS-px (round), щоб краї, рамка фото і стик «текст/фото» лягали на пікселі пристрою
