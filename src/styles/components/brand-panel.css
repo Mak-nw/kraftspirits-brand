@@ -6,7 +6,7 @@
 .brand-choice__item { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
 .brand-choice__item > .brand-panel { width: 100%; margin-bottom: var(--space-30); }
 .brand-choice__title { margin-bottom: var(--space-20); }
-.brand-choice__text { width: 100%; text-wrap: balance; margin-bottom: var(--space-40); }
+.brand-choice__text { width: 100%; padding-inline: calc((100% - var(--size-brand-panel-text-w)) / 2); text-wrap: balance; margin-bottom: var(--space-40); }
 .brand-panel { aspect-ratio: var(--ratio-brand-panel); padding: var(--border-frame); background: var(--color-beige); border-radius: var(--radius-panel); color: var(--color-green); }
 .brand-panel__box { position: relative; display: flex; flex-direction: column; align-items: center; height: 100%; padding-top: var(--space-brand-panel-pt); overflow: clip; border: var(--border-hairline) solid var(--color-brown); border-radius: var(--radius-panel); text-align: center; }
 .brand-panel__logo { display: flex; align-items: center; justify-content: center; flex: none; height: var(--size-brand-panel-logo-box-h); }
