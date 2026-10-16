@@ -1,5 +1,5 @@
-/* Лічильник статистики: велике число + підпис (194:1281), колонка 250 */
-.stats { display: flex; align-items: center; gap: var(--space-30); }
-.stat { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); width: var(--size-stat-w); text-align: center; }
+/* Лічильник статистики: велике число + підпис (194:1281). Три лічильники = 3 × 2 колонки єдиної сітки (6 колонок по центру, колонки 4–9), зазор = зазор сітки */
+.stats { display: grid; grid-template-columns: repeat(3, var(--grid-span-2)); column-gap: var(--grid-gap); align-items: center; width: var(--grid-span-6); max-width: 100%; }
+.stat { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); text-align: center; }
 /* compact (224:3643): «( 2 )» Regular 67 (Figma 65) + підпис, gap 40; фон коричневий */
 .stat--compact { gap: var(--space-40); }

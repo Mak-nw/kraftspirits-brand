@@ -187,7 +187,7 @@
 
 /* ---------- card: ІСНУЮЧА панель .tour-card (головна, «Екскурсії/Бочкова торгівля») на сітці 12 колонок ---------- */
 .lp-card__grid { width: var(--grid-w); margin-inline: auto; }
-.lp-card .tour-card { --size-tour-photo-box-w: calc(5 * var(--grid-col) + 4.5 * var(--grid-gap)); width: 100%; } /* фото-колонка = 5 колонок + пів-зазору: шов текст | фото — посередині зазору між колонками 7 і 8 (D12: внутрішній край половинки) */
+.lp-card .tour-card { width: 100%; } /* фото-колонка = 5 колонок + ½ зазору (--size-tour-photo-box-w, tokens.css): шов текст | фото посередині зазору */
 
 /* ---------- place: ІСНУЮЧІ панель .contacts-panel (5 колонок) і мапа .contacts-map (7 колонок) зі сторінки контактів ---------- */
 .lp-place__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: stretch; width: var(--grid-w); margin-inline: auto; }

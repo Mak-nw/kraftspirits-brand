@@ -15,10 +15,9 @@ export const GRID_DEFAULTS = {
   minBlockU: 60,        // блоки вужчі за 60u не перевіряються (значки, дрібні підписи)
   minHeightU: 20,
   profiles: {
-    catalog: { marginU: 47.5, gapU: 40, note: 'сітка каталогу (204:2222): 1825u, gap 40u, колонка 115.42u; 4 картки = 4×3 колонки; блок коктейлів 4/5/3' },
-    product: { marginU: 50, gapU: 5, note: 'сторінка товару / контакти / фідбек: поля 50u, gap 5u' },
+    catalog: { marginU: 47.5, gapU: 40, note: 'ЄДИНА сітка сайту (tokens.css: --grid-margin/--grid-gap/--grid-col): 12 колонок, поле 47.5u, gap 40u, колонка 115.42u, ширина 1825u' },
   },
-  pageProfile: { default: 'catalog', product: 'product', contacts: 'product', feedback: 'product' },
+  pageProfile: { default: 'catalog' }, // одна сітка для всіх сторінок (рішення замовника 16.10.2026); окремих профілів 50u/5u більше нема
   regionProfile: { header: 'catalog', footer: 'catalog' }, // header/footer однакові на всіх сторінках → єдина еталонна сітка (не залежить від профілю сторінки)
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', '.nav-link', 'button', 'input', 'select', 'textarea', 'label', '.visually-hidden', '.skip-link', '.hit-area', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs' /* мініатюри — накладка всередині фото з відступом-токеном, не блок сітки */],
   noRecordSelectors: ['dt', 'dd', 'li', 'td', 'th', 'tr', 'option'], // комірки/пункти списків: перевіряється їхній контейнер (ul/dl/table), не кожен пункт

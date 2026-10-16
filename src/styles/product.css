@@ -1,6 +1,6 @@
 /* Сторінка товару (YasnoCraft — новий макет 205:2430, Bazylsprings 194:1520).
    Один шаблон, тема бренду — data-brand на <main class="product">. Усі значення — токени.
-   Розкладка ОДНАКОВА для обох брендів (рішення замовника): поле 50 + фото 905 з мініатюрами-накладками + зазор 5 + панель 910 + поле 50 = 1920;
+   Розкладка ОДНАКОВА для обох брендів (рішення замовника): поле 47.5 + фото 6 колонок (892.5) з мініатюрами-накладками + зазор 40 + панель 6 колонок (892.5) + поле 47.5 = 1920 (єдина сітка сайту, tokens.css --grid-*);
    усе — в базових правилах нижче. Бренд-модифікатори (data-brand) додають лише відмінності: YC — арка-шапка і рамка панелі beige,
    BS — шапка-бейдж на всю ширину панелі (відступ збоку = зверху) і верхній відступ панелі.
    Фон сторінки — той самий візерунок ромбів, що на каталозі (класс page-product на body, як page-catalog; те саме правило на .page-contacts — контакти): плитка від y=0 через зону header до футера; зона header прозора. */
@@ -21,7 +21,7 @@
 }
 .product[data-brand="bazylsprings"] { --accent: var(--color-product-accent-bs); --accent-line: var(--color-product-accent-bs); }
 
-/* обгортка фото+мініатюр (обидва бренди): одна sticky-комірка 905×(100svh − 123u); мініатюри — накладки всередині фрейму фото */
+/* обгортка фото+мініатюр (обидва бренди): одна sticky-комірка 6 колонок × (100svh − 123u); мініатюри — накладки всередині фрейму фото */
 /* резерв до рендера JS (атрибут data-pending у product.html, знімається в product.js): висота = фрейм + верхній/нижній відступи, щоб футер не стрибав. Тла немає: фон дає body.page-product (візерунок). Без JS (noscript) резерв не потрібен — але атрибут статичний, тому для <noscript>-стану див. product.html (вміст noscript короткий, мінімум висоти безпечний). */
 .product[data-pending] { min-height: calc(var(--size-product-frame-h) + var(--space-product-top) + var(--space-product-page-bottom)); }
 .product-media { position: sticky; top: var(--offset-product-stage-sticky); grid-area: 1 / 1; align-self: start; width: var(--size-product-stage-w); height: var(--size-product-frame-h); }

@@ -29,7 +29,7 @@
 .faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-text-on-dark); --btn-row-faq-bg-default: var(--color-beige); } /* FAQ на зеленому (6064dc8a): заголовки груп світлі; рядки — beige-картки (як панелі на contacts/feedback), текст/«+»/рамка зелені, hover → --color-hover-faq */
 .faq-page__group { align-items: start; scroll-margin-top: var(--space-faq-anchor); }
 .faq-page__title { grid-column: var(--col-faq-title); text-indent: var(--shift-faq-title-ink); }
-.faq-page__body:not(.faq-page__body--legal) .faq-page__title { max-width: var(--size-faq-title-max); text-wrap: balance; } /* d0838707: довгі назви груп — у 2 рядки (balance дає рівні рядки); юридичні сторінки без змін */
+.faq-page__body:not(.faq-page__body--legal) .faq-page__title { max-width: var(--grid-span-2); text-wrap: balance; } /* d0838707: довгі назви груп — у 2 рядки (balance дає рівні рядки); бокс заголовка = 2 колонки сітки (270.8u ≈ 6.8em; було 8em); юридичні сторінки без змін */
 .faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-row-gap); align-items: start; } /* проміжок між двома колонками = вертикальному (--space-faq-row-gap) за рішенням замовника e71b1181; виняток із D12 — check-ds.allow.json */
 .faq-page__col { display: grid; row-gap: var(--space-faq-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки по 4 колонки сітки (5–8 і 9–12): розкриття питання зсуває лише свою колонку */
 

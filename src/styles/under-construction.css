@@ -8,5 +8,5 @@
   padding: var(--space-85) var(--grid-margin);
 }
 .under-construction__title { max-width: 100%; text-wrap: balance; }
-.under-construction__text { max-width: calc(600 * var(--u)); }
-.under-construction__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-30); }
+.under-construction__text { width: var(--grid-span-4); max-width: 100%; } /* текст і кнопки — 4 колонки по центру (5–8), межі на колонках сітки */
+.under-construction__actions { width: var(--grid-span-4); max-width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-30); }

@@ -21,13 +21,13 @@
 .brands { display: grid; grid-template-columns: 1fr 1fr; height: var(--size-sec-brands); background: var(--color-beige); }
 
 /* Вступ 224:3639 (1920×984): лічильники, великий заголовок, абзац, кнопка — колонкою по центру, py 70, gap 100 */
-.intro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-100); min-height: var(--size-sec-intro); padding: var(--space-intro-pad-y) var(--space-50); background: var(--color-brown); color: var(--color-beige); text-align: center; }
+.intro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-100); min-height: var(--size-sec-intro); padding: var(--space-intro-pad-y) var(--grid-margin); background: var(--color-brown); color: var(--color-beige); text-align: center; }
 .intro__text { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); width: 100%; }
-.intro__title { width: var(--container-intro-title); }
-.intro__body { width: var(--container-intro-text); }
+.intro__title { width: var(--grid-span-8); max-width: 100%; } /* заголовок — 8 колонок по центру (3–10) */
+.intro__body { width: var(--grid-span-4); max-width: 100%; } /* абзац — 4 колонки по центру (5–8) */
 
 /* Екскурсії / бочка 224:3586 (1920×1303): дві панелі .tour-card (components/tour-card.css), поля 20 / gap 5 */
-.tours { display: flex; flex-direction: column; align-items: stretch; gap: var(--space-tour-gap); min-height: var(--size-sec-tours); padding: var(--space-20) var(--space-tour-edge-r) var(--space-20) var(--space-tour-edge-l); background: var(--color-brown); }
+.tours { display: flex; flex-direction: column; align-items: stretch; gap: var(--space-tour-gap); min-height: var(--size-sec-tours); padding: var(--space-20) var(--grid-margin); background: var(--color-brown); }
 
 /* «Не знаєте з чого почати?» 194:1290 (h1281) */
 .picker { position: relative; min-height: var(--size-sec-picker); padding-top: var(--space-197); background: var(--color-teal); color: var(--color-beige); } /* 224:3732: текст і чіпи --color-beige (раніше gold) */
@@ -45,11 +45,11 @@
 .picker__bg[data-rank="5"] { z-index: 5; }
 .picker__bg[data-rank="6"] { z-index: 6; }
 .picker__content { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.picker__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-heading); height: var(--size-picker-head-h); }
-.picker__title { width: var(--container-picker-title); }
-.picker__text { width: var(--container-picker-text); }
+.picker__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--grid-span-8); max-width: 100%; height: var(--size-picker-head-h); } /* 8 колонок по центру (3–10) */
+.picker__title { width: var(--grid-span-4); max-width: 100%; }
+.picker__text { width: var(--grid-span-4); max-width: 100%; padding-inline: calc((var(--grid-span-4) - var(--container-picker-text)) / 2); } /* бокс = 4 колонки (5–8); міра рядка 500u (переноси підібрано) = внутрішній padding */
 .picker .chip-row { margin-top: var(--space-70); } /* 224:3737 y 475 − низ заголовка 405 */
-.picker .slider { margin-top: var(--space-60); } /* 224:3790 y 560 − низ чіпів 500 */
+.picker .slider { width: var(--grid-span-6); max-width: 100%; margin-top: var(--space-60); } /* бокс каруселі = 6 колонок по центру (4–9); стрілки й картка центровані всередині */ /* 224:3790 y 560 − низ чіпів 500 */
 .picker .slider .arrow-btn { align-self: flex-start; margin-top: var(--offset-picker-arrow-top); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
 .picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
 

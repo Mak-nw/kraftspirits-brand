@@ -8,7 +8,7 @@
 .catalog-nav {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center;
   gap: var(--space-catalog-title-row) var(--space-catalog-title-col);
-  width: var(--size-catalog-title-w2); margin: 0 auto; padding-top: var(--space-catalog-title-top2);
+  width: var(--grid-span-8); max-width: 100%; margin: 0 auto; padding-top: var(--space-catalog-title-top2);
   text-align: center;
 }
 .catalog-nav__item {
@@ -21,11 +21,12 @@
 @media (hover: hover) { .catalog-nav__item:hover { opacity: var(--btn-catnav-opacity-hover); } }
 
 .catalog-bar {
-  display: flex; align-items: center; justify-content: space-between;
+  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: center;
   width: var(--grid-w); margin: var(--space-catalog-bar-top) auto 0; padding: var(--space-catalog-bar-y) 0;
 }
-.catalog-bar__group { display: flex; align-items: center; }
-.catalog-bar__group--filters { gap: var(--space-select-gap); }
+/* фільтри — колонки 1–5 (притиснуті до колонки 1), сортування — 10–12 (притиснуте до правого краю колонки 12) */
+.catalog-bar__group { grid-column: 10 / span 3; display: flex; align-items: center; justify-content: flex-end; }
+.catalog-bar__group--filters { grid-column: 1 / span 5; justify-content: flex-start; gap: var(--space-select-gap); }
 
 .catalog-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: var(--size-card-cat2-h); gap: var(--grid-gap);
