@@ -1075,7 +1075,10 @@
   --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero: 140u від низу hero до низу контенту (рішення замовника e3214221) */
   --space-about-story-top: calc(240 * var(--u));           /* «15 місяців»: верх секції → верх заголовка/кіл (макет p2: 243) */
   --space-about-story-row: var(--space-100);               /* між шапкою й віхами, між віхами (макет p2: 89 / 102) */
-  --ratio-about-milestone: 17 / 20;                        /* фото віх на 2 колонки: макет p2 288×332 / 304×332 */
+  --size-about-milestone-w1: calc(288 * var(--u));         /* фото віхи 1 (макет p2: 288×332) */
+  --size-about-milestone-w2: calc(304 * var(--u));         /* фото віхи 2 (макет p2: 304×332) */
+  --size-about-milestone-h: calc(332 * var(--u));          /* висота фото віх (макет p2: 332) */
+  --size-about-stills-lead: calc(512 * var(--u));          /* підпис «Три установки» (макет p6: 512u) */
   --space-about-ring-gap: var(--space-30);                 /* коло → підпис */
   --size-about-ring-line: var(--border-hairline);          /* лінія кола-обводки: hairline (макет p2/p8 — тонка обводка; DS-товсте кільце плитки тут не підходить) */
   --size-about-people-h: calc(1311 * var(--u));            /* «Цитата + люди»: висота секції (макет p5) */
@@ -1083,7 +1086,7 @@
   --size-about-avatar: var(--grid-span-1);                 /* портрет Германа = 1 колонка (край колонки 10; макет p5: 157u ≈ 1.3 кол — на колонку, правило сітки) */
   --size-about-ring: calc(200 * var(--u));                 /* коло-обводка зі значенням (макет p2: ≈200 з 1920 = 10.4% ширини) */
   --size-about-dot: calc(40 * var(--u));                   /* кола-обводки з іконками біля імені засновника (реф about-circles-icons-ref: ≈60u) */
-  --size-about-dot-icon: 50%;                              /* іконка (24×24, лінія 1.5) всередині кола = половина діаметра */
+  --size-about-dot-icon: 62%;                              /* іконка (24×24, лінія 1.5; малюнок займає ≈78% полотна) всередині кола: чорнило ≈48% діаметра (реф about-circles-icons-ref) */
   --offset-about-founder-note: calc(195 * var(--u));       /* дрібний текст праворуч нижче кіл (макет p5: 828 − 633) */
   --size-about-hills-w: calc(900 * var(--u));              /* графіка пагорбів (940 з прозорим полем, 0.958 масштабу сітки) */
   --ratio-about-arch: 13 / 14;                             /* арки-фото установок (макет p6: 497×536) */
@@ -1096,11 +1099,11 @@
 /* ---------- Сторінка «Про дім»: секція 3, стрічка арок процесу (partials/about/process-track.html; стилі pages/about-process.css; JS about-process.js) ----------
    Лише похідні від сітки/u-масштабу. Арка = .lp-arch на 2 колонки; крок між арками = ширина арки + зазор-лінія в 1 крок сітки → на 1920 видно ≈ 2.3 арки. */
 :root {
-  --size-about-process-arch-w: var(--grid-span-2);          /* ширина арки: 2 колонки сітки (270.8u; реф arches-connected-ref ≈ 240u) */
+  --size-about-process-arch-w: calc(348 * var(--u));        /* ширина арки: реф arches-connected-ref (відношення ширина/висота 0.757 при висоті 460u) */
   --size-about-process-arch-h: calc(460 * var(--u));        /* висота арки (рішення замовника ≈ 460u) */
-  --size-about-process-link-w: var(--grid-step);            /* довжина лінії-зʼєднання між аркамі: 1 крок сітки */
+  --size-about-process-link-w: calc(243 * var(--u));        /* довжина лінії-зʼєднання = зазор між арками (реф: ≈0.70 ширини арки) */
   --ratio-about-process-link: 0.6;                          /* лінія на 60% висоти арки від верху (реф arches-connected-ref) */
-  --size-about-process-icon: calc(208 * var(--u));          /* кадр Lottie всередині арки (композиція 240×240 з малюнком 48-сітки) */
+  --size-about-process-icon: calc(240 * var(--u));          /* кадр Lottie всередині арки: композиція 240×240 1:1 (арка 348u) */
   --space-about-process-pt: calc(80 * var(--u));            /* верх арки → блок вмісту (склепіння не заважає) */
   --space-about-process-gap: var(--space-10);               /* анімація → номер → назва */
   --space-about-process-inset: var(--space-20);             /* внутрішнє поле арки під назву */
