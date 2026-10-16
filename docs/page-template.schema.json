@@ -235,6 +235,12 @@
           "maxLength": 240,
           "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
         },
+        "panel": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
         "cta": {
           "type": "object",
           "additionalProperties": false,

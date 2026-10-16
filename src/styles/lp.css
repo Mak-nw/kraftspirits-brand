@@ -47,6 +47,10 @@
 /* H1: розмір — роль .t-hero, ширина 4 колонки по центру — .heading-center (base.css) */
 .hero--lp .hero__subtitle { width: var(--container-lp-hero-sub); text-wrap: balance; }
 .hero--lp .btn { margin-top: var(--space-10); }
+/* hero.panel: true — текст hero (H1 4 колонки, лід, кнопка) у світлій панелі DS .contacts-panel по центру (6 колонок, 4–9), фото чисте: без оверлея, градієнта й тіні (рішення оркестратора: на фото D14 не проходить
+   при жодному кольорі тексту). Колір тексту — роль панелі (--color-green), не --lp-hero-ink; висота — за вмістом (скинуто мін. висоту панелі контактів). */
+.hero--lp .hero__panel { align-items: center; gap: var(--space-lp-hero-gap); width: var(--grid-span-6); min-height: 0; text-align: center; }
+.hero--lp .hero__panel .btn { margin-top: 0; }
 
 /* ---------- layers: «розріз» (рев'ю 77dd7d09: без кіл з фото, без розмиття/прозорості на накладанні) ----------
    Фото-текстури смугами впритул в одній рамці на всі 12 колонок (радіус панелі DS --radius-panel, як фото-рамки сайту): смуга = span колонок + зазор,

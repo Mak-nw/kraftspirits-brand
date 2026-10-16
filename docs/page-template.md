@@ -67,11 +67,11 @@ HTML у полях не приймається (усе екранується); 
 ## Типи секцій і їх поля
 
 ### `hero` — перший екран
-Фото на весь екран без оверлея, H1 `.t-hero` (4 колонки по центру), лід `.t-desc`, кнопка `.btn--<tone>`. Колір тексту — роль теми `--lp-hero-ink` (контраст на фото міряти піксельно, D8).
+Фото на весь екран без оверлея, H1 `.t-hero` (4 колонки по центру), лід `.t-desc`, кнопка `.btn--<tone>`. Колір тексту — роль теми `--lp-hero-ink` (контраст на фото міряти піксельно, D8/D14). **`panel: true`** — текст hero (H1, лід, кнопка) стоїть у світлій панелі DS `.contacts-panel` по центру (6 колонок, 4–9), фото лишається чистим (без оверлея, градієнта, тіні); колір тексту тоді — роль панелі (`--color-green`), а не `--lp-hero-ink`. Обирайте `panel`, коли кадр не має вільної зони під текст (контраст на фото не проходить жодним кольором); опція за замовчуванням вимкнена: на екскурсіях замовник відхилив панель (коментарі 5db5d797, 02cd307d) — там світлий текст прямо на фото (`--lp-hero-ink` теми), D14 для нього в allow з причиною.
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `img` | шлях | так | файл у `public/` | фото ≥ 2400 px по довгій стороні; вільна від деталей зона під текстом (верх-центр) |
+| `img` | шлях | так | файл у `public/` | фото ≥ 2400 px по довгій стороні (допустимо ≥ 2000); без `panel` — вільна від деталей зона під текстом (верх-центр); з `panel` — будь-який кадр. `<img>` має `fetchpriority="high"` (це LCP) |
 | `alt` | текст | ні | ≤ 140 | порожній — декоративне |
 | `slot` | текст | ні | ≤ 240 | підказка для `?slots=on` («що тут має бути за фото») |
 | `cta.text` / `cta.href` | текст / посилання | так | ≤ 24 (слово ≤ 16) | кнопка |
@@ -179,7 +179,7 @@ HTML у полях не приймається (усе екранується); 
 | `--lp-warm` / `--lp-deep` / `--lp-paper` | тло кімнат | brown / teal / beige | brown / green / beige |
 | `--lp-on-dark`, `--lp-on-dark-muted` | текст на warm/deep | light, nav-text | light, nav-text |
 | `--lp-on-paper`, `--lp-on-paper-muted` | текст на paper і панелях | teal, lp-ink-paper-muted | green, green |
-| `--lp-hero-ink` | текст hero на фото | teal | green |
+| `--lp-hero-ink` | текст hero на фото (без `panel`; з `panel` — колір панелі) | teal | green |
 | `--lp-accent` | кікер, назви шарів, цифри кроків, іконки | gold | gold |
 | `--lp-hairline` | арка, лінії кроків, маршрут | lp-hairline | lp-hairline |
 | `--lp-amber` | тло фото, доки вантажиться; рідина гравюри | lp-amber | lp-amber |
@@ -239,7 +239,7 @@ HTML у полях не приймається (усе екранується); 
 | `sections` | **Flexible Content** (layout = `type`; перший — лише hero) | InnerBlocks |
 | `id`, `key`, `*.icon`, `scene`/`engraving`/`wall` | Text (slug) · Select (іконки / ілюстрації за префіксом виду) | string |
 | `room`, `align`, `tone`, `variant`, `span` | Select | string / number |
-| `join`, `accent`, `approx`, `photoFirst` | True/False | boolean |
+| `join`, `panel`, `accent`, `approx`, `photoFirst` | True/False | boolean |
 | `title`, `kicker`, `name`, `origin`, `cta.text` … (≤ 90) | Text (maxlength = ліміт; слово ≤ 30) | string |
 | `lead`, `note`, `caption`, `text`, `faq.a`, `slot` | Text Area (без розмітки) | string |
 | `img`, `bg` | **Image** (шлях у `public/`; `bgW`/`bgH` — похідні від файлу) | image |

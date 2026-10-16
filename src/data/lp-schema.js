@@ -51,6 +51,7 @@ const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — під
 
 // спільні поля секції. Кожен тип бере лише ті, що його partial справді показує (поле в схемі ⇒ воно є на сторінці; перевіряє lp-contract)
 const BASE = { type: { type: 'type', req: true }, id: { type: 'id', req: true }, room: E(ROOMS, false), join: B(), kicker: T(25), title: T(60, true), lead: T(320), caption: T(120) };
+const STACK = { stack: B() };   // card / place: «стек великих блоків» — секція стоїть під попередньою card/place в ТІЙ САМІЙ кімнаті, зазор --grid-gap-panels (5u)
 const base = (...omit) => { const b = { ...BASE }; omit.forEach((k) => delete b[k]); return b; };
 
 export const SCHEMA = {
@@ -64,7 +65,7 @@ export const SCHEMA = {
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
-    hero: { ...base('room', 'join', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), cta: { ...CTA, req: true } },
+    hero: { ...base('room', 'join', 'kicker', 'caption'), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), cta: { ...CTA, req: true } },
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2, 3, 4 або 6 (ділять 12 колонок)
     layers: { ...BASE, room: E(ROOMS, false, 'warm'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true, { divides: GRID_COLS }) },
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри
@@ -248,7 +249,7 @@ const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те са
 function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), lead: t(s.lead), caption: t(s.caption) }; }
 
 const VIEW = {
-  hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone }),
+  hero: (s, p) => ({ id: s.id, title: t(s.title), lead: t(s.lead), img: s.img, alt: t(s.alt), slot: t(s.slot), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone, panel: s.panel ? '1' : '', mods: s.panel ? ' hero--panel' : '' }),
   layers: (s) => {
     const span = GRID_COLS / s.items.length;
     const cut = s.items.some((it) => it.img);
@@ -299,8 +300,8 @@ export function lpView(page, env = {}) {
     const def = SCHEMA.sections[s.type];
     const room = s.room || def.room?.def || '';
     const next = page.sections[i + 1];
-    const mods = `${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}`;
-    return { type: s.type, room, mods, ...VIEW[s.type](s, p) };
+    const mods = `${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
+    return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
   });
   return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections };
 }

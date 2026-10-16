@@ -10,7 +10,7 @@
   --lp-on-dark-muted: var(--color-nav-text);
   --lp-on-paper: var(--color-green);               /* = --color-text-on-light */
   --lp-on-paper-muted: var(--color-green);         /* окремого «приглушеного» зеленого в DS немає — ієрархію дають ролі .t-* */
-  --lp-hero-ink: var(--color-green);               /* текст hero — зелений на світлому цеху фото (D8 піксельно) */
+  --lp-hero-ink: var(--color-light);               /* текст hero — світлий на фото екопарку, без заливки/панелі/оверлея (рішення замовника 5db5d797, 02cd307d; D14 не проходить — allow) */
   --lp-accent: var(--color-gold);
   --lp-hairline: var(--color-lp-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
   --lp-amber: var(--color-lp-amber);          /* тло фото, доки вантажиться */

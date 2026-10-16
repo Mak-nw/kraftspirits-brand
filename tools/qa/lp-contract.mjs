@@ -248,6 +248,18 @@ cross('card: ні text, ні list', (p) => { delete S(p).text; }, false, false, 
 cross(`card: text = ${CARD_TEXT_MAX} знаків`, (p) => { S(p).text = 'а '.repeat(CARD_TEXT_MAX / 2).trim().padEnd(CARD_TEXT_MAX, 'б'); }, true, true, 'card [text');
 cross(`card: list = ${CARD_LIST_MAX + 1} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX + 1).fill('x'); }, false, false, 'card [list');
 cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text; S(p).list = Array(CARD_LIST_MAX).fill('x'); }, true, true, 'card [list');
+/* hero.panel: видимий ефект на сторінці (поле схеми ⇒ вигляд) */
+{
+  // hero.panel: панель DS з H1, лідом і кнопкою всередині; без panel — панелі в hero немає
+  const hp = pageOf([]); hp.sections[0].panel = true; const hHtml = render(hp);
+  const heroOf = (h) => { const i = h.indexOf('<section class="hero'); return h.slice(i, h.indexOf('</section>', i)); };
+  const heroBlock = heroOf(hHtml);
+  note(/class="contacts-panel hero__panel"/.test(heroBlock) && /hero--panel/.test(heroBlock), 'render: hero.panel → панель .contacts-panel і клас hero--panel');
+  note(/contacts-panel[\s\S]*<h1[\s\S]*hero__subtitle[\s\S]*btn[\s\S]*<\/div>\s*<\/div>/.test(heroBlock), 'render: hero.panel → H1, лід і кнопка всередині панелі');
+  const hn = pageOf([]); hn.sections[0].panel = false; const nHtml = render(hn);
+  note(!/contacts-panel|hero--panel/.test(heroOf(nHtml)), 'render: без hero.panel панелі немає');
+  note(/<img class="hero__bg"[^>]*fetchpriority="high"/.test(nHtml), 'render: hero-фото має fetchpriority="high"');
+}
 cross('offers: bg без bgW/bgH', (p) => { delete S(p).bgW; }, false, false, 'offers');
 cross('offers: bgW без bg', (p) => { delete S(p).bg; }, false, false, 'offers');
 for (const [cnt, cap] of Object.entries(PRICE_MAX)) {
