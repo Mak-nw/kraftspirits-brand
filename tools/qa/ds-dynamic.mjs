@@ -6,7 +6,7 @@ import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13
 import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
 import { D17_DEFAULTS, probeD17, analyzeD17, controlD17 } from './heading-d17.mjs';
 import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
-import { COLLECT_D18, analyzeD18, controlD18, D18_DEFAULTS } from './grid-d18.mjs';
+import { COLLECT_D18, analyzeD18, controlD18, d18Mode, D18_DEFAULTS } from './grid-d18.mjs';
 import { COLLECT_D19, D19_DEFAULTS } from './hero-d19.mjs';
 import { loadLpPage } from '../lp-pages.mjs';
 import { measureTextOnImage, measureTextOnImageParallax, D14_PAGES, D14_STATES, D14_DEFAULTS, D14_PARALLAX } from './text-on-image.mjs';
@@ -218,7 +218,7 @@ export async function runDynamic(opts, allow, rep) {
   const want16 = want('D16'); const d16 = []; const d16cfg = { ...D16_DEFAULTS, ...(A.d16 || {}), targets: A.d16?.targets || D16_DEFAULTS.targets }; let d16ctl = null; let d16ctlFb = null; // D16 (контроль: на index; якщо index немає в списку сторінок — на першій сторінці, інакше виводилось «null»): hug/padding кнопок (hug-d16.mjs)
   const want17 = want('D17'); const d17 = []; let d17ctl = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
   const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; let d14parCtl = null; /* D14 профіль parallax=on: позитивний контроль */ // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
-  const want18 = want('D18'); const d18 = []; const d18cfg = { ...D18_DEFAULTS, ...(A.d18 || {}) }; const d18ctl = []; // D18: зазор великих блоків 5u / малих 40u (grid-d18.mjs)
+  const want18 = want('D18'); const d18 = []; const d18cfg = { ...D18_DEFAULTS, ...(A.d18 || {}) }; const d18ctl = []; const d18legacy = (allow['legacy-5u-pages'] || []).filter((x) => x && x.page && x.reason).map((x) => x.page); // D18: гориз. зазор великих блоків 40u (5u лише product + legacy-5u-pages), малих 40u (grid-d18.mjs)
   const want19 = want('D19'); const d19 = []; const d19cfg = { ...D19_DEFAULTS, ...(A.d19 || {}) }; const wantHeroCtx = want19 || want('D14') || want('D8'); // D19: hero без оверлея (hero-d19.mjs); стан hero потрібен і для умовних винятків D14/D8 (allow.requires)
   rep.ctx = rep.ctx || { hero: {} };
   const specs = opts.pagesList.map(pageSpec);
@@ -266,7 +266,7 @@ export async function runDynamic(opts, allow, rep) {
         await page.evaluate(() => document.querySelectorAll('[data-qa-t]').forEach((e) => e.removeAttribute('data-qa-t')));
         collect.push({ label, spec, width: combo.width, sb: combo.scrollbar, data });
         if (want12 && (spec.name !== 'design-system' || opts.d12Ds)) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await collectStable(page, COLLECT_GRID, { ...gcfg, root: null }, sigGrid) });
-        if (want18 && spec.name !== 'design-system') d18.push({ label, spec, width: combo.width, data: await collectStable(page, COLLECT_D18, d18cfg, sigD18) });
+        if (want18) d18.push({ label, spec, width: combo.width, data: await collectStable(page, COLLECT_D18, spec.name === 'design-system' ? { ...d18cfg, root: '.brand-choice' } : d18cfg, sigD18) }); // design-system: лише демо brand-choice (корінь .ds-brands-demo) — 40u по колонках
         if (wantHeroCtx && spec.name !== 'design-system') d19.push({ label, spec, data: await evalRetry(page, COLLECT_D19, d19cfg) });
         // D5: підкреслення (лише для першої комбінації ширини/смуги — це не залежить від ширини)
         if (want('D5') && combo === combos[0]) {
@@ -342,10 +342,14 @@ export async function runDynamic(opts, allow, rep) {
           d18.push({ label: label0(st), spec: sp, width: combo.width, data: await collectStable(pg, COLLECT_D18, d18cfg, sigD18) });
           await pg.close().catch(() => {});
         }
-        const cp = await openPage(L.browser, pageUrl(opts.url, pageSpec('contacts'), 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
-        await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
-        d18ctl.push({ label: label0('contacts'), ...(await controlD18(cp, d18cfg)) });
-        await cp.close().catch(() => {});
+        // позитивні контролі: product (режим 5u: зазор 40u МАЄ дати порушення) і about (режим 40u: зазор 5u МАЄ дати порушення)
+        for (const nm of ['product?id=gin-yasnyi', 'about']) {
+          const sp0 = pageSpec(nm); const mode = d18Mode(sp0.name, d18legacy);
+          const cp = await openPage(L.browser, pageUrl(opts.url, sp0, 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
+          await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
+          d18ctl.push({ label: label0(nm.split('?')[0]), ...(await controlD18(cp, d18cfg, mode)) });
+          await cp.close().catch(() => {});
+        }
       }
     } finally { await L.close(); }
   }
@@ -481,23 +485,23 @@ export async function runDynamic(opts, allow, rep) {
   if (want18) {
     const st = (stats.d18 = { pages: d18.length, big: 0, tile: 0, fused: 0, fail: 0, unstable: 0 }); const dump = [];
     for (const c of d18) {
-      const a = analyzeD18(c.data, d18cfg); const u = c.data.u;
+      const mode = d18Mode(c.spec.name, d18legacy); const a = analyzeD18(c.data, d18cfg, mode); const u = c.data.u;
       if (c.data.__stab?.unstable) { st.unstable++; rep.note(`D18 ${c.label}: заміри не збіглися за ${c.data.__stab.samples} спроб (нестабільний макет) — взято найближчий до стабільного`); }
       st.fused += a.fused;
       for (const p of a.pairs) {
         st[p.kind]++;
-        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? 'великі блоки --grid-gap-panels' : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? 'великих блоків ≠ 5u' : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
+        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? (mode === 'five' ? 'великі блоки --grid-gap-panels, сторінка товару/legacy-5u' : 'великі блоки по колонках --grid-gap') : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? 'великих блоків ≠ 5u' : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
       }
       // охоронець покриття: на ключових сторінках пара/склеєний компонент МАЄ бути знайдена (збір не мовчить)
       for (const [key, min] of Object.entries(d18cfg.required || {})) {
         if (!(key.includes('?') ? c.spec.spec === key : c.spec.name === key && (key === 'product' ? /^product\?id=/.test(c.spec.spec) : !c.spec.query))) continue;
         if (a.pairs.length + a.fused < min) addV({ rule: 'D18', page: c.label, selector: key, value: `знайдено пар ${a.pairs.length} + склеєних ${a.fused}, потрібно ≥ ${min}`, msg: 'охоронець покриття: великі блоки на сторінці не знайдено (збір D18 зламано або сторінку змінено)' });
       }
-      dump.push({ label: c.label, u, blocks: c.data.blocks.length, pairs: a.pairs.map((p) => ({ kind: p.kind, gapU: +(p.gap / u).toFixed(3), ok: p.ok, a: p.a.path, b: p.b.path, cols: p.cols })), fused: a.fused });
+      dump.push({ label: c.label, mode, u, blocks: c.data.blocks.length, pairs: a.pairs.map((p) => ({ kind: p.kind, gapU: +(p.gap / u).toFixed(3), ok: p.ok, a: p.a.path, b: p.b.path, cols: p.cols })), fused: a.fused });
     }
-    for (const k of d18ctl) if (!k.applied || k.fails === 0) addV({ rule: 'D18', page: 'control', selector: `позитивний контроль ${k.label}`, value: k.applied ? '0 порушень' : 'пару великих блоків не знайдено', msg: 'зазор 40u замість 5u між великими блоками МАЄ дати порушення — інакше D18 зламано' });
+    for (const k of d18ctl) if (!k.applied || k.fails === 0) addV({ rule: 'D18', page: 'control', selector: `позитивний контроль ${k.label}`, value: k.applied ? '0 порушень' : 'пару великих блоків не знайдено', msg: 'зміна зазору великих блоків (product: 40u замість 5u; about: 5u замість 40u) МАЄ дати порушення — інакше D18 зламано' });
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd18.json'), JSON.stringify({ cfg: d18cfg, results: dump, control: d18ctl }, null, 1)); } catch {}
-    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; позитивний контроль (40u замість 5u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
+    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; режим 5u лише product + legacy-5u-pages [${d18legacy.join(',')}]; позитивний контроль (product 40u замість 5u / about 5u замість 40u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
   }
   // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
   if (wantHeroCtx) {
@@ -505,7 +509,7 @@ export async function runDynamic(opts, allow, rep) {
     // Рукописні сторінки без файлу даних lp: дозвіл hero.fade зафіксовано ТУТ, вузько (одна сторінка, один токен). about.html («Про дім») — вимога замовника:
     // «на херо … фотка [будівлі]. Поверх неї градієнт кольором зеленого фону, знизу 100, зверху 0 прозорості» (сторінку перероблено з шаблону lp на рукописну, src/data/about.js видалено).
     // Перевірка градієнта та сама (рівно один linear-gradient(to top, <токен --color-green> 0%, transparent 100%) на .hero::after, без filter/mask/тіні/opacity); інший тон чи інша сторінка — порушення.
-    const HAND_FADE = { about: 'green' };
+    const HAND_FADE = { about: 'green' }; // about: нижній градієнт hero.fade + верхній hero--fade-top (hero-d19.mjs; рішення замовника «градієнт зверху»)
     let off = 0, fadeSeen = 0;
     const dataFade = {};   // hero.fade із даних сторінки (єдине джерело дозволу градієнта D19); сторінки без файлу даних (index) — без fade
     for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || HAND_FADE[name] || null; } catch { dataFade[name] = HAND_FADE[name] || null; } }

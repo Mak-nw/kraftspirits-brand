@@ -1,4 +1,7 @@
-// D18: зазор великих блоків = --grid-gap-panels (5u), малих елементів (плитки: 3 колонки й вужче, ≥3 в ряду) = --grid-gap (40u).
+// D18: ГОРИЗОНТАЛЬНИЙ зазор великих блоків: 5u (--grid-gap-panels) ЛИШЕ на сторінці товару (product), на всіх інших сторінках = зазор колонок сітки 40u (--grid-gap)
+//      (ДОПОВНЕННЯ 3 і 5 ABOUT-REBUILD-PLAN.md, 17.10.2026); ВЕРТИКАЛЬНІ відступи між панелями (одна над одною) лишаються 5u і D18 їх не міряє.
+//      Перемикач: analyzeD18(data, cfg, mode): mode 'five' (product і сторінки зі списку legacy-5u-pages у check-ds.allow.json — тимчасово, чекають T7) | 'forty' (решта).
+//      Малі елементи (плитки: 3 колонки й вужче, ≥3 в ряду) = --grid-gap (40u) завжди.
 // Збір — у браузері (COLLECT_D18), аналіз — у Node (analyzeD18), позитивний контроль — controlD18. Опис — tools/qa/README.md (розділ D18).
 //
 // ВЕЛИКИЙ блок = видимий елемент завширшки ≥ 2 колонок (не на всю ширину в'юпорта, не абсолютний/fixed, висотою ≥ minHeightU), що є панеллю (фон/рамка/фонове зображення)
@@ -19,7 +22,7 @@ export const D18_DEFAULTS = {
   fusedSelectors: ['.tour-card'],
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', 'button', 'input', 'select', 'textarea', 'label', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs', '.age-card', '[data-age-gate]'],
   // сторінки (специфікації), де великі пари МАЮТЬ бути знайдені (охоронець: збір не мовчить): мін. кількість перевірених великих пар + склеєних
-  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'index': 1 },
+  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'index': 1, 'design-system': 1 },
   states: ['cart?demo=1', 'checkout?demo=1', 'account?state=login', 'account?state=dashboard'], // демо-стани, яких немає серед *.html
 };
 
@@ -73,8 +76,13 @@ export function COLLECT_D18(cfg) {
   return out;
 }
 
+/** Режим сторінки: 'five' — product та legacy-5u-pages (allow.json), 'forty' — решта. */
+export function d18Mode(pageName, legacyPages = []) {
+  return pageName === 'product' || legacyPages.includes(pageName) ? 'five' : 'forty';
+}
+
 /** Аналіз однієї сторінко-ширини → { pairs:[{a,b,gap,kind,expected,delta,ok,cols,n}], fused, blocks } */
-export function analyzeD18(data, cfg) {
+export function analyzeD18(data, cfg, mode = 'forty') {
   const tol = cfg.tolPx;
   const colW = (w) => (w + data.gap) / (data.col + data.gap);
   const bs = [...data.blocks].sort((x, y) => x.L - y.L || x.T - y.T);
@@ -95,27 +103,30 @@ export function analyzeD18(data, cfg) {
     const n = Math.max(rowCount(a), rowCount(b));
     const tile = colW(a.W) <= cfg.tileMaxCols + 0.05 && colW(b.W) <= cfg.tileMaxCols + 0.05;
     const kind = tile ? 'tile' : 'big';
-    const expected = kind === 'big' ? data.panelGap : data.gap;
+    const expected = kind === 'big' && mode === 'five' ? data.panelGap : data.gap;
     const delta = gap - expected;
-    pairs.push({ a, b, gap, kind, expected, delta, ok: Math.abs(delta) <= tol, cols: [+colW(a.W).toFixed(2), +colW(b.W).toFixed(2)], n });
+    pairs.push({ a, b, gap, kind, expected, delta, ok: Math.abs(delta) <= tol, mode, cols: [+colW(a.W).toFixed(2), +colW(b.W).toFixed(2)], n });
   }
   return { pairs, fused, blocks: bs.length };
 }
 
 /**
- * Позитивний контроль (у живій сторінці): першій знайденій парі великих блоків збільшуємо зазор до 40u (margin-left правого блока = 35u) → D18 МАЄ дати порушення.
+ * Позитивний контроль (у живій сторінці), двобічний:
+ *  dir 'widen' (сторінка в режимі 'five', напр. product): першій парі великих блоків збільшуємо зазор до 40u → D18 МАЄ дати порушення;
+ *  dir 'narrow' (режим 'forty', напр. about): першій парі зменшуємо зазор до 5u (margin-left правого блока = −35u) → D18 МАЄ дати порушення.
  * Повертає { applied: bool, fails: n } (applied=false — на сторінці немає великої пари).
  */
-export async function controlD18(page, cfg) {
+export async function controlD18(page, cfg, mode = 'five') {
   const data = await page.evaluate(COLLECT_D18, cfg);
-  const a = analyzeD18(data, cfg);
+  const a = analyzeD18(data, cfg, mode);
   const k = a.pairs.find((p) => p.kind === 'big' && p.ok) || a.pairs.find((p) => p.kind === 'big');
-  if (!k) return { applied: false, fails: 0 };
+  if (!k) return { applied: false, fails: 0, mode };
   const idx = data.blocks.indexOf(k.b);
-  await page.evaluate((i, px) => { const el = window.__qaD18[i]; el.__qaMl = el.style.marginLeft; el.style.marginLeft = `${px}px`; }, idx, data.gap - data.panelGap);
+  const shift = mode === 'five' ? data.gap - data.panelGap : -(data.gap - data.panelGap);
+  await page.evaluate((i, px) => { const el = window.__qaD18[i]; el.__qaMl = el.style.marginLeft; el.style.marginLeft = `${px}px`; }, idx, shift);
   const d2 = await page.evaluate(COLLECT_D18, cfg);
-  const a2 = analyzeD18(d2, cfg);
+  const a2 = analyzeD18(d2, cfg, mode);
   const fails = a2.pairs.filter((p) => !p.ok).length; // (якщо пара вже була неправильною — порушення є й без контролю)
   await page.evaluate((i) => { const el = window.__qaD18[i]; if (el) el.style.marginLeft = el.__qaMl || ''; }, idx).catch(() => {});
-  return { applied: true, fails };
+  return { applied: true, fails, mode };
 }
