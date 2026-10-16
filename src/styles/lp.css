@@ -18,8 +18,10 @@
 .lp-room--paper { background: var(--lp-paper); color: var(--lp-on-paper); }
 /* вертикальний ритм секцій; join — секція продовжує кімнату попередньої (без межі, лише повітря; бочки: S4 → S5) */
 .lp-sec { padding-block: var(--space-lp-section-y); }
+.lp-sec.lp-sec--loose { padding-block: var(--space-lp-section-y-loose); } /* поле `loose` секції: на один крок шкали вище (150 → 177) */
 .lp-sec.lp-sec--join-next { padding-bottom: var(--space-lp-room-join); }
 .lp-sec.lp-sec--join { padding-top: 0; }
+.lp-sec.lp-sec--loose.lp-sec--join-next { padding-bottom: var(--space-lp-section-y); } /* loose + продовження кімнати нижче: 120 → 150u (крок вгору) */
 /* stack: true (card / place) — стек великих блоків (як tours наприкінці головної): секція в ТІЙ САМІЙ кімнаті, що попередня (lpView), без верхнього відступу секції; між блоками --grid-gap-panels (5u), великого повітря немає */
 .lp-sec.lp-sec--stack-next { padding-bottom: 0; }
 .lp-sec.lp-sec--stack { padding-top: var(--grid-gap-panels); }
@@ -181,6 +183,16 @@
 .lp-route__point { min-width: 0; }
 .lp-route__line { flex: 1; height: var(--border-hairline); background: var(--lp-hairline); }
 .lp-route__side--from .lp-route__line { margin-right: var(--space-10); }
+/* tiles shape: circle — коло замість рамки 3:4: діаметр = ширина плитки (span колонок), кадр фото cover + object-position за даними (`imgPos`), тло — роль теми за `tone`,
+   кільце — hairline; назва — акцент теми, підпис — чорнило кімнати; лід — під рядом плиток (рядок 6), по центру */
+.lp-tile--tone-black { --lp-tile-bg: var(--lp-tile-black); } .lp-tile--tone-brown { --lp-tile-bg: var(--lp-tile-brown); } .lp-tile--tone-green { --lp-tile-bg: var(--lp-tile-green); } .lp-tile--tone-teal { --lp-tile-bg: var(--lp-tile-teal); }
+.lp-tiles--circle .lp-tile__img { box-sizing: border-box; aspect-ratio: 1; border: var(--border-hairline) solid var(--lp-hairline); border-radius: var(--radius-round); }
+.lp-tile--pos-top .lp-tile__img { object-position: top; } .lp-tile--pos-bottom .lp-tile__img { object-position: bottom; }
+.lp-tiles--circle.lp-room--warm .lp-tile__name, .lp-tiles--circle.lp-room--deep .lp-tile__name { color: var(--lp-accent); } /* на світлому золото не тримає контраст — лишається чорнило кімнати */
+.lp-tiles--circle.lp-room--warm .lp-tile__origin, .lp-tiles--circle.lp-room--deep .lp-tile__origin { color: var(--lp-on-dark); }
+.lp-tiles--circle .lp-tile__origin { white-space: pre-line; } /* опис — рівно 2 рядки по центру: перенос задає дані (правило tiles-circle-origin-2lines) */
+.lp-tiles__lead--cols-2 { width: var(--grid-span-2); } .lp-tiles__lead--cols-3 { width: var(--grid-span-3); } .lp-tiles__lead--cols-4 { width: var(--grid-span-4); } .lp-tiles__lead--cols-5 { width: var(--grid-span-5); } .lp-tiles__lead--cols-6 { width: var(--grid-span-6); }
+.lp-tiles__lead { grid-column: 4 / span 6; grid-row: 6; justify-self: center; margin: var(--space-lp-head) 0 0; text-align: center; }
 .lp-route__side--to .lp-route__line { margin-left: var(--space-10); }
 .lp-route__icon { --icon-size: var(--size-lp-route-icon); position: absolute; top: 50%; left: 50%; translate: -50% -50%; }
 

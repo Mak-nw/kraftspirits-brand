@@ -17,3 +17,7 @@
   --lp-tone: btn--green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
   --lp-tile-bg: var(--color-black);                /* «студійне» тло плиток дегустації: прозорі фото пляшок каталогу + AI-кадр келиха на чорному */
 }
+  --lp-tile-black: var(--color-black);               /* тло кола плитки (tiles shape: circle) за `tone` даних: чорне (кадр келиха), коричневе, зелене, teal */
+  --lp-tile-brown: var(--color-brown);
+  --lp-tile-green: var(--color-green);
+  --lp-tile-teal: var(--color-teal);

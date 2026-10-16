@@ -359,6 +359,7 @@
         <div><div class="radius-demo__box radius-demo__box--btn"></div><p class="ds-meta demo-label t-text">--radius-btn 5u · 194:1372 · кнопки, FAQ, поля, мініатюри</p></div>
         <div><div class="radius-demo__box radius-demo__box--panel"></div><p class="ds-meta demo-label t-text">--radius-panel 10u · панелі, карта, картка каталогу, фрейм товару</p></div>
         <div><div class="radius-demo__box radius-demo__box--pill"></div><p class="ds-meta demo-label t-text">--radius-pill 45px · 194:1333</p></div>
+        <div><div class="radius-demo__box radius-demo__box--round"></div><p class="ds-meta demo-label t-text">--radius-round 50% · коло: кадр плитки lp tiles shape: circle</p></div>
         <div><div class="radius-demo__box radius-demo__box--frame"></div><p class="ds-meta demo-label t-text">--border-frame 5px · 194:1388</p></div>
       </div>
       <p class="ds-meta demo-label t-text">Тіней немає. Єдиний box-shadow — кільце 1px помилки поля (.field.is-invalid). Інші форми — лише через маску/клип з токенами: арка картки каталогу (50% 50% 0 0), «крапля» маркера карти (50% 50% 0 50%), пілюля стрілок слайдера (--radius-pill).</p>
@@ -1298,7 +1299,7 @@
         <tr><td>layers</td><td>«розріз»: фото-смуги впритул в одній рамці --radius-panel на 12 колонок + під кожною іконка DS, назва .t-lead (акцент), пояснення .t-desc (рев'ю 77dd7d09)</td><td>2/3/4/6 пунктів; без фото — лише підписи; іконка необов'язкова; кімната</td></tr>
         <tr><td>steps</td><td>sticky-арка (одна hairline-рамка, колонки 1–5) + кроки (колонки 7–12): hairline зверху, цифра .t-stat (акцент), назва .t-product-name, пояснення .t-desc</td><td>медіа арки: гравюра (scene) або фото (img); 2–5 кроків; шапка з кікером/лідом/підписом</td></tr>
         <tr><td>compare</td><td>групи поруч на спільних рядках (subgrid): ярлик .t-product-name, число .t-stat (+ «≈»), одиниця .t-desc, медіа «стіна» або список DS, факти .t-chip + .t-desc</td><td>span груп (сума 12), вирівнювання start/center, wall або list</td></tr>
-        <tr><td>tiles</td><td>плитки на спільних рядках: медіа, назва .t-product-name, підпис .t-text, ноти .t-desc</td><td>медіа: гравюра + іконка DS або фото 3:4 у рамці --radius-panel; кімната</td></tr>
+        <tr><td>tiles</td><td>плитки на спільних рядках: медіа, назва .t-product-name, підпис .t-text, ноти .t-desc</td><td>медіа: гравюра + іконка DS або фото 3:4 у рамці --radius-panel; <code>shape: circle</code> — фото в колі (--radius-round, кільце hairline, тло за <code>tone</code> = роль теми --lp-tile-&lt;тон&gt;, кадр <code>imgPos</code>), назва — акцент теми, лід під рядом плиток; кімната</td></tr>
         <tr><td>offers</td><td>фото на всю секцію без затемнення; шапка (маршрут — hairline + іконка DS); панелі .contacts-panel: назва, ціна .t-stat, факти (hairline-рядки), список DS, кнопка</td><td>1–3 панелі; маршрут; підпис до ціни; необов’язковий рядок-підпис (foot; зараз на «Екскурсіях» не використовується)</td></tr>
         <tr><td>card</td><td>ІСНУЮЧА панель .tour-card (головна) на сітці 12 колонок</td><td>фото ліворуч/праворуч, список (параметр list), тон кнопки (параметр tone); <code>stack: true</code> — стек великих блоків (нижче)</td></tr>
         <tr><td>place</td><td>ІСНУЮЧІ .contacts-panel (5 колонок, факти .contacts-item) + мапа .contacts-map (7 колонок) зі сторінки контактів</td><td>факти, кнопки; <code>stack: true</code> — стек великих блоків (нижче)</td></tr>
@@ -1339,7 +1340,7 @@
       <p class="demo-label t-kicker">offers — бочки «Ціна» (кімната deep): фото днищ на ВСЮ секцію без затемнення (кадрування — файл сторінки src/styles/pages/&lt;сторінка&gt;.css: наближення до темної частини, світлий текст ≥ 4.5:1), шапка зі світлим текстом без плашки, маршрут (hairline-лінія + іконка DS .icon--barrels-ship), дві панелі .contacts-panel поруч по 6 колонок.</p>
       <div class="demo-panel ds-lp lp-scope theme-barrels lp-page--barrels"><!--@lp barrels price--></div>
 
-      <p class="demo-label t-kicker">Варіанти тих самих типів на екскурсіях (тема excursions: deep = --color-green, тон кнопок green; різниця — лише дані, медіа й тема): steps з фото в арці замість гравюри; tiles з фото 3:4 замість гравюри; compare зі списком замість стіни.</p>
+      <p class="demo-label t-kicker">Варіанти тих самих типів на екскурсіях (тема excursions: deep = --color-green, тон кнопок green; різниця — лише дані, медіа й тема): steps з фото в арці замість гравюри; tiles з фото в колі (shape: circle: тло за tone, кадр imgPos, лід під рядом) замість гравюри; compare зі списком замість стіни; formats — дві панелі «Екскурсія + 4 / 8 напоїв» (капсула з числом, колонки напоїв, факти).</p>
       <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions excursion--></div>
       <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions tasting--></div>
       <div class="demo-panel ds-lp lp-scope theme-excursions lp-page--excursions"><!--@lp excursions formats--></div>

@@ -43,15 +43,15 @@ export const excursions = {
       ],
     },
     {
-      type: 'tiles', id: 'tasting', room: 'warm',
+      type: 'tiles', id: 'tasting', room: 'warm', shape: 'circle', leadCols: 2, loose: true,
       kicker: 'Дегустація', title: 'Чотири характери в одному ряду',
       lead: 'Дегустацію ведемо від прозорого до витриманого: спершу чистий дистилят, потім сезонний напій, джин і віскі. Так чути, що саме дає зерно, що — ботаніка, а що — бочка.',
       items: [
         // ноти келихів — [потрібно уточнити] (порожнє поле: рядок не показується)
-        { key: 'newmake', img: '/assets/img/products/whiskey-white.webp', alt: 'Пляшка невитриманого віскі', name: 'Ньюмейк', origin: 'Чистий зерновий дистилят', notes: '', slot: 'Фото: пляшка з каталогу (whiskey-white) як ілюстрація ньюмейку — уточнити продукт дегустації' },
-        { key: 'pumpkin', img: '/assets/img/excursions-pumpkin.webp', alt: 'Келих гарбузівки поруч із гарбузом', name: 'Гарбузівка', origin: 'Сезонний напій з українським характером', notes: '', slot: AI('келих гарбузівки; пляшки в каталозі немає') },
-        { key: 'gin', img: '/assets/img/products/gin-yasnyi.webp', alt: 'Пляшка джину «Ясний»', name: 'Джин', origin: 'Авторський, ботанічний', notes: '', slot: 'Фото: пляшка з каталогу (gin-yasnyi) — уточнити продукт дегустації' },
-        { key: 'whisky', img: '/assets/img/products/oak-notes.webp', alt: 'Пляшка витриманого віскі', name: 'Віскі', origin: 'Витриманий насичений смак', notes: '', slot: 'Фото: пляшка з каталогу (oak-notes) — уточнити продукт дегустації' },
+        { key: 'newmake', tone: 'brown', imgPos: 'top', img: '/assets/img/products/whiskey-white.webp', alt: 'Пляшка невитриманого віскі', name: 'Ньюмейк', origin: 'Чистий зерновий\nдистилят', notes: '', slot: 'Фото: пляшка з каталогу (whiskey-white) як ілюстрація ньюмейку — уточнити продукт дегустації' },
+        { key: 'pumpkin', tone: 'black', imgPos: 'center', img: '/assets/img/excursions-pumpkin.webp', alt: 'Келих гарбузівки поруч із гарбузом', name: 'Гарбузівка', origin: 'Сезонний напій\nз українським характером', notes: '', slot: AI('келих гарбузівки; пляшки в каталозі немає') },
+        { key: 'gin', tone: 'green', imgPos: 'top', img: '/assets/img/products/gin-yasnyi.webp', alt: 'Пляшка джину «Ясний»', name: 'Джин', origin: 'Авторський,\nботанічний', notes: '', slot: 'Фото: пляшка з каталогу (gin-yasnyi) — уточнити продукт дегустації' },
+        { key: 'whisky', tone: 'teal', imgPos: 'top', img: '/assets/img/products/oak-notes.webp', alt: 'Пляшка витриманого віскі', name: 'Віскі', origin: 'Витриманий\nнасичений смак', notes: '', slot: 'Фото: пляшка з каталогу (oak-notes) — уточнити продукт дегустації' },
       ],
     },
     {

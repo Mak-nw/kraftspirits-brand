@@ -70,8 +70,9 @@ function variantsOf(type) {
     const a = clone(s); delete a.img; delete a.alt; out.push(['scene', a]);
     const b = clone(s); delete b.scene; out.push(['img', b]);
   } else if (type === 'tiles') {
-    const a = clone(s); a.items.forEach((t) => { delete t.img; delete t.alt; }); out.push(['engraving+icon', a]);
-    const b = clone(s); b.items.forEach((t) => { delete t.engraving; delete t.icon; }); out.push(['img+alt', b]);
+    const a = clone(s); delete a.shape; delete a.leadCols; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; }); out.push(['engraving+icon', a]);
+    const b = clone(s); delete b.shape; delete b.leadCols; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; }); out.push(['img+alt', b]);
+    const c = clone(s); c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
     const b = clone(s); delete b.text; out.push(['list', b]);
@@ -110,7 +111,14 @@ const validPages = [['hero', heroPage]];
 for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
   for (const [label, s] of variantsOf(type)) {
     const page = pageOf(withIds([s]));
-    shownCheck(type, label, render(page), s);
+    const html = render(page);
+    shownCheck(type, label, html, s);
+    if (type === 'tiles') { // enum-поля, що не маркуються текстом: shape → клас секції, tone/imgPos → модифікатори плитки, лід круглого варіанта — під рядом
+      const circ = s.shape === 'circle';
+      note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
+      note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
+      if (circ) note(html.indexOf('lp-tiles__lead') > html.lastIndexOf('lp-tile__caption') && !html.includes('<p class="lp-head__lead'), 'render tiles [circle]: лід — під рядом плиток, не в шапці');
+    }
     validPages.push([`${type}${label ? ` [${label}]` : ''}`, page]);
   }
 }
@@ -130,7 +138,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.items.tone', 'tiles.items.imgPos', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -242,6 +250,15 @@ cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps 
 cross('tiles: і engraving, і img', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
 cross('tiles: ні engraving, ні img', (p) => { delete S(p).items[0].engraving; delete S(p).items[0].icon; }, false, false, 'tiles [engraving');
 cross('tiles: icon без engraving', (p) => { delete S(p).items[0].engraving; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving');
+cross('tiles: shape circle без img у плитці', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; S(p).items[0].engraving = 'engraving-barrels-head'; }, false, false, 'tiles [circle');
+cross('tiles: shape circle, усі плитки з фото (валідно)', () => {}, true, true, 'tiles [circle');
+cross('tiles: leadCols без shape circle', (p) => { delete S(p).shape; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
+cross('tiles: circle, origin в один рядок', (p) => { S(p).items[0].origin = 'аб аб'; }, false, false, 'tiles [circle');
+cross('tiles: circle, origin у три рядки', (p) => { S(p).items[0].origin = 'аб\nаб\nаб'; }, false, false, 'tiles [circle');
+cross('tiles: tone без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).items.forEach((t) => delete t.imgPos); }, false, false, 'tiles [circle');
+cross('tiles: imgPos без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => delete t.tone); }, false, false, 'tiles [circle');
+cross('tiles: без shape і без leadCols/tone/imgPos (валідно)', (p) => { delete S(p).shape; delete S(p).leadCols; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, true, true, 'tiles [circle');
+cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
 cross('card: text і list разом', (p) => { S(p).list = ['x']; }, false, false, 'card [text');
 cross('card: ні text, ні list', (p) => { delete S(p).text; }, false, false, 'card [text');

@@ -46,6 +46,8 @@ export const wordPattern = (n = MAX_WORD) => `^(?![\\s\\S]*[^ \\n\\r\\t]{${n + 1
 
 const ROOMS = ['warm', 'deep', 'paper'];                    // кімнати: кольори задає тема (warm/deep — темні, paper — світла)
 export const TONES = ['teal', 'green', 'gold', 'light', 'beige'];
+export const TILE_TONES = ['black', 'brown', 'green', 'teal'];  // тло круглого кадру плитки: роль теми --lp-tile-<тон> (значення — токени палітри)
+export const TILE_POS = ['top', 'center', 'bottom'];        // кадрування фото в колі: object-position (верх — пляшка обрізана знизу)
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
 const MEDIA_IMG = { img: URL_(), alt: T(140), slot: T(240) }; // slot — підказка «що тут має бути за фото» (режим ?slots=on, data-slot)
 
@@ -76,8 +78,9 @@ export const SCHEMA = {
       count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
-    // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти
-    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
+    // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
+    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола) і imgPos (кадр) за даними, лід — під рядом плиток
+    tiles: { ...BASE, room: E(ROOMS, false, 'paper'), shape: E(['circle']), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
     offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
@@ -123,6 +126,15 @@ export const RULES = [
     check: (t) => (has(t.icon) && !has(t.engraving) ? 'icon доступний лише разом з engraving' : ''), json: dependent('icon', 'engraving') },
   { id: 'tiles-alt-needs-img', types: ['tiles'], path: 'items', doc: '`alt` плитки має сенс лише з `img`',
     check: (t) => (has(t.alt) && !has(t.img) ? 'alt доступний лише разом з img' : ''), json: dependent('alt', 'img') },
+  { id: 'tiles-circle-needs-img', types: ['tiles'], path: '', doc: '`shape: circle`: кожна плитка з фото `img` (гравюри в колі немає)',
+    check: (s) => (s.shape === 'circle' && s.items.some((it) => !has(it.img)) ? 'shape: circle потребує img у кожній плитці' : ''),
+    json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } } } },
+  { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` секції, `tone` і `imgPos` плитки мають сенс лише з `shape: circle`',
+    check: (s) => (!has(s.shape) && (has(s.leadCols) || s.items.some((it) => has(it.tone) || has(it.imgPos))) ? 'leadCols/tone/imgPos — лише з shape: circle' : ''),
+    json: { if: { not: present('shape') }, then: { allOf: [{ not: { properties: { leadCols: { type: 'integer' } }, required: ['leadCols'] } }, { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('tone'), present('imgPos')] } } } } }] } } },
+  { id: 'tiles-circle-origin-2lines', types: ['tiles'], path: '', doc: '`shape: circle`: `origin` плитки — рівно два рядки (один переніс `\\n`, кожен ≤ 32 знаки): підпис під колом завжди в 2 рядки по центру',
+    check: (s) => { if (s.shape !== 'circle') return ''; const bad = s.items.findIndex((it) => !/^[^\n]{1,32}\n[^\n]{1,32}$/u.test(it.origin)); return bad < 0 ? '' : `items[${bad}].origin: у колі потрібні рівно два рядки (один переніс), кожен ≤ 32 знаки`; },
+    json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', properties: { origin: { type: 'string', pattern: '^[^\\n]{1,32}\\n[^\\n]{1,32}$' } } } } } } } },
   { id: 'offers-bg-size', types: ['offers'], path: '', doc: 'з `bg` потрібні `bgW` і `bgH` (розміри файлу в пікселях; без них зсув макета при завантаженні)',
     check: (s) => (has(s.bg) && !(has(s.bgW) && has(s.bgH)) ? 'з bg потрібні bgW і bgH' : (!has(s.bg) && (has(s.bgW) || has(s.bgH) || has(s.bgSlot)) ? 'bgW/bgH/bgSlot без bg' : '')),
     json: { allOf: [{ if: present('bg'), then: { required: ['bgW', 'bgH'], properties: { bgW: { type: 'integer' }, bgH: { type: 'integer' } } } },
@@ -270,7 +282,12 @@ const VIEW = {
     groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
       label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
-  tiles: (s) => ({ ...head(s), items: s.items.map((it) => ({ key: it.key, span: GRID_COLS / s.items.length, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot), name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) }),
+  tiles: (s) => {
+    const round = s.shape === 'circle';   // коло: лід не в шапці, а під рядом плиток
+    return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
+      items: s.items.map((it) => ({ key: it.key, span: GRID_COLS / s.items.length, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
+        toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: it.imgPos ? ` lp-tile--pos-${it.imgPos}` : '', originRole: round ? 't-desc' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
+  },
   offers: (s, p) => ({ ...head(s), bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
     items: s.items.map((it) => ({ key: it.key, span: GRID_COLS / s.items.length, tone: p.tone, title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
