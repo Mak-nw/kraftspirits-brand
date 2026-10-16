@@ -63,7 +63,7 @@ a.nav-cell--fill:focus-visible { outline-color: var(--btn-focus-ring-color-on-da
 
 /* «каталог» (150×44, як «Кошик»/«підказати?», 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, ширина/висота фіксовані, тож розмір і позиція комірки й іконки не змінюються. */
 .nav-cell--ghost { border-radius: var(--radius-btn); background: var(--btn-bg); color: var(--btn-text); transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
-a.nav-cell--ghost:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
+a.nav-cell--ghost:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
   a.nav-cell--ghost:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
 }

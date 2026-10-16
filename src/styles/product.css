@@ -88,7 +88,7 @@
 
 /* стан «не знайдено» / noscript */
 .product-notfound { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: var(--space-50); padding: var(--space-70) 0; text-align: center; }
-.product-notfound__link { text-decoration: underline; text-underline-offset: var(--hover-nudge); }
+.product:has(> .product-notfound) { min-height: calc(100svh - var(--size-header-h)); } /* «не знайдено» — як заглушка/404 (under-construction): сторінка не коротша за вікно, смуга прокрутки на всіх сторінках однакова → масштаб --u і висоти компонентів не залежать від її наявності */
 
 /* «Характеристики»: пари підпис — значення */
 .product-specs { display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-30); row-gap: var(--space-5); }

@@ -78,7 +78,7 @@ a.contacts-link:focus-visible { color: var(--color-hover-nav-light); transition-
 .contacts-item__head .icon { --icon-size: var(--size-contacts-icon); }
 .contacts-item__value { margin: 0; overflow-wrap: anywhere; }
 .contacts-item .contacts-link::after { content: ''; position: absolute; inset: 0; } /* клікабельна вся колонка (hit-area) */
-.contacts-item:has(a:focus-visible) a:focus-visible { outline: none; }
-.contacts-item:has(a:focus-visible)::before { content: ''; position: absolute; inset: calc(-1 * var(--space-10)); border: var(--border-hairline) solid currentColor; border-radius: var(--radius-btn); pointer-events: none; }
+.contacts-item a.contacts-link:focus-visible { outline: none; }
+.contacts-item a.contacts-link:focus-visible::after { inset: calc(-1 * var(--space-10)); border-radius: var(--radius-btn); outline: var(--focus-ring-width) solid var(--btn-focus-ring-color-on-light); outline-offset: calc(-1 * var(--focus-ring-width)); } /* кільце фокуса — на hit-area (::after) посилання: вся колонка + 10u поля, кут як у кнопки, колір green (кільце на світлій панелі) */
 @media (hover: hover) { .contacts-item:has(a:hover) .contacts-item__value { color: var(--color-hover-nav-light); } }
 .contacts-item .contacts-item__value { transition: color var(--duration-fast) var(--ease-out); }

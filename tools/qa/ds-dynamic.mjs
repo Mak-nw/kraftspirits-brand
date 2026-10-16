@@ -89,7 +89,7 @@ function COLLECT(cfg) {
   for (const el of document.body.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')) {
     if (inTemplate(el) || !el.checkVisibility?.({ checkVisibilityCSS: true })) continue;
     const lvl = /^H\d$/.test(el.tagName) ? +el.tagName[1] : +el.getAttribute('aria-level') || 2;
-    out.headings.push({ level: lvl, el: nameOf(el), text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40), inGate: !!el.closest('[data-age-gate]') });
+    out.headings.push({ level: lvl, el: nameOf(el), text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40), inGate: !!el.closest('[data-age-gate]'), labelsGate: !!el.id && (el.closest('[data-age-gate]')?.getAttribute('aria-labelledby') || '').split(/\s+/).includes(el.id) });
   }
 
   // ---- D9: alt / aria-label
@@ -280,7 +280,7 @@ export async function runDynamic(opts, allow, rep) {
         if ((want('D10') && combo === combos[0]) || want('D11') || (want13 && spec === specs[0])) { // ворота: D10 — лише перша комбінація; D11 (чекбокс «запам'ятати») — на кожній ширині
           const gp = await openPage(L.browser, pageUrl(opts.url, spec, 'gate'), { width: combo.width, height: opts.height, dpr: 1, settle: false });
           await waitStable(gp);
-          if (want('D11')) { const gd = await gp.evaluate(COLLECT, cfg); collect.push({ label: `${label}/ворота`, spec, width: combo.width, sb: combo.scrollbar, data: { ...gd, roles: [], comps: [], headings: [], a11y: [], text: [] } }); }
+          if (want('D11')) { const gd = await gp.evaluate(COLLECT, cfg); collect.push({ label: `${label}/ворота`, spec, width: combo.width, sb: combo.scrollbar, data: { ...gd, roles: [], comps: [], headings: gd.headings, a11y: [], text: [] } }); }
           if (want13 && spec === specs[0]) d13.push({ label: `ворота18+@${combo.width}`, spec: { name: 'age-gate', label: 'ворота 18+' }, width: combo.width, sb: combo.scrollbar, gate: true, data: await gp.evaluate(COLLECT_D13, { ...d13cfg, root: '[data-age-gate]' }) });
           const g = !(want('D10') && combo === combos[0]) ? null : await gp.evaluate(() => { const el = document.querySelector('[data-age-gate]'); if (!el) return { exists: false }; const cs = getComputedStyle(el); return { exists: true, visible: el.checkVisibility?.({ checkVisibilityCSS: true, checkOpacity: true }) !== false && cs.display !== 'none', ageOk: document.documentElement.classList.contains('age-ok'), role: el.getAttribute('role'), modal: el.getAttribute('aria-modal') }; });
           if (g) if (spec.name !== '404' || g.exists) { if (!g.exists) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM' }); else if (!g.visible || g.ageOk) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: JSON.stringify(g), msg: 'ворота не показуються без ?age=ok' }); }
@@ -326,6 +326,11 @@ export async function runDynamic(opts, allow, rep) {
   // D7: заголовки
   if (want('D7')) {
     for (const c of collect) {
+      if (/\/ворота$/.test(c.label)) { // ворота 18+ (діалог поверх inert-сторінки): рівно один видимий заголовок, на який посилається aria-labelledby діалогу
+        const gh = c.data.headings.filter((h) => h.inGate);
+        if (gh.length !== 1 || !gh[0].labelsGate || !gh[0].text) addV({ rule: 'D7', page: c.label, selector: '[data-age-gate]', value: `заголовків у воротах: ${gh.length}, aria-labelledby → заголовок: ${gh.some((h) => h.labelsGate)}`, msg: 'ворота мають мати один видимий заголовок, що називає діалог' });
+        continue;
+      }
       const hs = c.data.headings.filter((h) => !h.inGate);
       const h1 = hs.filter((h) => h.level === 1);
       if (h1.length !== 1) addV({ rule: 'D7', page: c.label, selector: 'h1', value: `${h1.length}`, msg: 'має бути рівно один h1' });

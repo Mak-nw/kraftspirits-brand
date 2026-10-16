@@ -19,7 +19,10 @@
   <!--@include cart-label-init-->
   <main class="product" id="product" aria-live="polite" data-pending>
     <noscript>
-      <p class="product-notfound t-lead">Для перегляду товару потрібен JavaScript. <a class="product-notfound__link" href="catalog.html">Перейти до каталогу</a></p>
+      <div class="product-notfound">
+        <p class="t-lead">Для перегляду товару потрібен JavaScript.</p>
+        <!--@include components/btn variant="btn--green" href="catalog.html" text="До каталогу"-->
+      </div>
     </noscript>
   </main>
 

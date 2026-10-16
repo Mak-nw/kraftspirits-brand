@@ -368,7 +368,8 @@ export async function safeHover(page, handleOrSel, { wait = 650, retries = 2 } =
  * Повертає масив стопів. Зупиняється, коли фокус повертається на перший елемент або іде за межі сторінки.
  */
 export async function tabWalk(page, { max = 220, minRing = 3 } = {}) {
-  await page.evaluate(() => { scrollTo({ top: 0, behavior: 'instant' }); document.activeElement?.blur?.(); });
+  // html { scroll-behavior: smooth } (base.css) гасимо ЛИШЕ на час проходу: фокус на далекому елементі інакше ще «їде» в момент заміру кільця (знімок знизу від вікна → хибне «1:1»)
+  await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; scrollTo({ top: 0, behavior: 'instant' }); document.activeElement?.blur?.(); });
   await unhover(page);
   const stops = []; let first = null;
   for (let i = 0; i < max; i++) {

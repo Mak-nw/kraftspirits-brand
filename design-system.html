@@ -960,9 +960,9 @@
 
     <section class="ds-section" id="under-construction">
       <h2 class="t-h2 ds-section__title">Сторінка в розробці / 404</h2>
-      <p class="ds-note t-body">Заглушка для ще не створених сторінок і для 404.html: одна секція partials/sections/under-construction (CSS src/styles/under-construction.css). Параметри: page (необов'язковий кікер з назвою сторінки), id (необов'язковий якір секції; offer.html: id="rules" → offer.html#rules), title (типово «Упс.. Сторінка в розробці»), text; дві кнопки btn--green «На головну» (index.html) і «До каталогу» (catalog.html). Сторінка = header + main.under-construction-page + footer (тло main — beige, зона header 103u зелена, як у стані «Товар не знайдено»); секція по центру, min-height = 100svh − зона header, футер нижче. Без data-reveal. Окремі HTML у корені: about, faq, cart, offer; 404.html — той самий partial з title «Упс.. Сторінка не знайдена» і &lt;base href="%BASE_URL%"&gt; (шляхи працюють з будь-якої глибини URL). Після створення справжньої сторінки заглушку замінити (див. README).</p>
+      <p class="ds-note t-body">Заглушка для ще не створених сторінок і для 404.html: одна секція partials/sections/under-construction (CSS src/styles/under-construction.css). Параметри: page (необов'язковий кікер з назвою сторінки), h (рівень заголовка, типово h1; у цій демонстрації h3, щоб на сторінці дизайн-системи лишився один h1), id (необов'язковий якір секції; offer.html: id="rules" → offer.html#rules), title (типово «Упс.. Сторінка в розробці»), text; дві кнопки btn--green «На головну» (index.html) і «До каталогу» (catalog.html). Сторінка = header + main.under-construction-page + footer (тло main — beige, зона header 103u зелена, як у стані «Товар не знайдено»); секція по центру, min-height = 100svh − зона header, футер нижче. Без data-reveal. Окремі HTML у корені: about, faq, cart, offer; 404.html — той самий partial з title «Упс.. Сторінка не знайдена» і &lt;base href="%BASE_URL%"&gt; (шляхи працюють з будь-якої глибини URL). Після створення справжньої сторінки заглушку замінити (див. README).</p>
       <div class="demo-panel theme-beige ds-uc-demo">
-        <!--@include sections/under-construction page="Про дім"-->
+        <!--@include sections/under-construction page="Про дім" h="h3"-->
       </div>
     </section>
 
@@ -1078,8 +1078,8 @@
       <p class="demo-label t-kicker">Тип звернення: .topic-group[role="radiogroup"] > .topic-tile[role="radio"][aria-checked]. Стани: default (як .btn--green: --btn-green-bg-default, текст --btn-green-text-default), hover (--btn-green-bg-hover), selected (--btn-green-bg-active + постійна обводка-кільце як у кнопок на focus: --btn-choice-ring-*-selected; selected+focus-visible — кільце вдвічі товще), hover/focus-visible/active — токени --btn-choice-*. Клавіатура: Tab — вибрана плитка (або перша), стрілки рухають і вибирають, Space/Enter вибирають, Home/End</p>
       <div class="demo-panel theme-beige">
         <div class="field">
-          <span class="field__label" id="ds-topic-label">Тип звернення</span>
-          <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-label">
+          <span class="field__label" id="ds-topic-group-label">Тип звернення</span>
+          <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-group-label">
             <button class="topic-tile t-btn" type="button" role="radio" aria-checked="true" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
             <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
             <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Замовлення та доставка</span></button>
@@ -1092,8 +1092,8 @@
       <p class="demo-label t-kicker">Тип звернення: помилка (.field.is-invalid — рамка невибраних плиток у кольорі помилки + ромб-маркер під групою)</p>
       <div class="demo-panel theme-beige">
         <div class="field is-invalid">
-          <span class="field__label" id="ds-topic-label-2">Тип звернення</span>
-          <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-label-2" aria-invalid="true">
+          <span class="field__label" id="ds-topic-group-label-2">Тип звернення</span>
+          <div class="topic-group" role="radiogroup" aria-labelledby="ds-topic-group-label-2" aria-invalid="true">
             <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="0"><span class="topic-tile__label">Екскурсії</span></button>
             <button class="topic-tile t-btn" type="button" role="radio" aria-checked="false" tabindex="-1"><span class="topic-tile__label">Бочкова торгівля</span></button>
           </div>
@@ -1232,7 +1232,7 @@
       <p class="demo-label t-kicker">Стан «питання»</p>
       <div class="ds-age-demo"><!--@include components/age-gate-card id="age-demo" deny-off="1"--></div>
       <p class="demo-label t-kicker">Стан «відмова» (лише в пам'яті сторінки, не зберігається)</p>
-      <div class="ds-age-demo"><!--@include components/age-gate-card id="age-demo-deny" ask-off="1"--></div>
+      <div class="ds-age-demo"><!--@include components/age-gate-card id="age-demo-denied" ask-off="1"--></div>
       <p class="ds-note t-body">Дизайн: світлий повноекранний оверлей (<code>--color-age-overlay</code> = beige + ромби як у tours), картка <code>--color-age-card</code> (light), рамка <code>--color-age-border</code> 1px, радіус <code>--radius-panel</code>; пара ТЕМНИХ логотипів (home-brand-logo-yc/bs.svg); заголовок t-hero у 2 рядки; пояснення t-text; кнопки btn--green «Так, мені є 18 років» і btn--outline «Ні, мені ще немає 18» (нова контурна варіація btn, hover — заливка беж) однакової ширини; перемикач «Запам'ятати мій вибір на цьому пристрої» (нативний checkbox на весь рядок, індикатор 26u, рамка 1.5u, заливка green при checked, за замовчуванням вимкнено); юридичний текст — роль t-text, колір <code>--color-age-legal</code> (контраст ≈5.3:1), макс. ширина 560u. z-index: <code>--z-age-gate</code> 1000 (вище хедера 100).</p>
       <p class="ds-note t-body"><strong>Виняток із правила «підкреслень немає, крім футера»:</strong> посилання В СУЦІЛЬНОМУ ТЕКСТІ підкреслені (колір збігається з текстом, інакше їх не відрізнити — WCAG 1.4.1): два посилання в юридичному тексті воріт («правилами користування сайтом» → offer.html#rules, «умовами публічної оферти» → offer.html; колір green, hover teal; відкриваються в тій самій вкладці й доступні з клавіатури під час показу оверлея), посилання в згоді форми (<code>.check-field .check__label a</code>: «обробку персональних даних» → privacy.html, «правилами користування» → offer.html#rules), посилання в повідомленнях форми (<code>.contact-form__alert a</code>, <code>.contact-success a</code>). Одне спільне правило <code>text-decoration: underline</code> у <code>base.css</code> (перелік контекстів там же і в <code>check-ds.allow.json</code>); інших підкреслених посилань на сайті немає.</p>
       <p class="ds-note t-body">Поведінка: показується при вході, якщо вік не підтверджено. «Так» → збереження за перемикачем, плавне згасання (<code>--duration-base</code>; reduced-motion — миттєво), зняття inert/aria-hidden зі сторінки, повернення скролу і фокусу. «Ні» → в тій самій картці «Доступ обмежено» + «Змінити відповідь», без перенаправлень. Діалог: role=dialog, aria-modal, aria-labelledby/describedby (перемикаються разом зі станом), фокус на заголовку при відкритті, фокус-пастка Tab/Shift+Tab, Esc не закриває, сторінка під ним inert + aria-hidden, скрол заблоковано (<code>overflow: hidden; scrollbar-gutter: stable</code>, ширина/хедер не зсуваються; viewport.js міряє ширину html, а не clientWidth). Без JS — повідомлення «Для перегляду сайту ввімкніть JavaScript» (ворота лишаються).</p>
