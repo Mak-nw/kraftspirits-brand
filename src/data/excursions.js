@@ -20,7 +20,7 @@ export const excursions = {
       cta: { text: 'Обрати формат', href: '#price' },
     },
     {
-      type: 'layers', id: 'why', room: 'warm',
+      type: 'layers', id: 'why', room: 'deep',
       kicker: 'Що на вас чекає', title: 'Один візит — чотири враження',
       items: [
         { key: 'tour', title: 'Екскурсія дистилерією', text: 'Процес виробництва, обладнання та філософія YasnoCraft', img: '/assets/img/excursions-tex-copper.webp', slot: AI('мідь перегінного куба') },
@@ -30,7 +30,7 @@ export const excursions = {
       ],
     },
     {
-      type: 'steps', id: 'excursion', room: 'deep',
+      type: 'steps', id: 'excursion', room: 'deep', join: true,
       kicker: 'Екскурсія дистилерією', title: 'Від зерна до пляшки — своїми очима',
       lead: 'Проводимо залами дистилерії та розповідаємо, як працює сучасне виробництво, звідки ми взялися й чому робимо саме так. Без лекції — показуємо, питайте про все.',
       img: '/assets/img/home-tour-distillery.webp', alt: 'Мідні перегінні куби дистилерії YasnoCraft',
