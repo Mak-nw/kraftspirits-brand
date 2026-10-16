@@ -16,8 +16,8 @@
 .contacts-info { min-width: 0; }
 .contacts-map-panel { min-width: 0; padding: 0; border: 0; background: none; } /* карта = сам блок: без відступів і рамки */
 .contacts-info h1 { margin: 0; }
-.contacts-cta { display: flex; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку */
-.contacts-cta .btn { flex: 1 1 0; min-width: 0; }
+.contacts-cta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку; якщо в панелі на 4 колонки (10-колонкова сітка) обидві з падінгами не вміщуються в ряд — друга переходить на новий рядок (hug: вміст + падінги, D16) */
+.contacts-cta .btn { flex: 1 1 max-content; min-width: 0; }
 
 /* карта: MapLibre GL + OpenFreeMap (src/js/contacts-map.js; без ключа), перефарбована в палітру сайту токенами --map-*; радіус панелі 10u; розтягується на висоту панелі
    (CLS 0: розмір задано до завантаження). Без WebGL/мережі — статична заглушка .contacts-map__fallback (кнопка «Відкрити в OpenStreetMap»). */

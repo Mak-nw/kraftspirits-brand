@@ -33,16 +33,12 @@
 .cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-green); }
 .cocktail__desc { margin-top: var(--space-cocktail-head-gap); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
 .cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
-/* картка каталогу в блоці розтягується на висоту ряду (верх і низ = панель і слайдер; нотатка замовника «ітем справа» ): параметр існуючої .product-card--catalog лише на цій сторінці. Ширина 426.25u, арка (маска product-card-arch-full.svg, preserveAspectRatio none) подовжується
-   на ту саму різницю висоти (прямі сторони не змінюються, кути/дуга розтягуються на частки відсотка), пляшка лишається того ж розміру по центру зони фото, назва й ціна притиснуті до низу */
+/* картка каталогу в блоці розтягується на висоту ряду (верх і низ = панель і слайдер; нотатка замовника «ітем справа» ): параметр існуючої .product-card--catalog лише на цій сторінці. Ширина 348.55u (як у каталозі), арка (маска з трьох шарів product-card-arch-top/mid/bottom.svg) подовжується
+   на ту саму різницю висоти (прямі сторони не змінюються, дуга й нижня лінія не розтягуються), пляшка лишається того ж розміру по центру зони фото, назва й ціна притиснуті до низу */
 .cocktail__item { align-self: stretch; align-content: stretch; }
 .cocktail__item .product-card--catalog { height: 100%; }
 .cocktail__item .product-card--catalog::before { height: var(--size-cocktail-arch-h); }
-/* вищий блок (tall, 658u): арка — той самий SVG з довшою прямою частиною (viewBox 414×645.333 = 535 + (658 − 547.667)u: дуга й нижня лінія ті самі, що в каталозі; тому розтяг маски ≈1 і нижня лінія не товщає, як було б при розтягу 535 → 645); якщо вміст вкладки вищий за 658u, розтяг лишається часткою відсотка */
-.cocktail--tall .cocktail__item .product-card--catalog::before {
-  -webkit-mask: url('/assets/img/product-card-arch-full-tall.svg') 0 0 / 100% 100% no-repeat;
-  mask: url('/assets/img/product-card-arch-full-tall.svg') 0 0 / 100% 100% no-repeat;
-}
+/* арка (маска з трьох шарів, components/product-card-catalog.css) на будь-яку висоту ряду: верх (дуга) і низ (нижня лінія) не розтягуються, розтягується лише середина з бічними лініями — нижня лінія не товщає (вищий блок tall 658u і вкладка «Приготування» у вузькій панелі) */
 .cocktail__item .product-card--catalog .product-card__media { display: flex; align-items: center; }
 .cocktail__item .product-card--catalog .product-card__media img { flex: none; height: var(--size-cocktail-card-photo-h); }
 

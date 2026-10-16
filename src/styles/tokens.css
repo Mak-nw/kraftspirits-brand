@@ -531,6 +531,9 @@
   --space-card-cat2-photo-top: calc(50 * var(--u)); /* 204:2224 зсув фото вниз (pt 50), зона фото 426.25×329.67 */
   --radius-card-catalog: calc(10 * var(--u));     /* рішення замовника: закруглення зовнішніх кутів картки каталогу (клип картки); арка-маска закруглюється концентрично: --radius-card-catalog − --offset-arch */
   --radius-card-arch: calc(5 * var(--u));         /* зовнішній контур арки/рамки (клип ::before): концентричний до --radius-card-catalog (10u) з відступом --offset-arch 6u; 5 (не 4) — щоб внутрішній контур не став майже прямим; смуга 6u на діагоналі +0.4u */
+  --size-arch-top-h: calc(180 * var(--u));       /* верхній шар маски арки (product-card-arch-top.svg): дуга + верхня смуга, без розтягу */
+  --size-arch-bottom-h: calc(10 * var(--u));     /* нижній шар (product-card-arch-bottom.svg): нижня лінія + кути, без розтягу */
+  --size-arch-seam: calc(1 * var(--u));          /* заход середнього шару (лише бічні лінії) під верхній і нижній: без шва на дробових пікселях */
   --offset-arch: calc(6 * var(--u));              /* 204:2230 left/top арки */
   --size-arch-w: calc(var(--size-card-cat2-w) - 2 * var(--offset-arch));  /* арка = ширина картки − 2 відступи (348.55 − 12 = 336.55u; було 414 на картці 426.25) — один SVG-маска product-card-arch-full.svg (рамка 2.476 + кути 204:2231; SVG перебудовано під 336.55×535) */
   --size-arch-h: calc(535 * var(--u));            /* 204:2230 */

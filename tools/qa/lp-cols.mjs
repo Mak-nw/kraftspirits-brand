@@ -10,7 +10,7 @@
 const GRID_COLS = 10; // tokens.css --grid-cols (рішення замовника: весь сайт на 10 колонок)
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, sleep } from './lib.mjs';
 
-const PROBE = () => {
+const PROBE = (GRID_COLS) => {
   const px = (expr) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;visibility:hidden;height:0;width:${expr}`; document.body.appendChild(d); const w = d.getBoundingClientRect().width; d.remove(); return w; };
   const gridW = px('var(--grid-w)'); const step = px('var(--grid-step)'); const gap = px('var(--grid-gap)');
   const GRIDS = '.lp-layers__grid, .lp-compare__grid, .lp-formats__grid, .lp-tiles__grid, .lp-offers__grid, .faq-page__grid';
@@ -68,20 +68,20 @@ await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pag
         await sleep(400);
         // у даних сторінок `cols` не задано (10 = уся сітка = типово), тож механізм перевіряється синтетично: клас lp-cols--8 (tiles/offers) і lp-cols--6 (faq) ставимо на справжні секції, якщо реального cols немає
         await page.evaluate(() => { if (document.querySelector('[class*="lp-cols--"]')) return; for (const g of document.querySelectorAll('.lp-tiles__grid, .lp-offers__grid, .faq-page__grid')) g.closest('.lp-sec')?.classList.add(g.matches('.faq-page__grid') ? 'lp-cols--6' : 'lp-cols--8'); });
-        const d = await page.evaluate(PROBE);
+        const d = await page.evaluate(PROBE, GRID_COLS);
         colsCount += d.cols.length; padCount += d.pads.length; eqCount += d.cols.filter((c) => c.eq).length;
         check(d, rep, label);
         if (d.cols.length && ctl.wide === null) { // (а) контейнер на 10 колонок — має ловитися
           await page.addStyleTag({ content: '[class*="lp-cols--"] { --lp-w: var(--grid-w) !important; }' });
-          const dd = await page.evaluate(PROBE); ctl.wide = check(dd, { add() {} }, 'ctl');
+          const dd = await page.evaluate(PROBE, GRID_COLS); ctl.wide = check(dd, { add() {} }, 'ctl');
         }
         if (d.cols.some((c) => c.eq) && ctl.eq === null) { // (б) рівний поділ зламано: перша плитка ширша
           await page.addStyleTag({ content: '.lp-tiles__grid--eq > .lp-tile:first-child { margin-right: calc(-1 * var(--grid-gap)); }' });
-          const dd = await page.evaluate(PROBE); ctl.eq = check(dd, { add() {} }, 'ctl');
+          const dd = await page.evaluate(PROBE, GRID_COLS); ctl.eq = check(dd, { add() {} }, 'ctl');
         }
         if (d.pads.length && ctl.pad === null) { // (в) pad перебито
           await page.addStyleTag({ content: '[class*="lp-pad--"] { padding-block: calc(150 * var(--u)) !important; }' });
-          const dd = await page.evaluate(PROBE); ctl.pad = check(dd, { add() {} }, 'ctl');
+          const dd = await page.evaluate(PROBE, GRID_COLS); ctl.pad = check(dd, { add() {} }, 'ctl');
         }
         await page.close();
       }

@@ -21,8 +21,10 @@
   background: var(--color-green);
   will-change: transform; /* окремий композитний шар: арка растеризується в цілих device-пікселях незалежно від дробового x/y картки (47.5, зсув 6u тощо) — без цього растеризатор округлює дробові межі маски і тонка рамка 2.476u на деяких картках зникає/стоншується (права, інколи нижня сторона) */
   border-radius: var(--radius-card-arch); /* клип зовнішніх кутів арки/блоку; внутрішні кути рамки — дуги в самому SVG-маскі (--radius-card-arch-inner) */
-  -webkit-mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
-  mask: url('/assets/img/product-card-arch-full.svg') 0 0 / 100% 100% no-repeat;
+  /* маска з ТРЬОХ шарів по висоті (верх 180u з дугою — без розтягу; середина — лише бічні лінії, розтягується; низ 10u з нижньою лінією — без розтягу): висота картки може бути більшою за 547.667u
+     (блок коктейлю розтягує картку на висоту ряду, а вузька текстова панель 10-колонкової сітки робить ряд вищим), і нижня лінія арки не товщає. Середній шар заходить на --size-arch-seam під верхній і нижній (без шва на дробових пікселях). */
+  -webkit-mask: url('/assets/img/product-card-arch-top.svg') 0 0 / 100% var(--size-arch-top-h) no-repeat, url('/assets/img/product-card-arch-mid.svg') 0 calc(var(--size-arch-top-h) - var(--size-arch-seam)) / 100% calc(100% - var(--size-arch-top-h) - var(--size-arch-bottom-h) + 2 * var(--size-arch-seam)) no-repeat, url('/assets/img/product-card-arch-bottom.svg') 0 100% / 100% var(--size-arch-bottom-h) no-repeat;
+  mask: url('/assets/img/product-card-arch-top.svg') 0 0 / 100% var(--size-arch-top-h) no-repeat, url('/assets/img/product-card-arch-mid.svg') 0 calc(var(--size-arch-top-h) - var(--size-arch-seam)) / 100% calc(100% - var(--size-arch-top-h) - var(--size-arch-bottom-h) + 2 * var(--size-arch-seam)) no-repeat, url('/assets/img/product-card-arch-bottom.svg') 0 100% / 100% var(--size-arch-bottom-h) no-repeat;
 }
 
 /* закруглення 10u (рішення замовника) — лише картки сторінки каталогу й демо design-system; картка слайдера підбору на головній (.slider__slide) без змін.
