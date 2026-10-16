@@ -1,8 +1,10 @@
-// Динамічні перевірки check-ds (D1–D12; D12 — сітка колонок — вмикається явно: --rules D12 / npm run qa:grid): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
+// Динамічні перевірки check-ds (D1–D15; D12 — сітка колонок — входить у загальний прогін (design-system.html виключено); npm run qa:grid = лише D12): у браузері, по обчислених стилях. Один прохід по сторінці збирає дані, далі аналіз у Node.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
 import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13.mjs';
+import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
+import { measureTextOnImage, D14_PAGES, D14_DEFAULTS } from './text-on-image.mjs';
 import { textPixelContrast, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, tabWalk, u, waitStable, sleep, uniq } from './lib.mjs';
 
 /** Усе, що потрібно D1/D2/D7/D8/D9 за ОДИН page.evaluate (швидко, без шуму в консолі) */
@@ -199,11 +201,12 @@ export async function runDynamic(opts, allow, rep) {
   const A = allow.dynamic || {};
   const addV = (v) => rep.add(v);
   const collect = []; // { page, width, sb, data }
-  const want12 = !!(opts.rules?.has('D12') || opts.grid); // D12 — опційно (поки сторінки не приведено до сітки, у загальний прогін не входить)
+  const want12 = !opts.rules || opts.rules.has('D12') || !!opts.grid; // D12 входить у загальний прогін; design-system.html (демо-сторінка з власною розкладкою) із D12 виключено: --d12-ds вмикає
   const gcfg = { ...GRID_DEFAULTS, ...(allow.grid || {}), profiles: { ...GRID_DEFAULTS.profiles, ...(allow.grid?.profiles || {}) }, pageProfile: { ...GRID_DEFAULTS.pageProfile, ...(allow.grid?.pageProfile || {}) } };
   if (opts.gridDeep) gcfg.deep = true;
   const grid12 = []; // { label, spec, width, sb, gate, data }
   const want13 = want('D13'); const d13 = []; const d13cfg = { roles: want13 ? roleClassesFromBase() : [], root: null };
+  const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
   const specs = opts.pagesList.map(pageSpec);
   const combos = matrix(opts, { dprs: [opts.dpr[0]] });
   const cfg = { compSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.product-card--catalog'], textMin: A.textMinContrast ?? 4.5, largeMin: A.largeTextMinContrast ?? 3 };
@@ -235,6 +238,7 @@ export async function runDynamic(opts, allow, rep) {
         }
         // збір D1/D2/D7/D8/D9
         const data = await page.evaluate(COLLECT, cfg);
+        if (want15 && (spec.name !== 'design-system' || opts.d15Ds)) d15.push({ label, spec, width: combo.width, data: await page.evaluate(COLLECT_D15) });
         if (want13 && (spec.name !== 'design-system' || opts.d13Ds)) d13.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_D13, d13cfg) });
         // D8: ланцюжок фонів не бачить фонів із псевдоелементів/картинок → для «підозрілих» міряємо піксельно (мода кольору = фон, найдальший = текст)
         for (const t of data.text) {
@@ -244,7 +248,7 @@ export async function runDynamic(opts, allow, rep) {
         }
         await page.evaluate(() => document.querySelectorAll('[data-qa-t]').forEach((e) => e.removeAttribute('data-qa-t')));
         collect.push({ label, spec, width: combo.width, sb: combo.scrollbar, data });
-        if (want12) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_GRID, { ...gcfg, root: null }) });
+        if (want12 && (spec.name !== 'design-system' || opts.d12Ds)) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_GRID, { ...gcfg, root: null }) });
         // D5: підкреслення (лише для першої комбінації ширини/смуги — це не залежить від ширини)
         if (want('D5') && combo === combos[0]) {
           const found = await underlineProbe(page, A.underlineAllowClosest || []);
@@ -286,6 +290,14 @@ export async function runDynamic(opts, allow, rep) {
           if (g) if (spec.name !== '404' || g.exists) { if (!g.exists) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM' }); else if (!g.visible || g.ageOk) addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: JSON.stringify(g), msg: 'ворота не показуються без ?age=ok' }); }
           else addV({ rule: 'D10', page: label, selector: '[data-age-gate]', value: 'немає', msg: 'вікові ворота відсутні в DOM (404)' });
           await gp.close().catch(() => {});
+        }
+        // D14: піксельний контраст по літерах для тексту на зображенні (лише сторінки з hero/секціями на фото; наприкінці — змінює прокрутку)
+        if (want14 && (opts.d14All || (A.d14Pages || D14_PAGES).includes(spec.name))) {
+          let m = null;
+          for (let attempt = 0; attempt < 3 && !m; attempt++) { // dev-сервер може перезавантажити сторінку (HMR від чужих правок) — тоді міряємо заново
+            try { m = await measureTextOnImage(page, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin }); } catch (e) { if (attempt === 2) throw e; rep.note(`D14 ${label}: ${String(e.message).slice(0, 80)} — повтор ${attempt + 1}`); await waitStable(page); await sleep(500); }
+          }
+          d14.push({ label, spec, width: combo.width, ...m });
         }
         await page.close().catch(() => {});
       }
@@ -351,6 +363,22 @@ export async function runDynamic(opts, allow, rep) {
       }
     }
   }
+  // D14: контраст тексту на зображенні, по літерах (піксельно): FAIL = у вузлі є літера, у якої >50% пікселів нижче порога
+  if (want14) {
+    const st = (stats.d14 = { pageWidths: d14.length, canvas: 0, candidates: 0, noImage: 0, lettersMeasured: 0, failNodes: 0 });
+    for (const c of d14) {
+      st.candidates += c.stats.candidates; st.canvas += c.stats.canvas; st.noImage += c.stats.noImage; st.lettersMeasured += c.stats.lettersMeasured;
+      for (const h of c.hits) { st.failNodes++; addV({ rule: 'D14', page: c.label, selector: h.el, value: `«${h.text}» ${h.bad}/${h.measured} літер нижче ${h.thr}:1 (мін. ${h.minRatio}:1; найгірша ${Math.round(h.worst * 100)}% пікселів; ${h.size}px${h.large ? ' великий' : ''}; під текстом: ${h.layer}; y=${h.y}; погані: «${h.badCh}»)`, msg: 'текст на зображенні: контраст по літерах нижче порога' }); }
+    }
+    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd14.json'), JSON.stringify(d14.map((c) => ({ label: c.label, stats: c.stats, hits: c.hits, nodes: c.all.length })), null, 1)); } catch {}
+    rep.info({ rule: 'D14', msg: `вузлів з зображенням під текстом ${st.candidates} (без зображення пропущено ${st.noImage}; над <canvas> WebGL-картою не міряється ${st.canvas} — візуально: атрибуція maplibre), виміряно літер ${st.lettersMeasured} на ${st.pageWidths} сторінко-ширинах; FAIL-вузлів ${st.failNodes}` });
+  }
+  // D15: шапка і меню
+  if (want15) {
+    const bad = analyzeD15(d15, A.d15, gcfg);
+    for (const v of bad) addV({ rule: 'D15', ...v });
+    rep.info({ rule: 'D15', msg: `шапка/меню/футер перевірено на ${d15.length} сторінко-ширинах; порушень ${bad.length}` });
+  }
   // D9: alt/aria
   if (want('D9')) for (const c of collect) for (const a of c.data.a11y) addV({ rule: 'D9', page: c.label, selector: a.el, value: a.src || a.href || '', msg: a.kind });
   // D11: центрування бокс/іконка ↔ текст (check: оптичний центр першого рядка, допуск 0.5; icon: центр content-area тексту, допуск 1, + cap-центр — діагностично)
@@ -374,8 +402,17 @@ export async function runDynamic(opts, allow, rep) {
     for (const c of d13) st.nodeKinds += c.data.nodes.length;
     for (const v of a.violations) addV({ rule: 'D13', page: v.page, selector: v.selector, value: `«${v.text}» ×${v.nodes}: ${fmtSig(v.sig)}${v.near ? `; найближча ${v.near.role}: ${v.near.diff || 'збіг'}` : ''}`, msg: v.kind === 'поза ролями' ? 'текст поза ролями .t-*' : `роль ${v.role} перевизначена у CSS (стиль ≠ ролі)` });
     if (a.implicit.length) rep.info({ rule: 'D13', msg: `${a.implicit.length} типів вузлів збігаються з роллю лише за значеннями, без класу .t-* (роль у розмітці не призначена)` });
+    const group = (arr) => { const grp = new Map(); for (const n of arr) { const sel = n.selector.split(' > ').slice(-2).join(' > '); const k = `${sel}|${n.matches[0]}`; const g = grp.get(k) || grp.set(k, { selector: sel, role: n.matches.join('/'), anc: (n.ancRoles || []).filter((r) => n.matches.includes(r))[0] || (n.ancRoles || [])[0] || '', pages: new Set(), text: n.text, nodes: 0 }).get(k); g.pages.add(n.pageName); g.nodes += n.nodes; } return [...grp.values()].sort((x, y) => y.pages.size - x.pages.size); };
+    // (1) РЕКОМЕНДАЦІЯ (не fail), строго: стиль = роль за значеннями, `.t-*` на елементі немає І стиль не є наслідуванням від батька (вузол сам задає начерк, що збігся з роллю)
+    st.noClass = 0;
+    if (a.noClass.length) { const g1 = group(a.noClass); st.noClass = g1.length; rep.info({ rule: 'D13', msg: `РЕКОМЕНДАЦІЯ (не fail): ${g1.length} типів вузлів мають стиль ролі, `+'але .t-* немає на елементі, а стиль ≠ стилю батька (не наслідування) — призначити клас ролі на елемент' }); for (const g of g1) rep.info({ rule: 'D13', msg: `  без .t-*: ${g.selector} «${g.text}» = ${g.role} [${[...g.pages].slice(0, 5).join(',')}${g.pages.size > 5 ? ',…' : ''}] ×${g.nodes}` }); }
+    else rep.info({ rule: 'D13', msg: 'РЕКОМЕНДАЦІЯ (строга, не fail): вузлів зі стилем ролі, без .t-* на елементі й не успадкованих від батька, немає' });
+    // (2) РЕКОМЕНДАЦІЯ (не fail): роль лише успадкована від предка — на самому елементі `.t-*` немає (clean-наслідування: product dd/.strength/.product-volume, таби коктейлів, підписи feedback …). Список типів — для рішення, чи ставити клас явно.
+    { const g2 = group(a.implicit.filter((n) => n.inherited)); st.inheritedOnly = g2.length;
+      rep.info({ rule: 'D13', msg: `РЕКОМЕНДАЦІЯ (не fail): ${g2.length} типів вузлів мають роль лише через наслідування від предка (на елементі .t-* немає; повний список — d13.json → implicit[].inherited)` });
+      for (const g of g2.filter((x) => !/^(span|a|li)( |$)/.test(x.selector.split(' > ').pop()) || /product|tabs|strength|check|topic|contacts/.test(x.selector))) rep.info({ rule: 'D13', msg: `  успадковано: ${g.selector} «${g.text}» = ${g.role}${g.anc ? ` (від .${g.anc})` : ''} [${[...g.pages].slice(0, 4).join(',')}${g.pages.size > 4 ? ',…' : ''}]` }); }
     for (const sm of a.semantic.filter((x) => x.width === opts.widths[Math.min(1, opts.widths.length - 1)] || opts.widths.length === 1)) rep.info({ rule: 'D13', msg: `семантика ${sm.key}@${sm.width}: ${sm.variants.length} різних начерків — ${sm.variants.map((v) => `${v.role} [${v.pages.slice(0, 4).join(',')}${v.pages.length > 4 ? ',…' : ''}]`).join(' ≠ ')}` });
-    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd13.json'), JSON.stringify({ tolerances: a.tolerances, violations: a.violations, implicit: a.implicit, semantic: a.semantic, dump: a.dump }, null, 1)); } catch {}
+    try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd13.json'), JSON.stringify({ tolerances: a.tolerances, violations: a.violations, implicit: a.implicit, noClass: a.noClass, semantic: a.semantic, dump: a.dump }, null, 1)); } catch {}
   }
   // D12: прив'язка блоків до колонок сітки (tools/qa/grid-d12.mjs)
   if (want12) {

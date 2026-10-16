@@ -112,7 +112,7 @@ export class Report {
       const where = [v.file, v.selector, pg.length ? `[${pg.slice(0, 4).join(', ')}${pg.length > 4 ? `, +${pg.length - 4}` : ''}]` : ''].filter(Boolean).join('  ');
       console.log(`  ${v.rule.padEnd(4)} ${where}${v.value !== undefined && v.value !== '' ? `  = ${v.value}` : ''}${v.msg ? `  — ${v.msg}` : ''}`);
     }
-    for (const i of this.infos.slice(0, opts.infoLimit ?? 12)) console.log(`  info ${typeof i === 'string' ? i : `${i.rule || ''} ${i.msg || ''}`}`);
+    for (const i of this.infos.slice(0, opts.infoLimit ?? 40)) console.log(`  info ${typeof i === 'string' ? i : `${i.rule || ''} ${i.msg || ''}`}`);
     for (const s of this.notes) console.log(`  note ${s}`);
   }
 }

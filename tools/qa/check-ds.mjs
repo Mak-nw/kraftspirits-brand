@@ -2,7 +2,7 @@
 // check-ds: автоперевірка дизайн-системи (реалізація design-machine/04-token-grouping/check-ds.md, адаптована під правила site_brand).
 //   node tools/qa/check-ds.mjs [--url http://localhost:5200/] [--pages index,catalog,product?id=gin-yasnyi] [--widths 1920] [--scrollbar classic|none|both]
 //                              [--static-only | --dynamic-only] [--rules S1,S4,D5] [--no-build | --reuse-build] [--json] [--out dir]
-// Код виходу: 0 — немає порушень, 1 — є, 2 — збій інструмента. Статичні S1–S10 і динамічні D1–D11 — див. tools/qa/README.md.
+// Код виходу: 0 — немає порушень, 1 — є, 2 — збій інструмента. Статичні S1–S11 і динамічні D1–D15 — див. tools/qa/README.md.
 import { join } from 'node:path';
 import { Report, runMain, ROOT, QA_DIR } from './lib.mjs';
 import { runStatic, loadAllow, isAllowed, buildDist } from './ds-static.mjs';
@@ -14,7 +14,7 @@ await runMain('check-ds', { widths: '1920', scrollbar: 'classic', dpr: '1' }, as
   o.rules = o.rules ? new Set(String(o.rules).split(',').map((s) => s.trim().toUpperCase())) : null;
   const want = (set) => !o.rules || [...set].some((r) => o.rules.has(r));
   const doStatic = !o.dynamicOnly && want(['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11']);
-  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13']);
+  const doDynamic = !o.staticOnly && want(['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15']);
 
   if (doStatic) {
     let dist = o.dist ? join(ROOT, o.dist) : join(o.out, 'dist');

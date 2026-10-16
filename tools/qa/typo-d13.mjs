@@ -3,7 +3,7 @@
 // і зіставляється з таблицею ролей. Таблицю ролей збирає ця ж сторінка: для кожного `.t-*` із base.css створюється тимчасовий елемент і береться його
 // computed на поточній ширині (тому масштаб --u враховано). Роль, що не задає text-transform (успадковує), має його «будь-який» (визначається за двома батьками: none/uppercase).
 //   Порушення D13:  (а) нуль збігів із ролями — «текст поза ролями»;  (б) елемент має клас `.t-x`, але його стиль ≠ `.t-x` (роль перевизначена в CSS компонента).
-//   Інформація:     збіг з роллю БЕЗ класу ролі (збіг «випадковий» — у розмітці роль не призначена); «одна семантика — одна роль» (кластеризація за тегом заголовка / BEM-суфіксом).
+//   Інформація:     збіг з роллю БЕЗ класу ролі (збіг «випадковий» — у розмітці роль не призначена); `noClass` = те саме, але стиль вузла ≠ стилю батька (не просте наслідування ролі предка; рекомендація: призначити клас ролі на елемент, НЕ fail); «одна семантика — одна роль» (кластеризація за тегом заголовка / BEM-суфіксом).
 // Допуски: size/line-height 0.25/0.5px, letter-spacing 0.15px (allow.json → dynamic.d13).
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -56,11 +56,13 @@ export function COLLECT_D13(cfg) {
     const cs = getComputedStyle(el); if (cs.visibility === 'hidden') continue;
     const sig = sigOf(cs), roleCls = clsOf(el).filter((c) => /^t-[a-z0-9-]+$/.test(c));
     const tag = el.tagName.toLowerCase(), c0 = own(el)[0] || '';
+    const anc = []; for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) for (const c of clsOf(n)) if (/^t-[a-z0-9-]+$/.test(c)) anc.push(c);
+    const inh = !!el.parentElement && JSON.stringify(sig) === JSON.stringify(sigOf(getComputedStyle(el.parentElement))); // стиль вузла = стиль батька → чисте CSS-наслідування (роль задано предком)
     const bem = (c0.match(/__([a-z0-9-]+)$/) || [])[1] || '';
     const key = `${pathOf(el)}|${roleCls.join(' ')}|${JSON.stringify(sig)}`;
     const rec = out.get(key);
     if (rec) { rec.n++; continue; }
-    out.set(key, { path: pathOf(el), tag, bem, own: own(el).slice(0, 3).join('.'), roleCls, sig, text: text.slice(0, 40), n: 1, region: el.closest('.site-header, header') ? 'header' : el.closest('.site-footer, footer') ? 'footer' : el.closest('[data-age-gate]') ? 'gate' : 'main' });
+    out.set(key, { path: pathOf(el), anc, inh, tag, bem, own: own(el).slice(0, 3).join('.'), roleCls, sig, text: text.slice(0, 40), n: 1, region: el.closest('.site-header, header') ? 'header' : el.closest('.site-footer, footer') ? 'footer' : el.closest('[data-age-gate]') ? 'gate' : 'main' });
   }
   return { roles, nodes: [...out.values()] };
 }
@@ -98,7 +100,7 @@ export const semKey = (n) => (/^h[1-4]$/.test(n.tag) ? n.tag : SEM_BEM.has(n.bem
  */
 export function analyzeD13(collect, A = {}) {
   const T = { ...D13_DEFAULTS, ...(A || {}) };
-  const violations = [], implicit = [], dump = [];
+  const violations = [], implicit = [], noClass = [], dump = [];
   const semantic = new Map(); // `${width}|${key}` → Map(sigStr → {pages:Set, ex:[]})
   for (const c of collect) {
     const entry = { label: c.label, page: c.spec.name, width: c.width, gate: !!c.gate, roles: c.data.roles, nodes: [] };
@@ -111,7 +113,7 @@ export function analyzeD13(collect, A = {}) {
       const where = `${n.path}${n.roleCls.length ? '.' + n.roleCls.join('.') : ''}`;
       if (n.roleCls.length && !ownOk) violations.push({ kind: 'роль перевизначена', page: c.label, pageName: c.spec.name, width: c.width, selector: where, text: n.text, nodes: n.n, sig: n.sig, near: { role: n.roleCls[0], diff: c.data.roles[n.roleCls[0]] ? diffRole(n.sig, c.data.roles[n.roleCls[0]])[1] : 'роль не знайдена в base.css', score: 0 }, role: n.roleCls.join(' '), matches });
       else if (!matches.length) violations.push({ kind: 'поза ролями', page: c.label, pageName: c.spec.name, width: c.width, selector: where, text: n.text, nodes: n.n, sig: n.sig, near, role: '' });
-      else if (!n.roleCls.length) implicit.push({ page: c.label, pageName: c.spec.name, width: c.width, selector: n.path, text: n.text, nodes: n.n, sig: n.sig, matches });
+      else if (!n.roleCls.length) { const rec = { page: c.label, pageName: c.spec.name, width: c.width, selector: n.path, text: n.text, nodes: n.n, sig: n.sig, matches, ancRoles: n.anc, inherited: n.inh }; implicit.push(rec); if (!n.inh) noClass.push(rec); } // стиль збігається з роллю за значеннями, `.t-*` на елементі немає, і стиль НЕ є чистим наслідуванням від батька (вузол сам задає начерк, що випадково = ролі)
       const sk = semKey(n);
       if (sk) {
         const k = `${c.width}|${sk}`; const m = semantic.get(k) || semantic.set(k, new Map()).get(k);
@@ -124,5 +126,5 @@ export function analyzeD13(collect, A = {}) {
   }
   const sem = [];
   for (const [k, m] of semantic) if (m.size > 1) { const [width, key] = k.split('|'); sem.push({ width: +width, key, variants: [...m].map(([sid, g]) => ({ role: sid, pages: [...g.pages], examples: g.ex })) }); }
-  return { violations, implicit, semantic: sem, dump, tolerances: T };
+  return { violations, implicit, noClass, semantic: sem, dump, tolerances: T };
 }

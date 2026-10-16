@@ -23,11 +23,18 @@ export function loadAllow(path) {
   j.allow = (j.allow || []).filter((a) => a.reason && a.rule);
   return j;
 }
+/** Точний збіг класів/тегів (не підрядок): кожен токен виняткового селектора (`div`, `cocktail__body`, `product-card--catalog`…) має бути ТОЧНО серед токенів селектора порушення.
+ *  `site-header__logo` не маскує `site-header__logos`; `.a.b` матчить `div.a.b > x`, але не `div.a`. */
+const selTokens = (s) => String(s).split(/[^A-Za-z0-9_-]+/).filter(Boolean);
+export function selectorMatches(allowSel, violationSel) {
+  const need = selTokens(allowSel), have = new Set(selTokens(violationSel));
+  return need.length > 0 && need.every((t) => have.has(t));
+}
 export function isAllowed(allow, v) {
   return allow.allow.some((a) =>
     (a.rule === '*' || a.rule === v.rule) &&
     (!a.file || (v.file || '').includes(a.file)) &&
-    (!a.selector || (v.selector || '').includes(a.selector)) &&
+    (!a.selector || selectorMatches(a.selector, v.selector || '')) &&
     (!a.page || (v.page || '').includes(a.page)) &&
     (!a.prop || new RegExp(a.prop).test(v.prop || '')) &&
     (!a.value || new RegExp(a.value).test(String(v.value ?? ''))));
