@@ -153,6 +153,13 @@
 .lp-offers__bg > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); scale: var(--lp-offers-bg-scale, 1); transform-origin: var(--lp-offers-bg-origin, 50% 50%); }
 .lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--grid-w); margin-inline: auto; }
 .lp-head.lp-offers__head { grid-column: 1 / -1; }
+/* панелі-пропозиції — великі блоки: зазор між ними --grid-gap-panels 5u (не 40u колонок). Сітка лишається 12-колонковою (шапка/підвал на всю ширину), кожна панель заходить у зазор колонок
+   на частку --grid-gap-bridge (40u − 5u): n панелей по 12/n колонок; зовнішні краї лишаються на колонках 1 і 12, шви — на -b·i/n зліва та −b·(n−i−1)/n справа */
+.lp-offers__grid > .lp-offer.lp-span--6:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
+.lp-offers__grid > .lp-offer.lp-span--6:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
+.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) * -2 / 3); }
+.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(2) { margin-inline: calc(var(--grid-gap-bridge) / -3); }
+.lp-offers__grid > .lp-offer.lp-span--4:nth-of-type(3) { margin-left: calc(var(--grid-gap-bridge) * -2 / 3); }
 .lp-offers__title { margin-top: var(--shift-lp-cap-top); }
 .lp-offers__note { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
 .lp-offers__fine { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
@@ -186,12 +193,12 @@
 .lp-card .tour-card { width: 100%; } /* фото-колонка = 5 колонок + ½ зазору (--size-tour-photo-box-w, tokens.css): шов текст | фото посередині зазору */
 
 /* ---------- place: ІСНУЮЧІ панель .contacts-panel (5 колонок) і мапа .contacts-map (7 колонок) зі сторінки контактів ---------- */
-.lp-place__grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: stretch; width: var(--grid-w); margin-inline: auto; }
-.lp-place__panel { grid-column: span var(--span-lp-place-panel); min-height: var(--size-lp-place-h); }
+.lp-place__grid { display: grid; grid-template-columns: var(--grid-cols-panels-5-7); column-gap: var(--grid-gap-panels); align-items: stretch; width: var(--grid-w); margin-inline: auto; }
+.lp-place__panel { min-width: 0; min-height: var(--size-lp-place-h); }
 .lp-place__head { display: flex; flex-direction: column; gap: var(--space-lp-stack); }
 .lp-place__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
 .lp-place__head .t-kicker { margin-top: var(--shift-lp-kicker-cap-top); }
-.lp-place__map { grid-column: span calc(var(--grid-cols) - var(--span-lp-place-panel)); display: flex; flex-direction: column; }
+.lp-place__map { min-width: 0; display: flex; flex-direction: column; }
 
 /* ---------- faq: ІСНУЮЧА група FAQ (partials/sections/faq-group + components/faq-item) у тілі FAQ (.faq-page__body) ---------- */
 .lp-faq .faq-page__body { color: var(--lp-on-dark); }
