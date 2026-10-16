@@ -15,7 +15,7 @@
   --lp-hairline: var(--color-lp-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
   --lp-amber: var(--color-lp-amber);          /* тло фото, доки вантажиться */
   --lp-format-green: var(--color-green);             /* панель formats тону green (з візерунком ромбів DS); текст — --lp-on-dark */
-  --lp-format-teal: var(--color-teal);
+  --lp-format-teal: var(--color-teal);               /* панель formats тону teal (Bazylsprings) */
   --lp-format-line: var(--color-lp-format-line);       /* контур панелі, міні-блоків, роздільник formats */
   --lp-format-line-strong: var(--color-lp-format-line-strong); /* контур капсули */
   --lp-tone: btn--green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
