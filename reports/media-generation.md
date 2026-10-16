@@ -128,3 +128,12 @@
 
 Видалено з репозиторію (більше ніде не вживаються після переробки): `about-arch-stills`, `about-card-still`, `about-catalog-bg`, `about-layer-barrels|bottling|gallery|still`, `about-tile-barley|barrel|sightglass` (.webp) — у історії git лишаються.
 Чернетка до заміни: `about-arch-build.webp` (кадр будівництва) — потрібне реальне фото травня 2025 — серпня 2026.
+
+### Ітерація 2 (16.10.2026, коментарі a03264fe, 54906294, b7d0c39c, e6908955; verify-E4)
+| Файл | Джерело | Де | Вага |
+|---|---|---|---|
+| `about-build.webp` (720×900, q80) | **AI-чернетка** Seedream 5 Pro (2 варіанти × 100 = **200 кредитів**), референс — реальне аеро-фото будівлі з hero; промпт: «the same building from the reference image while it is still under construction, early summer 2025: the long wavy concrete roof shell cast on formwork and scaffolding, bare concrete walls, no glass facade yet, tower crane, same fields, trees and pond; no people, text, logos, flags»; узято варіант із тією самою хвилястою покрівлею, аркою зліва і ставком; `data-slot` | «15 місяців», віха 1.05.2025 | 177 КБ |
+| `about-story-bg.webp` (1600×1012, q72) | реальне аеро-фото будівлі: кроп будівлі, розмиття 14 px і затемнення до 32% (обробка в файлі, не CSS) | тло секції «15 місяців» (реф b7d0c39c) | 9 КБ |
+| `about-quote-still.webp` (600×800, q80) | `Куби/605A1000.jpg` | фото в цитаті (реф e6908955), декоративне | 59 КБ |
+| `about-viktor.webp` (280×350, q90) | кроп до плечей із наданих 400×400 (без апскейлу; на сторінці ≤ 2 колонки = 270.8u ≤ 280 px) | «Засновник» | 18 КБ |
+Видалено: `about-arch-build.webp` (AI-кадр прямокутного каркаса не збігався з хвилястою будівлею на hero). Разом AI за сторінку в цій ітерації: 200 кредитів.
