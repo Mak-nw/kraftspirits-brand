@@ -1,47 +1,53 @@
 # Шаблон посадкової (продажної) сторінки — `lp`
 
-Сторінки на шаблоні: `barrels.html` (Ф'ючерсні бочки, тема `barrels`), `excursions.html` (Екскурсії та дегустації, тема `excursions`).
+Сторінки на шаблоні: `barrels.html` (Ф'ючерсні бочки, тема `barrels`), `excursions.html` (Екскурсії та дегустації, тема `excursions`). Нова сторінка з'являється від одного файлу даних — див. «Як додати сторінку».
 
-**Сторінка = ДАНІ + МЕДІА + ТЕМА.** Розмітка, стилі блоків і логіка — спільні. Сторінкового CSS на блок немає. Різниця між сторінками —
-лише в даних (`src/data/<сторінка>.js`), медіа (шляхи в даних) і темі кольорів (`src/styles/themes/<тема>.css`).
-Адмінка = ті самі поля, що в схемі нижче, один-в-один (назва поля, тип, обов'язковість, ліміт довжини, допустимі значення).
+**Сторінка = ДАНІ + МЕДІА + ТЕМА.** Розмітка, стилі блоків і логіка — спільні. Різниця між сторінками — лише в даних (`src/data/<сторінка>.js`), медіа (шляхи й назви ілюстрацій у даних) і темі кольорів (`src/styles/themes/<тема>.css`).
+Адмінка (WP/ACF/Gutenberg) = ті самі поля, що в схемі нижче, один-в-один: назва поля, тип, обов'язковість, ліміт довжини, допустимі значення, перехресні правила. Єдине джерело правил — `src/data/lp-schema.js`: з нього збірка перевіряє дані, з нього ж генерується JSON Schema (`docs/page-template.schema.json`).
 
 | Що | Де |
 |---|---|
-| Схема даних + перевірка (збірка падає з поясненням) | `src/data/lp-schema.js` (`SCHEMA`, `validatePage`, `lpView`) |
-| JSON Schema (для адмінки/валідаторів) | `docs/page-template.schema.json` — генерується: `node tools/lp-schema-json.mjs` |
+| Схема даних + перевірка (збірка падає з поясненням) | `src/data/lp-schema.js` (`SCHEMA`, `RULES`, `PAGE_RULES`, `validatePage`, `lpView`); файлові перевірки — `tools/lp-files.mjs` |
+| JSON Schema (для адмінки/валідаторів) | `docs/page-template.schema.json` — генерується: `node tools/lp-schema-json.mjs` (з тих самих правил, що й збірка) |
+| Контрактна перевірка «фронт ≡ адмінка» | `npm run qa:lp` (`tools/qa/lp-contract.mjs`) |
 | Дані сторінок | `src/data/barrels.js`, `src/data/excursions.js` |
-| Тема (ролі кольорів, кадрування медіа, оптика тексту) | `src/styles/themes/barrels.css`, `src/styles/themes/excursions.css` |
+| Тема (лише ролі кольорів) | `src/styles/themes/<тема>.css` |
+| Кадр фото й оптика чорнила конкретної сторінки (необов'язково) | `src/styles/pages/<сторінка>.css` (`body.lp-page--<slug>`) |
 | Розмітка сторінки / секцій | `partials/lp/page.html`, `partials/lp/<type>.html` (+ дрібні: `head`, `layer`, `step`, `group`, `tile`, `offer`, `route` …) |
-| Ілюстрації-медіа (обираються в даних) | `partials/media/barrels-scene.html` (гравюра кроків), `partials/media/barrels-head.html` (гравюра днища); стіна пляшок — CSS-маска |
-| Стилі | `src/styles/lp.css` (блоки), `src/styles/lp-media.css` (ілюстрації), токени — блок «Шаблон посадкової сторінки» в `tokens.css` |
+| Ілюстрації-медіа (обираються в даних) | `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (вид: `scene` · `engraving` · `wall`) — реєстр нижче |
+| Стилі | `src/styles/lp.css` (блоки), `src/styles/lp-media.css` (загальне для ілюстрацій), токени — блок «Шаблон посадкової сторінки» в `tokens.css` |
 | Логіка | `src/js/lp.js` (лічильники, стани гравюри, `?slots=on`, FAQ, мапа — лише якщо відповідна секція є) |
-| Збірка | `vite.config.js`: `LP = { barrels: lpView(barrels), excursions: lpView(excursions) }`; `<сторінка>.html` = один рядок `<!--@page сторінка-->`; демо-секція в DS — `<!--@lp сторінка id-->` |
+| Збірка/dev | плагін `lp-auto` (`tools/vite-plugin-lp.mjs`): виявлення сторінок, `<slug>.html`, підключення CSS, ліниві перевірки; рушій partials — `tools/html-partials.mjs`; демо-секція в DS — `<!--@lp сторінка id-->` |
 | Дизайн-система | `design-system.html#page-template` |
 
 ## Як додати сторінку
 
-1. `src/data/<slug>.js` — `export const <slug> = { slug, theme, tone, metaTitle, metaDescription, sections: [...] }` за схемою нижче.
-2. `src/styles/themes/<theme>.css` — клас `.theme-<theme>` з ролями `--lp-*` (лише токени палітри DS; таблиця ролей — нижче) + `@import` у `src/styles/main.css`.
-3. `vite.config.js` — рядок у `LP`.
-4. `<slug>.html` у корені — один рядок `<!--@page <slug>-->` (vite підхоплює всі `*.html` кореня як окремі сторінки).
-5. Посилання в меню/футері — у `partials/header.html` / `partials/footer.html`.
+1. `src/data/<slug>.js` — `export const <slug> = { slug, theme, metaTitle, metaDescription, sections: [...] }` за схемою нижче. `<slug>` = ім'я файлу (`a-z0-9-`); експорт називається як slug, а для slug з дефісом — у camelCase (`my-page` → `export const myPage`).
+2. `src/styles/themes/<theme>.css` — клас `.theme-<theme>` з ролями `--lp-*` (лише токени палітри DS; таблиця ролей — нижче). Можна взяти наявну тему (`theme: 'excursions'`) — тоді цей крок не потрібен.
+3. **Більше нічого.** `<slug>.html` (один рядок `<!--@page <slug>-->`) плагін створює сам при першому запуску — файл треба закомітити; CSS тем/ілюстрацій/сторінок підключається автоматично (`/*@lp-auto*/` у `main.css`); реєстру в `vite.config.js` немає. Новий файл даних у запущеному `npm run dev` перезапускає сервер сам.
+4. **Вручну лишається лише навігація:** посилання на сторінку в `partials/header.html` / `partials/footer.html`.
 
-Тексти: будь-яке поле приймає видимий плейсхолдер `[потрібно уточнити]`. Порожнє необов'язкове поле — блок не показується.
-HTML у полях не приймається (усе екранується); нерозривний пробіл — символ U+00A0.
+Якщо сторінці потрібен власний кадр фото в секції `offers` або оптична поправка чорнила під конкретний текст — `src/styles/pages/<slug>.css` (за зразком `pages/barrels.css`); інакше файл не потрібен (оптика типово 0, кадр — центр).
+
+Помилка даних: **збірка** падає одним повідомленням `lp: <slug>.sections[2](how).items[0].title: довжина 31 > 25 знаків`; у **dev** помилка видна лише на своїй сторінці (оверлей Vite), інші сторінки працюють.
+
+Тексти: будь-яке поле приймає видимий плейсхолдер `[потрібно уточнити]`. Порожнє необов'язкове поле (`''`, `null`, відсутнє, порожній масив) — блок не показується.
+HTML у полях не приймається (усе екранується); нерозривний пробіл — символ U+00A0. Довжина — у кодових точках (nbsp = 1). У текстових полях `%contacts.<ключ>%` лишається текстом (підстановка контактів діє лише в полях-посиланнях).
 
 ## Сторінка
 
 | Поле | Тип | Обов. | Ліміт / значення | Що це |
 |---|---|---|---|---|
-| `slug` | id (`a-z0-9-`) | так | | ім'я файлу `<slug>.html` |
-| `theme` | id | так | | тема: `src/styles/themes/<theme>.css`, `body.theme-<theme>` |
-| `tone` | enum | так | `teal` · `green` · `gold` · `light` · `beige` | тон основних кнопок DS (`.btn--<tone>`) |
+| `slug` | id (`a-z0-9-`) | так | = ім'я файлу даних | ім'я файлу `<slug>.html` |
+| `theme` | id | так | є `src/styles/themes/<theme>.css` | тема: `body.theme-<theme>` |
+| `tone` | enum | ні | `teal` · `green` · `gold` · `light` · `beige` | тон основних кнопок DS (`.btn--<tone>`) на світлому/фото; типово — роль `--lp-tone` теми |
 | `metaTitle` | текст | так | ≤ 70 | `<title>` |
 | `metaDescription` | текст | так | ≤ 200 (пошук показує ≈ 155) | `<meta name="description">` |
-| `sections` | список | так | 1–20 | секції в порядку показу |
+| `sections` | список | так | 1–20; перша — `hero` і лише вона | секції в порядку показу |
 
 ## Спільні поля секції
+
+Кожен тип бере лише ті з них, що його partial справді показує (поле в схемі ⇒ воно є на сторінці; це перевіряє `qa:lp`). Нижче в таблицях типів — що саме приймає тип.
 
 | Поле | Тип | Обов. | Ліміт / значення | Що це |
 |---|---|---|---|---|
@@ -50,9 +56,11 @@ HTML у полях не приймається (усе екранується); 
 | `room` | enum | ні | `warm` · `deep` · `paper` (типово — за типом) | «кімната»: тло секції; кольори кімнат задає тема |
 | `join` | так/ні | ні | | продовжити кімнату попередньої секції (без межі, лише повітря) |
 | `kicker` | текст | ні | ≤ 25 | надзаголовок |
-| `title` | текст | так | ≤ 60 | заголовок H2 (у hero — H1) |
+| `title` | текст | так | ≤ 60 (`card` ≤ 36) | заголовок H2 (у hero — H1) |
 | `lead` | текст | ні | ≤ 320 (hero ≤ 160) | лід під заголовком |
 | `caption` | текст | ні | ≤ 120 | дрібний підпис під лідом (`.t-caption`) |
+
+Які спільні поля приймає тип: `hero` — `id` (необов'язковий), `title`, `lead` (без `room`, `join`, `kicker`, `caption`); `layers`, `steps`, `compare`, `tiles` — усі; `offers` — усі, крім `caption`; `card` — без `lead`, `caption`; `place` — без `caption`; `faq` — лише `id`, `room`, `join`, `title` (кікера, ліду й підпису немає).
 
 ## Типи секцій і їх поля
 
@@ -61,21 +69,21 @@ HTML у полях не приймається (усе екранується); 
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `img` | шлях | так | | фото ≥ 2400 px по довгій стороні; вільна від деталей зона під текстом (верх-центр) |
+| `img` | шлях | так | файл у `public/` | фото ≥ 2400 px по довгій стороні; вільна від деталей зона під текстом (верх-центр) |
 | `alt` | текст | ні | ≤ 140 | порожній — декоративне |
 | `slot` | текст | ні | ≤ 240 | підказка для `?slots=on` («що тут має бути за фото») |
-| `cta.text` / `cta.href` | текст / шлях | так | ≤ 24 | кнопка |
+| `cta.text` / `cta.href` | текст / посилання | так | ≤ 24 (слово ≤ 16) | кнопка |
 
 ### `layers` — «розріз»: шари / переваги (типово `warm`)
 Фото-смуги впритул в одній рамці `--radius-panel` на 12 колонок; під кожною — іконка DS, назва `.t-product-name` (акцент), пояснення `.t-desc`. Без фото — лише підписи.
 
 | `items[]` (2, 3, 4 або 6) | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `key` | id | так | | модифікатор `lp-layer--<key>` |
-| `icon` | id іконки DS | ні | | `.icon--<icon>` (див. DS «Брендові іконки»); нових іконок не вигадувати |
+| `key` | id | так | унікальний у списку | модифікатор `lp-layer--<key>` |
+| `icon` | id іконки DS | ні | є `.icon--<icon>` (перелік нижче) | нових іконок не вигадувати |
 | `title` | текст | так | ≤ 25 | |
 | `text` | текст | так | ≤ 90 | |
-| `img` | шлях | ні | | квадрат ≥ 1024 px, кадрується по центру |
+| `img` | шлях | ні | файл у `public/` | квадрат ≥ 1024 px, кадрується по центру |
 | `slot` | текст | ні | ≤ 240 | |
 
 ### `steps` — кроки зі sticky-аркою (типово `deep`)
@@ -83,25 +91,25 @@ HTML у полях не приймається (усе екранується); 
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `scene` | id медіа | одне з двох | | гравюра `partials/media/<scene>.html` (стани за `data-step`) |
-| `img` / `alt` / `slot` | шлях / текст / текст | одне з двох | ≤ 140 / ≤ 240 | фото в арці (портрет, cover) |
-| `items[]` (2–5): `key`, `value` (≤ 8), `title` (≤ 25), `text` (≤ 160) | | так | | `value` — велика цифра (`63%`, `1`) |
+| `scene` | назва `scene-…` | рівно одне з двох | є `partials/media/scene-….html` | гравюра (стани за `data-step`) |
+| `img` / `alt` / `slot` | шлях / текст / текст | рівно одне з двох (`img` або `scene`); `alt` лише з `img` | ≤ 140 / ≤ 240 | фото в арці (портрет, cover) |
+| `items[]` (2–5): `key`, `value` (≤ 5), `title` (≤ 25), `text` (≤ 160) | | так | | `value` — велика цифра (`63%`, `1`) |
 
 ### `compare` — порівняння груп (типово `paper`)
 Групи поруч на спільних рядках (subgrid): ярлик, число (+ «≈»), одиниця, медіа «стіна» або список DS, факти.
 
 | `groups[]` (2–3) | Тип | Обов. | Ліміт / значення | |
 |---|---|---|---|---|
-| `key` | id | так | | |
+| `key` | id | так | унікальний у списку | |
 | `label` | текст | так | ≤ 25 | ярлик `.t-product-name` |
 | `span` | число | так | 2–9; **сума = 12** | ширина групи в колонках |
 | `align` | enum | ні | `start` · `center` | вирівнювання тексту групи |
 | `accent` | так/ні | ні | | акцентний ярлик |
-| `count` | число | так | | лічильник 0 → значення |
+| `count` | ціле | так | 0…99 999; `span` 2 — ≤ 999 (з `approx` ≤ 99), `span` 3 з `approx` ≤ 999 | лічильник 0 → значення; розряди — `uk-UA` (nbsp) |
 | `approx` | так/ні | ні | | «≈» перед числом |
 | `unit` | текст | так | ≤ 40 | одиниця під числом |
-| `wall` | enum | ні | `one` · `four-minus-one` | медіа «стіна пляшок» (тема бочок); **або** `list` |
-| `list[]` | текст | ні | ≤ 90, до 8 | список DS |
+| `wall` | назва `wall-…` | ні | є `partials/media/wall-….html`; взаємовиключно з `list` | ілюстрація «стіна пляшок» |
+| `list[]` | текст | ні | ≤ 90, до 8; взаємовиключно з `wall` | список DS |
 | `facts[]` (0–3): `value` (≤ 60), `label` (≤ 60) | | ні | | факт `.t-chip` + підпис `.t-desc` |
 | `note` (секції) | текст | ні | ≤ 200 | дрібний текст під групами |
 
@@ -110,68 +118,144 @@ HTML у полях не приймається (усе екранується); 
 
 | `items[]` (2, 3, 4 або 6) | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `key` | id | так | | |
-| `engraving` + `icon` | id медіа + id іконки | одне з двох | | гравюра `partials/media/<engraving>.html` з іконкою DS у центрі |
-| `img` / `alt` | шлях / текст | одне з двох | ≤ 140 | фото 3:4 у рамці `--radius-panel` (тло рамки — роль теми `--lp-tile-bg`) |
+| `key` | id | так | унікальний у списку | |
+| `engraving` + `icon` | назва `engraving-…` + id іконки | рівно одне з двох (`engraving` або `img`); `icon` лише з `engraving` | є `partials/media/engraving-….html` | гравюра з іконкою DS у центрі |
+| `img` / `alt` | шлях / текст | рівно одне з двох; `alt` лише з `img` | ≤ 140 | фото 3:4 у рамці `--radius-panel` (тло рамки — роль теми `--lp-tile-bg`) |
 | `name` / `origin` / `notes` | текст | так / так / ні | ≤ 25 / ≤ 60 / ≤ 60 | |
 | `slot` | текст | ні | ≤ 240 | |
 
 ### `offers` — ціна / пропозиції (типово `deep`)
-Фото на всю секцію без затемнення (кадрування — тема); шапка (маршрут, лід); панелі `.contacts-panel`; рядок контактів.
+Фото на всю секцію без затемнення (кадр — `pages/<slug>.css`); шапка (маршрут, лід); панелі `.contacts-panel`; рядок контактів.
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `bg`, `bgW`, `bgH`, `bgSlot` | шлях, числа, текст | ні | | фото тла (текст шапки світлий — кадр з темною ділянкою, D8) |
-| `route.from` / `route.to` / `route.icon` | текст / текст / id іконки | ні (усі разом) | ≤ 30 | маршрут «A — B» з hairline-лінією |
-| `items[]` (1–3; кількість ділить 12) | | так | | панелі |
-| · `key`, `title` (≤ 25), `price` (≤ 14), `priceNote` (≤ 20, ні) | | | | ціна `.t-stat`, підпис під нею |
-| · `facts[]` (0–4): `dt` (≤ 40), `dd` (≤ 60) | | | | рядки з hairline; `dd` > 24 знаків переноситься |
+| `bg`, `bgW`, `bgH`, `bgSlot` | шлях, цілі, текст | ні; з `bg` обов'язкові `bgW`, `bgH` (піксельні розміри файлу) | | фото тла (текст шапки світлий — кадр з темною ділянкою, D8) |
+| `route.from` / `route.to` / `route.icon` | текст / текст / id іконки | ні (усі три разом) | ≤ 30 | маршрут «A — B» з hairline-лінією |
+| `items[]` (1–3; кількість ділить 12) | | так | | панелі; модифікатор `lp-offer--<key>` |
+| · `key`, `title` (≤ 25), `price`, `priceNote` (≤ 20, ні) | | | `price`: 1 панель ≤ 21, 2 ≤ 10, 3 ≤ 6 знаків | ціна `.t-stat`, підпис під нею («грн», «з людини» — сюди) |
+| · `facts[]` (0–4): `dt` (≤ 40), `dd` (≤ 60) | | | | рядки з hairline; довге `dd` (> 24 знаків або слово > 14) переноситься |
 | · `includes[]` (≤ 90, до 5) | | | | «що входить» — список DS |
 | · `cta.text` (≤ 24) / `cta.href` | | так | | кнопка `.btn--<tone>` |
-| `foot.text` (≤ 160), `foot.ctas[]` (`text` ≤ 24, `href`, `variant`: `light` · `beige` · `gold` · `teal` · `green`), `foot.note` (≤ 200) | | ні | | рядок контактів під панелями |
+| `foot.text` (≤ 160), `foot.ctas[]` (`text` ≤ 24, `href`, `variant`: `light` · `beige` · `gold` · `teal` · `green`; до 2), `foot.note` (≤ 200) | | ні | | рядок контактів під панелями |
 
 ### `card` — панель `.tour-card` (типово `warm`)
-ІСНУЮЧИЙ компонент головної («Екскурсії / Бочкова торгівля») на сітці 12 колонок. Висота панелі фіксована (629u): текст і список мають вміститися.
+ІСНУЮЧИЙ компонент головної («Екскурсії / Бочкова торгівля») на сітці 12 колонок. Висота панелі фіксована (629u), тож ліміти виміряно: з ними проміжок «текст → кнопка» ≥ 50u на 1200–1920, кнопка не виходить за панель.
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `text` | текст | одне з двох | ≤ 320 | абзац |
-| `list[]` | текст | одне з двох | ≤ 90, до 4 | список DS |
-| `img` / `alt` / `slot` | | так / ні / ні | | фото ≈ 6:5 |
+| `title` | текст | так | ≤ 36 | `.t-hero` у картці |
+| `text` | текст | **рівно одне з двох** | ≤ 260 | абзац |
+| `list[]` | текст | **рівно одне з двох** | до 3 пунктів по ≤ 60 | список DS |
+| `img` / `alt` / `slot` | | так / ні / ні | `img` — лише під `/assets/img/` | фото ≈ 6:5 |
 | `photoFirst` | так/ні | ні | | фото ліворуч |
-| `cta.text` / `cta.href` | | так | ≤ 24 | |
+| `cta.text` / `cta.href` | | так | ≤ 24 (слово ≤ 16) | |
 
 ### `place` — місце: панель + мапа (типово `deep`)
-ІСНУЮЧІ `.contacts-panel` (5 колонок, факти `.contacts-item`) і мапа `.contacts-map` (7 колонок). Координати мапи — `src/data/contacts.js`.
+ІСНУЮЧІ `.contacts-panel` (5 колонок, факти `.contacts-item`) і мапа `.contacts-map` (7 колонок). **Координати мапи — спільні для сайту: `src/data/contacts.js`** (різних локацій на різних сторінках поки немає — див. «Відкладено»).
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
-| `facts[]` (1–5): `label` (≤ 30), `value` (≤ 90), `icon` (ні), `href` (ні; можна `%contacts.gmapsView%`) | | так | | |
-| `ctas[]` (0–2): `text` (≤ 24), `href`, `variant`: `green` · `teal` · `outline` | | ні | | |
+| `facts[]` (1–5): `label` (≤ 30), `value` (≤ 90), `icon` (ні), `href` (ні) | | так | `href` може бути `%contacts.<ключ>%` | |
+| `ctas[]` (0–2): `text` (≤ 24, слово ≤ 16), `href`, `variant`: `green` · `teal` · `outline` | | ні | | |
+
+Ключі `%contacts.<ключ>%` (з `src/data/contacts.js`): `address`, `phoneDisplay`, `phoneHref`, `email`, `emailHref`, `lat`, `lng`, `zoom`, `osmEmbed`, `osmView`, `gmapsView`, `gmapsRoute` (+ службові `topicOptions`, `topicTilesHtml`) — актуальний перелік дає `Object.keys(contactsView(contacts))`; збірка відхиляє неіснуючий ключ.
 
 ### `faq` — питання (типово `deep`)
 ІСНУЮЧА група FAQ (`sections/faq-group` + `components/faq-item`): заголовок ліворуч, дві колонки питань.
 
-| `items[]` (1–12): `q` (≤ 90), `a` (≤ 600) | так |
-|---|---|
+| `items[]` (1–12) | Тип | Обов. | Ліміт | |
+|---|---|---|---|---|
+| `q` | текст | так | ≤ 90 | питання |
+| `a` | текст | так | ≤ 600 | відповідь; порожній рядок між абзацами = новий абзац; розмітки й посилань немає (для ACF — Text Area) |
 
 ## Тема: ролі кольорів
+
+Тема (`src/styles/themes/<тема>.css`, `.theme-<тема>`) — **лише** кольори. Нових кольорів не вводити — лише токени палітри DS.
 
 | Роль | Де | barrels | excursions |
 |---|---|---|---|
 | `--lp-warm` / `--lp-deep` / `--lp-paper` | тло кімнат | brown / teal / beige | brown / green / beige |
 | `--lp-on-dark`, `--lp-on-dark-muted` | текст на warm/deep | light, nav-text | light, nav-text |
-| `--lp-on-paper`, `--lp-on-paper-muted` | текст на paper і панелях | teal, barrels-ink-paper-muted | green, green |
+| `--lp-on-paper`, `--lp-on-paper-muted` | текст на paper і панелях | teal, lp-ink-paper-muted | green, green |
 | `--lp-hero-ink` | текст hero на фото | teal | green |
 | `--lp-accent` | кікер, назви шарів, цифри кроків, іконки | gold | gold |
-| `--lp-hairline` | арка, лінії кроків, маршрут | barrels-hairline | barrels-hairline |
-| `--lp-amber` | тло фото, доки вантажиться; рідина гравюри | barrels-amber | barrels-amber |
+| `--lp-hairline` | арка, лінії кроків, маршрут | lp-hairline | lp-hairline |
+| `--lp-amber` | тло фото, доки вантажиться; рідина гравюри | lp-amber | lp-amber |
+| `--lp-tone` (необов.) | тон кнопок, якщо `tone` не задано в даних; значення — клас кнопки DS | btn--teal | btn--green |
 | `--lp-tile-bg` (необов.) | тло рамки фото плиток | (amber) | black |
 
-Також у темі (необов'язково): кадрування фото тла `offers` (`--lp-offers-bg-pos | -scale | -origin` на `#<id секції>`) і оптичні поправки чорнила,
-виміряні під конкретний текст (`--lp-h2-optic`, `--lp-num-optic`, `--lp-title-optic`, `--lp-text-optic`, `--lp-label-optic`, `--lp-price-optic`,
-`--lp-fact-optic`, `--lp-caption-optic`, `--lp-approx-optic`; типово 0). Нових кольорів у темі не вводити — лише токени палітри DS.
+Кадр фото `offers` (`--lp-offers-bg-pos | -scale | -origin` на `#<id секції>`) і оптичні поправки чорнила (`--lp-h2-optic`, `--lp-num-optic`, `--lp-title-optic`, `--lp-text-optic`, `--lp-label-optic`, `--lp-price-optic`, `--lp-fact-optic`, `--lp-caption-optic`, `--lp-approx-optic`; типово 0) — **не в темі**, а в `src/styles/pages/<slug>.css`: це властивості фото й конкретних текстів, не кольору. Обмін теми між сторінками їх не відриває.
+
+## Медіа-ілюстрації (реєстр)
+
+Обираються в даних назвою з префіксом виду; кожна — пара файлів `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (CSS підключається автоматично; значення, що належать лише ілюстрації, — у її файлі). Збірка перевіряє префікс і існування файлу. Усі наявні ілюстрації — «бочкові» (сюжет і числа прив'язані до сторінки бочок); для іншої сторінки в `scene` / `engraving` / `wall` поки вибрати нічого — використовуйте фото (`img`) або додайте свою пару файлів.
+
+| Вид | Поле | Наявні | Примітка |
+|---|---|---|---|
+| `scene` | `steps.scene` | `scene-barrels` | гравюра «від бочки до пляшки»; стани за `data-step` 0…3 → потрібні рівно 3 кроки (налив / витримка / розлив) |
+| `engraving` | `tiles.items[].engraving` | `engraving-barrels-head` | днище бочки; іконка DS у центрі — поле `icon` |
+| `wall` | `compare.groups[].wall` | `wall-barrels-one` (96 пляшок), `wall-barrels-four-minus-one` (383) | маска `public/assets/img/barrels-bottle-block.svg` 16×6; геометрія розрахована на групи 3 + 9 колонок |
+
+Іконки DS (`icon`): `account`, `arrow-up-right`, `basket`, `bottle-0-5`, `bottle-0-7`, `bottle-1`, `catalog`, `headset`, `mail`, `phone`, `pin`, `strength` та `barrels-char`, `barrels-caramel`, `barrels-toast`, `barrels-oak`, `barrels-grape`, `barrels-mountain`, `barrels-glass`, `barrels-sun`, `barrels-ship` (остання група — малюнок під сюжет бочок, але вибір вільний). Перелік — `design-system.html` («Брендові іконки»); збірка відхиляє неіснуючу іконку.
+
+## Додаткові перевірки (правила, яких мало одного типу поля)
+
+Усі правила — в `lp-schema.js`: збірка перевіряє **всі**; JSON Schema виражає частину (колонка «У JSON Schema»), решту (`x-rules` у файлі, `expressed: false`) адмінка має реалізувати окремо (ACF: `acf/validate_value`; Gutenberg: валідація блоку). `qa:lp` доводить: де JSON Schema виражає правило — вердикти збігаються з `validatePage`; де ні — JS відхиляє, а JSON приймає.
+
+| Правило (`id`) | Де | Що перевіряє | У JSON Schema |
+|---|---|---|---|
+| `hero-first` | сторінка | перша секція — `hero`, і вона єдина | так |
+| `ids-unique` | сторінка | `id` секцій унікальні | ні |
+| `keys-unique` | сторінка | `key` унікальні в межах списку | ні |
+| `anchors-exist` | сторінка | `#id` у посиланнях веде на `id` секції цієї сторінки | ні |
+| `compare-span-sum` | compare | сума `span` груп = 12 | ні (арифметика) |
+| `compare-count-capacity` | compare | `count` вміщується в групу за `span` і `approx` | так |
+| `wall-xor-list` | compare | у групі `wall` і `list` взаємовиключні | так |
+| `steps-media` | steps | рівно одне з `scene` / `img` | так |
+| `steps-alt-needs-img` | steps | `alt` лише з `img` | так |
+| `tiles-media` | tiles | у плитці рівно одне з `engraving` / `img` | так |
+| `tiles-icon-needs-engraving` | tiles | `icon` лише з `engraving` | так |
+| `tiles-alt-needs-img` | tiles | `alt` лише з `img` | так |
+| `offers-bg-size` | offers | з `bg` обов'язкові `bgW`, `bgH`; без `bg` їх немає | так |
+| `offers-price-capacity` | offers | довжина `price` за кількістю панелей (21 / 10 / 6) | так |
+| `card-text-xor-list` | card | рівно одне з `text` / `list` | так |
+| `theme-exists` | файли | є `src/styles/themes/<theme>.css`; тон — з даних або `--lp-tone` теми | ні |
+| `media-partials-exist` | файли | є `partials/media/<назва>.html` для `scene` / `engraving` / `wall` | ні |
+| `icons-exist` | файли | є клас `.icon--<icon>` | ні |
+| `media-files-exist` | файли | кожен `img` / `bg` веде на файл у `public/` | ні |
+| `contacts-keys-exist` | файли | `%contacts.<ключ>%` існує | ні |
+| `slug-matches-file` | файли | `slug` = ім'я файлу даних | ні |
+
+Також у самій схемі (виражено в JSON): кількість пунктів `layers` / `tiles` / `offers` ділить 12; посилання — лише `#якір`, `/шлях`, `https://…`, `tel:`, `mailto:`, `%contacts.ключ%`, `сторінка.html[?…]` (без `javascript:` і `//host`); слово без пробілу ≤ 30 знаків (кнопки ≤ 16); `card.img` — під `/assets/img/`; `hero.id` може бути порожнім.
+
+## Відповідність полів типам ACF / Gutenberg
+
+| Поле шаблону | ACF | Gutenberg-атрибут |
+|---|---|---|
+| `slug`, `theme`, `tone` | Text (slug) · Select (теми = файли `themes/*.css`) · Select / Button group | slug запису WP · опція |
+| `metaTitle` / `metaDescription` | Text (maxlength 70) / Text Area (200) | SEO-поле |
+| `sections` | **Flexible Content** (layout = `type`; перший — лише hero) | InnerBlocks |
+| `id`, `key`, `*.icon`, `scene`/`engraving`/`wall` | Text (slug) · Select (іконки / ілюстрації за префіксом виду) | string |
+| `room`, `align`, `tone`, `variant`, `span` | Select | string / number |
+| `join`, `accent`, `approx`, `photoFirst` | True/False | boolean |
+| `title`, `kicker`, `name`, `origin`, `cta.text` … (≤ 90) | Text (maxlength = ліміт; слово ≤ 30) | string |
+| `lead`, `note`, `caption`, `text`, `faq.a`, `slot` | Text Area (без розмітки) | string |
+| `img`, `bg` | **Image** (шлях у `public/`; `bgW`/`bgH` — похідні від файлу) | image |
+| `cta.href`, `*.href` | Link / URL (за шаблоном посилань вище) | string |
+| `count`, `bgW`, `bgH` | Number (ціле, межі в таблицях) | number |
+| `items[]`, `groups[]`, `facts[]`, `ctas[]`, `list[]`, `includes[]` | **Repeater** (min/max з таблиць; кількість — із `divides 12` там, де зазначено) | array |
+| `route`, `foot`, `cta` | Group | object |
+
+## Відкладено / обмеження
+
+- **Мапа `place`** бере координати з `src/data/contacts.js` — різні локації на різних сторінках неможливі без окремого поля `lat/lng/zoom` і зміни компонента мапи (`components/contacts-map` + `contacts-map.js`).
+- **Ілюстрації** (`scene-barrels`, `engraving-barrels-head`, `wall-barrels-*`) під сюжет бочок; загальної бібліотеки ілюстрацій немає. Іконки `barrels-*` — теж малюнок під бочки (вибір вільний).
+- **Меню/футер** — посилання на нову сторінку додається вручну (`partials/header.html`, `partials/footer.html`).
+- **Кадр і оптика** сторінки — файл `pages/<slug>.css`, прив'язаний до `id` секцій і `key` елементів; у даних як поля адмінки їх немає (кадр — властивість фото; нове фото з іншим кадром = рядок у файлі сторінки).
+- **Ємність по ширині тексту** виміряна для звичайного регістру (слова українською); ВЕЛИКІ літери («ЩЩЩ…») ширші — межі не гарантують вміщення суцільного ВЕЛИКОГО тексту (hscroll при цьому не виникає: слова переносяться).
 
 ## Перевірки
-`npm run build` (перевірка схеми), `npm run qa:check-ds -- --pages barrels,excursions --grid` (D8/D12/D13), `qa:hscroll`, `qa:links`, `qa:states`, `qa:cls`.
-Пікселі «до/після» при зміні шаблону — знімки секцій на 1200/1440/1728/1920 (classic і none) проти попередньої збірки.
+
+- `npm run build` — перевірка даних усіх сторінок (падає з поясненням); `npm run qa:lp` — контракт «фронт ≡ адмінка»;
+- `npm run qa:check-ds -- --pages barrels,excursions --rules D8,D13,S11,D1,D2,D12 --widths 1200,1440,1728,1920 --scrollbar none` (колір/типографіка/сітка), `qa:hscroll`, `qa:links`, `qa:states`, `qa:cls`;
+- пікселі «до/після» при зміні шаблону — знімки секцій на 1200/1440/1728/1920 проти попередньої збірки.

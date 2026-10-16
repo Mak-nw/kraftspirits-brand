@@ -14,7 +14,7 @@ const readCss = (dir, out = []) => {
 export function themeInfo(root, theme) {
   const file = resolve(root, 'src/styles/themes', `${theme}.css`);
   if (!existsSync(file)) return null;
-  const m = /--lp-tone\s*:\s*([a-z]+)\s*;/.exec(readFileSync(file, 'utf8'));
+  const m = /--lp-tone\s*:\s*btn--([a-z]+)\s*;/.exec(readFileSync(file, 'utf8')); // значення — клас кнопки DS (btn--teal): назва кольору в CSS-значенні S1 не пропустить
   return { file, tone: m ? m[1] : null };
 }
 
@@ -37,7 +37,7 @@ export function checkFiles(page, { root, contactKeys = [] }) {
     walk({ type: 'object', fields: SCHEMA.sections[s.type] }, s, `${page.slug}.sections[${i}](${s.id || s.type})`, (d, v, path) => {
       const key = path.slice(path.lastIndexOf('.') + 1).replace(/\[\d+\]$/, '');
       if (d.type === 'partial') { if (!existsSync(resolve(root, 'partials/media', `${v}.html`))) fail(path, `немає partials/media/${v}.html (гравюра-медіа)`); }
-      else if (d.type === 'icon') { if (!icons.has(v)) fail(path, `немає іконки .icon--${v} у src/styles (перелік — design-system.html → «Іконки»)`); }
+      else if (d.type === 'icon') { if (!icons.has(v)) fail(path, `немає іконки .icon--${v} у src/styles (перелік — design-system.html → «Іконки», «Брендові іконки»)`); }
       else if (d.type === 'url' && typeof v === 'string') {
         if (key === 'img' || key === 'bg') { if (v.startsWith('/') && !existsSync(resolve(root, 'public', v.slice(1)))) fail(path, `файл ${v} відсутній у public/`); }
         else {

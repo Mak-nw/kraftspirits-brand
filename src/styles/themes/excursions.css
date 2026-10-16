@@ -14,6 +14,6 @@
   --lp-accent: var(--color-gold);
   --lp-hairline: var(--color-lp-hairline);    /* похідна DS: золото 55% (арка, лінії кроків) */
   --lp-amber: var(--color-lp-amber);          /* тло фото, доки вантажиться */
-  --lp-tone: green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
+  --lp-tone: btn--green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
   --lp-tile-bg: var(--color-black);                /* «студійне» тло плиток дегустації: прозорі фото пляшок каталогу + AI-кадр келиха на чорному */
 }

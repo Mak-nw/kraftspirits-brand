@@ -11,7 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
-import { SCHEMA, RULES, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
+import { SCHEMA, RULES, PAGE_RULES, FILE_RULES, PRICE_MAX, CARD_TEXT_MAX, CARD_LIST_MAX, MAX_WORD, COUNT_MAX, validatePage, lpView, divisors } from '../../src/data/lp-schema.js';
 import { jsonSchemaText, buildJsonSchema } from '../lp-schema-json.mjs';
 import { loadLpPages } from '../lp-pages.mjs';
 import { checkFiles, themeInfo } from '../lp-files.mjs';
@@ -293,6 +293,24 @@ if (realFiles) {
   const withScene = Object.values(real).map((pg) => [pg, pg.sections.find((x) => x.type === 'steps' && x.scene)]).find(([, x]) => x);
   if (withScene) { const [pg] = withScene; const p = clone(pg); p.sections.find((x) => x.type === 'steps').scene = 'scene-nope'; let msg = ''; try { validatePage(clone(p)); checkFiles(p, { root: ROOT, contactKeys }); } catch (e) { msg = e.message; } note(msg.includes('partials/media/scene-nope.html'), 'файли: scene не існує', msg); }
 }
+
+/* ------------------------------------------------------------------ docs ↔ схема: кожне правило й кожне поле описано в docs/page-template.md */
+{
+  const docs = readFileSync(resolve(ROOT, 'docs/page-template.md'), 'utf8');
+  const expressed = new Map([...RULES.map((r) => [r.id, !!r.json]), ...PAGE_RULES.map((r) => [r.id, !!r.json]), ...FILE_RULES.map((r) => [r.id, false])]);
+  for (const [id, ex] of expressed) {
+    const row = docs.split('\n').find((l) => l.startsWith(`| \`${id}\``));
+    note(!!row, `docs: правило \`${id}\` є в «Додаткових перевірках»`);
+    if (row) note(row.trim().replace(/\|$/, '').split('|').pop().trim() === (ex ? 'так' : 'ні') || /так \(|ні \(/.test(row.split('|').slice(-2)[0] ?? ''), `docs: правило \`${id}\` — колонка «У JSON Schema» = ${ex ? 'так' : 'ні'}`, row.slice(-40));
+  }
+  const names = new Set();
+  const collect = (def) => { if (def.type === 'object') for (const [k, d] of Object.entries(def.fields)) { names.add(k); collect(d); } else if (def.type === 'list' && def.of) collect(def.of); };
+  for (const f of Object.values(SCHEMA.sections)) collect({ type: 'object', fields: f });
+  for (const k of Object.keys(SCHEMA.page)) names.add(k);
+  names.delete('type');
+  for (const k of names) note(docs.includes(`\`${k}`) || docs.includes(`${k}\``) || docs.includes(`.${k}\``), `docs: поле \`${k}\` описано`);
+}
+
 console.log(`lp-contract: перевірок ${total}, з них мутацій полів ${mutCount}; розбіжностей ${bad}`);
 const inexpressible = RULES.filter((r) => !r.json).map((r) => r.id);
 console.log(`  правила, яких JSON Schema не виражає (x-rules): ${inexpressible.join(', ')}, ids-unique, keys-unique, anchors-exist + файлові (FILE_RULES)`);

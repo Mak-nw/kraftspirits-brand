@@ -1,8 +1,11 @@
-// Автовиявлення сторінок шаблону lp: кожен src/data/<slug>.js, що експортує `<slug>` — об'єкт { slug, theme, sections: [...] }, є сторінкою <slug>.html (docs/page-template.md).
+// Автовиявлення сторінок шаблону lp: кожен src/data/<slug>.js, що експортує `<slug>` (для slug з дефісом — camelCase) — об'єкт { slug, theme, sections: [...] }, є сторінкою <slug>.html (docs/page-template.md).
 // Файли з «_» на початку й lp-schema.js пропускаються. Реєстрація в vite.config.js не потрібна: цей модуль читають збірка/dev і QA.
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+
+// експорт має назву slug; для slug з дефісом — camelCase (my-page → myPage)
+const camel = (slug) => slug.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 
 export const lpDataFiles = (root) => readdirSync(resolve(root, 'src/data')).filter((f) => f.endsWith('.js') && !f.startsWith('_') && f !== 'lp-schema.js');
 
@@ -13,7 +16,7 @@ export async function loadLpPages(root, { bust = false } = {}) {
     const slug = f.replace(/\.js$/, '');
     const url = pathToFileURL(resolve(root, 'src/data', f)).href + (bust ? `?v=${Date.now()}` : '');
     const m = await import(url);
-    const d = m[slug];
+    const d = m[slug] ?? m[camel(slug)];
     if (d && typeof d === 'object' && Array.isArray(d.sections) && d.theme) {
       if (d.slug !== slug) throw new Error(`lp: src/data/${f}: slug «${d.slug}» має збігатися з іменем файлу «${slug}»`);
       pages[slug] = d;
@@ -27,8 +30,8 @@ export async function loadLpPage(root, slug) {
   const file = resolve(root, 'src/data', `${slug}.js`);
   if (!existsSync(file)) return null;
   const m = await import(`${pathToFileURL(file).href}?v=${statSync(file).mtimeMs}`);
-  const d = m[slug];
-  if (!d || typeof d !== 'object' || !Array.isArray(d.sections)) throw new Error(`lp: src/data/${slug}.js має експортувати const ${slug} = { slug, theme, sections: [...] }`);
+  const d = m[slug] ?? m[camel(slug)];
+  if (!d || typeof d !== 'object' || !Array.isArray(d.sections)) throw new Error(`lp: src/data/${slug}.js має експортувати const ${camel(slug)} = { slug, theme, sections: [...] }`);
   if (d.slug !== slug) throw new Error(`lp: src/data/${slug}.js: slug «${d.slug}» має збігатися з іменем файлу «${slug}»`);
   return d;
 }
