@@ -285,7 +285,7 @@
 .lp-offer__price { margin-left: var(--lp-price-optic, 0em); } /* ціна переноситься по пробілах, якщо не вміщується (ємність — PRICE_MAX у схемі); nbsp не розриває */
 .lp-offer__price-note { margin-top: calc(var(--space-lp-stack) * -1 + var(--space-5)); color: var(--lp-on-paper-muted); }
 .lp-offer__fact { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-20); padding-block: var(--space-15); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
-.lp-offer__fact dt { margin-left: var(--lp-fact-optic, 0em); color: var(--lp-on-paper-muted); }
+.lp-offer__fact dt { margin-left: var(--lp-fact-optic, 0em); color: var(--lp-on-paper-muted); overflow-wrap: break-word; } /* ярлик не стискається вужче за своє найдовше слово, коли довге значення (--wrap) займає рядок («Джин», «Витримка» на about); break-word, на відміну від anywhere (.page-lp main), не зменшує min-content */
 .lp-offer__fact dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lp-offer__fact dd.lp-offer__dd--wrap { white-space: normal; text-align: end; } /* довге значення (> 24 знаків) — переноситься, притиснуте праворуч */
 .lp-offer__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-lp-cert-row); margin-top: auto; }
