@@ -17,7 +17,7 @@ const conv = (d) => {
     case 'bool': return nullable({ type: 'boolean' }, d.req);
     case 'list': {
       const s = nullable({ type: 'array', minItems: d.min, maxItems: d.max, items: d.of.type === 'section' ? { $ref: '#/$defs/section' } : conv(d.of) }, d.req);
-      if (d.divides) { // кількість ділить 12: з min…max лише допустимі значення
+      if (d.divides) { // кількість ділить число (def.divides; зараз не вживається): з min…max лише допустимі значення
         const ok = divisors(d);
         if (ok.length !== d.max - d.min + 1) s.anyOf = ok.map((n) => ({ minItems: n, maxItems: n }));
         if (!d.req) s.anyOf = s.anyOf ? [{ type: 'null' }, ...s.anyOf] : undefined;

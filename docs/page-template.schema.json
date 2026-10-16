@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "page-template.schema.json",
   "title": "Шаблон посадкової сторінки (lp) — дані сторінки",
-  "description": "Згенеровано з src/data/lp-schema.js (node tools/lp-schema-json.mjs) — те саме джерело, що й перевірка збірки (validatePage). Порожнє значення необов'язкового поля ('' / null / відсутнє) = поле не задано. Ліміти — у кодових точках; слово без пробілу ≤ 30 (у тексті кнопки ≤ 16); кількість пунктів layers/tiles/offers ділить 12. Правила з \"expressed\": false JSON Schema виразити не може — їх треба реалізувати в адмінці окремо (див. \"x-rules\" і docs/page-template.md → «Додаткові перевірки»).",
+  "description": "Згенеровано з src/data/lp-schema.js (node tools/lp-schema-json.mjs) — те саме джерело, що й перевірка збірки (validatePage). Порожнє значення необов'язкового поля ('' / null / відсутнє) = поле не задано. Ліміти — у кодових точках; слово без пробілу ≤ 30 (у тексті кнопки ≤ 16); кількість пунктів layers/tiles/offers ділить 10. Правила з \"expressed\": false JSON Schema виразити не може — їх треба реалізувати в адмінці окремо (див. \"x-rules\" і docs/page-template.md → «Додаткові перевірки»).",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -69,13 +69,7 @@
       "id": "compare-span-sum",
       "scope": "compare",
       "expressed": false,
-      "rule": "сума `span` усіх груп = `cols` секції (типово 12)"
-    },
-    {
-      "id": "cols-items-divide",
-      "scope": "layers, formats, offers",
-      "expressed": true,
-      "rule": "кількість пунктів ділить `cols` (пункт = `cols` / кількість колонок): `layers` — 2, 3, 4 або 6, `offers` — 1, 2 або 3, `formats` — 2; при `cols: 10` лишаються 2 (layers, formats) і 1–2 (offers)"
+      "rule": "сума `span` усіх груп = `cols` секції (типово 10)"
     },
     {
       "id": "pad-exclusive",
@@ -311,6 +305,17 @@
             "href": {
               "type": "string",
               "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+            },
+            "variant": {
+              "enum": [
+                "light",
+                "beige",
+                "gold",
+                "teal",
+                "green",
+                "",
+                null
+              ]
             }
           },
           "required": [
@@ -400,13 +405,13 @@
             },
             "cols": {
               "enum": [
+                6,
                 8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "items": {
               "type": "array",
@@ -463,25 +468,7 @@
                   "title",
                   "text"
                 ]
-              },
-              "anyOf": [
-                {
-                  "minItems": 2,
-                  "maxItems": 2
-                },
-                {
-                  "minItems": 3,
-                  "maxItems": 3
-                },
-                {
-                  "minItems": 4,
-                  "maxItems": 4
-                },
-                {
-                  "minItems": 6,
-                  "maxItems": 6
-                }
-              ]
+              }
             }
           },
           "required": [
@@ -492,166 +479,6 @@
           ],
           "title": "layers",
           "allOf": [
-            {
-              "allOf": [
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 1
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 2
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 3,
-                        "maxItems": 3
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 3
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 4,
-                        "maxItems": 4
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 4
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 5,
-                        "maxItems": 5
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 5
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 6,
-                        "maxItems": 6
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 6
-                      }
-                    }
-                  }
-                }
-              ]
-            },
             {
               "if": {
                 "required": [
@@ -779,12 +606,12 @@
             },
             "cols": {
               "enum": [
+                8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "scene": {
               "type": [
@@ -1321,12 +1148,12 @@
             },
             "cols": {
               "enum": [
+                8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "note": {
               "type": [
@@ -1365,8 +1192,7 @@
                       5,
                       6,
                       7,
-                      8,
-                      9
+                      8
                     ]
                   },
                   "align": {
@@ -1739,12 +1565,12 @@
             },
             "cols": {
               "enum": [
+                8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "items": {
               "type": "array",
@@ -1869,166 +1695,6 @@
           "title": "formats",
           "allOf": [
             {
-              "allOf": [
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 1
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 2
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 3,
-                        "maxItems": 3
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 3
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 4,
-                        "maxItems": 4
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 4
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 5,
-                        "maxItems": 5
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 5
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 6,
-                        "maxItems": 6
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 6
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            {
               "if": {
                 "required": [
                   "pad"
@@ -2152,11 +1818,10 @@
                 6,
                 8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "shape": {
               "enum": [
@@ -2408,25 +2073,7 @@
                     }
                   }
                 ]
-              },
-              "anyOf": [
-                {
-                  "minItems": 2,
-                  "maxItems": 2
-                },
-                {
-                  "minItems": 3,
-                  "maxItems": 3
-                },
-                {
-                  "minItems": 4,
-                  "maxItems": 4
-                },
-                {
-                  "minItems": 6,
-                  "maxItems": 6
-                }
-              ]
+              }
             }
           },
           "required": [
@@ -2698,12 +2345,12 @@
             },
             "cols": {
               "enum": [
+                8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "bg": {
               "type": [
@@ -2955,166 +2602,6 @@
           ],
           "title": "offers",
           "allOf": [
-            {
-              "allOf": [
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 1
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 2
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 3,
-                        "maxItems": 3
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 3
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 4,
-                        "maxItems": 4
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 4
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 5,
-                        "maxItems": 5
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 5
-                      }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "items": {
-                        "type": "array",
-                        "minItems": 6,
-                        "maxItems": 6
-                      }
-                    },
-                    "required": [
-                      "items"
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "cols": {
-                        "type": [
-                          "number",
-                          "string",
-                          "null"
-                        ],
-                        "multipleOf": 6
-                      }
-                    }
-                  }
-                }
-              ]
-            },
             {
               "if": {
                 "required": [
@@ -3905,13 +3392,13 @@
             },
             "cols": {
               "enum": [
+                6,
                 8,
                 10,
-                12,
                 "",
                 null
               ],
-              "default": 12
+              "default": 10
             },
             "items": {
               "type": "array",

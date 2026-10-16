@@ -3,7 +3,7 @@
         <div class="lp-layers__head lp-head">
           <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" lead="{{lead}}" caption="{{caption}}"-->
         </div>
-        <div class="lp-layers{{#noCut}} lp-layers--text{{/noCut}}">
+        <div class="lp-layers{{nMod}}{{#noCut}} lp-layers--text{{/noCut}}">
           {{#cut}}<div class="lp-layers__cut" aria-hidden="true" data-reveal="fade"><!--@each items lp/layer-band--></div>{{/cut}}
           <ol class="lp-layers__list"><!--@each items lp/layer--></ol>
         </div>

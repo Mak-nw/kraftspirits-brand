@@ -18,7 +18,7 @@ export const excursions = {
       img: '/assets/img/excursions-hero-ecopark.webp', alt: 'Екопарк Ясногородка з висоти: корпуси, галявини, поля й дороги навколо',
       slot: 'Фото екопарку Ясногородка (надано замовником; оригінал у reports/client-photos); світлий текст на зеленому градієнті знизу (рішення замовника 53422015)',
       fade: 'green',   // градієнт знизу вгору від зеленого (53422015): текст hero лежить на ньому
-      cta: { text: 'Обрати формат', href: '#price' },
+      cta: { text: 'Обрати формат', href: '#price', variant: 'beige' },   // світла кнопка: зелена (тон сторінки) зливалась із зеленим градієнтом hero.fade
     },
     {
       type: 'layers', id: 'why', room: 'deep',
@@ -47,7 +47,7 @@ export const excursions = {
       ],
     },
     {
-      type: 'tiles', id: 'tasting', room: 'warm', cols: 10, shape: 'circle', leadCols: 2, loose: true,
+      type: 'tiles', id: 'tasting', room: 'warm', shape: 'circle', leadCols: 2, loose: true,
       kicker: 'Дегустація', title: 'Чотири характери в одному ряду',
       lead: 'Дегустацію ведемо від прозорого до витриманого: спершу чистий дистилят, потім сезонний напій, джин і віскі. Так чути, що саме дає зерно, що — ботаніка, а що — бочка.',
       items: [
@@ -78,7 +78,7 @@ export const excursions = {
       ],
     },
     {
-      type: 'offers', id: 'price', room: 'deep', cols: 10,
+      type: 'offers', id: 'price', room: 'deep',
       bg: '/assets/img/excursions-price-bg.webp', bgW: 2560, bgH: 1440,
       bgSlot: 'Фото «Ціна»: AI-кадр (Seedream 5 Pro, чернетка) — мідні куби в темному цеху, спокійна темна зона під текстом, без затемнення; замінити реальною зйомкою',
       kicker: 'Ціна', title: 'Оберіть формат і забронюйте дату',
