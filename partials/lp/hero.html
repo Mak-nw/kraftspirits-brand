@@ -2,7 +2,7 @@
       <img class="hero__bg" data-reveal="fade" src="{{img}}" alt="{{alt}}" fetchpriority="high"{{#slot}} data-slot="{{slot}}"{{/slot}}>
       <div class="hero__content">
         {{#panel}}<div class="contacts-panel hero__panel" data-reveal="rise">{{/panel}}
-        <h1 class="hero__title t-hero heading-center" data-reveal="rise">{{title}}</h1>
+        <h1 class="hero__title {{titleRole}} heading-center{{titleMod}}" data-reveal="rise">{{title}}</h1>
         {{#lead}}<p class="hero__subtitle t-desc" data-reveal="rise">{{lead}}</p>{{/lead}}
         <!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" reveal="rise"-->
         {{#panel}}</div>{{/panel}}
