@@ -92,7 +92,7 @@ export const SCHEMA = {
       facts: L(O({ label: T(30, true), value: T(60, true) }), 0, 2),
     }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
-    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — під рядом плиток
+    //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — у шапці під H2 (ширина leadCols)
     tiles: { ...BASE, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true, { divides: GRID_COLS }) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
     offers: { ...base('caption'), room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
@@ -306,10 +306,10 @@ const VIEW = {
     items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), value: t(it.value), unit: t(it.unit),
       cols: it.items.length, drinks: it.items.map((d) => ({ title: t(d.title), text: t(d.text) })), facts: (it.facts || []).map((f) => ({ label: t(f.label), value: t(f.value) })) })) }),
   tiles: (s) => {
-    const round = s.shape === 'circle';   // коло: лід не в шапці, а під рядом плиток
+    const round = s.shape === 'circle';   // коло: лід — у шапці під H2, як в інших секціях (рев'ю ce0223c5); раніше стояв під рядом плиток
     const n = s.items.length; const cols = colsOf(s);
     const eq = cols % n !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
-    return { ...head(s), lead: round ? '' : t(s.lead), leadBottom: round ? t(s.lead) : '', leadMod: s.leadCols ? ` lp-tiles__lead--cols-${s.leadCols}` : '', shapeMod: `${round ? ' lp-tiles--circle' : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
+    return { ...head(s), shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.leadCols ? ` lp-tiles--lead-${s.leadCols}` : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
       gridMod: eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${n}` : '',
       items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / n, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
         toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };

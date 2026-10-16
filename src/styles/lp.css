@@ -192,7 +192,7 @@
 /* tiles shape: circle — коло замість рамки 3:4: діаметр = ширина плитки (span колонок або 1/n контейнера, див. нижче), кадр фото cover + object-position за даними (`imgPos`) і масштаб `zoom`
    (кроки --scale-lp-zoom-*; origin — за imgPos (top: фокус на верхній третині — горлечко піднімається до верху кола, плечі й етикетка обрізаються знизу), як у рефі замовника 2026-10-16), тло — роль теми за `tone`.
    Кільце — ТОВСТЕ (токен --size-lp-tile-ring, колір — роль теми --lp-tile-ring): на самому колі (.lp-tile__media, overflow hidden), а фото зумиться всередині, тож кільце не масштабується. Назва — акцент теми,
-   підпис — чорнило кімнати (.t-spec: напівжирний, щільний); лід — під рядом плиток (рядок 6), по центру */
+   підпис — чорнило кімнати (.t-spec: напівжирний, щільний); лід — у шапці під H2 (рев'ю ce0223c5) */
 .lp-tile--tone-black { --lp-tile-bg: var(--lp-tile-black); } .lp-tile--tone-brown { --lp-tile-bg: var(--lp-tile-brown); } .lp-tile--tone-green { --lp-tile-bg: var(--lp-tile-green); } .lp-tile--tone-teal { --lp-tile-bg: var(--lp-tile-teal); }
 .lp-tiles--circle .lp-tile__media { box-sizing: border-box; width: 100%; aspect-ratio: 1; overflow: hidden; border: var(--size-lp-tile-ring) solid var(--lp-tile-ring, var(--lp-hairline)); border-radius: var(--radius-round); background: var(--lp-tile-bg, var(--lp-amber)); }
 .lp-tiles--circle .lp-tile__img { height: 100%; aspect-ratio: auto; border-radius: 0; background: none; }
@@ -210,8 +210,7 @@
 .lp-tiles--over .lp-tile__name { margin-top: 0; }
 .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-tiles__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tiles__grid--n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .lp-tiles__grid--n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .lp-tiles__grid--n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-.lp-tiles__lead--cols-2 { width: var(--grid-span-2); } .lp-tiles__lead--cols-3 { width: var(--grid-span-3); } .lp-tiles__lead--cols-4 { width: var(--grid-span-4); } .lp-tiles__lead--cols-5 { width: var(--grid-span-5); } .lp-tiles__lead--cols-6 { width: var(--grid-span-6); }
-.lp-tiles__lead { grid-column: 1 / -1; grid-row: 6; justify-self: center; width: var(--grid-span-6); margin: var(--space-lp-head) 0 0; text-align: center; } /* по центру контейнера; ширина — leadCols (типово 6 колонок) */
+.lp-tiles--lead-2 .lp-head__lead { width: var(--grid-span-2); } .lp-tiles--lead-3 .lp-head__lead { width: var(--grid-span-3); } .lp-tiles--lead-4 .lp-head__lead { width: var(--grid-span-4); } .lp-tiles--lead-5 .lp-head__lead { width: var(--grid-span-5); } .lp-tiles--lead-6 .lp-head__lead { width: var(--grid-span-6); } /* поле leadCols: ширина ліда в шапці (рев'ю dcd66896, ce0223c5: лід — у шапці під H2) */
 
 /* ---------- offers: фото на ВСЮ секцію без затемнення (рев'ю 003d2383, ee14a4bc, 8263cbc6); поверх — шапка й панелі-пропозиції ----------
    Контраст світлого тексту шапки дає вибір ділянки кадру (кадрування — змінні теми), а не затемнення (його немає в DS). Пропозиція = ІСНУЮЧА панель DS

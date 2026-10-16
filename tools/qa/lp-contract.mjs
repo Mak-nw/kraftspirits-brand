@@ -117,7 +117,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
-      if (circ) note(html.indexOf('lp-tiles__lead') > html.lastIndexOf('lp-tile__caption') && !html.includes('<p class="lp-head__lead'), 'render tiles [circle]: лід — під рядом плиток, не в шапці');
+      note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
     }
     validPages.push([`${type}${label ? ` [${label}]` : ''}`, page]);
   }
