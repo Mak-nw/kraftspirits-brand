@@ -63,12 +63,12 @@
 .about-quote__grid > * { grid-column: 1 / -1; }
 .about-quote__text { margin: 0; }
 .about-quote__line { display: block; }
-.about-quote__tail { display: grid; grid-template-columns: 1fr auto 1fr; width: max-content; margin-left: 50%; translate: -50% 0; white-space: nowrap; } /* слово · фото · слово: фото рівно по центру рядка, слова притиснуті до нього з двох боків (реф 6e9f7ed9) */
+.about-quote__tail { display: grid; grid-template-columns: var(--grid-span-4) var(--grid-span-2) var(--grid-span-4); column-gap: var(--grid-gap); width: var(--grid-span-10); margin-left: 50%; translate: -50% 0; white-space: nowrap; } /* слово (4 кол.) · фото (2 кол.) · слово (4 кол.): усе на колонках сітки, фото рівно по центру рядка (реф 6e9f7ed9) */
 .about-quote__word:first-child { text-align: right; }
 .about-quote__word:last-child { text-align: left; } /* «різною [фото] сировиною»» — завжди в одному (останньому) рядку: фото «звисає» під рядок, як на рефі */
-.about-quote__photo { display: block; width: var(--size-about-quote-photo-w); height: var(--size-about-quote-photo-h); margin-inline: var(--space-about-quote-photo-x); vertical-align: top; border-radius: var(--radius-panel); object-fit: cover; }
+.about-quote__photo { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; border-radius: var(--radius-panel); object-fit: cover; }
 .about-quote__cap { display: flex; flex-direction: column; align-items: center; gap: var(--space-10); }
-.about-quote__photo--person { width: var(--size-about-person-photo-w); height: var(--size-about-person-photo-h); }
+.about-quote__photo--person { aspect-ratio: var(--ratio-about-photo); } /* портрет Віктора 4:5 (кроп 280×350), 2 колонки ≤ 280 px — без збільшення */
 
 /* ---------- 5. ТРИ УСТАНОВКИ: обводка + тональні півтіні ---------- */
 .about-stills__head > * { grid-column: 1 / -1; }

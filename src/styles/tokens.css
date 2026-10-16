@@ -1059,7 +1059,7 @@
   --space-about-head: var(--space-lp-head);                /* шапка секції → вміст (70u) */
   --space-about-stack: var(--space-lp-stack);              /* заголовок → лід (20u) */
   --offset-about-facts-top: calc(var(--size-header-h) + var(--space-60));  /* hero: ряд трьох фактів — під пілюлею header, у зоні неба (163u від верху) */
-  --offset-about-hero-bottom: var(--space-100);            /* H1 і кнопка: відступ від низу hero (у суцільній зеленій зоні градієнта) */
+  --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero «Про нас»: 140u від низу hero до низу контенту (рішення замовника e3214221; у суцільній зеленій зоні градієнта) */
   --size-about-fact-icon: var(--size-contacts-icon);       /* іконка факту hero = іконка контактного рядка (24u, як іконки хедера), не збільшена */
   --space-about-fact-gap: var(--space-10);                 /* іконка → назва → підпис факту */
   --size-about-step-icon: calc(96 * var(--u));             /* іконка етапу процесу (брендбук YasnoCraft, process-*.svg 64×64, лінія 1.07) */
@@ -1068,9 +1068,6 @@
   --space-about-story-row: var(--space-100);               /* між віхами «15 місяців» */
   --size-about-ring: var(--grid-span-2);                   /* коло-обводка з числом на 2 колонки (краї на сітці, D12) — як кругла плитка DS (shape: circle); реф замовника b7d0c39c */
   --space-about-ring-gap: var(--space-30);                 /* коло → підпис; між колами */
-  --size-about-quote-photo-w: calc(150 * var(--u));        /* фото в розриві рядка цитати (вертикальне 3:4) */
-  --size-about-quote-photo-h: calc(200 * var(--u));
-  --space-about-quote-photo-x: var(--space-10);            /* повітря між словом і фото в рядку */
   --size-about-line: calc(1.5 * var(--u));                 /* товщина обводки ілюстрацій установок (як лінія іконок DS 1.5 на 24) */
   --size-about-still-wash-w: calc(389.8 * var(--u));  --size-about-still-wash-h: calc(396.4 * var(--u));   /* бражна 3660 л: ширина куба 232u */
   --size-about-still-spirit-w: calc(339.4 * var(--u)); --size-about-still-spirit-h: calc(406 * var(--u));  /* спиртова 2420 л: куб 202u (∛V) */
