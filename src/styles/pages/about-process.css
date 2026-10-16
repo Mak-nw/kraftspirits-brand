@@ -1,0 +1,15 @@
+/* about, секція 3 «Усе відбувається на одному майданчику»: стрічка 8 арок етапів процесу праворуч від заголовка (partials/about/process-track.html).
+   Арка = наявний .lp-arch (hairline теми .about); лінія між арками — той самий hairline (реф ref/arches-connected-ref.png, рішення замовника: арки зʼєднані).
+   Всередині арки — зациклена Lottie (src/js/about-process.js, динамічний імпорт lottie-web лише на цій сторінці) + номер (.t-kicker) і назва етапу (.t-caption).
+   Прокрутка: overflow-x + scroll-snap по аркі, без видимого скролбара; перетягування/клавіші — JS. Усі розміри — токени (tokens.css, блок «секція 3, стрічка арок процесу»). */
+.about-process { position: absolute; z-index: 1; inset-block: 0; right: 0; left: calc(var(--grid-margin) + 5 * var(--grid-step)); display: flex; align-items: center; } /* вікно стрічки: від початку колонки 6 до краю екрана (краї обрізають арки) */
+.about-process__viewport { flex: 1; min-width: 0; overflow: auto hidden; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; }
+.about-process__viewport::-webkit-scrollbar { display: none; }
+.about-process__viewport.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+.about-process__list { display: flex; width: max-content; margin: 0; padding: 0 var(--grid-margin) 0 0; list-style: none; }
+.about-process__item { flex: none; display: flex; scroll-snap-align: start; }
+.about-process__arch { --lp-rise: calc(var(--size-about-process-arch-w) * var(--ratio-lp-arch-rise)); flex: none; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-about-process-gap); width: var(--size-about-process-arch-w); height: var(--size-about-process-arch-h); padding: var(--space-about-process-pt) var(--space-about-process-inset) var(--space-about-process-inset); }
+.about-process__anim { flex: none; width: var(--size-about-process-icon); aspect-ratio: 1; }
+.about-process__anim svg { display: block; width: 100%; height: 100%; }
+.about-process__text { display: flex; flex-direction: column; align-items: center; gap: var(--space-5); margin: 0; text-align: center; text-wrap: balance; }
+.about-process__link { flex: none; align-self: flex-start; width: var(--size-about-process-link-w); margin-top: calc(var(--size-about-process-arch-h) * var(--ratio-about-process-link)); border-top: var(--border-hairline) solid var(--color-lp-hairline); } /* hairline між стінами сусідніх арок, 60% висоти (реф) */

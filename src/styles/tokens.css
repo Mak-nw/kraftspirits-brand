@@ -1091,3 +1091,16 @@
   --size-about-principle-ring: 82%;                        /* кільце принципу = 84% внутрішньої ширини картки = 60% картки (макет p8: 215 з 356) */
   --size-about-principle-icon: 36%;                        /* іконка в порожньому центрі кільця (центр = 66% діаметра; іконка 24×24, лінія 0.6 → читається при збільшенні) */
 }
+
+/* ---------- Сторінка «Про дім»: секція 3, стрічка арок процесу (partials/about/process-track.html; стилі pages/about-process.css; JS about-process.js) ----------
+   Лише похідні від сітки/u-масштабу. Арка = .lp-arch на 2 колонки; крок між арками = ширина арки + зазор-лінія в 1 крок сітки → на 1920 видно ≈ 2.3 арки. */
+:root {
+  --size-about-process-arch-w: var(--grid-span-2);          /* ширина арки: 2 колонки сітки (270.8u; реф arches-connected-ref ≈ 240u) */
+  --size-about-process-arch-h: calc(460 * var(--u));        /* висота арки (рішення замовника ≈ 460u) */
+  --size-about-process-link-w: var(--grid-step);            /* довжина лінії-зʼєднання між аркамі: 1 крок сітки */
+  --ratio-about-process-link: 0.6;                          /* лінія на 60% висоти арки від верху (реф arches-connected-ref) */
+  --size-about-process-icon: calc(208 * var(--u));          /* кадр Lottie всередині арки (композиція 240×240 з малюнком 48-сітки) */
+  --space-about-process-pt: calc(80 * var(--u));            /* верх арки → блок вмісту (склепіння не заважає) */
+  --space-about-process-gap: var(--space-10);               /* анімація → номер → назва */
+  --space-about-process-inset: var(--space-20);             /* внутрішнє поле арки під назву */
+}
