@@ -38,9 +38,12 @@
 .woocommerce table.shop_table .product-name { width: 100%; }
 .woocommerce table.shop_table thead th:last-child { text-align: end; }
 .woocommerce table.cart td.actions { padding-block: var(--space-30) 0; border-bottom: 0; text-align: start; }
-.woocommerce table.cart td.actions::after { content: ''; display: block; clear: both; }
-.woocommerce table.cart td.actions .coupon { float: left; }
-.woocommerce table.cart td.actions > .btn { float: right; }
+/* ряд дій кошика (bd5bc5c8): підсітка з 10 колонок на всю ширину таблиці, зазор великих блоків; поле купона 4, «Застосувати купон» 3, «Оновити кошик» 3 */
+.woocommerce table.cart td.actions .wc-grid--actions { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--grid-gap-panels); align-items: center; }
+.woocommerce table.cart td.actions .wc-grid--actions .coupon { display: contents; }
+.woocommerce table.cart td.actions .wc-grid--actions .coupon .field__control { grid-column: span 4; width: auto; }
+.woocommerce table.cart td.actions .wc-grid--actions .coupon > .btn { grid-column: span 3; }
+.woocommerce table.cart td.actions .wc-grid--actions > .btn { grid-column: span 3; }
 .woocommerce .product-thumbnail img { width: auto; max-width: none; height: var(--size-wc-thumb-h); object-fit: contain; }
 .woocommerce .product-name .variation { display: flex; gap: var(--space-5); margin: 0; }
 .woocommerce .product-name .variation :is(dt, dd) { margin: 0; }
