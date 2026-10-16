@@ -7,7 +7,7 @@ import {
 } from './wc-common.js';
 import { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
-const ORDER_KEY = 'ks_order';
+const ORDER_KEY = 'ks_order'; // те саме значення — у wc-common.js (seedDemoIfNeeded)
 seedDemoIfNeeded();
 
 const views = Object.fromEntries(qsa('[data-wc-view]').map((v) => [v.dataset.wcView, v]));

@@ -18,6 +18,8 @@ const DEMO_ITEMS = [
   { slug: 'calvados-3', volume: 0.7, qty: 1 },
   { slug: 'whiskey-white', volume: 0.5, qty: 1 },
 ];
+const ORDER_KEY = 'ks_order'; // знімок останнього справжнього замовлення (пише wc-checkout.js)
+const hasRealOrder = () => { try { return !!sessionStorage.getItem(ORDER_KEY); } catch { return false; } };
 const DEMO_STATES = ['updated', 'coupon-error', 'coupon-applied', 'error', 'thanks'];
 
 export const fmtMoney = (n) => `${n.toLocaleString('uk-UA')} ₴`;
@@ -25,10 +27,12 @@ export const fmtVol = (l) => `${String(l).replace('.', ',')} л`;
 export const qs = (sel, root = document) => root.querySelector(sel);
 export const qsa = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-// порожній кошик + явний запит демо (?demo=1 або стан, якому потрібні позиції) → демо-позиції в сховищі
+// порожній кошик + явний запит демо (?demo=1 або стан, якому потрібні позиції) → демо-позиції в сховищі.
+// Після РЕАЛЬНОГО оформлення (знімок замовлення ks_order у sessionStorage) сторінка подяки кошик не засіває: кошик лишається порожнім; демо там лише за явним ?demo.
 export function seedDemoIfNeeded() {
   if (state === 'empty') return;
   if (!(query.has('demo') || DEMO_STATES.includes(state))) return;
+  if (state === 'thanks' && !query.has('demo') && hasRealOrder()) return;
   if (!readCart().length) writeCart(DEMO_ITEMS.map((i) => ({ ...i })));
 }
 
