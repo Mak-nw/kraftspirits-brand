@@ -2,7 +2,7 @@
    дизайн-системи на токенах. Цей файл нічого не вигадує: він застосовує правила наявних компонентів до класів woocommerce-* (спека, розділ 2.4):
    button.button → .btn (+ тон) · p.form-row → .field · select → .select--light.select--field · checkbox/radio → .check · блок → .contacts-panel · помилка → .contact-form__alert / .field.is-invalid ·
    успіх/інфо → .contact-success · ± кількості → .arrow-btn. Рядки таблиць — hairline як рядки акордеона/фактів (.lp-offer__fact): жодних нових ліній, тіней, плашок.
-   Текст — лише ролі .t-* у розмітці (п. 5в). Сітка: 10 колонок єдиної сітки; кошик 7 + 3, оформлення 6 + 4, кабінет меню 3 + вміст 7 (зазор між панелями 5u). Композиції описані в design-system.html, розділ «Шаблони WooCommerce». */
+   Текст — лише ролі .t-* у розмітці (п. 5в). Сітка: 10 колонок єдиної сітки; кошик 7 + 3, оформлення 6 + 4, кабінет меню 3 + вміст 7 (горизонтальний зазор між панелями = зазор колонок 40u). Композиції описані в design-system.html, розділ «Шаблони WooCommerce». */
 
 /* фон сторінок — той самий візерунок ромбів, що на каталозі/товарі/контактах (product.css); зона header прозора */
 .page-cart, .page-checkout, .page-account { background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
@@ -10,9 +10,9 @@
 
 .wc-page { width: 100%; max-width: var(--size-product-page-w); margin-inline: auto; padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom); }
 .wc-grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: stretch; }
-/* пари великих блоків (панелі) — зазор --grid-gap-panels 5u: кошик 7 + підсумок 3, оформлення 6 + підсумок 4 (шаблони колонок — tokens.css) */
-.wc-grid--cart { grid-template-columns: var(--grid-cols-panels-7-3); column-gap: var(--grid-gap-panels); }
-.wc-grid--checkout { grid-template-columns: var(--grid-cols-panels-6-4); column-gap: var(--grid-gap-panels); }
+/* пари великих блоків (панелі) — горизонтальний зазор колонок --grid-gap 40u (рішення замовника 17.10.2026): кошик 7 + підсумок 3, оформлення 6 + підсумок 4 (шаблони колонок — tokens.css) */
+.wc-grid--cart { grid-template-columns: var(--grid-cols-7-3); }
+.wc-grid--checkout { grid-template-columns: var(--grid-cols-6-4); }
 .wc-grid--guest { grid-template-columns: var(--grid-span-6); justify-content: center; align-items: start; } /* 767afdb7: гостьовий екран = ОДНА панель (вхід | відновлення | реєстрація — стани тієї ж панелі), 6 колонок по центру (колонки 3–8, як hero-панель lp), висота за вмістом */
 .wc-grid--guest > .contacts-panel { min-height: 0; }
 /* гостьовий екран по центру в'юпорта: main = вільна висота першого екрана (100svh − зона header), панель центрується по вертикалі; футер нижче екрана */
