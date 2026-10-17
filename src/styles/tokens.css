@@ -1074,7 +1074,8 @@
   --space-about-stack: var(--space-lp-stack);              /* заголовок → лід (20u) */
   --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero: 140u від низу hero до низу контенту (рішення замовника e3214221) */
   --space-about-story-top: calc(240 * var(--u));           /* «15 місяців»: верх секції → верх заголовка/кіл (макет p2: 243) */
-  --space-about-story-row: var(--space-100);               /* між шапкою й віхами, між віхами (макет p2: 89 / 102) */
+  --space-about-story-row: var(--space-100);               /* між віхами (макет p2: 102) */
+  --space-about-story-head: calc(73 * var(--u));           /* шапка («15 місяців», кола) → віха 1: фото віхи 1 на 649u від верху секції (макет p2: 649) */
   --size-about-milestone-w1: calc(288 * var(--u));         /* фото віхи 1 (макет p2: 288×332) */
   --size-about-milestone-w2: calc(304 * var(--u));         /* фото віхи 2 (макет p2: 304×332) */
   --size-about-story-text-w: calc(320 * var(--u));         /* блок тексту «15 місяців» (лід, віхи): 320u → 4 / 6 / 5 рядків, як у макеті p2 (було 271u = 2 колонки: 5 / 7 / 6)  */

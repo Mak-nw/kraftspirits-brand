@@ -18,14 +18,15 @@
 /* ---------- 2. 15 МІСЯЦІВ: фото-фон, шапка (кол. 3–6) + два статичні кола (кол. 7–10), віхи в шаховому порядку ---------- */
 .about-story { position: relative; overflow: clip; padding-top: var(--space-about-story-top); background: var(--color-brown); color: var(--color-light); }
 .about-story__bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; }
-.about-story__grid { position: relative; row-gap: var(--space-about-story-row); align-items: start; }
+.about-story__grid { position: relative; row-gap: 0; align-items: start; }
 .about-story__head { grid-column: 3 / span 4; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-about-stack); }
 .about-story__lead { max-width: var(--size-about-story-text-w); }
 .about-story__rings { grid-column: 7 / span 4; grid-row: 1; display: grid; grid-template-columns: repeat(2, var(--size-about-ring)); justify-content: end; column-gap: var(--grid-gap); margin: 0; padding: 0; list-style: none; } /* пара кіл 200u із зазором колонок 40u, правий край = правий край кол. 10 (макет p2: кола 1305–1505 і 1545–1745) */
 .about-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-about-ring-gap); text-align: center; }
 .about-ring > .t-stat-label { width: 100%; text-wrap: balance; }
 .about-ring .about-ring__circle { align-items: center; width: var(--size-about-ring); } /* коло — наявне DS (.lp-tiles--circle .lp-tile__media: діаметр = ширина комірки); усередині значення */
-.about-story__milestone { grid-column: 1 / span 6; display: grid; grid-template-columns: subgrid; align-items: start; }
+.about-story__milestone { grid-column: 1 / span 6; display: grid; grid-template-columns: subgrid; align-items: start; margin-top: var(--space-about-story-row); }
+.about-story__milestone--start { margin-top: var(--space-about-story-head); } /* шапка → віха 1 (73u) відрізняється від зазору між віхами (100u) */
 .about-story__date { grid-column: 1 / span 2; }
 .about-story__text { width: var(--size-about-story-text-w); max-width: none; } /* ширина 320u виходить за 2 колонки (271u) у зазор/порожню зону: рядків стільки, скільки в макеті */
 .about-story__photo { display: block; justify-self: start; width: var(--size-about-milestone-w1); max-width: none; height: var(--size-about-milestone-h); border-radius: 0; object-fit: cover; } /* розмір фото = макет p2 (288×332 / 304×332); колонки не ламає: старт на межі колонки */
