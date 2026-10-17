@@ -181,15 +181,13 @@
 .js .page-lp [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }
 @keyframes count-failsafe { to { opacity: 1; } }
 
-/* ---------- formats: дві великі панелі поруч (по 5 колонок; шов — зазор великих блоків --grid-gap-panels 5u, зовнішні краї на колонках 1 і 10, як панелі offers) ----------
+/* ---------- formats: дві великі панелі поруч (по 5 колонок; шов — зазор колонок --grid-gap 40u, зовнішні краї на колонках 1 і 10, як панелі offers) ----------
    Елементи — за рефом замовника (2026-10-16, затверджено): панель з hairline-контуром (трохи світліше за тло) і приглушеним візерунком ромбів DS (format-pattern-green.svg / format-pattern-teal.svg — приглушені варіанти візерунка каталогу), підпис, КАПСУЛА (світла hairline-лінія, повне закруглення = половина ширини) з ромбом-маркером (.icon--diamond-mark), числом
    і одиницею, 2–4 колонки напоїв (ромб, назва, опис), роздільник (лінія, що згасає по краях), міні-блоки в hairline-рамках (ромб, підпис, значення). Рядки панелей — subgrid: капсули, колонки,
    роздільники й міні-блоки обох панелей на спільних лініях. Тон панелі — роль теми. Типографіка — лише ролі .t-*. */
 .lp-formats__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-formats__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-head); }
 .lp-formats__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
-.lp-formats__grid > .lp-format:nth-of-type(1) { margin-right: calc(var(--grid-gap-bridge) / -2); }
-.lp-formats__grid > .lp-format:nth-of-type(2) { margin-left: calc(var(--grid-gap-bridge) / -2); }
 .lp-format { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; justify-items: center; min-width: 0; padding: var(--space-lp-format-pad); border: var(--border-hairline) solid var(--lp-format-line); border-radius: var(--radius-panel); color: var(--lp-on-dark); text-align: center; background: var(--lp-format-teal); }
 .lp-format--green { --lp-format-tone: var(--lp-format-green); --lp-format-pattern: url('/assets/img/format-pattern-green.svg'); --lp-format-fill: var(--lp-format-fill-green, transparent); }
 .lp-format--teal { --lp-format-tone: var(--lp-format-teal); --lp-format-pattern: url('/assets/img/format-pattern-teal.svg'); --lp-format-fill: var(--lp-format-fill-teal, transparent); }
@@ -263,10 +261,9 @@
 .lp-offers__bg > img { position: absolute; display: block; max-width: none; width: calc(100% * var(--lp-offers-bg-scale, 1)); height: calc(100% * var(--lp-offers-bg-scale, 1)); left: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-ox, 0.5)); top: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-oy, 0.5)); object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); }
 .lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-head.lp-offers__head { grid-column: 1 / -1; }
-/* панелі-пропозиції — великі блоки: зазор між ними --grid-gap-panels 5u (не 40u колонок). n панелей = n РІВНИХ блоків контейнера (--lp-w) із зазором 5u (клас сітки lp-offers__grid--n<n>): n = 2 — шов посередині (5 + 5 колонок),
+/* панелі-пропозиції — великі блоки: горизонтальний зазор між ними = зазор колонок --grid-gap 40u (рішення замовника 17.10.2026; 5u лише на сторінці товару). n панелей = n РІВНИХ блоків контейнера (--lp-w) із зазором 40u (клас сітки lp-offers__grid--n<n>): n = 2 — шов посередині (5 + 5 колонок),
    n = 3 — рівний поділ (10 колонок на 3 не діляться); шапка/підвал — на всю ширину; зовнішні краї — на колонках контейнера (D12 «шов великих блоків: рівний поділ») */
 .lp-offers__grid--n1 { grid-template-columns: minmax(0, 1fr); } .lp-offers__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-offers__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.lp-offers__grid { column-gap: var(--grid-gap-panels); }
 .lp-offers__title { margin-top: var(--shift-lp-cap-top); }
 .lp-offers__note { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
 .lp-offers__fine { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
@@ -300,7 +297,7 @@
 .lp-card .tour-card { width: 100%; } /* фото-колонка = 5 колонок + ½ зазору (--size-tour-photo-box-w, tokens.css): шов текст | фото посередині зазору */
 
 /* ---------- place: ІСНУЮЧІ панель .contacts-panel (5 колонок) і мапа .contacts-map (7 колонок) зі сторінки контактів ---------- */
-.lp-place__grid { display: grid; grid-template-columns: var(--grid-cols-panels-4-6); column-gap: var(--grid-gap-panels); align-items: stretch; width: var(--grid-w); margin-inline: auto; }
+.lp-place__grid { display: grid; grid-template-columns: var(--grid-cols-4-6); column-gap: var(--grid-gap); align-items: stretch; width: var(--grid-w); margin-inline: auto; }
 .lp-place__panel { min-width: 0; min-height: var(--size-lp-place-h); }
 .lp-place__head { display: flex; flex-direction: column; gap: var(--space-lp-stack); }
 .lp-place__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
