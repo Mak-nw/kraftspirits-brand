@@ -3,8 +3,8 @@
 // Що міряється (обчислені стилі, у браузері; кожна ширина × смуга):
 //   1. «заголовок по центру» = text-align: center і центр бокса = центр в'юпорта (або клас .heading-center): ширина бокса ≤ 4 колонки (+ допуск), центр = центр в'юпорта (допуск 1.5px);
 //   2. .heading-start: ширина ≤ 4 колонки; якщо всередині сітки юридичної сторінки (.faq-page__intro--legal) — лівий край = початок колонки 3 (допуск 1px; 10-колонкова сітка);
-//   3. слова не розриваються: overflow-wrap: normal, hyphens: manual/none, word-break: normal на .heading-*; слово, яке не вміщується в 4 колонки (scrollWidth > clientWidth), —
-//      НЕ порушення (не ламаємо слово, hscroll ловить D3), а info зі словом: «слово не вміщується».
+//   3. слова не розриваються: overflow-wrap: normal, hyphens: manual/none, word-break: normal на .heading-*; слово, яке виходить за бокс заголовка (scrollWidth > clientWidth + 1, .heading-start/-center/-wide), —
+//      ПОРУШЕННЯ (раніше info): виправлення — .heading-wide (6 колонок) на сторінці, де слово не вміщується в 4.
 // Не цілі: заголовок усередині панелі/картки, вирівняний вліво (tour-card, .contacts-panel, коктейль), числа (.stat__num), картка вікової перевірки (.age-card; модальне вікно, не сторінка), навігація категорій каталогу (.catalog-nav: ряд посилань-фільтрів у ролі .t-hero, не заголовок; ширина 8 колонок — рішення замовника не було, див. звіт).
 //   4. текст у панелях (.cocktail__body, .contacts-panel) не виходить за контент-бокс панелі (rect тексту vs межі без рамки й padding) — це ПОРУШЕННЯ (не info).
 // Позитивний контроль (controlD17): токен --size-heading-w = 12 колонок → заголовки по центру МАЮТЬ дати порушення; контроль панелей (controlD17Panel): на копії примусове --space-cocktail-pad-x/--space-contacts-pad = 50u ⇒ cocktails МАЄ дати порушення.
@@ -60,10 +60,10 @@ export function analyzeD17(cells, cfg = D17_DEFAULTS) {
     const cap = h.wide ? h.span6 : h.span4;   // .heading-wide (titleCols: 6) — виняток за рішенням замовника (заголовок у 2 рядки): до 6 колонок
     if (centered && h.width > cap + cfg.tolerancePx) add(`ширина ${h.width.toFixed(1)}px > ${h.wide ? '6' : '4'} колонки ${cap.toFixed(1)}px`, 'заголовок по центру має бути шириною 4 колонки (--size-heading-w, клас .heading-center; 6 — лише .heading-wide)');
     if (centered && Math.abs(h.cx - h.vw / 2) > cfg.centerTolerancePx) add(`центр ${h.cx.toFixed(1)}px ≠ центр в'юпорта ${(h.vw / 2).toFixed(1)}px`, 'заголовок по центру зсунуто від центру сторінки');
-    if (h.cls === 'start' && h.width > h.span4 + cfg.tolerancePx) add(`ширина ${h.width.toFixed(1)}px > 4 колонки ${h.span4.toFixed(1)}px`, 'заголовок (лівий край) має бути не ширшим за 4 колонки (.heading-start)');
+    if (h.cls === 'start' && h.width > cap + cfg.tolerancePx) add(`ширина ${h.width.toFixed(1)}px > ${h.wide ? '6' : '4'} колонки ${cap.toFixed(1)}px`, 'заголовок (лівий край) має бути не ширшим за 4 колонки (.heading-start)');
     if (h.cls === 'start' && h.legal) { const col4 = h.gridMargin + 2 * h.step; if (Math.abs(h.left - col4) > cfg.tolerancePx) add(`лівий край ${h.left.toFixed(1)}px ≠ початок колонки 3 ${col4.toFixed(1)}px`, 'заголовок юридичної сторінки має починатися з колонки 3'); }
     if (h.cls && (h.wrap !== 'normal' || !['manual', 'none'].includes(h.hyphens) || h.wordBreak !== 'normal')) add(`overflow-wrap ${h.wrap}, hyphens ${h.hyphens}, word-break ${h.wordBreak}`, 'заголовок не має розривати слова');
-    if (h.wideWord) { const k = `${h.wideWord}`; if (!seen.has(k)) { seen.add(k); info.push(`${cell.label}: слово «${h.wideWord}» не вміщується в ${h.span4.toFixed(0)}px (+${h.over}px) — слово не розірвано, переповнення в межах в'юпорта`); } }
+    if (h.wideWord && (h.cls || h.wide)) { const k = `${cell.label}|${h.el}|${h.wideWord}`; if (!seen.has(k)) { seen.add(k); add(`слово «${h.wideWord}» виходить за бокс заголовка на +${h.over}px (бокс ${h.width.toFixed(0)}px)`, 'слово заголовка (.heading-start/.heading-center/.heading-wide) не вміщується у бокс — використати .heading-wide або скоротити'); } }
   }
   return { violations, info };
 }

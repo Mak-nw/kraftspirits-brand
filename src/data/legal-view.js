@@ -1,7 +1,7 @@
 // Підготовка юридичних документів (src/data/legal.js) до шаблону (лише збірка/dev: імпортує vite.config.js; у браузер не потрапляє).
 // legalLists(LEGAL) → { legalPrivacy: [doc], legalCookies: [doc], … }: для кожного документа список з ОДНОГО елемента
 // під <!--@each legalPrivacy sections/legal-doc--> (ключ = 'legal' + Slug у CamelCase: 'age-policy' → legalAgePolicy).
-// Елемент: { slug, title, lead, updated, sections: [{ slug, title, bodyHtml }] } — рядки екрановані; sections —
+// Елемент: { slug, titleWide (' heading-wide' для титулу, що не вміщується в 4 колонки; з doc.titleWide), title, lead, updated, sections: [{ slug, title, bodyHtml }] } — рядки екрановані; sections —
 // вкладений цикл <!--@each sections sections/legal-section-->.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const SLUG_RE = /^[a-z0-9-]+$/;
@@ -25,7 +25,7 @@ export function legalView(doc) {
     // абзаци — готова розмітка з екранованого тексту (роль .t-text, як відповідь FAQ)
     return { slug: s.slug, title: esc(s.title), bodyHtml: paras.map((p) => `<p class="t-text">${esc(p)}</p>`).join('') };
   });
-  return { slug: doc.slug, title: esc(doc.title), lead: esc(doc.lead), updated: esc(doc.updated ?? ''), sections };
+  return { slug: doc.slug, titleWide: doc.titleWide ? ' heading-wide' : '', title: esc(doc.title), lead: esc(doc.lead), updated: esc(doc.updated ?? ''), sections };
 }
 
 export function legalLists(docs) {
