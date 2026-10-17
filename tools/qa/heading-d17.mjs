@@ -6,8 +6,9 @@
 //   3. слова не розриваються: overflow-wrap: normal, hyphens: manual/none, word-break: normal на .heading-*; слово, яке не вміщується в 4 колонки (scrollWidth > clientWidth), —
 //      НЕ порушення (не ламаємо слово, hscroll ловить D3), а info зі словом: «слово не вміщується».
 // Не цілі: заголовок усередині панелі/картки, вирівняний вліво (tour-card, .contacts-panel, коктейль), числа (.stat__num), картка вікової перевірки (.age-card; модальне вікно, не сторінка), навігація категорій каталогу (.catalog-nav: ряд посилань-фільтрів у ролі .t-hero, не заголовок; ширина 8 колонок — рішення замовника не було, див. звіт).
-// Позитивний контроль (controlD17): токен --size-heading-w = 12 колонок → заголовки по центру МАЮТЬ дати порушення.
-export const D17_DEFAULTS = { tolerancePx: 1, centerTolerancePx: 1.5, skipClosest: ['.stat', '.age-card', '[data-age-gate]', '.catalog-nav', '.ds-header-demo'] };
+//   4. текст у панелях (.cocktail__body, .contacts-panel) не виходить за контент-бокс панелі (rect тексту vs межі без рамки й padding) — це ПОРУШЕННЯ (не info).
+// Позитивний контроль (controlD17): токен --size-heading-w = 12 колонок → заголовки по центру МАЮТЬ дати порушення; контроль панелей (controlD17Panel): на копії примусове --space-cocktail-pad-x/--space-contacts-pad = 50u ⇒ cocktails МАЄ дати порушення.
+export const D17_DEFAULTS = { tolerancePx: 1, panelLeftOpticPx: 2, centerTolerancePx: 1.5, skipClosest: ['.stat', '.age-card', '[data-age-gate]', '.catalog-nav', '.ds-header-demo'] };
 
 /** у браузері: збір заголовків (t-hero / t-h2) */
 export async function probeD17(page, cfg = D17_DEFAULTS) {
@@ -29,6 +30,22 @@ export async function probeD17(page, cfg = D17_DEFAULTS) {
         cls: el.classList.contains('heading-center') ? 'center' : el.classList.contains('heading-start') ? 'start' : '', legal: !!el.closest('.faq-page__intro--legal'),
         wrap: cs.overflowWrap, hyphens: cs.hyphens, wordBreak: cs.wordBreak, lines: Math.round(b.height / lh), over: el.scrollWidth - el.clientWidth, wideWord: wide });
     }
+    // 4. текст у панелях (.cocktail__body, .contacts-panel) не виходить за контент-бокс (межі без padding і рамки; допуск праворуч tolerancePx; ліворуч panelLeftOpticPx=2 — оптичний зсув ярликів фактів лендингу --lp-fact-optic ≈ −1.2px): міряємо rect кожного текстового вузла (Range), а не scrollWidth —
+    //    scrollWidth не бачить виходу в padding без overflow і дає шум від hover-плашок табів
+    const rg = document.createRange();
+    for (const panel of document.querySelectorAll('.cocktail__body, .contacts-panel')) {
+      const pb = panel.getBoundingClientRect(); if (!pb.width || !pb.height || getComputedStyle(panel).visibility === 'hidden') continue;
+      const ps = getComputedStyle(panel);
+      const L = pb.left + parseFloat(ps.borderLeftWidth) + parseFloat(ps.paddingLeft); const R = pb.right - parseFloat(ps.borderRightWidth) - parseFloat(ps.paddingRight);
+      const tw = document.createTreeWalker(panel, NodeFilter.SHOW_TEXT);
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+        const t = n.textContent.trim(); const pe = n.parentElement;
+        if (!t || !pe || pe.closest('template, [hidden], .visually-hidden, .map, .contacts-map') || pe.checkVisibility?.({ checkVisibilityCSS: true }) === false) continue;
+        rg.selectNodeContents(n);
+        let l = Infinity, r = -Infinity; for (const rc of rg.getClientRects()) { if (!rc.width) continue; l = Math.min(l, rc.left); r = Math.max(r, rc.right); }
+        if (r - R > c.tolerancePx || L - l > c.panelLeftOpticPx) out.push({ panelOver: true, el: name(pe), panel: name(panel), text: t.replace(/\s+/g, ' ').slice(0, 40), left: L - l, right: r - R });
+      }
+    }
     return out;
   }, cfg);
 }
@@ -37,6 +54,7 @@ export async function probeD17(page, cfg = D17_DEFAULTS) {
 export function analyzeD17(cells, cfg = D17_DEFAULTS) {
   const violations = []; const info = []; const seen = new Set();
   for (const cell of cells) for (const h of cell.data) {
+    if (h.panelOver) { const k = `${cell.label}|${h.el}|${h.text}`; if (!seen.has(k)) { seen.add(k); violations.push({ page: cell.label, selector: h.el, value: `«${h.text}» виходить за контент-бокс панелі ${h.panel}: праворуч +${h.right.toFixed(1)}px, ліворуч +${h.left.toFixed(1)}px`, msg: 'текст у панелі (.cocktail__body, .contacts-panel) не має виходити за контент-бокс' }); } continue; }
     const centered = h.cls === 'center' || (h.align === 'center' && Math.abs(h.cx - h.vw / 2) <= cfg.centerTolerancePx * 2);
     const add = (value, msg) => violations.push({ page: cell.label, selector: h.el, value: `«${h.text}» ${value}`, msg });
     const cap = h.wide ? h.span6 : h.span4;   // .heading-wide (titleCols: 6) — виняток за рішенням замовника (заголовок у 2 рядки): до 6 колонок
@@ -56,4 +74,13 @@ export async function controlD17(page, cfg = D17_DEFAULTS) {
   const cells = [{ label: 'control', data: await probeD17(page, cfg) }];
   await page.evaluate(() => document.getElementById('qa-d17-control')?.remove());
   return analyzeD17(cells, cfg).violations.length;
+}
+
+/** позитивний контроль правила 4 (лише коли на сторінці є .cocktail__body): поля панелі коктейлю 50u → слово «кальвадосом» виходить → порушень > 0 */
+export async function controlD17Panel(page, cfg = D17_DEFAULTS) {
+  if (!(await page.$('.cocktail__body'))) return null;
+  await page.evaluate(() => { const s = document.createElement('style'); s.id = 'qa-d17-panel-control'; s.textContent = '.cocktail__body{padding-inline:calc(50 * var(--u)) !important}'; document.head.appendChild(s); });
+  const cells = [{ label: 'control', data: await probeD17(page, cfg) }];
+  await page.evaluate(() => document.getElementById('qa-d17-panel-control')?.remove());
+  return analyzeD17(cells, cfg).violations.filter((v) => /панелі/.test(v.value)).length;
 }

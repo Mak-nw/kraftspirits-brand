@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { COLLECT_GRID, GRID_DEFAULTS, analyzeGrid, describe as describeGrid } from './grid-d12.mjs';
 import { COLLECT_D13, analyzeD13, roleClassesFromBase, fmtSig } from './typo-d13.mjs';
 import { COLLECT_D15, analyzeD15 } from './header-menu.mjs';
-import { D17_DEFAULTS, probeD17, analyzeD17, controlD17 } from './heading-d17.mjs';
+import { D17_DEFAULTS, probeD17, analyzeD17, controlD17, controlD17Panel } from './heading-d17.mjs';
 import { D16_DEFAULTS, probeD16, analyzeD16, controlD16 } from './hug-d16.mjs';
 import { COLLECT_D18, analyzeD18, controlD18, d18Mode, D18_DEFAULTS } from './grid-d18.mjs';
 import { COLLECT_D19, D19_DEFAULTS } from './hero-d19.mjs';
@@ -216,7 +216,7 @@ export async function runDynamic(opts, allow, rep) {
   const grid12 = []; // { label, spec, width, sb, gate, data }
   const want13 = want('D13'); const d13 = []; const d13cfg = { roles: want13 ? roleClassesFromBase() : [], root: null };
   const want16 = want('D16'); const d16 = []; const d16cfg = { ...D16_DEFAULTS, ...(A.d16 || {}), targets: A.d16?.targets || D16_DEFAULTS.targets }; let d16ctl = null; let d16ctlFb = null; // D16 (контроль: на index; якщо index немає в списку сторінок — на першій сторінці, інакше виводилось «null»): hug/padding кнопок (hug-d16.mjs)
-  const want17 = want('D17'); const d17 = []; let d17ctl = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
+  const want17 = want('D17'); const d17 = []; let d17ctl = null; let d17ctlPanel = null; const d17cfg = { ...D17_DEFAULTS, ...(A.d17 || {}) }; // D17: заголовки display = 4 колонки (heading-d17.mjs)
   const want15 = want('D15'); const d15 = []; const want14 = want('D14'); const d14 = []; let d14parCtl = null; /* D14 профіль parallax=on: позитивний контроль */ // D14: піксельний контраст тексту на зображенні (профіль сторінок — text-on-image.mjs); D15: шапка/меню
   const want18 = want('D18'); const d18 = []; const d18cfg = { ...D18_DEFAULTS, ...(A.d18 || {}) }; const d18ctl = []; // D18: гориз. зазор великих блоків 40u (5u лише product), малих 40u (grid-d18.mjs)
   const want19 = want('D19'); const d19 = []; const d19cfg = { ...D19_DEFAULTS, ...(A.d19 || {}) }; const wantHeroCtx = want19 || want('D14') || want('D8'); // D19: hero без оверлея (hero-d19.mjs); стан hero потрібен і для умовних винятків D14/D8 (allow.requires)
@@ -254,7 +254,7 @@ export async function runDynamic(opts, allow, rep) {
         // збір D1/D2/D7/D8/D9
         const data = await page.evaluate(COLLECT, cfg);
         if (want16) { d16.push({ label, data: await probeD16(page, d16cfg) }); if (d16ctl === null && spec.name === 'index') d16ctl = await controlD16(page, d16cfg, A.d16 || {}); else if (d16ctlFb === null) d16ctlFb = await controlD16(page, d16cfg, A.d16 || {}); }
-        if (want17) { const hs = await probeD17(page, d17cfg); d17.push({ label, data: hs }); if (d17ctl === null && hs.some((h) => h.cls === 'center')) d17ctl = await controlD17(page, d17cfg); }
+        if (want17) { const hs = await probeD17(page, d17cfg); d17.push({ label, data: hs }); if (d17ctl === null && hs.some((h) => h.cls === 'center')) d17ctl = await controlD17(page, d17cfg);  if (d17ctlPanel === null) d17ctlPanel = await controlD17Panel(page, d17cfg); }
         if (want15 && (spec.name !== 'design-system' || opts.d15Ds)) d15.push({ label, spec, width: combo.width, data: await page.evaluate(COLLECT_D15) });
         if (want13 && (spec.name !== 'design-system' || opts.d13Ds)) d13.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await page.evaluate(COLLECT_D13, d13cfg) });
         // D8: ланцюжок фонів не бачить фонів із псевдоелементів/картинок → для «підозрілих» міряємо піксельно (мода кольору = фон, найдальший = текст)
@@ -438,7 +438,8 @@ export async function runDynamic(opts, allow, rep) {
     for (const v of a.violations) addV({ rule: 'D17', ...v });
     for (const m of [...new Set(a.info)].slice(0, 20)) rep.info({ rule: 'D17', msg: m });
     if (d17ctl !== null && d17ctl === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'ширина заголовка 10 колонок НЕ дала порушень — D17 не працює' });
-    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (10 колонок): ${d17ctl} порушень` });
+    if (d17ctlPanel !== null && d17ctlPanel === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль панелі', value: '0 порушень', msg: 'поля 50u у панелі коктейлю НЕ дали виходу тексту за контент-бокс — правило «текст у панелі» не працює' });
+    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (10 колонок): ${d17ctl} порушень; контроль панелі коктейлю (поля 50u): ${d17ctlPanel}` });
   }
   // D15: шапка і меню
   if (want15) {

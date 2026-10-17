@@ -17,7 +17,7 @@
 
 /* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною), порядок зліва направо (bb972de6): ТЕКСТ — ІСНУЮЧА панель DS .contacts-panel
    (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad), СЛАЙДЕР-галерея (ширина 4 колонок сітки каталогу, висота = текстова панель .cocktail__body (stretch), кадр cover по центру; 976a748f) і картка каталогу (426.25u) стоять прямо на зеленому.
-   Між трьома плашками ОДНАКОВИЙ горизонтальний проміжок --space-cocktail-plate-gap = зазор колонок 40u (рішення замовника 17.10.2026; було 5u за c121e3bf); панель забирає весь простір, що лишився (≈504u = 3,95 колонки).
+   Між трьома плашками ОДНАКОВИЙ горизонтальний проміжок --space-cocktail-plate-gap = зазор колонок 40u (рішення замовника 17.10.2026; було 5u за c121e3bf); панель забирає весь простір, що лишився (≈504u = 3,95 колонки; горизонтальне поле панелі --space-cocktail-pad-x 20u).
    Усі три притиснуті до верху й не розтягуються (897ea0d1): панель — за вмістом (висота табів = найвища панель), слайдер і панель — однієї висоти (stretch), картка — своєї висоти до верху; ряд = найвищий із трьох (довша панель з даних збільшує ряд). Порядок у DOM = порядок Tab.
    Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
 .cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-plate-gap); row-gap: 0; align-items: start; }
@@ -26,7 +26,7 @@
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
 .cocktail__zoom:focus-visible { outline-color: var(--color-beige); } /* кільце — поза фото, на зеленому тлі: зелене кільце (колір тла) не видно (D6) */
 /* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
-.cocktail__body { min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
+.cocktail__body { padding-inline: var(--space-cocktail-pad-x); min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
 .cocktail--tall .cocktail__body { min-height: var(--size-cocktail-h-tall); } /* вищий блок за даними (tall: true): панель, слайдер і картка — одна висота ряду; без обрізання вмісту */
 .cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
 .cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
