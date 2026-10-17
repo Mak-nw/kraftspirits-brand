@@ -309,8 +309,7 @@
 
 /* ---------- faq: ІСНУЮЧА група FAQ (partials/sections/faq-group + components/faq-item) у тілі FAQ (.faq-page__body) ---------- */
 .lp-faq .faq-page__body { color: var(--lp-on-dark); }
-.lp-faq .faq-page__grid { grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); width: var(--lp-w); } /* `cols`: тіло FAQ у вужчому контейнері (без cols — 10 колонок, як у faq.css); заголовок групи — колонки 1–3, рядки питань — від 4-ї до кінця */
-.lp-faq .faq-page__list { grid-column: 4 / -1; }
+.lp-faq .faq-page__grid { grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); width: var(--lp-w); } /* `cols`: тіло FAQ у вужчому контейнері (без cols — 10 колонок, як у faq.css); заголовок групи й картки питань — внутрішні колонки 2…−2 (--col-faq-cards: 10 → 2–9, 8 → 2–7, 6 → 2–5) */
 .lp-faq.lp-pad--20 .faq-page__body { padding-block: var(--space-20); } .lp-faq.lp-pad--30 .faq-page__body { padding-block: var(--space-30); } .lp-faq.lp-pad--40 .faq-page__body { padding-block: var(--space-40); }
 .lp-faq.lp-pad--50 .faq-page__body { padding-block: var(--space-50); } .lp-faq.lp-pad--70 .faq-page__body { padding-block: var(--space-70); } .lp-faq.lp-pad--100 .faq-page__body { padding-block: var(--space-100); } /* `pad` для FAQ: відступ тіла (у FAQ власний вертикальний ритм --space-faq-room-y) */
 .lp-room--paper.lp-faq .faq-page__body { color: var(--lp-on-paper); }

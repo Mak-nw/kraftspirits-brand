@@ -123,7 +123,6 @@
 
   /* ---------- Контейнери / розміри блоків ---------- */
   --container-wide: calc(1508 * var(--u));     /* 194:1275 / 194:1185 (1920 − 2×206) */
-  --container-heading-narrow: calc(1006 * var(--u)); /* 194:1186, 194:1236 */
   --container-text: calc(712 * var(--u));      /* 194:1277 / 194:1279 текстова колонка */
   --size-header-h: calc(var(--header3-top) + var(--header3-h)); /* 214:2902 Header 3: 30 відступ зверху + 73 пілюля = 103u зона header у потоці (раніше 206:2495 = 73, 194:1374 = 64) */
   --z-header: 100;                             /* семантичний токен, вузла Figma немає: шар фіксованої пілюлі header над секціями */
@@ -452,11 +451,9 @@
   --btn-check-tick:                    var(--color-age-card);
   --btn-check-ring-color:              var(--btn-focus-ring-color-on-light);
 
-  /* рядки-акордеони (summary як кнопка-рядок): фон на hover; default = прозорий */
-  --btn-row-faq-bg-default:            transparent;
-  --btn-row-faq-bg-hover:              var(--color-hover-faq);
-  --btn-row-faq-card-bg-default:       var(--color-light);            /* вигляд «картка» (.acc--card, макет About Us p10): кремова картка всередині рамки .acc-frame; найближчий колір палітри до крему макета */
-  --btn-row-faq-card-bg-hover:         var(--color-hover-acc-product); /* hover картки: теплий беж DS (як рядок акордеона товару) */
+  /* рядки-акордеони (summary як кнопка-рядок): фон на hover; FAQ = єдина картка (.acc--faq в .acc-frame, макет About Us p10) */
+  --btn-row-faq-bg-default:            var(--color-light);            /* кремова картка всередині рамки .acc-frame; найближчий колір палітри до крему макета */
+  --btn-row-faq-bg-hover:              var(--color-hover-acc-product); /* hover картки: теплий беж DS (як рядок акордеона товару) */
   --space-faq-card-row-gap:            var(--space-5);               /* вертикальний відступ між картками-рядками .acc-frame (макет p10: майже впритул; рішення замовника); горизонтальний між колонками = --grid-gap (40u) */
   --space-faq-card-inset:              var(--space-5);                /* відступ між зовнішньою hairline-рамкою .acc-frame і карткою (макет: ~5u) */
   --radius-faq-card:                   var(--radius-panel);           /* закруглення картки; зовнішня рамка .acc-frame — прямі кути (--radius-none), як на макеті */
@@ -506,11 +503,9 @@
   --space-208: calc(208 * var(--u));  /* 194:1275 / 194:1292 top заголовка секцій */
   --size-sec-about: calc(921 * var(--u));   /* 194:1274 */
   --size-sec-picker: calc(1281 * var(--u)); /* 194:1290 */
-  --size-sec-faq: calc(996 * var(--u));     /* 194:1184 */
   --size-picker-head-h: calc(208 * var(--u));   /* 224:3734 Frame 51: 134 (заголовок) + 30 + 44 (текст) */
   --size-picker-bg-h: calc(683 * var(--u));     /* 224:3733 image 43, 1920×683 від низу секції */
   --container-picker-text: calc(500 * var(--u)); /* 194:1294: у Figma 492 з опечаткою «допомже»; з виправленим «допоможе» перший рядок на ~12px ширший — 500, щоб переноси збігались (…ЗРОБИТИ / ВИБІР…) */
-  --size-faq-head-h: calc(300 * var(--u));      /* 194:1188 top 477 − 194:1185 top 177 */
   /* ---------- Каталог (catalog 194:1443) ---------- */
   --space-catalog-title-col: calc(21 * var(--u));   /* 194:1493 column-gap між пунктами заголовка */
   --size-chevron-w: calc(12 * var(--u));            /* 194:1479 шеврон селекта */
@@ -1025,13 +1020,11 @@
    Кімнати: вступ і «Не знайшли відповідь?» — .theme-green (продовження зеленої зони header), питання — beige тло сторінки. */
 :root {
   --col-faq-intro: 3 / span 6;                              /* вступ і фінальний блок: 6 середніх колонок (3–8, як вступ коктейлів) — центр = центр екрана */
-  --col-faq-title: 1 / span 3;                              /* заголовок групи: колонки 1–3 (було 1–4 з 12) */
-  --col-faq-list: 4 / span 7;                               /* рядки питань групи: колонки 4–10 (було 5–12) */
+  --col-faq-cards: 2 / -2;                                  /* заголовок групи й список карток: внутрішні колонки сітки без крайніх (10 колонок → 2–9; у lp-секції faq `cols` 8 → 2–7, 6 → 2–5): дві колонки карток по рівній кількості колонок, зазор 40u = зазор сітки */
   --space-faq-intro-top: var(--space-catalog-title-top2);   /* 83u: від зони header до заголовка (як каталог/коктейлі) */
   --space-faq-room-y: var(--space-100);                     /* вертикальне поле кімнат (вступ знизу, тіло, фінальний блок) */
   --space-faq-group-gap: var(--space-100);                  /* між групами */
-  --space-faq-row-gap: var(--space-10);                     /* між рядками FAQ (як .faq__col на головній) */
-  --space-faq-head-gap: var(--space-30);                    /* заголовок → рядок вступу (як вступ коктейлів) */
+  --space-faq-head-gap: var(--space-30);                    /* заголовок → рядок вступу (як вступ коктейлів); заголовок групи → картки */
   --space-faq-action-gap: var(--space-50);                  /* рядок → кнопка у фінальному блоці */
   --space-faq-anchor: var(--space-50);                      /* якір групи (#slug): відступ прокрутки */
   --shift-faq-title-ink: -0.03em;                           /* оптика: лівий бічний відступ гліфа EB Garamond (капітель .t-lead) — 0.013–0.05em за ink-заміром dpr 4 (З, П, Е, Ф, К); text-indent зсуває чорнило на лінію колонки 1, бокс лишається на сітці */

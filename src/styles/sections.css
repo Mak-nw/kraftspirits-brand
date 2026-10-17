@@ -49,10 +49,3 @@
 .picker .slider .arrow-btn { align-self: flex-start; margin-top: var(--offset-picker-arrow-top); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
 .picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
 
-/* FAQ 194:1184 (h996): 3 колонки, кожна розкривається незалежно */
-.faq { min-height: var(--size-sec-faq); padding-top: var(--space-177); }
-.faq__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: var(--container-wide); height: var(--size-faq-head-h); margin: 0 auto; text-align: center; }
-.faq__title { width: var(--container-heading-narrow); }
-.faq__text { width: var(--container-text); }
-.faq__grid { display: flex; align-items: flex-start; gap: var(--space-10); width: var(--grid-w); margin: 0 auto; }
-.faq__col { display: flex; flex-direction: column; gap: var(--space-10); flex: 1 1 0; min-width: 0; }

@@ -227,7 +227,7 @@ HTML у полях не приймається (усе екранується); 
 Ключі `%contacts.<ключ>%` (з `src/data/contacts.js`): `address`, `phoneDisplay`, `phoneHref`, `email`, `emailHref`, `lat`, `lng`, `zoom`, `osmEmbed`, `osmView`, `gmapsView`, `gmapsRoute` (+ службові `topicOptions`, `topicTilesHtml`) — актуальний перелік дає `Object.keys(contactsView(contacts))`; збірка відхиляє неіснуючий ключ.
 
 ### `faq` — питання (типово `deep`)
-ІСНУЮЧА група FAQ (`sections/faq-group` + `components/faq-item`): заголовок ліворуч, дві колонки питань.
+ІСНУЮЧА група FAQ (`sections/faq-group` + `components/faq-item`): заголовок по центру, під ним картки у двох колонках (колонки 2–9; для `cols` 8 → 2–7, 6 → 2–5).
 
 | `items[]` (1–12) | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|

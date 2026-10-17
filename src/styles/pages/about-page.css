@@ -1,6 +1,6 @@
 /* Сторінка «Про дім» (about.html) — рукописна, 1:1 за макетом замовника ref/About Us.pdf (10 секцій). Підключення: плагін lp-auto імпортує src/styles/pages/*.css у main.css.
    Сітка — 10 колонок єдиної сітки (--grid-*), значення — токени блоку «Сторінка «Про дім»» у tokens.css, текст — лише ролі .t-*.
-   Наявні компоненти: .hero/.hero--fade-green, .btn, .lp-arch (арка-hairline, також з фото), коло плитки .lp-tiles--circle .lp-tile__media, .tour-card (секція .tours), .brand-choice, faq-item (.acc--card).
+   Наявні компоненти: .hero/.hero--fade-green, .btn, .lp-arch (арка-hairline, також з фото), коло плитки .lp-tiles--circle .lp-tile__media, .tour-card (секція .tours), .brand-choice, faq-item (.acc--faq в .acc-frame).
    Нового візуального: лише розкладка (і вінець принципів з макета). Опис — design-system.html#about-page. */
 
 .page-about .site-header { --size-header-zone-h: 0px; }

@@ -1,5 +1,5 @@
 /* Сторінка FAQ (faq.html). Дані — src/data/faq.js, розмітка груп — partials/sections/faq-group.html, рядок питання — ІСНУЮЧИЙ partial
-   components/faq-item (.acc.acc--faq, accordion.css, без змін стилю), кнопка — components/btn (btn--light).
+   components/faq-item (єдиний вигляд «картка»: .acc-frame > .acc.acc--faq, accordion.css), кнопка — components/btn (btn--light).
    Нових візуальних елементів немає: лише композиція на єдиній сітці (10 колонок, 1514.2u, зазор 40u) і кімнати .theme-green / beige тло сторінки (опис — design-system.html#faq). */
 /* CLS (як .page-cocktails): body-vw міряє ширину html до розбору вмісту; довгу сторінку Chrome малює частинами, і поява класичної смуги прокрутки зсувала макет.
    body одразу на 1px вищий за вікно — смуга є вже в момент заміру (без смуги нічого не змінюється) */
@@ -22,16 +22,12 @@
 .faq-page__action { display: flex; justify-content: center; margin-top: calc(var(--space-faq-action-gap) - var(--space-faq-head-gap)); }
 
 
-/* тіло на beige тлі сторінки: кожна група — рядок сітки «заголовок (колонки 1–4) | рядки питань (колонки 5–12)» */
-.faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-text-on-dark); --btn-row-faq-bg-default: var(--color-beige); } /* FAQ на зеленому (6064dc8a): заголовки груп світлі; рядки — beige-картки (як панелі на contacts/feedback), текст/«+»/рамка зелені, hover → --color-hover-faq */
-.faq-page__group { align-items: start; scroll-margin-top: var(--space-faq-anchor); }
-.faq-page__title { grid-column: var(--col-faq-title); text-indent: var(--shift-faq-title-ink); }
-.faq-page__body:not(.faq-page__body--legal) .faq-page__title { max-width: var(--grid-span-2); text-wrap: balance; } /* d0838707: довгі назви груп — у 2 рядки (balance дає рівні рядки); бокс заголовка = 2 колонки сітки (270.8u ≈ 6.8em; було 8em); юридичні сторінки без змін */
-.faq-page__list { grid-column: var(--col-faq-list); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-row-gap); align-items: start; } /* проміжок між двома колонками = вертикальному (--space-faq-row-gap) за рішенням замовника e71b1181; виняток із D12 — check-ds.allow.json */
-.faq-page__col { display: grid; row-gap: var(--space-faq-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки по 4 колонки сітки (5–8 і 9–12): розкриття питання зсуває лише свою колонку */
-/* вигляд «картка» (faq-item card="1", .acc-frame): колонки розсунуті на 40u (--grid-gap), рядки — на 5u (--space-faq-card-row-gap) */
-.faq-page__list:has(.acc-frame) { column-gap: var(--grid-gap); }
-.faq-page__col:has(.acc-frame) { row-gap: var(--space-faq-card-row-gap); }
+/* тіло на зеленому тлі сторінки: кожна група = заголовок (h2 .t-lead, по центру) і під ним список карток faq-item у колонках 2–9 сітки (--col-faq-cards) */
+.faq-page__body { display: grid; row-gap: var(--space-faq-group-gap); padding-block: var(--space-faq-room-y); color: var(--color-text-on-dark); } /* FAQ на зеленому (6064dc8a): заголовки груп світлі; картки — кремові (.acc--faq), текст/«+» зелені, hover — теплий беж */
+.faq-page__group { align-items: start; row-gap: var(--space-faq-head-gap); scroll-margin-top: var(--space-faq-anchor); }
+.faq-page__title { grid-column: var(--col-faq-cards); text-align: center; }
+.faq-page__list { grid-column: var(--col-faq-cards); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; } /* дві колонки карток по рівній кількості колонок сітки (8 → 4+4), зазор = зазор сітки 40u (горизонталь) */
+.faq-page__col { display: grid; row-gap: var(--space-faq-card-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки: розкриття питання зсуває лише свою колонку; вертикальний відступ карток 5u */
 
 /* Юридичні сторінки (privacy, cookies, offer, delivery, age-policy, barrels-terms; partials/sections/legal-doc + legal-section, дані src/data/legal.js):
    світла сторінка (beige тло, зелений текст), ОДИН вертикальний стовпець без sticky і без бічної колонки; усе вирівняно по лівому краю в 6 середніх колонках 4–9
@@ -43,5 +39,6 @@
 .faq-page__body--legal { color: var(--color-green); }
 .faq-page__body--legal .faq-page__action { grid-column: var(--col-faq-intro); justify-content: flex-start; margin-top: 0; } /* кнопка «Повернутись додому» — у самому низу, лівим краєм колонок 4–9 як текст */
 .faq-page__body--legal .faq-page__title, .faq-page__text { grid-column: var(--col-faq-intro); }
+.faq-page__body--legal .faq-page__title { text-align: left; text-indent: var(--shift-faq-title-ink); } /* юридичні сторінки: заголовок розділу по лівому краю; оптика лівого бічного відступу гліфа */
 .faq-page__text { display: grid; row-gap: var(--space-15); min-width: 0; }
 .faq-page__body--legal .faq-page__group { row-gap: var(--space-30); }
