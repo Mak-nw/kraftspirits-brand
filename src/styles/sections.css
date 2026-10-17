@@ -17,8 +17,6 @@
 .about-brief__head { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: 100%; }
 .about-brief__kicker, .about-brief__text { width: var(--container-text); }
 
-/* Бренди 224:3596 (1920×974): дві половини 960 — .brand-half (components/brand-half.css) */
-.brands { display: grid; grid-template-columns: 1fr 1fr; height: var(--size-sec-brands); background: var(--color-beige); }
 
 /* Вступ 224:3639 (1920×984): лічильники, великий заголовок, абзац, кнопка — колонкою по центру, py 70, gap 100 */
 .intro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-100); min-height: var(--size-sec-intro); padding: var(--space-intro-pad-y) var(--grid-margin); background: var(--color-brown); color: var(--color-beige); text-align: center; }
