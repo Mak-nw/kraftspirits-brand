@@ -1,6 +1,6 @@
 // D18: ГОРИЗОНТАЛЬНИЙ зазор великих блоків: 5u (--grid-gap-panels) ЛИШЕ на сторінці товару (product), на всіх інших сторінках = зазор колонок сітки 40u (--grid-gap)
 //      (ДОПОВНЕННЯ 3 і 5 ABOUT-REBUILD-PLAN.md, 17.10.2026); ВЕРТИКАЛЬНІ відступи між панелями (одна над одною) лишаються 5u і D18 їх не міряє.
-//      Перемикач: analyzeD18(data, cfg, mode): mode 'five' (product і сторінки зі списку legacy-5u-pages у check-ds.allow.json — тимчасово, чекають T7) | 'forty' (решта).
+//      Перемикач: analyzeD18(data, cfg, mode): mode 'five' (лише product) | 'forty' (решта; T7 завершено 17.10.2026 — списку legacy-5u-pages більше немає).
 //      Малі елементи (плитки: 3 колонки й вужче, ≥3 в ряду) = --grid-gap (40u) завжди.
 // Збір — у браузері (COLLECT_D18), аналіз — у Node (analyzeD18), позитивний контроль — controlD18. Опис — tools/qa/README.md (розділ D18).
 //
@@ -22,7 +22,7 @@ export const D18_DEFAULTS = {
   fusedSelectors: ['.tour-card'],
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', 'button', 'input', 'select', 'textarea', 'label', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs', '.age-card', '[data-age-gate]'],
   // сторінки (специфікації), де великі пари МАЮТЬ бути знайдені (охоронець: збір не мовчить): мін. кількість перевірених великих пар + склеєних
-  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'index': 1, 'design-system': 1 },
+  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'cocktails': 1, 'index': 1, 'design-system': 1 },
   states: ['cart?demo=1', 'checkout?demo=1', 'account?state=login', 'account?state=dashboard'], // демо-стани, яких немає серед *.html
 };
 
@@ -76,9 +76,9 @@ export function COLLECT_D18(cfg) {
   return out;
 }
 
-/** Режим сторінки: 'five' — product та legacy-5u-pages (allow.json), 'forty' — решта. */
-export function d18Mode(pageName, legacyPages = []) {
-  return pageName === 'product' || legacyPages.includes(pageName) ? 'five' : 'forty';
+/** Режим сторінки: 'five' — лише product, 'forty' — решта. */
+export function d18Mode(pageName) {
+  return pageName === 'product' ? 'five' : 'forty';
 }
 
 /** Аналіз однієї сторінко-ширини → { pairs:[{a,b,gap,kind,expected,delta,ok,cols,n}], fused, blocks } */
