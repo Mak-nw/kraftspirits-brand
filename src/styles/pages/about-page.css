@@ -16,7 +16,7 @@
 .about-hero__content { position: absolute; z-index: 2; left: 0; right: 0; bottom: var(--offset-about-hero-bottom); display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-hero-gap); text-align: center; color: var(--color-light); }
 
 /* ---------- 2. 15 МІСЯЦІВ: фото-фон, шапка (кол. 3–6) + два статичні кола (кол. 7–10), віхи в шаховому порядку ---------- */
-.about-story { position: relative; overflow: clip; padding-top: var(--space-about-story-top); background: var(--color-brown); color: var(--color-light); }
+.about-story { position: relative; overflow: clip; padding-top: var(--space-about-story-top); padding-bottom: var(--space-about-story-bottom); background: var(--color-brown); color: var(--color-light); }
 .about-story__bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; }
 .about-story__grid { position: relative; row-gap: 0; align-items: start; }
 .about-story__head { grid-column: 3 / span 4; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-about-stack); }
@@ -61,7 +61,7 @@
 .about-people__hills { position: absolute; z-index: 0; bottom: 0; right: 0; display: block; width: var(--size-about-hills-w); height: auto; max-width: none; }
 
 /* ---------- 6. ТРИ УСТАНОВКИ: три арки-фото (.lp-arch) рівного поділу сітки, центральна вища ---------- */
-.about-stills { color: var(--color-light); }
+.about-stills { padding-bottom: var(--space-about-stills-bottom); color: var(--color-light); }
 .about-stills__head > * { grid-column: 1 / -1; }
 .about-stills__lead { grid-column: 4 / span 4; justify-self: center; max-width: var(--size-about-stills-lead); margin-top: var(--space-about-stack); text-align: center; text-wrap: balance; }
 .about-stills__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: end; width: var(--grid-w); margin: var(--space-about-head) auto 0; padding: 0; list-style: none; }
@@ -70,10 +70,10 @@
 .about-still--tall .about-still__arch { aspect-ratio: var(--ratio-about-arch-tall); }
 
 /* ---------- 7. ЕКСКУРСІЇ І БОЧКА: секція .tours + tour-card (як на головній) ---------- */
-.about-tours { padding-block: var(--space-70); } /* вертикальний зазор між панелями лишається 5u (.tours gap, як у макеті; гап колонок 40u — лише горизонтальний) */
+.about-tours { padding-block: var(--space-about-tours-y); } /* вертикальний зазор між панелями лишається 5u (.tours gap, як у макеті; гап колонок 40u — лише горизонтальний) */
 
 /* ---------- 8. НАШІ ПРИНЦИПИ: чотири картки з hairline-рамкою рівного поділу сітки; кільце-коло з іконкою, назва й опис унизу ---------- */
-.about-principles { color: var(--color-light); }
+.about-principles { padding-bottom: var(--space-about-principles-bottom); color: var(--color-light); }
 .about-principles__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--grid-gap); width: var(--grid-w); margin: var(--space-about-head) auto 0; padding: 0; list-style: none; }
 .about-sprite { position: absolute; } /* спрайт symbol: principle-crown (вінець з макета p8 / ref/principles-new.webp: 32 клини, лінія — currentColor) і principle-icon-1…4 */
 .about-principle { --lp-hairline: var(--color-gold); --lp-rise: calc((var(--grid-w) - 3 * var(--grid-gap)) / 8); box-sizing: border-box; aspect-ratio: var(--ratio-about-principle); display: flex; flex-direction: column; justify-content: space-between; padding: var(--space-70) var(--space-46) var(--space-46); background: var(--color-gold); color: var(--color-brown); } /* картка-арка: .lp-arch (заокруглений верх на всю ширину), золота заливка, темне чорнило */
@@ -83,5 +83,6 @@
 .about-principle__text { display: flex; flex-direction: column; gap: var(--space-10); }
 
 /* ---------- 10. FAQ: дві колонки карток (faq-item card) у колонках 2–9 ---------- */
+.about-faq { padding-bottom: var(--space-about-faq-bottom); }
 .about-faq__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; width: var(--grid-span-8); margin: var(--space-about-head) auto 0; }
 .about-faq__col { display: grid; row-gap: var(--space-faq-card-row-gap, var(--space-5)); min-width: 0; }

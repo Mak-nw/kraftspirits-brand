@@ -1074,7 +1074,12 @@
   --space-about-stack: var(--space-lp-stack);              /* заголовок → лід (20u) */
   --offset-about-hero-bottom: calc(140 * var(--u));        /* H1 і кнопка hero: 140u від низу hero до низу контенту (рішення замовника e3214221) */
   --space-about-story-top: calc(240 * var(--u));           /* «15 місяців»: верх секції → верх заголовка/кіл (макет p2: 243) */
-  --space-about-story-row: var(--space-100);               /* між віхами (макет p2: 102) */
+  --space-about-story-row: calc(102 * var(--u));           /* між віхами (макет p2: 102; віха 2 на 1083u від верху секції) */
+  --space-about-story-bottom: calc(159 * var(--u));        /* «15 місяців»: низ фото віхи 2 → низ секції (макет p2: 1574 − 1415; висота секції 1574u) */
+  --space-about-stills-bottom: calc(137 * var(--u));       /* «Три установки»: низ останнього контенту → низ секції (макет p6) */
+  --space-about-principles-bottom: calc(117 * var(--u));   /* «Принципи»: низ карток → низ секції (макет p8) */
+  --space-about-faq-bottom: calc(122 * var(--u));          /* FAQ: низ карток → низ секції (макет p10) */
+  --space-about-tours-y: calc(85 * var(--u));              /* екскурсії (лише about): край секції → панелі (макет p7: 85/86) */
   --space-about-story-head: calc(73 * var(--u));           /* шапка («15 місяців», кола) → віха 1: фото віхи 1 на 649u від верху секції (макет p2: 649) */
   --size-about-milestone-w1: calc(288 * var(--u));         /* фото віхи 1 (макет p2: 288×332) */
   --size-about-milestone-w2: calc(304 * var(--u));         /* фото віхи 2 (макет p2: 304×332) */

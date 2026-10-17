@@ -3,7 +3,7 @@
 //   G1: кожен елемент із border-radius:50% і класом *ava* / *circle* / *ring* має aspect = 1 (|w−h| ≤ 0.5px).
 //   G2: у секціях зі стрічкою арок (.about-place) жоден текстовий бокс (заголовок, підпис) не перетинає бокс арки
 //       за scrollLeft 0 / середнім / max стрічки.
-//   G3: ключові розміри за макетом (в u = px / (vw/1920), ±1u): арки стрічки 348×460, арки установок 478 (ширина), кола 95%/400 л 200×200, фото віх 288×332 / 304×332; пагорби .about-people__hills: права межа = правий край секції (±1u), ширина 940u.
+//   G3: ключові розміри за макетом (в u = px / (vw/1920), ±1u): арки стрічки 348×460, арки установок 478 (ширина), кола 95%/400 л 200×200, фото віх 288×332 / 304×332; y-позиції віх «15 місяців» від верху секції (фото віхи 1 = 649u, віхи 2 = 1083u, ±1u) і висота секції 1574u (±2u); пагорби .about-people__hills: права межа = правий край секції (±1u), ширина 940u.
 //   node tools/qa/about-geom.mjs [--url …] [--widths 1200,1440,1920] [--pages about] [--break circle|overlap|size|shift]
 //   --break — позитивний контроль: у відкриту сторінку інжектується поломка (еліпс / заголовок на всю ширину); перевірка МАЄ впасти.
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, waitStable, sleep } from './lib.mjs';
@@ -11,7 +11,7 @@ import { Report, runMain, launch, openPage, pageUrl, pageSpec, waitStable, sleep
 const BREAKS = {
   circle: '.about-people__ava{height:157px !important;aspect-ratio:auto !important}',
   size: '.about-process__arch{width:300px !important}.about-story__photo{height:300px !important}',
-  shift: '.about-people__hills{right:100px !important}.about-people__hills{width:900px !important}',
+  shift: '.about-people__hills{right:100px !important}.about-people__hills{width:900px !important}.about-story__milestone--finish{margin-top:140px !important}',
   overlap: '.about-place .about-place__title,.about-place .about-place__lead{grid-column:1 / -1 !important}',
 };
 
@@ -48,6 +48,15 @@ export async function runAboutGeom(o) {
           return out;
         });
         for (const z of sizes) { n++; if (Math.abs(z.w - z.W) > 1 || (z.H != null && Math.abs(z.h - z.H) > 1)) rep.add({ rule: 'G3', page: label, selector: z.name, value: `${z.w.toFixed(1)}×${z.h.toFixed(1)}u`, msg: `розмір ≠ макет ${z.W}×${z.H ?? '—'}u (±1u)` }); }
+        const story = await page.evaluate(() => {
+          const u = innerWidth / 1920; const s = document.querySelector('#story'); if (!s) return null; const sr = s.getBoundingClientRect();
+          const y = (sel) => { const e = document.querySelector(sel); return e ? (e.getBoundingClientRect().top - sr.top) / u : NaN; };
+          return { p1: y('.about-story__milestone--start .about-story__photo'), p2: y('.about-story__milestone--finish .about-story__photo'), h: sr.height / u };
+        });
+        if (story) {
+          n++; if (!(Math.abs(story.p1 - 649) <= 1) || !(Math.abs(story.p2 - 1083) <= 1)) rep.add({ rule: 'G3', page: label, selector: 'віхи .about-story__photo', value: `віха 1 ${story.p1.toFixed(1)}u, віха 2 ${story.p2.toFixed(1)}u`, msg: 'y-позиція фото віх від верху секції ≠ макет 649u / 1083u (±1u)' });
+          n++; if (!(Math.abs(story.h - 1574) <= 2)) rep.add({ rule: 'G3', page: label, selector: '#story', value: `${story.h.toFixed(1)}u`, msg: 'висота секції «15 місяців» ≠ макет 1574u (±2u)' });
+        }
         const hills = await page.evaluate(() => {
           const u = innerWidth / 1920; const h = document.querySelector('.about-people__hills'); const s = document.querySelector('.about-people'); if (!h || !s) return null;
           const r = h.getBoundingClientRect(), sr = s.getBoundingClientRect(); return { dr: (r.right - sr.right) / u, w: r.width / u, db: (r.bottom - sr.bottom) / u };
