@@ -707,7 +707,6 @@
      Пара великих блоків лягає на колонки сітки: n + m колонок = --grid-span-n --grid-span-m (n + m = 10), шов — рівно зазор колонок; зовнішні краї на колонках 1 і 10 (D12, D18). */
   --grid-gap-panels: var(--space-5);
   --grid-half-panel: calc((var(--grid-w) - var(--grid-gap-panels)) / 2);
-  --grid-cols-5-5: var(--grid-span-5) var(--grid-span-5);
   --grid-cols-7-3: var(--grid-span-7) var(--grid-span-3);
   --grid-cols-6-4: var(--grid-span-6) var(--grid-span-4);
   --grid-cols-4-6: var(--grid-span-4) var(--grid-span-6);
