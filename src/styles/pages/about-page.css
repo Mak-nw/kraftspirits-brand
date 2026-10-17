@@ -57,7 +57,7 @@
 .about-people__name { grid-column: 1 / span 5; grid-row: 3; align-self: end; display: flex; flex-direction: column; gap: var(--space-10); }
 .about-people__name .t-lead { color: var(--color-teal); }
 .about-people__viktor { position: absolute; z-index: 1; bottom: 0; left: calc(var(--grid-margin) + 3 * var(--grid-step)); display: block; width: var(--grid-span-5); height: auto; max-width: none; }
-.about-people__hills { position: absolute; z-index: 0; bottom: 0; left: calc(var(--grid-margin) + 6 * var(--grid-step)); display: block; width: var(--size-about-hills-w); height: auto; max-width: none; }
+.about-people__hills { position: absolute; z-index: 0; bottom: 0; right: 0; display: block; width: var(--size-about-hills-w); height: auto; max-width: none; }
 
 /* ---------- 6. ТРИ УСТАНОВКИ: три арки-фото (.lp-arch) рівного поділу сітки, центральна вища ---------- */
 .about-stills { color: var(--color-light); }
