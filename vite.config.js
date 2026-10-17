@@ -48,6 +48,7 @@ LISTS.faq = FAQ_VIEW;
 // для <!--@each legalX sections/legal-doc--> (вкладений цикл sections → legal-section)
 Object.assign(LISTS, legalLists(LEGAL));
 LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
+LISTS.faqDemoOpen = LISTS.faqDemo.slice(0, 1); LISTS.faqDemoClosed = LISTS.faqDemo.slice(1, 2); // демо в двох колонках .faq-page__col (design-system.html)
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev

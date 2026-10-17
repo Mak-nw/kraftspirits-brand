@@ -84,5 +84,3 @@
 
 /* ---------- 10. FAQ: дві колонки карток (faq-item card) у колонках 2–9 ---------- */
 .about-faq { padding-bottom: var(--space-about-faq-bottom); }
-.about-faq__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: start; width: var(--grid-span-8); margin: var(--space-about-head) auto 0; }
-.about-faq__col { display: grid; row-gap: var(--space-faq-card-row-gap, var(--space-5)); min-width: 0; }
