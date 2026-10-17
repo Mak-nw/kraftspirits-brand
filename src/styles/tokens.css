@@ -1077,6 +1077,7 @@
   --space-about-story-row: var(--space-100);               /* між шапкою й віхами, між віхами (макет p2: 89 / 102) */
   --size-about-milestone-w1: calc(288 * var(--u));         /* фото віхи 1 (макет p2: 288×332) */
   --size-about-milestone-w2: calc(304 * var(--u));         /* фото віхи 2 (макет p2: 304×332) */
+  --size-about-story-text-w: calc(320 * var(--u));         /* блок тексту «15 місяців» (лід, віхи): 320u → 4 / 6 / 5 рядків, як у макеті p2 (було 271u = 2 колонки: 5 / 7 / 6)  */
   --size-about-milestone-h: calc(332 * var(--u));          /* висота фото віх (макет p2: 332) */
   --size-about-stills-lead: calc(512 * var(--u));          /* підпис «Три установки» (макет p6: 512u) */
   --space-about-ring-gap: var(--space-30);                 /* коло → підпис */

@@ -20,18 +20,19 @@
 .about-story__bg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; }
 .about-story__grid { position: relative; row-gap: var(--space-about-story-row); align-items: start; }
 .about-story__head { grid-column: 3 / span 4; grid-row: 1; display: flex; flex-direction: column; gap: var(--space-about-stack); }
-.about-story__lead { max-width: var(--grid-span-2); }
+.about-story__lead { max-width: var(--size-about-story-text-w); }
 .about-story__rings { grid-column: 7 / span 4; grid-row: 1; display: grid; grid-template-columns: repeat(2, var(--size-about-ring)); justify-content: end; column-gap: var(--grid-gap); margin: 0; padding: 0; list-style: none; } /* пара кіл 200u із зазором колонок 40u, правий край = правий край кол. 10 (макет p2: кола 1305–1505 і 1545–1745) */
 .about-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-about-ring-gap); text-align: center; }
 .about-ring > .t-stat-label { width: 100%; text-wrap: balance; }
 .about-ring .about-ring__circle { align-items: center; width: var(--size-about-ring); } /* коло — наявне DS (.lp-tiles--circle .lp-tile__media: діаметр = ширина комірки); усередині значення */
 .about-story__milestone { grid-column: 1 / span 6; display: grid; grid-template-columns: subgrid; align-items: start; }
 .about-story__date { grid-column: 1 / span 2; }
+.about-story__text { width: var(--size-about-story-text-w); max-width: none; } /* ширина 320u виходить за 2 колонки (271u) у зазор/порожню зону: рядків стільки, скільки в макеті */
 .about-story__photo { display: block; justify-self: start; width: var(--size-about-milestone-w1); max-width: none; height: var(--size-about-milestone-h); border-radius: 0; object-fit: cover; } /* розмір фото = макет p2 (288×332 / 304×332); колонки не ламає: старт на межі колонки */
 .about-story__milestone--start .about-story__photo { grid-column: 3 / span 2; }
 .about-story__milestone--start .about-story__text { grid-column: 5 / span 2; }
 .about-story__milestone--finish .about-story__text { grid-column: 3 / span 2; grid-row: 1; }
-.about-story__milestone--finish .about-story__photo { grid-column: 5 / span 2; grid-row: 1; width: var(--size-about-milestone-w2); }
+.about-story__milestone--finish .about-story__photo { grid-column: 5 / span 2; grid-row: 1; width: var(--size-about-milestone-w2); margin-left: calc(var(--size-about-story-text-w) - 2 * var(--grid-step) + var(--space-10)); } /* фото зсунуто праворуч від ширшого тексту (зазор 10u) */
 
 /* ---------- 3. УСЕ ВІДБУВАЄТЬСЯ НА ОДНОМУ МАЙДАНЧИКУ: висота = в'юпорт, sticky (рішення замовника) — наступна секція «15 місяців» (непрозорий фон) заїжджає поверх; праворуч — стрічка арок процесу (T9) ---------- */
 .about-stack { position: relative; } /* межа sticky: секція тримається, поки ця обгортка (3 + 2) прокручується */
@@ -49,7 +50,7 @@
 .about-people__german figcaption { align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
 .about-people__ava { display: block; width: var(--size-about-avatar); height: auto; aspect-ratio: 1; border-radius: var(--radius-round); object-fit: cover; }
 .about-people__intro { grid-column: 1 / span 2; grid-row: 2; display: flex; flex-direction: column; gap: var(--space-30); }
-.about-people__dots { display: flex; gap: var(--space-10); margin: 0; color: var(--color-green); } /* два кола-обводки (коло плитки DS, hairline) з іконками колосок / команда */
+.about-people__dots { display: flex; gap: var(--space-5); margin: 0; color: var(--color-green); } /* два кола-обводки (коло плитки DS, hairline) з іконками колосок / команда */
 .about-people__dots .lp-tile__media { flex: none; align-items: center; justify-content: center; width: var(--size-about-dot); --lp-tile-ring: var(--color-green); }
 .about-people__dots img { flex: none; width: var(--size-about-dot-icon); height: auto; }
 .about-people__note { grid-column: 9 / span 2; grid-row: 2; align-self: start; margin-top: var(--offset-about-founder-note); text-align: right; }

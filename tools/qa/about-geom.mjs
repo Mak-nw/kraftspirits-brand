@@ -3,12 +3,14 @@
 //   G1: кожен елемент із border-radius:50% і класом *ava* / *circle* / *ring* має aspect = 1 (|w−h| ≤ 0.5px).
 //   G2: у секціях зі стрічкою арок (.about-place) жоден текстовий бокс (заголовок, підпис) не перетинає бокс арки
 //       за scrollLeft 0 / середнім / max стрічки.
-//   node tools/qa/about-geom.mjs [--url …] [--widths 1200,1440,1920] [--pages about] [--break circle|overlap]
+//   G3: ключові розміри за макетом (в u = px / (vw/1920), ±1u): арки стрічки 348×460, арки установок 478 (ширина), кола 95%/400 л 200×200, фото віх 288×332 / 304×332.
+//   node tools/qa/about-geom.mjs [--url …] [--widths 1200,1440,1920] [--pages about] [--break circle|overlap|size]
 //   --break — позитивний контроль: у відкриту сторінку інжектується поломка (еліпс / заголовок на всю ширину); перевірка МАЄ впасти.
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, waitStable, sleep } from './lib.mjs';
 
 const BREAKS = {
   circle: '.about-people__ava{height:157px !important;aspect-ratio:auto !important}',
+  size: '.about-process__arch{width:300px !important}.about-story__photo{height:300px !important}',
   overlap: '.about-place .about-place__title,.about-place .about-place__lead{grid-column:1 / -1 !important}',
 };
 
@@ -33,6 +35,18 @@ export async function runAboutGeom(o) {
           return { sel: e.tagName.toLowerCase() + '.' + String(e.className).trim().split(/\s+/).join('.'), br: cs.borderTopLeftRadius, w: r.width, h: r.height, vis: r.width > 0 && cs.display !== 'none' };
         }).filter((x) => x.vis && (x.br === '50%' || parseFloat(x.br) >= Math.min(x.w, x.h) / 2 - 0.01) && x.br !== '0px'));
         for (const c of circ) { n++; if (Math.abs(c.w - c.h) > 0.5) rep.add({ rule: 'G1', page: label, selector: c.sel, value: `${c.w.toFixed(1)}×${c.h.toFixed(1)}`, msg: 'коло не квадратне (|w−h| > 0.5px)' }); }
+        // G3
+        const sizes = await page.evaluate(() => {
+          const u = innerWidth / 1920; const out = [];
+          const add = (sel, name, W, H) => document.querySelectorAll(sel).forEach((e, i) => { const r = e.getBoundingClientRect(); out.push({ name: `${name}#${i}`, W, H, w: r.width / u, h: r.height / u }); });
+          add('.about-process__arch', 'арка стрічки', 348, 460);
+          add('.about-still__arch', 'арка установки', 478, null);
+          add('.about-ring__circle', 'коло', 200, 200);
+          add('.about-story__milestone--start .about-story__photo', 'фото віхи 1', 288, 332);
+          add('.about-story__milestone--finish .about-story__photo', 'фото віхи 2', 304, 332);
+          return out;
+        });
+        for (const z of sizes) { n++; if (Math.abs(z.w - z.W) > 1 || (z.H != null && Math.abs(z.h - z.H) > 1)) rep.add({ rule: 'G3', page: label, selector: z.name, value: `${z.w.toFixed(1)}×${z.h.toFixed(1)}u`, msg: `розмір ≠ макет ${z.W}×${z.H ?? '—'}u (±1u)` }); }
         // G2
         const hasTrack = await page.$('.about-process__viewport');
         if (hasTrack) {
