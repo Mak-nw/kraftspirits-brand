@@ -10,7 +10,7 @@
 .about-process__viewport::-webkit-scrollbar { display: none; }
 .about-place-run { display: none; height: var(--size-about-process-run); } /* розпірка: хід вертикального скролу, поки секція закріплена */
 @media (prefers-reduced-motion: reduce) {
-  .about-place { position: relative; height: auto; padding-block: var(--space-about-sec-y); } /* без pinned: звичайна секція в потоці */
+  .about-place { position: relative; height: auto; padding-block: var(--space-about-sec-y); scroll-margin-top: 0; } /* без pinned: звичайна секція в потоці */
 }
 @media (prefers-reduced-motion: no-preference) {
   .about-place { display: block; }

@@ -37,7 +37,7 @@
 
 /* ---------- 3. УСЕ ВІДБУВАЄТЬСЯ НА ОДНОМУ МАЙДАНЧИКУ: висота = в'юпорт, sticky (рішення замовника) — наступна секція «15 місяців» (непрозорий фон) заїжджає поверх; праворуч — стрічка арок процесу (T9) ---------- */
 .about-stack { position: relative; } /* межа sticky: секція тримається, поки ця обгортка (3 + 2) прокручується */
-.about-place { position: sticky; top: 0; z-index: 0; overflow: clip; height: 100svh; padding-block: 0; }
+.about-place { position: sticky; top: 0; z-index: 0; overflow: clip; height: 100svh; padding-block: 0; scroll-margin-top: calc(-1 * var(--size-header-h)); } /* якір #place: компенсує scroll-padding-top html — секція sticky 100svh, приземляється рівно на верх в'юпорта (хедер fixed і лежить поверх) */
 .about-place__text { flex: none; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; width: var(--vw, 100vw); } /* текст — по центру в'юпорта (по обох осях); у треку займає рівно ширину в'юпорта */
 .about-place__lead { width: var(--size-heading-w); max-width: 100%; margin: var(--space-about-stack) 0 0; text-align: center; text-wrap: balance; }
 .about-story { z-index: 1; } /* поверх sticky-секції */
