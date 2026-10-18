@@ -31,14 +31,17 @@
     </section>
 
     <div class="about-stack">
-    <!-- 3. УСЕ ВІДБУВАЄТЬСЯ НА ОДНОМУ МАЙДАНЧИКУ (макет p3; за рішенням замовника йде ОДРАЗУ після hero): висота = в'юпорт, sticky — «15 місяців» заїжджає поверх; зелений фон, H2 у 3 рядки по центру, підпис; праворуч контурна арка (.lp-arch, hairline), що виходить за край -->
+    <!-- 3. УСЕ ВІДБУВАЄТЬСЯ НА ОДНОМУ МАЙДАНЧИКУ (макет p3; за рішенням замовника йде ОДРАЗУ після hero): висота = в'юпорт, sticky; pinned horizontal scroll: єдиний трек (текст на ширину в'юпорта + стрічка арок) їде вліво на весь екран, поки секція закріплена — «15 місяців» заїжджає поверх; зелений фон, H2 у 3 рядки по центру, підпис; праворуч контурна арка (.lp-arch, hairline), що виходить за край -->
     <section class="about-sec theme-green about-place" id="place" aria-labelledby="place-title">
-      <div class="about__grid">
-        <h2 class="t-h2 heading-center heading-wide about-place__title" id="place-title" data-reveal="rise">Усе відбувається<br>на одному<br>майданчику</h2>
-        <p class="t-desc about-place__lead" data-reveal="rise">Дистилерію проєктували так, щоб гості бачили виробництво від сировини до розливу.</p>
+      <div class="about-track" data-process-track>
+        <div class="about-place__text">
+          <h2 class="t-h2 heading-center heading-wide about-place__title" id="place-title" data-reveal="rise">Усе відбувається<br>на одному<br>майданчику</h2>
+          <p class="t-desc about-place__lead" data-reveal="rise">Дистилерію проєктували так, щоб гості бачили виробництво від сировини до розливу.</p>
+        </div>
+        <!--@include about/process-track-->
       </div>
-      <!--@include about/process-track-->
     </section>
+    <div class="about-place-run" data-process-run aria-hidden="true"></div><!-- розпірка pinned-скролу: висота = хід стрічки (--size-about-process-run); секція вище sticky, «15 місяців» заїжджає поверх по закінченню ходу -->
 
     <!-- 2. 15 МІСЯЦІВ (макет p2): фон — аерофото замовника (затемнене в самому файлі), заголовок + абзац (кол. 3–6), праворуч два кола-обводки зі значенням (кол. 8–10), нижче дві віхи в шаховому порядку -->
     <section class="about-sec about-story" id="story" data-parallax="soft" aria-labelledby="story-title">

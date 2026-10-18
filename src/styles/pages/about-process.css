@@ -1,13 +1,27 @@
 /* about, секція 3 «Усе відбувається на одному майданчику»: стрічка 8 арок етапів процесу праворуч від заголовка (partials/about/process-track.html).
    Арка = наявний .lp-arch (hairline теми .about); лінія між арками — той самий hairline (реф ref/arches-connected-ref.png, рішення замовника: арки зʼєднані).
    Всередині арки — зациклена Lottie (src/js/about-process.js, динамічний імпорт lottie-web лише на цій сторінці) + номер (.t-kicker) і назва етапу (.t-caption).
-   Прокрутка: overflow-x + scroll-snap по аркі, без видимого скролбара; перетягування/клавіші — JS. Усі розміри — токени (tokens.css, блок «секція 3, стрічка арок процесу»). */
-.about-process { position: absolute; z-index: 1; inset-block: 0; right: 0; left: calc(var(--grid-margin) + 5 * var(--grid-step)); display: flex; align-items: center; } /* вікно стрічки: від початку колонки 6 до краю екрана (краї обрізають арки) */
-.about-process__viewport { flex: 1; min-width: 0; overflow: auto hidden; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; }
+   Pinned horizontal scroll (рішення замовника): секція sticky 100svh; єдиний трек .about-track (блок тексту на ширину в'юпорта по центру + стрічка арок) їде вліво НА ВЕСЬ ЕКРАН від вертикального скролу
+   (JS about-process.js: прогрес = скрол обгортки / висота розпірки .about-place-run). p = 0: текст по центру, арок не видно (за правим краєм); p = 1: остання арка по центру в'юпорта, далі сторінка гортається вниз.
+   prefers-reduced-motion: pinned вимкнено — текст і стрічка по черзі в потоці, стрічка з нативним горизонтальним overflow. Усі розміри — токени (tokens.css, блок «секція 3, стрічка арок процесу»). */
+.about-track { display: flex; flex-direction: column; row-gap: var(--space-about-stack); }
+.about-process { min-width: 0; }
+.about-process__viewport { overflow: auto hidden; overscroll-behavior-x: contain; scrollbar-width: none; padding-inline: var(--grid-margin); }
 .about-process__viewport::-webkit-scrollbar { display: none; }
-.about-process__viewport.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
-.about-process__list { display: flex; width: max-content; margin: 0; padding: 0 var(--grid-margin) 0 0; list-style: none; }
-.about-process__item { flex: none; display: flex; scroll-snap-align: start; }
+.about-place-run { display: none; height: var(--size-about-process-run); } /* розпірка: хід вертикального скролу, поки секція закріплена */
+@media (prefers-reduced-motion: reduce) {
+  .about-place { position: relative; height: auto; padding-block: var(--space-about-sec-y); } /* без pinned: звичайна секція в потоці */
+}
+@media (prefers-reduced-motion: no-preference) {
+  .about-place { display: block; }
+  .about-track { position: absolute; inset: 0 auto 0 0; row-gap: 0; flex-direction: row; align-items: center; width: max-content; will-change: transform; }
+  .about-process { flex: none; margin-left: var(--space-about-track-gap); }
+  .about-process__viewport { overflow: visible; padding-inline: 0; }
+  .about-place-run { display: block; }
+}
+.about-process__list { display: flex; width: max-content; margin: 0; padding: 0; list-style: none; }
+.about-process__item { flex: none; display: flex; }
+.about-process__item:last-child .about-process__link { display: none; } /* лінія — лише МІЖ арками */
 .about-process__arch { --lp-rise: calc(var(--size-about-process-arch-w) * var(--ratio-lp-arch-rise)); flex: none; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-about-process-gap); width: var(--size-about-process-arch-w); height: var(--size-about-process-arch-h); padding: var(--space-about-process-pt) var(--space-about-process-inset) var(--space-about-process-inset); }
 .about-process__anim { flex: none; width: var(--size-about-process-icon); aspect-ratio: 1; }
 .about-process__anim svg { display: block; width: 100%; height: 100%; }

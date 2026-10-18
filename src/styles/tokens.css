@@ -1090,4 +1090,7 @@
   --space-about-process-pt: calc(80 * var(--u));            /* верх арки → блок вмісту (склепіння не заважає) */
   --space-about-process-gap: var(--space-10);               /* анімація → номер → назва */
   --space-about-process-inset: var(--space-20);             /* внутрішнє поле арки під назву */
+  --space-about-track-gap: var(--grid-step);                /* pinned-трек: зазор між блоком тексту (ширина в'юпорта) і першою аркою = 1 крок сітки (155u); стрічка йде повз текст, не поверх */
+  --size-about-process-list-w: calc(8 * var(--size-about-process-arch-w) + 7 * var(--size-about-process-link-w)); /* стрічка: 8 арок + 7 ліній між ними (кінцевої лінії нема) */
+  --size-about-process-run: calc(var(--vw, 100vw) / 2 + var(--space-about-track-gap) + var(--size-about-process-list-w) - var(--size-about-process-arch-w) / 2); /* хід треку = вертикальний хід розпірки .about-place-run: текст виїжджає (в'юпорт) і стрічка проходить увесь екран до кінцевого положення — остання арка по центру в'юпорта */
 }

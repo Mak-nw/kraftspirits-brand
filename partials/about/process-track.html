@@ -1,8 +1,8 @@
-<!-- Секція «Усе відбувається на одному майданчику» (about, макет p3 + доповнення 8): стрічка 8 арок-«дверей» етапів процесу, з'єднаних hairline-лінією, праворуч від заголовка.
-     Горизонтальна прокрутка: scroll-snap по аркі, перетягування мишею, клавіші ← → Home End (src/js/about-process.js). У кожній арці — зациклена векторна Lottie (public/assets/lottie/process-NN.json; генератор tools/lottie/gen-process.mjs).
-     Арка = наявний .lp-arch (hairline). Підключення: директивою include (about/process-track) у section#place після .about__grid. Стилі: src/styles/pages/about-process.css; опис — design-system.html#about-page. -->
+<!-- Секція «Усе відбувається на одному майданчику» (about, макет p3 + доповнення 8): стрічка 8 арок-«дверей» етапів процесу, з'єднаних hairline-лінією, після блоку заголовка в єдиному треку .about-track.
+     Pinned horizontal scroll: вертикальний скрол рухає весь трек (текст + стрічка) вліво на весь екран, поки секція закріплена (src/js/about-process.js; розпірка .about-place-run у about.html); reduced-motion — нативний overflow-x. У кожній арці — зациклена векторна Lottie (public/assets/lottie/process-NN.json; генератор tools/lottie/gen-process.mjs).
+     Арка = наявний .lp-arch (hairline). Підключення: директивою include (about/process-track) у section#place всередині .about-track після .about-place__text. Стилі: src/styles/pages/about-process.css; опис — design-system.html#about-page. -->
 <div class="about-process" data-process>
-  <div class="about-process__viewport" data-process-viewport role="region" aria-label="Етапи виробництва від осолодження до розливу" tabindex="0">
+  <div class="about-process__viewport" data-process-viewport role="region" aria-label="Етапи виробництва від осолодження до розливу">
     <ol class="about-process__list" role="list">
       <li class="about-process__item" aria-label="Етап 1: Осолодження й подрібнення">
         <div class="lp-arch about-process__arch">

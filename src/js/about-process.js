@@ -1,49 +1,50 @@
-// about, секція 3: стрічка арок процесу. (1) Lottie етапів — lottie-web light (svg), динамічний імпорт: вантажиться лише на about;
-// анімації ЗАЦИКЛЕНІ й працюють завжди (без прив'язки до появи у в'юпорті); пауза лише коли вкладка прихована; prefers-reduced-motion → статичний кадр (data-poster).
-// (2) Горизонтальна прокрутка: нативний overflow-x + scroll-snap по аркі; перетягування мишею, клавіші ← → Home End (в'юпорт tabindex=0, role=region).
+// about, секція 3: стрічка арок процесу. (1) Pinned horizontal scroll: секція `.about-place` sticky 100svh, за нею в потоці розпірка `.about-place-run`
+// (висота = хід треку, токен --size-about-process-run); вертикальний скрол обгортки `.about-stack` (0 → висота розпірки) = прогрес p 0→1,
+// єдиний трек `.about-track` (текст на ширину в'юпорта + стрічка арок) зсувається вліво translate3d на ВЕСЬ екран (p=0: текст по центру, арок не видно; p=1: остання арка по центру), далі сторінка гортається вниз («15 місяців» заїжджає поверх).
+// Плавність — lerp прогресу в rAF з тим самим токеном інерції, що в паралаксі (--parallax-lerp); без scroll-snap, без перехоплення колеса/клавіш.
+// prefers-reduced-motion: pinned вимкнено (CSS), стрічка — нативний горизонтальний overflow (в'юпорт стає фокусним, нативні стрілки).
+// (2) Lottie етапів — lottie-web light (svg), динамічний імпорт: вантажиться лише на about; анімації ЗАЦИКЛЕНІ й працюють завжди (без прив'язки до появи у в'юпорті);
+// пауза лише коли вкладка прихована; reduced-motion → статичний кадр (data-poster).
 const root = document.querySelector('[data-process]');
 const base = import.meta.env.BASE_URL;
 
 if (root) {
   const viewport = root.querySelector('[data-process-viewport]');
-  const items = [...root.querySelectorAll('.about-process__item')];
+  const list = document.querySelector('[data-process-track]');
+  const run = document.querySelector('[data-process-run]');
+  const stack = run?.parentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const step = () => (items[1] ? items[1].offsetLeft - items[0].offsetLeft : viewport.clientWidth);
-  const smooth = () => (reduce.matches ? 'auto' : 'smooth');
-  const goTo = (i) => viewport.scrollTo({ left: Math.max(0, Math.min(items.length - 1, i)) * step(), behavior: smooth() });
-  const current = () => Math.round(viewport.scrollLeft / step());
 
-  // клавіатура
-  viewport.addEventListener('keydown', (e) => {
-    const k = { ArrowRight: () => goTo(current() + 1), ArrowLeft: () => goTo(current() - 1), Home: () => goTo(0), End: () => goTo(items.length - 1) }[e.key];
-    if (!k) return;
-    e.preventDefault();
-    k();
-  });
-
-  // перетягування мишею (на дотик працює нативний свайп)
-  let drag = null;
-  viewport.addEventListener('pointerdown', (e) => {
-    if (e.pointerType !== 'mouse' || e.button !== 0) return;
-    drag = { x: e.clientX, left: viewport.scrollLeft, moved: false, id: e.pointerId };
-  });
-  viewport.addEventListener('pointermove', (e) => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const dx = e.clientX - drag.x;
-    if (!drag.moved && Math.abs(dx) < 4) return;
-    if (!drag.moved) { drag.moved = true; viewport.classList.add('is-dragging'); viewport.setPointerCapture(e.pointerId); }
-    viewport.scrollLeft = drag.left - dx;
-  });
-  const endDrag = (e) => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const moved = drag.moved;
-    drag = null;
-    if (!moved) return;
-    viewport.classList.remove('is-dragging');
-    goTo(current()); // дотягнути до найближчої арки
-  };
-  viewport.addEventListener('pointerup', endDrag);
-  viewport.addEventListener('pointercancel', endDrag);
+  if (reduce.matches) viewport.setAttribute('tabindex', '0'); // нативно прокручувана область має бути фокусною
+  else if (run && stack && list) {
+    const tokens = getComputedStyle(document.documentElement);
+    const LERP = Math.min(Math.max(parseFloat(tokens.getPropertyValue('--parallax-lerp')) || 0.08, 0.01), 1);
+    let travel = 0, cur = 0, target = 0, raf = 0, last = 0, set = NaN;
+    const measure = () => { travel = run.offsetHeight; };
+    const aim = () => (travel > 0 ? Math.min(Math.max(-stack.getBoundingClientRect().top / travel, 0), 1) : 0);
+    const write = () => {
+      const v = Math.round(-cur * travel * 10) / 10 + 0; // ±0 → 0
+      if (v !== set) { set = v; list.style.transform = `translate3d(${v}px,0,0)`; }
+    };
+    const frame = (now) => {
+      raf = 0;
+      const k = 1 - Math.pow(1 - LERP, Math.min(now - (last || now - 16.7), 64) / 16.7);
+      last = now;
+      cur += (target - cur) * k;
+      if (Math.abs(target - cur) < 0.0002) cur = target;
+      write();
+      if (cur !== target) raf = requestAnimationFrame(frame); else last = 0;
+    };
+    const onScroll = () => { target = aim(); if (!raf) raf = requestAnimationFrame(frame); };
+    const onResize = () => { measure(); target = aim(); cur = target; write(); };
+    measure();
+    target = cur = aim();
+    write();
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onResize);
+    new ResizeObserver(onResize).observe(run);
+    addEventListener('load', onResize);
+  }
 
   // Lottie
   const slots = [...root.querySelectorAll('[data-lottie]')];
