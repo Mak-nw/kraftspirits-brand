@@ -145,11 +145,15 @@
 .lp-steps__card-tags { display: flex; flex-wrap: wrap; gap: var(--space-10) var(--space-30); margin: auto 0 0; padding: 0; list-style: none; }
 .lp-steps__card-text { margin-top: auto; text-wrap: pretty; }
 .lp-steps__card-tags + .lp-steps__card-text { margin-top: var(--space-lp-deck-text); }
-/* steps deck split (`split: true`; рішення замовника: «у дівах карточок зліва текст, справа медіа»): та сама стікі-колода, але картка = дві половини — ліворуч ТІЛЬКИ текст (номер, назва, теги, пояснення — ті самі ролі) на тоновому фоні
-   теми (--lp-split-bg: excursions — світліший зелений, barrels — світліший синій; наявні токени format-fill), праворуч медіа: фото (img, кадр imgPos / zoom) або векторна Lottie-анімація (lottie, дві золоті лінії + півтіні, зациклена; src/js/lp.js).
-   Половини рівні (1fr 1fr); фото — cover без оверлея, кадр за замовчуванням зсунуто праворуч (80%: у кадрах колоди тема справа, темна зона зліва); анімація — по центру з полями картки на тлі «warm» кімнати. */
-.lp-steps__card--split { --lp-deck-pos: 80% 50%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: var(--lp-split-bg, var(--lp-amber)); }
+/* steps deck split (`split: true`; рішення замовника: «у дівах карточок зліва текст, справа медіа»; правки 19.10: відтінок ТЕМНІШИЙ за кімнату, опис під заголовком, світла обводка всередині + прямі краї зовні):
+   картка = схема .brand-panel: зовнішній прямокутник БЕЗ закруглень (--radius-none, поле --border-frame кольору картки) + внутрішній бокс .brand-panel__box з hairline світлою лінією (--color-lp-format-line-strong) і закругленням --radius-panel.
+   Тон картки — кімната (--lp-deep) трохи темніша: color-mix з чорним (частка --share-lp-split-shade, tokens.css) — без нового кольору палітри. Всередині дві рівні половини: ліворуч ТІЛЬКИ текст
+   (номер у «таблетці», група «назва + опис», теги; ті самі ролі), праворуч медіа: фото (img, кадр imgPos / zoom; за замовчуванням зсунуто праворуч 80%) або векторна Lottie (lottie; src/js/lp.js) на тлі «warm». */
+.lp-steps__card--split { --lp-deck-pos: 80% 50%; --lp-split-tone: color-mix(in srgb, var(--lp-deep) calc(100% - var(--share-lp-split-shade)), var(--color-black)); box-sizing: border-box; padding: var(--border-frame); border-radius: var(--radius-none); background: var(--lp-split-tone); }
+.lp-steps__split-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; padding-top: 0; border-color: var(--color-lp-format-line-strong); background: var(--lp-split-pattern, none) 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--lp-split-tone); text-align: start; } /* візерунок ромбів DS у тон картки (роль теми --lp-split-pattern; плитка --size-pattern-catalog-tile як на formats); свій колір на кожен колір картки */
 .lp-steps__split-text { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; height: 100%; padding: var(--space-lp-deck-pad); color: var(--lp-on-dark); }
+.lp-steps__split-group { display: flex; flex-direction: column; }
+.lp-steps__split-group .lp-steps__card-text { margin-top: 0; }
 .lp-steps__card--split .lp-steps__card-num { width: auto; min-width: var(--size-lp-deck-num); padding-inline: var(--space-20); white-space: nowrap; } /* номер/значення («≈15%») — у «таблетці»: коло лишається колом для цифри, довше значення розширює її */
 .lp-steps__split-media { position: relative; min-width: 0; overflow: hidden; background: var(--lp-warm); }
 .lp-steps__split-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--lp-deck-pos); transform: scale(var(--lp-deck-zoom)); transform-origin: var(--lp-deck-pos); }
@@ -164,6 +168,7 @@
    (ярлик, число, одиниця, медіа АБО список, факти), тож однотипні рядки всіх груп на одних базових лініях (рев'ю b9892b9b). Вирівнювання групи —
    start (по лівому краю) або center (рев'ю a58b6a28). «≈» перед числом — approx: true. Лічильник 0 → значення (lp.js). */
 .lp-compare__grid { display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
+.lp-room--warm .lp-compare__grid, .lp-room--deep .lp-compare__grid { --lp-on-paper: var(--lp-on-dark); --lp-on-paper-muted: var(--lp-on-dark-muted); } /* compare на темній кімнаті (barrels, рішення замовника 19.10: коричневий фон): текст і графіка стін — світлі ролі кімнати */
 .lp-compare__head { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-lp-profit-head); }
 .lp-compare__head .t-h2 { margin-top: var(--shift-lp-cap-top); }
 .lp-compare__note { grid-column: 1 / -1; grid-row: 7; margin-top: var(--space-lp-head); text-align: center; color: var(--lp-on-paper-muted); }

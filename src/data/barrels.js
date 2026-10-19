@@ -27,6 +27,7 @@ export const barrels = {
       lead: 'Екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу',
       img: '/assets/img/barrels-hero.webp', alt: '',
       slot: 'Фото hero: наявний AI-кадр barrels-hero.webp; за ТЗ IMG-1 — асиметричний кадр (бочки праворуч) або нова зйомка',
+      fade: 'brown',   // градієнт знизу вгору від коричневого --color-brown (рішення замовника 19.10: «градієнт на першому коричневого кольору»; наступна кімната — warm = той самий коричневий, шва нема); текст hero — світлий
       cta: { text: 'Переглянути ціни', href: '#price', variant: 'light' },   // світла кнопка: темна (тон сторінки, teal) на фото без градієнта давала нетекстовий контраст медіана 3.3:1 / p10 2.1:1 (verify-E3-B, дефект 3)
     },
     {
@@ -51,7 +52,7 @@ export const barrels = {
       ],
     },
     {
-      type: 'compare', id: 'profit', room: 'paper',
+      type: 'compare', id: 'profit', room: 'warm',
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
         { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-one',
@@ -61,7 +62,7 @@ export const barrels = {
       ],
     },
     {
-      type: 'tiles', id: 'next', room: 'paper', join: true,
+      type: 'tiles', id: 'next', room: 'warm', join: true,
       title: 'Подальша витримка',
       lead: `Бочки з-під марсали, мадери, портвейну, хересу${NB}— кожна додає свій унікальний відтінок смаку`,
       items: [
