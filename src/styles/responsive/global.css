@@ -4,3 +4,25 @@
   .btn { max-width: 100%; }
   .btn__inner { height: auto; min-height: var(--size-btn-h); white-space: normal; text-align: center; padding-block: var(--space-10); }
 }
+
+/* touch-цілі ≥ 44 px (≤ 1199: планшети, телефони, iPad у ландшафті); hover-стани мають touch-еквівалент: :focus-visible і :active (стани кнопок вже задають спільні правила), :hover там обгорнуто в (hover: hover) */
+@media (max-width: 1199.98px) {
+  .catalog-nav__item, .product-crumbs a, .acc > summary { display: flex; align-items: center; min-height: var(--size-touch-target); }
+  .catalog-nav__item { display: inline-flex; }
+  .product-crumbs a { justify-content: center; min-width: var(--size-touch-target); }
+  .product-volume, .tabs__tab { min-height: var(--size-touch-target); }
+  .chip { min-height: var(--size-touch-target); }
+  .check { min-height: var(--size-touch-target); }
+  .woocommerce td.product-name a, .woocommerce .product-name a.t-product-name { display: inline-flex; align-items: center; min-height: var(--size-touch-target); }
+  .select__label { white-space: normal; }
+  .select { min-height: var(--size-touch-target); }
+  .select__option { min-height: var(--size-touch-target); display: flex; align-items: center; }
+  .site-header__logo { height: var(--size-touch-target); }
+  .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
+  .site-footer__list { gap: 0; }
+  .site-footer__list a, .site-footer__list li.nav-link, .site-footer__offer a { display: flex; align-items: center; min-height: var(--size-touch-target); }
+  .site-footer__list a { width: 100%; }
+  .site-footer__offer { row-gap: 0; }
+  .woocommerce .quantity .arrow-btn { flex: none; }
+  .contacts-item__value { min-height: var(--size-touch-target); display: flex; align-items: center; }
+}

@@ -1,0 +1,66 @@
+/* АДАПТИВ: шаблон посадкової сторінки (lp: barrels, excursions; файли lp.css, lp-media.css, themes/*, pages/barrels.css, pages/excursions.css — для злиття з правкою екскурсій див. docs/responsive.md).
+   Лише поза діапазоном 1200–1920. Планшет: сітка 8 колонок; телефон: 4 колонки, плитки/панелі — стовпцем. */
+@media (max-width: 1023.98px) {
+  /* span колонок за даними: 10 → 8 колонок (планшет), нижче окремо (телефон: 4) */
+  .lp-span--1 { grid-column: span 1; } .lp-span--2, .lp-span--3 { grid-column: span 2; } .lp-span--4 { grid-column: span 3; }
+  .lp-span--5 { grid-column: span 4; } .lp-span--6 { grid-column: span 5; } .lp-span--7, .lp-span--8 { grid-column: span 6; }
+  .lp-span--9 { grid-column: span 7; } .lp-span--10 { grid-column: span 8; }
+  .hero--lp .hero__content { top: auto; bottom: var(--offset-lp-hero-bottom); }
+  .hero--lp:not(.hero--fade) .hero__content { top: var(--offset-lp-hero-top); bottom: auto; }
+  .lp-head__lead, .lp-offers__note, .lp-offers__fine { width: var(--size-lp-text-w); }
+  /* layers: смуги фото — одним рядом, підписи — сіткою 2 колонки (планшет — до 4) */
+  .lp-layers { grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-30); }
+  .lp-layers__cut { grid-column: 1 / -1; grid-row: auto; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); height: var(--size-lp-layer-band-h); }
+  .lp-layers__band, .lp-layers__band:last-child { margin-right: 0; }
+  .lp-layer, .lp-layers--text .lp-layer { grid-row: auto; }
+  /* steps: кроки на планшеті — поруч з аркою (3 + 5 колонок), на телефоні нижче */
+  .lp-steps__chapters { grid-row: 2; }
+  /* compare / tiles / offers / formats */
+  .lp-compare__grid, .lp-formats__grid, .lp-tiles__grid, .lp-offers__grid, .lp-layers { width: var(--lp-w); }
+  .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
+  .lp-format__drinks--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-30); }
+  .lp-place__grid { row-gap: var(--grid-gap-panels); }
+  .lp-place__panel { min-height: 0; }
+  .lp-route { width: var(--grid-w); }
+  .lp-steps__card { height: auto; min-height: var(--size-lp-deck-min-h); }
+  .lp-slots { display: none; }
+}
+@media (max-width: 767.98px) {
+  .lp-cols--6, .lp-cols--8 { --lp-cols: 4; --lp-w: var(--grid-w); }
+  .lp-span--1, .lp-span--2, .lp-span--3 { grid-column: span 1; } .lp-span--4, .lp-span--5, .lp-span--6 { grid-column: span 2; }
+  .lp-span--7, .lp-span--8 { grid-column: span 3; } .lp-span--9, .lp-span--10 { grid-column: span 4; }
+  /* layers: 2 колонки підписів */
+  .lp-layers--n3, .lp-layers--n4, .lp-layers--n5, .lp-layers--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-layers { column-gap: var(--grid-gap); }
+  /* steps: арка зверху (не sticky), кроки під нею */
+  .lp-steps__grid { grid-template-rows: auto auto auto; }
+  .lp-steps__stage { grid-column: 1 / -1; grid-row: 2; position: relative; top: auto; justify-self: center; width: 70%; height: calc(var(--grid-w) * 0.7 * 1.1); margin-bottom: var(--space-lp-head); }
+  .lp-steps__chapters { grid-column: 1 / -1; grid-row: 3; }
+  .lp-step { padding-top: var(--space-lp-chapter-rule); }
+  .lp-step__text { max-width: none; }
+  /* compare: групи за span (2 + 2) лишаються поруч */
+  /* tiles: 2 колонки без спільних рядків */
+  .lp-tiles__grid, .lp-tiles__grid--n3, .lp-tiles__grid--n4, .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-50); }
+  .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-tiles__head { grid-column: 1 / -1; grid-row: auto; }
+  .lp-tile { grid-row: auto; grid-template-rows: auto auto; }
+  .lp-tile__caption { grid-row: auto; grid-template-rows: none; display: block; }
+  .lp-tiles--over .lp-tile__media, .lp-tiles--over .lp-tile__caption { grid-row: 1; }
+  .lp-tiles--over .lp-tile { grid-template-rows: auto; }
+  .lp-tiles--lead-2 .lp-head__lead, .lp-tiles--lead-3 .lp-head__lead, .lp-tiles--lead-4 .lp-head__lead, .lp-tiles--lead-5 .lp-head__lead, .lp-tiles--lead-6 .lp-head__lead { width: 100%; }
+  /* offers / formats: панелі стовпцем */
+  .lp-offers__grid--n2, .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
+  .lp-formats__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .lp-format { grid-row: auto; grid-template-rows: none; display: flex; flex-direction: column; align-items: center; padding: var(--space-lp-format-pad); }
+  .lp-format__drinks, .lp-format__facts { width: 100%; }
+  .lp-offers__actions { flex-wrap: wrap; }
+  .lp-route { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lp-route__side--from { grid-column: 1 / span 2; } .lp-route__side--to { grid-column: 3 / span 2; }
+  .lp-layer__icon { --icon-size: calc(36 * var(--u)); }
+  .lp-format__facts { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
+  /* колода кроків: фото зверху, текст під ним (текст не лежить на фото) */
+  .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
+  .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * 0.55); }
+  .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }
+}

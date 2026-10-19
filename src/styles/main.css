@@ -42,3 +42,6 @@
 @import './responsive/header.css';
 @import './responsive/home.css';
 @import './responsive/catalog.css';
+@import './responsive/pages.css';
+@import './responsive/about.css';
+@import './responsive/lp.css';

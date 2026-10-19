@@ -1134,6 +1134,8 @@
     --header2-btn-ghost-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header2-btn-fill-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header3-menu-w: max(calc(310 * var(--u)), 260px);
+    --size-arrow-btn-w: max(calc(64 * var(--u)), var(--size-touch-target));
+    --size-arrow-btn-h: max(calc(66 * var(--u)), var(--size-touch-target));
   }
 }
 
@@ -1166,12 +1168,17 @@
     --offset-hero-logos-top: calc(var(--size-header-h) + var(--space-70));
     --size-sec-hero: max(calc(1086 * var(--u)), 480px);
     --size-picker-head-h: calc(300 * var(--u));
+    --scale-cocktail-thumb: 1;                                 /* мініатюри коктейлів: на дотик без зменшення (≥ 44 px) */
     --size-product-stage-w: var(--grid-w);                     /* товар: фото й панель — одна під одною на всю ширину вмісту */
     --size-product-panel-w: var(--grid-w);
     --size-product-frame-h: min(calc(var(--grid-w) * 1.1), 100svh);
     --size-contacts-panel-min-h: 0px;
     --size-contacts-map-min-h: max(calc(360 * var(--u)), 280px);
     --size-select-w: max(calc(200 * var(--u)), 120px);
+    --col-faq-cards: 1 / -1;                                   /* FAQ: картки на всю ширину вмісту */
+    --grid-cols-7-3: minmax(0, 1fr);                           /* пари великих блоків (кошик, оформлення, контакти, «місце» lp) стають одним стовпцем */
+    --grid-cols-6-4: minmax(0, 1fr);
+    --grid-cols-4-6: minmax(0, 1fr);
     --size-sec-intro: auto;
     --size-sec-tours: auto;
     --size-sec-picker: auto;
@@ -1218,9 +1225,16 @@
     --grid-margin: calc(54 * var(--u));
     --grid-gap: calc(30 * var(--u));
     --size-card-cat2-w: calc((var(--grid-w) - 2 * var(--grid-gap)) / 3);   /* картка каталогу: 3 рівні блоки в ряд */
+    --container-lp-hero-sub: var(--grid-span-6);
+    --span-lp-stage: 3;                                         /* lp steps: арка — колонки 1–3, кроки — 4–8 */
+    --col-lp-chapters: 4;
+    --span-lp-chapter-text: 4;
+    --span-feedback-aside: 4;
+    --span-feedback-main: 4;
+    --span-wc-account-nav: 3;
+    --span-wc-account-main: 5;
     --catalog-grid-reserve-rows: 5;
     --col-faq-intro: 2 / span 6;
-    --col-faq-cards: 1 / -1;
     --col-cocktails-intro: 2 / span 6;
     --size-heading-w: var(--grid-span-6);        /* заголовок: 6 з 8 колонок по центру */
     --size-heading-w-wide: var(--grid-w);
@@ -1234,10 +1248,10 @@
     --font-size-wordmark: calc(var(--vw, 100vw) * 0.118);
     --font-size-stat: calc(var(--vw, 100vw) * 0.115);
     --font-size-h2: clamp(26px, calc(var(--vw, 100vw) * 0.072), 40px);
-    --font-size-hero: clamp(28px, calc(var(--vw, 100vw) * 0.078), 44px);
-    --font-size-lead: clamp(20px, calc(var(--vw, 100vw) * 0.054), 30px);
+    --font-size-hero: clamp(24px, calc(var(--vw, 100vw) * 0.078), 44px);
+    --font-size-lead: clamp(18px, calc(var(--vw, 100vw) * 0.048), 30px);
     --font-size-chip: clamp(15px, calc(var(--vw, 100vw) * 0.04), 20px);
-    --font-size-title: clamp(15px, calc(var(--vw, 100vw) * 0.041), 18px);
+    --font-size-title: clamp(13px, calc(var(--vw, 100vw) * 0.041), 18px);
     --font-size-text: clamp(14px, calc(var(--vw, 100vw) * 0.037), 16px);
     --font-size-small: 12px;
     --font-size-nav: 13px;
@@ -1263,6 +1277,22 @@
     --grid-margin: calc(44 * var(--u));
     --grid-gap: calc(30 * var(--u));
     --size-card-cat2-w: calc((var(--grid-w) - var(--grid-gap)) / 2);        /* картка каталогу: 2 рівні блоки в ряд */
+    --grid-span-5: var(--grid-w);                               /* 4 колонки: блоки ширші за 4 колонки = на всю ширину вмісту */
+    --grid-span-6: var(--grid-w);
+    --grid-span-7: var(--grid-w);
+    --grid-span-8: var(--grid-w);
+    --container-lp-hero-sub: var(--grid-w);
+    --span-lp-stage: 4;
+    --col-lp-chapters: 1;
+    --span-lp-chapter-text: 4;
+    --size-lp-stage-max: 100%;
+    --span-feedback-aside: 4;
+    --span-feedback-main: 4;
+    --span-wc-account-nav: 4;
+    --span-wc-account-main: 4;
+    --size-lp-deck-min-h: calc(520 * var(--u));
+    --space-lp-deck-peek: var(--space-50);
+    --space-lp-deck-pad: var(--space-50);
     --col-faq-intro: 1 / -1;
     --col-cocktails-intro: 1 / -1;
     --size-heading-w: var(--grid-w);             /* заголовок: на всю ширину вмісту (4 колонки) */

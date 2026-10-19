@@ -26,7 +26,7 @@
   .picker__text { width: 100%; padding-inline: 0; }
   .picker .slider { width: 100%; }
   .chip-row { width: var(--grid-w); flex-wrap: wrap; justify-content: center; row-gap: var(--space-20); }
-  .chip-row .chip { flex: 1 1 auto; }
+  .chip-row .chip { flex: 1 1 auto; min-height: var(--size-touch-target); }
 }
 @media (max-width: 767.98px) {
   .brand-choice__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-70); }

@@ -11,6 +11,8 @@
   .site-header__side--end { padding-right: var(--space-5); gap: var(--space-5); }
   .site-header__menu-btn { padding-inline: var(--space-15); }
   .site-header__logos { justify-self: center; }
+  .site-header__logo { height: var(--size-touch-target); }                      /* область дотику логотипа ≥ 44 px: зображення центруються у вищій комірці */
+  .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
   /* меню — на всю ширину пілюлі, з прокруткою, якщо не вміщується у вікно */
   .site-header__menu { width: 100%; max-height: calc(100svh - var(--header3-top) - var(--header3-h) - var(--header3-menu-gap) - var(--space-10)); overflow-y: auto; overscroll-behavior: contain; }
   .nav-cell--menu { width: 100%; }
@@ -29,12 +31,13 @@
   .site-footer__col--menu, .site-footer__col--catalog, .site-footer__col--contacts { grid-column: auto; }
   .site-footer__col { gap: var(--space-20); }
   .site-footer__list { gap: 0; }
-  .site-footer__list a { display: flex; align-items: center; min-height: var(--size-touch-target); white-space: normal; }
+  .site-footer__list a { display: flex; align-items: center; width: 100%; min-height: var(--size-touch-target); white-space: normal; }
   .site-footer__list li.nav-link { display: flex; align-items: center; min-height: var(--size-touch-target); white-space: normal; }
   .site-footer__legal { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); padding-bottom: var(--space-30); }
   .site-footer__legal .site-footer__wordmark { position: static; width: 100%; margin-top: var(--space-30); }
   .site-footer__copy { order: 2; }
   .site-footer__offer { order: 1; grid-template-columns: repeat(2, auto); justify-content: start; justify-items: start; column-gap: var(--space-50); row-gap: 0; }
+  .site-footer__offer { justify-items: stretch; }
   .site-footer__offer a { display: flex; align-items: center; min-height: var(--size-touch-target); }
   .site-footer__legal .site-footer__wordmark { order: 3; }
   .site-footer__bottom { height: auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding: var(--space-50) var(--grid-margin) var(--space-50); }
@@ -44,4 +47,10 @@
 @media (max-width: 767.98px) {
   .site-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-footer__col--contacts { grid-column: 1 / -1; }
+}
+
+/* малі ноути 1024–1199: висота верху футера — мінімум (малий текст із підлогами px не вміщується у 659u) */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .site-footer__top { height: auto; min-height: var(--footer-h-top); gap: var(--space-50); }
+  .site-footer__legal { padding-bottom: var(--space-20); }
 }

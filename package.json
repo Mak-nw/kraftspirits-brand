@@ -16,6 +16,8 @@
     "qa:arch:cocktails": "node tools/qa/arch.mjs --page cocktails",
     "qa:cls": "node tools/qa/cls.mjs",
     "qa:hscroll": "node tools/qa/hscroll.mjs",
+    "qa:resp": "node tools/qa/responsive.mjs",
+    "qa:resp-ds": "node tools/qa/check-ds.mjs --rules D3,D4,D13,D17 --widths 390,768,1024,2560 --scrollbar none",
     "qa:about-geom": "node tools/qa/about-geom.mjs",
     "qa:ink": "node tools/qa/ink-align.mjs",
     "qa:grid": "node tools/qa/check-ds.mjs --rules D12 --widths 1200,1440,1728,1920 --scrollbar none",

@@ -28,8 +28,8 @@ npm run preview  # http://localhost:5200
 - `src/styles/fonts.css` — локальні @font-face (EB Garamond, Manrope, Cormorant; кирилиця є).
 - `src/js/` — скрипти сторінок. `public/assets/{img,fonts,icons}` — ассети з Figma.
 
-## Масштаб 1200–1920
-`--u` = 1 px макета (1 на 1920+, 0.625 на 1200). Усі розміри — `calc(N * var(--u))`, де N — значення у Figma. Брейкпоінтів немає.
+## Масштаб і адаптив
+`--u` = 1 px макета. Основний діапазон **1200–1920 — піксель у піксель** (`--u` = 1 на 1920, 0.625 на 1200; усі розміри `calc(N * var(--u))`). Адаптив (рішення замовника 2026-10-19; гілка `responsive`) додано ЛИШЕ в медіа-запитах поза цим діапазоном: **> 1920** (u росте до 2560, далі сцена 1920u по центру, фони full-bleed), **1024–1199** (u = vw/1920, підлоги px для малого тексту), **768–1023** (сітка 8 колонок, u = vw/1100), **< 768** (сітка 4 колонки, u = clamp(0.5, vw/640, 0.9)). Breakpoint-токени — в кінці `src/styles/tokens.css` (блок «АДАПТИВ»), розкладки — `src/styles/responsive/*.css` (імпорт у кінці `main.css`). Рішення, таблиці, файли, що потребує погодження — `docs/responsive.md`.
 
 ## Токени (скорочено)
 Кольори: `--color-green #223520`, `--color-teal #041e27`, `--color-gold #cbaf86`, `--color-light #eae9e8`, `--color-beige #dcdbcf`, `--color-brown #171009`, `--color-nav-text #ceccc5`, `--color-green-alt #223521`, `--color-black`, `--color-line`, `--color-line-strong`.
@@ -378,6 +378,7 @@ npm run qa                       # smoke на 1920: check-ds (static) + links + 
 npm run qa:full                  # 1200/1440/1920 × dpr 1,2 × classic+none: + check-ds dynamic, arch, cls
 npm run qa:check-ds              # S1–S11 статичні + D1–D19 у браузері (-- --static-only | --dynamic-only | --rules S4,D5)
 npm run qa:links | qa:states | qa:arch | qa:cls | qa:hscroll
+npm run qa:resp                  # адаптив: R1 hscroll, R2 touch ≥44, R3 текст у межах, R4 шрифт ≥11, R5 перетин тексту, R6 ключові елементи/картинки (320…3440; docs/responsive.md)
 npm run qa:grid                  # D12: блоки на межах 10 колонок (1200/1440/1728/1920)
 npm run qa:d18                   # D18: горизонтальний зазор великих блоків: product і cocktails 5u (gap5-pages), решта 40u
 npm run qa:d19                   # D19: hero без оверлея (єдиний виняток — hero.fade)

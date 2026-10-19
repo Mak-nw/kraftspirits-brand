@@ -1,0 +1,51 @@
+/* АДАПТИВ: сторінка «Про дім» (about.html). Лише поза діапазоном 1200–1920 (замовник: «в сторінку про нас нічого не змінювати» — для десктопу). */
+@media (max-width: 1023.98px) {
+  .about__grid { width: var(--grid-w); }
+  .about-hero { height: var(--size-sec-hero); }
+  /* секція 3: БЕЗ pinned-скролу (дотик): секція в потоці, стрічка арок — нативна горизонтальна прокрутка */
+  .about-place { position: relative; display: block; height: auto; padding-block: var(--space-about-sec-y); scroll-margin-top: 0; overflow: clip; }
+  .about-track { position: static; inset: auto; display: flex; flex-direction: column; align-items: stretch; row-gap: var(--space-about-stack); width: auto; will-change: auto; transform: none !important; }
+  .about-place__text { width: auto; padding-inline: var(--grid-margin); }
+  .about-process { margin-left: 0; }
+  .about-process__viewport { overflow: auto hidden; padding-inline: var(--grid-margin); -webkit-overflow-scrolling: touch; }
+  .about-place-run { display: none; }
+  /* «15 місяців»: усе одним стовпцем */
+  .about-story { padding-top: var(--space-about-sec-y); padding-bottom: var(--space-about-sec-y); }
+  .about-story__grid > * { grid-column: 1 / -1; grid-row: auto; }
+  .about-story__head { gap: var(--space-about-stack); }
+  .about-story__lead { max-width: none; }
+  .about-story__rings { grid-template-columns: repeat(2, minmax(0, var(--size-about-ring))); justify-content: space-between; margin-top: var(--space-about-head); }
+  .about-story__milestone, .about-story__milestone--start { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); margin-top: var(--space-about-head); }
+  .about-story__milestone--finish .about-story__text, .about-story__milestone--finish .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--start .about-story__text { grid-column: auto; grid-row: auto; margin-left: 0; }
+  .about-story__date { order: 1; }
+  .about-story__photo { order: 2; width: min(var(--size-about-milestone-w1), 100%); height: auto; aspect-ratio: 288 / 332; }
+  .about-story__milestone--finish .about-story__photo { width: min(var(--size-about-milestone-w2), 100%); aspect-ratio: 304 / 332; margin-left: 0; }
+  .about-story__text { order: 3; width: 100%; }
+  /* цитата і люди: стовпець; портрет і пагорби — внизу секції */
+  .about-people { min-height: 0; padding-bottom: 0; }
+  .about-people__grid { display: flex; flex-direction: column; gap: var(--space-about-head); padding-bottom: var(--space-about-head); }
+  .about-people__quote { order: 1; }
+  .about-people__bq br { display: none; }
+  .about-people__german { order: 2; align-items: flex-start; text-align: left; }
+  .about-people__german figcaption { align-items: flex-start; }
+  .about-people__ava { width: min(var(--size-about-avatar), 30%); min-width: calc(80 * var(--u)); }
+  .about-people__intro { order: 3; }
+  .about-people__note { order: 4; margin-top: 0; text-align: left; }
+  .about-people__name { order: 5; }
+  .about-people__viktor { position: relative; z-index: 1; left: auto; display: block; width: min(var(--grid-span-5), 100%); margin: 0 auto; }
+  .about-people__hills { width: 100%; }
+  /* три установки */
+  .about-stills__head > * { grid-column: 1 / -1; }
+  .about-stills__lead { grid-column: 1 / -1; max-width: none; }
+  /* принципи */
+  .about-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--grid-gap); }
+  .about-principle { --lp-rise: calc((var(--grid-w) - var(--grid-gap)) / 4); padding: var(--space-50) var(--space-30) var(--space-30); }
+  .about-faq .faq-page__list--span8 { width: 100%; }
+}
+@media (max-width: 767.98px) {
+  .about-stills__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-50); justify-items: center; }
+  .about-still { width: 82%; }
+  .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * 0.82 * var(--ratio-lp-arch-rise)); }
+  .about-principles__list { grid-template-columns: minmax(0, 1fr); }
+  .about-principle { --lp-rise: calc(var(--grid-w) / 2); width: 86%; margin-inline: auto; }
+}
