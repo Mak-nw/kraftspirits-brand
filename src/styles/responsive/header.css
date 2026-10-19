@@ -9,7 +9,9 @@
   .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; width: auto; left: var(--grid-margin); right: var(--grid-margin); margin-inline: 0; }
   .site-header__side { padding-left: var(--space-5); }
   .site-header__side--end { padding-right: var(--space-5); gap: var(--space-5); }
-  .site-header__menu-btn { padding-inline: var(--space-15); }
+  /* кабінет — окрема кругла кнопка в пілюлі зліва від кошика: дубль у меню не потрібен */
+  .site-header__menu-extra[href="account.html"] { display: none; }
+  .site-header__side--end > .nav-cell--round { order: -1; min-width: var(--size-touch-target); }
   .site-header__logos { justify-self: center; }
   .site-header__logo { height: var(--size-touch-target); }                      /* область дотику логотипа ≥ 44 px: зображення центруються у вищій комірці */
   .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
@@ -17,9 +19,16 @@
   .site-header__menu { width: 100%; max-height: calc(100svh - var(--header3-top) - var(--header3-h) - var(--header3-menu-gap) - var(--space-10)); overflow-y: auto; overscroll-behavior: contain; }
   .nav-cell--menu { width: 100%; }
 }
-/* телефон: кошик — лише іконка (підпис лишається для читачів екрана), кабінет — у меню */
+/* «меню» — лише іконка і на малих ноутах 1024–1199 (підпис лишається для читачів екрана; aria-label на кнопці) */
+@media (max-width: 1199.98px) {
+  .site-header__menu-btn { width: var(--size-touch-target); padding-inline: 0; justify-content: center; }
+  .site-header__menu-btn > span { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+/* вузький телефон: пара логотипів менша, щоб не налізала на кабінет і кошик */
+@media (max-width: 440px) { :root { --header-logo-k: 0.6; } }
+@media (max-width: 360px) { :root { --header-logo-k: 0.5; } }
+/* телефон: кошик — лише іконка (підпис лишається для читачів екрана) */
 @media (max-width: 767.98px) {
-  .site-header__side--end > .nav-cell--round { display: none; }
   .site-header__side--end > .nav-cell--ghost .nav-cell__label { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .site-header__side--end > .nav-cell--ghost { width: var(--size-touch-target); padding-inline: 0; }
 }
