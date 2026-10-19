@@ -37,7 +37,7 @@ export function COLLECT_D15() {
     barTop: r ? r.top : null, barLeft: r?.left ?? null, barRight: r?.right ?? null, barPos: bar ? getComputedStyle(bar).position : null,
     tokenRaw: getComputedStyle(document.documentElement).getPropertyValue('--header3-top').trim(), tokenPx: px('var(--header3-top)'),
     scrollY: window.scrollY, vw: Math.min(clientW, vwVar), u: Math.min(Math.max(vwVar, 1185), 1920) / 1920,
-    menu: items('.site-header__menu a.nav-cell--menu'), footer: items('.site-footer__col--menu a'),
+    menu: items('.site-header__menu:not(.site-header__menu--lang) a.nav-cell--menu'), lang: (() => { const b = document.querySelector('.site-header__lang-btn'), c = document.querySelector('.site-header__side--end a[href$="cart.html"]'), lg = [...document.querySelectorAll('.site-header__menu--lang a[data-lang]')].map((x) => x.dataset.lang); const rb = b?.getBoundingClientRect(), rc = c?.getBoundingClientRect(); return { has: !!b, right: rb?.right ?? null, cartLeft: rc?.left ?? null, langs: lg, haspopup: b?.getAttribute('aria-haspopup'), expanded: b?.getAttribute('aria-expanded') }; })(), footer: items('.site-footer__col--menu a'),
   };
 }
 
@@ -69,6 +69,13 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
       out.push({ page: c.label, selector: kind === 'menu' ? '.site-header__menu' : '.site-footer__col--menu', value: `${missing.length ? `немає: ${missing.join(', ')}; ` : ''}${extra.length ? `зайві: ${extra.join(', ')}; ` : ''}${order ? 'інший порядок; ' : ''}є: ${fmtList(got)}`, msg: kind === 'menu' ? 'меню шапки ≠ еталонному списку пунктів (склад/порядок)' : 'меню футера ≠ еталонному списку пунктів (склад/порядок)' });
     };
     cmp('menu', d.menu);
+    // перемикач мови (docs/i18n.md): кнопка зліва від «Кошика», aria-haspopup/aria-expanded, у списку uk і en
+    const L = d.lang;
+    if (!L?.has) out.push({ page: c.label, selector: '.site-header__lang-btn', value: 'немає', msg: 'у шапці немає перемикача мови' });
+    else {
+      if (!(L.right <= L.cartLeft + tol)) out.push({ page: c.label, selector: '.site-header__lang-btn', value: `правий край ${L.right?.toFixed(1)} > лівий край «Кошика» ${L.cartLeft?.toFixed(1)}`, msg: 'перемикач мови має стояти зліва від «Кошика»' });
+      if (L.langs.join() !== 'uk,en' || L.haspopup !== 'true' || L.expanded !== 'false') out.push({ page: c.label, selector: '.site-header__lang-btn', value: `мови ${L.langs.join()}, haspopup=${L.haspopup}, expanded=${L.expanded}`, msg: 'перемикач мови: очікується список uk,en, aria-haspopup="true", aria-expanded="false"' });
+    }
     if (!d.hasFooter) out.push({ page: c.label, selector: '.site-footer', value: 'немає', msg: 'на сторінці немає футера (partials/footer.html)' }); else cmp('footer', d.footer);
   }
   return out;

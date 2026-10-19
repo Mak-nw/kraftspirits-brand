@@ -1,5 +1,6 @@
 // Stub кошика (повноцінний кошик — окрема задача). Сховище: localStorage 'ks_cart' = [{ slug, volume, qty }].
 // Лічильник «Кошик ( N )» у header знаходимо за посиланням на cart.html (розмітку header не змінюємо).
+import { t } from '../i18n/runtime.js';
 export const CART_KEY = 'ks_cart';
 
 export function readCart() {
@@ -27,7 +28,7 @@ export function writeCart(list) {
 
 export function renderCartCount(list = readCart()) {
   const n = list.reduce((s, r) => s + (Number(r.qty) || 0), 0);
-  document.querySelectorAll('.site-header a[href$="cart.html"]').forEach((a) => { (a.querySelector('[data-cart-label]') || a).textContent = `Кошик ( ${n} )`; });
+  document.querySelectorAll('.site-header a[href$="cart.html"]').forEach((a) => { (a.querySelector('[data-cart-label]') || a).textContent = t('js.cart.count', { n }); });
 }
 
 renderCartCount();

@@ -5,17 +5,19 @@
 // поки курсор над кнопкою або над панеллю (+ «місток» ::before у CSS); після виходу з обох закривається через --header3-menu-close-delay (0.25s).
 // Клік по кнопці, коли меню відкрите ховером, «закріплює» його (нічого не закриває, без мигання); наступний клік, Esc, клік поза або перехід за пунктом закривають.
 // Анімацію (opacity/transform) веде CSS (--duration-base, --ease-out; reduced-motion — миттєво).
-function init(header) {
-  const btn = header.querySelector('.site-header__menu-btn');
-  const menu = header.querySelector('.site-header__menu');
-  if (!btn || !menu) return;
+// Та сама поведінка (initDropdown) — у випадайці мови зліва від «Кошика» (.site-header__lang-btn + .site-header__menu--lang; docs/i18n.md): окремий екземпляр, спільна логіка.
+import { LANG_KEY } from '../i18n/config.js';
+import { t } from '../i18n/runtime.js';
+
+// outside — селектор «своєї» зони: pointerdown поза нею закриває; labels — [відкрити, закрити] для aria-label кнопки (null — підпис кнопки не змінюється)
+function initDropdown(header, btn, menu, { outside, labels }) {
   const items = [...menu.querySelectorAll('a')];
 
   const setOpen = (open, focusBtn = false) => {
     if (!open) { hoverOpened = false; pinned = false; cancelClose(); }
     menu.classList.toggle('is-open', open);
     btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
+    if (labels) btn.setAttribute('aria-label', open ? labels[1] : labels[0]);
     if (focusBtn) btn.focus();
   };
   const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
@@ -76,7 +78,7 @@ function init(header) {
     escaped = btn.matches(':hover') || menu.matches(':hover');
     setOpen(false, btn.contains(a) || menu.contains(a));
   });
-  document.addEventListener('pointerdown', (e) => { if (isOpen() && !e.target.closest('.site-header__side, .site-header__menu')) setOpen(false); });
+  document.addEventListener('pointerdown', (e) => { if (isOpen() && !e.target.closest(outside)) setOpen(false); });
   // Tab/Shift+Tab за межі кнопки+панелі (навіть до сусіднього «каталог») закриває меню.
   // relatedTarget === null (Shift+Tab з першого елемента, у браузерний інтерфейс або по колу): дивимось, де фокус після тіку; на body лишаємо відкритим лише якщо курсор над кнопкою/панеллю (клік по полях меню).
   const inside = (n) => !!n && (btn.contains(n) || menu.contains(n));
@@ -90,10 +92,35 @@ function init(header) {
       if ((a && a !== document.body) || !(btn.matches(':hover') || menu.matches(':hover'))) setOpen(false);
     }, 0);
   });
+}
 
-  // поточна сторінка: aria-current для посилання на неї (візуального стану в Figma немає)
+function init(header) {
+  const btn = header.querySelector('.site-header__menu-btn');
+  const menu = header.querySelector('.site-header__menu:not(.site-header__menu--lang)');
+  if (btn && menu) initDropdown(header, btn, menu, { outside: '.site-header__side:not(.site-header__side--end), .site-header__menu:not(.site-header__menu--lang)', labels: [t('js.menu.open'), t('js.menu.close')] });
+  const langBtn = header.querySelector('.site-header__lang-btn');
+  const langMenu = header.querySelector('.site-header__menu--lang');
+  if (langBtn && langMenu) { initDropdown(header, langBtn, langMenu, { outside: '.site-header__lang', labels: null }); initLangLinks(langMenu); }
+
+  // поточна сторінка: aria-current для посилання на неї (візуального стану в Figma немає); посилання перемикача мови (data-lang) мають власний aria-current
   const here = location.pathname.split('/').pop() || 'index.html';
-  header.querySelectorAll('a[href$=".html"]').forEach((a) => { if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page'); });
+  header.querySelectorAll('a[href$=".html"]:not([data-lang])').forEach((a) => { if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page'); });
+}
+
+// Посилання мов ведуть на ту саму сторінку іншою мовою (шлях рахує збірка); тут додаємо поточні ?query і #hash (кошик, фільтри каталогу, ?age=ok) і запам'ятовуємо вибір (LANG_KEY).
+function initLangLinks(menu) {
+  const links = [...menu.querySelectorAll('a[data-lang]')];
+  const path = new Map(links.map((a) => [a, a.getAttribute('href')]));
+  const sync = () => links.forEach((a) => a.setAttribute('href', path.get(a) + location.search + location.hash));
+  sync();
+  addEventListener('hashchange', sync);
+  menu.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-lang]');
+    if (!a) return;
+    try { localStorage.setItem(LANG_KEY, a.dataset.lang); } catch { /* приватний режим: без збереження */ }
+    sync();
+    if (a.getAttribute('aria-current') === 'true') e.preventDefault(); // поточна мова: нічого не перезавантажуємо
+  });
 }
 
 document.querySelectorAll('.site-header').forEach(init);
