@@ -15,6 +15,10 @@
 .wc-grid--checkout { grid-template-columns: var(--grid-cols-6-4); }
 .wc-grid--guest { grid-template-columns: var(--grid-span-6); justify-content: center; align-items: start; } /* 767afdb7: гостьовий екран = ОДНА панель (вхід | відновлення | реєстрація — стани тієї ж панелі), 6 колонок по центру (колонки 3–8, як hero-панель lp), висота за вмістом */
 .wc-grid--guest > .contacts-panel { min-height: 0; }
+/* гостьові екрани (вхід | відновлення | реєстрація; рев'ю 7995662b, 88ffe817): контент усередині панелі по центру (заголовок, підписи, текст, згода, кнопки); кнопки в одному ряду однакової ширини = дві рівні колонки на ширину форми (.btn--block: виняток «кнопка на ширину колонки», падінги лишаються); рядок «Немає акаунта? | Створити акаунт» — у тій самій сітці 2 колонок */
+.wc-grid--guest [data-wc-view] { text-align: center; }
+.wc-grid--guest .check-field { align-items: center; }
+.woocommerce-account .wc-grid--guest .wc-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-10); align-items: center; }
 /* гостьовий екран по центру в'юпорта: main = вільна висота першого екрана (100svh − зона header), панель центрується по вертикалі; футер нижче екрана */
 body.page-account .wc-page:has([data-wc-layout="guest"]:not([hidden])) { min-height: calc(100svh - var(--size-header-h)); display: flex; flex-direction: column; box-sizing: border-box; }
 body.page-account .wc-page:has([data-wc-layout="guest"]:not([hidden])) > .woocommerce { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; }
