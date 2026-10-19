@@ -154,11 +154,11 @@
 .lp-steps__split-text { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; height: 100%; padding: var(--space-lp-deck-pad); color: var(--lp-on-dark); }
 .lp-steps__split-group { display: flex; flex-direction: column; }
 .lp-steps__split-group .lp-steps__card-text { margin-top: 0; }
-.lp-steps__card--split .lp-steps__card-num { width: auto; min-width: var(--size-lp-deck-num); padding-inline: var(--space-20); white-space: nowrap; } /* номер/значення («≈15%») — у «таблетці»: коло лишається колом для цифри, довше значення розширює її */
+.lp-steps__card--split .lp-steps__card-num { background: var(--color-brown); width: auto; min-width: var(--size-lp-deck-num); padding-inline: var(--space-20); white-space: nowrap; } /* номер/значення («≈15%») — у «таблетці»: коло лишається колом для цифри, довше значення розширює її */
 .lp-steps__split-media { position: relative; min-width: 0; overflow: hidden; background: var(--lp-warm); }
 .lp-steps__split-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--lp-deck-pos); transform: scale(var(--lp-deck-zoom)); transform-origin: var(--lp-deck-pos); }
-.lp-steps__lottie { position: absolute; inset: var(--space-lp-deck-pad); }
-.lp-steps__lottie svg { display: block; width: 100%; height: 100%; }
+.lp-steps__lottie { position: absolute; inset: var(--space-lp-deck-pad); transform: scale(var(--scale-lp-deck-lottie)); } /* scale на контейнері (lottie-web ставить власний transform на svg); центр масштабу = центр поля медіа */
+.lp-steps__lottie svg { display: block; width: 100%; height: 100%; } /* Lottie менша за поле медіа, по центру (рішення замовника, коментар 17771ab0: «масштаб менше») */
 @media (prefers-reduced-motion: reduce) {
   .lp-steps__card { position: relative; top: auto; margin-top: var(--grid-gap-panels); margin-bottom: 0; }
   .lp-steps__card:first-child { margin-top: 0; }
