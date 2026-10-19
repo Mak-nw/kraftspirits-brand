@@ -75,7 +75,7 @@
 /* ---------- 8. НАШІ ПРИНЦИПИ: чотири картки з hairline-рамкою рівного поділу сітки; кільце-коло з іконкою, назва й опис унизу ---------- */
 .about-principles { padding-bottom: var(--space-about-principles-bottom); color: var(--color-light); }
 .about-principles__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--grid-gap); width: var(--grid-w); margin: var(--space-about-head) auto 0; padding: 0; list-style: none; }
-.about-sprite { position: absolute; } /* спрайт symbol: principle-crown (вінець з макета p8 / ref/principles-new.webp: 32 клини, лінія — currentColor) і principle-icon-1…4 */
+.about-sprite { position: absolute; } /* спрайт symbol: principle-crown (вінець з макета p8 / ref/principles-new.webp: 16 клинів за рішенням замовника (було 32 за макетом), лінія — currentColor) і principle-icon-1…4 */
 .about-principle { --lp-hairline: var(--color-gold); --lp-rise: calc((var(--grid-w) - 3 * var(--grid-gap)) / 8); box-sizing: border-box; aspect-ratio: var(--ratio-about-principle); display: flex; flex-direction: column; justify-content: space-between; padding: var(--space-70) var(--space-46) var(--space-46); background: var(--color-gold); color: var(--color-brown); } /* картка-арка: .lp-arch (заокруглений верх на всю ширину), золота заливка, темне чорнило */
 .about-principle__ring { position: relative; display: grid; place-items: center; width: var(--size-about-principle-ring); aspect-ratio: 1; margin: 0 auto; }
 .about-principle__crown { position: absolute; inset: 0; width: 100%; height: 100%; }
