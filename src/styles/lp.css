@@ -178,7 +178,7 @@
 .lp-group--center { text-align: center; }
 .lp-group--center .lp-group__size, .lp-group--center .lp-group__unit, .lp-group--center .lp-group__fact-label { text-indent: 0; }
 .lp-group--center .lp-group__fact { align-items: center; }
-.lp-group--center .lp-group__approx { margin-left: calc(var(--shift-lp-approx-ink) / -2); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
+.lp-group--center .lp-group__approx { margin-left: calc(var(--shift-lp-approx-ink) / -2 + var(--lp-num-ink, 0em)); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
 .lp-group--center .lp-group__fact-value { text-indent: calc(var(--shift-lp-approx-ink) / 2); }
 .lp-group__num { margin-top: var(--space-lp-ledger-row); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .lp-group__approx { margin-left: var(--shift-lp-approx-ink); margin-right: var(--space-lp-approx-gap); } /* «≈» піднято до середини висоти цифр (old-style) */
@@ -313,7 +313,7 @@
 .lp-look--about .lp-offer__offer .lp-list { flex: 1; align-content: start; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: start; column-gap: var(--space-20); padding-inline-start: 0; list-style: none; } /* «що входить» — один горизонтальний рядок (рев'ю 992782c0): пункти рівними колонками в ОДИН ряд, між ними hairline; текст пункту переноситься в межах колонки */
 .lp-look--about .lp-offer__offer .lp-list li + li { margin-top: 0; padding-inline-start: var(--space-20); border-inline-start: var(--border-divider-dots) var(--color-line-soft); }
 .lp-look--about .lp-offer__buy { align-self: stretch; display: flex; align-items: center; justify-content: space-between; gap: var(--space-20); padding: var(--space-30); border-radius: var(--radius-panel); background: var(--lp-buy-bg, var(--color-green)); color: var(--color-light); } /* заливка — роль теми --lp-buy-bg (типово зелений; barrels — teal); рев'ю 13e05374: ціна й кнопка — один контейнер з зеленою заливкою, space-between; кнопка — світла (btn--beige, як у hero) */
-.lp-look--about .lp-offer__price { margin-left: 0; } /* look: about — ціна з «грн» одним елементом ролі .t-price (як ціна на сторінці товару), внизу перед кнопкою */
+.lp-look--about .lp-offer__price { margin-left: 0; } /* look: about — ціна з «грн» одним елементом ролі .t-lead (як ціна на сторінці товару), внизу перед кнопкою */
 .lp-offer__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-lp-cert-row); margin-top: auto; }
 
 /* ---------- card: ІСНУЮЧА панель .tour-card (головна, «Екскурсії/Бочкова торгівля») на сітці 10 колонок ---------- */
