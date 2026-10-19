@@ -148,6 +148,9 @@ npm run preview  # http://localhost:5200
 - **Оброблені (14):** gin-yasnyi, gin-garden, gin-barrel, calvados-3, calvados-5, schnapps-plum, schnapps-pear, schnapps-cherry, tincture-herbal, tincture-rowan, fruit-watermelon, whiskey-white, barley-spirit, oak-notes (Bazylsprings, hero 866:875 — `heroRatio` у bottle-map.json). Імена файлів, що не збігаються зі slug, — у `tools/bottle-map.json` (`synonyms`; `heroNames` — виняток для імені hero-файлу gin-yasnyi). Виріз: `node tools/import-bottle.mjs --cutout <png з альфою> <slug>`.
 - Скрипт потребує `python3` з Pillow і `cwebp` (`which cwebp`); products.js скрипт не змінює.
 
+## Мови (uk / en)
+Сайт двомовний: українська — корінь, англійська — `/en/…` (статична генерація на збірці). Перемикач «UA/EN» — у шапці зліва від «Кошика» (випадний список, логіка як у меню). Словники — `src/i18n/`, у розмітці `%t.ключ%`. Архітектура, правила, глосарій і статус перекладу — **`docs/i18n.md`**; перевірка повноти — `npm run qa:i18n`; `SITE_URL=… npm run build` додає hreflang/canonical/sitemap. Згенеровані стаби `/en/*.html` — у `.gitignore`.
+
 ## Фавікон
 
 Біла літера «Y» (EB Garamond, wght 600, переведена в path) на `--color-green` з `src/styles/tokens.css`; генерує `tools/make-favicon.py`, який записує `public/favicon.svg`, `public/favicon-32.png`, `public/favicon.ico` (16/32/48) і `public/apple-touch-icon.png` (180×180, без прозорості). Перегенерувати після зміни токена кольору чи шрифту: `pip install fonttools brotli pillow`, далі з кореня `python3 tools/make-favicon.py`. Підключено одним partial `partials/head-icons.html` через `<!--@include head-icons-->` у `<head>` кожної сторінки, шляхи без base (Vite переписує їх на `/kraftspirits/`).
