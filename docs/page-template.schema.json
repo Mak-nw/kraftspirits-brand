@@ -1348,6 +1348,12 @@
               "maxLength": 200,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
+            "reveal": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "groups": {
               "type": "array",
               "minItems": 2,

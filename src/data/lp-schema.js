@@ -93,7 +93,7 @@ export const SCHEMA = {
     steps: { ...BASE, ...TITLE, room: E(ROOMS, false, 'deep'), deck: B(), split: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
       ...MEDIA_IMG, lottie: URL_(false, { startsWith: '/assets/lottie/' }), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа cellar (кімната-погріб partials/media/cellar-<назва>.html, бочка по центру) АБО list, факти
-    compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
+    compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), reveal: B(), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8], true), align: E(['start', 'center'], false, 'start'), accent: B(),
       count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), cellar: { type: 'partial', kind: 'cellar' }, liters: N(false, { int: true, min: 1, max: 1000 }), list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
@@ -372,8 +372,8 @@ const VIEW = {
       items: s.items.map((it, i) => ({ key: it.key, n: i + 1, value: t(it.value), title: t(it.title), text: t(it.text),
         img: it.img || '', lottie: it.lottie || '', alt: t(it.alt), slot: t(it.slot), posMod: `${it.imgPos ? ` lp-steps__card--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-steps__card--zoom-${Math.round(it.zoom * 100)}` : ''}`, tags: li(it.tags) })) };
   },
-  compare: (s) => ({ ...head(s), note: t(s.note),
-    groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.cellar ? ' lp-group--has-cellar' : ''}${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
+  compare: (s) => ({ ...head(s), note: t(s.note), rv: s.reveal === false ? '' : '1',   // reveal: false — групи без появи і без count-up (число одразу фінальне)
+    groups: s.groups.map((g) => ({ rv: s.reveal === false ? '' : '1', key: g.key, span: g.span, mods: `${g.cellar ? ' lp-group--has-cellar' : ''}${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
       label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', lookMod: s.look === 'about' ? ' lp-look--about' : '',
