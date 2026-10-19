@@ -1,0 +1,6 @@
+/* АДАПТИВ: спільні компоненти (кнопки, поля, картки). Лише поза діапазоном 1200–1920. */
+@media (max-width: 1023.98px) {
+  /* кнопка на вузькому екрані: підпис може переноситись у 2 рядки (hug по ширині, але не ширше за контейнер) */
+  .btn { max-width: 100%; }
+  .btn__inner { height: auto; min-height: var(--size-btn-h); white-space: normal; text-align: center; padding-block: var(--space-10); }
+}

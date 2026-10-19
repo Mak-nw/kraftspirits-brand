@@ -9,7 +9,8 @@ function init(header) {
   const btn = header.querySelector('.site-header__menu-btn');
   const menu = header.querySelector('.site-header__menu');
   if (!btn || !menu) return;
-  const items = [...menu.querySelectorAll('a')];
+  // пункти, видимі на поточній ширині: адаптив (≤1023) додає в меню каталог/кошик/кабінет/«підказати?», які на ширших екранах є кнопками пілюлі й у меню приховані (display: none)
+  const getItems = () => [...menu.querySelectorAll('a')].filter((a) => a.getClientRects().length > 0);
 
   const setOpen = (open, focusBtn = false) => {
     if (!open) { hoverOpened = false; pinned = false; cancelClose(); }
@@ -57,9 +58,10 @@ function init(header) {
     setOpen(!isOpen());
   });
   btn.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); items[0]?.focus(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); getItems()[0]?.focus(); }
   });
   menu.addEventListener('keydown', (e) => {
+    const items = getItems();
     const i = items.indexOf(document.activeElement);
     if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); (i > 0 ? items[i - 1] : btn).focus(); }

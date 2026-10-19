@@ -1,0 +1,47 @@
+/* АДАПТИВ: header і footer (docs/responsive.md). Лише поза діапазоном 1200–1920. */
+
+/* ≤ 1023 (планшети й телефони): у пілюлі лишаються «меню», пара логотипів і кошик (+ кабінет на планшеті); решта — у випадному меню (на ≥1024 ці пункти приховані) */
+.site-header__menu-extra { display: none; }
+@media (max-width: 1023.98px) {
+  .site-header__menu-extra { display: flex; }
+  .site-header__side:not(.site-header__side--end) > .nav-cell--ghost { display: none; }                      /* «каталог», «про дім» → у меню */
+  .site-header__side--end > .nav-cell--fill { display: none; }                  /* «підказати?» → у меню */
+  .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; width: auto; left: var(--grid-margin); right: var(--grid-margin); margin-inline: 0; }
+  .site-header__side { padding-left: var(--space-5); }
+  .site-header__side--end { padding-right: var(--space-5); gap: var(--space-5); }
+  .site-header__menu-btn { padding-inline: var(--space-15); }
+  .site-header__logos { justify-self: center; }
+  /* меню — на всю ширину пілюлі, з прокруткою, якщо не вміщується у вікно */
+  .site-header__menu { width: 100%; max-height: calc(100svh - var(--header3-top) - var(--header3-h) - var(--header3-menu-gap) - var(--space-10)); overflow-y: auto; overscroll-behavior: contain; }
+  .nav-cell--menu { width: 100%; }
+}
+/* телефон: кошик — лише іконка (підпис лишається для читачів екрана), кабінет — у меню */
+@media (max-width: 767.98px) {
+  .site-header__side--end > .nav-cell--round { display: none; }
+  .site-header__side--end > .nav-cell--ghost .nav-cell__label { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .site-header__side--end > .nav-cell--ghost { width: var(--size-touch-target); padding-inline: 0; }
+}
+
+/* ---------- footer ---------- */
+@media (max-width: 1023.98px) {
+  .site-footer__top { height: auto; padding: var(--space-70) var(--grid-margin) 0; gap: var(--space-50); }
+  .site-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-50); }
+  .site-footer__col--menu, .site-footer__col--catalog, .site-footer__col--contacts { grid-column: auto; }
+  .site-footer__col { gap: var(--space-20); }
+  .site-footer__list { gap: 0; }
+  .site-footer__list a { display: flex; align-items: center; min-height: var(--size-touch-target); white-space: normal; }
+  .site-footer__list li.nav-link { display: flex; align-items: center; min-height: var(--size-touch-target); white-space: normal; }
+  .site-footer__legal { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); padding-bottom: var(--space-30); }
+  .site-footer__legal .site-footer__wordmark { position: static; width: 100%; margin-top: var(--space-30); }
+  .site-footer__copy { order: 2; }
+  .site-footer__offer { order: 1; grid-template-columns: repeat(2, auto); justify-content: start; justify-items: start; column-gap: var(--space-50); row-gap: 0; }
+  .site-footer__offer a { display: flex; align-items: center; min-height: var(--size-touch-target); }
+  .site-footer__legal .site-footer__wordmark { order: 3; }
+  .site-footer__bottom { height: auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding: var(--space-50) var(--grid-margin) var(--space-50); }
+  .site-footer__bottom .site-footer__wordmark { justify-self: auto; width: 100%; }
+  .site-footer__age { white-space: normal; text-wrap: balance; }
+}
+@media (max-width: 767.98px) {
+  .site-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .site-footer__col--contacts { grid-column: 1 / -1; }
+}

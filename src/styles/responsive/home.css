@@ -1,0 +1,35 @@
+/* АДАПТИВ: головна (index) і спільні секції (brand-choice, stats, tour-card, picker). Лише поза діапазоном 1200–1920. */
+@media (max-width: 1023.98px) {
+  .hero { min-height: var(--size-sec-hero); }
+  .about-brief { min-height: 0; }
+  .about-brief__inner { width: 100%; }
+  .about-brief__kicker, .about-brief__text { width: 100%; }
+  /* вибір бренду: планшет — дві панелі в ряд на рівних частках, телефон — одна під одною */
+  .brand-choice__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .brand-choice__text { padding-inline: 0; }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .intro { min-height: 0; padding-inline: var(--grid-margin); }
+  .intro__body { width: var(--grid-span-6); }
+  /* панелі екскурсії / бочки: текст і фото одна під одною (фото зверху) */
+  .tours { padding-inline: var(--grid-margin); }
+  .tour-card { flex-direction: column-reverse; height: auto; }
+  .tour-card--photo-first { flex-direction: column-reverse; }
+  .tour-card__photo { width: 100%; aspect-ratio: var(--ratio-r-photo); border-width: 0; border-bottom-width: var(--border-tour-frame); }
+  .tour-card--photo-first .tour-card__photo { border-width: 0; border-bottom-width: var(--border-tour-frame); }
+  .tour-card__text, .tour-card--photo-first .tour-card__text { flex: none; padding: var(--space-tour-pad); gap: var(--space-40); }
+  .tour-card__head { width: 100%; }
+  .tour-card .tour-card__body { width: 100%; }
+  /* підбір: чіпи 2 × 2 (телефон) / в ряд (планшет), слайдер на ширину вмісту */
+  .picker { min-height: 0; padding-bottom: var(--space-100); }
+  .picker__head { width: var(--grid-w); }
+  .picker__bgs { top: calc(var(--space-197) + var(--size-picker-head-h)); height: auto; }
+  .picker__text { width: 100%; padding-inline: 0; }
+  .picker .slider { width: 100%; }
+  .chip-row { width: var(--grid-w); flex-wrap: wrap; justify-content: center; row-gap: var(--space-20); }
+  .chip-row .chip { flex: 1 1 auto; }
+}
+@media (max-width: 767.98px) {
+  .brand-choice__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-70); }
+  .intro__body { width: 100%; }
+  .chip-row .chip { flex: 1 1 45%; }
+}
