@@ -293,7 +293,7 @@
 .lp-route__side { display: flex; align-items: center; gap: var(--space-20); min-width: 0; }
 .lp-route__side--from { grid-column: 1 / span 3; }
 .lp-route__side--to { grid-column: 4 / span 3; }
-.lp-route__point { min-width: 0; }
+.lp-route__point { min-width: 0; color: var(--color-gold); } /* точки маршруту — золото, як іконка корабля (рев'ю 8f301810) */
 .lp-route__line { flex: 1; height: var(--border-hairline); background: var(--lp-hairline); }
 .lp-route__side--from .lp-route__line { margin-right: var(--space-10); }
 .lp-route__side--to .lp-route__line { margin-left: var(--space-10); }

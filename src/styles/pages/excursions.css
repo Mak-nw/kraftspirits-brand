@@ -2,3 +2,4 @@
    Кадр — властивість фото, а не колір, тому він тут, а не в темі (src/styles/themes/excursions.css). Див. pages/barrels.css. */
 .lp-page--excursions #price { --lp-offers-bg-pos: 50% 50%; }
 .lp-page--excursions #why { --size-lp-layer-band-h: calc(1.5 * (var(--grid-col) + var(--grid-gap))); } /* фото-смуги секції «Один візит — чотири враження» вищі в 1,5 раза (рев'ю fff84d2e «зробити фотки в карточках вище»): 155u → 233u (токен висоти розрізу layers; решта сторінок шаблону — без змін) */
+.lp-page--excursions .lp-steps__card--split .lp-steps__card-num { padding-inline: var(--space-46); } /* номер кроку «1…4» — овал-«таблетка», як значення на barrels (63% / ≈15% / 40%): одна цифра вужча за мінімум, тож додаємо бічний падінг (рев'ю a8c15f47); решта стилю — компонент .lp-steps__card--split .lp-steps__card-num */
