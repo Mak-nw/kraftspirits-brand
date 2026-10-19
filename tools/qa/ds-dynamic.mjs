@@ -491,7 +491,7 @@ export async function runDynamic(opts, allow, rep) {
       st.fused += a.fused;
       for (const p of a.pairs) {
         st[p.kind]++;
-        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? (mode === 'five' ? 'великі блоки --grid-gap-panels, сторінка товару' : 'великі блоки по колонках --grid-gap') : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? 'великих блоків ≠ 5u' : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
+        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? (mode === 'five' ? 'горизонтальний зазор великих блоків: очікувано 40u (або 5u на gap5-pages: product, cocktails) — тут 5u, --grid-gap-panels' : 'горизонтальний зазор великих блоків: очікувано 40u (або 5u на gap5-pages: product, cocktails) — тут 40u, --grid-gap') : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? `великих блоків ≠ ${mode === 'five' ? '5u' : '40u'}` : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
       }
       // охоронець покриття: на ключових сторінках пара/склеєний компонент МАЄ бути знайдена (збір не мовчить)
       for (const [key, min] of Object.entries(d18cfg.required || {})) {
