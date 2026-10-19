@@ -25,6 +25,8 @@
   --shift-barrels-cert-title-ink: -0.025em;           /* «Бочка …»: бокове поле «Б» — на лівій осі */
   --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту на 2–3px (виміряно чорнилом) — зсув праворуч */
   --shift-barrels-fact-ink: -0.06em;                  /* підписи фактів («Пляшок…», «Вартість…»): бокове поле «П»/«В» */
+  --shift-barrels-num-b50-ink: -0.083em;               /* число групи «≈96» по центру кімнати: чорнило зсунуте вправо від боксу (поле «≈» зліва й «6» справа) — виміряно пікселями (dpr 2) на 1920/1440/1200 */
+  --shift-barrels-num-b200-ink: -0.061em;              /* …те саме для «≈383» («3» має ширше праве поле) */
   --shift-barrels-caption-ink: -0.04em;               /* підписи груп («пляшок…», «вартість…»): бокове поле першої літери */
 }
 /* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
@@ -40,3 +42,5 @@
 .lp-page--barrels .lp-step--bottle { --lp-num-optic: var(--shift-barrels-numeral-bottle); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
 /* оптика груп і пропозицій: «Б» назв, «€» цін, «П/В» підписів, «≈» фактів */
 .lp-page--barrels .lp-group, .lp-page--barrels .lp-offer { --lp-label-optic: var(--shift-barrels-cert-title-ink); --lp-price-optic: var(--shift-barrels-price-ink); --lp-fact-optic: var(--shift-barrels-fact-ink); --lp-caption-optic: var(--shift-barrels-caption-ink); --lp-approx-optic: var(--shift-lp-approx-ink); }
+.lp-page--barrels .lp-group--b50 { --lp-num-ink: var(--shift-barrels-num-b50-ink); }
+.lp-page--barrels .lp-group--b200 { --lp-num-ink: var(--shift-barrels-num-b200-ink); }

@@ -320,7 +320,7 @@ const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те са
 // Кімната = ширина групи (span колонок + зазори, у u як сітка: колонка 115.42u, зазор 40u) × CELLAR.h; стелажі з двох боків ідуть углиб до точки сходу (перспектива), пляшки тонуть у фоні.
 // Одиниця виміру — ПРОЛІТ стелажа = 2 стіни × 4 полиці × 6 пляшок = 48 (96 = 2 прольоти, 383 = 7 повних + 47: найдальша пляшка-«хвіст» не добудована). Бочка — по центру кімнати на підлозі; розмір ∝ літражу^(1/3) (об'єм → лінійний розмір).
 const CELLAR = { h: 420, col: 115.42, gap: 40, vy: 0.42, depth: 0.42, fade: 0.32, shelves: [0.24, 0.47, 0.70, 0.93], top: 0.02, wallX: [0.04, 0.96], perShelf: 6, bottleW: 22, bottleH: 50, bottleK: 0.78,
-  wRef: 673, qMin: 0.55, barrelRef: 200, barrelWRef: 220, barrelBase: 0.97, caskW: 344, caskBottom: 652, caskCx: 260, stroke: 0.9 };   // stroke — як --svg-stroke-hair (одиниці viewBox); барель: ширина 200 L = barrelWRef, нижній край підставок на barrelBase висоти кімнати
+  wRef: 673, qMin: 0.55, barrelRef: 200, barrelWRef: 297, barrelBase: 0.97, caskW: 344, caskBottom: 652, caskCx: 260, stroke: 0.9 };   // stroke — як --svg-stroke-hair (одиниці viewBox); барель: ширина 200 L = barrelWRef, нижній край підставок на barrelBase висоти кімнати
 const cellarView = (count, span, liters, key) => {
   const C = CELLAR, W = span * C.col + (span - 1) * C.gap, H = C.h, vx = W / 2, vy = H * C.vy;
   const nw = Math.min(1, W / C.wRef), q = Math.max(C.qMin, Math.sqrt(nw)), depth = C.depth / Math.sqrt(nw);   // вузька кімната: пляшки дрібніші, перспектива глибша (інакше пляшки злипаються)
