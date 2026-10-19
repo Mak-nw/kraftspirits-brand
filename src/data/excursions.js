@@ -54,7 +54,7 @@ export const excursions = {
       items: [
         // ноти келихів — [потрібно уточнити] (порожнє поле: рядок не показується)
         { key: 'newmake', tone: 'brown', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/whiskey-white.webp', alt: 'Пляшка невитриманого віскі', name: 'Ньюмейк', origin: 'Чистий зерновий\nдистилят', notes: '', slot: 'Фото: пляшка з каталогу (whiskey-white) як ілюстрація ньюмейку — уточнити продукт дегустації' },
-        { key: 'pumpkin', tone: 'brown', imgPos: 'center', zoom: 1, img: '/assets/img/excursions-glass-dark.webp', alt: 'Келих гарбузівки з жовтим напоєм на темному тлі', name: 'Гарбузівка', origin: 'Сезонний напій\nз українським характером', notes: '', slot: AI('один келих glencairn з жовтим напоєм, фронтально, ≈67% висоти кадру, темно-коричневе тло') },
+        { key: 'pumpkin', tone: 'brown', imgPos: 'top', zoom: 1.5, img: '/assets/img/excursions-glass-dark.webp', alt: 'Келих гарбузівки з жовтим напоєм на темному тлі', name: 'Гарбузівка', origin: 'Сезонний напій\nз українським характером', notes: '', slot: AI('один келих glencairn з жовтим напоєм, фронтально, ≈67% висоти кадру, темно-коричневе тло') },
       { key: 'gin', tone: 'green', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/gin-yasnyi.webp', alt: 'Пляшка джину «Ясний»', name: 'Джин', origin: 'Авторський,\nботанічний', notes: '', slot: 'Фото: пляшка з каталогу (gin-yasnyi) — уточнити продукт дегустації' },
         { key: 'whisky', tone: 'teal', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/oak-notes.webp', alt: 'Пляшка витриманого віскі', name: 'Віскі', origin: 'Витриманий\nнасичений смак', notes: '', slot: 'Фото: пляшка з каталогу (oak-notes) — уточнити продукт дегустації' },
       ],
