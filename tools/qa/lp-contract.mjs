@@ -67,10 +67,12 @@ function variantsOf(type) {
   const s = fullSection(type);
   const out = [];
   if (type === 'steps') {
-    const arch = (x) => { delete x.deck; delete x.cols; x.items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].forEach((k) => delete it[k]); }); return x; }; // арка + список: полів колоди немає
+    const arch = (x) => { delete x.deck; delete x.split; delete x.cols; x.items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags', 'lottie'].forEach((k) => delete it[k]); }); return x; }; // арка + список: полів колоди немає
     const a = arch(clone(s)); delete a.img; delete a.alt; out.push(['scene', a]);
     const b = arch(clone(s)); delete b.scene; out.push(['img', b]);
-    const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; out.push(['deck', c]); // deck: true — картки з фото в кожному кроці, арки немає
+    const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; delete c.split; c.items.forEach((it) => { delete it.lottie; }); out.push(['deck', c]);
+    const d1 = clone(c); d1.split = true; out.push(['deck split photo', d1]);   // split: текст на тоновому фоні | фото
+    const d2 = clone(d1); d2.items.forEach((it) => { delete it.img; it.lottie = '/assets/lottie/barrel-01-pour.json'; }); out.push(['deck split lottie', d2]);   // split: текст | Lottie // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
     const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
     const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
@@ -150,7 +152,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -271,6 +273,11 @@ cross('steps deck: slot секції (арки немає)', (p) => { S(p).slot 
 cross('steps deck: крок без img', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; }, false, false, 'steps [deck');
 cross('steps deck: крок без tags/imgPos/zoom/alt/slot (валідно)', (p) => { S(p).items.forEach((it) => { delete it.tags; delete it.imgPos; delete it.zoom; delete it.alt; delete it.slot; }); }, true, true, 'steps [deck');
 cross('steps deck: без cols (10 колонок, валідно)', (p) => { delete S(p).cols; }, true, true, 'steps [deck');
+cross('steps deck split: фото + lottie в одному кроці', (p) => { S(p).split = true; S(p).items[0].lottie = '/assets/lottie/q1'; }, false, false, 'steps [deck');
+cross('steps deck split: крок без img і без lottie', (p) => { S(p).split = true; delete S(p).items[0].img; delete S(p).items[0].alt; }, false, false, 'steps [deck');
+cross('steps deck split: фото в усіх кроках (валідно)', (p) => { S(p).split = true; }, true, true, 'steps [deck');
+cross('steps deck без split: lottie у кроці', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; S(p).items[0].lottie = '/assets/lottie/q1'; }, false, false, 'steps [deck');
+cross('steps: split без deck', (p) => { S(p).deck = false; delete S(p).cols; S(p).scene = 'scene-barrels'; S(p).items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].forEach((k) => delete it[k]); }); S(p).split = true; }, false, false, 'steps [deck');
 cross('steps deck: tags 5 шт.', (p) => { S(p).items[0].tags = ['а', 'б', 'в', 'г', 'ґ']; }, false, false, 'steps [deck');
 cross('steps deck: deck: false з фото в кроках', (p) => { S(p).deck = false; S(p).scene = 'scene-barrels'; }, false, false, 'steps [deck');
 cross('steps арка: img у кроці', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'steps [scene');

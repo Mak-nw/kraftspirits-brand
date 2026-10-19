@@ -80,3 +80,19 @@ if (document.querySelector('[data-contacts-map]')) import('./contacts-map.js');
 
 await import('./reveal.js');
 await import('./parallax.js');
+
+// (8) steps deck split: Lottie-анімація в медіа-частині картки ([data-lottie] = шлях від кореня /assets/lottie/*.json) — lottie-web light (svg), динамічний імпорт лише коли такі картки є;
+//     зациклена, грає поки вкладка видима; prefers-reduced-motion → статичний кадр 0; шлях — з BASE_URL (збірка з BASE_PATH).
+const lotties = [...document.querySelectorAll('[data-lottie]')];
+if (lotties.length) {
+  const base = import.meta.env.BASE_URL;
+  const { default: lottie } = await import('lottie-web/build/player/esm/lottie_light.min.js');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const anims = lotties.map((el) => {
+    const a = lottie.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: false, path: base + el.dataset.lottie.replace(/^\//, ''), rendererSettings: { preserveAspectRatio: 'xMidYMid meet' } });
+    a.addEventListener('DOMLoaded', () => { if (reduced.matches) a.goToAndStop(0, true); else a.play(); });
+    return a;
+  });
+  reduced.addEventListener('change', () => anims.forEach((a) => (reduced.matches ? a.goToAndStop(0, true) : a.play())));
+  document.addEventListener('visibilitychange', () => { if (reduced.matches) return; anims.forEach((a) => (document.hidden ? a.pause() : a.play())); });
+}

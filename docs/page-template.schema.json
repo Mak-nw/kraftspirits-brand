@@ -93,7 +93,7 @@
       "id": "steps-deck-fields",
       "scope": "steps",
       "expressed": true,
-      "rule": "`deck: true`: кожен крок — з фото `img` (тло картки); поля кроку `img`, `alt`, `slot`, `imgPos`, `zoom`, `tags` (до 4 по ≤ 20) і `cols` секції — лише з `deck: true` (у варіанті з аркою кроки без фото, ширина фіксована)"
+      "rule": "`deck: true`: кожен крок — з фото `img` (тло картки); з `split: true` (картка «текст зліва на тоновому фоні | медіа справа») — РІВНО одне з `img` (фото) або `lottie` (векторна Lottie-анімація, `alt` — її підпис для читачів екрана); поля кроку `img`, `alt`, `slot`, `imgPos`, `zoom`, `tags` (до 4 по ≤ 20), `lottie` і `cols`, `split` секції — лише з `deck: true` (`lottie` — лише з `split`)"
     },
     {
       "id": "steps-alt-needs-img",
@@ -648,6 +648,12 @@
                 "null"
               ]
             },
+            "split": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "cols": {
               "enum": [
                 8,
@@ -742,6 +748,13 @@
                     ],
                     "maxLength": 240,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "lottie": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^/assets/lottie/[^\\s\"<>]*$"
                   },
                   "imgPos": {
                     "enum": [
@@ -981,18 +994,109 @@
                 ]
               },
               "then": {
-                "properties": {
-                  "items": {
-                    "type": "array",
+                "if": {
+                  "properties": {
+                    "split": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "split"
+                  ]
+                },
+                "then": {
+                  "properties": {
                     "items": {
-                      "type": "object",
-                      "required": [
-                        "img"
-                      ],
-                      "properties": {
-                        "img": {
-                          "type": "string",
-                          "minLength": 1
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "oneOf": [
+                          {
+                            "allOf": [
+                              {
+                                "required": [
+                                  "img"
+                                ],
+                                "properties": {
+                                  "img": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              {
+                                "not": {
+                                  "required": [
+                                    "lottie"
+                                  ],
+                                  "properties": {
+                                    "lottie": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "allOf": [
+                              {
+                                "required": [
+                                  "lottie"
+                                ],
+                                "properties": {
+                                  "lottie": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              {
+                                "not": {
+                                  "required": [
+                                    "img"
+                                  ],
+                                  "properties": {
+                                    "img": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "img"
+                        ],
+                        "properties": {
+                          "img": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "not": {
+                          "required": [
+                            "lottie"
+                          ],
+                          "properties": {
+                            "lottie": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
                         }
                       }
                     }
@@ -1009,6 +1113,18 @@
                       "properties": {
                         "cols": {
                           "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "not": {
+                      "required": [
+                        "split"
+                      ],
+                      "properties": {
+                        "split": {
+                          "const": true
                         }
                       }
                     }
@@ -1060,6 +1176,17 @@
                                 ],
                                 "properties": {
                                   "imgPos": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "lottie"
+                                ],
+                                "properties": {
+                                  "lottie": {
                                     "type": "string",
                                     "minLength": 1
                                   }

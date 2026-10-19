@@ -90,8 +90,8 @@ export const SCHEMA = {
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
     //    deck: true — «колода»: кожен крок = велика картка з фото на тлі (img кроку, cover), картки прилипають під header і наїжджають одна на одну (CSS sticky);
     //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
-    steps: { ...BASE, ...TITLE, room: E(ROOMS, false, 'deep'), deck: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
-      ...MEDIA_IMG, imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
+    steps: { ...BASE, ...TITLE, room: E(ROOMS, false, 'deep'), deck: B(), split: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
+      ...MEDIA_IMG, lottie: URL_(false, { startsWith: '/assets/lottie/' }), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
     compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8], true), align: E(['start', 'center'], false, 'start'), accent: B(),
@@ -151,16 +151,23 @@ export const RULES = [
       ? ([s.scene, s.img, s.alt, s.slot].some(has) ? 'deck: true — арки немає: scene / img / alt / slot секції не задаються (фото — у кроках)' : '')
       : (has(s.scene) === has(s.img) ? 'потрібне медіа арки: рівно одне з scene або img' : '')),
     json: { if: DECK_ON, then: { not: { anyOf: [present('scene'), present('img'), present('alt'), present('slot')] } }, else: exactlyOne('scene', 'img') } },
-  { id: 'steps-deck-fields', types: ['steps'], path: '', doc: `\`deck: true\`: кожен крок — з фото \`img\` (тло картки); поля кроку \`img\`, \`alt\`, \`slot\`, \`imgPos\`, \`zoom\`, \`tags\` (до ${DECK_TAGS_MAX} по ≤ ${DECK_TAG_MAX}) і \`cols\` секції — лише з \`deck: true\` (у варіанті з аркою кроки без фото, ширина фіксована)`,
+  { id: 'steps-deck-fields', types: ['steps'], path: '', doc: `\`deck: true\`: кожен крок — з фото \`img\` (тло картки); з \`split: true\` (картка «текст зліва на тоновому фоні | медіа справа») — РІВНО одне з \`img\` (фото) або \`lottie\` (векторна Lottie-анімація, \`alt\` — її підпис для читачів екрана); поля кроку \`img\`, \`alt\`, \`slot\`, \`imgPos\`, \`zoom\`, \`tags\` (до ${DECK_TAGS_MAX} по ≤ ${DECK_TAG_MAX}), \`lottie\` і \`cols\`, \`split\` секції — лише з \`deck: true\` (\`lottie\` — лише з \`split\`)`,
     check: (s) => {
-      if (s.deck === true) { const bad = s.items.findIndex((it) => !has(it.img)); return bad < 0 ? '' : `items[${bad}].img: deck: true — кожна картка-крок потребує фото img`; }
+      if (s.deck === true) {
+        if (s.split === true) { const bad = s.items.findIndex((it) => has(it.img) === has(it.lottie)); return bad < 0 ? '' : `items[${bad}]: split: true — рівно одне з img (фото) або lottie (анімація)`; }
+        const bl = s.items.findIndex((it) => has(it.lottie)); if (bl >= 0) return `items[${bl}].lottie — лише з split: true`;
+        const bad = s.items.findIndex((it) => !has(it.img)); return bad < 0 ? '' : `items[${bad}].img: deck: true — кожна картка-крок потребує фото img`;
+      }
       if (has(s.cols)) return 'cols — лише з deck: true (арка + кроки мають фіксовану композицію)';
-      const bad = s.items.findIndex((it) => ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].some((k) => has(it[k])));
-      return bad < 0 ? '' : `items[${bad}]: img / alt / slot / imgPos / zoom / tags кроку — лише з deck: true`;
+      if (s.split === true) return 'split — лише з deck: true';
+      const bad = s.items.findIndex((it) => ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags', 'lottie'].some((k) => has(it[k])));
+      return bad < 0 ? '' : `items[${bad}]: img / alt / slot / imgPos / zoom / tags / lottie кроку — лише з deck: true`;
     },
-    json: { if: DECK_ON, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } },
-      else: { allOf: [{ not: { required: ['cols'], properties: { cols: { type: 'number' } } } },
-        { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('img'), present('alt'), present('slot'), present('imgPos'), present('tags', 'arr'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
+    json: { if: DECK_ON, then: { if: { properties: { split: { const: true } }, required: ['split'] },
+        then: { properties: { items: { type: 'array', items: { type: 'object', ...exactlyOne('img', 'lottie') } } } },
+        else: { properties: { items: { type: 'array', items: { type: 'object', ...present('img'), not: present('lottie') } } } } },
+      else: { allOf: [{ not: { required: ['cols'], properties: { cols: { type: 'number' } } } }, { not: { required: ['split'], properties: { split: { const: true } } } },
+        { properties: { items: { type: 'array', items: { type: 'object', not: { anyOf: [present('img'), present('alt'), present('slot'), present('imgPos'), present('lottie'), present('tags', 'arr'), { required: ['zoom'], properties: { zoom: { type: 'number' } } }] } } } } }] } } },
   { id: 'steps-alt-needs-img', types: ['steps'], path: '', doc: '`alt` має сенс лише з `img`',
     check: (s) => (has(s.alt) && !has(s.img) ? 'alt доступний лише разом з img' : ''), json: dependent('alt', 'img') },
   { id: 'tiles-media', types: ['tiles'], path: 'items', doc: 'плитка: рівно одне з `engraving` (гравюра + `icon`) або `img` (фото)',
@@ -324,10 +331,11 @@ const VIEW = {
   steps: (s) => {
     const rich = !!(s.kicker || s.lead || s.caption);
     const deck = s.deck === true;   // колода карток з фото замість арки + списку (lp.css «steps deck»)
-    return { ...head(s), plainHead: rich ? '' : '1', richHead: rich ? '1' : '', arch: deck ? '' : '1', deck: deck ? '1' : '', deckMod: deck ? ` lp-steps--deck lp-steps--n${s.items.length}` : '',
+    const split = deck && s.split === true;   // картка «текст на тоновому фоні | медіа справа» (фото або Lottie)
+    return { ...head(s), plainHead: rich ? '' : '1', richHead: rich ? '1' : '', arch: deck ? '' : '1', deck: deck ? '1' : '', deckMod: deck ? ` lp-steps--deck${split ? ' lp-steps--split' : ''} lp-steps--n${s.items.length}` : '', split: split ? '1' : '', noSplit: split ? '' : '1',
       scene: s.scene || '', img: s.img || '', alt: t(s.alt), slot: t(s.slot),
       items: s.items.map((it, i) => ({ key: it.key, n: i + 1, value: t(it.value), title: t(it.title), text: t(it.text),
-        img: it.img || '', alt: t(it.alt), slot: t(it.slot), posMod: `${it.imgPos ? ` lp-steps__card--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-steps__card--zoom-${Math.round(it.zoom * 100)}` : ''}`, tags: li(it.tags) })) };
+        img: it.img || '', lottie: it.lottie || '', alt: t(it.alt), slot: t(it.slot), posMod: `${it.imgPos ? ` lp-steps__card--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-steps__card--zoom-${Math.round(it.zoom * 100)}` : ''}`, tags: li(it.tags) })) };
   },
   compare: (s) => ({ ...head(s), note: t(s.note),
     groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,

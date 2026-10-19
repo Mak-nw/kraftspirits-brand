@@ -20,6 +20,7 @@
   --lp-format-fill-teal: var(--color-lp-format-fill-teal);     /* заливка капсули «8 напоїв» і міні-блоків */
   --lp-format-line: var(--color-lp-format-line);       /* контур панелі, міні-блоків, роздільник formats */
   --lp-format-line-strong: var(--color-lp-format-line-strong); /* контур капсули */
+  --lp-split-bg: var(--color-lp-format-fill-green);   /* steps deck split: фон текстової половини картки — світліший зелений (наявний тон format-fill; текст світлий, AA) */
   --lp-tone: btn--green;                                /* тон основних кнопок DS (.btn--green); у даних сторінки `tone` необов'язковий */
   --lp-tile-bg: var(--color-black);                /* «студійне» тло плиток дегустації: прозорі фото пляшок каталогу + AI-кадр келиха на чорному */
   --lp-tile-black: var(--color-black);               /* тло кола плитки (tiles shape: circle) за `tone` даних: чорне (кадр келиха), коричневе, зелене, teal */

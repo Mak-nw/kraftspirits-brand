@@ -33,7 +33,7 @@ export const excursions = {
     },
     {
       // deck: стікі-картки з фото на тлі (запит замовника, реф reports/client-refs/sticky-cards-ref.png); фото — AI-кадри 21:9 з темною зоною зліва під текст
-      type: 'steps', id: 'excursion', room: 'deep', join: true, deck: true,
+      type: 'steps', id: 'excursion', room: 'deep', join: true, deck: true, split: true,
       kicker: 'Екскурсія дистилерією', title: 'Від зерна до пляшки — своїми очима',
       lead: 'Проводимо залами дистилерії та розповідаємо, як працює сучасне виробництво, звідки ми взялися й чому робимо саме так. Без лекції — показуємо, питайте про все.',
       items: [
