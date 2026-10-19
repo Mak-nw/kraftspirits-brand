@@ -6,7 +6,7 @@
 }
 
 /* ---------- engraving «engraving-barrels-head» (tiles): днище бочки — одне коло-обідок і клепки тонкими лініями в кільці навколо порожнього центру (іконка DS) ---------- */
-.lp-engraving { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: currentColor; }
+.lp-engraving { display: block; width: var(--size-barrels-finish-head); fill: none; stroke: var(--lp-accent, currentColor); } /* бочка — золота (роль теми --lp-accent = --color-gold; рев'ю 917bda5f «жовтий колір для бочок»), іконка в центрі лишається світлою (currentColor кімнати) */
 .lp-engraving__rim, .lp-engraving__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); } /* одна hairline-лінія DS (1px за будь-якого масштабу) */
 .lp-engraving__rim { stroke-width: var(--border-barrels-rim); } /* обідок днища вдвічі товщий за клепки (рев'ю 3cc0afdd) */
 .lp-tile__icon { --icon-size: var(--size-barrels-finish-icon); color: inherit; position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* іконка DS у центрі гравюри (поле icon плитки; розмір — частка гравюри) */
