@@ -26,6 +26,7 @@
    Питання ліворуч, «+» праворуч (механіка іконки та відкриття — .acc; іконка зверху, у закритому рядку опущена до центру першого рядка питання --acc-faq-icon-drop і плавно піднімається при відкритті);
    висота закритого рядка = padding 30u + рядок 28u + 30u = 88u у всіх рядків. Усе клікабельне (details), фокус-кільце — глобальне :focus-visible у summary. Тіло відповіді при розгортанні обрізається по заокругленню. */
 .acc-frame { padding: var(--space-faq-card-inset); border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-none); }
+.page-faq .acc-frame { border-color: var(--color-lp-hairline); } /* 4df2b29d: на зеленому тлі faq.html рамка 20% зеленого невидима — світлий hairline темних кімнат (золото 55%) */
 .acc--faq { padding: var(--space-30); border-radius: var(--radius-faq-card); background-color: var(--btn-row-faq-bg-default); transition: background-color var(--duration-base) var(--ease-out); }
 .acc--faq > summary { align-items: flex-start; }
 .acc--faq > summary::after { translate: 0 var(--acc-faq-icon-drop); }
