@@ -953,6 +953,7 @@
   --color-lp-format-line-strong: color-mix(in srgb, var(--color-light) 65%, transparent); /* контур капсули: тонка світла лінія */
   --color-lp-format-fill-green: color-mix(in srgb, var(--color-green) 85%, var(--color-light));  /* заливка капсули й міні-блоків formats на панелі green (рев'ю замовника: «дати заливку зеленого кольору»): тон панелі з малою часткою світлого --color-light (15%) — світліша за панель, але лишається зеленою (hue ≈113° проти 114° панелі); видимість проти панелі ≈1.5:1, світлий текст на заливці ≈7:1 (D14 AA) */
   --color-lp-format-fill-teal: color-mix(in srgb, var(--color-teal) 85%, var(--color-light));     /* те саме для панелі teal («синього кольору»): hue ≈195° = панель; видимість проти панелі ≈1.5:1, світлий текст ≈9.5:1 */
+  --border-divider-dots: var(--border-hairline) dotted;   /* роздільник крапками (look: about на excursions, рев'ю 044918cd): замість суцільної hairline — точкова лінія тієї ж товщини; колір задає компонент */
   --size-lp-format-capsule-w: calc(205 * var(--u));   /* ширина капсули (реф ≈ 205 на панелі 870) */
   --size-lp-format-capsule-h: calc(270 * var(--u));   /* висота капсули */
   --size-lp-format-mark: calc(16 * var(--u));         /* ромб-маркер: капсула, над назвами напоїв */
