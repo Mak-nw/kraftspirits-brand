@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { readFileSync, readdirSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { basename, relative, resolve } from 'node:path';
 import { createRenderer } from './tools/html-partials.mjs';
 import { reviewMode } from './vite-plugin-review.js';
 import { contacts, contactsView } from './src/data/contacts.js';
@@ -12,6 +12,7 @@ import { FAQ } from './src/data/faq.js';
 import { faqView } from './src/data/faq-view.js';
 import { LEGAL } from './src/data/legal.js';
 import { legalLists } from './src/data/legal-view.js';
+import { localizeHtml, sitemapXml, writeStubs } from './tools/i18n.mjs';
 
 const root = import.meta.dirname;
 
@@ -50,6 +51,8 @@ Object.assign(LISTS, legalLists(LEGAL));
 LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
 LISTS.faqDemoOpen = LISTS.faqDemo.slice(0, 1); LISTS.faqDemoClosed = LISTS.faqDemo.slice(1, 2); // демо в двох колонках .faq-page__col (design-system.html)
 
+const I18N_MISSING = []; // ключі, яких немає в en (для сторінок-чернеток це нормально; повнота — npm run qa:i18n)
+
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
   // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
@@ -58,7 +61,21 @@ function htmlPartials() {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
     // %BASE_URL% (404.html: <base href>) підставляємо самі, щоб dev і build/preview давали однаковий результат
-    transformIndexHtml: { order: 'pre', handler: async (html) => { await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1])); return fillContacts(render(html)).replaceAll('%BASE_URL%', base); } },
+    // i18n (docs/i18n.md): en/<name>.html — стаб; вміст = корінь <name>.html, мова en. Для обох мов: partials → %contacts.*% → %t.*% (словники) → мовна обробка (lang, перемикач, hreflang).
+    transformIndexHtml: {
+      order: 'pre',
+      handler: async (html, ctx) => {
+        const rel = relative(root, ctx.filename || '').split('\\').join('/');
+        const enName = /^en\/([\w-]+)\.html$/.exec(rel)?.[1];
+        const locale = enName ? 'en' : 'uk';
+        const name = enName || basename(rel, '.html');
+        if (enName) html = readFileSync(resolve(root, `${enName}.html`), 'utf8');
+        await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]));
+        const out = localizeHtml(fillContacts(render(html)), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
+        return out.replaceAll('%BASE_URL%', base);
+      },
+    },
+    generateBundle() { if (process.env.SITE_URL) this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(root, base, process.env.SITE_URL) }); },
     handleHotUpdate({ file, server }) {
       if (file.includes('/partials/')) server.ws.send({ type: 'full-reload' });
     },
@@ -71,6 +88,8 @@ const pages = Object.fromEntries(
     .filter((f) => f.endsWith('.html'))
     .map((f) => [f.replace('.html', ''), resolve(root, f)])
 );
+// мовні версії: en/<сторінка>.html — стаби, згенеровані тут же (tools/i18n.mjs, у .gitignore); входи збірки 'en/<сторінка>' → dist/en/<сторінка>.html
+for (const n of writeStubs(root)) pages[`en/${n}`] = resolve(root, 'en', `${n}.html`);
 
 // base: BUILD_BASE лише для збірки й `vite preview` (GitHub Pages); dev — корінь
 export default defineConfig(({ command, isPreview }) => ({
