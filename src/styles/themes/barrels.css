@@ -22,5 +22,6 @@
   --lp-tile-brown: var(--color-brown);
   --lp-tile-green: var(--color-green);
   --lp-tile-teal: var(--color-teal);
+  --lp-buy-bg: var(--color-teal);                       /* look: about: контейнер «ціна + кнопка» картки offers — teal Bazylsprings (на excursions типово зелений) */
   --lp-tone: btn--teal;                                  /* тон основних кнопок DS (.btn--teal) на світлому/фото; читає збірка (tools/lp-files.mjs); у даних сторінки `tone` необов'язковий */
 }

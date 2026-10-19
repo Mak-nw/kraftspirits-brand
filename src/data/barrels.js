@@ -30,7 +30,7 @@ export const barrels = {
       cta: { text: 'Переглянути ціни', href: '#price', variant: 'light' },   // світла кнопка: темна (тон сторінки, teal) на фото без градієнта давала нетекстовий контраст медіана 3.3:1 / p10 2.1:1 (verify-E3-B, дефект 3)
     },
     {
-      type: 'layers', id: 'benefits', room: 'warm',
+      type: 'layers', id: 'benefits', room: 'warm', look: 'about',
       kicker: 'Переваги бочок', title: 'Що дає бочка',
       items: [
         { key: 'char', icon: 'barrels-char', title: 'Сильний обпал', text: 'Формує глибину та структуру', img: '/assets/img/barrels-tex-char.webp', slot: TEX('IMG-T1', 'обпалена клепка') },
@@ -72,7 +72,7 @@ export const barrels = {
       ],
     },
     {
-      type: 'offers', id: 'price', room: 'deep',
+      type: 'offers', id: 'price', room: 'deep', look: 'about',
       bg: '/assets/img/barrels-price-bg.webp', bgW: 1620, bgH: 1080,
       bgSlot: 'Фото «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку (≥ 2400 px по довгій стороні, MEDIA.md)',
       title: 'Ціна',

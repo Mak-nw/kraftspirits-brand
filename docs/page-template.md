@@ -260,6 +260,7 @@ HTML у полях не приймається (усе екранується); 
 | `--lp-format-green` / `--lp-format-teal` / `--lp-format-line` / `--lp-format-line-strong` | тон панелей formats (текст — `--lp-on-dark`); контур панелі й міні-блоків / контур капсули й роздільник | --color-green / --color-teal | --color-green / --color-teal |
 | `--lp-amber` | тло фото, доки вантажиться; рідина гравюри | lp-amber | lp-amber |
 | `--lp-tone` (необов.) | тон кнопок, якщо `tone` не задано в даних; значення — клас кнопки DS | btn--teal | btn--green |
+| `--lp-buy-bg` (необов.) | заливка контейнера «ціна + кнопка» у offers з `look: about` | типово `--color-green`; barrels — `--color-teal` |
 | `--lp-tile-bg` (необов.) | тло рамки фото плиток | (amber) | black |
 
 Кадр фото `offers` (`--lp-offers-bg-pos | -scale | -origin` на `#<id секції>`) і оптичні поправки чорнила (`--lp-h2-optic`, `--lp-num-optic`, `--lp-title-optic`, `--lp-text-optic`, `--lp-label-optic`, `--lp-price-optic`, `--lp-fact-optic`, `--lp-caption-optic`, `--lp-approx-optic`; типово 0) — **не в темі**, а в `src/styles/pages/<slug>.css`: це властивості фото й конкретних текстів, не кольору. Обмін теми між сторінками їх не відриває.
