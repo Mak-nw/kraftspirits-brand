@@ -1208,7 +1208,7 @@
   :root {
     --u: calc(var(--vw, 100vw) / 1100);
     --font-size-wordmark: calc(137 * var(--u));
-    --font-size-stat: calc(130 * var(--u));
+    --font-size-stat: calc(100 * var(--u));
     --font-size-h2: calc(67 * var(--u));
     --font-size-hero: calc(55 * var(--u));
     --font-size-lead: calc(40 * var(--u));

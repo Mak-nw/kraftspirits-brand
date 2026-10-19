@@ -22,6 +22,7 @@
   .site-footer__list { gap: 0; }
   .site-footer__list a, .site-footer__list li.nav-link, .site-footer__offer a { display: flex; align-items: center; min-height: var(--size-touch-target); }
   .site-footer__list a { width: 100%; }
+  .site-footer__offer a { min-width: var(--size-touch-target); }
   .site-footer__offer { row-gap: 0; }
   .woocommerce .quantity .arrow-btn { flex: none; }
   .contacts-item__value { min-height: var(--size-touch-target); display: flex; align-items: center; }

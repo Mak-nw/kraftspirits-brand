@@ -18,6 +18,7 @@
   /* compare / tiles / offers / formats */
   .lp-compare__grid, .lp-formats__grid, .lp-tiles__grid, .lp-offers__grid, .lp-layers { width: var(--lp-w); }
   .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lp-layers--n4, .lp-layers--n5, .lp-layers--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
   .lp-format__drinks--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-30); }
   .lp-place__grid { row-gap: var(--grid-gap-panels); }
