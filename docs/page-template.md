@@ -14,7 +14,7 @@
 | Тема (лише ролі кольорів) | `src/styles/themes/<тема>.css` |
 | Кадр фото й оптика чорнила конкретної сторінки (необов'язково) | `src/styles/pages/<сторінка>.css` (`body.lp-page--<slug>`) |
 | Розмітка сторінки / секцій | `partials/lp/page.html`, `partials/lp/<type>.html` (+ дрібні: `head`, `layer`, `step`, `group`, `tile`, `offer`, `route` …) |
-| Ілюстрації-медіа (обираються в даних) | `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (вид: `scene` · `engraving` · `wall`) — реєстр нижче |
+| Ілюстрації-медіа (обираються в даних) | `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (вид: `scene` · `engraving` · `cellar`) — реєстр нижче |
 | Стилі | `src/styles/lp.css` (блоки), `src/styles/lp-media.css` (загальне для ілюстрацій), токени — блок «Шаблон посадкової сторінки» в `tokens.css` |
 | Логіка | `src/js/lp.js` (лічильники, стани гравюри, `?slots=on`, FAQ, мапа — лише якщо відповідна секція є) |
 | Збірка/dev | плагін `lp-auto` (`tools/vite-plugin-lp.mjs`): виявлення сторінок, `<slug>.html`, підключення CSS, ліниві перевірки; рушій partials — `tools/html-partials.mjs`; демо-секція в DS — `<!--@lp сторінка id-->` |
@@ -139,7 +139,7 @@ HTML у полях не приймається (усе екранується); 
 Перевірка скролу — `npm run qa:lp-stack` (блок DECK: прилипання зі зсувом кроку, видима смужка ≥ peek, порядок перекриття, колода у вікні, вихід без «схлопування» й без діри, reduced-motion; висоти вікна 700 і 1080; позитивні контролі).
 
 ### `compare` — порівняння груп (типово `paper`)
-Групи поруч на спільних рядках (subgrid): ярлик, число (+ «≈»), одиниця, медіа «стіна» або список DS, факти.
+Групи поруч на спільних рядках (subgrid): ярлик, число (+ «≈»), одиниця, медіа «кімната-погріб» або список DS, факти.
 
 | `groups[]` (2–3) | Тип | Обов. | Ліміт / значення | |
 |---|---|---|---|---|
@@ -151,8 +151,9 @@ HTML у полях не приймається (усе екранується); 
 | `count` | ціле | так | 0…99 999; `span` 2 — ≤ 999 (з `approx` ≤ 99), `span` 3 з `approx` ≤ 999 | лічильник 0 → значення; розряди — `uk-UA` (nbsp) |
 | `approx` | так/ні | ні | | «≈» перед числом |
 | `unit` | текст | так | ≤ 40 | одиниця під числом |
-| `wall` | назва `wall-…` | ні | є `partials/media/wall-….html`; взаємовиключно з `list` | ілюстрація «стіна пляшок» |
-| `list[]` | текст | ні | ≤ 90, до 8; взаємовиключно з `wall` | список DS |
+| `cellar` | назва `cellar-…` | ні | є `partials/media/cellar-….html`; взаємовиключно з `list` | ілюстрація «кімната-погріб» (бочка по центру) |
+| `liters` | ціле | ні | 1…1000; типово 200 | літраж бочки: розмір бочки в кімнаті ∝ liters^(1/3) |
+| `list[]` | текст | ні | ≤ 90, до 8; взаємовиключно з `cellar` | список DS |
 | `facts[]` (0–3): `value` (≤ 60), `label` (≤ 60) | | ні | | факт `.t-chip` + підпис `.t-desc` |
 | `note` (секції) | текст | ні | ≤ 200 | дрібний текст під групами |
 
@@ -269,13 +270,13 @@ HTML у полях не приймається (усе екранується); 
 
 ## Медіа-ілюстрації (реєстр)
 
-Обираються в даних назвою з префіксом виду; кожна — пара файлів `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (CSS підключається автоматично; значення, що належать лише ілюстрації, — у її файлі). Збірка перевіряє префікс і існування файлу. Усі наявні ілюстрації — «бочкові» (сюжет і числа прив'язані до сторінки бочок); для іншої сторінки в `scene` / `engraving` / `wall` поки вибрати нічого — використовуйте фото (`img`) або додайте свою пару файлів.
+Обираються в даних назвою з префіксом виду; кожна — пара файлів `partials/media/<вид>-<назва>.html` + `src/styles/media/<вид>-<назва>.css` (CSS підключається автоматично; значення, що належать лише ілюстрації, — у її файлі). Збірка перевіряє префікс і існування файлу. Усі наявні ілюстрації — «бочкові» (сюжет і числа прив'язані до сторінки бочок); для іншої сторінки в `scene` / `engraving` / `cellar` поки вибрати нічого — використовуйте фото (`img`) або додайте свою пару файлів.
 
 | Вид | Поле | Наявні | Примітка |
 |---|---|---|---|
 | `scene` | `steps.scene` | `scene-barrels` | гравюра «від бочки до пляшки»; стани за `data-step` 0…3 → потрібні рівно 3 кроки (налив / витримка / розлив) |
 | `engraving` | `tiles.items[].engraving` | `engraving-barrels-head` | днище бочки; іконка DS у центрі — поле `icon` |
-| `wall` | `compare.groups[].wall` | `wall-barrels-units` — стіна з count групи | inline SVG (2 pattern + 3 rect + градієнт): блок 16 × 6 = 96 пляшок (одиниця = бочка 50 L) рівно на 2 колонки сітки, блоки по колонках через зазор 40u (група span 2 = 1 блок, span 8 = 4 блоки); неповний блок — знизу, неповний ряд — верхній зліва; кількість блоків рахує `wallView` (src/data/lp-schema.js) з `count` і `span`; золото теми в півтоні (`--opacity-lp-wall`), затемнення вглиб у кожному блоці — ряди вгору тонуть до `--opacity-lp-wall-far` |
+| `cellar` | `compare.groups[].cellar` | `cellar-barrels` — кімната-погріб з count і liters групи | inline SVG ширини групи (у u, як сітка) × спільна висота: стелажі з двох боків углиб до точки сходу, затемнення з глибиною; 1 проліт = 2 стіни × 4 полиці × 6 = 48 пляшок (96 = 2, 383 = 8, найдальший неповний), пляшок рівно `count` (`<use>` одного контуру 22 × 50); бочка зі сцени `scene-barrels` по центру на підлозі, розмір ∝ `liters`^(1/3); підпис літрів (`label`) — під бочкою, число/одиниця/вартість — над кімнатою, усе по центру; геометрію рахує `cellarView` (src/data/lp-schema.js); золото теми в півтоні (`--opacity-lp-cellar*`) |
 
 Іконки DS (`icon`): `account`, `arrow-up-right`, `basket`, `bottle-0-5`, `bottle-0-7`, `bottle-1`, `catalog`, `headset`, `mail`, `phone`, `pin`, `strength` та `barrels-char`, `barrels-caramel`, `barrels-toast`, `barrels-oak`, `barrels-grape`, `barrels-mountain`, `barrels-glass`, `barrels-sun`, `barrels-ship` (остання група — малюнок під сюжет бочок, але вибір вільний). Перелік — `design-system.html` («Брендові іконки»); збірка відхиляє неіснуючу іконку.
 
@@ -292,7 +293,7 @@ HTML у полях не приймається (усе екранується); 
 | `compare-span-sum` | compare | сума `span` груп = `cols` секції (типово 12) | ні (арифметика) |
 | `pad-exclusive` | усі, крім hero | `pad` не разом з `loose`, `join`, `stack` | так |
 | `compare-count-capacity` | compare | `count` вміщується в групу за `span` і `approx` | так |
-| `wall-xor-list` | compare | у групі `wall` і `list` взаємовиключні | так |
+| `cellar-xor-list` | compare | у групі `cellar` і `list` взаємовиключні | так |
 | `steps-media` | steps | рівно одне з `scene` / `img`; з `deck: true` — жодного з `scene` / `img` / `alt` / `slot` секції | так |
 | `steps-deck-fields` | steps | `deck: true` ⇒ `img` у кожному кроці; `img` / `alt` / `slot` / `imgPos` / `zoom` / `tags` кроку й `cols` секції — лише з `deck: true` | так |
 | `steps-alt-needs-img` | steps | `alt` лише з `img` | так |
@@ -309,7 +310,7 @@ HTML у полях не приймається (усе екранується); 
 | `stack-after-block` | сторінка | `stack: true` дозволено лише секції, перед якою стоїть `card` або `place` | ні |
 | `card-text-xor-list` | card | рівно одне з `text` / `list` | так |
 | `theme-exists` | файли | є `src/styles/themes/<theme>.css`; тон — з даних або `--lp-tone` теми | ні |
-| `media-partials-exist` | файли | є `partials/media/<назва>.html` для `scene` / `engraving` / `wall` | ні |
+| `media-partials-exist` | файли | є `partials/media/<назва>.html` для `scene` / `engraving` / `cellar` | ні |
 | `icons-exist` | файли | є клас `.icon--<icon>` | ні |
 | `media-files-exist` | файли | кожен `img` / `bg` веде на файл у `public/` | ні |
 | `contacts-keys-exist` | файли | `%contacts.<ключ>%` існує | ні |
@@ -324,7 +325,7 @@ HTML у полях не приймається (усе екранується); 
 | `slug`, `theme`, `tone` | Text (slug) · Select (теми = файли `themes/*.css`) · Select / Button group | slug запису WP · опція |
 | `metaTitle` / `metaDescription` | Text (maxlength 70) / Text Area (200) | SEO-поле |
 | `sections` | **Flexible Content** (layout = `type`; перший — лише hero) | InnerBlocks |
-| `id`, `key`, `*.icon`, `scene`/`engraving`/`wall` | Text (slug) · Select (іконки / ілюстрації за префіксом виду) | string |
+| `id`, `key`, `*.icon`, `scene`/`engraving`/`cellar` | Text (slug) · Select (іконки / ілюстрації за префіксом виду) | string |
 | `room`, `align`, `tone`, `variant`, `span`, `fade` | Select | string / number |
 | `join`, `stack`, `panel`, `accent`, `approx`, `photoFirst` | True/False | boolean |
 | `title`, `kicker`, `name`, `origin`, `cta.text` … (≤ 90) | Text (maxlength = ліміт; слово ≤ 30) | string |
@@ -338,7 +339,7 @@ HTML у полях не приймається (усе екранується); 
 ## Відкладено / обмеження
 
 - **Мапа `place`** бере координати з `src/data/contacts.js` — різні локації на різних сторінках неможливі без окремого поля `lat/lng/zoom` і зміни компонента мапи (`components/contacts-map` + `contacts-map.js`).
-- **Ілюстрації** (`scene-barrels`, `engraving-barrels-head`, `wall-barrels-*`) під сюжет бочок; загальної бібліотеки ілюстрацій немає. Іконки `barrels-*` — теж малюнок під бочки (вибір вільний).
+- **Ілюстрації** (`scene-barrels`, `engraving-barrels-head`, `cellar-barrels`) під сюжет бочок; загальної бібліотеки ілюстрацій немає. Іконки `barrels-*` — теж малюнок під бочки (вибір вільний).
 - **Меню/футер** — посилання на нову сторінку додається вручну (`partials/header.html`, `partials/footer.html`).
 - **Кадр і оптика** сторінки — файл `pages/<slug>.css`, прив'язаний до `id` секцій і `key` елементів; у даних як поля адмінки їх немає (кадр — властивість фото; нове фото з іншим кадром = рядок у файлі сторінки).
 - **Ємність по ширині тексту** виміряна для звичайного регістру (слова українською); ВЕЛИКІ літери («ЩЩЩ…») ширші — межі не гарантують вміщення суцільного ВЕЛИКОГО тексту (hscroll при цьому не виникає: слова переносяться).

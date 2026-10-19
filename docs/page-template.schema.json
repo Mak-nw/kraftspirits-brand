@@ -60,10 +60,10 @@
   ],
   "x-rules": [
     {
-      "id": "wall-xor-list",
+      "id": "cellar-xor-list",
       "scope": "compare",
       "expressed": true,
-      "rule": "у групі `wall` і `list` взаємовиключні"
+      "rule": "у групі `cellar` і `list` взаємовиключні"
     },
     {
       "id": "compare-span-sum",
@@ -207,7 +207,7 @@
       "id": "media-partials-exist",
       "scope": "files",
       "expressed": false,
-      "rule": "`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].wall` (`wall-…`): є `partials/media/<id>.html`"
+      "rule": "`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].cellar` (`cellar-…`): є `partials/media/<id>.html`"
     },
     {
       "id": "icons-exist",
@@ -1406,12 +1406,20 @@
                     "minLength": 1,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
-                  "wall": {
+                  "cellar": {
                     "type": [
                       "string",
                       "null"
                     ],
-                    "pattern": "^(?:|wall-[a-z0-9-]+)$"
+                    "pattern": "^(?:|cellar-[a-z0-9-]+)$"
+                  },
+                  "liters": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1000
                   },
                   "list": {
                     "type": [
@@ -1476,10 +1484,10 @@
                       "allOf": [
                         {
                           "required": [
-                            "wall"
+                            "cellar"
                           ],
                           "properties": {
-                            "wall": {
+                            "cellar": {
                               "type": "string",
                               "minLength": 1
                             }

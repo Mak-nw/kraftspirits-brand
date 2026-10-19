@@ -47,7 +47,7 @@ function fillValue(def, path, o = {}) {
     case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
     case 'url': { const m = `${def.startsWith || '/'}q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
-    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-units';
+    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'cellar-barrels';
     case 'icon': return 'pin';
     case 'enum': return def.sample ?? def.values[0];
     case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
@@ -83,10 +83,10 @@ function variantsOf(type) {
     const b = clone(s); delete b.text; out.push(['list', b]);
   } else if (type === 'compare') {
     const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 7; g.approx = false; });
-    a.groups[0].wall = 'wall-barrels-units'; delete a.groups[0].list; // група 1 — wall
-    a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
-    out.push(['wall+list', a]);
-    const b = clone(a); b.groups[1].wall = 'wall-barrels-units'; b.groups[1].count = 383; delete b.groups[1].list; out.push(['wall units 4 blocks', b]);   // кілька блоків + неповний (383 = 3 × 96 + 95) + затемнення вглиб
+    a.groups[0].cellar = 'cellar-barrels'; delete a.groups[0].list; // група 1 — cellar
+    a.groups[1].cellar = undefined; delete a.groups[1].cellar; // група 2 — list
+    out.push(['cellar+list', a]);
+    const b = clone(a); b.groups[1].cellar = 'cellar-barrels'; b.groups[1].count = 383; delete b.groups[1].list; out.push(['cellar 2 rooms', b]);   // кілька блоків + неповний (383 = 3 × 96 + 95) + затемнення вглиб
   } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
     const a = clone(s); delete a.look; out.push(['', a]);
@@ -152,7 +152,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -177,7 +177,7 @@ function mutantsFor(def, key, type) {
       break;
     case 'id': case 'partial': case 'icon':
       m.push(['велика літера', 'Ab', false], ['пробіл', 'a b', false], ['валідний', def.kind ? `${def.kind}-x-1` : 'a-b-1', true], ['порожній', '', opt], ['відсутнє', DEL, opt]);
-      if (def.kind) m.push(['без префікса виду', 'a-b-1', false], ['чужий вид', `${def.kind === 'scene' ? 'wall' : 'scene'}-x`, false]);
+      if (def.kind) m.push(['без префікса виду', 'a-b-1', false], ['чужий вид', `${def.kind === 'scene' ? 'cellar' : 'scene'}-x`, false]);
       break;
     case 'enum':
       m.push(['поза переліком', 'zzz', false], ['рядок замість числа', String(def.values[0]) === def.values[0] ? 5 : String(def.values[0]), false], ['відсутнє', DEL, opt]);
@@ -256,13 +256,13 @@ cross('layers: 7 пунктів (більше за максимум 6)', (p) => 
 for (const k of [2, 3, 4, 5, 6]) cross(`layers: ${k} пунктів — n рівних блоків контейнера (10 колонок)`, (p) => { S(p).items = Array.from({ length: k }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'layers');
 cross('tiles: 5 пунктів (n рівних блоків)', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'tiles [engraving');
 cross('tiles: 7 пунктів (більше за максимум)', (p) => { S(p).items = Array.from({ length: 7 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving');
-cross('compare: сума span = 9 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 6; }, false, true, 'compare [wall+list');
-cross('compare: типово cols 10, сума span = 10 (3+7)', (p) => { delete S(p).cols; }, true, true, 'compare [wall+list');
-cross('compare: cols 10, сума span = 10 (3+7)', () => {}, true, true, 'compare [wall+list');
-cross('compare: span 9 поза переліком 2–8 (JS і JSON відхиляють)', (p) => { S(p).groups[1].span = 9; }, false, false, 'compare [wall+list');
-cross('compare: cols 10, але сума span = 11 (3+8; JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [wall+list');
-cross('compare: wall і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [wall+list');
-cross('compare: 3 групи, сума 10 (4+3+3)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); delete S(p).cols; g[0].span = 4; g[0].wall = undefined; delete g[0].wall; g[0].list = ['x']; g[1].span = 3; g[2].span = 3; }, true, true, 'compare [wall+list');
+cross('compare: сума span = 9 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 6; }, false, true, 'compare [cellar+list');
+cross('compare: типово cols 10, сума span = 10 (3+7)', (p) => { delete S(p).cols; }, true, true, 'compare [cellar+list');
+cross('compare: cols 10, сума span = 10 (3+7)', () => {}, true, true, 'compare [cellar+list');
+cross('compare: span 9 поза переліком 2–8 (JS і JSON відхиляють)', (p) => { S(p).groups[1].span = 9; }, false, false, 'compare [cellar+list');
+cross('compare: cols 10, але сума span = 11 (3+8; JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [cellar+list');
+cross('compare: cellar і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [cellar+list');
+cross('compare: 3 групи, сума 10 (4+3+3)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); delete S(p).cols; g[0].span = 4; g[0].cellar = undefined; delete g[0].cellar; g[0].list = ['x']; g[1].span = 3; g[2].span = 3; }, true, true, 'compare [cellar+list');
 cross('steps: і scene, і img', (p) => { S(p).img = '/q1'; }, false, false, 'steps [scene');
 cross('steps: ні scene, ні img', (p) => { delete S(p).scene; }, false, false, 'steps [scene');
 cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps [scene');
@@ -372,12 +372,12 @@ cross('tone відсутній (дозволено: бере тема)', (p) => 
 cross('tone поза переліком', (p) => { p.tone = 'red'; }, false, false, 'layers');
 cross('невідоме поле сторінки', (p) => { p.subtitle = 'x'; }, false, false, 'layers');
 for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { approx: 999 } })) for (const [kind, cap] of Object.entries(c)) {
-  const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 10 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
-  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall units 4 blocks');
-  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall units 4 blocks');
+  const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 10 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.cellar; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.cellar && x.list) delete x.list; }); };
+  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [cellar 2 rooms');
+  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [cellar 2 rooms');
 }
-cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
-cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');
+cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [cellar+list');
+cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [cellar+list');
 
 /* поле `cols` (ширина вмісту секції в колонках) і `pad` (вертикальний відступ секції): правила + видимий ефект на сторінці */
 {

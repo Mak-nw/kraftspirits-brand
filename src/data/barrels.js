@@ -4,8 +4,8 @@
 const NB = ' '; // нерозривний пробіл: «€ 6 000» не розривається між рядками
 
 // числа (рішення замовника 15.10): ціна, вихід пляшок 0,7 л, вартість вмісту однієї пляшки, міцність, «частка ангелів»
-const B50 = { size: '50 L', price: `€${NB}2${NB}000`, bottles: 96, bottlesWord: 'пляшок', cost: `€${NB}20,83` };
-const B200 = { size: '200 L', price: `€${NB}6${NB}000`, bottles: 383, bottlesWord: 'пляшки', cost: `€${NB}15,66` };
+const B50 = { size: '50 L', liters: 50, price: `€${NB}2${NB}000`, bottles: 96, bottlesWord: 'пляшок', cost: `€${NB}20,83` };
+const B200 = { size: '200 L', liters: 200, price: `€${NB}6${NB}000`, bottles: 383, bottlesWord: 'пляшки', cost: `€${NB}15,66` };
 // що входить у ціну (рішення замовника 15.10: «власність, сертифікат»; рев'ю 395a73a7/f733e520 — рядок «інші умови» прибрано). Інших пунктів НЕ вигадувати.
 const INCLUDES = ['Бочка у вашій власності', 'Сертифікат на бочку'];
 // Смакові ноти «Подальшої витримки» — ЧЕРНЕТКА (замовник 15.10 попросив придумати): загальновідомі ноти СТИЛЮ вина (марсала «оро», мадера, портвейн тоні,
@@ -55,11 +55,11 @@ export const barrels = {
       type: 'compare', id: 'profit', room: 'warm',
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
-        // стіна пляшок (рішення замовника 19.10 «криво, не по лінійці, як смітник, занадто світла»): блок 16 × 6 = 96 пляшок = одиниця виміру рівно на 2 колонки;
-        // 50 L — span 2 = 1 блок (колонки 1–2), 200 L — span 8 = 4 блоки (колонки 3–10), масштаб 1 : 4; кількість блоків — з count; золото в півтоні, затемнення вглиб рядів (media/wall-barrels-units)
-        { key: 'b50', label: `Бочка ${B50.size}`, span: 2, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
+        // кімнати-погреби (рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): обидві кімнати однакової ширини: span 5 (колонки 1–5 і 6–10); різницю ×4 дають глибина (прольоти) й розмір бочки;
+        // над кімнатою по центру — орієнтовна кількість пляшок і вартість однієї пляшки, під бочкою — літри (label); розмір бочки з liters, стелажі з count (1 проліт = 48 пляшок); media/cellar-barrels
+        { key: 'b50', label: `${B50.liters} л`, liters: B50.liters, span: 5, align: 'center', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `Бочка ${B200.size}`, span: 8, align: 'start', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
+        { key: 'b200', label: `${B200.liters} л`, liters: B200.liters, span: 5, align: 'center', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },

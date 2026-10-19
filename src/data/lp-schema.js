@@ -92,10 +92,10 @@ export const SCHEMA = {
     //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
     steps: { ...BASE, ...TITLE, room: E(ROOMS, false, 'deep'), deck: B(), split: B(), cols: COLS('steps'), scene: { type: 'partial', kind: 'scene' }, ...MEDIA_IMG, items: L(O({ key: { type: 'id', req: true }, value: T(5, true), title: T(25, true), text: T(160, true),
       ...MEDIA_IMG, lottie: URL_(false, { startsWith: '/assets/lottie/' }), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), tags: L(T(DECK_TAG_MAX), 0, DECK_TAGS_MAX) }), 2, 5, true) },
-    // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа wall (ілюстрація partials/media/wall-<назва>.html) АБО list, факти
+    // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа cellar (кімната-погріб partials/media/cellar-<назва>.html, бочка по центру) АБО list, факти
     compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8], true), align: E(['start', 'center'], false, 'start'), accent: B(),
-      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), wall: { type: 'partial', kind: 'wall' }, list: L(T(90), 0, 8),
+      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), unit: T(40, true), cellar: { type: 'partial', kind: 'cellar' }, liters: N(false, { int: true, min: 1, max: 1000 }), list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
     // 4б. Формати: дві великі панелі поруч (по 5 колонок, шов 5u): підпис, капсула з великим числом і одиницею, 2–4 колонки (назва + опис), 0–2 факти
@@ -133,8 +133,8 @@ const DECK_ON = { properties: { deck: { const: true } }, required: ['deck'] };  
 
 /* path: де застосовується (''=секція; 'groups'/'items' = кожен елемент списку з таким ім'ям). check(target) → повідомлення про помилку або ''. json — фрагмент allOf для JSON Schema (де виразимо). */
 export const RULES = [
-  { id: 'wall-xor-list', types: ['compare'], path: 'groups', doc: 'у групі `wall` і `list` взаємовиключні',
-    check: (g) => (g.wall && g.list?.length ? 'wall і list — взаємовиключні' : ''), json: { not: { allOf: [present('wall'), present('list', 'arr')] } } },
+  { id: 'cellar-xor-list', types: ['compare'], path: 'groups', doc: 'у групі `cellar` і `list` взаємовиключні',
+    check: (g) => (g.cellar && g.list?.length ? 'cellar і list — взаємовиключні' : ''), json: { not: { allOf: [present('cellar'), present('list', 'arr')] } } },
   { id: 'compare-span-sum', types: ['compare'], path: '', doc: 'сума `span` усіх груп = `cols` секції (типово 10)',
     check: (s) => { const sum = s.groups.reduce((a, g) => a + g.span, 0); const cols = s.cols || GRID_COLS; return sum === cols ? '' : `groups: сума span = ${sum}, має дорівнювати cols = ${cols}`; }, json: null },
   { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)',
@@ -214,7 +214,7 @@ export const PAGE_RULES = [
 /* Перевірки проти файлової системи (tools/lp-files.mjs; збірка падає з поясненням) — у чистій схемі лише опис для docs і x-rules */
 export const FILE_RULES = [
   { id: 'theme-exists', doc: '`theme`: є файл `src/styles/themes/<theme>.css` з роллю `--lp-tone` (або `tone` задано в даних)' },
-  { id: 'media-partials-exist', doc: '`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].wall` (`wall-…`): є `partials/media/<id>.html`' },
+  { id: 'media-partials-exist', doc: '`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].cellar` (`cellar-…`): є `partials/media/<id>.html`' },
   { id: 'icons-exist', doc: '`icon` (layers, tiles, place, route): є клас `.icon--<icon>` у `src/styles/`' },
   { id: 'media-files-exist', doc: 'кожен шлях `img` / `bg` веде на наявний файл у `public/` (`card.img` — лише під `/assets/img/`)' },
   { id: 'contacts-keys-exist', doc: '`%contacts.<ключ>%` у посиланнях: ключ є в `src/data/contacts.js`' },
@@ -316,23 +316,37 @@ const t = (v) => esc(v).replace(/%(?=(?:contacts\.\w+|BASE_URL)%)/g, '&#37;');
 const li = (arr) => (arr || []).map((x) => ({ text: t(x) }));
 const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [...w].length)); // найдовший непереносний відрізок (nbsp не розриває)
 const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
-// Стіна пляшок (compare.groups[].wall, partials/media/wall-*.html): геометрія рахується з count і span групи (не хардкод).
-// Одиниця виміру — БЛОК WALL.cols × WALL.rows = 16 × 6 = 96 пляшок (= бочка 50 L) рівно на WALL.span = 2 колонки сітки (краї блоку = межі колонок);
-// блоки йдуть по колонках сітки через зазор колонок: група span 2 = 1 блок, span 8 = 4 блоки (масштаб 1 : 4, рішення замовника 19.10).
-// Координати — одиниці viewBox: комірка-пляшка 22 × 50; колонка й зазор сітки — у пропорції 115.42u : 40u (той самий масштаб u, тож SVG на ширину групи лягає точно на колонки).
-// Неповний блок заповнюється знизу; неповний ряд — верхній, від лівого краю (383 = 3 × 96 + 95: верхньої правої пляшки немає).
-const WALL = { cols: 16, rows: 6, span: 2, cellW: 22, cellH: 50, inset: 3, gapRatio: 40 / 115.42 };   // inset — поле комірки до чорнила пляшки (3/22): блок обрізано по чорнилу крайніх пляшок, тож вони стоять точно на лініях колонки
-const wallView = (count, span) => {
-  const per = WALL.cols * WALL.rows, blockW = WALL.cols * WALL.cellW - 2 * WALL.inset, h = WALL.rows * WALL.cellH;
-  const col = blockW / (WALL.span + (WALL.span - 1) * WALL.gapRatio), gap = col * WALL.gapRatio;
-  const step = blockW + gap;   // крок блоку = WALL.span колонок + зазор
-  const n = Math.max(0, Math.floor(count)); const full = Math.floor(n / per), rest = n % per, rows = Math.floor(rest / WALL.cols), tail = rest % WALL.cols;
-  const blocks = full + (rest ? 1 : 0); const drawn = Math.max(blockW, blocks * step - gap);
-  const r = (x) => +x.toFixed(3);
-  const w = Math.max(span * col + (span - 1) * gap, drawn);   // ширина групи у viewBox; якщо блоків більше, ніж вміщає span, — стіна масштабується вниз, не вилазить
-  return { wallW: r(w), wallH: h, wallCellW: WALL.cellW, wallCellH: WALL.cellH, wallBlockW: blockW, wallStep: r(step), wallFullW: full ? r(full * step - gap) : 0, wallRestX: r(full * step),
-    wallRowsY: h - rows * WALL.cellH, wallRowsH: rows * WALL.cellH, wallTailY: h - (rows + 1) * WALL.cellH, wallTailW: tail ? tail * WALL.cellW - WALL.inset : 0, wallInset: WALL.inset,
-  };
+// Кімната-погріб (compare.groups[].cellar, partials/media/cellar-*.html; рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): геометрія рахується з count, span і liters групи.
+// Кімната = ширина групи (span колонок + зазори, у u як сітка: колонка 115.42u, зазор 40u) × CELLAR.h; стелажі з двох боків ідуть углиб до точки сходу (перспектива), пляшки тонуть у фоні.
+// Одиниця виміру — ПРОЛІТ стелажа = 2 стіни × 4 полиці × 6 пляшок = 48 (96 = 2 прольоти, 383 = 7 повних + 47: найдальша пляшка-«хвіст» не добудована). Бочка — по центру кімнати на підлозі; розмір ∝ літражу^(1/3) (об'єм → лінійний розмір).
+const CELLAR = { h: 420, col: 115.42, gap: 40, vy: 0.42, depth: 0.42, fade: 0.32, shelves: [0.24, 0.47, 0.70, 0.93], top: 0.02, wallX: [0.04, 0.96], perShelf: 6, bottleW: 22, bottleH: 50, bottleK: 0.78,
+  wRef: 673, qMin: 0.55, barrelRef: 200, barrelWRef: 220, barrelBase: 0.97, caskW: 344, caskBottom: 652, caskCx: 260, stroke: 0.9 };   // stroke — як --svg-stroke-hair (одиниці viewBox); барель: ширина 200 L = barrelWRef, нижній край підставок на barrelBase висоти кімнати
+const cellarView = (count, span, liters, key) => {
+  const C = CELLAR, W = span * C.col + (span - 1) * C.gap, H = C.h, vx = W / 2, vy = H * C.vy;
+  const nw = Math.min(1, W / C.wRef), q = Math.max(C.qMin, Math.sqrt(nw)), depth = C.depth / Math.sqrt(nw);   // вузька кімната: пляшки дрібніші, перспектива глибша (інакше пляшки злипаються)
+  const sc = (z) => 1 / (1 + depth * z);
+  const P = (X, Y, z) => [vx + (X - vx) * sc(z), vy + (Y - vy) * sc(z)];
+  const fade = (z) => Math.max(0.04, Math.exp(-z * C.fade));
+  const per = 2 * C.shelves.length * C.perShelf;   // пляшок на проліт
+  const n = Math.max(0, Math.floor(count)), bays = Math.max(1, Math.ceil(n / per));
+  const wx = C.wallX.map((k) => W * k), ys = C.shelves.map((k) => H * k), yTop = H * C.top;
+  const f = (x) => +x.toFixed(1), o = (x) => +x.toFixed(3);
+  let lines = '';
+  const ln = (a, b, op) => { lines += `<line x1='${f(a[0])}' y1='${f(a[1])}' x2='${f(b[0])}' y2='${f(b[1])}' opacity='${o(op)}'/>`; };
+  for (const X of wx) for (const Y of [...ys, yTop]) for (let z = 0; z < bays; z += 0.5) ln(P(X, Y, z), P(X, Y, z + 0.5), fade(z + 0.25));   // полиці: сегменти з затемненням
+  for (let k = 0; k <= bays; k++) for (const X of wx) ln(P(X, yTop, k), P(X, ys[3], k), fade(k));   // стійки прольотів
+  { const [ax, ay] = P(wx[0], yTop, bays), [bx, by] = P(wx[1], ys[3], bays); lines += `<rect x='${f(ax)}' y='${f(ay)}' width='${f(bx - ax)}' height='${f(by - ay)}' opacity='${o(fade(bays))}'/>`; }   // торцева стіна
+  const list = [];
+  for (let k = 0; k < bays; k++) for (const [wi, X] of wx.entries()) for (const Y of ys) for (let i = 0; i < C.perShelf; i++) list.push({ z: k + (i + 0.5) / C.perShelf, X, Y, wi });
+  list.sort((a, b) => a.z - b.z);
+  const keep = list.slice(0, n).sort((a, b) => b.z - a.z);   // рівно count пляшок (найдальша — неповний проліт); малюються від дальніх до ближніх
+  const bh = (ys[1] - ys[0]) * C.bottleK * q; let bottles = '';
+  for (const b of keep) {
+    const s = sc(b.z), [x, y] = P(b.X, b.Y, b.z), h = bh * s, w = h * C.bottleW / C.bottleH, xx = b.wi === 0 ? x + w * 0.1 : x - w * 1.1;
+    bottles += `<use href='#lp-cellar-bottle-${key}' transform='translate(${f(xx)} ${f(y - h)}) scale(${o(w / C.bottleW)} ${o(h / C.bottleH)})' opacity='${o(0.92 * fade(b.z))}'/>`;
+  }
+  const k = (C.barrelWRef / C.caskW) * Math.cbrt((liters || C.barrelRef) / C.barrelRef);   // масштаб бочки з сцени (344 × 284 од.) у кімнаті
+  return { cellarW: o(W), cellarH: H, cellarLines: lines, cellarBottles: bottles, cellarBarrel: `translate(${f(vx - C.caskCx * k)} ${f(H * C.barrelBase - C.caskBottom * k)}) scale(${o(k)})`, cellarStroke: o(C.stroke / k) };
 };
 const titleMod = (s) => (s.titleCols === 6 ? ' heading-wide' : '');   // клас-модифікатор ширини заголовка (base.css .heading-wide)
 function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), titleMod: titleMod(s), lead: t(s.lead), caption: t(s.caption) }; }
@@ -356,8 +370,8 @@ const VIEW = {
         img: it.img || '', lottie: it.lottie || '', alt: t(it.alt), slot: t(it.slot), posMod: `${it.imgPos ? ` lp-steps__card--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-steps__card--zoom-${Math.round(it.zoom * 100)}` : ''}`, tags: li(it.tags) })) };
   },
   compare: (s) => ({ ...head(s), note: t(s.note),
-    groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
-      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', ...(g.wall ? wallView(g.count, g.span) : {}), list: li(g.list),
+    groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.cellar ? ' lp-group--has-cellar' : ''}${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
+      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', lookMod: s.look === 'about' ? ' lp-look--about' : '',
     items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), leadGap: !it.lead && s.items.some((x) => x.lead) ? '1' : '',   // lead у ОДНІЙ панелі: у другій — порожній рядок тієї ж висоти (спільні рядки subgrid)

@@ -160,7 +160,7 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 
 | Файл | Призначення |
 |---|---|
-| ~~`img/barrels-bottle-block.svg`~~ | видалено 19.10: «стіна пляшок» тепер inline SVG `partials/media/wall-barrels-units.html` (контур пляшки 22 × 50 у pattern; блок 16 × 6 = 96 на 2 колонки, кількість — з даних) |
+| ~~`img/barrels-bottle-block.svg`~~ | видалено 19.10: «стіна пляшок» відхилена замовником 19.10, замінена кімнатою-погребом: inline SVG `partials/media/cellar-barrels.html` (контур пляшки 22 × 50 у `<use>`, стелажі в перспективі, бочка по центру; кількість і розмір бочки — з даних; без растрових файлів) |
 
 Видалено під час доопрацювання (арки й ілюстративні фактури прибрано за рішенням замовника): `barrels-staves.webp`, `barrels-amber.webp`, `barrels-heads-chalk.webp`, `barrels-tex-char|caramel|toast|oak.svg`, `barrels-pattern-diamond.svg`.
 

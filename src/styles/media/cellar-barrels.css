@@ -1,0 +1,23 @@
+/* МЕДІА «cellar-barrels» (partials/media/cellar-barrels.html; шаблон lp, тип compare, поле cellar групи; рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати).
+   Кімната-погріб: один inline SVG на групу, ширина = ширина групи (у u, тож лягає точно на колонки), висота спільна для обох груп. Стелажі з двох боків ідуть углиб до точки сходу
+   й тонуть у фоні (прозорість ліній і пляшок спадає з глибиною — атрибути з lp-schema.js → cellarView); пляшки — контур DS 22 × 50, золото теми (--lp-accent) у півтоні.
+   Бочка — гравюра зі сцени scene-barrels (ті самі лінії), по центру кімнати на підлозі; розмір ∝ літражу (cellarView). Підпис літрів — ПІД бочкою (.lp-group__size), число й вартість — НАД кімнатою; усе по центру кімнати. */
+:root, .lp-scope {
+  --opacity-lp-cellar: 0.9;          /* півтон пляшок: золото теми на 90% (на коричневому — м'яке золото, не біле; рішення замовника 19.10) */
+  --opacity-lp-cellar-fill: 0.16;    /* заливка тіла бочки (півтон гравюри) */
+  --opacity-lp-cellar-frame: 0.55;   /* стелажі: тонкі лінії рами погреба, ще приглушені глибиною */
+}
+
+/* група з кімнатою: над кімнатою — число, одиниця, вартість; кімната; під бочкою — літри. Рядки спільні (subgrid) → кімнати обох груп на одній висоті. */
+.lp-group--has-cellar .lp-group__num { grid-row: 1; }
+.lp-group--has-cellar .lp-group__unit { grid-row: 2; }
+.lp-group--has-cellar .lp-group__facts { grid-row: 3; margin-top: var(--space-lp-ledger-row); }
+.lp-group--has-cellar .lp-cellar { grid-row: 4; }
+.lp-group--has-cellar .lp-group__size { grid-row: 5; margin-top: var(--space-15); }
+.lp-group--has-cellar { grid-template-columns: minmax(0, 1fr); min-width: 0; } /* усі елементи групи — на ширину кімнати (= колонки сітки), текст по центру (.lp-group--center) → центр тексту = центр кімнати */
+
+.lp-cellar { display: block; width: 100%; height: auto; margin-top: var(--space-lp-wall-top); color: var(--lp-accent); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: var(--svg-stroke-hair); }
+.lp-cellar__frame { opacity: var(--opacity-lp-cellar-frame); }
+.lp-cellar__bottles { fill: currentColor; stroke: none; opacity: var(--opacity-lp-cellar); }
+.lp-cellar__cask { fill: currentColor; fill-opacity: var(--opacity-lp-cellar-fill); }
+.lp-cellar__cask-bg { fill: var(--lp-warm); stroke: none; } /* непрозора підкладка тону кімнати: пляшки позаду бочки не просвічують */
