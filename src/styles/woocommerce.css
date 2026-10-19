@@ -41,36 +41,22 @@ body.page-account .wc-page:has([data-wc-layout="guest"]:not([hidden])) > .woocom
 .woocommerce table.cart :is(.product-quantity) { text-align: start; }
 .woocommerce table.shop_table .product-name { width: 100%; }
 .woocommerce table.shop_table thead th:last-child { text-align: end; }
-.woocommerce table.cart td.actions { padding-block: var(--space-30) 0; border-bottom: 0; text-align: start; }
-/* ряд дій кошика (bd5bc5c8): підсітка з 10 колонок на всю ширину таблиці, зазор великих блоків; поле купона 4, «Застосувати купон» 3, «Оновити кошик» 3 */
-.woocommerce table.cart td.actions .wc-grid--actions { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--grid-gap-panels); align-items: center; }
-.woocommerce table.cart td.actions .wc-grid--actions .coupon { display: contents; }
-.woocommerce table.cart td.actions .wc-grid--actions .coupon .field__control { grid-column: span 4; width: auto; }
-.woocommerce table.cart td.actions .wc-grid--actions .coupon > .btn { grid-column: span 3; }
-.woocommerce table.cart td.actions .wc-grid--actions > .btn { grid-column: span 3; }
 .woocommerce .product-thumbnail img { width: auto; max-width: none; height: var(--size-wc-thumb-h); object-fit: contain; }
 .woocommerce .product-name .variation { display: flex; gap: var(--space-5); margin: 0; }
 .woocommerce .product-name .variation :is(dt, dd) { margin: 0; }
 .woocommerce a.remove { --wc-remove-pad-x: max(var(--space-5), calc(var(--size-touch-target) - var(--size-wc-remove-glyph) - var(--space-15))); --wc-remove-pad-y: max(var(--space-5), calc((var(--size-touch-target) - 1lh) / 2)); display: inline-block; padding: var(--wc-remove-pad-y) var(--space-15) var(--wc-remove-pad-y) var(--wc-remove-pad-x); margin: calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--space-15)) calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--wc-remove-pad-x)); transition: color var(--duration-fast) var(--ease-out); } /* «×»: роль t-lead + поле під палець: область дотику ≥ --size-touch-target (44px) по обох осях; поле компенсоване від'ємним відступом — знак і розкладка колонки ті самі; праворуч поле = --space-15 (≤ порожнього padding комірки, до фото не заходить), решту дає ліве поле (порожня ділянка панелі) */
-@media (hover: hover) { .woocommerce a.remove:hover, .woocommerce a.woocommerce-remove-coupon:hover { color: var(--color-teal); } }
-.woocommerce a.woocommerce-remove-coupon { transition: color var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .woocommerce a.remove:hover { color: var(--color-teal); } }
 
-/* кількість: стрілки = .arrow-btn (на світлій панелі кольори словника інвертовано — так само, як контактна панель перемикає hover .btn--outline у contacts.css); поле — .field__control між ними */
+/* кількість: стрілки = .arrow-btn.arrow-btn--sm (проста мала кругла кнопка з однією hairline-обводкою, шеврон chevron-down.svg; на світлій панелі кольори словника інвертовано — так само, як контактна панель перемикає hover .btn--outline у contacts.css); поле — .field__control між ними */
 .quantity { display: flex; align-items: center; gap: var(--space-5); }
 .quantity .qty { width: var(--size-wc-qty-w); text-align: center; appearance: textfield; -moz-appearance: textfield; }
 .quantity .qty::-webkit-inner-spin-button, .quantity .qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .woocommerce .quantity .arrow-btn {
   --btn-bg: var(--btn-outline-bg-default); --btn-bg-hover: var(--btn-green-bg-default); --btn-bg-focus: var(--btn-green-bg-default); --btn-bg-active: var(--btn-green-bg-active); --btn-bg-disabled: var(--btn-outline-bg-default);
   --btn-border: var(--btn-outline-border-default); --btn-border-hover: var(--btn-green-border-default); --btn-border-focus: var(--btn-green-border-default); --btn-border-active: var(--btn-green-border-default); --btn-border-disabled: var(--btn-outline-border-default);
-  --btn-icon-filter: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-default); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-default); --btn-icon-filter-active: var(--btn-arrow-icon-filter-default); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-hover);
 }
 
-/* вимкнена «Оновити кошик»: контурна кнопка на панелі отримує hover/focus/active-заливку з contacts.css (.contacts-panel .btn--outline) — для disabled повертаємо заливку стану disabled (як у решти кнопок: стани не змінюються) */
-.contacts-panel .btn:is(:disabled, [aria-disabled="true"]) { --btn-bg-hover: var(--btn-bg-disabled); --btn-bg-focus: var(--btn-bg-disabled); --btn-bg-active: var(--btn-bg-disabled); }
 
-/* купон: поле + кнопка в ряд */
-.woocommerce .coupon { display: flex; flex-direction: row; align-items: center; gap: var(--space-10); }
-.woocommerce .coupon .field__control { width: calc(var(--size-wc-qty-w) * 3); }
 
 /* підсумки: назва ліворуч, сума праворуч */
 .cart_totals table.shop_table :is(td) { text-align: end; }

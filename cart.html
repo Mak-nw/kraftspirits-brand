@@ -7,7 +7,7 @@
   <!--@include head-fonts price="1"-->
   <!--@include head-age-->
   <title>Кошик — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Кошик інтернет-магазину YasnoCraft × Bazylsprings: позиції, кількість, купон, підсумок і перехід до оформлення замовлення.">
+  <meta name="description" content="Кошик інтернет-магазину YasnoCraft × Bazylsprings: позиції, кількість, підсумок і перехід до оформлення замовлення.">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
@@ -15,7 +15,7 @@
 </head>
 <!-- Розмітка = класичний шорткод [woocommerce_cart]: шаблони cart/cart.php, cart-totals.php, cart-empty.php, notices/*.php (reports/wc-templates-spec.md, розділ 1.4).
      Класи woocommerce-* лишаються (JS/CSS WooCommerce шукає їх), поверх — наші компоненти (partials/components/wc-*.html, стилі src/styles/woocommerce.css).
-     Стани: ?state=empty | updated | coupon-error | coupon-applied; ?demo=1 кладе демо-позиції в порожній кошик (localStorage ks_cart). -->
+     Стани: ?state=empty; ?demo=1 кладе демо-позиції в порожній кошик (localStorage ks_cart). -->
 <body class="page-cart woocommerce-cart woocommerce-page">
   <!--@include body-vw-->
   <!--@include components/age-gate-->
@@ -45,18 +45,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-wc-actions-row>
-                <td colspan="6" class="actions">
-                  <div class="wc-grid wc-grid--actions">
-                  <div class="coupon field" data-field="coupon_code">
-                    <label class="screen-reader-text visually-hidden" for="coupon_code">Купон:</label>
-                    <input class="input-text field__control t-text" type="text" name="coupon_code" id="coupon_code" value="" placeholder="Код купона" autocomplete="off">
-                    <button class="button btn btn--outline" type="submit" name="apply_coupon" value="Застосувати купон"><span class="btn__inner t-btn">Застосувати купон</span></button>
-                  </div>
-                  <button class="button btn btn--outline" type="submit" name="update_cart" value="Оновити кошик" disabled aria-disabled="true"><span class="btn__inner t-btn">Оновити кошик</span></button>
-                  </div>
-                </td>
-              </tr>
             </tbody>
           </table>
         </form>
@@ -73,12 +61,12 @@
           <table class="shop_table shop_table_responsive">
             <tbody>
               <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="0 ₴" attr="data-wc-subtotal"-->
-              <!--@include components/wc-row cls="cart-discount coupon-demo10" label="Купон" value="" attr="data-wc-discount" hidden="1"-->
               <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
               <!--@include components/wc-row cls="order-total" label="Разом" value="0 ₴" attr="data-wc-total"-->
             </tbody>
           </table>
-          <p class="t-text" data-wc-note>Вік 18+ підтверджується через Дію перед оплатою та під час отримання.</p>
+          <p class="t-text" data-wc-note>Зверніть увагу: при отриманні в пункті необхідне підтвердження віку.</p>
+          <p class="t-text" data-wc-ship-note>* вартість доставки розраховується за тарифами обраного перевізника</p>
         </div>
         <div class="wc-proceed-to-checkout">
           <a class="checkout-button button alt wc-forward btn btn--green btn--block" href="checkout.html"><span class="btn__inner t-btn">Перейти до оформлення</span></a>

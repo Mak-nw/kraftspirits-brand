@@ -10,9 +10,8 @@ const base = import.meta.env.BASE_URL;
 export const query = new URLSearchParams(location.search);
 export const state = query.get('state') || '';
 
-export const FREE_SHIPPING_FROM = 3000; // ₴: безкоштовна доставка «Новою поштою» (legal.js, «Доставка, оплата й повернення» п. 2.2)
-export const DEMO_COUPON = { code: 'DEMO10', percent: 10 }; // лише демо купона (для стану «купон застосовано»); справжні купони — у налаштуваннях WooCommerce
-const COUPON_KEY = 'ks_coupon';
+export const SHIPPING_TARIFF = 'за тарифами перевізника*'; // значення рядка «Доставка» для «Нової пошти» (кошик, подяка, кабінет); зірочка — примітка SHIPPING_TARIFF_NOTE під таблицею підсумків
+export const SHIPPING_TARIFF_NOTE = '* вартість доставки розраховується за тарифами обраного перевізника';
 const DEMO_ITEMS = [
   { slug: 'gin-yasnyi', volume: 0.7, qty: 2 },
   { slug: 'calvados-3', volume: 0.7, qty: 1 },
@@ -20,7 +19,7 @@ const DEMO_ITEMS = [
 ];
 const ORDER_KEY = 'ks_order'; // знімок останнього справжнього замовлення (пише wc-checkout.js)
 const hasRealOrder = () => { try { return !!sessionStorage.getItem(ORDER_KEY); } catch { return false; } };
-const DEMO_STATES = ['updated', 'coupon-error', 'coupon-applied', 'error', 'thanks'];
+const DEMO_STATES = ['error', 'thanks'];
 
 export const fmtMoney = (n) => `${n.toLocaleString('uk-UA')} ₴`;
 export const fmtVol = (l) => `${String(l).replace('.', ',')} л`;
@@ -52,15 +51,10 @@ export function resolveLines(list = readCart()) {
   return out;
 }
 
-export const getCoupon = () => { try { return sessionStorage.getItem(COUPON_KEY) || ''; } catch { return ''; } };
-export const setCoupon = (code) => { try { if (code) sessionStorage.setItem(COUPON_KEY, code); else sessionStorage.removeItem(COUPON_KEY); } catch { /* без збереження */ } };
-
-export function calcTotals(lines, coupon = getCoupon()) {
+// доставку в суму не входить (рахується за тарифами перевізника): разом = проміжний підсумок
+export function calcTotals(lines) {
   const subtotal = lines.reduce((s, l) => s + l.subtotal, 0);
-  const discount = coupon === DEMO_COUPON.code ? Math.round(subtotal * DEMO_COUPON.percent / 100) : 0;
-  const total = subtotal - discount;
-  const free = subtotal >= FREE_SHIPPING_FROM;
-  return { subtotal, discount, total, free, coupon: discount ? coupon : '' };
+  return { subtotal, total: subtotal };
 }
 
 // справжній прихований <select name="billing_state|billing_city|billing_warehouse"> (його читають checkout.js WooCommerce і плагін «Нової пошти»; серверні дані підставляються в нього без зміни розмітки):

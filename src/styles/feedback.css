@@ -3,8 +3,12 @@
    Фон сторінки — візерунок ромбів (правило .page-feedback поруч із .page-product/.page-contacts у product.css). Значення — токени блоку «Зворотній зв'язок» (tokens.css). Поля — components/field.css, плитки теми — components/topic-tile.css, згода — components/check.css. */
 .feedback {
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto;
-  padding: var(--space-product-top) var(--space-product-page-x) var(--space-product-page-bottom);
+  padding: var(--space-product-top) var(--space-product-page-x);
+  /* секція = в'юпорт: зона header у потоці (--size-header-h) + секція = 100svh; вікно форми по центру вільної зони під шапкою (по вертикалі й горизонталі), висота вікна фіксована (658u) і від теми/помилок/успіху не залежить (c7bb214d) */
+  box-sizing: border-box; min-height: calc(100svh - var(--size-header-h));
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
+.feedback > .feedback-window { width: 100%; }
 /* вікно форми = панель контактів (.contacts-panel: beige, рамка 5u кольору панелі, радіус 10u, відступ 50u, мін. висота = фрейм екрана) — той самий компонент, власних стилів вікна немає; клас .feedback-window лишився гачком для підсвітки (is-highlight) */
 /* два стани в одній клітинці сітки (форма ↔ успіх): вікно тримає висоту вищого, стрибка немає; перемикання — fade */
 /* висота: мін. висота-фрейм панелі контактів тут знята (вікно не розтягується на екран → без порожньої зони між контактами й згодою); форма має мін. висоту --size-feedback-window-h (658u), вища за вмістом — росте, нічого не обрізається */
@@ -27,7 +31,7 @@
 .feedback-col--main > * { grid-column: calc(var(--span-feedback-aside) + 1) / span var(--span-feedback-main); min-width: 0; }
 .feedback-col--main > .feedback-message { grid-row: 1 / span 3; }
 .feedback-col--main > .feedback-foot { grid-row: 4; align-self: end; }
-.feedback-col--main > .contact-form__alert { grid-row: 5; } /* загальна помилка — окремий рядок під «Надіслати» (рядок існує лише поки вона показана) */
+.feedback-col--main > .contact-form__alert { grid-row: 4; grid-column: calc(var(--span-feedback-aside) + 1) / span 3; align-self: start; } /* загальна помилка надсилання: у ряду «Надіслати», ліворуч від кнопки (без власного рядка сітки — висота вікна не росте); показується лише при збої відправки, коли польових помилок немає */
 
 .feedback-head { display: flex; flex-direction: column; gap: var(--space-10); } /* заголовок → підзаголовок: було 15, на крок шкали менше (a161aa61) */
 .feedback-head p { margin: 0; }
@@ -36,6 +40,10 @@
 
 /* повідомлення: поле розтягується на висоту рядків 1–3 (мін. --size-feedback-message-min-h); рядки помилок «Телефон/E-mail» і «повідомлення» виведені з потоку (absolute під контролом),
    щоб нижні краї textarea і E-mail збігались і за помилок валідації */
+/* помилки НЕ змінюють висоту вікна (c7bb214d): «Тип звернення» й «Ім'я» — у ряду підпису праворуч від нього; «Телефон/E-mail» (спільне повідомлення) — під парою на обидві колонки, у запасі над згодою; «повідомлення» і згода — вже виведені з потоку */
+.feedback-col--aside :is([data-field="topic"], [data-field="name"]) { position: relative; }
+.feedback-col--aside :is([data-field="topic"], [data-field="name"]) > .field__error { position: absolute; top: 0; inset-inline-end: 0; }
+.feedback-pair .field:first-child .field__error { inset-inline-end: calc(-100% - var(--space-5)); }
 .feedback-pair .field, .feedback-message { position: relative; }
 .feedback-pair .field__error, .feedback-message .field__error { position: absolute; inset-inline: 0; top: 100%; margin-top: var(--space-field-label-gap); }
 .feedback-message .field__control { flex: 1; min-height: var(--size-feedback-message-min-h); resize: vertical; }

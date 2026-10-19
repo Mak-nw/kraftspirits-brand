@@ -219,7 +219,7 @@ function init() {
     select.set(value);
     revalidate();
     await whenAgeOk(); // поки ворота віку показані, скрол і фокус не чіпаємо
-    aside.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+    aside.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }); // 'nearest': вікно вже у видимій зоні (секція = в'юпорт, вікно по центру) — сторінка не зсувається
     aside.classList.remove('is-highlight');
     void aside.offsetWidth; // перезапуск анімації спалаху
     aside.classList.add('is-highlight');
