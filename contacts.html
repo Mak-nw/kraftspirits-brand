@@ -21,7 +21,10 @@
   <main class="contacts">
     <section class="contacts-screen" aria-label="Контакти">
       <div class="contacts-panel contacts-window">
-        <div class="contacts-info">
+        <div class="contacts-window__map">
+          <!--@include components/contacts-map-->
+        </div>
+        <div class="contacts-panel contacts-info">
           <h1 class="t-hero" id="contacts-title">Контакти</h1>
           <div class="contacts-data">
             <div class="contacts-item contacts-item--wide">
@@ -41,9 +44,6 @@
             <!--@include components/btn variant="btn--green btn--block" href="feedback.html" text="Написати нам" arrow="arrow-up-right"-->
             <!--@include components/btn variant="btn--outline btn--block" href="feedback.html?topic=excursion" text="Замовити екскурсію"-->
           </div>
-        </div>
-        <div class="contacts-window__map">
-          <!--@include components/contacts-map-->
         </div>
       </div>
     </section>

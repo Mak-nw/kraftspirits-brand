@@ -1,5 +1,5 @@
 /* Сторінка «Контакти» (contacts.html) = за версткою «Зворотній зв'язок» (рішення замовника): ОДНЕ вікно по центру в'юпорта (.contacts-panel.contacts-window: beige, рамка 5u, радіус 10u, відступ 50u, фіксована висота = висота вікна feedback; зелений ромбовий фон сторінки) із двома половинами по 5 колонок:
-   ліворуч контакти (.contacts-info: «Контакти», Адреса/Телефон/E-mail з іконками DS, кнопки «Написати нам» / «Замовити екскурсію» → feedback.html), праворуч мапа (.contacts-window__map > .contacts-map) на всю висоту половини, у тому ж внутрішньому відступі вікна. Форма — окрема сторінка feedback.html (feedback.css).
+   ліворуч контакти — картка поверх мапи (.contacts-info: «Контакти», Адреса/Телефон/E-mail з іконками DS, кнопки «Написати нам» / «Замовити екскурсію» → feedback.html), мапа (.contacts-window__map > .contacts-map) — фон усього вікна від краю до краю, видно праворуч від картки. Форма — окрема сторінка feedback.html (feedback.css).
    Контейнер сторінки — як .feedback: поля 202.9u, секція = в'юпорт (зона header у потоці), вікно по центру обох осей. Фон сторінки — візерунок ромбів (правило .page-contacts у product.css поруч із .page-product / .page-feedback). Усі значення — токени блоку «Контакти». */
 .contacts {
   width: 100%; max-width: var(--size-product-page-w); margin-inline: auto; box-sizing: border-box;
@@ -18,11 +18,11 @@
 .contacts-cta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-contacts-item-gap); margin-top: auto; } /* кнопки внизу лівої панелі: дві ділять всю ширину блоку; якщо в панелі на 4 колонки (10-колонкова сітка) обидві з падінгами не вміщуються в ряд — друга переходить на новий рядок (hug: вміст + падінги, D16) */
 .contacts-cta .btn { flex: 1 1 max-content; min-width: 0; }
 
-/* вікно: дві половини на 10 колонках (як форма feedback), висота фіксована; мапа заповнює праву половину повністю */
-.contacts-window { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-feedback-col-gap); min-height: var(--size-contacts-window-h); box-sizing: border-box; }
-.contacts-window > .contacts-info { grid-column: 1 / span var(--span-feedback-aside); }
-.contacts-window > .contacts-window__map { grid-column: calc(var(--span-feedback-aside) + 1) / span var(--span-feedback-main); display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.contacts-window__map > .contacts-map { flex: 1; min-height: 0; }
+/* вікно: карта = ФОН усього вікна (від краю до краю в межах рамки), контакти — картка .contacts-panel зліва поверх неї (висота вікна фіксована, як на feedback); карта лишається інтерактивною: картка перехоплює події лише на собі */
+.contacts-window { position: relative; display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--space-feedback-col-gap); min-height: var(--size-contacts-window-h); box-sizing: border-box; padding: var(--space-contacts-card-inset); overflow: hidden; }
+.contacts-window > .contacts-window__map { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.contacts-window__map > .contacts-map { flex: 1; min-height: 0; border-radius: 0; }
+.contacts-window > .contacts-info { position: relative; z-index: 1; grid-column: 1 / span var(--span-contacts-card); min-height: 0; background: var(--color-light); border-color: var(--color-light); } /* картка світліша за тло карти (земля мапи = beige як і панель): інакше межі картки на мапі не видно; колір з палітри DS */
 
 /* карта: MapLibre GL + OpenFreeMap (src/js/contacts-map.js; без ключа), перефарбована в палітру сайту токенами --map-*; радіус панелі 10u; розтягується на висоту панелі
    (CLS 0: розмір задано до завантаження). Без WebGL/мережі — статична заглушка .contacts-map__fallback (кнопка «Відкрити в OpenStreetMap»). */

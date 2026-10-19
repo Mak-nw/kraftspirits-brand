@@ -155,6 +155,12 @@ async function initMap(host) {
       touchPitch: false,
       fadeDuration: reduced ? 0 : 150,
     });
+    // карта — фон вікна: картка контактів зліва перекриває її частину → центр і маркер у вільній частині (padding.left = ширина картки до її правого краю)
+    const card = host.closest('.contacts-window')?.querySelector('.contacts-info');
+    const applyPadding = () => { if (!card) return; const left = Math.max(0, card.getBoundingClientRect().right - host.getBoundingClientRect().left); map.setPadding({ left, right: 0, top: 0, bottom: 0 }); };
+    applyPadding();
+    map.jumpTo({ center: [lng, lat] });
+    map.on('resize', () => { applyPadding(); map.jumpTo({ center: [lng, lat] }); });
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation?.();
     map.addControl(new AttributionControl({ compact: false, customAttribution: ATTRIBUTION }), 'bottom-right');
