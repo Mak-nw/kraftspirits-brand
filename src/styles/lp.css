@@ -189,7 +189,7 @@
 .lp-group__fact { display: flex; flex-direction: column; gap: var(--space-5); }
 .lp-group__fact-value { text-indent: var(--lp-approx-optic, 0em); white-space: nowrap; }
 .lp-group__fact-value--wrap { white-space: normal; text-wrap: balance; } /* довгий факт (> 16 знаків) переноситься */
-.lp-group__fact-label { text-indent: var(--lp-caption-optic, 0em); color: var(--lp-on-paper-muted); }
+.lp-group__fact-label { text-indent: var(--lp-caption-optic, 0em); color: var(--lp-on-paper-muted); text-wrap: balance; } /* вузька група (span 2) переносить підпис рівними рядками, без «вдови» */
 /* лічильник: до старту (lp.js ставить data-count="run"|"done") число приховане, щоб не було кадру «фінал → 0 → рахує»; layout не змінюється.
    Страховка: через --duration-count-failsafe число з'являється саме. Без JS і з reduced-motion — фінальне значення одразу. */
 .js .page-lp [data-count-to]:not([data-count]) { opacity: 0; animation: count-failsafe 0s linear var(--duration-count-failsafe) forwards; }

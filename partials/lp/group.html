@@ -2,6 +2,6 @@
   <h3 class="lp-group__size t-product-name">{{label}}</h3>
   <p class="lp-group__num t-stat">{{#approx}}<span class="lp-group__approx" aria-hidden="true">≈</span><span class="lp-sr">{{approxLabel}}</span>{{/approx}}<span data-count-to="{{count}}">{{countText}}</span></p>
   <p class="lp-group__unit t-desc">{{unit}}</p>
-  {{#wall}}<!--@include media/{{wall}} key="{{key}}" w="{{wallW}}" h="{{wallH}}" cellW="{{wallCellW}}" cellH="{{wallCellH}}" blockW="{{wallBlockW}}" step="{{wallStep}}" fullW="{{wallFullW}}" restX="{{wallRestX}}" rowsY="{{wallRowsY}}" rowsH="{{wallRowsH}}" tailY="{{wallTailY}}" tailW="{{wallTailW}}" fade="{{wallFade}}" fadeX2="{{wallFadeX2}}"-->{{/wall}}{{#list}}<ul class="lp-group__list lp-list t-desc"><!--@each list lp/li--></ul>{{/list}}
+  {{#wall}}<!--@include media/{{wall}} key="{{key}}" w="{{wallW}}" h="{{wallH}}" cellW="{{wallCellW}}" cellH="{{wallCellH}}" inset="{{wallInset}}" blockW="{{wallBlockW}}" step="{{wallStep}}" fullW="{{wallFullW}}" restX="{{wallRestX}}" rowsY="{{wallRowsY}}" rowsH="{{wallRowsH}}" tailY="{{wallTailY}}" tailW="{{wallTailW}}"-->{{/wall}}{{#list}}<ul class="lp-group__list lp-list t-desc"><!--@each list lp/li--></ul>{{/list}}
   <div class="lp-group__facts"><!--@each facts lp/group-fact--></div>
 </article>

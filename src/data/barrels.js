@@ -55,11 +55,11 @@ export const barrels = {
       type: 'compare', id: 'profit', room: 'warm',
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
-        // стіна пляшок (рішення замовника 19.10 «криво, не по лінійці, як смітник, занадто світла»): вертикальний блок 8 × 12 = 96 пляшок = одиниця виміру на 1 колонку;
-        // 50 L — 1 блок (колонка 1), 200 L — 4 блоки (колонки 4–7); кількість блоків рахується з count; золото в півтоні, затемнення вглиб (media/wall-barrels-units)
-        { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
+        // стіна пляшок (рішення замовника 19.10 «криво, не по лінійці, як смітник, занадто світла»): блок 16 × 6 = 96 пляшок = одиниця виміру рівно на 2 колонки;
+        // 50 L — span 2 = 1 блок (колонки 1–2), 200 L — span 8 = 4 блоки (колонки 3–10), масштаб 1 : 4; кількість блоків — з count; золото в півтоні, затемнення вглиб рядів (media/wall-barrels-units)
+        { key: 'b50', label: `Бочка ${B50.size}`, span: 2, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `Бочка ${B200.size}`, span: 7, align: 'start', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
+        { key: 'b200', label: `Бочка ${B200.size}`, span: 8, align: 'start', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-units',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },
