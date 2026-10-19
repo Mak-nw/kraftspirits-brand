@@ -76,10 +76,10 @@ export async function controlD17(page, cfg = D17_DEFAULTS) {
   return analyzeD17(cells, cfg).violations.length;
 }
 
-/** позитивний контроль правила 4 (лише коли на сторінці є .cocktail__body): поля панелі коктейлю 50u → слово «кальвадосом» виходить → порушень > 0 */
+/** позитивний контроль правила 4 (лише коли на сторінці є .cocktail__body): поля панелі коктейлю 100u (стандарт 50u вміщується, 19.10.2026) → слово «кальвадосом» виходить → порушень > 0 */
 export async function controlD17Panel(page, cfg = D17_DEFAULTS) {
   if (!(await page.$('.cocktail__body'))) return null;
-  await page.evaluate(() => { const s = document.createElement('style'); s.id = 'qa-d17-panel-control'; s.textContent = '.cocktail__body{padding-inline:calc(50 * var(--u)) !important}'; document.head.appendChild(s); });
+  await page.evaluate(() => { const s = document.createElement('style'); s.id = 'qa-d17-panel-control'; s.textContent = '.cocktail__body{padding-inline:calc(100 * var(--u)) !important}'; document.head.appendChild(s); });
   const cells = [{ label: 'control', data: await probeD17(page, cfg) }];
   await page.evaluate(() => document.getElementById('qa-d17-panel-control')?.remove());
   return analyzeD17(cells, cfg).violations.filter((v) => /панелі/.test(v.value)).length;

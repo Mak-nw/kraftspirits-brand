@@ -342,9 +342,9 @@ export async function runDynamic(opts, allow, rep) {
           d18.push({ label: label0(st), spec: sp, width: combo.width, data: await collectStable(pg, COLLECT_D18, d18cfg, sigD18) });
           await pg.close().catch(() => {});
         }
-        // позитивні контролі: product (режим 5u: зазор 40u МАЄ дати порушення) і about (режим 40u: зазор 5u МАЄ дати порушення)
-        for (const nm of ['product?id=gin-yasnyi', 'about']) {
-          const sp0 = pageSpec(nm); const mode = d18Mode(sp0.name);
+        // позитивні контролі: product і cocktails (режим 5u: зазор 40u МАЄ дати порушення) і about (режим 40u: зазор 5u МАЄ дати порушення)
+        for (const nm of ['product?id=gin-yasnyi', 'cocktails', 'about']) {
+          const sp0 = pageSpec(nm); const mode = d18Mode(sp0.name, d18cfg);
           const cp = await openPage(L.browser, pageUrl(opts.url, sp0, 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
           await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
           d18ctl.push({ label: label0(nm.split('?')[0]), ...(await controlD18(cp, d18cfg, mode)) });
@@ -438,8 +438,8 @@ export async function runDynamic(opts, allow, rep) {
     for (const v of a.violations) addV({ rule: 'D17', ...v });
     for (const m of [...new Set(a.info)].slice(0, 20)) rep.info({ rule: 'D17', msg: m });
     if (d17ctl !== null && d17ctl === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль', value: '0 порушень', msg: 'ширина заголовка 10 колонок НЕ дала порушень — D17 не працює' });
-    if (d17ctlPanel !== null && d17ctlPanel === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль панелі', value: '0 порушень', msg: 'поля 50u у панелі коктейлю НЕ дали виходу тексту за контент-бокс — правило «текст у панелі» не працює' });
-    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (10 колонок): ${d17ctl} порушень; контроль панелі коктейлю (поля 50u): ${d17ctlPanel}` });
+    if (d17ctlPanel !== null && d17ctlPanel === 0) addV({ rule: 'D17', page: 'control', selector: 'позитивний контроль панелі', value: '0 порушень', msg: 'поля 100u у панелі коктейлю НЕ дали виходу тексту за контент-бокс — правило «текст у панелі» не працює' });
+    rep.info({ rule: 'D17', msg: `заголовків ${d17.reduce((n, c) => n + c.data.length, 0)} на ${d17.length} сторінко-ширинах; порушень ${a.violations.length}; позитивний контроль (10 колонок): ${d17ctl} порушень; контроль панелі коктейлю (поля 100u): ${d17ctlPanel}` });
   }
   // D15: шапка і меню
   if (want15) {
@@ -486,7 +486,7 @@ export async function runDynamic(opts, allow, rep) {
   if (want18) {
     const st = (stats.d18 = { pages: d18.length, big: 0, tile: 0, fused: 0, fail: 0, unstable: 0 }); const dump = [];
     for (const c of d18) {
-      const mode = d18Mode(c.spec.name); const a = analyzeD18(c.data, d18cfg, mode); const u = c.data.u;
+      const mode = d18Mode(c.spec.name, d18cfg); const a = analyzeD18(c.data, d18cfg, mode); const u = c.data.u;
       if (c.data.__stab?.unstable) { st.unstable++; rep.note(`D18 ${c.label}: заміри не збіглися за ${c.data.__stab.samples} спроб (нестабільний макет) — взято найближчий до стабільного`); }
       st.fused += a.fused;
       for (const p of a.pairs) {
@@ -502,7 +502,7 @@ export async function runDynamic(opts, allow, rep) {
     }
     for (const k of d18ctl) if (!k.applied || k.fails === 0) addV({ rule: 'D18', page: 'control', selector: `позитивний контроль ${k.label}`, value: k.applied ? '0 порушень' : 'пару великих блоків не знайдено', msg: 'зміна зазору великих блоків (product: 40u замість 5u; about: 5u замість 40u) МАЄ дати порушення — інакше D18 зламано' });
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd18.json'), JSON.stringify({ cfg: d18cfg, results: dump, control: d18ctl }, null, 1)); } catch {}
-    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; режим 5u лише product; позитивний контроль (product 40u замість 5u / about 5u замість 40u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
+    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; режим 5u: gap5-pages (product, cocktails); позитивний контроль (product 40u замість 5u / about 5u замість 40u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
   }
   // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
   if (wantHeroCtx) {

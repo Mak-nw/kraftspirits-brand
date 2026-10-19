@@ -233,6 +233,7 @@ hero (фото + паралакс, затемнення лише зверху п
 Сторінка «Часті запитання»: зелений вступ (h1 `.t-h2`, рядок `.t-text`, навігація розділами `.nav-link.t-nav` — якорі `#slug`), далі на beige тлі групи питань, у кінці зелений блок «Не знайшли відповідь?» з кнопкою `btn--light` → `feedback.html?topic=other`. Опис композиції — `design-system.html#faq`.
 - **Дані — один файл** `src/data/faq.js` (`FAQ`): масив груп `{ slug, title, items: [{ q, a, draft?, invented?, todo? }] }`. Розмітку будує `vite.config.js`: `<!--@each faq sections/faq-group-->` (h2 + рядки) і `<!--@each faq sections/faq-nav-->` (навігація); рядок — ІСНУЮЧИЙ partial `components/faq-item` (єдиний вигляд — картка `.acc--faq` в `.acc-frame`). Перевірка полів і екранування — `src/data/faq-view.js` (помилка збірки з назвою групи й номером питання).
 - **Розкладка (станом на 15.10; зараз 10 колонок: вступ і фінал — колонки 3–8):** сітка каталогу (12 колонок, 1825u, зазор 40u; `npm run qa:grid` — 0 fail у main): вступ і фінал — колонки 4–9 по центру; група — h2 у колонках 1–4 (sticky у межах групи) і питання у двох незалежних колонках (5–8 і 9–12, перша половина зліва, друга справа — розкриття не зсуває сусідню). Токени — блок «FAQ» у `tokens.css`, CSS — `src/styles/faq.css`.
+- **Зазор колонок карток (19.10.2026):** горизонтальний відступ між двома колонками карток FAQ = вертикальний відступ між картками, 5u (`--space-faq-card-row-gap`; `faq.css` `.faq-page__list`); колонки не на межах колонок сітки — дозволений виняток D12. На `about.html` (`.faq-page__list--span8`) зазор лишається 40u за рішенням замовника. Те саме для FAQ на lp-сторінках і в демо `design-system.html`.
 - **Поведінка:** кілька відповідей можуть бути відкриті одночасно (як акордеон товару); Enter/Space, ↑/↓, Home/End (`initAccordionKeys`, `src/js/accordion.js`), `aria-expanded`/`aria-controls`. Без JS усі відповіді відкриті (у розмітці `open`, інлайн-скрипт у `faq.html` згортає їх до першого paint).
 - **Тексти — чернетки** (`draft: true` у всіх). За рішенням замовника («нехай придумає») частина умов придумана — такі питання мають `invented: true` і поле `todo`; повний перелік «що придумано → кому підтвердити» — `reports/faq-invented-facts.md`. Контакти в відповідях — плейсхолдери `%contacts.email%`, `%contacts.phoneDisplay%`, `%contacts.address%` (підставляються з `src/data/contacts.js`), числа бочок — з `src/data/barrels.js` (змінювати разом).
 
@@ -378,7 +379,7 @@ npm run qa:full                  # 1200/1440/1920 × dpr 1,2 × classic+none: + 
 npm run qa:check-ds              # S1–S11 статичні + D1–D19 у браузері (-- --static-only | --dynamic-only | --rules S4,D5)
 npm run qa:links | qa:states | qa:arch | qa:cls | qa:hscroll
 npm run qa:grid                  # D12: блоки на межах 10 колонок (1200/1440/1728/1920)
-npm run qa:d18                   # D18: горизонтальний зазор великих блоків: product 5u, решта 40u
+npm run qa:d18                   # D18: горизонтальний зазор великих блоків: product і cocktails 5u (gap5-pages), решта 40u
 npm run qa:d19                   # D19: hero без оверлея (єдиний виняток — hero.fade)
 npm run qa:header                # D15: шапка / меню
 npm run qa:img-contrast          # D14: контраст тексту на фото по літерах (+ профіль parallax=on для barrels #price)
