@@ -2,6 +2,22 @@
   "_comment": "Дозволені винятки check-ds. Кожен запис: rule (S1…S9, D1…D10 або *), необов'язкові file (підрядок шляху), selector (ТОЧНИЙ збіг класів/тегів: кожен токен селектора має бути серед токенів селектора порушення; `site-header__logo` НЕ матчить `site-header__logos`), value (RegExp на значення), page (підрядок), та ОБОВ'ЯЗКОВІ reason (чому), date, decision (id рішення замовника або 'проєктне правило'). Без reason запис ігнорується. Необов'язковий requires (напр. 'hero-light-no-overlay', див. ds-static.mjs REQUIRES): запис діє лише поки умова виконана. Правило D19 allow-записами не фільтрується. Коментарі CSS/HTML вже ігноруються автоматично й записів не потребують.",
   "allow": [
     {
+      "rule": "S11",
+      "file": "lp.css",
+      "selector": "lp-offer__unit",
+      "reason": "одиниця «шт.» у чіпі факту оферу (≈ 383 шт.) — малими літерами: єдина відмінність від ролі t-chip — text-transform: lowercase; розмір/гарнітура/вага — ролі",
+      "date": "2026-10-19",
+      "decision": "коментар замовника на /barrels.html"
+    },
+    {
+      "rule": "D13",
+      "selector": "lp-offer__unit",
+      "page": "barrels",
+      "reason": "одиниця «шт.» у чіпі факту оферу (≈ 383 шт.) — малими літерами: єдина відмінність від ролі t-chip — text-transform: lowercase; розмір/гарнітура/вага — ролі",
+      "date": "2026-10-19",
+      "decision": "коментар замовника на /barrels.html"
+    },
+    {
       "rule": "D12",
       "selector": "about-story__lead",
       "page": "about",

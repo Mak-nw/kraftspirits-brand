@@ -304,6 +304,7 @@
 .lp-offer__fact dt { margin-left: var(--lp-fact-optic, 0em); color: var(--lp-on-paper-muted); overflow-wrap: break-word; } /* ярлик не стискається вужче за своє найдовше слово, коли довге значення (--wrap) займає рядок («Джин», «Витримка» на about); break-word, на відміну від anywhere (.page-lp main), не зменшує min-content */
 .lp-offer__fact dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lp-offer__fact dd.lp-offer__dd--wrap { white-space: normal; text-align: end; } /* довге значення (> 24 знаків) — переноситься, притиснуте праворуч */
+.lp-offer__unit { text-transform: lowercase; } /* одиниця «шт.» у чіпі факту — малими (решта чіпа лишається капсом) */
 .lp-offer__fact--swap { flex-direction: row-reverse; border-bottom: var(--border-divider-dots) var(--color-line-soft); } /* look: about — «значення | підпис»: значення зліва, підпис справа (DOM лишається dt → dd) */
 .lp-offer__fact--swap dd { margin: 0; }
 .lp-offer__fact--swap dd.lp-offer__dd--wrap { text-align: start; }

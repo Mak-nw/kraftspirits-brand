@@ -376,7 +376,7 @@ const VIEW = {
   offers: (s, p) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', gridMod: ` lp-offers__grid--n${s.items.length}`, bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
     items: s.items.map((it) => ({ key: it.key, span: '', tone: p.tone, look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
-      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
+      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd).replace(/шт\./g, '<span class="lp-offer__unit">шт.</span>'), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
       includes: li(it.includes), ctaText: t(it.cta.text), ctaHref: esc(it.cta.href) })),
     footText: t(s.foot?.text), footNote: t(s.foot?.note), footCtas: (s.foot?.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant })) }),
   card: (s, p) => ({ ...head(s), text: t(s.text), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone,
