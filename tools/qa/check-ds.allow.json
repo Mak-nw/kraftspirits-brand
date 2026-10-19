@@ -233,6 +233,15 @@
         { "text": "FAQ", "href": "faq.html" },
         { "text": "Контакти", "href": "contacts.html" },
         { "text": "Зворотній зв'язок", "href": "feedback.html" }
+      ],
+      "headerMenu": [
+        { "text": "Головна", "href": "index.html" },
+        { "text": "Про дім", "href": "about.html" },
+        { "text": "Ф'ючерсні бочки", "href": "barrels.html" },
+        { "text": "Екскурсії", "href": "excursions.html" },
+        { "text": "Коктейлі", "href": "cocktails.html" },
+        { "text": "FAQ", "href": "faq.html" },
+        { "text": "Контакти", "href": "contacts.html" }
       ]
     },
     "roleTolerancePx": 0.5,

@@ -3,7 +3,7 @@
 //   (а) верхній відступ пілюлі (.site-header__bar, position: fixed) = обчислений токен --header3-top (px з calc) ±0.5px,
 //       а сам токен = задана замовником величина `headerTopU`·u (allow.json → dynamic.d15; 15u) — щоб зсув токена не проходив непоміченим;
 //   (б) пілюля стоїть на колонках 1–10 єдиної сітки: лівий край = початок кол. 1, правий = кінець кол. 10 (±0.5px; сітка — профіль `catalog` D12);
-//   (в) у меню шапки (.site-header__menu .nav-cell--menu; DOM, навіть коли меню закрите) присутні ВСІ пункти зі списку, у тому ж порядку (текст без регістру + href);
+//   (в) у меню шапки (`headerMenu`, без «Зворотній зв'язок») (.site-header__menu .nav-cell--menu; DOM, навіть коли меню закрите) присутні ВСІ пункти зі списку, у тому ж порядку (текст без регістру + href);
 //   (г) футер (.site-footer__col--menu) має ті самі пункти в тому ж порядку (текст без регістру + href).
 // Додаткові пункти меню/футера = теж порушення (список має збігатися точно).
 import { gridFor, GRID_DEFAULTS } from './grid-d12.mjs';
@@ -20,6 +20,15 @@ export const D15_DEFAULTS = {
     { text: 'FAQ', href: 'faq.html' },
     { text: 'Контакти', href: 'contacts.html' },
     { text: "Зворотній зв'язок", href: 'feedback.html' },
+  ],
+  headerMenu: [ // меню шапки БЕЗ «Зворотній зв'язок» (рішення замовника: «саме посилання „зворотній зв'язок" з хедер меню заберемо»); футер лишає повний список `menu`
+    { text: 'Головна', href: 'index.html' },
+    { text: 'Про дім', href: 'about.html' },
+    { text: "Ф'ючерсні бочки", href: 'barrels.html' },
+    { text: 'Екскурсії', href: 'excursions.html' },
+    { text: 'Коктейлі', href: 'cocktails.html' },
+    { text: 'FAQ', href: 'faq.html' },
+    { text: 'Контакти', href: 'contacts.html' },
   ],
   skipPages: [], // сторінки без шапки/футера (поки порожньо: 404 теж має partials)
 };
@@ -60,7 +69,7 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
     const dl = d.barLeft - g.starts[0], dr = d.barRight - g.ends[g.cols - 1];
     if (Math.abs(dl) > tol || Math.abs(dr) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `ліво ${dl >= 0 ? '+' : ''}${dl.toFixed(2)}px від поч. кол. 1, право ${dr >= 0 ? '+' : ''}${dr.toFixed(2)}px від кін. кол. 10`, msg: 'пілюля шапки не на колонках 1–10' });
     const cmp = (kind, got) => {
-      const want = C.menu;
+      const want = kind === 'menu' ? (C.headerMenu || C.menu) : C.menu;
       const same = got.length === want.length && want.every((w, i) => nz(got[i].text) === nz(w.text) && got[i].href === w.href);
       if (same) return;
       const missing = want.filter((w) => !got.some((g2) => nz(g2.text) === nz(w.text) && g2.href === w.href)).map((w) => w.text);
