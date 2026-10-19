@@ -117,7 +117,7 @@ export async function measureTextOnImage(page, cfgIn = {}) {
  * Перед кожним заміром чекаємо, поки інерція паралакса згасне (--parallax-y не змінюється). `css` — необов'язкова накладка (для позитивного контролю).
  * Повертає { hits, all, stats, positions }.
  */
-export const D14_PARALLAX = [{ page: 'barrels', sel: '#price' }];
+export const D14_PARALLAX = [{ page: 'excursions', sel: '#price' }]; // фото «Ціни» лишилось лише на excursions (на barrels — векторна панорама scene, 20.10.2026)
 export async function measureTextOnImageParallax(page, sel, cfgIn = {}, css = '') {
   const cfg = { ...D14_DEFAULTS, ...cfgIn };
   const vh = page.viewport()?.height || 1080;

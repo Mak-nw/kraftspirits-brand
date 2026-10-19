@@ -89,8 +89,10 @@ function variantsOf(type) {
     const b = clone(a); b.groups[1].cellar = 'cellar-barrels'; b.groups[1].count = 383; delete b.groups[1].list; out.push(['cellar 2 rooms', b]);   // кілька блоків + неповний (383 = 3 × 96 + 95) + затемнення вглиб
   } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
+    const sc = clone(s); if (type === 'offers') { delete s.scene; ['bg', 'bgW', 'bgH', 'bgSlot'].forEach((k) => delete sc[k]); }   // offers: фон — рівно одне з bg (фото) або scene (панорама)
     const a = clone(s); delete a.look; out.push(['', a]);
     out.push(['look about', s]);
+    if (type === 'offers') out.push(['scene', sc]);
   } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
 }
@@ -152,7 +154,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -352,6 +354,7 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   const hf2 = pageOf(withIds([fullSection('layers')])); hf2.sections[1].fade = 'green'; note(jsOk(hf2) !== true && jsonOk(hf2) !== true, 'hero.fade: поле не приймається секцією не-hero (layers)');
   note(/<img class="hero__bg"[^>]*fetchpriority="high"/.test(nHtml), 'render: hero-фото має fetchpriority="high"');
 }
+cross('offers: і bg, і scene', (p) => { S(p).scene = 'scene-barrels-route'; }, false, false, 'offers');
 cross('offers: bg без bgW/bgH', (p) => { delete S(p).bgW; }, false, false, 'offers');
 cross('offers: bgW без bg', (p) => { delete S(p).bg; }, false, false, 'offers');
 for (const [cnt, cap] of Object.entries(PRICE_MAX)) {

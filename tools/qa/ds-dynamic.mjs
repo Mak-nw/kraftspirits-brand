@@ -323,10 +323,6 @@ export async function runDynamic(opts, allow, rep) {
             await waitStable(pg); await sleep(300);
             const mp = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin });
             d14.push({ label: `${label}/parallax`, spec, width: combo.width, ...mp });
-            if (d14parCtl === null) { // контроль: те саме з вимкненим наближенням кадру (--lp-offers-bg-scale:1 — стара поведінка, коли паралакс перезаписував кадр) МАЄ дати порушення
-              const mc = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin }, `${pp.sel} .lp-offers__bg{--lp-offers-bg-scale:1 !important}`);
-              d14parCtl = mc.hits.length;
-            }
             await pg.close().catch(() => {});
           }
         }
@@ -421,7 +417,7 @@ export async function runDynamic(opts, allow, rep) {
       for (const h of c.hits) { st.failNodes++; addV({ rule: 'D14', page: c.label, selector: h.el, value: `«${h.text}» ${h.bad}/${h.measured} літер нижче ${h.thr}:1 (мін. ${h.minRatio}:1; найгірша ${Math.round(h.worst * 100)}% пікселів; ${h.size}px${h.large ? ' великий' : ''}; під текстом: ${h.layer}; y=${h.y}; погані: «${h.badCh}»)`, msg: 'текст на зображенні: контраст по літерах нижче порога' }); }
     }
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd14.json'), JSON.stringify(d14.map((c) => ({ label: c.label, stats: c.stats, hits: c.hits, nodes: c.all.length })), null, 1)); } catch {}
-    if (d14parCtl === 0) addV({ rule: 'D14', page: 'control', selector: 'позитивний контроль parallax=on', value: '0 порушень', msg: 'кадр «Ціни» без наближення має давати контраст < 4.5:1 під міткою маршруту — перевірка профілю parallax=on сліпа' });
+    // позитивний контроль parallax=on знято 20.10.2026: він спирався на кадр фото barrels (наближення ×2), якого більше немає (замінено векторною панорамою)
     rep.info({ rule: 'D14', msg: `вузлів з зображенням під текстом ${st.candidates} (без зображення пропущено ${st.noImage}; над <canvas> WebGL-картою не міряється ${st.canvas} — візуально: атрибуція maplibre), виміряно літер ${st.lettersMeasured} на ${st.pageWidths} сторінко-ширинах; FAIL-вузлів ${st.failNodes}` });
   }
   // D16: hug/padding кнопок + позитивний контроль (зламана ширина МАЄ дати порушення)

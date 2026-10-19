@@ -193,12 +193,14 @@ HTML у полях не приймається (усе екранується); 
 У колі кожна плитка — з фото `img` (гравюри `engraving` немає); `origin` — рівно два рядки (перенос `\n` у даних, ≤ 32 знаки в рядку; роль `.t-spec` — напівжирний щільний підпис, найближча наявна роль до рефа; було `.t-desc`), показується по центру під назвою. Правила — у «Додаткових перевірках».
 
 ### `offers` — ціна / пропозиції (типово `deep`)
-Фото на всю секцію без затемнення (кадр — `pages/<slug>.css`); шапка (маршрут, лід); панелі `.contacts-panel`; рядок контактів.
+Фон секції — або фото на всю секцію без затемнення (кадр — `pages/<slug>.css`), або векторна гравюра-панорама `scene` під шапкою (за панелями); шапка (маршрут, лід); панелі `.contacts-panel`; рядок контактів.
 
 | Поле | Тип | Обов. | Ліміт | |
 |---|---|---|---|---|
 | `bg`, `bgW`, `bgH`, `bgSlot` | шлях, цілі, текст | ні; з `bg` обов'язкові `bgW`, `bgH` (піксельні розміри файлу) | | фото тла (текст шапки світлий — кадр з темною ділянкою, D8) |
-| `route.from` / `route.to` / `route.icon` | текст / текст / id іконки | ні (усі три разом) | ≤ 30 | маршрут «A — B» з hairline-лінією |
+| `scene` | назва `scene-…` | ні; не разом з `bg` | є `partials/media/scene-….html` | статична золота панорама на всю ширину вікна: починається під дисклеймером шапки (фігура лежить у шапці, `top: 100%`), іде вниз за панелями (вони z-index 1 і частково її перекривають); секція отримує клас `lp-offers--scene` (нижній відступ під панелями — токен ілюстрації) |
+| `airy` | булеве | ні | | `true`: зазор між панелями 40u → 50u і рядки шапки (ЦІНА → маршрут → дисклеймер) 20u → 30u (клас `lp-offers--airy`; глобальні `--space-lp-stack` / `--space-lp-cert-gap` не змінюються). Свідомий виняток із D18 (40u), рішення замовника 20.10.2026 «ціна barrels» — `tools/qa/check-ds.allow.json` |
+| `route.from` / `route.to` / `route.icon` | текст / текст / id іконки | ні (усі три разом) | ≤ 30 | маршрут «A — B» з hairline-лінією; іконка маршруту — золота (`--color-gold`) |
 | `items[]` (1–3) | | так | | панелі; модифікатор `lp-offer--<key>` |
 | · `key`, `title` (≤ 25), `price`, `priceNote` (≤ 20, ні) | | | `price`: 1 панель ≤ 21, 2 ≤ 10, 3 ≤ 6 знаків | ціна `.t-stat`, підпис під нею («грн», «з людини» — сюди) |
 | · `facts[]` (0–4): `dt` (≤ 40), `dd` (≤ 60) | | | | рядки з hairline; довге `dd` (> 24 знаків або слово > 14) переноситься |
@@ -266,7 +268,7 @@ HTML у полях не приймається (усе екранується); 
 | `--lp-buy-bg` (необов.) | заливка контейнера «ціна + кнопка» у offers з `look: about` | типово `--color-green`; barrels — `--color-teal` |
 | `--lp-tile-bg` (необов.) | тло рамки фото плиток | (amber) | black |
 
-Кадр фото `offers` (`--lp-offers-bg-pos | -scale | -origin` на `#<id секції>`) і оптичні поправки чорнила (`--lp-h2-optic`, `--lp-num-optic`, `--lp-title-optic`, `--lp-text-optic`, `--lp-label-optic`, `--lp-price-optic`, `--lp-fact-optic`, `--lp-caption-optic`, `--lp-approx-optic`; типово 0) — **не в темі**, а в `src/styles/pages/<slug>.css`: це властивості фото й конкретних текстів, не кольору. Обмін теми між сторінками їх не відриває.
+Кадр фото `offers` (`--lp-offers-bg-pos` на `#<id секції>`; наближення scale/origin прибрано 20.10.2026) і оптичні поправки чорнила (`--lp-h2-optic`, `--lp-num-optic`, `--lp-title-optic`, `--lp-text-optic`, `--lp-label-optic`, `--lp-price-optic`, `--lp-fact-optic`, `--lp-caption-optic`, `--lp-approx-optic`; типово 0) — **не в темі**, а в `src/styles/pages/<slug>.css`: це властивості фото й конкретних текстів, не кольору. Обмін теми між сторінками їх не відриває.
 
 ## Медіа-ілюстрації (реєстр)
 
@@ -275,6 +277,7 @@ HTML у полях не приймається (усе екранується); 
 | Вид | Поле | Наявні | Примітка |
 |---|---|---|---|
 | `scene` | `steps.scene` | `scene-barrels` | гравюра «від бочки до пляшки»; стани за `data-step` 0…3 → потрібні рівно 3 кроки (налив / витримка / розлив) |
+| `scene` | `offers.scene` | `scene-barrels-route` | статична золота панорама «Шлях бочки» 1920×982u (склад-рикхаус і вантажівка в Кентуккі → пристань і кран → корабель → море → пристань → вантажівка → Київ); інлайн SVG без JS; висота `--size-barrels-route-h`, нижній відступ секції `--space-barrels-route-tail` (в CSS ілюстрації) |
 | `engraving` | `tiles.items[].engraving` | `engraving-barrels-head` | днище бочки; іконка DS у центрі — поле `icon` |
 | `cellar` | `compare.groups[].cellar` | `cellar-barrels` — кімната-погріб з count і liters групи | inline SVG ширини групи (у u, як сітка) × спільна висота: стелажі з двох боків углиб до точки сходу, затемнення з глибиною; 1 проліт = 2 стіни × 4 полиці × 6 = 48 пляшок (96 = 2, 383 = 8, найдальший неповний), пляшок рівно `count` (`<use>` одного контуру 22 × 50); бочка зі сцени `scene-barrels` по центру на підлозі, розмір ∝ `liters`^(1/3) (200 L ≈ 39% ширини кімнати); підпис літрів (`label`) — під бочкою всередині медіа, число/одиниця/вартість — ПІД медіа (рядки subgrid: кімната → підпис → число → одиниця → факти), усе по центру; геометрію рахує `cellarView` (src/data/lp-schema.js); золото теми в півтоні (`--opacity-lp-cellar*`) |
 
@@ -304,13 +307,14 @@ HTML у полях не приймається (усе екранується); 
 | `tiles-circle-origin-2lines` | tiles | `shape: circle`: `origin` — рівно два рядки (один `\n`, кожен ≤ 32) | так |
 | `look-tiles-circle` | tiles | `look: about` лише з `shape: circle` | так |
 | `tiles-circle-fields` | tiles | `leadCols` секції, `tone` / `imgPos` / `zoom` плитки лише з `shape: circle` | так |
+| `offers-media` | offers | не більше одного з `bg` / `scene` | так |
 | `offers-bg-size` | offers | з `bg` обов'язкові `bgW`, `bgH`; без `bg` їх немає | так |
 | `offers-price-capacity` | offers | довжина `price` за кількістю панелей (21 / 10 / 6) | так |
 | `stack-exclusive` | card, place | `stack: true` бере кімнату попередньої секції — `room` і `join` разом з ним не задаються | так |
 | `stack-after-block` | сторінка | `stack: true` дозволено лише секції, перед якою стоїть `card` або `place` | ні |
 | `card-text-xor-list` | card | рівно одне з `text` / `list` | так |
 | `theme-exists` | файли | є `src/styles/themes/<theme>.css`; тон — з даних або `--lp-tone` теми | ні |
-| `media-partials-exist` | файли | є `partials/media/<назва>.html` для `scene` / `engraving` / `cellar` | ні |
+| `media-partials-exist` | файли | є `partials/media/<назва>.html` для `scene` (steps, offers) / `engraving` / `cellar` | ні |
 | `icons-exist` | файли | є клас `.icon--<icon>` | ні |
 | `media-files-exist` | файли | кожен `img` / `bg` веде на файл у `public/` | ні |
 | `contacts-keys-exist` | файли | `%contacts.<ключ>%` існує | ні |

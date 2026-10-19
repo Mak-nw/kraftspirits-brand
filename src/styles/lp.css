@@ -271,13 +271,17 @@
    .contacts-panel (computed-вигляд = панель контактів); .lp-offer — лише розкладка (стопка: назва, ціна, факти, «що входить», кнопка); рядки фактів —
    hairline-лінії (як рядки акордеона DS), «що входить» — список DS. Нижче — необов'язковий рядок контактів (foot). */
 .lp-offers__bg { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
-/* кадр-наближення (--lp-offers-bg-scale, точка закріплення --lp-offers-bg-ox/oy 0…1) задано РОЗМІРОМ і положенням img, а не `scale`/`transform-origin`: ті належать паралаксу (parallax.css) і з data-parallax перезаписували б кадр — світла стіна фото опинялась під білою міткою маршруту (контраст 1.4:1) */
-.lp-offers__bg > img { position: absolute; display: block; max-width: none; width: calc(100% * var(--lp-offers-bg-scale, 1)); height: calc(100% * var(--lp-offers-bg-scale, 1)); left: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-ox, 0.5)); top: calc((1 - var(--lp-offers-bg-scale, 1)) * 100% * var(--lp-offers-bg-oy, 0.5)); object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); }
+/* фото секції: cover, кадр — --lp-offers-bg-pos (файл сторінки; типово центр). Наближення кадру (scale/origin) прибрано 20.10.2026 разом із фото barrels — векторна панорама scene замінила його; паралакс (data-parallax) масштабує/зсуває сам figure, не img */
+.lp-offers__bg > img { position: absolute; display: block; max-width: none; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--lp-offers-bg-pos, 50% 50%); }
 .lp-offers__grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(var(--lp-cols), minmax(0, 1fr)); row-gap: var(--space-lp-cert-gap); column-gap: var(--grid-gap); width: var(--lp-w); margin-inline: auto; }
 .lp-head.lp-offers__head { grid-column: 1 / -1; }
 /* панелі-пропозиції — великі блоки: горизонтальний зазор між ними = зазор колонок --grid-gap 40u (рішення замовника 17.10.2026; 5u лише на сторінці товару). n панелей = n РІВНИХ блоків контейнера (--lp-w) із зазором 40u (клас сітки lp-offers__grid--n<n>): n = 2 — шов посередині (5 + 5 колонок),
    n = 3 — рівний поділ (10 колонок на 3 не діляться); шапка/підвал — на всю ширину; зовнішні краї — на колонках контейнера (D12 «шов великих блоків: рівний поділ») */
 .lp-offers__grid--n1 { grid-template-columns: minmax(0, 1fr); } .lp-offers__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-offers__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* offers `airy: true` (поле даних; секція барелів «Ціна», рішення замовника 20.10.2026): панелі й рядки шапки розсунуті на крок шкали вгору — зазор між панелями 40u → 50u, ЦІНА → маршрут → дисклеймер 20u → 30u. Глобальні --space-lp-stack / --space-lp-cert-gap (інші споживачі) не змінюються.
+   Свідомий виняток із правила D18 «горизонтальний зазор великих блоків = 40u»: tools/qa/check-ds.allow.json (D18, page barrels). */
+.lp-offers--airy .lp-offers__grid { column-gap: var(--space-50); row-gap: var(--space-50); }
+.lp-offers--airy .lp-head.lp-offers__head { gap: var(--space-30); }
 .lp-offers__title { margin-top: var(--shift-lp-cap-top); }
 .lp-offers__note { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
 .lp-offers__fine { width: var(--size-lp-text-w); max-width: 100%; color: var(--lp-on-dark); text-wrap: balance; }
@@ -293,7 +297,7 @@
 .lp-route__line { flex: 1; height: var(--border-hairline); background: var(--lp-hairline); }
 .lp-route__side--from .lp-route__line { margin-right: var(--space-10); }
 .lp-route__side--to .lp-route__line { margin-left: var(--space-10); }
-.lp-route__icon { --icon-size: var(--size-lp-route-icon); position: absolute; top: 50%; left: 50%; translate: -50% -50%; }
+.lp-route__icon { --icon-size: var(--size-lp-route-icon); color: var(--color-gold); position: absolute; top: 50%; left: 50%; translate: -50% -50%; }
 
 .lp-offer { display: flex; flex-direction: column; gap: var(--space-lp-cert-block); min-height: 0; color: var(--lp-on-paper); }
 .lp-offer__head { display: flex; flex-direction: column; gap: var(--space-lp-stack); }

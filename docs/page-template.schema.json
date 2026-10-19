@@ -144,6 +144,12 @@
       "rule": "з `bg` потрібні `bgW` і `bgH` (розміри файлу в пікселях; без них зсув макета при завантаженні)"
     },
     {
+      "id": "offers-media",
+      "scope": "offers",
+      "expressed": true,
+      "rule": "фон секції — не більше одного з `bg` (фото на всю секцію) або `scene` (гравюра-панорама `scene-…` під шапкою, за панелями; потрібна всій ширині вікна)"
+    },
+    {
       "id": "offers-price-capacity",
       "scope": "offers",
       "expressed": true,
@@ -207,7 +213,7 @@
       "id": "media-partials-exist",
       "scope": "files",
       "expressed": false,
-      "rule": "`steps.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].cellar` (`cellar-…`): є `partials/media/<id>.html`"
+      "rule": "`steps.scene` / `offers.scene` (`scene-…`), `tiles.items[].engraving` (`engraving-…`), `compare.groups[].cellar` (`cellar-…`): є `partials/media/<id>.html`"
     },
     {
       "id": "icons-exist",
@@ -2607,6 +2613,19 @@
               ],
               "default": 10
             },
+            "airy": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "scene": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?:|scene-[a-z0-9-]+)$"
+            },
             "bg": {
               "type": [
                 "string",
@@ -2967,6 +2986,34 @@
                   }
                 }
               ]
+            },
+            {
+              "not": {
+                "allOf": [
+                  {
+                    "required": [
+                      "bg"
+                    ],
+                    "properties": {
+                      "bg": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "scene"
+                    ],
+                    "properties": {
+                      "scene": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                ]
+              }
             },
             {
               "allOf": [

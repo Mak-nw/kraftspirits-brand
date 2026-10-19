@@ -1,0 +1,20 @@
+/* МЕДІА «scene-barrels-route» (partials/media/scene-barrels-route.html; шаблон lp, тип offers, поле scene; затверджено замовником 20.10.2026, варіант A «Шлях бочки» прототипу).
+   Статична золота гравюра-панорама на всю ширину вікна: починається ПІД шапкою секції (фігура лежить у шапці `top: 100%`, тож слідує за її висотою — і в uk, і в en), іде вниз за панелями-пропозиціями;
+   панелі (z-index 1) частково її перекривають. Лінії: одне золото теми (--lp-accent), товщини --svg-stroke / --svg-stroke-hair, приглушення — токени прозорості; нових кольорів немає.
+   Висота панорами = висота ділянки «низ шапки → низ секції» (панелі + нижній відступ секції); сцена намальована в одиницях 1920×982 (u). */
+:root, .lp-scope {
+  --size-barrels-route-h: calc(982 * var(--u));                       /* висота панорами: viewBox 1920×982 u (від низу шапки до низу секції) */
+  --space-barrels-route-tail: calc(var(--space-177) * 1.7 + var(--space-70)); /* відступ секції під панелями: 177u × 1,7 + 70u зсуву (затверджений замовником) */
+}
+
+/* секція зі сценою: нижній відступ під панелями — місце для води й морських хвиль панорами */
+.lp-sec.lp-offers--scene { padding-bottom: var(--space-barrels-route-tail); overflow: clip; } /* overflow: clip — панорама не виходить за низ секції (висота панелей ±2u між ширинами) */
+.lp-offers--scene .lp-offers__head { position: relative; }
+.lp-offers--scene .lp-offer { position: relative; z-index: 1; } /* панелі — на передньому плані: панорама лягає за ними */
+.lp-offers__scene { position: absolute; top: 100%; left: calc(50% - var(--vw, 100vw) / 2); z-index: 0; width: var(--vw, 100vw); height: var(--size-barrels-route-h); margin: 0; overflow: hidden; pointer-events: none; }
+
+/* гравюра: одне золото теми, лінії DS */
+.lp-rt { display: block; width: 100%; height: 100%; color: var(--lp-accent); fill: none; stroke: currentColor; stroke-width: var(--svg-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.lp-rt-hair { stroke-width: var(--svg-stroke-hair); }
+.lp-rt-soft { opacity: var(--opacity-disabled); }
+.lp-rt-route { stroke-width: var(--svg-stroke-hair); stroke-dasharray: var(--size-barrels-dash) var(--size-barrels-gap); opacity: var(--opacity-liquid-back); } /* пунктир шляху бочки: вантажівка → кран → корабель → вантажівка */

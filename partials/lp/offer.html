@@ -11,9 +11,9 @@
     <!--@each facts lp/offer-fact-->
   </dl>
   <div class="lp-offer__offer">
-    <ul class="lp-list t-desc">
+    {{#includes}}<ul class="lp-list t-desc">
       <!--@each includes lp/li-->
-    </ul>
+    </ul>{{/includes}}
     {{#look}}<div class="lp-offer__buy">
       <p class="lp-offer__price t-lead">{{price}}&nbsp;{{priceNote}}</p>
       <!--@include components/btn variant="btn--beige" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->

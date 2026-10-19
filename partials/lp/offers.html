@@ -1,4 +1,4 @@
-    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{#look}} lp-look--about{{/look}}" id="{{id}}" aria-labelledby="{{id}}-title">
+    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{offersMod}}{{#look}} lp-look--about{{/look}}" id="{{id}}" aria-labelledby="{{id}}-title">
       {{#bg}}<figure class="lp-offers__bg" data-parallax="soft"{{#bgSlot}} data-slot="{{bgSlot}}"{{/bgSlot}}>
         <img src="{{bg}}" width="{{bgW}}" height="{{bgH}}" alt="" loading="lazy" decoding="async">
       </figure>{{/bg}}
@@ -8,6 +8,7 @@
           <h2 class="lp-offers__title t-h2 heading-center{{titleMod}}" id="{{id}}-title" data-reveal="rise">{{title}}</h2>
           {{#routeFrom}}<!--@include lp/route from="{{routeFrom}}" to="{{routeTo}}" icon="{{routeIcon}}"-->{{/routeFrom}}
           {{#lead}}<p class="lp-offers__note t-desc">{{lead}}</p>{{/lead}}
+          {{#scene}}<figure class="lp-offers__scene"><!--@include media/{{scene}}--></figure>{{/scene}}
         </div>
         <!--@each items lp/offer-->
         {{#footText}}<div class="lp-offers__foot lp-head" data-reveal="rise">
