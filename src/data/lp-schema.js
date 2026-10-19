@@ -108,7 +108,7 @@ export const SCHEMA = {
     //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — у шапці під H2 (ширина leadCols)
     tiles: { ...BASE, ...TITLE, ...LOOK, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
-    offers: { ...base('caption'), ...TITLE, room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
+    offers: { ...base('caption'), ...TITLE, ...LOOK, room: E(ROOMS, false, 'deep'), cols: COLS('offers'), bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
       items: L(O({ key: { type: 'id', req: true }, title: T(25, true), price: T(PRICE_MAX[1], true), priceNote: T(20), facts: L(O({ dt: T(40, true), dd: T(60, true) }), 0, 4), includes: L(T(90), 0, 5), cta: { ...CTA, req: true } }), 1, 3, true),
       foot: O({ text: T(160, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green'], true) }), 0, 2), note: T(200) }) },
@@ -347,10 +347,10 @@ const VIEW = {
       items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / n, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
         toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
   },
-  offers: (s, p) => ({ ...head(s), gridMod: ` lp-offers__grid--n${s.items.length}`, bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
+  offers: (s, p) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', gridMod: ` lp-offers__grid--n${s.items.length}`, bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
-    items: s.items.map((it) => ({ key: it.key, span: '', tone: p.tone, title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
-      facts: (it.facts || []).map((f) => ({ dt: t(f.dt), dd: t(f.dd), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
+    items: s.items.map((it) => ({ key: it.key, span: '', tone: p.tone, look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
+      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
       includes: li(it.includes), ctaText: t(it.cta.text), ctaHref: esc(it.cta.href) })),
     footText: t(s.foot?.text), footNote: t(s.foot?.note), footCtas: (s.foot?.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant })) }),
   card: (s, p) => ({ ...head(s), text: t(s.text), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone,

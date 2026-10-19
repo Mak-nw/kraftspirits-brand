@@ -79,7 +79,7 @@ export const excursions = {
       ],
     },
     {
-      type: 'offers', id: 'price', room: 'deep',
+      type: 'offers', id: 'price', room: 'deep', look: 'about',
       bg: '/assets/img/excursions-price-bg.webp', bgW: 2560, bgH: 1440,
       bgSlot: 'Фото «Ціна»: AI-кадр (Seedream 5 Pro, чернетка) — мідні куби в темному цеху, спокійна темна зона під текстом, без затемнення; замінити реальною зйомкою',
       kicker: 'Ціна', title: 'Оберіть формат і забронюйте дату',

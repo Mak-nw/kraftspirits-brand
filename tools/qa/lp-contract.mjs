@@ -85,7 +85,7 @@ function variantsOf(type) {
     a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
     out.push(['wall+list', a]);
     const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
-  } else if (['layers', 'formats', 'place'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
+  } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
     const a = clone(s); delete a.look; out.push(['', a]);
     out.push(['look about', s]);

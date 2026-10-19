@@ -226,7 +226,7 @@ HTML у полях не приймається (усе екранується); 
 
 Ключі `%contacts.<ключ>%` (з `src/data/contacts.js`): `address`, `phoneDisplay`, `phoneHref`, `email`, `emailHref`, `lat`, `lng`, `zoom`, `osmEmbed`, `osmView`, `gmapsView`, `gmapsRoute` (+ службові `topicOptions`, `topicTilesHtml`) — актуальний перелік дає `Object.keys(contactsView(contacts))`; збірка відхиляє неіснуючий ключ.
 
-### Вигляд `look: 'about'` — компоненти сторінки «Про нас» (layers · tiles · formats · place)
+### Вигляд `look: 'about'` — компоненти сторінки «Про нас» (layers · tiles · formats · offers · place)
 Необов'язкове поле секції (enum `about`; без нього — типовий вигляд, `barrels` не змінюється). Дає той самий вміст у компонентах «Про нас» (CLAUDE.md п. 5а — наявні класи, нових візуальних елементів немає; розкладка — `src/styles/lp.css`, блок «look: about»):
 
 | Тип | Вигляд з `look: about` | Partial |
@@ -234,6 +234,7 @@ HTML у полях не приймається (усе екранується); 
 | `layers` | арки-фото `.lp-arch` (`.about-still`, як «Три установки») + назва `.t-lead` і опис `.t-desc` під аркою; `img` пункту — фото арки (без `img` арка порожня) | `lp/layer-arch` |
 | `tiles` (лише `shape: circle`) | картки-арки з золотою заливкою (`.about-principle`, як «Наші принципи»): кадр-коло фото (`tone`, `imgPos`, `zoom` — як у колі), назва й опис унизу; `captionOver` ігнорується | `lp/tile-card` |
 | `formats` | панелі `.brand-panel` (беж, прямий зовнішній кут + заокруглений внутрішній бокс): число `.t-h2` + одиниця `.t-lead`, напої з hairline-рядками, факти; рядки двох панелей спільні (subgrid) | `lp/format-panel`, `-drink`, `-fact` |
+| `offers` | ті самі панелі `.contacts-panel`, але: назва роллю `.t-lead`; рядки фактів «значення \| підпис» (значення зліва, підпис справа); ціна з «грн» (`price` + `priceNote`) одним елементом ролі `.t-price` (як ціна на сторінці товару) внизу перед кнопкою | `lp/offer`, `lp/offer-fact` |
 | `place` | ОДНА картка `.tour-card tour-card--photo-first` (як «Те, що сподобалось — із собою»): мапа зліва впритул до тексту, праворуч кікер, H2 `.t-hero`, лід, факти (2 колонки), кнопки hug; `titleSize` ігнорується | `lp/place` (гілка `look`), `lp/place-card-cta` |
 
 ### `faq` — питання (типово `deep`)

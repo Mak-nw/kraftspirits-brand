@@ -2456,6 +2456,13 @@
                 null
               ]
             },
+            "look": {
+              "enum": [
+                "about",
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 8,

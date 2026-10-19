@@ -289,6 +289,10 @@
 .lp-offer__fact dt { margin-left: var(--lp-fact-optic, 0em); color: var(--lp-on-paper-muted); overflow-wrap: break-word; } /* ярлик не стискається вужче за своє найдовше слово, коли довге значення (--wrap) займає рядок («Джин», «Витримка» на about); break-word, на відміну від anywhere (.page-lp main), не зменшує min-content */
 .lp-offer__fact dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lp-offer__fact dd.lp-offer__dd--wrap { white-space: normal; text-align: end; } /* довге значення (> 24 знаків) — переноситься, притиснуте праворуч */
+.lp-offer__fact--swap { flex-direction: row-reverse; } /* look: about — «значення | підпис»: значення зліва, підпис справа (DOM лишається dt → dd) */
+.lp-offer__fact--swap dd { margin: 0; }
+.lp-offer__fact--swap dd.lp-offer__dd--wrap { text-align: start; }
+.lp-look--about .lp-offer__price { margin-left: 0; } /* look: about — ціна з «грн» одним елементом ролі .t-price (як ціна на сторінці товару), внизу перед кнопкою */
 .lp-offer__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-lp-cert-row); margin-top: auto; }
 
 /* ---------- card: ІСНУЮЧА панель .tour-card (головна, «Екскурсії/Бочкова торгівля») на сітці 10 колонок ---------- */
