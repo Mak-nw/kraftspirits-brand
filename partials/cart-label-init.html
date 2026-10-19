@@ -5,7 +5,7 @@
   try {
     var n = 0, list = JSON.parse(localStorage.getItem('ks_cart') || '[]');
     if (Array.isArray(list)) list.forEach(function (r) { n += Number(r && r.qty) || 0; });
-    if (n) document.querySelectorAll('.site-header a[href$="cart.html"] [data-cart-label]').forEach(function (el) { el.textContent = 'Кошик ( ' + n + ' )'; });
+    if (n) document.querySelectorAll('.site-header a[href$="cart.html"] [data-cart-label]').forEach(function (el) { el.textContent = '%t.js.cart.count%'.replace('{n}', n); });
   } catch (e) {}
 })();
 </script>

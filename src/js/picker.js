@@ -1,6 +1,8 @@
 import { PRODUCTS } from '../data/products.js';
 import { OCCASIONS, HITS, DEFAULT_IMAGE } from '../data/occasions.js';
 import { cssMs } from './duration.js';
+import { locale, t, fmtPrice } from '../i18n/runtime.js';
+import { localizeProduct, localizeOccasion } from '../i18n/localize.js';
 
 // «Не знаєте з чого почати?»: чіпи-події → добірка товарів у слайдері (одна позиція за раз) + фон секції (кросфейд шарів).
 // Розмітка картки і чіпа — partials у <template> (components/product-card, components/chip), як у catalog.html.
@@ -24,14 +26,14 @@ function init(root) {
   const cardTpl = root.querySelector('#picker-card-template');
   const chipTpl = root.querySelector('#picker-chip-template');
 
-  const bySlug = new Map(PRODUCTS.map((p) => [p.slug, p]));
+  const lc = locale();
+  const bySlug = new Map(PRODUCTS.map((p) => [p.slug, localizeProduct(p, lc)])); // en: назви/опис з src/i18n/data/products.en.js
   const pick = (slugs) => slugs.map((s) => bySlug.get(s)).filter((p) => p && p.status === 'available');
   const hits = pick(HITS);
 
   const state = { occasion: null, list: hits, i: 0 };
 
   // ---- картка ----
-  const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
   const renderCard = (p) => {
     const a = cardTpl.content.firstElementChild.cloneNode(true);
     a.dataset.slug = p.slug;
@@ -54,7 +56,7 @@ function init(root) {
     }
     const price = a.querySelector('.t-price');
     if (p.price == null) price.remove();
-    else price.textContent = (p.volumes.length > 1 ? 'від ' : '') + fmtPrice(p.price);
+    else price.textContent = (p.volumes.length > 1 ? t('js.price.from') : '') + fmtPrice(p.price);
     return a;
   };
 
@@ -177,7 +179,8 @@ function init(root) {
   };
 
   // ---- чіпи з даних ----
-  const chips = OCCASIONS.map((o) => {
+  const chips = OCCASIONS.map((o0) => {
+    const o = localizeOccasion(o0, lc);
     const c = chipTpl.content.firstElementChild.cloneNode(true);
     c.querySelector('.t-chip').textContent = o.title;
     c.dataset.occasion = o.id;
