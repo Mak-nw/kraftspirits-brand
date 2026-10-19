@@ -21,9 +21,9 @@ const PROBE = (GRID_COLS) => {
     const out = { id: sec.id, n, left: b.left, width: b.width, expWidth: px(`var(--grid-span-${n})`), center, cx: b.left + b.width / 2, k, gridLeft: center - gridW / 2, step, gridW };
     const eq = sec.querySelector('.lp-tiles__grid--eq');
     if (eq) {
-      const figs = [...eq.querySelectorAll(':scope > .lp-tile')].map((f) => f.getBoundingClientRect());
+      const figs = [...eq.querySelectorAll(':scope > .lp-tile, :scope > .lp-arches > li')].map((f) => f.getBoundingClientRect());
       const m = figs.length; const w = (eq.getBoundingClientRect().width - (m - 1) * gap) / m;
-      out.eq = { n: m, w, widths: figs.map((r) => r.width), gaps: figs.slice(1).map((r, i) => r.left - figs[i].right), expGap: gap, imgs: !sec.classList.contains('lp-tiles--circle') ? [] : [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().width), imgH: [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().height) };
+      out.eq = { n: m, w, widths: figs.map((r) => r.width), gaps: figs.slice(1).map((r, i) => r.left - figs[i].right), expGap: gap, imgs: !sec.classList.contains('lp-tiles--circle') || sec.classList.contains('lp-look--about') ? [] : [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().width), imgH: [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().height) };
     }
     return out;
   });

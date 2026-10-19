@@ -72,9 +72,10 @@ function variantsOf(type) {
     const b = arch(clone(s)); delete b.scene; out.push(['img', b]);
     const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; out.push(['deck', c]); // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
-    const a = clone(s); delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
-    const b = clone(s); delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
-    const c = clone(s); c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
+    const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
+    const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
+    const c = clone(s); delete c.look; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
+    const d = clone(c); d.look = 'about'; out.push(['circle+look about', d]);   // картки-арки «Про нас» (partials/lp/tile-card)
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
     const b = clone(s); delete b.text; out.push(['list', b]);
@@ -84,6 +85,10 @@ function variantsOf(type) {
     a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
     out.push(['wall+list', a]);
     const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
+  } else if (['layers', 'formats', 'place'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
+    if (type !== 'place') delete s.cols;
+    const a = clone(s); delete a.look; out.push(['', a]);
+    out.push(['look about', s]);
   } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
 }
@@ -124,7 +129,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
-      note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
+      if (!s.look) note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
     }
     validPages.push([`${type}${label ? ` [${label}]` : ''}`, page]);
   }
@@ -287,6 +292,9 @@ cross('tiles: captionOver без shape circle', (p) => { delete S(p).shape; dele
 cross('tiles: zoom без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
 cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom = 1.3; }, false, false, 'tiles [circle');
 cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
+cross('tiles: look about без shape circle', (p) => { S(p).look = 'about'; delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: look about + shape circle (валідно)', (p) => { S(p).look = 'about'; }, true, true, 'tiles [circle');
+cross('look: значення поза переліком', (p) => { S(p).look = 'other'; }, false, false, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
 cross('card: text і list разом', (p) => { S(p).list = ['x']; }, false, false, 'card [text');
@@ -315,10 +323,10 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   const sec = (id) => (htmlStack.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
   note(/lp-sec--stack\b/.test(sec('a-place')) && /lp-room--warm/.test(sec('a-place')) && !/lp-room--deep/.test(sec('a-place')), 'render: stack → секція має lp-sec--stack і кімнату попередньої (warm), а не свою типову (deep)', sec('a-place'));
   note(/lp-sec--stack-next/.test(sec('a-card')), 'render: попередня секція стека має lp-sec--stack-next', sec('a-card'));
-  { // pad перемагає stack (рев'ю d360474e): нижній відступ pad лишається, верх стекової = 0
+  { // stack після секції з pad (рев'ю 5d981ca1): стек-next попередньої лишається, нижній відступ 0, зазор = 5u
     const htmlPad = render(stackPage((pg) => { pg.sections[1].pad = 40; }));
     const secP = (id) => (htmlPad.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
-    note(!/lp-sec--stack-next/.test(secP('a-card')) && /lp-pad--40/.test(secP('a-card')) && /lp-sec--stack-after-pad/.test(secP('a-place')), 'render: stack після секції з pad → без stack-next, стекова має lp-sec--stack-after-pad', secP('a-card') + secP('a-place'));
+    note(/lp-sec--stack-next/.test(secP('a-card')) && /lp-pad--40/.test(secP('a-card')) && !/stack-after-pad/.test(secP('a-place')), 'render: stack після секції з pad → stack-next лишається (зазор 5u), pad зберігається', secP('a-card') + secP('a-place'));
   }
   const htmlPlain = render(stackPage((pg) => { pg.sections[2].stack = false; }));
   note(!/lp-sec--stack/.test(htmlPlain) && /lp-room--deep/.test((htmlPlain.match(/<section[^>]*id="a-place"[^>]*>/) || [''])[0]), 'render: без stack класів стека немає, кімната — власна (deep)');

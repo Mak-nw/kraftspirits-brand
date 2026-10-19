@@ -31,8 +31,7 @@
 /* stack: true (card / place) — стек великих блоків (як tours наприкінці головної): секція в ТІЙ САМІЙ кімнаті, що попередня (lpView), без верхнього відступу секції; між блоками --grid-gap-panels (5u), великого повітря немає */
 .lp-sec.lp-sec--stack-next { padding-bottom: 0; }
 .lp-sec.lp-sec--stack { padding-top: var(--grid-gap-panels); }
-/* stack після секції з явним `pad` (рев'ю d360474e: #shop — 40): явний pad попередньої перемагає stack — її нижній відступ (pad) і є зазор до стекової секції, тож власний верх стекової = 0 (зазор = pad, а не pad + 5u); без pad у попередньої діє звичайний стек (0 + 5u) */
-.lp-sec.lp-sec--stack.lp-sec--stack-after-pad { padding-top: 0; }
+/* stack після секції з `pad` (рев'ю 5d981ca1, замінило d360474e: «відступ менше, логіка як на головній»): нижній відступ попередньої секції = 0 і при заданому pad (стоїть після .lp-pad-*, тому перемагає), зазор до стекової секції — той самий 5u, що між tour-card на головній; верхній відступ попередньої (pad) лишається */
 /* шапка секції (кікер / заголовок / лід / підписи) — по центру сітки (рев'ю e725d1be, a40df587, 73b1b655) */
 .lp-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-stack); text-align: center; }
 .lp-head > .t-h2 { padding-inline: max(var(--lp-h2-optic, 0em), 0em) max(calc(-1 * var(--lp-h2-optic, 0em)), 0em); } /* оптичний центр чорнила H2 — змінна теми (виміряно під текст), типово 0; зсув центру = половина значення (було margin-left); бокс лишається на колонках 5–8 (.heading-center, D12), зсувається лише текст усередині */
@@ -310,6 +309,42 @@
 .lp-faq.lp-pad--20 .faq-page__body { padding-block: var(--space-20); } .lp-faq.lp-pad--30 .faq-page__body { padding-block: var(--space-30); } .lp-faq.lp-pad--40 .faq-page__body { padding-block: var(--space-40); }
 .lp-faq.lp-pad--50 .faq-page__body { padding-block: var(--space-50); } .lp-faq.lp-pad--70 .faq-page__body { padding-block: var(--space-70); } .lp-faq.lp-pad--100 .faq-page__body { padding-block: var(--space-100); } /* `pad` для FAQ: відступ тіла (у FAQ власний вертикальний ритм --space-faq-room-y) */
 .lp-room--paper.lp-faq .faq-page__body { color: var(--lp-on-paper); }
+
+/* ---------- look: about — вигляд компонентів сторінки «Про нас» (поле `look: 'about'` у даних секцій layers · tiles · formats · place; без поля — типовий вигляд, barrels не змінюється).
+   Лише ІСНУЮЧІ компоненти «Про нас» (CLAUDE.md п. 5а): арка-фото (.lp-arch + .about-still, як «Три установки»), картка-арка принципу (.about-principle: золота заливка, кільце, назва й опис унизу),
+   панель .brand-panel (беж, прямий зовнішній кут, заокруглений внутрішній бокс з hairline), tour-card (як «Те, що сподобалось — із собою»; мапа замість фото). Тут — лише розкладка: сітка списку арок, нутрощі панелі формату, картка «місце». ---------- */
+.lp-arches { --lp-n: 4; display: grid; grid-template-columns: repeat(var(--lp-n), minmax(0, 1fr)); column-gap: var(--grid-gap); align-items: stretch; width: var(--lp-w); margin: 0 auto; padding: 0; list-style: none; } /* пункти однієї висоти (рівний поділ колонок — D12) */
+.lp-arches--n2 { --lp-n: 2; } .lp-arches--n3 { --lp-n: 3; } .lp-arches--n4 { --lp-n: 4; } .lp-arches--n5 { --lp-n: 5; } .lp-arches--n6 { --lp-n: 6; }
+.lp-tiles__grid > .lp-arches { grid-column: 1 / -1; grid-row: 2; }
+.lp-arches .about-still__arch { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) * var(--ratio-lp-arch-rise)); } /* склепіння = 0.42 ширини арки (як about-still, але n колонок) */
+.lp-arches .about-still .t-desc { text-wrap: balance; }
+.lp-arches--cards { --size-lp-tile-ring: var(--size-about-ring-line); --lp-tile-ring: var(--color-brown); } /* кільце фото в картці — hairline коричневим на золоті (як кільце принципу) */
+.lp-arches--cards .about-principle { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) / 2); } /* верх картки = півколо на всю ширину (для 4 карток на 10 колонок = значення .about-principle) */
+.lp-arches__origin { white-space: pre-line; }
+
+.lp-look--about .lp-fpanel { grid-row: 2 / span 5; display: grid; grid-template-rows: subgrid; min-width: 0; aspect-ratio: auto; } /* панель = .brand-panel; висота за вмістом; рядки (підпис · число · напої · факти) — спільні з сусідньою панеллю (subgrid), тож напої й факти двох панелей вирівняні */
+.lp-fpanel__box { grid-row: 1 / -1; display: grid; grid-template-rows: subgrid; align-items: start; padding: var(--space-lp-format-pad); }
+.lp-fpanel__lead { grid-row: 1; } .lp-fpanel__badge { grid-row: 2; } .lp-fpanel__drinks { grid-row: 3; } .lp-fpanel__facts { grid-row: 4; }
+.lp-fpanel__lead { margin: 0 0 var(--space-20); }
+.lp-fpanel__badge { display: flex; align-items: baseline; justify-content: center; gap: var(--space-20); margin: 0; }
+.lp-fpanel__drinks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-30); margin: var(--space-lp-format-gap) 0 0; padding: 0; list-style: none; text-align: start; }
+.lp-fpanel__drinks--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lp-fpanel__drink { display: flex; flex-direction: column; gap: var(--space-10); padding: var(--space-20) 0 var(--space-30); border-top: var(--border-hairline) solid var(--color-brown); }
+.lp-fpanel__drink > * { margin: 0; }
+.lp-fpanel__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-30); margin: 0; padding-top: var(--space-lp-format-gap); text-align: start; }
+.lp-fpanel__facts:empty { display: none; }
+.lp-fpanel__fact { display: flex; flex-direction: column; gap: var(--space-10); padding-top: var(--space-20); border-top: var(--border-hairline) solid var(--color-brown); }
+.lp-fpanel__fact > * { margin: 0; }
+
+.lp-place__card { width: var(--grid-w); margin-inline: auto; }
+.lp-place__tour { width: 100%; height: auto; min-height: var(--size-tour-card-h); } /* картка «місце»: висота за вмістом інфо-колонки (мінімум — висота tour-card), мапа розтягується на всю висоту */
+.lp-place__tour .tour-card__text { gap: var(--space-50); }
+.lp-place__body { display: flex; flex-direction: column; gap: var(--space-40); width: 100%; }
+.lp-place__body .contacts-item--wide { grid-column: span 1; } /* адреса — в одну з двох колонок фактів, як решта */
+.lp-place__body .contacts-cta { margin-top: 0; }
+.lp-place__body .contacts-cta .btn { flex: none; } /* кнопка hug по ширині (правило проєкту) */
+.lp-place__tour.tour-card--photo-first .tour-card__photo { display: flex; flex-direction: column; border-right-width: 0; } /* мапа впритул до тексту: коричневої рамки-шва нема (один цілий блок) */
+.lp-place__tour .contacts-map { border-radius: var(--radius-none); }
 
 /* ---------- демо в design-system.html: справжні секції сторінок (<!--@lp сторінка секція-->) у ширині демо-панелі ---------- */
 .demo-panel.ds-lp { display: block; padding: 0; overflow: clip; }

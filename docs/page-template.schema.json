@@ -150,6 +150,12 @@
       "rule": "довжина `price` залежить від кількості пропозицій: 1 — ≤ 21, 2 — ≤ 10, 3 — ≤ 6 знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у `priceNote`)"
     },
     {
+      "id": "look-tiles-circle",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`look: about`: картки-арки з колом-фото — лише з `shape: circle` (кожна плитка з фото)"
+    },
+    {
       "id": "stack-exclusive",
       "scope": "card, place",
       "expressed": true,
@@ -422,6 +428,13 @@
               "enum": [
                 4,
                 6,
+                "",
+                null
+              ]
+            },
+            "look": {
+              "enum": [
+                "about",
                 "",
                 null
               ]
@@ -1610,6 +1623,13 @@
                 null
               ]
             },
+            "look": {
+              "enum": [
+                "about",
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 8,
@@ -1865,6 +1885,13 @@
               "enum": [
                 4,
                 6,
+                "",
+                null
+              ]
+            },
+            "look": {
+              "enum": [
+                "about",
                 "",
                 null
               ]
@@ -2334,6 +2361,28 @@
                     }
                   }
                 }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "look": {
+                    "const": "about"
+                  }
+                },
+                "required": [
+                  "look"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "shape": {
+                    "const": "circle"
+                  }
+                },
+                "required": [
+                  "shape"
+                ]
               }
             }
           ]
@@ -3226,6 +3275,13 @@
               "type": [
                 "boolean",
                 "null"
+              ]
+            },
+            "look": {
+              "enum": [
+                "about",
+                "",
+                null
               ]
             },
             "titleSize": {

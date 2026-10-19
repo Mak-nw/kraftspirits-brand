@@ -14,6 +14,7 @@
 .icon--account { -webkit-mask-image: url('/assets/icons/account.svg'); mask-image: url('/assets/icons/account.svg'); }                       /* кнопка «мій кабінет» у хедері */
 .icon--headset { -webkit-mask-image: url('/assets/icons/headset.svg'); mask-image: url('/assets/icons/headset.svg'); }                     /* кнопка «підказати?» у хедері */
 .icon--pin { -webkit-mask-image: url('/assets/icons/pin.svg'); mask-image: url('/assets/icons/pin.svg'); }                                 /* контакти: адреса */
+.icon--tree { -webkit-mask-image: url('/assets/icons/tree.svg'); mask-image: url('/assets/icons/tree.svg'); }                             /* екопарк (крона + стовбур): факт «Екопарк» у place */
 .icon--phone { -webkit-mask-image: url('/assets/icons/phone.svg'); mask-image: url('/assets/icons/phone.svg'); }                         /* контакти: телефон */
 .icon--mail { -webkit-mask-image: url('/assets/icons/mail.svg'); mask-image: url('/assets/icons/mail.svg'); }                             /* контакти: e-mail */
 .icon--catalog { -webkit-mask-image: url('/assets/icons/catalog.svg'); mask-image: url('/assets/icons/catalog.svg'); }                   /* пункт «каталог» у хедері */

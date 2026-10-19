@@ -1,0 +1,8 @@
+<article class="brand-panel lp-fpanel lp-fpanel--{{key}} lp-span--{{span}}" data-reveal="rise">
+  <div class="brand-panel__box lp-fpanel__box">
+    {{#lead}}<h3 class="lp-fpanel__lead t-chip">{{lead}}</h3>{{/lead}}{{#leadGap}}<span class="lp-fpanel__lead t-chip" aria-hidden="true">&nbsp;</span>{{/leadGap}}
+    <p class="lp-fpanel__badge"><span class="lp-fpanel__value t-h2">{{value}}</span><span class="lp-fpanel__unit t-lead">{{unit}}</span></p>
+    <ul class="lp-fpanel__drinks lp-fpanel__drinks--{{cols}}"><!--@each drinks lp/format-panel-drink--></ul>
+    <dl class="lp-fpanel__facts"><!--@each facts lp/format-panel-fact--></dl>
+  </div>
+</article>
