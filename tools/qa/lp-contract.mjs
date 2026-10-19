@@ -47,7 +47,7 @@ function fillValue(def, path, o = {}) {
     case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
     case 'url': { const m = `${def.startsWith || '/'}q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
-    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-one';
+    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-units';
     case 'icon': return 'pin';
     case 'enum': return def.sample ?? def.values[0];
     case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
@@ -83,10 +83,10 @@ function variantsOf(type) {
     const b = clone(s); delete b.text; out.push(['list', b]);
   } else if (type === 'compare') {
     const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 7; g.approx = false; });
-    a.groups[0].wall = 'wall-barrels-one'; delete a.groups[0].list; // група 1 — wall
+    a.groups[0].wall = 'wall-barrels-units'; delete a.groups[0].list; // група 1 — wall
     a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
     out.push(['wall+list', a]);
-    const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
+    const b = clone(a); b.groups[1].wall = 'wall-barrels-units'; b.groups[1].count = 383; delete b.groups[1].list; out.push(['wall units 4 blocks', b]);   // кілька блоків + неповний (383 = 3 × 96 + 95) + затемнення вглиб
   } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
     const a = clone(s); delete a.look; out.push(['', a]);
@@ -373,8 +373,8 @@ cross('tone поза переліком', (p) => { p.tone = 'red'; }, false, fal
 cross('невідоме поле сторінки', (p) => { p.subtitle = 'x'; }, false, false, 'layers');
 for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { approx: 999 } })) for (const [kind, cap] of Object.entries(c)) {
   const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 10 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
-  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall four-minus-one');
-  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall four-minus-one');
+  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall units 4 blocks');
+  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall units 4 blocks');
 }
 cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
 cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');

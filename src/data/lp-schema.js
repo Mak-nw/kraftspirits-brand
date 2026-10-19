@@ -316,6 +316,23 @@ const t = (v) => esc(v).replace(/%(?=(?:contacts\.\w+|BASE_URL)%)/g, '&#37;');
 const li = (arr) => (arr || []).map((x) => ({ text: t(x) }));
 const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [...w].length)); // найдовший непереносний відрізок (nbsp не розриває)
 const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
+// Стіна пляшок (compare.groups[].wall, partials/media/wall-*.html): геометрія рахується з count групи (не хардкод).
+// Одиниця виміру — БЛОК WALL.cols × WALL.rows пляшок (= бочка 50 L, 96) на WALL.span колонок сітки; блоки стоять по колонках сітки (між блоками — зазор колонок).
+// Координати — одиниці viewBox: комірка-пляшка 22 × 50; колонка й зазор сітки — у пропорції 115.42u : 40u (той самий масштаб u, тому SVG на ширину групи лягає точно на колонки).
+// Неповний блок заповнюється знизу; неповний ряд — верхній, від лівого краю (383 = 3 × 96 + 95: верхньої правої пляшки немає).
+const WALL = { cols: 8, rows: 12, span: 1, cellW: 22, cellH: 50, gapRatio: 40 / 115.42 };
+const wallView = (count, span) => {
+  const per = WALL.cols * WALL.rows, blockW = WALL.cols * WALL.cellW, h = WALL.rows * WALL.cellH;
+  const col = blockW / (WALL.span + (WALL.span - 1) * WALL.gapRatio), gap = col * WALL.gapRatio;
+  const step = blockW + gap;   // крок блоку = WALL.span колонок + зазор
+  const n = Math.max(0, Math.floor(count)); const full = Math.floor(n / per), rest = n % per, rows = Math.floor(rest / WALL.cols), tail = rest % WALL.cols;
+  const blocks = full + (rest ? 1 : 0); const drawn = Math.max(blockW, blocks * step - gap);
+  const r = (x) => +x.toFixed(3);
+  const w = Math.max(span * col + (span - 1) * gap, drawn);   // ширина групи у viewBox; якщо блоків більше, ніж вміщає span, — стіна масштабується вниз, не вилазить
+  return { wallW: r(w), wallH: h, wallCellW: WALL.cellW, wallCellH: WALL.cellH, wallBlockW: blockW, wallStep: r(step), wallFullW: r(full * step), wallRestX: r(full * step),
+    wallRowsY: h - rows * WALL.cellH, wallRowsH: rows * WALL.cellH, wallTailY: h - (rows + 1) * WALL.cellH, wallTailW: tail * WALL.cellW,
+    wallFade: blocks > 1 ? '1' : '', wallFadeX2: r(drawn) };   // затемнення вглиб — лише коли блоків більше одного: від кінця першого блоку до кінця стіни
+};
 const titleMod = (s) => (s.titleCols === 6 ? ' heading-wide' : '');   // клас-модифікатор ширини заголовка (base.css .heading-wide)
 function head(s) { return { id: s.id, kicker: t(s.kicker), title: t(s.title), titleMod: titleMod(s), lead: t(s.lead), caption: t(s.caption) }; }
 
@@ -339,7 +356,7 @@ const VIEW = {
   },
   compare: (s) => ({ ...head(s), note: t(s.note),
     groups: s.groups.map((g) => ({ key: g.key, span: g.span, mods: `${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
-      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', list: li(g.list),
+      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, unit: t(g.unit), wall: g.wall || '', ...(g.wall ? wallView(g.count, g.span) : {}), list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', lookMod: s.look === 'about' ? ' lp-look--about' : '',
     items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), leadGap: !it.lead && s.items.some((x) => x.lead) ? '1' : '',   // lead у ОДНІЙ панелі: у другій — порожній рядок тієї ж висоти (спільні рядки subgrid)

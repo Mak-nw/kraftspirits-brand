@@ -275,7 +275,7 @@ HTML у полях не приймається (усе екранується); 
 |---|---|---|---|
 | `scene` | `steps.scene` | `scene-barrels` | гравюра «від бочки до пляшки»; стани за `data-step` 0…3 → потрібні рівно 3 кроки (налив / витримка / розлив) |
 | `engraving` | `tiles.items[].engraving` | `engraving-barrels-head` | днище бочки; іконка DS у центрі — поле `icon` |
-| `wall` | `compare.groups[].wall` | `wall-barrels-one` (96 пляшок), `wall-barrels-four-minus-one` (383) | маска `public/assets/img/barrels-bottle-block.svg` 16×6; геометрія розрахована на групи 3 + 9 колонок |
+| `wall` | `compare.groups[].wall` | `wall-barrels-units` — стіна з count групи | inline SVG (2 pattern + 3 rect): вертикальний блок 8 × 12 = 96 пляшок (одиниця = бочка 50 L) на 1 колонку сітки, блоки по колонках через зазор 40u; неповний блок — знизу, неповний ряд — верхній зліва; кількість блоків рахує `wallView` (src/data/lp-schema.js) з `count` і `span`; золото теми в півтоні (`--opacity-lp-wall`), у стіні з ≥ 2 блоків — затемнення вглиб від кінця першого блоку до `--opacity-lp-wall-fade-end` |
 
 Іконки DS (`icon`): `account`, `arrow-up-right`, `basket`, `bottle-0-5`, `bottle-0-7`, `bottle-1`, `catalog`, `headset`, `mail`, `phone`, `pin`, `strength` та `barrels-char`, `barrels-caramel`, `barrels-toast`, `barrels-oak`, `barrels-grape`, `barrels-mountain`, `barrels-glass`, `barrels-sun`, `barrels-ship` (остання група — малюнок під сюжет бочок, але вибір вільний). Перелік — `design-system.html` («Брендові іконки»); збірка відхиляє неіснуючу іконку.
 
