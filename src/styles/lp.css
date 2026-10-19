@@ -341,6 +341,7 @@
 .lp-place__tour .tour-card__text { gap: var(--space-50); }
 .lp-place__body { display: flex; flex-direction: column; gap: var(--space-40); width: 100%; }
 .lp-place__body .contacts-item--wide { grid-column: span 1; } /* адреса — в одну з двох колонок фактів, як решта */
+.lp-place__body .contacts-item__value { white-space: pre-line; } /* явний перенос у значенні факту (\n у даних) */
 .lp-place__body .contacts-cta { margin-top: 0; }
 .lp-place__body .contacts-cta .btn { flex: none; } /* кнопка hug по ширині (правило проєкту) */
 .lp-place__tour.tour-card--photo-first .tour-card__photo { display: flex; flex-direction: column; border-right-width: 0; } /* мапа впритул до тексту: коричневої рамки-шва нема (один цілий блок) */
