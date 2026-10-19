@@ -14,7 +14,10 @@
     <ul class="lp-list t-desc">
       <!--@each includes lp/li-->
     </ul>
-    {{#look}}<p class="lp-offer__price t-price">{{price}} {{priceNote}}</p>{{/look}}
-    <!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->
+    {{#look}}<div class="lp-offer__buy">
+      <p class="lp-offer__price t-price">{{price}} {{priceNote}}</p>
+      <!--@include components/btn variant="btn--beige" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->
+    </div>{{/look}}
+    {{#noLook}}<!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->{{/noLook}}
   </div>
 </article>

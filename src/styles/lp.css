@@ -295,6 +295,7 @@
 .lp-look--about .lp-offer__title { white-space: pre-line; } /* явний перенос у назві («Екскурсія» / «+ 8 напоїв») — \n у даних (рев'ю ec7eb5cf) */
 .lp-look--about .lp-offer__offer .lp-list { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: stretch; column-gap: var(--space-20); padding-inline-start: 0; list-style: none; } /* «що входить» — один горизонтальний рядок (рев'ю 992782c0): пункти рівними колонками в ОДИН ряд, між ними hairline; текст пункту переноситься в межах колонки */
 .lp-look--about .lp-offer__offer .lp-list li + li { margin-top: 0; padding-inline-start: var(--space-20); border-inline-start: var(--border-hairline) solid var(--color-line-soft); }
+.lp-look--about .lp-offer__buy { align-self: stretch; display: flex; align-items: center; justify-content: space-between; gap: var(--space-20); padding: var(--space-30); border-radius: var(--radius-panel); background: var(--color-green); color: var(--color-light); } /* рев'ю 13e05374: ціна й кнопка — один контейнер з зеленою заливкою, space-between; кнопка — світла (btn--beige, як у hero) */
 .lp-look--about .lp-offer__price { margin-left: 0; } /* look: about — ціна з «грн» одним елементом ролі .t-price (як ціна на сторінці товару), внизу перед кнопкою */
 .lp-offer__offer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-lp-cert-row); margin-top: auto; }
 
