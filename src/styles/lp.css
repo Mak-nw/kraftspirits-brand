@@ -182,6 +182,7 @@
 .lp-group--center .lp-group__approx { margin-left: calc(var(--shift-lp-approx-ink) / -2 + var(--lp-num-ink, 0em)); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
 .lp-group--center .lp-group__fact-value { text-indent: calc(var(--shift-lp-approx-ink) / 2); }
 .lp-group__num { margin-top: var(--space-lp-ledger-row); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lp-room--warm .lp-compare__grid .lp-group__num, .lp-room--deep .lp-compare__grid .lp-group__num { color: var(--color-gold); } /* великий рядок compare на темній кімнаті (barrels, #profit): золотий токен, як точки маршруту; дрібний підпис .lp-group__unit і вартість не змінюються */
 .lp-group__approx { margin-left: var(--shift-lp-approx-ink); margin-right: var(--space-lp-approx-gap); } /* «≈» піднято до середини висоти цифр (old-style) */
 .lp-group__unit { margin-top: var(--space-15); text-indent: var(--lp-caption-optic, 0em); color: var(--lp-on-paper-muted); }
 .lp-group__list { align-self: start; margin-top: var(--space-lp-wall-top); text-align: start; }
