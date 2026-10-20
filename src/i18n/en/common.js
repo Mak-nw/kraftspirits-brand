@@ -19,7 +19,7 @@ export default {
   'header.about': 'about us',
   'header.logo.bs': 'Bazylsprings — Barrel Futures',
   'header.cart': 'Cart ( 0 )',
-  'header.help': 'need help?',
+  'header.help': 'need advice?',
   'header.account': 'My account',
   'header.lang.code': 'EN',
   'header.lang.btn': 'EN, site language',

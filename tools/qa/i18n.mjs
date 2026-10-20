@@ -15,6 +15,16 @@ import productsEn from '../../src/i18n/data/products.en.js';
 import occasionsEn from '../../src/i18n/data/occasions.en.js';
 import { PRODUCTS } from '../../src/data/products.js';
 import { OCCASIONS } from '../../src/data/occasions.js';
+import { COCKTAILS } from '../../src/data/cocktails.js';
+import { FAQ } from '../../src/data/faq.js';
+import { LEGAL } from '../../src/data/legal.js';
+import { contacts } from '../../src/data/contacts.js';
+import cocktailsEn from '../../src/i18n/data/cocktails.en.js';
+import faqEn from '../../src/i18n/data/faq.en.js';
+import legalEn from '../../src/i18n/data/legal.en.js';
+import contactsEn from '../../src/i18n/data/contacts.en.js';
+import { cyrPaths, deepOverlay } from '../../src/i18n/overlay.js';
+import { loadLpPages } from '../../tools/lp-pages.mjs';
 
 const args = process.argv.slice(2);
 const flag = (n) => args.includes(`--${n}`);
@@ -51,6 +61,35 @@ for (const p of PRODUCTS) for (const fld of ['name', 'nameLines', 'kind', 'notes
   if (JSON.stringify(v ?? '').match(CYR)) fail('І4', `products.en.js: ${p.slug}.${fld} містить кирилицю`);
 }
 for (const o of OCCASIONS) for (const fld of ['title', 'label']) if (!occasionsEn[o.id]?.[fld] || CYR.test(occasionsEn[o.id][fld])) fail('І4', `occasions.en.js: ${o.id}.${fld}`);
+
+// І4б: оверлеї даних (src/i18n/data/*.en.js) — ключі існують у базових даних (опечатка не мовчить), масиви не довші за базові; для сторінок done у злитих даних немає кирилиці
+const extra = (base, over, path, out = []) => {
+  if (Array.isArray(over)) { if (!Array.isArray(base) || over.length > base.length) out.push(`${path}: масив довший за базовий`); else over.forEach((o, i) => o != null && extra(base[i], o, `${path}[${i}]`, out)); }
+  else if (over && typeof over === 'object') { if (!base || typeof base !== 'object') out.push(`${path}: немає в базових даних`); else for (const [k, v] of Object.entries(over)) { if (k === '$drop') continue; if (!(k in base)) out.push(`${path}.${k}: немає в базових даних`); else extra(base[k], v, `${path}.${k}`, out); } }
+  return out;
+};
+const byKey = (list, key = 'slug') => Object.fromEntries(list.map((x) => [x[key], x]));
+const overlaySets = [
+  ['cocktails', byKey(COCKTAILS), cocktailsEn, ['cocktails']],
+  ['faq', byKey(FAQ), faqEn, ['faq']],
+  ['legal', byKey(LEGAL), legalEn, LEGAL.map((d) => d.slug)],
+  ['contacts', { c: contacts }, { c: contactsEn }, ['contacts', 'feedback']],
+];
+for (const [name, base, over, pages] of overlaySets) {
+  for (const e of extra(base, over, name)) fail('І4', `${name}.en.js: ${e}`);
+  if (pages.some((pg) => pageStatus('en', pg) === 'done')) {
+    for (const [k, b] of Object.entries(base)) for (const c of cyrPaths(deepOverlay(b, over[k]), k)) fail('І4', `${name}.en.js: українське лишилось у ${c}`);
+  }
+}
+const lpPagesBase = await loadLpPages(ROOT);
+for (const [slug, base] of Object.entries(lpPagesBase)) {
+  let over; try { over = (await import(`../../src/i18n/data/${slug}.en.js`)).default; } catch { over = null; }
+  if (over) for (const e of extra(base, over, slug)) fail('І4', `${slug}.en.js: ${e}`);
+  if (pageStatus('en', slug) === 'done') {
+    if (!over) { fail('І4', `${slug}.en.js: немає файлу, а сторінка done`); continue; }
+    for (const c of cyrPaths(deepOverlay(base, over), slug)) fail('І4', `${slug}.en.js: українське лишилось у ${c}`);
+  }
+}
 
 // І5–І7: збірка
 let dist = opt('out'), tmp;

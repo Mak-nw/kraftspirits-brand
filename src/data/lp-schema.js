@@ -29,7 +29,8 @@ export const DECK_TAG_MAX = 20;
 export const COUNT_MAX = 99999;              // лічильник групи compare: ціле 0…99 999
 // число `.t-stat` не переноситься: у вузьких групах (span 2–3) вміщується менше цифр (разом із розділювачем розрядів; з «≈» — ще менше)
 export const COUNT_CAP = { 2: { plain: 999, approx: 99 }, 3: { plain: 99999, approx: 999 } };
-export const LABELS = { approx: 'приблизно ' };   // службовий текст для читачів екрана
+export const LABELS = { approx: 'приблизно ' };
+export const LABELS_EN = { approx: 'approximately ' };   // службовий текст для читачів екрана
 
 const T = (max, req = false, extra = {}) => ({ type: 'text', max, req, ...extra });   // текст (екранується)
 const URL_ = (req = false, extra = {}) => ({ type: 'url', req, ...extra });            // посилання або шлях (див. URL_SOURCE); extra.startsWith — обов'язковий префікс шляху
@@ -321,7 +322,8 @@ const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;'
 const t = (v) => esc(v).replace(/%(?=(?:contacts\.\w+|BASE_URL)%)/g, '&#37;');
 const li = (arr) => (arr || []).map((x) => ({ text: t(x) }));
 const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [...w].length)); // найдовший непереносний відрізок (nbsp не розриває)
-const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
+let LOC = 'uk'; // мова поточного lpView (env.locale): числа, службові підписи, одиниця «шт.»
+const fmt = (n) => Number(n).toLocaleString(LOC === 'en' ? 'en-GB' : 'uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
 // Кімната-погріб (compare.groups[].cellar, partials/media/cellar-*.html; рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): геометрія рахується з count, span і liters групи.
 // Кімната = ширина групи (span колонок + зазори, у u як сітка: колонка 115.42u, зазор 40u) × CELLAR.h; стелажі з двох боків ідуть углиб до точки сходу (перспектива), пляшки тонуть у фоні.
 // Одиниця виміру — ПРОЛІТ стелажа = 2 стіни × 4 полиці × 6 пляшок = 48 (96 = 2 прольоти, 383 = 7 повних + 47: найдальша пляшка-«хвіст» не добудована). Бочка — по центру кімнати на підлозі; розмір ∝ літражу^(1/3) (об'єм → лінійний розмір).
@@ -377,7 +379,7 @@ const VIEW = {
   },
   compare: (s) => ({ ...head(s), note: t(s.note), rv: s.reveal === false ? '' : '1',   // reveal: false — групи без появи і без count-up (число одразу фінальне)
     groups: s.groups.map((g) => ({ rv: s.reveal === false ? '' : '1', key: g.key, span: g.span, mods: `${g.cellar ? ' lp-group--has-cellar' : ''}${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
-      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, sizeShow: g.countWord ? '' : '1', inlineLiters: g.countWord ? '1' : '', countWord: t(g.countWord), unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
+      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LOC === 'en' ? LABELS_EN.approx : LABELS.approx, sizeShow: g.countWord ? '' : '1', inlineLiters: g.countWord ? '1' : '', countWord: t(g.countWord), unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', lookMod: s.look === 'about' ? ' lp-look--about' : '',
     items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), leadGap: !it.lead && s.items.some((x) => x.lead) ? '1' : '',   // lead у ОДНІЙ панелі: у другій — порожній рядок тієї ж висоти (спільні рядки subgrid)
@@ -396,7 +398,7 @@ const VIEW = {
   offers: (s, p) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', gridMod: ` lp-offers__grid--n${s.items.length}`, offersMod: `${s.scene ? ' lp-offers--scene' : ''}${s.airy ? ' lp-offers--airy' : ''}`, scene: s.scene || '', bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
     items: s.items.map((it) => ({ key: it.key, span: '', tone: p.tone, look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
-      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd).replace(/шт\./g, '<span class="lp-offer__unit">шт.</span>'), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
+      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd).replace(LOC === 'en' ? /\bpcs\b/g : /шт\./g, `<span class="lp-offer__unit">${LOC === 'en' ? 'pcs' : 'шт.'}</span>`), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
       includes: li(it.includes), ctaText: t(it.cta.text), ctaHref: esc(it.cta.href) })),
     footText: t(s.foot?.text), footNote: t(s.foot?.note), footCtas: (s.foot?.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant })) }),
   card: (s, p) => ({ ...head(s), text: t(s.text), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone,
@@ -419,6 +421,7 @@ const VIEW = {
  * env.themeTone — тон кнопок за замовчуванням з теми (`--lp-tone` у src/styles/themes/<theme>.css); якщо `tone` у даних не задано.
  */
 export function lpView(page, env = {}) {
+  LOC = env.locale || 'uk';
   validatePage(page);
   const tone = page.tone || env.themeTone;
   if (!tone) fail(`${page.slug}.tone`, `не задано: вкажіть tone у даних або роль --lp-tone у src/styles/themes/${page.theme}.css`);

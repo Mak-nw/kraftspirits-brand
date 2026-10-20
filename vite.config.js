@@ -7,12 +7,15 @@ import { contacts, contactsView } from './src/data/contacts.js';
 import { createLp } from './tools/vite-plugin-lp.mjs';
 import { COCKTAILS } from './src/data/cocktails.js';
 import { PRODUCTS } from './src/data/products.js';
+import { localizeProduct } from './src/i18n/localize.js';
 import { cocktailsView } from './src/data/cocktails-view.js';
 import { FAQ } from './src/data/faq.js';
 import { faqView } from './src/data/faq-view.js';
 import { LEGAL } from './src/data/legal.js';
 import { legalLists } from './src/data/legal-view.js';
 import { localizeHtml, sitemapXml, writeStubs } from './tools/i18n.mjs';
+import { localizeCocktails, localizeContacts, localizeFaq, localizeLegal } from './src/i18n/localize-build.js';
+import { LOCALES } from './src/i18n/config.js';
 
 const root = import.meta.dirname;
 
@@ -29,8 +32,9 @@ const BUILD_BASE = normalizeBase(process.env.BASE_PATH);
 
 // %contacts.<ключ>% у HTML -> значення з src/data/contacts.js (адреса, координати, телефон, e-mail, посилання мапи, теми) з екрануванням для атрибутів/тексту
 const CONTACTS = contactsView(contacts);
+const CONTACTS_BY_LOCALE = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, contactsView(localizeContacts(contacts, l))])); // адреса й теми звернення — мовою сторінки
 const escapeHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in CONTACTS ? (key.endsWith('Html') ? CONTACTS[key] : escapeHtml(CONTACTS[key])) : m)); // ключі *Html — готова розмітка (екранування в contacts.js)
+const fillContacts = (html, locale = 'uk') => { const C = CONTACTS_BY_LOCALE[locale]; return html.replace(/%contacts\.(\w+)%/g, (m, key) => (key in C ? (key.endsWith('Html') ? C[key] : escapeHtml(C[key])) : m)); }; // ключі *Html — готова розмітка (екранування в contacts.js)
 
 // ШАБЛОН ПОСАДКОВОЇ СТОРІНКИ (docs/page-template.md): <!--@page name--> у <name>.html -> уся сторінка з partials/lp/page.html і секцій partials/lp/<type>.html
 // за даними src/data/<name>.js (схема й перевірка — src/data/lp-schema.js + tools/lp-files.mjs: збірка падає з поясненням, якщо дані не за схемою).
@@ -39,24 +43,28 @@ const fillContacts = (html) => html.replace(/%contacts\.(\w+)%/g, (m, key) => (k
 const LP = await createLp({ root, contactKeys: Object.keys(CONTACTS) });
 const LP_NAMES_RE = /<!--@(?:page|lp) ([a-z0-9]+(?:-[a-z0-9]+)*)/g;
 
-// Списки для @each (будуються з src/data/* під час збірки/dev): cocktails.html
-const COCKTAILS_VIEW = cocktailsView(COCKTAILS, PRODUCTS);
-const LISTS = { cocktails: COCKTAILS_VIEW, cocktailsDemo: COCKTAILS_VIEW.slice(1, 2).map((c) => ({ ...c, loading: 'eager', fetchpriority: 'auto' })) }; // cocktailsDemo — один блок для design-system.html (фото eager: інакше lazy-кадр поза екраном не завантажений, і кільце мініатюр міряється на зеленому тлі панелі)
-// faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group-->; faqDemo — два рядки для design-system.html
-const FAQ_VIEW = faqView(FAQ);
-LISTS.faq = FAQ_VIEW;
-// юридичні сторінки (src/data/legal.js): legalPrivacy / legalCookies / legalOffer / legalDelivery / legalAgePolicy / legalBarrelsTerms — список з одного документа
-// для <!--@each legalX sections/legal-doc--> (вкладений цикл sections → legal-section)
-Object.assign(LISTS, legalLists(LEGAL));
-LISTS.faqDemo = FAQ_VIEW[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
-LISTS.faqDemoOpen = LISTS.faqDemo.slice(0, 1); LISTS.faqDemoClosed = LISTS.faqDemo.slice(1, 2); // демо в двох колонках .faq-page__col (design-system.html)
+// Списки для @each (будуються з src/data/* під час збірки/dev; мовна версія — оверлей src/i18n/data/*.en.js поверх українських даних): cocktails.html, faq.html, юридичні сторінки
+function buildLists(locale) {
+  const cocktailsView_ = cocktailsView(localizeCocktails(COCKTAILS, locale), PRODUCTS.map((p) => localizeProduct(p, locale)), locale);
+  const lists = { cocktails: cocktailsView_, cocktailsDemo: cocktailsView_.slice(1, 2).map((c) => ({ ...c, loading: 'eager', fetchpriority: 'auto' })) }; // cocktailsDemo — один блок для design-system.html (фото eager: інакше lazy-кадр поза екраном не завантажений, і кільце мініатюр міряється на зеленому тлі панелі)
+  // faq.html: групи питань (src/data/faq.js) — <!--@each faq sections/faq-group-->; faqDemo — два рядки для design-system.html
+  const faqView_ = faqView(localizeFaq(FAQ, locale));
+  lists.faq = faqView_;
+  // юридичні сторінки (src/data/legal.js): legalPrivacy / legalCookies / legalOffer / legalDelivery / legalAgePolicy / legalBarrelsTerms — список з одного документа
+  // для <!--@each legalX sections/legal-doc--> (вкладений цикл sections → legal-section)
+  Object.assign(lists, legalLists(localizeLegal(LEGAL, locale)));
+  lists.faqDemo = faqView_[0].items.slice(0, 2).map((it, k) => (k === 0 ? { ...it, open: ' open', expanded: 'true' } : { ...it, open: '', expanded: 'false' })); // design-system.html#faq: відкритий (2 абзаци) і закритий рядок
+  lists.faqDemoOpen = lists.faqDemo.slice(0, 1); lists.faqDemoClosed = lists.faqDemo.slice(1, 2); // демо в двох колонках .faq-page__col (design-system.html)
+  return lists;
+}
+const LISTS_BY_LOCALE = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, buildLists(l)]));
 
 const I18N_MISSING = []; // ключі, яких немає в en (для сторінок-чернеток це нормально; повнота — npm run qa:i18n)
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
   // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
-  const render = createRenderer({ root, lists: LISTS, getLpPage: (name) => LP.view(name) });
+  const renderers = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, createRenderer({ root, lists: LISTS_BY_LOCALE[l], getLpPage: (name) => LP.view(name, l) })]));
   return {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
@@ -70,8 +78,8 @@ function htmlPartials() {
         const locale = enName ? 'en' : 'uk';
         const name = enName || basename(rel, '.html');
         if (enName) html = readFileSync(resolve(root, `${enName}.html`), 'utf8');
-        await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]));
-        const out = localizeHtml(fillContacts(render(html)), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
+        await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]), locale);
+        const out = localizeHtml(fillContacts(renderers[locale](html), locale), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
         return out.replaceAll('%BASE_URL%', base);
       },
     },

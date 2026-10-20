@@ -2,10 +2,11 @@
 // Повертає масив «параметрів» для partials/components/cocktail.html: усі рядки вже екрановані для HTML/атрибутів,
 // списки (photos, ingredients, steps) — масиви для вкладених <!--@each … -->. Дані — src/data/cocktails.js.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
 export const LIMITS = { description: 320, ingredients: 7, steps: 6, photos: 1 };
 
-export function cocktailsView(cocktails, products) {
+export function cocktailsView(cocktails, products, locale = 'uk') {
+  const en = locale === 'en';
+  const fmtPrice = (n) => (en ? `₴${n.toLocaleString('en-GB')}` : `${n.toLocaleString('uk-UA')} ₴`); // як fmtPrice() у src/i18n/runtime.js
   const slugs = new Set();
   return cocktails.map((c, i) => {
     if (!c.slug || !/^[a-z0-9-]+$/.test(c.slug)) throw new Error(`cocktails.js: некоректний slug «${c.slug}» (латиниця, цифри, дефіс)`);
@@ -48,7 +49,7 @@ export function cocktailsView(cocktails, products) {
       // картка — дослівно як у каталозі (catalog.js): назва nameLines[0] <br> nameLines[1], фото catalogImage || image, ціна «від …» для кількох об'ємів
       productNameHtml: p ? (p.nameLines || [p.name]).map(esc).join('<br>') : '',
       productImage: p && (p.catalogImage || p.image) ? `/${esc(p.catalogImage || p.image)}` : '',
-      productPrice: p?.price != null ? `${p.volumes.length > 1 ? 'від ' : ''}${fmtPrice(p.price)}` : '',
+      productPrice: p?.price != null ? `${p.volumes.length > 1 ? (en ? 'from ' : 'від ') : ''}${fmtPrice(p.price)}` : '',
       productNote: esc(c.productNote || ''),
     };
   });
