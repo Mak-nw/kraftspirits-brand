@@ -45,10 +45,51 @@
         {
           "$ref": "#/$defs/hero"
         }
+      ]
+    },
+    "tabs": {
+      "type": [
+        "array",
+        "null"
       ],
+      "minItems": 2,
+      "maxItems": 3,
       "items": {
-        "$ref": "#/$defs/section"
+        "type": [
+          "object",
+          "null"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 1,
+            "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
+          },
+          "start": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "start"
+        ]
       }
+    },
+    "tabsLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40,
+      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
     }
   },
   "required": [
@@ -57,6 +98,54 @@
     "metaTitle",
     "metaDescription",
     "sections"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "tabs"
+        ],
+        "properties": {
+          "tabs": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "type": "array",
+            "prefixItems": [
+              true
+            ],
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/hero"
+                },
+                {
+                  "$ref": "#/$defs/section"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sections": {
+            "type": "array",
+            "prefixItems": [
+              true
+            ],
+            "items": {
+              "$ref": "#/$defs/section"
+            }
+          }
+        }
+      }
+    }
   ],
   "x-rules": [
     {
@@ -184,6 +273,12 @@
       "scope": "page",
       "expressed": true,
       "rule": "перша секція — `hero`, і вона єдина (без неї немає `<h1>`)"
+    },
+    {
+      "id": "tabs-start-hero",
+      "scope": "page",
+      "expressed": false,
+      "rule": "`tabs` (2–3 вкладки): `tabs[].start` — `id` hero-секції; перша вкладка стартує з першої секції; кожна наступна hero сторінки — старт вкладки (без `tabs` hero лише одна); `key` і `start` унікальні; `tabsLabel` лише разом з `tabs`"
     },
     {
       "id": "ids-unique",

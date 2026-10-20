@@ -62,6 +62,7 @@ export const HERO_TITLE_SIZES = ['large'];   // `hero.titleSize`: 'large' — H1
 export const PLACE_TITLE_SIZES = ['small'];   // `place.titleSize`: 'small' — H2 панелі роллю .t-lead (40u) замість .t-h2 (67u): довге слово («Ясногородка») вміщується в панель цілим, не розривається дефісом (дефект E3-B); без поля — .t-h2
 export const HERO_FADES = ['green', 'teal', 'brown'];       // `hero.fade`: колір градієнта знизу вгору (токен палітри --color-<значення>; без поля — градієнта немає; рішення замовника 53422015)
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
+export const TAB_LABEL_MAX = 20;   // `tabs[].label`: підпис вкладки (чіп .product-volume у ряду)
 export const LOOKS = ['about'];   // `look`: 'about' — вигляд компонентів сторінки «Про нас» (арки lp-arch, картки-арки принципів, панелі brand-panel, картка tour-card з мапою); без поля — типовий вигляд шаблону (barrels не змінюється)
 const LOOK = { look: E(LOOKS) };
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
@@ -82,6 +83,10 @@ export const SCHEMA = {
     metaTitle: T(70, true),
     metaDescription: T(200, true),   // пошуковики показують ≈155 знаків
     sections: L({ type: 'section' }, 1, 20, true),
+    // Вкладки верхнього рівня (необов'язково): сторінка з кількома «під-сторінками» (напр. «B2B» / «Івенти»). Секції лишаються ПЛОСКИМ списком `sections`; кожна вкладка починається зі
+    // своєї hero-секції (`start` = її `id`) і триває до наступного старту. Перемикач — компонент DS `.tabs` (WAI-ARIA, src/js/tabs.js), hash `#<key>` відкриває вкладку; перша — типова.
+    tabs: L(O({ key: { type: 'id', req: true }, label: T(TAB_LABEL_MAX, true, { word: BTN_WORD }), start: { type: 'id', req: true } }), 2, 3),
+    tabsLabel: T(40),   // aria-label перемикача вкладок (назва групи для читачів екрана)
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
@@ -212,6 +217,7 @@ export const RULES = [
 /* Правила сторінки: hero першим і єдиним; id секцій і key у списках унікальні; якорі `#id` ведуть на секцію сторінки */
 export const PAGE_RULES = [
   { id: 'hero-first', doc: 'перша секція — `hero`, і вона єдина (без неї немає `<h1>`)', json: true },
+  { id: 'tabs-start-hero', doc: '`tabs` (2–3 вкладки): `tabs[].start` — `id` hero-секції; перша вкладка стартує з першої секції; кожна наступна hero сторінки — старт вкладки (без `tabs` hero лише одна); `key` і `start` унікальні; `tabsLabel` лише разом з `tabs`', json: null },
   { id: 'ids-unique', doc: '`id` секцій унікальні в межах сторінки', json: null },
   { id: 'keys-unique', doc: '`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `formats.items`, `offers.items`) — з нього будується CSS-клас', json: null },
   { id: 'stack-after-block', doc: '`stack: true` дозволено лише секції, перед якою стоїть `card` або `place` (стек = ряд великих блоків; після hero чи інших типів стека немає)', json: null },
@@ -287,12 +293,26 @@ export function validatePage(page) {
   if (!Array.isArray(sections) || !sections.length) fail(`${page.slug}.sections`, 'порожньо');
   if (sections.length > SCHEMA.page.sections.max) fail(`${page.slug}.sections`, `секцій ${sections.length}, допустимо 1–${SCHEMA.page.sections.max}`);
   const ids = new Set();
+  // вкладки: start кожної — id hero-секції; перша вкладка стартує з першої секції; key і start унікальні; решта hero лише на стартах
+  const tabStarts = new Set();
+  if (page.tabs) {
+    const keys = new Set();
+    page.tabs.forEach((tb, j) => {
+      const p = `${page.slug}.tabs[${j}]`;
+      if (keys.has(tb.key)) fail(`${p}.key`, `key «${tb.key}» повторюється`); keys.add(tb.key);
+      if (tabStarts.has(tb.start)) fail(`${p}.start`, `start «${tb.start}» повторюється`); tabStarts.add(tb.start);
+      const k = sections.findIndex((x) => x.id === tb.start);
+      if (k < 0 || sections[k].type !== 'hero') fail(`${p}.start`, `«${tb.start}» має бути id hero-секції`);
+      if (j === 0 && k !== 0) fail(`${p}.start`, 'перша вкладка стартує з першої секції сторінки');
+    });
+    sections.forEach((x, k) => { if (x.type === 'hero' && !tabStarts.has(x.id) && k > 0) fail(`${page.slug}.sections[${k}]`, 'hero без вкладки: додайте її id в tabs[].start'); });
+  } else if (page.tabsLabel) fail(`${page.slug}.tabsLabel`, 'задається лише разом з tabs');
   sections.forEach((s, i) => {
     const path = `${page.slug}.sections[${i}](${s.id || s.type})`;
     const def = SCHEMA.sections[s.type];
     if (!def) fail(path, `невідомий type «${s.type}»; допустимо: ${Object.keys(SCHEMA.sections).join(', ')}`);
     if (i === 0 && s.type !== 'hero') fail(path, 'перша секція має бути hero (без нього немає <h1>)');
-    if (i > 0 && s.type === 'hero') fail(path, 'hero може бути лише першою (і єдиною) секцією');
+    if (i > 0 && s.type === 'hero' && !(tabStarts.has(s.id))) fail(path, 'hero може бути лише першою (і єдиною) секцією; з `tabs` — ще й на початку кожної вкладки (tabs[].start = id цієї hero)');
     if (s.id) { if (ids.has(s.id)) fail(path, `id «${s.id}» повторюється`); ids.add(s.id); }
     check({ type: 'object', fields: def }, s, path);
     if (s.stack === true && !['card', 'place'].includes(sections[i - 1]?.type)) fail(path, 'stack: true дозволено лише після секції card або place (стек великих блоків)');
@@ -436,5 +456,17 @@ export function lpView(page, env = {}) {
     const mods = `${s.cols && s.cols !== GRID_COLS ? ` lp-cols--${s.cols}` : ''}${s.pad ? ` lp-pad--${s.pad}` : ''}${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
     return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
   });
+  if (page.tabs) {   // вкладки: у плоский список вставляються службові блоки (partials/lp/tabbar|tabpanel-open|tabpanel-close|tabs-close): перемикач + обгортки панелей
+    const starts = page.tabs.map((tb) => sections.findIndex((x) => x.id === tb.start));
+    const tabsView = page.tabs.map((tb, j) => ({ key: tb.key, label: t(tb.label), active: j === 0 ? ' is-active' : '', selected: j === 0 ? 'true' : 'false', tabindex: j === 0 ? '' : ' tabindex="-1"' }));
+    const wrapped = [{ type: 'tabbar', room: 'deep', mods: '', tabsLabel: t(page.tabsLabel || ''), tabs: tabsView }];
+    sections.forEach((s, i) => {
+      const j = starts.indexOf(i);
+      if (j >= 0) { if (j > 0) wrapped.push({ type: 'tabpanel-close', mods: '' }); wrapped.push({ type: 'tabpanel-open', mods: '', ...tabsView[j] }); }
+      wrapped.push(s);
+    });
+    wrapped.push({ type: 'tabpanel-close', mods: '' }, { type: 'tabs-close', mods: '' });
+    return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections: wrapped, tabs: tabsView };
+  }
   return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections };
 }

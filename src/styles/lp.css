@@ -385,3 +385,9 @@
 /* ---------- демо в design-system.html: справжні секції сторінок (<!--@lp сторінка секція-->) у ширині демо-панелі ---------- */
 .demo-panel.ds-lp { display: block; padding: 0; overflow: clip; }
 .ds-lp.lp-scope { --grid-w: var(--size-lp-demo-w); }
+
+/* ---------- вкладки верхнього рівня (page.tabs): компонент DS .tabs (cocktails.css; вигляд вкладки = .product-volume), панель — вся «під-сторінка» (hero + секції) ----------
+   Смуга з перемикачем — кімната deep над hero: зона під fixed-пілюлею header (--size-header-h) + повітря; перемикач по центру. Лише токени. */
+.lp-tabs__bar { padding-top: calc(var(--size-header-h) + var(--space-20)); padding-bottom: var(--space-20); }
+.lp-tabs .lp-tabs__list { justify-content: center; } /* два класса: cocktails.css (.tabs__list / .tabs__panels) подключено після lp.css */
+.lp-tabs .lp-tabs__panels { padding-top: 0; }
