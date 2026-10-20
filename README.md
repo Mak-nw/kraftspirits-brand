@@ -382,7 +382,7 @@ npm run qa:full                  # 1200/1440/1920 × dpr 1,2 × classic+none: + 
 npm run qa:check-ds              # S1–S11 статичні + D1–D19 у браузері (-- --static-only | --dynamic-only | --rules S4,D5)
 npm run qa:links | qa:states | qa:arch | qa:cls | qa:hscroll
 npm run qa:grid                  # D12: блоки на межах 10 колонок (1200/1440/1728/1920)
-npm run qa:d18                   # D18: горизонтальний зазор великих блоків: product і cocktails 5u (gap5-pages), решта 40u
+npm run qa:d18                   # D18: горизонтальний зазор великих блоків: product, cocktails і cart 5u (gap5-pages), решта 40u
 npm run qa:d19                   # D19: hero без оверлея (єдиний виняток — hero.fade)
 npm run qa:header                # D15: шапка / меню
 npm run qa:img-contrast          # D14: контраст тексту на фото по літерах (+ профіль parallax=on для barrels #price)
