@@ -41,14 +41,7 @@
 /* бочки: маршрут «Кентуккі — Київ» — корабель по центру лінії */
 .icon--barrels-ship { -webkit-mask-image: url('/assets/icons/barrels-ship.svg'); mask-image: url('/assets/icons/barrels-ship.svg'); }
 
-/* Об'єм з пляшкою (.vol): іконка bottle-* ліворуч від тексту об'єму. Розмір пляшки = --size-volume-icon-w × --vol-scale (1 — кнопки об'єму сторінки товару; менший — акордеони);
-   пляшка вища за рядок — margin-компенсація, тож висота рядка не змінюється. Колір = колір тексту. */
-.vol { --vol-scale: 1; display: inline-flex; align-items: center; gap: calc(var(--space-volume-icon-gap) * var(--vol-scale)); vertical-align: middle; white-space: nowrap; }
-.vol .icon { --icon-size: calc(var(--size-volume-icon-w) * var(--vol-scale)); margin-block: calc((1em - var(--icon-size) * var(--icon-ratio, 1)) / 2); }
-.vol--inline { --vol-scale: var(--scale-volume-inline); }
-
-/* Міцність з іконкою (.strength): склянка strength.svg ліворуч від тексту («42% alc» у шапці продукту YC, рядок «Міцність» у «Характеристиках»).
-   Іконка 24u (--size-strength-icon) × --strength-scale; вища за рядок — margin-компенсація, тож висота рядка не змінюється. Колір = колір тексту. */
-.strength { --strength-scale: 1; display: inline-flex; align-items: center; gap: var(--space-volume-icon-gap); white-space: nowrap; }
-.strength--inline { --strength-scale: var(--scale-strength-inline); }
-.strength .icon, .product-volumes .strength .icon { --icon-size: calc(var(--size-strength-icon) * var(--strength-scale)); margin-block: calc((1em - var(--icon-size)) / 2); }
+/* Міцність з іконкою (.strength): склянка strength.svg ліворуч від тексту («42% alc» у шапці продукту YC; в акордеонах товару іконок немає).
+   Іконка 24u (--size-strength-icon); вища за рядок — margin-компенсація, тож висота рядка не змінюється. Колір = колір тексту. */
+.strength { display: inline-flex; align-items: center; gap: var(--space-volume-icon-gap); white-space: nowrap; }
+.strength .icon, .product-volumes .strength .icon { --icon-size: var(--size-strength-icon); margin-block: calc((1em - var(--icon-size)) / 2); }

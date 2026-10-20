@@ -93,8 +93,6 @@
 /* «Характеристики»: пари підпис — значення */
 .product-specs { display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-30); row-gap: var(--space-5); }
 .product-specs dd { margin: 0; }
-.product-specs dd:has(.vol) { display: flex; flex-wrap: wrap; gap: 0 var(--space-product-volumes-gap); }
-.product-specs dd:has(.strength) { display: flex; } /* inline-flex у рядку збільшував лінійний бокс: flex-контейнер тримає висоту рядка */
 
 /* ======================================================================
    YasnoCraft: лише відмінності від спільної розкладки — рамка панелі beige (BS — teal), арка-шапка 900×359.93 з круглим лого,
