@@ -46,7 +46,7 @@ export const b2b = {
       items: [
         { key: 'power', title: 'Потужність', value: `до 400${NB}л`, text: 'напоїв за зміну', img: '/assets/img/hero-home.webp', slot: PH('загальний план цеху: зміна в роботі, установки й лінія розливу, вертикаль') },
         { key: 'wash', title: 'Бражна', value: `3${NB}660${NB}л`, text: 'Класична установка: перегонка в кубі (pot still) або через тарілки', img: '/assets/img/about-still-wash.webp', slot: 'Кадр наявний (about-still-wash): бражна установка' },
-        { key: 'spirit', title: 'Спиртова', value: `2${NB}420${NB}л`, text: 'Класична установка: куб (pot still) або тарілки, залежно від напою', img: '/assets/img/about-still-spirit.webp', slot: 'Кадр наявний (about-still-spirit): спиртова установка' },
+        { key: 'spirit', title: 'Спиртова', value: `2${NB}420${NB}л`, text: 'Також класична: куб (pot still) або тарілки на вибір', img: '/assets/img/about-still-spirit.webp', slot: 'Кадр наявний (about-still-spirit): спиртова установка' },
         { key: 'vacuum', title: 'Вакуумна', value: `410${NB}л`, text: 'До 7 тарілок і джин-кошик. Низька температура зберігає аромат фруктів і ботаніки', img: '/assets/img/about-still-vac.webp', slot: 'Кадр наявний (about-still-vac): вакуумна установка' },
       ],
     },
