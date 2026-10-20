@@ -5,9 +5,8 @@
 //   title        — назва українською (h2 блоку)
 //   original     — оригінальна назва (необов'язково; '' або відсутнє — рядок не показується)
 //   description  — опис, 2–3 речення, до 320 символів (зараз ≈200–210; довше 320 — помилка збірки)
-//   photos       — 1–3 фото [{ src, thumb?, alt, slot? }]: src — шлях від кореня public/ без початкового «/»
-//                  (4:5, 1120×1400 webp); thumb — мініатюра 252×334 (необов'язково, інакше береться src);
-//                  alt — опис кадру; slot — нотатка для огляду ?slots=on (що це за кадр і чим замінити)
+//   photos       — рівно 1 кадр [{ src, alt, slot? }] (слайдера нема; коментар замовника 3d471d43): src — шлях від кореня public/ без «/»
+//                  (кроп 4:5 до одного келиха з коктейлем, без пляшки/рук/декору); alt — опис кадру; slot — нотатка для ?slots=on
 //   ingredients  — 1–7 позицій [{ name, amount }] у порядку додавання; amount — рядок («50 мл», «2 деші», «1 шт.»)
 //   tall         — true: вищий блок (мін. висота ряду --size-cocktail-h-tall = 658u замість 547.67u; правка замовника ccd53c73 лише для Олд-фешн); решта — висота картки каталогу
 //   steps        — кроки приготування, 1–6 коротких речень у наказовому способі (нумерація — автоматично; більше 6 — помилка збірки)
@@ -16,8 +15,7 @@
 //   productNote  — необов'язково: чому обрано саме цей напій, якщо точного відповідника в асортименті немає (видно лише тут і в ?slots=on)
 //   draft        — true: тексти й фото — чернетка-заглушка, на заміну/затвердження замовником
 // Тексти: класичні загальновідомі рецептури, без тверджень про бренд, історію, користь чи ефект; пропорції стандартні.
-// Фото: 1) кадр коктейлю public/assets/img/cocktails/<slug>-1.webp (AI-фон і бокал + реальна пляшка, reports/cocktail-photos.json) — на затвердження;
-//       2) реальне студійне фото пляшки зі сторінки товару (product-hero-*). Мініатюри 252×334 — public/assets/img/cocktails/thumbs/.
+// Фото: public/assets/img/cocktails/<slug>-glass.webp — лише бокал із коктейлем (кроп AI-кадру <slug>-1.webp), на затвердження замовника.
 
 export const COCKTAILS = [
   {
@@ -26,8 +24,7 @@ export const COCKTAILS = [
     original: 'Gin & Tonic',
     description: 'Найпростіший спосіб познайомитися з джином: ялівець і цитрус розкриваються в гірчинці тоніку. Освіжає без зайвої солодкості. Добрий напій для теплого вечора на терасі або для неспішної розмови перед вечерею.',
     photos: [
-      { src: 'assets/img/cocktails/gin-tonic-1.webp', thumb: 'assets/img/cocktails/thumbs/gin-tonic-1-thumb.webp', alt: 'Коктейль «Джин-тонік»: пляшка «Джин Ясногородський» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-yasnyi-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-yasnyi-hero-thumb.webp', alt: 'Пляшка «Джин Ясногородський», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/gin-tonic-glass.webp', alt: 'Коктейль «Джин-тонік»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '50 мл' },
@@ -52,8 +49,7 @@ export const COCKTAILS = [
     original: 'Negroni',
     description: 'Рівні частини джину, червоного вермуту й гіркого біттера. Смак глибокий, з апельсиновою гірчинкою й теплою солодкістю вермуту. Джин, що відпочив у дубі, додає м’якої ванілі. Класичний аперитив перед вечерею.',
     photos: [
-      { src: 'assets/img/cocktails/negroni-1.webp', thumb: 'assets/img/cocktails/thumbs/negroni-1-thumb.webp', alt: 'Коктейль «Негроні»: пляшка «Джин Бочковий» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-gin-barrel-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-barrel-hero-thumb.webp', alt: 'Пляшка «Джин Бочковий», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/negroni-glass.webp', alt: 'Коктейль «Негроні»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '30 мл' },
@@ -78,8 +74,7 @@ export const COCKTAILS = [
     original: 'Dry Martini',
     description: 'Джин і крапля сухого вермуту, добре охолоджені й нічого зайвого. Чистий, прохолодний, з виразним ялівцем у центрі. Коктейль для тих, хто хоче відчути сам джин. Подають до легких закусок або як аперитив.',
     photos: [
-      { src: 'assets/img/cocktails/dry-martini-1.webp', thumb: 'assets/img/cocktails/thumbs/dry-martini-1-thumb.webp', alt: 'Коктейль «Сухий мартіні»: пляшка «Джин Ясногородський» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-yasnyi-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-yasnyi-hero-thumb.webp', alt: 'Пляшка «Джин Ясногородський», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/dry-martini-glass.webp', alt: 'Коктейль «Сухий мартіні»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '60 мл' },
@@ -104,8 +99,7 @@ export const COCKTAILS = [
     original: 'Gimlet',
     description: 'Джин, свіжий сік лайма й трохи цукрового сиропу. Кислинка й солодкість урівноважені, а трав’яні ноти садового джину роблять смак зеленішим. Короткий, яскравий коктейль, який легко приготувати вдома.',
     photos: [
-      { src: 'assets/img/cocktails/gimlet-1.webp', thumb: 'assets/img/cocktails/thumbs/gimlet-1-thumb.webp', alt: 'Коктейль «Ґімлет»: пляшка «Джин Садовий» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-gin-garden-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-garden-hero-thumb.webp', alt: 'Пляшка «Джин Садовий», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/gimlet-glass.webp', alt: 'Коктейль «Ґімлет»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '60 мл' },
@@ -130,8 +124,7 @@ export const COCKTAILS = [
     original: 'Gin Basil Smash',
     description: 'Свіжий базилік, лимон і джин: трав’янистий, яскраво-зелений і дуже ароматний. Садовий джин з базиліком і огірком звучить тут природно. Підійде до літньої вечері, сирної тарілки або страв з томатами.',
     photos: [
-      { src: 'assets/img/cocktails/gin-basil-smash-1.webp', thumb: 'assets/img/cocktails/thumbs/gin-basil-smash-1-thumb.webp', alt: 'Коктейль «Джин-смеш з базиліком»: пляшка «Джин Садовий» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-gin-garden-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-garden-hero-thumb.webp', alt: 'Пляшка «Джин Садовий», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/gin-basil-smash-glass.webp', alt: 'Коктейль «Джин-смеш з базиліком»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '60 мл' },
@@ -157,8 +150,7 @@ export const COCKTAILS = [
     original: 'Tom Collins',
     description: 'Довгий освіжальний коктейль: джин, лимон, трохи солодкості й содова. Легкий, з м’якими бульбашками й чистим цитрусовим смаком. Добре тримає свіжість у спеку і пасує до вечері на свіжому повітрі.',
     photos: [
-      { src: 'assets/img/cocktails/tom-collins-1.webp', thumb: 'assets/img/cocktails/thumbs/tom-collins-1-thumb.webp', alt: 'Коктейль «Том Коллінз»: пляшка «Джин Ясногородський» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-yasnyi-new.webp', thumb: 'assets/img/cocktails/thumbs/gin-yasnyi-hero-thumb.webp', alt: 'Пляшка «Джин Ясногородський», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/tom-collins-glass.webp', alt: 'Коктейль «Том Коллінз»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Джин', amount: '50 мл' },
@@ -184,8 +176,7 @@ export const COCKTAILS = [
     original: 'Old Fashioned',
     description: 'Міцний напій, трохи цукру, ароматичний біттер і апельсинова цедра. Дуб, ваніль і карамель стають об’ємнішими, а цедра додає світла. Коктейль для повільного вечора: його п’ють невеликими ковтками, поки тане лід.',
     photos: [
-      { src: 'assets/img/cocktails/old-fashioned-1.webp', thumb: 'assets/img/cocktails/thumbs/old-fashioned-1-thumb.webp', alt: 'Коктейль «Олд-фешн»: пляшка «Oak Notes» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-oak-notes-new.webp', thumb: 'assets/img/cocktails/thumbs/oak-notes-hero-thumb.webp', alt: 'Пляшка «Oak Notes», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/old-fashioned-glass.webp', alt: 'Коктейль «Олд-фешн»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Витриманий напій типу віскі', amount: '60 мл' },
@@ -212,8 +203,7 @@ export const COCKTAILS = [
     original: 'Manhattan',
     description: 'Віскі, червоний вермут і краплі біттера, перемішані до прохолоди. Смак густий і теплий: спеції, сухофрукти, дерево. Класичний коктейль перед вечерею або після неї, коли хочеться чогось зібраного й неспішного.',
     photos: [
-      { src: 'assets/img/cocktails/manhattan-1.webp', thumb: 'assets/img/cocktails/thumbs/manhattan-1-thumb.webp', alt: 'Коктейль «Манхеттен»: пляшка «Oak Notes» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-oak-notes-new.webp', thumb: 'assets/img/cocktails/thumbs/oak-notes-hero-thumb.webp', alt: 'Пляшка «Oak Notes», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/manhattan-glass.webp', alt: 'Коктейль «Манхеттен»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Витриманий напій типу віскі', amount: '50 мл' },
@@ -239,8 +229,7 @@ export const COCKTAILS = [
     original: 'Whiskey Sour',
     description: 'Віскі, свіжий лимон і цукровий сироп у балансі кислого й солодкого. Чистий зерновий дистилят дає світлішу, хлібну версію класики. Коктейль, з якого зручно починати знайомство з віскі в міксології.',
     photos: [
-      { src: 'assets/img/cocktails/whiskey-sour-1.webp', thumb: 'assets/img/cocktails/thumbs/whiskey-sour-1-thumb.webp', alt: 'Коктейль «Віскі-сауер»: пляшка «White Whiskey» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-whiskey-white-new.webp', thumb: 'assets/img/cocktails/thumbs/whiskey-white-hero-thumb.webp', alt: 'Пляшка «White Whiskey», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/whiskey-sour-glass.webp', alt: 'Коктейль «Віскі-сауер»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Віскі', amount: '50 мл' },
@@ -266,8 +255,7 @@ export const COCKTAILS = [
     original: 'Whiskey Mule',
     description: 'Віскі, лайм та імбирне пиво з льодом. Пряний, освіжальний, з помітним імбирним теплом і зерновою основою. Довгий напій, який легко приготувати на компанію: потрібні лише склянка, лід і барна ложка.',
     photos: [
-      { src: 'assets/img/cocktails/whiskey-mule-1.webp', thumb: 'assets/img/cocktails/thumbs/whiskey-mule-1-thumb.webp', alt: 'Коктейль «Віскі-мул»: пляшка «White Whiskey» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-whiskey-white-new.webp', thumb: 'assets/img/cocktails/thumbs/whiskey-white-hero-thumb.webp', alt: 'Пляшка «White Whiskey», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/whiskey-mule-glass.webp', alt: 'Коктейль «Віскі-мул»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Віскі', amount: '50 мл' },
@@ -292,8 +280,7 @@ export const COCKTAILS = [
     original: 'Highball',
     description: 'Дистилят, содова й багато льоду. Мінімум складників, тому основа звучить чисто: ячмінний солод, хлібна м’якість, свіжість бульбашок. Легкий довгий напій до вечері або для неквапливої розмови.',
     photos: [
-      { src: 'assets/img/cocktails/whisky-highball-1.webp', thumb: 'assets/img/cocktails/thumbs/whisky-highball-1-thumb.webp', alt: 'Коктейль «Хайбол»: пляшка «Barley Spirit» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-barley-spirit-new.webp', thumb: 'assets/img/cocktails/thumbs/barley-spirit-hero-thumb.webp', alt: 'Пляшка «Barley Spirit», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/whisky-highball-glass.webp', alt: 'Коктейль «Хайбол»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Ячмінний дистилят', amount: '50 мл' },
@@ -318,8 +305,7 @@ export const COCKTAILS = [
     original: 'Jack Rose',
     description: 'Яблучний бренді, лимон і гренадин. Коктейль рожевого кольору з ароматом печеного яблука й легкою ягідною солодкістю. Короткий і святковий, добре пасує до осінніх вечорів і невеликих закусок.',
     photos: [
-      { src: 'assets/img/cocktails/jack-rose-1.webp', thumb: 'assets/img/cocktails/thumbs/jack-rose-1-thumb.webp', alt: 'Коктейль «Джек Роуз»: пляшка «Кальвадос 3 роки» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-calvados-3-new.webp', thumb: 'assets/img/cocktails/thumbs/calvados-3-hero-thumb.webp', alt: 'Пляшка «Кальвадос 3 роки», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/jack-rose-glass.webp', alt: 'Коктейль «Джек Роуз»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Кальвадос', amount: '45 мл' },
@@ -344,8 +330,7 @@ export const COCKTAILS = [
     original: 'Calvados Sidecar',
     description: 'Класичний сайдкар, у якому основа — яблучний бренді. Мед і сушене яблуко кальвадосу зустрічаються з апельсиновим лікером і лимоном. Теплий, цитрусовий, зібраний коктейль для вечора в невеликій компанії.',
     photos: [
-      { src: 'assets/img/cocktails/calvados-sidecar-1.webp', thumb: 'assets/img/cocktails/thumbs/calvados-sidecar-1-thumb.webp', alt: 'Коктейль «Сайдкар з кальвадосом»: пляшка «Кальвадос 5 років» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-calvados-5-new.webp', thumb: 'assets/img/cocktails/thumbs/calvados-5-hero-thumb.webp', alt: 'Пляшка «Кальвадос 5 років», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/calvados-sidecar-glass.webp', alt: 'Коктейль «Сайдкар з кальвадосом»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Кальвадос', amount: '50 мл' },
@@ -370,8 +355,7 @@ export const COCKTAILS = [
     original: '',
     description: 'Грушевий шнапс, содова й свіжа м’ята. Груша й мед звучать легко, бульбашки роблять смак свіжим, м’ята додає прохолоди. Простий довгий напій до літньої вечері, який готують просто в склянці.',
     photos: [
-      { src: 'assets/img/cocktails/pear-highball-1.webp', thumb: 'assets/img/cocktails/thumbs/pear-highball-1-thumb.webp', alt: 'Коктейль «Грушевий хайбол»: пляшка «Шнапс грушевий» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-schnapps-pear-new.webp', thumb: 'assets/img/cocktails/thumbs/schnapps-pear-hero-thumb.webp', alt: 'Пляшка «Шнапс грушевий», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/pear-highball-glass.webp', alt: 'Коктейль «Грушевий хайбол»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Грушевий шнапс', amount: '50 мл' },
@@ -396,8 +380,7 @@ export const COCKTAILS = [
     original: '',
     description: 'Трав’яна настоянка з тоніком і чебрецем. М’ята, чебрець і легка гірчинка кори стають світлішими й свіжішими. Довгий напій для спокійного вечора, коли хочеться трав’яного смаку, свіжості й неквапливої розмови.',
     photos: [
-      { src: 'assets/img/cocktails/herbal-tonic-1.webp', thumb: 'assets/img/cocktails/thumbs/herbal-tonic-1-thumb.webp', alt: 'Коктейль «Трав’яний тонік»: пляшка «Настоянка трав’яна» і бокал', slot: 'AI-кадр, на затвердження замовника' },
-      { src: 'assets/img/product-hero-tincture-herbal-new.webp', thumb: 'assets/img/cocktails/thumbs/tincture-herbal-hero-thumb.webp', alt: 'Пляшка «Настоянка трав’яна», студійне фото', slot: 'Реальне студійне фото товару (як на сторінці товару)' },
+      { src: 'assets/img/cocktails/herbal-tonic-glass.webp', alt: 'Коктейль «Трав’яний тонік»: бокал із коктейлем', slot: 'Лише бокал із коктейлем (кроп наявного AI-кадру); реальне фото — на заміну від замовника' },
     ],
     ingredients: [
       { name: 'Трав’яна настоянка', amount: '40 мл' },

@@ -22,7 +22,6 @@
    Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
 .cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-plate-gap); row-gap: 0; align-items: start; }
 .cocktail__media { --accent: var(--color-green); position: relative; align-self: stretch; } /* слайдер = висота текстової панелі (нотатка замовника 976a748f «як дів боді»); кадр cover */ /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
-.cocktail__thumbs .product-thumb { width: calc(var(--size-product-thumb-w) * var(--scale-cocktail-thumb)); height: calc(var(--size-product-thumb-h) * var(--scale-cocktail-thumb)); } /* менші мініатюри лише на коктейлях (параметр .product-thumbs; сторінка товару без змін) */
 .cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
 .cocktail__zoom:focus-visible { outline-color: var(--color-beige); } /* кільце — поза фото, на зеленому тлі: зелене кільце (колір тла) не видно (D6) */
 /* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */

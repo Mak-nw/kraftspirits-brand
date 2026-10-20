@@ -174,7 +174,7 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 - Negative для всіх: `illustration, drawing, vector, 3d render, cgi, text, watermark, logo, people, hands, glass, bottle, liquid splash, vignette, blur, oversaturated`
 Кредити: Seedream 5 Pro 2k = 100 / кадр (simulate_cost: exact) → 4 текстури = 400; баланс 24 070 → 23 670. Інші генерації (днища IMG-4, hero IMG-1) — НЕ запускали, лише з окремого дозволу замовника.
 
-## Фото коктейлів (AI) — `img/cocktails/<slug>-1.webp`
+## Фото коктейлів (AI) — `img/cocktails/<slug>-glass.webp` (кроп до келиха; вихідні `<slug>-1.webp` із пляшкою видалено, лишились у git-історії)
 
 Статус: **AI-зображення, чернетка на затвердження замовником.** 15 кадрів 1120×1400 (4:5), WebP q80, 27–45 КБ. Мапінг slug → файл/alt/склянка/фон/вартість: `reports/cocktail-photos.json`; контактний лист: `reports/cocktail-photos-sheet.png`.
 - Пляшка на кожному кадрі — **РЕАЛЬНА** (прозорий виріз `img/products/<slug>.webp`, етикетка справжня), однакова висота (66 % кадру), позиція ліворуч (≈29 % ширини), спільна тінь і м’яке відображення додані в Pillow. Бокал із коктейлем **згенеровано AI** (модель z-image, Magnific, 5 кредитів/кадр, без тексту/логотипів/людей), однотонний пастельний фон під колір напою; бокал праворуч (≈69 %), лінія столу єдина (80 % висоти).
