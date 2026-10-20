@@ -54,8 +54,5 @@
 .picker .chip-row { margin-top: var(--space-70); } /* 224:3737 y 475 − низ заголовка 405 */
 .picker .slider { width: var(--grid-span-6); max-width: 100%; margin-top: var(--space-60); } /* бокс каруселі = 6 колонок по центру (4–9); стрілки й картка центровані всередині */ /* 224:3790 y 560 − низ чіпів 500 */
 .picker .slider .arrow-btn { align-self: flex-start; margin-top: calc(var(--offset-picker-arrow-top) + (var(--size-arrow-btn-h) - var(--size-arrow-btn-sm)) / 2); } /* центр кнопки там же, де був центр великої (66u) */
-/* стрілки слайдера = ТА Ж кнопка, що ± кількості в кошику (.arrow-btn--sm); на темному тлі шеврон chevron-down.svg (темний) показаний інвертованим, на hover/focus/active — темним на світлій заливці (дзеркально до світлої панелі кошика) */
-.picker .slider .arrow-btn--sm { --btn-icon-filter: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-default); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-default); --btn-icon-filter-active: var(--btn-arrow-icon-filter-default); }
-.picker .slider .arrow-btn--sm:is(:disabled, [aria-disabled="true"]) { --btn-icon-filter: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-active: var(--btn-arrow-icon-filter-hover); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
 .picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
 
