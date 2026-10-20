@@ -1,6 +1,6 @@
-// D18: ГОРИЗОНТАЛЬНИЙ зазор великих блоків: 5u (--grid-gap-panels) на сторінках зі списку `gap5-pages` (product і cocktails — виняток замовника 19.10.2026), на всіх інших сторінках = зазор колонок сітки 40u (--grid-gap)
+// D18: ГОРИЗОНТАЛЬНИЙ зазор великих блоків: 5u (--grid-gap-panels) на сторінках зі списку `gap5-pages` (product, cocktails, cart — винятки замовника 19–20.10.2026), на всіх інших сторінках = зазор колонок сітки 40u (--grid-gap)
 //      (ДОПОВНЕННЯ 3 і 5 ABOUT-REBUILD-PLAN.md, 17.10.2026); ВЕРТИКАЛЬНІ відступи між панелями (одна над одною) лишаються 5u і D18 їх не міряє.
-//      Перемикач: analyzeD18(data, cfg, mode): mode 'five' (сторінки `gap5-pages`: product, cocktails) | 'forty' (решта; T7 завершено 17.10.2026 — списку legacy-5u-pages більше немає).
+//      Перемикач: analyzeD18(data, cfg, mode): mode 'five' (сторінки `gap5-pages`: product, cocktails, cart) | 'forty' (решта; T7 завершено 17.10.2026 — списку legacy-5u-pages більше немає).
 //      Малі елементи (плитки: 3 колонки й вужче, ≥3 в ряду) = --grid-gap (40u) завжди.
 // Збір — у браузері (COLLECT_D18), аналіз — у Node (analyzeD18), позитивний контроль — controlD18. Опис — tools/qa/README.md (розділ D18).
 //
@@ -13,7 +13,7 @@
 // Допуск tolPx = 0.6 px (u = --vw/1920, у classic-смуги порахований за --vw).
 
 export const D18_DEFAULTS = {
-  'gap5-pages': ['product', 'cocktails'], // сторінки, де горизонтальний зазор великих блоків = 5u (--grid-gap-panels); решта = 40u
+  'gap5-pages': ['product', 'cocktails', 'cart'], // сторінки, де горизонтальний зазор великих блоків = 5u (--grid-gap-panels); решта = 40u
   marginU: 202.9, gapU: 40, panelGapU: 5,
   minCols: 2,          // великий блок: ≥ 2 колонок завширшки
   minHeightU: 150,     // нижче — це рядок/акордеон/лейбл, не великий блок
@@ -23,7 +23,7 @@ export const D18_DEFAULTS = {
   fusedSelectors: ['.tour-card'],
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', 'button', 'input', 'select', 'textarea', 'label', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs', '.age-card', '[data-age-gate]'],
   // сторінки (специфікації), де великі пари МАЮТЬ бути знайдені (охоронець: збір не мовчить): мін. кількість перевірених великих пар + склеєних
-  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, 'contacts': 1, 'excursions': 3, 'barrels': 1, 'cocktails': 1, 'index': 1, 'design-system': 1 },
+  required: { 'cart?demo=1': 1, 'checkout?demo=1': 1, /* account?state=login: гостьовий екран = одна панель по центру (767afdb7), пари немає (кабінет: меню + вміст, теж без пари) */ 'product': 1, /* contacts: одне вікно (контакти | мапа всередині нього, не пара блоків) + feedback — пари немає (рішення замовника) */ 'excursions': 3, 'barrels': 1, 'cocktails': 1, 'index': 1, 'design-system': 1 },
   states: ['cart?demo=1', 'checkout?demo=1', 'account?state=login', 'account?state=dashboard'], // демо-стани, яких немає серед *.html
 };
 

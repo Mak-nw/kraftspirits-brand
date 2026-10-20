@@ -1,13 +1,8 @@
-/* СТОРІНКА «barrels» (src/data/barrels.js): кадр фото секції «Ціна» й оптичні поправки чорнила, ВИМІРЯНІ під конкретні тексти сторінки (бокові поля перших літер, цифри-гіганти).
+/* СТОРІНКА «barrels» (src/data/barrels.js): оптичні поправки чорнила, ВИМІРЯНІ під конкретні тексти сторінки (бокові поля перших літер, цифри-гіганти).
    Це не колір (колір — тема src/styles/themes/barrels.css) і не загальний код шаблону: файл прив'язаний до id секцій і key елементів даних цієї сторінки, тож зміна теми їх не відриває.
    Нова сторінка файлу не потребує (оптика типово 0, кадр — центр). Клас body.lp-page--<slug> ставить partials/lp/page.html; плагін lp-auto підключає файл сам.
    Значення — локальні токени сторінки (не tokens.css). */
 .lp-page--barrels {
-  /* кадрування фото «Ціни» */
-  --scale-barrels-price-bg: 2;                        /* наближення кадру (origin праворуч): шапка лягає на темну розмиту частину бочок */
-  --ox-barrels-price-bg: 1;                            /* точка закріплення наближення: правий край… */
-  --oy-barrels-price-bg: 0.55;                         /* …на 55% висоти */
-  --pos-barrels-price-bg: 50% 55%;                    /* кадрування фото секції: ряд днищ */
   /* оптика H2 по центру: бокові поля першої й останньої літер різні («Щ…А», «П…А», «Ц…А» — чорнило праворуч, «С…?» — ліворуч); margin-left
      центрованого flex-елемента зсуває центр на половину значення. Виміряно чорнилом (DPR 3, 1200/1440/1728/1920), середнє зміщення × 2 */
   --shift-barrels-h2-center-benefits: -0.026em;       /* «Що дає бочка» */
@@ -25,11 +20,12 @@
   --shift-barrels-cert-title-ink: -0.025em;           /* «Бочка …»: бокове поле «Б» — на лівій осі */
   --shift-barrels-price-ink: 0.029em;                 /* «€» виступає ліворуч від осі тексту на 2–3px (виміряно чорнилом) — зсув праворуч */
   --shift-barrels-fact-ink: -0.06em;                  /* підписи фактів («Пляшок…», «Вартість…»): бокове поле «П»/«В» */
-  --shift-barrels-caption-ink: -0.04em;               /* підписи груп («пляшок…», «вартість…»): бокове поле першої літери */
+  --shift-barrels-num-b50-ink: -0.094em;               /* рядок «50 Л ≈ 96 ПЛЯШОК» по центру кімнати: чорнило правіше боксу (поле «5» зліва менше, «К» справа) — text-indent зсуває центрований рядок на половину (виміряно чорнилом всього рядка, DPR 4, 1920/1440/1200) */
+  --shift-barrels-num-b200-ink: -0.028em;              /* …те саме для «200 Л ≈ 383 ПЛЯШКИ» */
+  --shift-barrels-caption-ink: 0.045em;               /* підписи груп по центру («пляшок…», «вартість…»): чорнило лівіше центру кімнати на ≈0,45px — виміряно пікселями (dpr 3 і 6, 1920/1440/1200) */
 }
-/* кадрування фото «Ціни»: наближення до темної правої частини (світлий текст шапки ≥ 4.5:1 без затемнення) */
-.lp-page--barrels #price { --lp-offers-bg-pos: var(--pos-barrels-price-bg); --lp-offers-bg-scale: var(--scale-barrels-price-bg); --lp-offers-bg-ox: var(--ox-barrels-price-bg); --lp-offers-bg-oy: var(--oy-barrels-price-bg); }
 /* оптика H2 по центру (чорнило «Щ…А», «С…?», «П…А», «Ц…А») */
+.lp-page--barrels #profit.lp-sec--join-next { padding-bottom: var(--space-177); } /* «Скільки пляшок» → «Подальша витримка»: на крок шкали вище join 150u (рев'ю 2e88804d, «збільшити гап між секціями») */
 .lp-page--barrels #benefits .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-benefits); }
 .lp-page--barrels #profit .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-profit); }
 .lp-page--barrels #next .lp-head { --lp-h2-optic: var(--shift-barrels-h2-center-next); }
@@ -40,3 +36,5 @@
 .lp-page--barrels .lp-step--bottle { --lp-num-optic: var(--shift-barrels-numeral-bottle); --lp-title-optic: var(--shift-barrels-title-stem); --lp-text-optic: var(--shift-barrels-copy-stem); }
 /* оптика груп і пропозицій: «Б» назв, «€» цін, «П/В» підписів, «≈» фактів */
 .lp-page--barrels .lp-group, .lp-page--barrels .lp-offer { --lp-label-optic: var(--shift-barrels-cert-title-ink); --lp-price-optic: var(--shift-barrels-price-ink); --lp-fact-optic: var(--shift-barrels-fact-ink); --lp-caption-optic: var(--shift-barrels-caption-ink); --lp-approx-optic: var(--shift-lp-approx-ink); }
+.lp-page--barrels .lp-group--b50 { --lp-num-ink: var(--shift-barrels-num-b50-ink); }
+.lp-page--barrels .lp-group--b200 { --lp-num-ink: var(--shift-barrels-num-b200-ink); }

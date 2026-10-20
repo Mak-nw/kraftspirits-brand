@@ -4,7 +4,7 @@
 // Стани (?state=): login · login-error · lost · lost-sent · register · register-error · logout · dashboard · orders (&page=N) · empty-orders · order-view (&order=№) · tracking · tracking-result (&order=№) · tracking-error ·
 // addresses · addresses-saved · account · account-saved · account-error; &guest=1 (tracking*) — відстеження без входу. Усі стани «усередині кабінету» самі вмикають демо-вхід.
 import { initSelect } from './select.js';
-import { query, state, fmtMoney, fmtVol, qs, qsa, resolveLines, calcTotals, showNotice, syncNativeSelect } from './wc-common.js';
+import { query, state, fmtMoney, fmtVol, qs, qsa, resolveLines, calcTotals, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, showNotice, syncNativeSelect } from './wc-common.js';
 import { DEMO_USER, ORDERS, STATUS, TRACK_STEPS, NOVA_POSHTA_TRACKING, ORDERS_PER_PAGE } from '../data/account-demo.js';
 import { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
@@ -51,8 +51,8 @@ try {
   const fmtWhen = (iso) => `${new Date(iso).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}, ${fmtTime(iso)}`;
   const plural = (n) => { const m = n % 100; const d = n % 10; return m > 10 && m < 15 ? 'товарів' : d === 1 ? 'товар' : d > 1 && d < 5 ? 'товари' : 'товарів'; };
   const findOrder = (num) => ORDERS.find((o) => o.number === String(num).replace(/^#/, '').trim());
-  const orderTotals = (o) => { const lines = resolveLines(o.lines); return { lines, t: calcTotals(lines, o.coupon), count: lines.reduce((s, l) => s + l.qty, 0) }; };
-  const shippingText = (o, t) => (o.shipping === 'np' ? (t.free ? 'Безкоштовно' : 'За тарифом перевізника') : SHIPPING_LABELS[o.shipping]);
+  const orderTotals = (o) => { const lines = resolveLines(o.lines); return { lines, t: calcTotals(lines), count: lines.reduce((s, l) => s + l.qty, 0) }; };
+  const shippingText = (o, t) => (o.shipping === 'np' ? SHIPPING_TARIFF : SHIPPING_LABELS[o.shipping]);
   const withGuest = (url) => (guestMode ? `${url}&guest=1` : url);
   const note = (kind, text) => showNotice(notices, kind, text, { focus: true });
   const noteQuiet = (kind, text) => showNotice(notices, kind, text);
@@ -141,9 +141,9 @@ try {
     qs('[data-wc-total]', frag).textContent = fmtMoney(t.total);
     qs('[data-wc-shipping]', frag).textContent = shippingText(o, t);
     qs('[data-wc-payment]', frag).textContent = PAYMENT_LABELS[o.payment];
-    const row = qs('.cart-discount', frag);
-    row.hidden = !t.discount;
-    if (t.discount) { qs('th', row).textContent = `Купон: ${t.coupon}`; qs('[data-wc-discount]', row).textContent = `−${fmtMoney(t.discount)}`; }
+    const shNote = qs('[data-wc-ship-note]', frag);
+    shNote.textContent = SHIPPING_TARIFF_NOTE;
+    shNote.hidden = o.shipping !== 'np';
     const lineBreaks = (parts) => parts.flatMap((p, i) => (i ? [document.createElement('br'), p] : [p]));
     qs('[data-wc-customer]', frag).replaceChildren(...lineBreaks([o.customer.name, o.customer.phone, o.customer.email]));
     qs('[data-wc-delivery]', frag).replaceChildren(...lineBreaks([SHIPPING_LABELS[o.shipping], o.customer.delivery]));

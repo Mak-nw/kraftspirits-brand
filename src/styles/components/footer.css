@@ -1,7 +1,6 @@
-/* Footer (194:1235) на ЄДИНІЙ СІТЦІ САЙТУ (рішення замовника): 10 колонок --grid-*, усі блоки — на межах колонок (QA D12). Висота — токени --footer-* (tokens.css).
-   «Меню» — колонки 1–3, «Каталог» — 4–6, «Контакти» — 7–9 (426u, як було: адреса вміщується без переносу); колонка 10 вгорі порожня. Нижній рядок: «©» — 1–3, вордмарк yasnocraft по центру (2–9),
-   юридичні посилання — колонки 8–10, ОДНИМ стовпчиком (6 рядків) притиснуті до правого краю колонки 10: на 10 колонках таблиця 2×3 (324u) заходила б під хвіст вордмарка (888u по центру), стовпчик (154u) — ні;
-   бірюзовий блок: вордмарк bazylsprings по центру (2–9), вікове застереження по центру (3–8). */
+/* Footer (194:1235) на ЄДИНІЙ СІТЦІ САЙТУ: 10 колонок --grid-*, усі блоки — на межах колонок (QA D12). Висота — токени --footer-* (tokens.css).
+   Верхній ряд: «Меню» — колонки 1–3, «Каталог» — 4–6, «Документація» (юридичні посилання, рішення замовника 00e73af5) — 8–10. Над логотипами — дві кнопки .btn «Замовити екскурсію» / «Замовити бочки» однакової ширини (a2414623; контакти — на contacts.html).
+   Нижній рядок: «©» — колонки 1–3, вордмарк yasnocraft по центру (2–9); бірюзовий блок: вордмарк bazylsprings по центру (2–9), вікове застереження по центру (3–8). */
 .site-footer { background: var(--color-beige); color: var(--color-green); }
 .site-footer__top { display: flex; flex-direction: column; justify-content: space-between; height: var(--footer-h-top); padding: var(--footer-pad-top) calc((100% - var(--grid-w)) / 2) 0; } /* 194:1237 top 55 */
 .site-footer__cols, .site-footer__legal, .site-footer__bottom { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); }
@@ -10,20 +9,24 @@
 .site-footer__cols, .site-footer__legal { width: 100%; } /* ширина = 10 колонок: поле між краєм футера й сіткою (calc((100% − --grid-w)/2)) дає padding .site-footer__top / .site-footer__bottom (не лишається від'ємним у вужчому контейнері демо design-system) */
 .site-footer__col--menu { grid-column: 1 / span 3; }
 .site-footer__col--catalog { grid-column: 4 / span 3; }
-.site-footer__col--contacts { grid-column: 7 / span 3; }
-/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-nav на посиланні/пункті; регістр — КАПС, як у шапці (рішення замовника) */
+.site-footer__col--docs { grid-column: 8 / span 3; } /* «Документація» — справа (колонки 8–10), колонка 7 порожня */
+.site-footer__order { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); width: 100%; margin-bottom: var(--space-70); } /* над логотипами: дві кнопки .btn--block однакової ширини (по 2 колонки: 4–5 і 6–7, центр = центр сторінки), проміжок = зазор сітки 40u (горизонталь за DS) */
+.site-footer__order > .btn:nth-child(1) { grid-column: 4 / span 2; }
+.site-footer__order > .btn:nth-child(2) { grid-column: 6 / span 2; }
+/* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-btn на посиланні (як кнопки сайту); регістр — КАПС, як у шапці (рішення замовника) */
 .site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); }
-.site-footer__list a { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом (кільце виступає в зазор між колонками / поле, не обрізується) */
+.site-footer__list a:not(.btn) { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом (кільце виступає в зазор між колонками / поле, не обрізується) */
 /* рядок: © / wordmark по центру / юридичні посилання; 194:1260 top 623 → 20 до низу бежевої частини */
 .site-footer__legal { align-items: end; padding-bottom: var(--space-20); position: relative; }
 .site-footer__legal .site-footer__wordmark { position: absolute; inset-inline: 0; bottom: 0; grid-column: 2 / span 8; } /* абсолютний: висота вордмарка рядок не розтягує; ліво/право — межі колонок 2–9 (парна кількість — центр = центр сторінки), низ — край бежевої частини */
 .site-footer__copy { grid-column: 1 / span 3; grid-row: 1; justify-self: start; }
-/* юридичні посилання (оферта, конфіденційність, cookies, доставка й оплата, 18+, умови бочок): той самий .nav-link.t-nav; шість посилань стоять одним стовпчиком у колонках 8–10 (3 колонки = 426u, найширше «Доставка й оплата» 154u, перенесень немає), притиснуті до правого краю колонки 10,
+/* юридичні посилання (оферта, конфіденційність, cookies, доставка й оплата, 18+, умови бочок): той самий .nav-link.t-btn; шість посилань стоять одним стовпчиком у колонках 8–10 (3 колонки = 426u, найширше «Доставка й оплата» 154u, перенесень немає), притиснуті до правого краю колонки 10,
    нижній рядок на лінії «©»; проміжок між рядками як у списках футера (15u). Таблиця 2×3 (324u) на 10 колонках заходила б під вордмарк yasnocraft (888u по центру) */
-.site-footer__offer { grid-column: 8 / span 3; grid-row: 1; display: grid; grid-template-columns: auto; justify-content: end; justify-items: end; row-gap: var(--space-15); }
-.site-footer__offer a { white-space: nowrap; }
 .site-footer__wordmark { display: flex; justify-content: center; white-space: nowrap; }
 /* нижній блок (194:1263) */
 .site-footer__bottom { padding-inline: calc((100% - var(--grid-w)) / 2); align-content: start; justify-items: center; row-gap: var(--space-5); height: var(--footer-h-bottom); overflow: clip; background: var(--color-teal); color: var(--color-gold); }
 .site-footer__bottom .site-footer__wordmark { grid-column: 2 / span 8; justify-self: stretch; }
 .site-footer__age { grid-column: 3 / span 6; justify-self: stretch; text-align: center; white-space: nowrap; }
+/* «Документація» — права крайня колонка: права межа = права межа сітки, текст (заголовок і посилання) по правому краю (рішення замовника 6874de72) */
+.site-footer__col--docs { text-align: right; }
+.site-footer__col--docs .site-footer__list a:not(.btn) { margin-left: auto; }

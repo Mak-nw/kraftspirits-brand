@@ -37,7 +37,7 @@
       <div class="wc-grid wc-grid--guest u-columns col2-set" id="customer_login" data-wc-layout="guest">
 
         <section class="contacts-panel wc-main--account-form u-column1 col-1" data-wc-view="login" aria-labelledby="login-title" hidden>
-          <h1 class="t-hero" id="login-title">Вхід</h1>
+          <h1 class="t-hero heading-center" id="login-title">Вхід</h1>
           <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
           <form class="woocommerce-form woocommerce-form-login login" action="account.html" method="post" novalidate data-wc-form="login">
             <!--@include components/wc-field name="username" label="Логін або e-mail" req="1" autocomplete="username" placeholder="name@example.com"-->
@@ -45,18 +45,14 @@
             <!--@include components/wc-check name="rememberme" label="Запам'ятати мене"-->
             <!--@include components/wc-nonce name="woocommerce-login-nonce" referer="/account.html"-->
             <div class="form-row wc-actions">
-              <button type="submit" class="woocommerce-button button woocommerce-form-login__submit btn btn--green" name="login" value="Увійти"><span class="btn__inner t-btn">Увійти</span></button>
-              <a class="woocommerce-LostPassword lost_password button btn btn--outline" href="account.html?state=lost"><span class="btn__inner t-btn">Забули пароль?</span></a>
+              <button type="submit" class="woocommerce-button button woocommerce-form-login__submit btn btn--green btn--block" name="login" value="Увійти"><span class="btn__inner t-btn">Увійти</span></button>
+              <a class="woocommerce-LostPassword lost_password button btn btn--outline btn--block" href="account.html?state=lost"><span class="btn__inner t-btn">Забули пароль?</span></a>
             </div>
           </form>
-          <div class="wc-actions">
-            <p class="t-text">Немає акаунта?</p>
-            <a class="button btn btn--outline" href="account.html?state=register"><span class="btn__inner t-btn">Створити акаунт</span></a>
-          </div>
         </section>
 
         <section class="contacts-panel wc-main--account-form" data-wc-view="lost" aria-labelledby="lost-title" hidden>
-          <h1 class="t-hero" id="lost-title">Відновлення пароля</h1>
+          <h1 class="t-hero heading-center" id="lost-title">Відновлення пароля</h1>
           <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
           <form class="woocommerce-ResetPassword lost_reset_password" action="account.html" method="post" novalidate data-wc-form="lost">
             <p class="t-text">Загубили пароль? Вкажіть логін або e-mail — ми надішлемо посилання для створення нового пароля.</p>
@@ -64,8 +60,8 @@
             <div class="form-row wc-actions">
               <input type="hidden" name="wc_reset_password" value="true">
               <!--@include components/wc-nonce name="woocommerce-lost-password-nonce" referer="/account.html"-->
-              <button type="submit" class="woocommerce-Button button btn btn--green" value="Скинути пароль"><span class="btn__inner t-btn">Скинути пароль</span></button>
-              <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Назад до входу</span></a>
+              <button type="submit" class="woocommerce-Button button btn btn--green btn--block" value="Скинути пароль"><span class="btn__inner t-btn">Скинути пароль</span></button>
+              <a class="button btn btn--outline btn--block" href="account.html?state=login"><span class="btn__inner t-btn">Назад до входу</span></a>
             </div>
           </form>
           <div data-wc-lost-done hidden>
@@ -74,7 +70,7 @@
         </section>
 
         <section class="contacts-panel wc-main--account-form u-column2 col-2" data-wc-view="register" aria-labelledby="register-title" hidden>
-          <h1 class="t-hero" id="register-title">Створити акаунт</h1>
+          <h1 class="t-hero heading-center" id="register-title">Створити акаунт</h1>
           <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
           <form class="woocommerce-form woocommerce-form-register register" action="account.html" method="post" novalidate data-wc-form="register">
             <!--@include components/wc-field name="email" id="reg_email" label="E-mail" type="email" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
@@ -82,8 +78,8 @@
             <!--@include components/wc-check name="reg_consent" req="1" label="Погоджуюсь з <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>"-->
             <!--@include components/wc-nonce name="woocommerce-register-nonce" referer="/account.html"-->
             <div class="form-row wc-actions">
-              <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit btn btn--green" name="register" value="Зареєструватися"><span class="btn__inner t-btn">Зареєструватися</span></button>
-              <a class="button btn btn--outline" href="account.html?state=login"><span class="btn__inner t-btn">Вже є акаунт? Увійти</span></a>
+              <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit btn btn--green btn--block" name="register" value="Зареєструватися"><span class="btn__inner t-btn">Зареєструватися</span></button>
+              <a class="button btn btn--outline btn--block" href="account.html?state=login"><span class="btn__inner t-btn">Вже є акаунт? Увійти</span></a>
             </div>
           </form>
         </section>
@@ -348,12 +344,12 @@
         <tbody data-wc-rows></tbody>
         <tfoot>
           <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="" attr="data-wc-subtotal"-->
-          <!--@include components/wc-row cls="cart-discount" label="Купон" value="" attr="data-wc-discount" hidden="1"-->
           <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
           <!--@include components/wc-row cls="payment_method" label="Спосіб оплати" value="" attr="data-wc-payment"-->
           <!--@include components/wc-row cls="order-total" label="Разом" value="" attr="data-wc-total"-->
         </tfoot>
       </table>
+      <p class="t-text" data-wc-ship-note hidden></p>
     </section>
     <section class="woocommerce-customer-details">
       <section class="woocommerce-columns woocommerce-columns--2 woocommerce-columns--addresses col2-set addresses">

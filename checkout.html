@@ -77,7 +77,6 @@
               <tbody data-wc-rows></tbody>
               <tfoot>
                 <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="0 ₴" attr="data-wc-subtotal"-->
-                <!--@include components/wc-row cls="cart-discount coupon-demo10" label="Купон" value="" attr="data-wc-discount" hidden="1"-->
                 <tr class="woocommerce-shipping-totals shipping">
                   <th class="t-text" scope="row">Доставка</th>
                   <td data-title="Доставка">
@@ -86,7 +85,7 @@
                       <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_courier" value="courier" label="Кур'єр по Києву"--></li>
                       <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_pickup" value="pickup" label="Самовивіз з дистилерії"--></li>
                     </ul>
-                    <p class="t-text" data-wc-shipping-note>За тарифом перевізника; безкоштовно від 3&nbsp;000 ₴.</p>
+                    <p class="t-text" data-wc-shipping-note>Вартість доставки — за тарифами перевізника.</p>
                   </td>
                 </tr>
                 <!--@include components/wc-row cls="order-total" label="Разом" value="0 ₴" attr="data-wc-total"-->
@@ -150,11 +149,11 @@
               <tbody data-wc-rows></tbody>
               <tfoot>
                 <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="" attr="data-wc-subtotal"-->
-                <!--@include components/wc-row cls="cart-discount" label="Купон" value="" attr="data-wc-discount" hidden="1"-->
                 <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
                 <!--@include components/wc-row cls="order-total" label="Разом" value="" attr="data-wc-total"-->
               </tfoot>
             </table>
+            <p class="t-text" data-wc-ship-note hidden></p>
           </section>
         </section>
         <aside class="contacts-panel wc-aside" aria-label="Одержувач і відстеження">
@@ -177,7 +176,7 @@
       try {
         var q = location.search, st = (/[?&]state=([\w-]+)/.exec(q) || [])[1] || '', n = 0, v;
         JSON.parse(localStorage.getItem('ks_cart') || '[]').forEach(function (r) { n += Number(r && r.qty) || 0; });
-        var demo = /[?&]demo(=|&|$)/.test(q) || /^(updated|coupon-error|coupon-applied|error|thanks)$/.test(st);
+        var demo = /[?&]demo(=|&|$)/.test(q) || /^(error|thanks)$/.test(st);
         v = st === 'thanks' ? 'thanks' : (st === 'empty' || (!n && !demo) ? 'empty' : 'form');
         document.querySelectorAll('[data-wc-view]').forEach(function (el) { el.hidden = el.getAttribute('data-wc-view') !== v; });
         /* рядки замовлення й тексти доставки наповнює модуль після paint — до цього сховано (visibility), щоб висота панелей не стрибала (CLS); страховка на випадок збою модуля */

@@ -1,9 +1,10 @@
-    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{shapeMod}}" id="{{id}}" aria-labelledby="{{id}}-title">
+    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{shapeMod}}{{lookMod}}" id="{{id}}" aria-labelledby="{{id}}-title">
       <div class="lp-tiles__grid{{gridMod}}">
         <div class="lp-tiles__head lp-head">
           <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" titleMod="{{titleMod}}" lead="{{lead}}" caption="{{caption}}"-->
         </div>
-        <!--@each items lp/tile-->
+        {{#look}}<ul class="lp-arches lp-arches--cards {{arches}}"><!--@each items lp/tile-card--></ul>{{/look}}
+        {{#noLook}}<!--@each items lp/tile-->{{/noLook}}
       </div>
     </section>
 

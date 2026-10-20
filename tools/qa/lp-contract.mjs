@@ -47,7 +47,7 @@ function fillValue(def, path, o = {}) {
     case 'text': { const m = mk(); markers.push({ marker: m, path }); return m; }
     case 'url': { const m = `${def.startsWith || '/'}q${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
     case 'id': { const m = `i${(++n).toString(36)}`; markers.push({ marker: m, path }); return m; }
-    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'wall-barrels-one';
+    case 'partial': return def.kind === 'scene' ? 'scene-barrels' : def.kind === 'engraving' ? 'engraving-barrels-head' : 'cellar-barrels';
     case 'icon': return 'pin';
     case 'enum': return def.sample ?? def.values[0];
     case 'number': return def.min !== undefined ? Math.max(def.min, 7) : 7;
@@ -67,23 +67,32 @@ function variantsOf(type) {
   const s = fullSection(type);
   const out = [];
   if (type === 'steps') {
-    const arch = (x) => { delete x.deck; delete x.cols; x.items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].forEach((k) => delete it[k]); }); return x; }; // арка + список: полів колоди немає
+    const arch = (x) => { delete x.deck; delete x.split; delete x.cols; x.items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags', 'lottie'].forEach((k) => delete it[k]); }); return x; }; // арка + список: полів колоди немає
     const a = arch(clone(s)); delete a.img; delete a.alt; out.push(['scene', a]);
     const b = arch(clone(s)); delete b.scene; out.push(['img', b]);
-    const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; out.push(['deck', c]); // deck: true — картки з фото в кожному кроці, арки немає
+    const c = clone(s); delete c.scene; delete c.img; delete c.alt; delete c.slot; delete c.split; c.items.forEach((it) => { delete it.lottie; }); out.push(['deck', c]);
+    const d1 = clone(c); d1.split = true; out.push(['deck split photo', d1]);   // split: текст на тоновому фоні | фото
+    const d2 = clone(d1); d2.items.forEach((it) => { delete it.img; it.lottie = '/assets/lottie/barrel-01-pour.json'; }); out.push(['deck split lottie', d2]);   // split: текст | Lottie // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
-    const a = clone(s); delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
-    const b = clone(s); delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
-    const c = clone(s); c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
+    const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
+    const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
+    const c = clone(s); delete c.look; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
+    const d = clone(c); d.look = 'about'; out.push(['circle+look about', d]);   // картки-арки «Про нас» (partials/lp/tile-card)
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
     const b = clone(s); delete b.text; out.push(['list', b]);
   } else if (type === 'compare') {
     const a = clone(s); a.groups.forEach((g, i) => { g.span = i === 0 ? 3 : 7; g.approx = false; });
-    a.groups[0].wall = 'wall-barrels-one'; delete a.groups[0].list; // група 1 — wall
-    a.groups[1].wall = undefined; delete a.groups[1].wall; // група 2 — list
-    out.push(['wall+list', a]);
-    const b = clone(a); b.groups[1].wall = 'wall-barrels-four-minus-one'; delete b.groups[1].list; out.push(['wall four-minus-one', b]);
+    a.groups[0].cellar = 'cellar-barrels'; delete a.groups[0].list; // група 1 — cellar
+    a.groups[1].cellar = undefined; delete a.groups[1].cellar; // група 2 — list
+    out.push(['cellar+list', a]);
+    const b = clone(a); b.groups[1].cellar = 'cellar-barrels'; b.groups[1].count = 383; delete b.groups[1].list; out.push(['cellar 2 rooms', b]);   // кілька блоків + неповний (383 = 3 × 96 + 95) + затемнення вглиб
+  } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
+    if (type !== 'place') delete s.cols;
+    const sc = clone(s); if (type === 'offers') { delete s.scene; ['bg', 'bgW', 'bgH', 'bgSlot'].forEach((k) => delete sc[k]); }   // offers: фон — рівно одне з bg (фото) або scene (панорама)
+    const a = clone(s); delete a.look; out.push(['', a]);
+    out.push(['look about', s]);
+    if (type === 'offers') out.push(['scene', sc]);
   } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
 }
@@ -124,7 +133,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
-      note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
+      if (!s.look) note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
     }
     validPages.push([`${type}${label ? ` [${label}]` : ''}`, page]);
   }
@@ -145,7 +154,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.wall', 'compare.groups.list', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -170,7 +179,7 @@ function mutantsFor(def, key, type) {
       break;
     case 'id': case 'partial': case 'icon':
       m.push(['велика літера', 'Ab', false], ['пробіл', 'a b', false], ['валідний', def.kind ? `${def.kind}-x-1` : 'a-b-1', true], ['порожній', '', opt], ['відсутнє', DEL, opt]);
-      if (def.kind) m.push(['без префікса виду', 'a-b-1', false], ['чужий вид', `${def.kind === 'scene' ? 'wall' : 'scene'}-x`, false]);
+      if (def.kind) m.push(['без префікса виду', 'a-b-1', false], ['чужий вид', `${def.kind === 'scene' ? 'cellar' : 'scene'}-x`, false]);
       break;
     case 'enum':
       m.push(['поза переліком', 'zzz', false], ['рядок замість числа', String(def.values[0]) === def.values[0] ? 5 : String(def.values[0]), false], ['відсутнє', DEL, opt]);
@@ -249,13 +258,13 @@ cross('layers: 7 пунктів (більше за максимум 6)', (p) => 
 for (const k of [2, 3, 4, 5, 6]) cross(`layers: ${k} пунктів — n рівних блоків контейнера (10 колонок)`, (p) => { S(p).items = Array.from({ length: k }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'layers');
 cross('tiles: 5 пунктів (n рівних блоків)', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'tiles [engraving');
 cross('tiles: 7 пунктів (більше за максимум)', (p) => { S(p).items = Array.from({ length: 7 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving');
-cross('compare: сума span = 9 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 6; }, false, true, 'compare [wall+list');
-cross('compare: типово cols 10, сума span = 10 (3+7)', (p) => { delete S(p).cols; }, true, true, 'compare [wall+list');
-cross('compare: cols 10, сума span = 10 (3+7)', () => {}, true, true, 'compare [wall+list');
-cross('compare: span 9 поза переліком 2–8 (JS і JSON відхиляють)', (p) => { S(p).groups[1].span = 9; }, false, false, 'compare [wall+list');
-cross('compare: cols 10, але сума span = 11 (3+8; JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [wall+list');
-cross('compare: wall і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [wall+list');
-cross('compare: 3 групи, сума 10 (4+3+3)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); delete S(p).cols; g[0].span = 4; g[0].wall = undefined; delete g[0].wall; g[0].list = ['x']; g[1].span = 3; g[2].span = 3; }, true, true, 'compare [wall+list');
+cross('compare: сума span = 9 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 6; }, false, true, 'compare [cellar+list');
+cross('compare: типово cols 10, сума span = 10 (3+7)', (p) => { delete S(p).cols; }, true, true, 'compare [cellar+list');
+cross('compare: cols 10, сума span = 10 (3+7)', () => {}, true, true, 'compare [cellar+list');
+cross('compare: span 9 поза переліком 2–8 (JS і JSON відхиляють)', (p) => { S(p).groups[1].span = 9; }, false, false, 'compare [cellar+list');
+cross('compare: cols 10, але сума span = 11 (3+8; JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 8; }, false, true, 'compare [cellar+list');
+cross('compare: cellar і list в одній групі', (p) => { S(p).groups[0].list = ['x']; }, false, false, 'compare [cellar+list');
+cross('compare: 3 групи, сума 10 (4+3+3)', (p) => { const g = S(p).groups; g.push({ ...clone(g[1]), key: 'g3' }); delete S(p).cols; g[0].span = 4; g[0].cellar = undefined; delete g[0].cellar; g[0].list = ['x']; g[1].span = 3; g[2].span = 3; }, true, true, 'compare [cellar+list');
 cross('steps: і scene, і img', (p) => { S(p).img = '/q1'; }, false, false, 'steps [scene');
 cross('steps: ні scene, ні img', (p) => { delete S(p).scene; }, false, false, 'steps [scene');
 cross('steps: alt без img', (p) => { S(p).alt = 'x'; }, false, false, 'steps [scene');
@@ -266,6 +275,11 @@ cross('steps deck: slot секції (арки немає)', (p) => { S(p).slot 
 cross('steps deck: крок без img', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; }, false, false, 'steps [deck');
 cross('steps deck: крок без tags/imgPos/zoom/alt/slot (валідно)', (p) => { S(p).items.forEach((it) => { delete it.tags; delete it.imgPos; delete it.zoom; delete it.alt; delete it.slot; }); }, true, true, 'steps [deck');
 cross('steps deck: без cols (10 колонок, валідно)', (p) => { delete S(p).cols; }, true, true, 'steps [deck');
+cross('steps deck split: фото + lottie в одному кроці', (p) => { S(p).split = true; S(p).items[0].lottie = '/assets/lottie/q1'; }, false, false, 'steps [deck');
+cross('steps deck split: крок без img і без lottie', (p) => { S(p).split = true; delete S(p).items[0].img; delete S(p).items[0].alt; }, false, false, 'steps [deck');
+cross('steps deck split: фото в усіх кроках (валідно)', (p) => { S(p).split = true; }, true, true, 'steps [deck');
+cross('steps deck без split: lottie у кроці', (p) => { delete S(p).items[0].img; delete S(p).items[0].alt; S(p).items[0].lottie = '/assets/lottie/q1'; }, false, false, 'steps [deck');
+cross('steps: split без deck', (p) => { S(p).deck = false; delete S(p).cols; S(p).scene = 'scene-barrels'; S(p).items.forEach((it) => { ['img', 'alt', 'slot', 'imgPos', 'zoom', 'tags'].forEach((k) => delete it[k]); }); S(p).split = true; }, false, false, 'steps [deck');
 cross('steps deck: tags 5 шт.', (p) => { S(p).items[0].tags = ['а', 'б', 'в', 'г', 'ґ']; }, false, false, 'steps [deck');
 cross('steps deck: deck: false з фото в кроках', (p) => { S(p).deck = false; S(p).scene = 'scene-barrels'; }, false, false, 'steps [deck');
 cross('steps арка: img у кроці', (p) => { S(p).items[0].img = '/q1'; }, false, false, 'steps [scene');
@@ -287,6 +301,9 @@ cross('tiles: captionOver без shape circle', (p) => { delete S(p).shape; dele
 cross('tiles: zoom без shape circle', (p) => { delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; }); }, false, false, 'tiles [circle');
 cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom = 1.3; }, false, false, 'tiles [circle');
 cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
+cross('tiles: look about без shape circle', (p) => { S(p).look = 'about'; delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
+cross('tiles: look about + shape circle (валідно)', (p) => { S(p).look = 'about'; }, true, true, 'tiles [circle');
+cross('look: значення поза переліком', (p) => { S(p).look = 'other'; }, false, false, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
 cross('card: text і list разом', (p) => { S(p).list = ['x']; }, false, false, 'card [text');
@@ -315,10 +332,10 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   const sec = (id) => (htmlStack.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
   note(/lp-sec--stack\b/.test(sec('a-place')) && /lp-room--warm/.test(sec('a-place')) && !/lp-room--deep/.test(sec('a-place')), 'render: stack → секція має lp-sec--stack і кімнату попередньої (warm), а не свою типову (deep)', sec('a-place'));
   note(/lp-sec--stack-next/.test(sec('a-card')), 'render: попередня секція стека має lp-sec--stack-next', sec('a-card'));
-  { // pad перемагає stack (рев'ю d360474e): нижній відступ pad лишається, верх стекової = 0
+  { // stack після секції з pad (рев'ю 5d981ca1): стек-next попередньої лишається, нижній відступ 0, зазор = 5u
     const htmlPad = render(stackPage((pg) => { pg.sections[1].pad = 40; }));
     const secP = (id) => (htmlPad.match(new RegExp(`<section[^>]*id="${id}"[^>]*>`)) || [''])[0];
-    note(!/lp-sec--stack-next/.test(secP('a-card')) && /lp-pad--40/.test(secP('a-card')) && /lp-sec--stack-after-pad/.test(secP('a-place')), 'render: stack після секції з pad → без stack-next, стекова має lp-sec--stack-after-pad', secP('a-card') + secP('a-place'));
+    note(/lp-sec--stack-next/.test(secP('a-card')) && /lp-pad--40/.test(secP('a-card')) && !/stack-after-pad/.test(secP('a-place')), 'render: stack після секції з pad → stack-next лишається (зазор 5u), pad зберігається', secP('a-card') + secP('a-place'));
   }
   const htmlPlain = render(stackPage((pg) => { pg.sections[2].stack = false; }));
   note(!/lp-sec--stack/.test(htmlPlain) && /lp-room--deep/.test((htmlPlain.match(/<section[^>]*id="a-place"[^>]*>/) || [''])[0]), 'render: без stack класів стека немає, кімната — власна (deep)');
@@ -337,6 +354,7 @@ cross(`card: list = ${CARD_LIST_MAX} пунктів`, (p) => { delete S(p).text;
   const hf2 = pageOf(withIds([fullSection('layers')])); hf2.sections[1].fade = 'green'; note(jsOk(hf2) !== true && jsonOk(hf2) !== true, 'hero.fade: поле не приймається секцією не-hero (layers)');
   note(/<img class="hero__bg"[^>]*fetchpriority="high"/.test(nHtml), 'render: hero-фото має fetchpriority="high"');
 }
+cross('offers: і bg, і scene', (p) => { S(p).scene = 'scene-barrels-route'; }, false, false, 'offers');
 cross('offers: bg без bgW/bgH', (p) => { delete S(p).bgW; }, false, false, 'offers');
 cross('offers: bgW без bg', (p) => { delete S(p).bg; }, false, false, 'offers');
 for (const [cnt, cap] of Object.entries(PRICE_MAX)) {
@@ -357,12 +375,12 @@ cross('tone відсутній (дозволено: бере тема)', (p) => 
 cross('tone поза переліком', (p) => { p.tone = 'red'; }, false, false, 'layers');
 cross('невідоме поле сторінки', (p) => { p.subtitle = 'x'; }, false, false, 'layers');
 for (const [sp, c] of Object.entries({ 2: { plain: 999, approx: 99 }, 3: { approx: 999 } })) for (const [kind, cap] of Object.entries(c)) {
-  const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 10 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.wall; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.wall && x.list) delete x.list; }); };
-  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [wall four-minus-one');
-  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [wall four-minus-one');
+  const set = (cnt) => (p) => { delete S(p).cols; const g = S(p).groups; g.push(clone(g[1])); g.forEach((x, i) => { x.span = i === 0 ? +sp : (i === 1 ? 10 - 2 - +sp : 2); x.key = `g${i}`; if (i > 0) delete x.cellar; x.approx = false; }); g[0].approx = kind === 'approx'; g[0].count = cnt; g.forEach((x, i) => { if (x.cellar && x.list) delete x.list; }); };
+  cross(`count = ${cap} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap), true, true, 'compare [cellar 2 rooms');
+  cross(`count = ${cap + 1} при span ${sp}${kind === 'approx' ? ' з «≈»' : ''}`, set(cap + 1), false, false, 'compare [cellar 2 rooms');
 }
-cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [wall+list');
-cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [wall+list');
+cross('count = 0', (p) => { S(p).groups[0].count = 0; }, true, true, 'compare [cellar+list');
+cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true, true, 'compare [cellar+list');
 
 /* поле `cols` (ширина вмісту секції в колонках) і `pad` (вертикальний відступ секції): правила + видимий ефект на сторінці */
 {

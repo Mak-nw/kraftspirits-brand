@@ -1,7 +1,7 @@
-<article class="lp-group lp-span--{{span}}{{mods}}" data-reveal="rise">
-  <h3 class="lp-group__size t-product-name">{{label}}</h3>
-  <p class="lp-group__num t-stat">{{#approx}}<span class="lp-group__approx" aria-hidden="true">≈</span><span class="lp-sr">{{approxLabel}}</span>{{/approx}}<span data-count-to="{{count}}">{{countText}}</span></p>
+<article class="lp-group lp-span--{{span}}{{mods}}"{{#rv}} data-reveal="rise"{{/rv}}>
+  {{#sizeShow}}<h3 class="lp-group__size t-product-name">{{label}}</h3>{{/sizeShow}}
+  <p class="lp-group__num t-h2">{{#inlineLiters}}<span class="lp-group__liters">{{label}}</span> {{/inlineLiters}}{{#approx}}<span class="lp-group__approx" aria-hidden="true">≈</span><span class="lp-sr">{{approxLabel}}</span>{{/approx}}<span{{#rv}} data-count-to="{{count}}"{{/rv}}>{{countText}}</span>{{#countWord}} <span class="lp-group__word">{{countWord}}</span>{{/countWord}}</p>
   <p class="lp-group__unit t-desc">{{unit}}</p>
-  {{#wall}}<!--@include media/{{wall}}-->{{/wall}}{{#list}}<ul class="lp-group__list lp-list t-desc"><!--@each list lp/li--></ul>{{/list}}
+  {{#cellar}}<!--@include media/{{cellar}} key="{{key}}" w="{{cellarW}}" h="{{cellarH}}" lines="{{cellarLines}}" bottles="{{cellarBottles}}" barrel="{{cellarBarrel}}" stroke="{{cellarStroke}}"-->{{/cellar}}{{#list}}<ul class="lp-group__list lp-list t-desc"><!--@each list lp/li--></ul>{{/list}}
   <div class="lp-group__facts"><!--@each facts lp/group-fact--></div>
 </article>

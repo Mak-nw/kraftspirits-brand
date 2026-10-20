@@ -1,8 +1,9 @@
-    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}" id="{{id}}" aria-labelledby="{{id}}-title">
+    <section class="lp-sec lp-room lp-room--{{room}}{{mods}}{{lookMod}}" id="{{id}}" aria-labelledby="{{id}}-title">
       <div class="lp-formats__grid">
         <div class="lp-formats__head lp-head">
           <!--@include lp/head id="{{id}}" kicker="{{kicker}}" title="{{title}}" titleMod="{{titleMod}}" lead="{{lead}}" caption="{{caption}}"-->
         </div>
-        <!--@each items lp/format-->
+        {{#look}}<!--@each items lp/format-panel-->{{/look}}
+        {{#noLook}}<!--@each items lp/format-->{{/noLook}}
       </div>
     </section>

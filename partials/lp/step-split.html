@@ -1,0 +1,15 @@
+<li class="lp-steps__card lp-steps__card--split lp-step--{{key}}{{posMod}}" data-step="{{n}}">
+  <div class="brand-panel__box lp-steps__split-box">
+    <article class="lp-steps__split-text">
+      <p class="lp-steps__card-num t-lead">{{value}}</p>
+      <div class="lp-steps__split-group">
+        <h3 class="lp-steps__card-title t-hero">{{title}}</h3>
+        <p class="lp-steps__card-text t-desc">{{text}}</p>
+      </div>
+      {{#tags}}<ul class="lp-steps__card-tags t-chip"><!--@each tags lp/li--></ul>{{/tags}}
+    </article>
+    <div class="lp-steps__split-media"{{#slot}} data-slot="{{slot}}"{{/slot}}>
+      {{#img}}<img class="lp-steps__split-img" src="{{img}}" alt="{{alt}}" loading="lazy" decoding="async">{{/img}}{{#lottie}}<div class="lp-steps__lottie" role="img" aria-label="{{alt}}" data-lottie="{{lottie}}"></div>{{/lottie}}
+    </div>
+  </div>
+</li>

@@ -3,7 +3,7 @@
 //   (а) верхній відступ пілюлі (.site-header__bar, position: fixed) = обчислений токен --header3-top (px з calc) ±0.5px,
 //       а сам токен = задана замовником величина `headerTopU`·u (allow.json → dynamic.d15; 15u) — щоб зсув токена не проходив непоміченим;
 //   (б) пілюля стоїть на колонках 1–10 єдиної сітки: лівий край = початок кол. 1, правий = кінець кол. 10 (±0.5px; сітка — профіль `catalog` D12);
-//   (в) у меню шапки (.site-header__menu .nav-cell--menu; DOM, навіть коли меню закрите) присутні ВСІ пункти зі списку, у тому ж порядку (текст без регістру + href);
+//   (в) у меню шапки (`headerMenu`, без «Зворотній зв'язок») (.site-header__menu .nav-cell--menu; DOM, навіть коли меню закрите) присутні ВСІ пункти зі списку, у тому ж порядку (текст без регістру + href);
 //   (г) футер (.site-footer__col--menu) має ті самі пункти в тому ж порядку (текст без регістру + href).
 // Додаткові пункти меню/футера = теж порушення (список має збігатися точно).
 import { gridFor, GRID_DEFAULTS } from './grid-d12.mjs';
@@ -21,6 +21,15 @@ export const D15_DEFAULTS = {
     { text: 'Контакти', href: 'contacts.html' },
     { text: "Зворотній зв'язок", href: 'feedback.html' },
   ],
+  headerMenu: [ // меню шапки БЕЗ «Зворотній зв'язок» (рішення замовника: «саме посилання „зворотній зв'язок" з хедер меню заберемо»); футер лишає повний список `menu`
+    { text: 'Головна', href: 'index.html' },
+    { text: 'Про дім', href: 'about.html' },
+    { text: "Ф'ючерсні бочки", href: 'barrels.html' },
+    { text: 'Екскурсії', href: 'excursions.html' },
+    { text: 'Коктейлі', href: 'cocktails.html' },
+    { text: 'FAQ', href: 'faq.html' },
+    { text: 'Контакти', href: 'contacts.html' },
+  ],
   skipPages: [], // сторінки без шапки/футера (поки порожньо: 404 теж має partials)
 };
 
@@ -37,7 +46,7 @@ export function COLLECT_D15() {
     barTop: r ? r.top : null, barLeft: r?.left ?? null, barRight: r?.right ?? null, barPos: bar ? getComputedStyle(bar).position : null,
     tokenRaw: getComputedStyle(document.documentElement).getPropertyValue('--header3-top').trim(), tokenPx: px('var(--header3-top)'),
     scrollY: window.scrollY, vw: Math.min(clientW, vwVar), u: Math.min(Math.max(vwVar, 1185), 1920) / 1920,
-    menu: items('.site-header__menu a.nav-cell--menu'), footer: items('.site-footer__col--menu a'),
+    menu: items('.site-header__menu:not(.site-header__menu--lang) a.nav-cell--menu'), lang: (() => { const b = document.querySelector('.site-header__lang-btn'), c = document.querySelector('.site-header__side--end a[href$="cart.html"]'), lg = [...document.querySelectorAll('.site-header__menu--lang a[data-lang]')].map((x) => x.dataset.lang); const rb = b?.getBoundingClientRect(), rc = c?.getBoundingClientRect(); return { has: !!b, right: rb?.right ?? null, cartLeft: rc?.left ?? null, langs: lg, haspopup: b?.getAttribute('aria-haspopup'), expanded: b?.getAttribute('aria-expanded') }; })(), footer: items('.site-footer__col--menu a'),
   };
 }
 
@@ -60,7 +69,7 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
     const dl = d.barLeft - g.starts[0], dr = d.barRight - g.ends[g.cols - 1];
     if (Math.abs(dl) > tol || Math.abs(dr) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `ліво ${dl >= 0 ? '+' : ''}${dl.toFixed(2)}px від поч. кол. 1, право ${dr >= 0 ? '+' : ''}${dr.toFixed(2)}px від кін. кол. 10`, msg: 'пілюля шапки не на колонках 1–10' });
     const cmp = (kind, got) => {
-      const want = C.menu;
+      const want = kind === 'menu' ? (C.headerMenu || C.menu) : C.menu;
       const same = got.length === want.length && want.every((w, i) => nz(got[i].text) === nz(w.text) && got[i].href === w.href);
       if (same) return;
       const missing = want.filter((w) => !got.some((g2) => nz(g2.text) === nz(w.text) && g2.href === w.href)).map((w) => w.text);
@@ -69,6 +78,13 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
       out.push({ page: c.label, selector: kind === 'menu' ? '.site-header__menu' : '.site-footer__col--menu', value: `${missing.length ? `немає: ${missing.join(', ')}; ` : ''}${extra.length ? `зайві: ${extra.join(', ')}; ` : ''}${order ? 'інший порядок; ' : ''}є: ${fmtList(got)}`, msg: kind === 'menu' ? 'меню шапки ≠ еталонному списку пунктів (склад/порядок)' : 'меню футера ≠ еталонному списку пунктів (склад/порядок)' });
     };
     cmp('menu', d.menu);
+    // перемикач мови (docs/i18n.md): кнопка зліва від «Кошика», aria-haspopup/aria-expanded, у списку uk і en
+    const L = d.lang;
+    if (!L?.has) out.push({ page: c.label, selector: '.site-header__lang-btn', value: 'немає', msg: 'у шапці немає перемикача мови' });
+    else {
+      if (!(L.right <= L.cartLeft + tol)) out.push({ page: c.label, selector: '.site-header__lang-btn', value: `правий край ${L.right?.toFixed(1)} > лівий край «Кошика» ${L.cartLeft?.toFixed(1)}`, msg: 'перемикач мови має стояти зліва від «Кошика»' });
+      if (L.langs.join() !== 'uk,en' || L.haspopup !== 'true' || L.expanded !== 'false') out.push({ page: c.label, selector: '.site-header__lang-btn', value: `мови ${L.langs.join()}, haspopup=${L.haspopup}, expanded=${L.expanded}`, msg: 'перемикач мови: очікується список uk,en, aria-haspopup="true", aria-expanded="false"' });
+    }
     if (!d.hasFooter) out.push({ page: c.label, selector: '.site-footer', value: 'немає', msg: 'на сторінці немає футера (partials/footer.html)' }); else cmp('footer', d.footer);
   }
   return out;

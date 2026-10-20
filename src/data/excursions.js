@@ -22,7 +22,7 @@ export const excursions = {
       cta: { text: 'Обрати формат', href: '#price', variant: 'beige' },   // світла кнопка: зелена (тон сторінки) зливалась із зеленим градієнтом hero.fade
     },
     {
-      type: 'layers', id: 'why', room: 'deep',
+      type: 'layers', id: 'why', room: 'deep', look: 'about',
       kicker: 'Що на вас чекає', title: 'Один візит — чотири враження', titleCols: 6,   // 6 колонок: заголовок у 2 рядки (рев'ю d0234bbc)
       items: [
         { key: 'tour', title: 'Екскурсія дистилерією', text: 'Процес виробництва, обладнання та філософія YasnoCraft', img: '/assets/img/excursions-tex-copper.webp', slot: AI('мідь перегінного куба') },
@@ -33,7 +33,7 @@ export const excursions = {
     },
     {
       // deck: стікі-картки з фото на тлі (запит замовника, реф reports/client-refs/sticky-cards-ref.png); фото — AI-кадри 21:9 з темною зоною зліва під текст
-      type: 'steps', id: 'excursion', room: 'deep', join: true, deck: true,
+      type: 'steps', id: 'excursion', room: 'deep', join: true, deck: true, split: true,
       kicker: 'Екскурсія дистилерією', title: 'Від зерна до пляшки — своїми очима',
       lead: 'Проводимо залами дистилерії та розповідаємо, як працює сучасне виробництво, звідки ми взялися й чому робимо саме так. Без лекції — показуємо, питайте про все.',
       items: [
@@ -48,19 +48,19 @@ export const excursions = {
       ],
     },
     {
-      type: 'tiles', id: 'tasting', room: 'warm', shape: 'circle', leadCols: 2, loose: true,
+      type: 'tiles', id: 'tasting', room: 'warm', shape: 'circle', look: 'about', loose: true,
       kicker: 'Дегустація', title: 'Чотири характери в одному ряду',
       lead: 'Дегустацію ведемо від прозорого до витриманого: спершу чистий дистилят, потім сезонний напій, джин і віскі. Так чути, що саме дає зерно, що — ботаніка, а що — бочка.',
       items: [
         // ноти келихів — [потрібно уточнити] (порожнє поле: рядок не показується)
         { key: 'newmake', tone: 'brown', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/whiskey-white.webp', alt: 'Пляшка невитриманого віскі', name: 'Ньюмейк', origin: 'Чистий зерновий\nдистилят', notes: '', slot: 'Фото: пляшка з каталогу (whiskey-white) як ілюстрація ньюмейку — уточнити продукт дегустації' },
-        { key: 'pumpkin', tone: 'brown', imgPos: 'center', zoom: 1.75, img: '/assets/img/excursions-glass-dark.webp', alt: 'Келих гарбузівки з жовтим напоєм на темному тлі', name: 'Гарбузівка', origin: 'Сезонний напій\nз українським характером', notes: '', slot: AI('один келих glencairn з жовтим напоєм, фронтально, ≈67% висоти кадру, темно-коричневе тло') },
+        { key: 'pumpkin', tone: 'brown', imgPos: 'top', zoom: 1.5, img: '/assets/img/excursions-glass-dark.webp', alt: 'Келих гарбузівки з жовтим напоєм на темному тлі', name: 'Гарбузівка', origin: 'Сезонний напій\nз українським характером', notes: '', slot: AI('один келих glencairn з жовтим напоєм, фронтально, ≈67% висоти кадру, темно-коричневе тло') },
       { key: 'gin', tone: 'green', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/gin-yasnyi.webp', alt: 'Пляшка джину «Ясний»', name: 'Джин', origin: 'Авторський,\nботанічний', notes: '', slot: 'Фото: пляшка з каталогу (gin-yasnyi) — уточнити продукт дегустації' },
         { key: 'whisky', tone: 'teal', imgPos: 'top', zoom: 1.75, img: '/assets/img/products/oak-notes.webp', alt: 'Пляшка витриманого віскі', name: 'Віскі', origin: 'Витриманий\nнасичений смак', notes: '', slot: 'Фото: пляшка з каталогу (oak-notes) — уточнити продукт дегустації' },
       ],
     },
     {
-      type: 'formats', id: 'formats', room: 'warm', join: true,
+      type: 'formats', id: 'formats', room: 'warm', join: true, look: 'about',
       kicker: 'Формати', title: 'Який формат дегустації обрати?', titleCols: 6,   // текст і 2 рядки — рев'ю 58f675f7, 28fcde83
       lead: 'Обидва формати — з екскурсією і закусками, для групи від 6 осіб. Різниця — у глибині: у великому форматі чотири віскі з різними характерами й два джини, а до столу додаються м\'ясні та сирні делікатеси.',
       items: [
@@ -79,19 +79,19 @@ export const excursions = {
       ],
     },
     {
-      type: 'offers', id: 'price', room: 'deep',
+      type: 'offers', id: 'price', room: 'deep', look: 'about',
       bg: '/assets/img/excursions-price-bg.webp', bgW: 2560, bgH: 1440,
       bgSlot: 'Фото «Ціна»: AI-кадр (Seedream 5 Pro, чернетка) — мідні куби в темному цеху, спокійна темна зона під текстом, без затемнення; замінити реальною зйомкою',
       kicker: 'Ціна', title: 'Оберіть формат і забронюйте дату',
       lead: 'Ціна — з людини, уже з екскурсією, дегустацією та закусками. Групи від 6 осіб. Екскурсії проводимо з 24 жовтня.',
       items: [
-        { key: 'f4', title: 'Екскурсія + 4 напої', price: '1500', priceNote: 'грн з людини',
+        { key: 'f4', title: 'Екскурсія\n+ 4 напої', price: '1500', priceNote: 'грн з людини',
           facts: [{ dt: 'Напоїв', dd: '4' }, { dt: 'Закуски', dd: 'горіхи, крекери, сухе варення' }, { dt: 'Група', dd: 'від 6 осіб' }],
-          includes: ['Екскурсія дистилерією', 'Дегустація 4 напоїв', 'Закуски до дегустації'],
+          includes: ['Екскурсія дистилерією', 'Закуски до дегустації'],
           cta: { text: 'Забронювати', href: 'feedback.html?topic=excursion&format=4' } },
-        { key: 'f8', title: 'Екскурсія + 8 напоїв', price: '3800', priceNote: 'грн з людини',
+        { key: 'f8', title: 'Екскурсія\n+ 8 напоїв', price: '3800', priceNote: 'грн з людини',
           facts: [{ dt: 'Напоїв', dd: '8' }, { dt: 'Закуски', dd: '+ м\'ясні та сирні делікатеси' }, { dt: 'Група', dd: 'від 6 осіб' }],
-          includes: ['Екскурсія дистилерією', 'Дегустація 8 напоїв: 4 віскі, 2 джини, гарбузівка, ньюмейк', 'Закуски з м\'ясними та сирними делікатесами'],
+          includes: ['Екскурсія дистилерією', 'Закуски з м\'ясними та сирними делікатесами'],
           cta: { text: 'Забронювати', href: 'feedback.html?topic=excursion&format=8' } },
       ],
     },
@@ -105,14 +105,13 @@ export const excursions = {
       cta: { text: 'Дивитися каталог', href: 'catalog.html' },
     },
     {
-      type: 'place', id: 'location', stack: true,
-      kicker: 'Наша локація', title: 'Ясногородка, екопарк', titleSize: 'small',   // роль .t-lead (40u) замість .t-h2 (67u): «Ясногородка» (364/582px при 317/507 доступних) не вміщувалась цілою й рвалась дефісом — тепер ціле слово на 1200–1920 (E3-B, дефект 1)
+      type: 'place', id: 'location', stack: true, look: 'about',
+      kicker: 'Наша локація', title: 'Ясногородка, екопарк',   // (look: about — заголовок роллю .t-hero у картці; раніше titleSize small: .t-lead (40u) замість .t-h2 (67u): «Ясногородка» (364/582px при 317/507 доступних) не вміщувалась цілою й рвалась дефісом — тепер ціле слово на 1200–1920 (E3-B, дефект 1)
       lead: 'Дистилерія стоїть на території сімейного екопарку Ясногородка — можна поєднати екскурсію з прогулянкою й відпочинком.',
       facts: [
         { label: 'Адреса', icon: 'pin', value: 'Київська обл., Фастівський р-н, с. Ясногородка, вул. Довгий Брід, 46', href: '%contacts.gmapsView%' },
-        { label: 'Екопарк', value: 'На території сімейного екопарку Ясногородка' },
-        { label: 'Як дістатися', value: 'Авто / громадський транспорт, парковка — [потрібно уточнити]' },
-        { label: 'Графік', value: 'Дні тижня, години — [потрібно уточнити]' },
+        { label: 'Екопарк', icon: 'tree', value: 'На території сімейного екопарку Ясногородка' },
+        { label: 'Графік', icon: 'clock', value: 'Пн–Пт, 11:00–18:00\nЕкскурсії за попереднім записом' },
       ],
       ctas: [{ text: 'Забронювати', href: '#price', variant: 'green' }],   // одна основна кнопка (рев'ю 29f1be2a «забрати кнопку» «Прокласти маршрут», 2a622988 «зробити основною»)
     },

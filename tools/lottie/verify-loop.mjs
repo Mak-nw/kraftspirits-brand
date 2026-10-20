@@ -31,10 +31,11 @@ try {
     return { px: n, mean: +(sum / (A.length / 4)).toFixed(4) };
   }, a.toString('base64'), b.toString('base64'));
 
-  for (let i = 1; i <= 8; i++) {
-    const n = String(i).padStart(2, '0');
-    if (only && only !== n) continue;
-    const data = JSON.parse(readFileSync(resolve(args.dir ? resolve(args.dir) : resolve(root, 'public/assets/lottie'), `process-${n}.json`), 'utf8'));
+  const stems = args.names ? String(args.names).split(',') : Array.from({ length: 8 }, (_, i) => `process-${String(i + 1).padStart(2, '0')}`);   // --names=barrel-01-pour,… — інші набори анімацій (gen-barrels.mjs)
+  for (const stem of stems) {
+    const n = stem;
+    if (only && only !== n.replace(/^process-/, '')) continue;
+    const data = JSON.parse(readFileSync(resolve(args.dir ? resolve(args.dir) : resolve(root, 'public/assets/lottie'), `${stem}.json`), 'utf8'));
     const T = data.op;
     data.op = T + 1; data.layers.forEach((l) => { l.op = T + 1; }); // тестова копія: кадр T існує
     await page.evaluate((d) => { if (window.__a) window.__a.destroy(); window.__a = lottie.loadAnimation({ container: document.getElementById('a'), renderer: 'svg', loop: false, autoplay: false, animationData: d }); }, data);
@@ -56,8 +57,8 @@ try {
     const ok = seam.px === 0 && seam.mean === 0 && dSeamA.px <= maxN * 1.5 + 5 && seamOk;
     if (!ok) fail++;
     console.log(`process-${n} T=${T}  seam(0≡T): ${seam.px}px mean=${seam.mean}  | Δ(T-1→T)=${dSeamA.px}px  Δ(0→1)=${dSeamB.px}px  | Δ межі кадрів (крок 3): max=${maxN}px avg=${(sumN / cnt).toFixed(1)}px  | шов: max=${seamMax.toFixed(4)} avg=${avgAll.toFixed(4)} inner=${inner.toFixed(4)} ×${(seamMax / (avgAll || 1)).toFixed(2)} ${seamOk ? '' : 'SEAM-FAIL'}  ${ok ? 'OK' : 'FAIL'}`);
-    for (const f of sheetFrames) { const b = await shot(f); (await import('node:fs')).writeFileSync(resolve(out, `process-${n}-f${String(f).padStart(3, '0')}.png`), b); }
-    (await import('node:fs')).writeFileSync(resolve(out, `process-${n}-seamT.png`), fT);
+    for (const f of sheetFrames) { const b = await shot(f); (await import('node:fs')).writeFileSync(resolve(out, `${stem}-f${String(f).padStart(3, '0')}.png`), b); }
+    (await import('node:fs')).writeFileSync(resolve(out, `${stem}-seamT.png`), fT);
   }
 } finally { await browser.close(); }
 process.exit(fail ? 1 : 0);

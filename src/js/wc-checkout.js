@@ -3,7 +3,7 @@
 // очищає кошик і веде на ?state=thanks. Стани: ?state=error (помилки валідації) | thanks (подяка) | empty (порожній кошик); ?demo=1 (демо-позиції). Довідники НП — src/data/checkout-demo.js (демо).
 import { initSelect } from './select.js';
 import {
-  state, FREE_SHIPPING_FROM, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, getCoupon, setCoupon, calcTotals, syncNativeSelect,
+  state, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, calcTotals, syncNativeSelect,
 } from './wc-common.js';
 import { NP_AREAS, NP_CITIES, npWarehouses, npAddress, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
 
@@ -30,11 +30,10 @@ function fillRows(tbody, list, extraClass = '') {
 function fillTotals(root, t, shippingText) {
   qs('[data-wc-subtotal]', root).textContent = fmtMoney(t.subtotal);
   qs('[data-wc-total]', root).textContent = fmtMoney(t.total);
-  const row = qs('.cart-discount', root);
-  row.hidden = !t.discount;
-  if (t.discount) { qs('th', row).textContent = `Купон: ${t.coupon}`; qs('[data-wc-discount]', row).textContent = `−${fmtMoney(t.discount)}`; }
   const sh = qs('[data-wc-shipping]', root);
   if (sh) sh.textContent = shippingText;
+  const shNote = qs('[data-wc-ship-note]', root);
+  if (shNote) { shNote.textContent = SHIPPING_TARIFF_NOTE; shNote.hidden = shippingText !== SHIPPING_TARIFF; }
 }
 
 try {
@@ -81,7 +80,7 @@ function initForm() {
   // ---------- доставка / оплата ----------
   const method = () => qs('input[name="shipping_method[0]"]:checked', form).value;
   const shipNote = (m) => ({
-    np: totals.free ? `Доставка безкоштовна (від ${fmtMoney(FREE_SHIPPING_FROM)}).` : `За тарифом перевізника; безкоштовно від ${fmtMoney(FREE_SHIPPING_FROM)}.`,
+    np: 'Вартість доставки — за тарифами перевізника.',
     courier: 'Вартість доставки по Києву розраховується окремо.',
     pickup: 'Адресу дистилерії дивіться на сторінці «Контакти».',
   }[m]);
@@ -191,11 +190,10 @@ function initForm() {
       name: `${val('billing_first_name')} ${val('billing_last_name')}`,
       phone: val('billing_phone'), email: val('billing_email'),
       shipping: m, delivery, payment: qs('input[name="payment_method"]:checked', form).value,
-      lines, coupon: totals.coupon,
+      lines,
     };
     try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(order)); } catch { /* без збереження: подяка покаже демо-дані */ }
     writeCart([]);
-    setCoupon('');
     const next = new URLSearchParams(location.search);
     next.delete('demo');
     next.set('state', 'thanks');
@@ -219,17 +217,17 @@ function initThanks() {
     const demoLines = resolveLines(readCart());
     order = {
       number: '10427', date: new Date().toISOString(), name: 'Олена Коваленко', phone: '+380 50 123 45 67', email: 'name@example.com',
-      shipping: 'np', delivery: 'Київська область, Бровари, Відділення №1', payment: 'card', lines: demoLines, coupon: getCoupon(),
+      shipping: 'np', delivery: 'Київська область, Бровари, Відділення №1', payment: 'card', lines: demoLines,
     };
   }
-  const t = calcTotals(order.lines, order.coupon);
+  const t = calcTotals(order.lines);
   qs('[data-wc-order-number]', root).textContent = order.number;
   qs('[data-wc-order-date]', root).textContent = new Date(order.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
   qs('[data-wc-order-email]', root).textContent = order.email;
   qs('[data-wc-order-total]', root).textContent = fmtMoney(t.total);
   qs('[data-wc-order-method]', root).textContent = PAYMENT_LABELS[order.payment] || PAYMENT_LABELS.card;
   fillRows(qs('[data-wc-rows]', root), order.lines, 'woocommerce-table__line-item order_item');
-  fillTotals(root, t, order.shipping === 'np' && !t.free ? 'За тарифом перевізника' : (order.shipping === 'np' ? 'Безкоштовно' : SHIPPING_LABELS[order.shipping]));
+  fillTotals(root, t, order.shipping === 'np' ? SHIPPING_TARIFF : SHIPPING_LABELS[order.shipping]);
   const addr = qs('[data-wc-address]', root);
   const parts = [order.name, order.phone, order.email, order.delivery];
   addr.replaceChildren(...parts.flatMap((p, i) => (i ? [document.createElement('br'), p] : [p])));

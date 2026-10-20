@@ -34,13 +34,20 @@
 .site-header__menu-actions { display: flex; flex-direction: column; gap: var(--header3-menu-pad); margin-top: var(--header3-menu-pad); }
 .nav-cell--menu { justify-content: flex-start; width: auto; } /* пункт меню: на ширину панелі (виняток із hug); padding-inline — з .nav-cell */
 @media (prefers-reduced-motion: reduce) { .site-header__menu, .site-header__burger-line { transition: none; } }
+/* Перемикач мови (docs/i18n.md): зліва від «Кошика» у правій групі; кнопка «UA»/«EN» = .nav-cell--outline (як «меню»), список — той самий випадний компонент .site-header__menu з модифікатором --lang
+   (ті самі панель, ховер/клік/клавіатура — header-menu.js, анімація, пункти .nav-cell--menu). Обгортка .site-header__lang — відносний контейнер: панель під кнопкою, ліворуч від її краю, на тій самій висоті від пілюлі, що й панель «меню»
+   (вертикаль: від низу кнопки до низу пілюлі (header3-h − висота кнопки)/2 + --header3-menu-gap). Активна мова = стан selected контурної кнопки (--btn-nav-outline-*-selected), без нових стилів. */
+.site-header__lang { position: relative; flex: none; display: flex; }
+.site-header__menu--lang { --header3-lang-drop: calc((var(--header3-h) - var(--header2-btn-outline-h)) / 2 + var(--header3-menu-gap)); top: calc(100% + var(--header3-lang-drop)); width: max-content; min-width: 100%; }
+.site-header__menu--lang::before { height: var(--header3-lang-drop); } /* «місток» ховеру: від низу кнопки до верху панелі */
+.site-header__menu--lang .nav-cell--menu[aria-current="true"] { border-radius: var(--radius-btn); background: var(--btn-nav-outline-bg-selected); color: var(--btn-nav-outline-text-selected); }
 /* Логотипи в хедері: кожен у комірці 220.37x63 (206:2504 / 206:2506) */
 .site-header__logo { position: relative; flex: none; width: var(--header-logo-cell-w); height: var(--header-logo-cell-h); overflow: hidden; display: block; }
 .site-header__logo img { position: absolute; max-width: none; object-fit: cover; }
 .site-header__logo--yc img { left: var(--header-logo-yc-x); top: var(--header-logo-yc-y); width: var(--header-logo-yc-w); height: var(--header-logo-yc-h); } /* 194:1384 */
 .site-header__logo--bs img { left: var(--header-logo-bs-x); top: var(--header-logo-bs-y); width: var(--header-logo-bs-w); height: var(--header-logo-bs-h); } /* 194:1386 */
-/* спільний hover пари логотипів: курсор над будь-яким логотипом або над групою (.site-header__logos) — ОБИДВА зображення разом тьмяніють 1 → --opacity-logo-hover за --duration-fast; вихід — разом повертаються. Без підкреслення й зміни розміру. Окремого hover на кожному лого немає; focus-visible кільце кожного лого (beige) — звичайне, opacity на нього не діє */
+/* окремий hover кожного логотипа (рев'ю e9d7852c «робимо окремі ховери при наводці»): курсор над логотипом тьмянить ЛИШЕ його 1 → --opacity-logo-hover за --duration-fast; другий лого не реагує. Без підкреслення й зміни розміру; focus-visible кільце кожного лого (beige) — звичайне, opacity на нього не діє */
 .site-header__logo img { transition: opacity var(--duration-fast) var(--ease-out); }
-@media (hover: hover) { .site-header__logos:hover img { opacity: var(--opacity-logo-hover); } }
-.site-header__logos:focus-within img { opacity: var(--opacity-logo-hover); transition-duration: var(--btn-transition-duration-focus); }
+@media (hover: hover) { .site-header__logo:hover img { opacity: var(--opacity-logo-hover); } }
+.site-header__logo:focus-within img { opacity: var(--opacity-logo-hover); transition-duration: var(--btn-transition-duration-focus); }
 @media (prefers-reduced-motion: reduce) { .site-header__logo img { transition: none; } }

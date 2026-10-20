@@ -39,7 +39,7 @@ export function checkFiles(page, { root, contactKeys = [] }) {
       if (d.type === 'partial') { if (!existsSync(resolve(root, 'partials/media', `${v}.html`))) fail(path, `немає partials/media/${v}.html (гравюра-медіа)`); }
       else if (d.type === 'icon') { if (!icons.has(v)) fail(path, `немає іконки .icon--${v} у src/styles (перелік — design-system.html → «Іконки», «Брендові іконки»)`); }
       else if (d.type === 'url' && typeof v === 'string') {
-        if (key === 'img' || key === 'bg') { if (v.startsWith('/') && !existsSync(resolve(root, 'public', v.slice(1)))) fail(path, `файл ${v} відсутній у public/`); }
+        if (key === 'img' || key === 'bg' || key === 'lottie') { if (v.startsWith('/') && !existsSync(resolve(root, 'public', v.slice(1)))) fail(path, `файл ${v} відсутній у public/`); }
         else {
           const mm = /^%contacts\.(\w+)%$/.exec(v); if (mm && !contactKeys.includes(mm[1])) fail(path, `%contacts.${mm[1]}% — немає такого ключа в src/data/contacts.js (є: ${contactKeys.join(', ')})`);
           const pg = /^([a-z0-9-]+)\.html(?:[?#].*)?$/.exec(v); if (pg && !existsSync(resolve(root, `${pg[1]}.html`)) && !existsSync(resolve(root, 'src/data', `${pg[1]}.js`))) fail(path, `сторінки ${pg[1]}.html немає в корені проєкту`);

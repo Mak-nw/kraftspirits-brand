@@ -11,6 +11,7 @@ html:not(.age-ok):not(.age-closing) { background-color: var(--color-age-gutter);
   display: none;
   position: fixed; inset: 0; z-index: var(--z-age-gate);
   overflow: auto; overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges; /* смуга (classic) — симетрично з обох боків: картка й пара логотипів по центру вікна, а не зсунуті на half-смуги */
   padding: var(--space-30);
   background: url('/assets/img/home-pattern-diamond.svg') 0 0 / var(--size-pattern-tile) var(--size-pattern-tile) repeat, var(--color-age-overlay); /* візерунок ромбів тон-в-тон (як у tours) */
   color: var(--color-green);
@@ -36,11 +37,10 @@ html:not(.age-ok) .age-gate { display: flex; }
 @keyframes age-card-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* пара логотипів (темні версії для світлого фону) */
-.age-card__logos { display: flex; align-items: center; justify-content: center; gap: var(--space-50); }
+.age-card__logos { display: flex; align-items: center; justify-content: center; gap: calc(var(--space-50) * 2 + var(--border-hairline)); /* відстань між логотипами як раніше (роздільника більше немає) */ }
 .age-card__logo { flex: none; max-width: none; }
 .age-card__logo--yc { width: var(--size-age-logo-yc-w); height: var(--size-age-logo-yc-h); }
 .age-card__logo--bs { width: var(--size-age-logo-bs-w); height: var(--size-age-logo-bs-h); }
-.age-card__sep { flex: none; width: var(--border-hairline); height: var(--size-age-logo-sep-h); background: var(--color-age-border); }
 
 /* два стани в одній клітинці сітки: картка тримає висоту вищого (питання), стрибка при «Ні» / «Змінити відповідь» немає */
 .age-card__stack { display: grid; width: 100%; }

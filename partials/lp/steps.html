@@ -11,7 +11,7 @@
         <div class="lp-steps__chapters">
           <!--@each items lp/step-->
         </div>{{/arch}}{{#deck}}<ol class="lp-steps__deck">
-          <!--@each items lp/step-card-->
+          {{#noSplit}}<!--@each items lp/step-card-->{{/noSplit}}{{#split}}<!--@each items lp/step-split-->{{/split}}
         </ol>{{/deck}}
       </div>
     </section>

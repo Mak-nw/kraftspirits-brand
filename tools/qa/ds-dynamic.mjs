@@ -323,10 +323,6 @@ export async function runDynamic(opts, allow, rep) {
             await waitStable(pg); await sleep(300);
             const mp = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin });
             d14.push({ label: `${label}/parallax`, spec, width: combo.width, ...mp });
-            if (d14parCtl === null) { // контроль: те саме з вимкненим наближенням кадру (--lp-offers-bg-scale:1 — стара поведінка, коли паралакс перезаписував кадр) МАЄ дати порушення
-              const mc = await measureTextOnImageParallax(pg, pp.sel, { ...D14_DEFAULTS, textMin: cfg.textMin, largeMin: cfg.largeMin }, `${pp.sel} .lp-offers__bg{--lp-offers-bg-scale:1 !important}`);
-              d14parCtl = mc.hits.length;
-            }
             await pg.close().catch(() => {});
           }
         }
@@ -343,7 +339,7 @@ export async function runDynamic(opts, allow, rep) {
           await pg.close().catch(() => {});
         }
         // позитивні контролі: product і cocktails (режим 5u: зазор 40u МАЄ дати порушення) і about (режим 40u: зазор 5u МАЄ дати порушення)
-        for (const nm of ['product?id=gin-yasnyi', 'cocktails', 'about']) {
+        for (const nm of ['product?id=gin-yasnyi', 'cocktails', 'cart?demo=1', 'about']) {
           const sp0 = pageSpec(nm); const mode = d18Mode(sp0.name, d18cfg);
           const cp = await openPage(L.browser, pageUrl(opts.url, sp0, 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
           await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
@@ -421,7 +417,7 @@ export async function runDynamic(opts, allow, rep) {
       for (const h of c.hits) { st.failNodes++; addV({ rule: 'D14', page: c.label, selector: h.el, value: `«${h.text}» ${h.bad}/${h.measured} літер нижче ${h.thr}:1 (мін. ${h.minRatio}:1; найгірша ${Math.round(h.worst * 100)}% пікселів; ${h.size}px${h.large ? ' великий' : ''}; під текстом: ${h.layer}; y=${h.y}; погані: «${h.badCh}»)`, msg: 'текст на зображенні: контраст по літерах нижче порога' }); }
     }
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd14.json'), JSON.stringify(d14.map((c) => ({ label: c.label, stats: c.stats, hits: c.hits, nodes: c.all.length })), null, 1)); } catch {}
-    if (d14parCtl === 0) addV({ rule: 'D14', page: 'control', selector: 'позитивний контроль parallax=on', value: '0 порушень', msg: 'кадр «Ціни» без наближення має давати контраст < 4.5:1 під міткою маршруту — перевірка профілю parallax=on сліпа' });
+    // позитивний контроль parallax=on знято 20.10.2026: він спирався на кадр фото barrels (наближення ×2), якого більше немає (замінено векторною панорамою)
     rep.info({ rule: 'D14', msg: `вузлів з зображенням під текстом ${st.candidates} (без зображення пропущено ${st.noImage}; над <canvas> WebGL-картою не міряється ${st.canvas} — візуально: атрибуція maplibre), виміряно літер ${st.lettersMeasured} на ${st.pageWidths} сторінко-ширинах; FAIL-вузлів ${st.failNodes}` });
   }
   // D16: hug/padding кнопок + позитивний контроль (зламана ширина МАЄ дати порушення)
@@ -491,7 +487,7 @@ export async function runDynamic(opts, allow, rep) {
       st.fused += a.fused;
       for (const p of a.pairs) {
         st[p.kind]++;
-        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? (mode === 'five' ? 'великі блоки --grid-gap-panels, сторінка товару' : 'великі блоки по колонках --grid-gap') : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? 'великих блоків ≠ 5u' : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
+        if (!p.ok) { st.fail++; addV({ rule: 'D18', page: c.label, selector: `${p.a.path} | ${p.b.path}`, value: `зазор ${(p.gap / u).toFixed(2)}u (${p.gap.toFixed(2)}px), очікув. ${(p.expected / u).toFixed(0)}u (${p.kind === 'big' ? (mode === 'five' ? 'горизонтальний зазор великих блоків: очікувано 40u (або 5u на gap5-pages: product, cocktails, cart) — тут 5u, --grid-gap-panels' : 'горизонтальний зазор великих блоків: очікувано 40u (або 5u на gap5-pages: product, cocktails, cart) — тут 40u, --grid-gap') : 'малі елементи --grid-gap'}); Δ${p.delta >= 0 ? '+' : ''}${p.delta.toFixed(2)}px; ширини ${p.cols.join('+')} кол.`, msg: `зазор пари ${p.kind === 'big' ? `великих блоків ≠ ${mode === 'five' ? '5u' : '40u'}` : 'малих елементів ≠ 40u'} (±${d18cfg.tolPx}px)` }); }
       }
       // охоронець покриття: на ключових сторінках пара/склеєний компонент МАЄ бути знайдена (збір не мовчить)
       for (const [key, min] of Object.entries(d18cfg.required || {})) {
@@ -502,7 +498,7 @@ export async function runDynamic(opts, allow, rep) {
     }
     for (const k of d18ctl) if (!k.applied || k.fails === 0) addV({ rule: 'D18', page: 'control', selector: `позитивний контроль ${k.label}`, value: k.applied ? '0 порушень' : 'пару великих блоків не знайдено', msg: 'зміна зазору великих блоків (product: 40u замість 5u; about: 5u замість 40u) МАЄ дати порушення — інакше D18 зламано' });
     try { mkdirSync(opts.out, { recursive: true }); writeFileSync(join(opts.out, 'd18.json'), JSON.stringify({ cfg: d18cfg, results: dump, control: d18ctl }, null, 1)); } catch {}
-    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; режим 5u: gap5-pages (product, cocktails); позитивний контроль (product 40u замість 5u / about 5u замість 40u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
+    rep.info({ rule: 'D18', msg: `сторінко-ширин ${st.pages}: пар великих блоків ${st.big}, малих елементів ${st.tile}, склеєних (tour-card) ${st.fused}; порушень ${st.fail}; режим 5u: gap5-pages (product, cocktails, cart); позитивний контроль (product 40u замість 5u / about 5u замість 40u) ${d18ctl.length ? d18ctl.map((k) => `${k.fails}`).join('/') : '—'} порушень на ${d18ctl.length} ширинах; нестабільних замірів ${st.unstable}` });
   }
   // D19: hero без оверлея (tools/qa/hero-d19.mjs); НЕ фільтрується allow
   if (wantHeroCtx) {

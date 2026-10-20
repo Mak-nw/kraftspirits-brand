@@ -1,16 +1,23 @@
 <article class="contacts-panel lp-offer lp-span--{{span}} lp-offer--{{key}}" data-reveal="rise">
-  <div class="lp-offer__head">
+  {{#noLook}}<div class="lp-offer__head">
     <h3 class="lp-offer__title t-product-name">{{title}}</h3>
     <p class="lp-offer__price t-stat">{{price}}</p>{{#priceNote}}
     <p class="lp-offer__price-note t-desc">{{priceNote}}</p>{{/priceNote}}
-  </div>
+  </div>{{/noLook}}
+  {{#look}}<div class="lp-offer__head">
+    <h3 class="lp-offer__title t-lead">{{title}}</h3>
+  </div>{{/look}}
   <dl class="lp-offer__facts">
     <!--@each facts lp/offer-fact-->
   </dl>
   <div class="lp-offer__offer">
-    <ul class="lp-list t-desc">
+    {{#includes}}<ul class="lp-list t-desc">
       <!--@each includes lp/li-->
-    </ul>
-    <!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->
+    </ul>{{/includes}}
+    {{#look}}<div class="lp-offer__buy">
+      <p class="lp-offer__price t-lead">{{price}}&nbsp;{{priceNote}}</p>
+      <!--@include components/btn variant="btn--beige" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->
+    </div>{{/look}}
+    {{#noLook}}<!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" arrow="arrow-up-right"-->{{/noLook}}
   </div>
 </article>

@@ -14,6 +14,11 @@
 }
 .arrow-btn img { width: 100%; height: 100%; filter: var(--btn-icon-filter); transition: filter var(--btn-transition-duration) var(--btn-transition-ease); }
 .arrow-btn--prev { transform: scaleX(var(--flip-x)); } /* 194:1336 */
+/* --sm (545956bc): проста мала кругла кнопка стрілки — ОДНА hairline-обводка (власна рамка кнопки), без кола в іконці; шеврон chevron-down.svg (темний, лінія без обводки), повернутий убік: prev ← / next →; стани ті ж токени (hover/focus: заливка + інверсія іконки). Область дотику = --size-touch-target */
+.arrow-btn--sm { width: var(--size-arrow-btn-sm); height: var(--size-arrow-btn-sm); padding: 0; align-items: center; justify-content: center; }
+.arrow-btn--sm img { width: var(--size-arrow-btn-sm-icon); height: auto; transform: rotate(-90deg); }
+.arrow-btn--sm.arrow-btn--prev { transform: none; }
+.arrow-btn--sm.arrow-btn--prev img { transform: rotate(90deg); }
 /* hover/focus: світла заливка, іконка (світла) інвертується в темну */
 .arrow-btn:focus-visible { background-color: var(--btn-bg-focus); border-color: var(--btn-border-focus); transition-duration: var(--btn-transition-duration-focus); }
 .arrow-btn:focus-visible img { filter: var(--btn-icon-filter-focus); transition-duration: var(--btn-transition-duration-focus); }

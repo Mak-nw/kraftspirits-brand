@@ -4,10 +4,9 @@
 const NB = ' '; // нерозривний пробіл: «€ 6 000» не розривається між рядками
 
 // числа (рішення замовника 15.10): ціна, вихід пляшок 0,7 л, вартість вмісту однієї пляшки, міцність, «частка ангелів»
-const B50 = { size: '50 L', price: `€${NB}2${NB}000`, bottles: 96, bottlesWord: 'пляшок', cost: `€${NB}20,83` };
-const B200 = { size: '200 L', price: `€${NB}6${NB}000`, bottles: 383, bottlesWord: 'пляшки', cost: `€${NB}15,66` };
-// що входить у ціну (рішення замовника 15.10: «власність, сертифікат»; рев'ю 395a73a7/f733e520 — рядок «інші умови» прибрано). Інших пунктів НЕ вигадувати.
-const INCLUDES = ['Бочка у вашій власності', 'Сертифікат на бочку'];
+const B50 = { size: '50 L', liters: 50, price: `€${NB}2${NB}000`, bottles: 96, bottlesWord: 'пляшок', cost: `€${NB}20,83` };
+const B200 = { size: '200 L', liters: 200, price: `€${NB}6${NB}000`, bottles: 383, bottlesWord: 'пляшки', cost: `€${NB}15,66` };
+// що входить у ціну: рядок фактів «Сертифікат | Бочка у вашій власності» (замовник 20.10.2026 — замість смуги «що входить»); інших пунктів НЕ вигадувати.
 // Смакові ноти «Подальшої витримки» — ЧЕРНЕТКА (замовник 15.10 попросив придумати): загальновідомі ноти СТИЛЮ вина (марсала «оро», мадера, портвейн тоні,
 // херес олоросо), орієнтовні — не опис конкретних бочок; по 3 слова, щоб плашки були рівні. Порожнє значення — рядок не показується.
 const NOTES = { marsala: 'абрикос, мед, мигдаль', madeira: 'карамель, кава, цедра', port: 'інжир, родзинки, ірис', sherry: 'горіх, чорнослив, прянощі' };
@@ -24,13 +23,13 @@ export const barrels = {
     {
       type: 'hero', id: '',
       title: "Ф'ючерсні бочки Bazylsprings",
-      lead: 'Екс-бурбонові бочки Wild Turkey з Кентуккі з американського дубу',
       img: '/assets/img/barrels-hero.webp', alt: '',
       slot: 'Фото hero: наявний AI-кадр barrels-hero.webp; за ТЗ IMG-1 — асиметричний кадр (бочки праворуч) або нова зйомка',
+      fade: 'brown',   // градієнт знизу вгору від коричневого --color-brown (рішення замовника 19.10: «градієнт на першому коричневого кольору»; наступна кімната — warm = той самий коричневий, шва нема); текст hero — світлий
       cta: { text: 'Переглянути ціни', href: '#price', variant: 'light' },   // світла кнопка: темна (тон сторінки, teal) на фото без градієнта давала нетекстовий контраст медіана 3.3:1 / p10 2.1:1 (verify-E3-B, дефект 3)
     },
     {
-      type: 'layers', id: 'benefits', room: 'warm',
+      type: 'layers', id: 'benefits', room: 'warm', look: 'about',
       kicker: 'Переваги бочок', title: 'Що дає бочка',
       items: [
         { key: 'char', icon: 'barrels-char', title: 'Сильний обпал', text: 'Формує глибину та структуру', img: '/assets/img/barrels-tex-char.webp', slot: TEX('IMG-T1', 'обпалена клепка') },
@@ -42,26 +41,28 @@ export const barrels = {
     {
       type: 'steps', id: 'how', room: 'deep',
       title: 'Від бочки до вашої пляшки',
-      scene: 'scene-barrels',
+      deck: true, split: true,   // стікі-колода: ліворуч текст на синьому тлі, праворуч Lottie-анімація кроку (gen-barrels.mjs)
       items: [
-        { key: 'pour', value: '63%', title: 'Заливка', text: 'У бочку заливається дистилят міцністю близько 63%' },
+        { key: 'pour', value: '63%', title: 'Заливка', text: 'У бочку заливається дистилят міцністю близько 63%', lottie: '/assets/lottie/barrel-01-pour.json', alt: 'Анімація: дистилят ллється в бочку, рівень піднімається' },
         // «частка ангелів» (рішення замовника 15.10): число як приблизне — знак ≈; наближеність пояснює дрібний текст у «Ціні»
-        { key: 'angels', value: '≈15%', title: 'Витримка', text: 'Під час витримки приблизно 15% спирту природно випаровується («частка ангелів»)' },
-        { key: 'bottle', value: '40%', title: 'Розлив', text: 'Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л' },
+        { key: 'angels', value: '≈15%', title: 'Витримка', text: 'Під час витримки приблизно 15% спирту природно випаровується («частка ангелів»)', lottie: '/assets/lottie/barrel-02-angels.json', alt: 'Анімація: з бочки піднімаються частки ангелів' },
+        { key: 'bottle', value: '40%', title: 'Розлив', text: 'Після дозрівання віскі доводиться до питної міцності 40% та розливається у пляшки 0,7 л', lottie: '/assets/lottie/barrel-03-bottle.json', alt: 'Анімація: пляшка наповнюється віскі' },
       ],
     },
     {
-      type: 'compare', id: 'profit', room: 'paper',
+      type: 'compare', id: 'profit', room: 'warm', reveal: false,   // замовник [b63a7396]: без анімації появи (групи, кімнати, count-up)
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
-        { key: 'b50', label: `Бочка ${B50.size}`, span: 3, align: 'start', accent: true, count: B50.bottles, approx: true, unit: `${B50.bottlesWord} по 0,7 л`, wall: 'wall-barrels-one',
+        // кімнати-погреби (рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): обидві кімнати однакової ширини: span 5 (колонки 1–5 і 6–10); різницю ×4 дають глибина (прольоти) й розмір бочки;
+        // під кімнатою по центру ОДИН великий рядок «200 Л ≈ 383 ПЛЯШКИ» (label літри + ≈ + count + countWord; відгук 1a979e42), нижче «по 0,7 л» і вартість однієї пляшки; розмір бочки з liters, стелажі з count (1 проліт = 48 пляшок); media/cellar-barrels
+        { key: 'b50', label: `${B50.liters} л`, liters: B50.liters, span: 5, align: 'center', accent: true, count: B50.bottles, approx: true, countWord: B50.bottlesWord, unit: 'по 0,7 л', cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `Бочка ${B200.size}`, span: 7, align: 'start', count: B200.bottles, approx: true, unit: `${B200.bottlesWord} по 0,7 л`, wall: 'wall-barrels-four-minus-one',
+        { key: 'b200', label: `${B200.liters} л`, liters: B200.liters, span: 5, align: 'center', count: B200.bottles, approx: true, countWord: B200.bottlesWord, unit: 'по 0,7 л', cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },
     {
-      type: 'tiles', id: 'next', room: 'paper', join: true,
+      type: 'tiles', id: 'next', room: 'warm', join: true,
       title: 'Подальша витримка',
       lead: `Бочки з-під марсали, мадери, портвейну, хересу${NB}— кожна додає свій унікальний відтінок смаку`,
       items: [
@@ -72,16 +73,14 @@ export const barrels = {
       ],
     },
     {
-      type: 'offers', id: 'price', room: 'deep',
-      bg: '/assets/img/barrels-price-bg.webp', bgW: 1620, bgH: 1080,
-      bgSlot: 'Фото «Ціна»: реальний кадр днищ бочок (photo/…/Обладнання/IMG_2221) — за потреби замінити на нову зйомку (≥ 2400 px по довгій стороні, MEDIA.md)',
+      type: 'offers', id: 'price', room: 'deep', look: 'about',
+      scene: 'scene-barrels-route', airy: true,   // замовник 20.10.2026: векторна панорама «Шлях бочки» замість фото; airy — панелі 50u, рядки шапки 30u
       title: 'Ціна',
       route: { from: 'Кентуккі (США)', to: 'Київ (Україна)', icon: 'barrels-ship' },
       lead: DISCLAIMER,
       items: [B50, B200].map((b) => ({
         key: `b${b.size.replace(/\D/g, '')}`, title: `Бочка ${b.size}`, price: b.price,
-        facts: [{ dt: 'Пляшок по 0,7 л', dd: `≈ ${b.bottles}${NB}шт.` }, { dt: 'Вартість вмісту однієї пляшки', dd: `≈ ${b.cost}` }],
-        includes: INCLUDES,
+        facts: [{ dt: 'Пляшок по 0,7 л', dd: `≈ ${b.bottles}${NB}шт.` }, { dt: 'Вартість вмісту однієї пляшки', dd: `≈ ${b.cost}` }, { dt: 'Бочка у вашій власності', dd: 'Сертифікат' }],
         cta: { text: 'замовити', href: `feedback.html?topic=barrel&size=${b.size.replace(/\D/g, '')}` },
       })),
     },

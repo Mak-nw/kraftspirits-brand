@@ -1,9 +1,9 @@
 /* ЗАГАЛЬНІ правила МЕДІА-ілюстрацій шаблону посадкової сторінки. Самі ілюстрації (гравюри SVG, стіна пляшок) — окремі файли: partials/media/<вид>-<назва>.html + src/styles/media/<вид>-<назва>.css
-   (вид: scene — арка кроків, engraving — плитка, wall — група compare), підключаються автоматично; обираються в даних сторінки полями scene / engraving / wall. Тут — лише те, що однакове для всіх. */
+   (вид: scene — арка кроків, engraving — плитка, cellar — група compare), підключаються автоматично; обираються в даних сторінки полями scene / engraving / cellar. Тут — лише те, що однакове для всіх. */
 
 /* зациклені анімації ілюстрацій грають лише поки секція [data-loop] у в'юпорті (lp.js ставить .is-playing) */
 .js [data-loop]:not(.is-playing) *, .js [data-loop]:not(.is-playing) *::before { animation-play-state: paused; }
 
-/* поява стіни (будь-якої .lp-wall): «наповнюється» знизу вгору разом із reveal групи (один раз; без JS / reduced-motion — одразу повна) */
-.js-reveal .lp-group[data-reveal] .lp-wall { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
-.js-reveal .lp-group[data-reveal].is-in .lp-wall { clip-path: inset(0); }
+/* поява кімнати-погреба (будь-якої .lp-cellar): «наповнюється» знизу вгору разом із reveal групи (один раз; без JS / reduced-motion — одразу повна) */
+.js-reveal .lp-group[data-reveal] .lp-cellar { clip-path: inset(100% 0 0 0); transition: clip-path var(--duration-reveal) var(--ease-out) var(--duration-fast); }
+.js-reveal .lp-group[data-reveal].is-in .lp-cellar { clip-path: inset(0); }

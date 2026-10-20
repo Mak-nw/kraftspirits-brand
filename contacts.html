@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>if (/[?&]topic=/.test(location.search) || location.hash === '#form') location.replace('feedback.html' + location.search + location.hash);</script>
   <!--@include head-icons-->
   <!--@include head-fonts-->
   <!--@include head-age-->
@@ -20,30 +19,33 @@
   <!--@include components/age-gate-->
   <!--@include header-->
   <main class="contacts">
-    <section class="contacts-panel contacts-info" aria-labelledby="contacts-title">
-      <h1 class="t-hero" id="contacts-title">Контакти</h1>
-      <div class="contacts-data">
-        <div class="contacts-item contacts-item--wide">
-          <h2 class="contacts-item__head t-footer-head"><span class="icon icon--pin" aria-hidden="true"></span>Адреса</h2>
-          <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.gmapsView%" target="_blank" rel="noopener">%contacts.address%</a></p>
+    <section class="contacts-screen" aria-label="Контакти">
+      <div class="contacts-panel contacts-window">
+        <div class="contacts-window__map">
+          <!--@include components/contacts-map-->
         </div>
-        <div class="contacts-item">
-          <h2 class="contacts-item__head t-footer-head"><span class="icon icon--phone" aria-hidden="true"></span>Телефон</h2>
-          <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.phoneHref%">%contacts.phoneDisplay%</a></p>
-        </div>
-        <div class="contacts-item">
-          <h2 class="contacts-item__head t-footer-head"><span class="icon icon--mail" aria-hidden="true"></span>E-mail</h2>
-          <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.emailHref%">%contacts.email%</a></p>
+        <div class="contacts-panel contacts-info">
+          <h1 class="t-hero" id="contacts-title">Контакти</h1>
+          <div class="contacts-data">
+            <div class="contacts-item contacts-item--wide">
+              <h2 class="contacts-item__head t-footer-head"><span class="icon icon--pin" aria-hidden="true"></span>Адреса</h2>
+              <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.gmapsView%" target="_blank" rel="noopener">%contacts.address%</a></p>
+            </div>
+            <div class="contacts-item">
+              <h2 class="contacts-item__head t-footer-head"><span class="icon icon--phone" aria-hidden="true"></span>Телефон</h2>
+              <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.phoneHref%">%contacts.phoneDisplay%</a></p>
+            </div>
+            <div class="contacts-item">
+              <h2 class="contacts-item__head t-footer-head"><span class="icon icon--mail" aria-hidden="true"></span>E-mail</h2>
+              <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.emailHref%">%contacts.email%</a></p>
+            </div>
+          </div>
+          <div class="contacts-cta">
+            <!--@include components/btn variant="btn--green btn--block" href="feedback.html" text="Написати нам" arrow="arrow-up-right"-->
+            <!--@include components/btn variant="btn--outline btn--block" href="feedback.html?topic=excursion" text="Замовити екскурсію"-->
+          </div>
         </div>
       </div>
-      <div class="contacts-cta">
-        <!--@include components/btn variant="btn--green btn--block" href="feedback.html" text="Написати нам" arrow="arrow-up-right"-->
-        <!--@include components/btn variant="btn--outline btn--block" href="feedback.html?topic=excursion" text="Замовити екскурсію"-->
-      </div>
-    </section>
-
-    <section class="contacts-panel contacts-map-panel" aria-label="Мапа">
-      <!--@include components/contacts-map-->
     </section>
   </main>
   <!--@include footer-->

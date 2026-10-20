@@ -11,6 +11,8 @@
     "qa:full": "node tools/qa/run.mjs --full",
     "qa:check-ds": "node tools/qa/check-ds.mjs",
     "qa:links": "node tools/qa/links.mjs",
+    "qa:links:en": "node tools/qa/links.mjs --pages en/index,en/about,en/catalog,en/cart,en/faq,en/contacts",
+    "qa:i18n": "node tools/qa/i18n.mjs",
     "qa:states": "node tools/qa/states.mjs",
     "qa:arch": "node tools/qa/arch.mjs",
     "qa:arch:cocktails": "node tools/qa/arch.mjs --page cocktails",

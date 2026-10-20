@@ -8,9 +8,9 @@
   /* чорнило */
   --lp-on-dark: var(--color-light);
   --lp-on-dark-muted: var(--color-nav-text);
-  --lp-on-paper: var(--color-teal);
-  --lp-on-paper-muted: var(--color-lp-ink-paper-muted);
-  --lp-hero-ink: var(--color-teal);                 /* текст hero — темний teal на світлому небі чистого фото (D8) */
+  --lp-on-paper: var(--color-green);
+  --lp-on-paper-muted: var(--color-green);
+  --lp-hero-ink: var(--color-light);                 /* текст hero — світлий на зеленому градієнті hero.fade знизу (як about/excursions) */
   --lp-accent: var(--color-gold);                   /* кікер, назви шарів, цифри кроків, іконки на темному */
   --lp-hairline: var(--color-lp-hairline);     /* арка, лінії кроків, лінія маршруту */
   --lp-amber: var(--color-lp-amber);           /* рідина гравюри, тло розрізу, доки вантажаться фото */
@@ -22,5 +22,7 @@
   --lp-tile-brown: var(--color-brown);
   --lp-tile-green: var(--color-green);
   --lp-tile-teal: var(--color-teal);
+  --lp-buy-bg: var(--color-teal);                       /* look: about: контейнер «ціна + кнопка» картки offers — teal Bazylsprings (на excursions типово зелений) */
+  --lp-split-pattern: url('/assets/img/deck-pattern-teal.svg');   /* колода split: візерунок ромбів у тон картки (синій; deck-pattern-*.svg) */
   --lp-tone: btn--teal;                                  /* тон основних кнопок DS (.btn--teal) на світлому/фото; читає збірка (tools/lp-files.mjs); у даних сторінки `tone` необов'язковий */
 }
