@@ -162,7 +162,7 @@
     },
     {
       "id": "pad-exclusive",
-      "scope": "layers, steps, compare, formats, tiles, offers, card, place, faq",
+      "scope": "layers, steps, compare, formats, tiles, offers, card, place, brands, faq",
       "expressed": true,
       "rule": "`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)"
     },
@@ -3821,6 +3821,125 @@
                       "required": [
                         "join"
                       ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "brands"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "room": {
+              "enum": [
+                "warm",
+                "deep",
+                "paper",
+                "",
+                null
+              ],
+              "default": "deep"
+            },
+            "join": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "pad": {
+              "enum": [
+                20,
+                30,
+                40,
+                50,
+                70,
+                100,
+                "",
+                null
+              ]
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 60,
+              "minLength": 1,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "lead": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 320,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "titleCols": {
+              "enum": [
+                4,
+                6,
+                "",
+                null
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "title"
+          ],
+          "title": "brands",
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "pad"
+                ],
+                "properties": {
+                  "pad": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "loose"
+                      ],
+                      "properties": {
+                        "loose": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "join"
+                      ],
+                      "properties": {
+                        "join": {
+                          "const": true
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "stack"
+                      ],
+                      "properties": {
+                        "stack": {
+                          "const": true
+                        }
+                      }
                     }
                   ]
                 }

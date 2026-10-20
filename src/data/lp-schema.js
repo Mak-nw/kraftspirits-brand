@@ -122,6 +122,8 @@ export const SCHEMA = {
     card: { ...base('lead', 'caption'), ...STACK, title: T(CARD_TITLE_MAX, true), room: E(ROOMS, false, 'warm'), text: T(CARD_TEXT_MAX), list: L(T(CARD_ITEM_MAX), 0, CARD_LIST_MAX), photoFirst: B(), ...MEDIA_IMG, img: URL_(true, { startsWith: '/assets/img/' }), cta: { ...CTA, req: true } },
     // 8. Місце: панель DS з фактами й кнопками + мапа DS (координати — src/data/contacts.js)
     place: { ...base('caption'), ...STACK, ...LOOK, titleSize: E(PLACE_TITLE_SIZES), room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
+    // 8б. Бренди: ІСНУЮЧА секція головної «Два характери» (partials/sections/brands: дві половини brand-half з вирізом-пляшкою) під шапкою (H2 + лід) у кімнаті. Тексти карток, лого, фото й посилання — ті самі, що на головній (ключі t.home.choice.*); у даних секції лише шапка
+    brands: { ...base('kicker', 'caption'), ...TITLE, room: E(ROOMS, false, 'deep') },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
     faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), cols: COLS('faq'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
   },
@@ -143,7 +145,7 @@ export const RULES = [
     check: (g) => (g.cellar && g.list?.length ? 'cellar і list — взаємовиключні' : ''), json: { not: { allOf: [present('cellar'), present('list', 'arr')] } } },
   { id: 'compare-span-sum', types: ['compare'], path: '', doc: 'сума `span` усіх груп = `cols` секції (типово 10)',
     check: (s) => { const sum = s.groups.reduce((a, g) => a + g.span, 0); const cols = s.cols || GRID_COLS; return sum === cols ? '' : `groups: сума span = ${sum}, має дорівнювати cols = ${cols}`; }, json: null },
-  { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)',
+  { id: 'pad-exclusive', types: ['layers', 'steps', 'compare', 'formats', 'tiles', 'offers', 'card', 'place', 'brands', 'faq'], path: '', doc: '`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)',
     check: (s) => (has(s.pad) && (s.loose === true || s.join === true || s.stack === true) ? 'pad не задається разом з loose, join або stack' : ''),
     json: { if: { required: ['pad'], properties: { pad: { type: 'number' } } }, then: { not: { anyOf: ['loose', 'join', 'stack'].map((k) => ({ required: [k], properties: { [k]: { const: true } } })) } } } },
   { id: 'compare-count-capacity', types: ['compare'], path: 'groups', doc: `число не переноситься, тому у вузьких групах воно обмежене: \`span\` 2 — count ≤ ${COUNT_CAP[2].plain} (з \`approx\` ≤ ${COUNT_CAP[2].approx}); \`span\` 3 — з \`approx\` ≤ ${COUNT_CAP[3].approx}; від 4 колонок — без обмеження понад ${COUNT_MAX}`,
@@ -428,6 +430,7 @@ const VIEW = {
     titleRole: s.look === 'about' ? 't-hero' : (s.titleSize === 'small' ? 't-lead' : 't-h2'),   // look: about — заголовок картки tour-card (роль .t-hero, як у «Те, що сподобалось — із собою»)
     facts: s.facts.map((f) => ({ label: t(f.label), value: t(f.value), icon: f.icon || '', href: f.href ? esc(f.href) : '', plain: f.href ? '' : '1', external: /^https?:/.test(f.href || '') || /^%contacts\.gmaps/.test(f.href || '') ? '1' : '' })),
     ctas: (s.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant, arrow: c.variant === 'outline' ? '' : '1' })) }),
+  brands: (s) => ({ ...head(s) }),
   faq: (s) => {
     // як faq.html: закриті, відкриття — accordion.js; порожній рядок у відповіді = новий абзац
     const items = s.items.map((it, k) => ({ id: `${s.id}-${k + 1}`, q: t(it.q), aHtml: it.a.split(/\n\s*\n/).map((para) => `<p class="t-text">${t(para.trim())}</p>`).join(''), open: '', expanded: 'false' }));

@@ -72,7 +72,7 @@ sections: [ { type: 'hero', id: 'b2b-hero', … }, …секції B2B…, { typ
 
 | Поле | Тип | Обов. | Ліміт / значення | Що це |
 |---|---|---|---|---|
-| `type` | enum | так | `hero` `layers` `steps` `compare` `formats` `tiles` `offers` `card` `place` `faq` | тип блоку |
+| `type` | enum | так | `hero` `layers` `steps` `compare` `formats` `tiles` `offers` `card` `place` `brands` `faq` | тип блоку |
 | `id` | id | так (крім hero) | унікальний на сторінці | якір (`#id`) |
 | `room` | enum | ні | `warm` · `deep` · `paper` (типово — за типом) | «кімната»: тло секції; кольори кімнат задає тема |
 | `join` | так/ні | ні | | продовжити кімнату попередньої секції (без межі, лише повітря 150u) |
@@ -83,7 +83,7 @@ sections: [ { type: 'hero', id: 'b2b-hero', … }, …секції B2B…, { typ
 | `lead` | текст | ні | ≤ 320 (hero ≤ 160) | лід під заголовком |
 | `caption` | текст | ні | ≤ 120 | дрібний підпис під лідом (`.t-caption`) |
 
-Які спільні поля приймає тип: `hero` — `id` (необов'язковий), `title`, `lead` (без `room`, `join`, `pad`, `stack`, `kicker`, `caption`); `layers`, `steps`, `compare`, `formats`, `tiles` — усі, крім `stack`; `offers` — усі, крім `caption`, `stack`; `card` — без `lead`, `caption` (+ `stack`); `place` — без `caption` (+ `stack`); `faq` — лише `id`, `room`, `join`, `title` (кікера, ліду й підпису немає).
+Які спільні поля приймає тип: `hero` — `id` (необов'язковий), `title`, `lead` (без `room`, `join`, `pad`, `stack`, `kicker`, `caption`); `layers`, `steps`, `compare`, `formats`, `tiles` — усі, крім `stack`; `offers` — усі, крім `caption`, `stack`; `card` — без `lead`, `caption` (+ `stack`); `place` — без `caption` (+ `stack`); `brands` — `id`, `room`, `join`, `pad`, `title`, `titleCols`, `lead`; `faq` — лише `id`, `room`, `join`, `title` (кікера, ліду й підпису немає).
 
 **Ширина заголовка `titleCols`** (hero, `layers`, `steps`, `compare`, `formats`, `tiles`, `offers`): `4` (типово) або `6` — виняток за рішенням замовника (d0234bbc, 58f675f7, 28fcde83: «в два рядки»): `.heading-wide` = `--grid-span-6` (по центру, колонки 3–8), рядки рівні, слова не рвуться; перевірка D17 допускає 6 колонок лише з цим класом. Без поля — правило нижче.
 
@@ -265,6 +265,15 @@ sections: [ { type: 'hero', id: 'b2b-hero', … }, …секції B2B…, { typ
 | `formats` | панелі `.brand-panel` (беж, прямий зовнішній кут + заокруглений внутрішній бокс): число `.t-h2` + одиниця `.t-lead`, напої з hairline-рядками, факти; рядки двох панелей спільні (subgrid) | `lp/format-panel`, `-drink`, `-fact` |
 | `offers` | ті самі панелі `.contacts-panel`, але: назва роллю `.t-lead`; рядки фактів «значення \| підпис» (значення зліва, підпис справа); ціна з «грн» (`price` + `priceNote`) одним елементом ролі `.t-price` (як ціна на сторінці товару) внизу перед кнопкою | `lp/offer`, `lp/offer-fact` |
 | `place` | ОДНА картка `.tour-card tour-card--photo-first` (як «Те, що сподобалось — із собою»): мапа зліва впритул до тексту, праворуч кікер, H2 `.t-hero`, лід, факти (2 колонки), кнопки hug; `titleSize` ігнорується | `lp/place` (гілка `look`), `lp/place-card-cta` |
+
+### `brands` — шапка + два бренди (типово `deep`)
+ІСНУЮЧА секція головної «Два характери» (`partials/sections/brands` = дві половини `.brand-half` з вирізом-пляшкою), без дубля: partial `lp/brands.html` лише додає шапку секції (H2 + лід) і підключає `sections/brands`. Тексти карток, лого, фото, кнопки й посилання (`catalog.html?brand=…`) — ті самі, що на головній (ключі `t.home.choice.*`, uk/en), у даних секції їх немає. Секція на всю ширину вікна (як на головній), шапка — по центру. Використання: b2b, «Приватний розлив.» (макет замовника b2b.pdf, стор. 10).
+
+| Поле | Тип | Обов. | Ліміт | |
+|---|---|---|---|---|
+| `title` | текст | так | ≤ 60 | H2 шапки |
+| `lead` | текст | ні | ≤ 320 | лід шапки |
+| `titleCols` | enum | ні | `4` · `6` | як в інших секціях |
 
 ### `faq` — питання (типово `deep`)
 ІСНУЮЧА група FAQ (`sections/faq-group` + `components/faq-item`): заголовок по центру, під ним картки у двох колонках (колонки 2–9; для `cols` 8 → 2–7, 6 → 2–5).
