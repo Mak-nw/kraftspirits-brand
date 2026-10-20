@@ -27,6 +27,18 @@
 }
 @media (max-width: 767.98px) {
   /* кошик: рядок позиції = картка (фото | назва, ціна, кількість, разом) */
+  /* кабінет: таблиця замовлень = картки (номер · статус / дата · сума / кнопка на всю ширину) */
+  .woocommerce-orders-table { display: block; }
+  .woocommerce-orders-table thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
+  .woocommerce-orders-table tbody { display: block; }
+  .woocommerce-orders-table tr.woocommerce-orders-table__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "num status" "date total" "act act"; column-gap: var(--space-20); row-gap: var(--space-10); align-items: center; padding-block: var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+  .woocommerce-orders-table tr.woocommerce-orders-table__row > :is(th, td) { display: block; padding: 0; border: 0; }
+  .woocommerce-orders-table__cell-order-number { grid-area: num; }
+  .woocommerce-orders-table__cell-order-status { grid-area: status; text-align: end; }
+  .woocommerce-orders-table__cell-order-date { grid-area: date; }
+  .woocommerce-orders-table__cell-order-total { grid-area: total; text-align: end; }
+  .woocommerce-orders-table__cell-order-actions { grid-area: act; }
+  .woocommerce-orders-table__cell-order-actions .btn { display: flex; width: 100%; }
   .woocommerce table.cart thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
   .woocommerce table.cart, .woocommerce table.cart tbody { display: block; }
   .woocommerce table.cart tr.cart_item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "thumb name remove" "thumb price price" "thumb qty sub"; column-gap: var(--space-20); row-gap: var(--space-10); align-items: center; padding-block: var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-soft); }

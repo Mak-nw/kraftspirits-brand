@@ -37,7 +37,7 @@ export const D15_DEFAULTS = {
 export function COLLECT_D15() {
   const bar = document.querySelector('.site-header__bar');
   const px = (v) => { const t = document.createElement('div'); t.style.cssText = `position:absolute;visibility:hidden;height:${v}`; document.body.appendChild(t); const h = t.getBoundingClientRect().height; t.remove(); return h; };
-  const items = (sel) => [...document.querySelectorAll(sel)].map((a) => ({ text: (a.textContent || '').replace(/\s+/g, ' ').trim(), href: a.getAttribute('href') || '' }));
+  const items = (sel) => [...document.querySelectorAll(sel)].filter((a) => a.getClientRects().length > 0).map((a) => ({ text: (a.textContent || '').replace(/\s+/g, ' ').trim(), href: a.getAttribute('href') || '' }));
   const clientW = document.documentElement.clientWidth;
   const vwVar = parseFloat(document.documentElement.style.getPropertyValue('--vw')) || clientW;
   const r = bar?.getBoundingClientRect();
