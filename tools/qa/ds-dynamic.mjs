@@ -509,7 +509,8 @@ export async function runDynamic(opts, allow, rep) {
     const HAND_FADE = { about: 'green' }; // about: нижній градієнт hero.fade + верхній hero--fade-top (hero-d19.mjs; рішення замовника «градієнт зверху»)
     let off = 0, fadeSeen = 0;
     const dataFade = {};   // hero.fade із даних сторінки (єдине джерело дозволу градієнта D19); сторінки без файлу даних (index) — без fade
-    for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || HAND_FADE[name] || null; } catch { dataFade[name] = HAND_FADE[name] || null; } }
+    const dataFadeById = {};   // сторінка з вкладками (page.tabs, напр. b2b): кілька hero — fade звіряється з hero за його id
+    for (const name of new Set(d19.map((c) => c.spec.name))) { try { const d = await loadLpPage(ROOT, name); dataFade[name] = d?.sections?.find((x) => x.type === 'hero')?.fade || HAND_FADE[name] || null; if (d?.tabs) dataFadeById[name] = Object.fromEntries(d.sections.filter((x) => x.type === 'hero' && x.id).map((x) => [x.id, x.fade || null])); } catch { dataFade[name] = HAND_FADE[name] || null; } }
     for (const c of d19) {
       const name = c.spec.name; const h = (rep.ctx.hero[name] ||= { inkLight: null, overlay: false, n: 0 });
       h.n++; if (c.data.inkLight === false) h.inkLight = false; else if (c.data.inkLight === true && h.inkLight !== false) h.inkLight = true;
@@ -518,7 +519,9 @@ export async function runDynamic(opts, allow, rep) {
         for (const o of c.data.offenders) { off++; addV({ rule: 'D19', page: c.label, selector: o.el, value: `${o.prop}: ${o.value}`, msg: `hero з фото: оверлей/ефект поверх фото (${o.role}) заборонено (рішення замовника a2289410); allow не діє` }); }
         const df = dataFade[name], f = c.data.fade;
         if (f) fadeSeen++;
-        if (f && f.cls !== df) addV({ rule: 'D19', page: c.label, selector: '.hero::after', value: `градієнт hero--fade-${f.cls}`, msg: df ? `у даних hero.fade = «${df}», а на сторінці градієнт «${f.cls}»` : 'градієнт на hero без hero.fade у даних сторінки (рішення замовника 53422015 дозволяє градієнт лише за полем hero.fade); allow не діє' });
+        const byId = dataFadeById[name];
+        if (byId) { for (const x of c.data.fades || []) if ((byId[x.id] ?? null) !== x.cls) addV({ rule: 'D19', page: c.label, selector: `#${x.id}.hero::after`, value: `градієнт hero--fade-${x.cls}`, msg: `у даних hero «${x.id}».fade = «${byId[x.id] ?? '—'}», а на сторінці градієнт «${x.cls}» (вкладки: кожен hero звіряється за id)` }); }
+        else if (f && f.cls !== df) addV({ rule: 'D19', page: c.label, selector: '.hero::after', value: `градієнт hero--fade-${f.cls}`, msg: df ? `у даних hero.fade = «${df}», а на сторінці градієнт «${f.cls}»` : 'градієнт на hero без hero.fade у даних сторінки (рішення замовника 53422015 дозволяє градієнт лише за полем hero.fade); allow не діє' });
         if (!f && df && c.data.heroes.length) addV({ rule: 'D19', page: c.label, selector: '.hero::after', value: `hero.fade = ${df}, градієнта немає`, msg: 'у даних hero.fade, але computed .hero::after не є дозволеним градієнтом linear-gradient(to top, <токен> 0%, transparent 100%)' });
         if (heroNeed.includes(name) && !c.data.heroes.length) addV({ rule: 'D19', page: c.label, selector: '.hero', value: 'hero не знайдено', msg: 'охоронець покриття: на сторінці з hero-фото немає .hero (збір D19 зламано або hero перейменовано)' });
       }

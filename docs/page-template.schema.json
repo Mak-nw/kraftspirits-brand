@@ -591,6 +591,14 @@
                     "minLength": 1,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
+                  "value": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 12,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
                   "text": {
                     "type": "string",
                     "maxLength": 90,

@@ -20,7 +20,7 @@ export const D19_DEFAULTS = {
 };
 
 export function COLLECT_D19(cfg) {
-  const out = { heroes: [], offenders: [], inkLight: null, ink: null, light: null, fade: null };
+  const out = { heroes: [], offenders: [], inkLight: null, ink: null, light: null, fade: null, fades: [] };   // fades — градієнт КОЖНОГО hero з id (сторінка з вкладками page.tabs має кілька hero)
   const roots = [...document.querySelectorAll(cfg.heroSelectors.join(','))].filter((e) => !e.closest('template'));
   if (!roots.length) return out;
   const nameOf = (el) => { const c = (typeof el.className === 'string' ? el.className.trim().split(/\s+/) : []).filter((x) => !/^(is-|js-|has-|in-view|reveal)/.test(x)).slice(0, 2); return el.tagName.toLowerCase() + (c.length ? `.${c.join('.')}` : ''); };
@@ -61,6 +61,7 @@ export function COLLECT_D19(cfg) {
         if (fm && gm) {
           const tokenRgb = probe(`var(--color-${fm[1]})`);
           out.fade = { cls: fm[1], from: gm[1], to: gm[2], token: tokenRgb, tokenOk: gm[1] === tokenRgb, single: (p.backgroundImage.match(/gradient\(/g) || []).length === 1 };
+          out.fades.push({ id: el.id || '', cls: fm[1] });
           fadeOk = out.fade.tokenOk && out.fade.single;
           if (!out.fade.tokenOk) bad.push(`градієнт не від токена --color-${fm[1]} (${gm[1]} ≠ ${tokenRgb})`);
         }

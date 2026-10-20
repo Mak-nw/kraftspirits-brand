@@ -18,6 +18,6 @@ export const NOINDEX_PAGES = ['404'];
 // <html lang="uk" data-locale="en">, <meta name="robots" content="noindex">, canonical → українська сторінка, у sitemap немає.
 // Після повного перекладу сторінки — рядок сюди і перевірка `npm run qa:i18n`.
 export const PAGE_STATUS = {
-  en: { index: 'done', catalog: 'done', '404': 'done', cart: 'done', contacts: 'done', feedback: 'done', product: 'done', about: 'done', faq: 'done', cocktails: 'done', barrels: 'done', excursions: 'done', offer: 'done', privacy: 'done', cookies: 'done', delivery: 'done', 'age-policy': 'done', 'barrels-terms': 'done', checkout: 'done', account: 'done' },
+  en: { index: 'done', catalog: 'done', '404': 'done', cart: 'done', contacts: 'done', feedback: 'done', product: 'done', about: 'done', faq: 'done', cocktails: 'done', barrels: 'done', excursions: 'done', b2b: 'done', offer: 'done', privacy: 'done', cookies: 'done', delivery: 'done', 'age-policy': 'done', 'barrels-terms': 'done', checkout: 'done', account: 'done' },
 };
 export const pageStatus = (locale, name) => (locale === DEFAULT_LOCALE ? 'done' : PAGE_STATUS[locale]?.[name] || 'draft');
