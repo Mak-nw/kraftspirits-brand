@@ -39,6 +39,12 @@ for (const f of Object.keys(DICT_FILES.uk)) {
   for (const k of u) if (!e.includes(k)) fail('І1', `en/${f}.js: немає ключа «${k}»`);
   for (const k of e) if (!u.includes(k)) fail('І1', `en/${f}.js: зайвий ключ «${k}» (немає в uk)`);
 }
+// І1б: розмітка значень (теги з атрибутами, {{параметри}}, {підстановки}) в en така сама, як в uk — переклад міняє лише текст
+{
+  const U = Object.assign({}, ...Object.values(DICT_FILES.uk)), E = Object.assign({}, ...Object.values(DICT_FILES.en));
+  const sig = (v) => (String(v).match(/<[^>]+>|\{\{[^}]*\}\}|\{\w+\}|&[a-z]+;/g) || []).map((x) => x.replace(/\s(aria-label|alt|title|placeholder)="[^"]*"/g, '')).join('');
+  for (const k of Object.keys(U)) if (k in E && !k.startsWith('lang.') && sig(U[k]) !== sig(E[k])) fail('І1б', `en: розмітка «${k}» не збігається з uk: ${sig(U[k]).slice(0, 80)} ≠ ${sig(E[k]).slice(0, 80)}`);
+}
 // І3
 for (const [k, v] of Object.entries(Object.assign({}, ...Object.values(DICT_FILES.en)))) {
   if (!String(v).trim()) fail('І3', `en: порожнє значення «${k}»`);

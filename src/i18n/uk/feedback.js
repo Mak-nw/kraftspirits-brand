@@ -1,0 +1,20 @@
+// feedback: українські тексти (docs/i18n.md). Значення = колишній текст розмітки ±0 байт.
+export default {
+  'feedback.title': "Зворотній зв'язок — YasnoCraft × Bazylsprings",
+  'feedback.desc': "Зворотній зв'язок з дистилерією YasnoCraft × Bazylsprings: оберіть тему — екскурсії, бочкова торгівля, замовлення та доставка, співпраця, консультація — залиште контакти й напишіть нам.",
+  'feedback.contact-form.form-title': "Зворотній зв'язок",
+  'feedback.contact-form.p': 'Оберіть тему звернення та залиште контакти, ми відповімо найближчим часом',
+  'feedback.contact-form.contact-topic-label': 'Тип звернення',
+  'feedback.contact-form.contact-data-label': 'Контактні дані',
+  'feedback.contact-form.field-label': "Ім'я",
+  'feedback.contact-form.contact-name.placeholder': 'Як до вас звертатись',
+  'feedback.contact-form.field-label-2': 'Телефон',
+  'feedback.contact-form.check-label': 'Погоджуюсь на <a href="privacy.html" target="_blank" rel="noopener">обробку персональних даних</a> та з <a href="offer.html#rules" target="_blank" rel="noopener">правилами користування</a> сайтом',
+  'feedback.contact-form.field-label-3': 'Ваше повідомлення',
+  'feedback.contact-form.contact-message.placeholder': 'Розкажіть, чим можемо допомогти',
+  'feedback.contact-form.label': 'Не заповнюйте це поле',
+  'feedback.contact-form.btn': '<span class="btn__inner t-btn" data-submit-label>Надіслати</span>',
+  'feedback.form.contact-success-title': 'Дякуємо!',
+  'feedback.form.p': 'Ми отримали ваше звернення.',
+  'feedback.form.btn': '<span class="btn__inner t-btn">Надіслати ще одне</span>',
+};

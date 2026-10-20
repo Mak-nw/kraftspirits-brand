@@ -1,0 +1,20 @@
+// Contact form page (feedback.html) — English. Keys mirror uk/feedback.js.
+export default {
+  'feedback.title': 'Contact us — YasnoCraft × Bazylsprings',
+  'feedback.desc': 'Write to the YasnoCraft × Bazylsprings distillery: pick a topic (tours, barrel trade, orders and delivery, partnerships, advice), leave your contact details and send us a message.',
+  'feedback.contact-form.form-title': 'Contact us',
+  'feedback.contact-form.p': 'Choose a topic and leave your details. We will reply shortly',
+  'feedback.contact-form.contact-topic-label': 'Topic',
+  'feedback.contact-form.contact-data-label': 'Contact details',
+  'feedback.contact-form.field-label': 'Name',
+  'feedback.contact-form.contact-name.placeholder': 'What should we call you?',
+  'feedback.contact-form.field-label-2': 'Phone',
+  'feedback.contact-form.check-label': 'I agree to the <a href="privacy.html" target="_blank" rel="noopener">processing of my personal data</a> and the <a href="offer.html#rules" target="_blank" rel="noopener">site rules</a>',
+  'feedback.contact-form.field-label-3': 'Your message',
+  'feedback.contact-form.contact-message.placeholder': 'Tell us how we can help',
+  'feedback.contact-form.label': 'Leave this field empty',
+  'feedback.contact-form.btn': '<span class="btn__inner t-btn" data-submit-label>Send</span>',
+  'feedback.form.contact-success-title': 'Thank you!',
+  'feedback.form.p': 'We have received your message.',
+  'feedback.form.btn': '<span class="btn__inner t-btn">Send another</span>',
+};

@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts-->
   <!--@include head-age-->
-  <title>Контакти — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Контакти дистилерії YasnoCraft × Bazylsprings у с. Ясногородка: адреса, телефон, e-mail та мапа проїзду.">
+  <title>%t.contacts.title%</title>
+  <meta name="description" content="%t.contacts.desc%">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
@@ -19,20 +19,20 @@
   <!--@include components/age-gate-->
   <!--@include header-->
   <main class="contacts">
-    <section class="contacts-screen" aria-label="Контакти">
+    <section class="contacts-screen" aria-label="%t.contacts.contacts-screen.label%">
       <div class="contacts-panel contacts-window">
         <div class="contacts-window__map">
           <!--@include components/contacts-map-->
         </div>
         <div class="contacts-panel contacts-info">
-          <h1 class="t-hero" id="contacts-title">Контакти</h1>
+          <h1 class="t-hero" id="contacts-title">%t.contacts.contacts-title%</h1>
           <div class="contacts-data">
             <div class="contacts-item contacts-item--wide">
-              <h2 class="contacts-item__head t-footer-head"><span class="icon icon--pin" aria-hidden="true"></span>Адреса</h2>
+              <h2 class="contacts-item__head t-footer-head">%t.contacts.contacts-item-head%</h2>
               <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.gmapsView%" target="_blank" rel="noopener">%contacts.address%</a></p>
             </div>
             <div class="contacts-item">
-              <h2 class="contacts-item__head t-footer-head"><span class="icon icon--phone" aria-hidden="true"></span>Телефон</h2>
+              <h2 class="contacts-item__head t-footer-head">%t.contacts.contacts-item-head-2%</h2>
               <p class="contacts-item__value t-text"><a class="contacts-link" href="%contacts.phoneHref%">%contacts.phoneDisplay%</a></p>
             </div>
             <div class="contacts-item">
@@ -41,8 +41,8 @@
             </div>
           </div>
           <div class="contacts-cta">
-            <!--@include components/btn variant="btn--green btn--block" href="feedback.html" text="Написати нам" arrow="arrow-up-right"-->
-            <!--@include components/btn variant="btn--outline btn--block" href="feedback.html?topic=excursion" text="Замовити екскурсію"-->
+            <!--@include components/btn variant="btn--green btn--block" href="feedback.html" text="%t.contacts.btn.text%" arrow="arrow-up-right"-->
+            <!--@include components/btn variant="btn--outline btn--block" href="feedback.html?topic=excursion" text="%t.contacts.btn.text-2%"-->
           </div>
         </div>
       </div>

@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts price="1"-->
   <!--@include head-age-->
-  <title>Кошик — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Кошик інтернет-магазину YasnoCraft × Bazylsprings: позиції, кількість, підсумок і перехід до оформлення замовлення.">
+  <title>%t.cart.title%</title>
+  <meta name="description" content="%t.cart.desc%">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
@@ -25,23 +25,23 @@
     <div class="woocommerce wc-grid wc-grid--cart">
       <noscript>
         <section class="contacts-panel wc-main wc-main--cart">
-          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="Для роботи кошика потрібен JavaScript. Увімкніть його в браузері або перегляньте товари в каталозі." href="catalog.html" link="До каталогу"-->
+          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="%t.cart.wc-notice.text%" href="catalog.html" link="%t.cart.wc-notice.link%"-->
         </section>
       </noscript>
       <section class="contacts-panel wc-main wc-main--cart" aria-labelledby="cart-title">
-        <h1 class="t-hero" id="cart-title">Кошик</h1>
+        <h1 class="t-hero" id="cart-title">%t.cart.cart.cart-title%</h1>
         <div class="woocommerce-notices-wrapper" tabindex="-1" data-wc-notices></div>
 
         <form class="woocommerce-cart-form" action="cart.html" method="post" novalidate data-wc-filled hidden>
           <table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents">
             <thead>
               <tr>
-                <th class="product-remove"><span class="screen-reader-text visually-hidden">Видалити позицію</span></th>
-                <th class="product-thumbnail"><span class="screen-reader-text visually-hidden">Фото</span></th>
-                <th class="product-name t-btn" scope="col">Товар</th>
-                <th class="product-price t-btn" scope="col">Ціна</th>
-                <th class="product-quantity t-btn" scope="col">Кількість</th>
-                <th class="product-subtotal t-btn" scope="col">Разом</th>
+                <th class="product-remove">%t.cart.cart.product-remove%</th>
+                <th class="product-thumbnail">%t.cart.cart.product-thumbnail%</th>
+                <th class="product-name t-btn" scope="col">%t.cart.cart.product-name%</th>
+                <th class="product-price t-btn" scope="col">%t.cart.cart.product-price%</th>
+                <th class="product-quantity t-btn" scope="col">%t.cart.cart.product-quantity%</th>
+                <th class="product-subtotal t-btn" scope="col">%t.cart.cart.product-subtotal%</th>
               </tr>
             </thead>
             <tbody>
@@ -50,26 +50,26 @@
         </form>
 
         <div class="wc-cart-empty" data-wc-empty hidden>
-          <p class="cart-empty woocommerce-info t-lead">Ваш кошик порожній.</p>
-          <p class="return-to-shop"><a class="button wc-backward btn btn--green" href="catalog.html"><span class="btn__inner t-btn">Повернутись до каталогу</span></a></p>
+          <p class="cart-empty woocommerce-info t-lead">%t.cart.cart.cart-empty%</p>
+          <p class="return-to-shop">%t.cart.cart.return-to-shop%</p>
         </div>
       </section>
 
       <div class="cart-collaterals contacts-panel wc-aside" data-wc-filled hidden>
         <div class="cart_totals calculated_shipping">
-          <h2 class="t-lead">Підсумок кошика</h2>
+          <h2 class="t-lead">%t.cart.cart.h2%</h2>
           <table class="shop_table shop_table_responsive">
             <tbody>
-              <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="0 ₴" attr="data-wc-subtotal"-->
-              <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
-              <!--@include components/wc-row cls="order-total" label="Разом" value="0 ₴" attr="data-wc-total"-->
+              <!--@include components/wc-row cls="cart-subtotal" label="%t.cart.wc-row.label%" value="0 ₴" attr="data-wc-subtotal"-->
+              <!--@include components/wc-row cls="shipping" label="%t.cart.wc-row.label-2%" value="" attr="data-wc-shipping"-->
+              <!--@include components/wc-row cls="order-total" label="%t.cart.wc-row.label-3%" value="0 ₴" attr="data-wc-total"-->
             </tbody>
           </table>
-          <p class="t-text" data-wc-note>Зверніть увагу: при отриманні в пункті необхідне підтвердження віку.</p>
-          <p class="t-text" data-wc-ship-note>* вартість доставки розраховується за тарифами обраного перевізника</p>
+          <p class="t-text" data-wc-note>%t.cart.cart.p%</p>
+          <p class="t-text" data-wc-ship-note>%t.cart.cart.p-2%</p>
         </div>
         <div class="wc-proceed-to-checkout">
-          <a class="checkout-button button alt wc-forward btn btn--green btn--block" href="checkout.html"><span class="btn__inner t-btn">Перейти до оформлення</span></a>
+          %t.cart.cart.wc-proceed-to-checkout%
         </div>
       </div>
     </div>
@@ -78,12 +78,12 @@
 
   <template id="wc-tpl-row">
     <tr class="woocommerce-cart-form__cart-item cart_item">
-      <td class="product-remove"><a class="remove t-lead" href="#" role="button" aria-label="Видалити позицію" data-wc-remove>&times;</a></td>
+      <td class="product-remove">%t.cart.wc-tpl-row.product-remove%</td>
       <td class="product-thumbnail"><a href="catalog.html" aria-hidden="true" tabindex="-1" data-wc-link><img src="" alt="" width="800" height="1060"></a></td>
-      <td class="product-name" data-title="Товар"><a class="t-product-name" href="catalog.html" data-wc-link data-wc-name></a><dl class="variation"><dt class="variation-Obyem t-spec">Об'єм:</dt><dd class="variation-Obyem t-spec"><p class="t-spec" data-wc-volume></p></dd></dl></td>
-      <td class="product-price t-price" data-title="Ціна" data-wc-price></td>
-      <td class="product-quantity" data-title="Кількість"><!--@include components/wc-qty id="cart_qty" name="cart_qty" label="Кількість" value="1"--></td>
-      <td class="product-subtotal t-price" data-title="Разом" data-wc-subtotal-row></td>
+      <td class="product-name" data-title="%t.cart.wc-tpl-row.product-name.data-title%"><a class="t-product-name" href="catalog.html" data-wc-link data-wc-name></a><dl class="variation"><dt class="variation-Obyem t-spec">%t.cart.wc-tpl-row.variation-obyem%</dt><dd class="variation-Obyem t-spec"><p class="t-spec" data-wc-volume></p></dd></dl></td>
+      <td class="product-price t-price" data-title="%t.cart.wc-tpl-row.product-price.data-title%" data-wc-price></td>
+      <td class="product-quantity" data-title="%t.cart.wc-tpl-row.product-quantity.data-title%"><!--@include components/wc-qty id="cart_qty" name="cart_qty" label="%t.cart.cart-qty.label%" value="1"--></td>
+      <td class="product-subtotal t-price" data-title="%t.cart.wc-tpl-row.product-subtotal.data-title%" data-wc-subtotal-row></td>
     </tr>
   </template>
   <template id="wc-tpl-message"><!--@include components/wc-notice cls="woocommerce-message" text=""--></template>

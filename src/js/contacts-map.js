@@ -4,6 +4,8 @@
 // Збій (немає WebGL, помилка стилю/мережі, таймаут) -> показуємо статичну заглушку `.contacts-map__fallback` з кнопкою «Відкрити в OpenStreetMap».
 // Ліцензії/атрибуція: OpenFreeMap, OpenMapTiles, дані © OpenStreetMap contributors (ODbL) — видима в кутку, не ховати (README, «Мапа контактів»).
 
+import { t, locale } from '../i18n/runtime.js';
+
 const STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
 const LOAD_TIMEOUT_MS = 15000;
 const MIN_ZOOM = 5;
@@ -11,11 +13,11 @@ const MAX_ZOOM = 17;
 // рядок збігається з attribution у TileJSON OpenFreeMap (https://tiles.openfreemap.org/planet): MapLibre зводить однакові до одного; тут — гарантія, що атрибуція є завжди
 const ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
 const UI_TEXT = { // переклад службових рядків MapLibre (ключі з default_locale бібліотеки)
-  'CooperativeGesturesHandler.WindowsHelpText': 'Щоб змінити масштаб, утримуйте Ctrl і прокручуйте',
-  'CooperativeGesturesHandler.MacHelpText': 'Щоб змінити масштаб, утримуйте ⌘ і прокручуйте',
-  'CooperativeGesturesHandler.MobileHelpText': 'Рухайте мапу двома пальцями',
-  'Map.Title': 'Мапа',
-  'Marker.Title': 'Дистилерія YasnoCraft × Bazylsprings',
+  'CooperativeGesturesHandler.WindowsHelpText': t('js.map.ctrl'),
+  'CooperativeGesturesHandler.MacHelpText': t('js.map.cmd'),
+  'CooperativeGesturesHandler.MobileHelpText': t('js.map.touch'),
+  'Map.Title': t('js.map.title'),
+  'Marker.Title': t('js.map.marker'),
 };
 
 const root = document.documentElement;
@@ -56,7 +58,7 @@ function paintStyle(map) {
     else if (l.type === 'symbol') {
       set(id, 'text-color', C.text); set(id, 'text-halo-color', C.halo); set(id, 'text-halo-width', haloWidth);
       if (id.includes('shield')) map.setLayoutProperty(id, 'visibility', 'none'); // дорожні щити (US/міжнародні) — зайві й сірі
-      else map.setLayoutProperty(id, 'text-field', ['coalesce', ['get', 'name:uk'], ['get', 'name']]); // лише українська назва (стиль за замовчуванням: латиниця + місцева в два рядки)
+      else map.setLayoutProperty(id, 'text-field', ['coalesce', ['get', `name:${locale()}`], ['get', 'name']]); // лише українська назва (стиль за замовчуванням: латиниця + місцева в два рядки)
     } else if (id === 'water') set(id, 'fill-color', C.water);
     else if (id === 'waterway') set(id, 'line-color', C.water);
     else if (id === 'park') { set(id, 'fill-color', C.park); set(id, 'fill-opacity', tokenNumber('--map-park-opacity')); }
@@ -103,8 +105,8 @@ function createZoomControl() {
       map = m;
       box = document.createElement('div');
       box.className = 'maplibregl-ctrl contacts-map__zoom-group';
-      plus = button('contacts-map__zoom--plus', 'Збільшити масштаб', '+', () => map.zoomIn(reduced() ? { duration: 0 } : undefined));
-      minus = button('contacts-map__zoom--minus', 'Зменшити масштаб', '−', () => map.zoomOut(reduced() ? { duration: 0 } : undefined));
+      plus = button('contacts-map__zoom--plus', t('js.map.zoom-in'), '+', () => map.zoomIn(reduced() ? { duration: 0 } : undefined));
+      minus = button('contacts-map__zoom--minus', t('js.map.zoom-out'), '−', () => map.zoomOut(reduced() ? { duration: 0 } : undefined));
       box.append(plus, minus);
       map.on('zoom', sync); sync();
       return box;

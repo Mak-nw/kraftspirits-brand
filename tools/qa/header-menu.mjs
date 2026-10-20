@@ -30,6 +30,16 @@ export const D15_DEFAULTS = {
     { text: 'FAQ', href: 'faq.html' },
     { text: 'Контакти', href: 'contacts.html' },
   ],
+  menuEn: [ // англійські сторінки (en/<сторінка>): ті самі пункти й href, підписи за глосарієм docs/i18n.md
+    { text: 'Home', href: 'index.html' },
+    { text: 'About us', href: 'about.html' },
+    { text: 'Barrel Futures', href: 'barrels.html' },
+    { text: 'Tours', href: 'excursions.html' },
+    { text: 'Cocktails', href: 'cocktails.html' },
+    { text: 'FAQ', href: 'faq.html' },
+    { text: 'Contacts', href: 'contacts.html' },
+    { text: 'Contact us', href: 'feedback.html' },
+  ],
   skipPages: [], // сторінки без шапки/футера (поки порожньо: 404 теж має partials)
 };
 
@@ -69,7 +79,8 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
     const dl = d.barLeft - g.starts[0], dr = d.barRight - g.ends[g.cols - 1];
     if (Math.abs(dl) > tol || Math.abs(dr) > tol) out.push({ page: c.label, selector: '.site-header__bar', value: `ліво ${dl >= 0 ? '+' : ''}${dl.toFixed(2)}px від поч. кол. 1, право ${dr >= 0 ? '+' : ''}${dr.toFixed(2)}px від кін. кол. 10`, msg: 'пілюля шапки не на колонках 1–10' });
     const cmp = (kind, got) => {
-      const want = kind === 'menu' ? (C.headerMenu || C.menu) : C.menu;
+      const en = String(c.label).startsWith('en/');
+      const want = en ? (kind === 'menu' ? C.menuEn.slice(0, -1) : C.menuEn) : (kind === 'menu' ? (C.headerMenu || C.menu) : C.menu);
       const same = got.length === want.length && want.every((w, i) => nz(got[i].text) === nz(w.text) && got[i].href === w.href);
       if (same) return;
       const missing = want.filter((w) => !got.some((g2) => nz(g2.text) === nz(w.text) && g2.href === w.href)).map((w) => w.text);

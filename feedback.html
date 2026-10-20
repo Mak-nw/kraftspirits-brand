@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts-->
   <!--@include head-age-->
-  <title>Зворотній зв'язок — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Зворотній зв'язок з дистилерією YasnoCraft × Bazylsprings: оберіть тему — екскурсії, бочкова торгівля, замовлення та доставка, співпраця, консультація — залиште контакти й напишіть нам.">
+  <title>%t.feedback.title%</title>
+  <meta name="description" content="%t.feedback.desc%">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
@@ -22,11 +22,11 @@
         <form class="feedback-form" id="contact-form" novalidate aria-labelledby="form-title">
           <div class="feedback-col feedback-col--aside">
             <div class="feedback-head">
-              <h1 class="t-hero" id="form-title">Зворотній зв'язок</h1>
-              <p class="t-desc">Оберіть тему звернення та залиште контакти, ми відповімо найближчим часом</p>
+              <h1 class="t-hero" id="form-title">%t.feedback.contact-form.form-title%</h1>
+              <p class="t-desc">%t.feedback.contact-form.p%</p>
             </div>
             <div class="field" data-field="topic">
-              <span class="field__label t-btn" id="contact-topic-label">Тип звернення</span>
+              <span class="field__label t-btn" id="contact-topic-label">%t.feedback.contact-form.contact-topic-label%</span>
               <div class="topic-group" id="contact-topic" role="radiogroup" aria-labelledby="contact-topic-label" aria-describedby="contact-topic-error" aria-required="true">
             %contacts.topicTilesHtml%
               </div>
@@ -34,15 +34,15 @@
               <p class="field__error" id="contact-topic-error" role="alert"><span class="t-text"></span></p>
             </div>
             <div class="feedback-block" role="group" aria-labelledby="contact-data-label">
-              <span class="visually-hidden" id="contact-data-label">Контактні дані</span>
+              <span class="visually-hidden" id="contact-data-label">%t.feedback.contact-form.contact-data-label%</span>
               <div class="field" data-field="name">
-                <label class="field__label t-btn" for="contact-name">Ім'я</label>
-                <input class="field__control t-text" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Як до вас звертатись" aria-describedby="contact-name-error">
+                <label class="field__label t-btn" for="contact-name">%t.feedback.contact-form.field-label%</label>
+                <input class="field__control t-text" id="contact-name" name="name" type="text" autocomplete="name" placeholder="%t.feedback.contact-form.contact-name.placeholder%" aria-describedby="contact-name-error">
                 <p class="field__error" id="contact-name-error" role="alert"><span class="t-text"></span></p>
               </div>
               <div class="feedback-pair">
               <div class="field" data-field="phone">
-                <label class="field__label t-btn" for="contact-phone">Телефон</label>
+                <label class="field__label t-btn" for="contact-phone">%t.feedback.contact-form.field-label-2%</label>
                 <input class="field__control t-text" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" aria-describedby="contact-phone-error">
                 <p class="field__error" id="contact-phone-error" role="alert"><span class="t-text"></span></p>
               </div>
@@ -57,7 +57,7 @@
               <label class="check">
                 <input class="check__input" type="checkbox" name="consent" autocomplete="off" aria-describedby="contact-consent-error">
                 <span class="check__box" aria-hidden="true"></span>
-                <span class="check__label t-text">Погоджуюсь на <a href="privacy.html" target="_blank" rel="noopener">обробку персональних даних</a> та з <a href="offer.html#rules" target="_blank" rel="noopener">правилами користування</a> сайтом</span>
+                <span class="check__label t-text">%t.feedback.contact-form.check-label%</span>
               </label>
               <p class="field__error" id="contact-consent-error" role="alert"><span class="t-text"></span></p>
             </div>
@@ -65,25 +65,25 @@
 
           <div class="feedback-col feedback-col--main">
             <div class="field feedback-message" data-field="message">
-              <label class="field__label t-btn" for="contact-message">Ваше повідомлення</label>
-              <textarea class="field__control t-text" id="contact-message" name="message" rows="8" placeholder="Розкажіть, чим можемо допомогти" aria-describedby="contact-message-error"></textarea>
+              <label class="field__label t-btn" for="contact-message">%t.feedback.contact-form.field-label-3%</label>
+              <textarea class="field__control t-text" id="contact-message" name="message" rows="8" placeholder="%t.feedback.contact-form.contact-message.placeholder%" aria-describedby="contact-message-error"></textarea>
               <p class="field__error" id="contact-message-error" role="alert"><span class="t-text"></span></p>
             </div>
             <div class="field visually-hidden" aria-hidden="true">
-              <label for="contact-website">Не заповнюйте це поле</label>
+              <label for="contact-website">%t.feedback.contact-form.label%</label>
               <input class="t-text" id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
             </div>
             <p class="contact-form__alert t-text" role="alert" hidden data-form-alert></p>
             <div class="feedback-foot">
-              <button class="btn btn--green feedback-foot__submit" type="submit" data-submit><span class="btn__inner t-btn" data-submit-label>Надіслати</span></button>
+              <button class="btn btn--green feedback-foot__submit" type="submit" data-submit>%t.feedback.contact-form.btn%</button>
             </div>
           </div>
         </form>
 
         <div class="contact-success" data-success inert aria-hidden="true">
-          <h2 class="contact-success__title t-hero" tabindex="-1" data-success-title>Дякуємо!</h2>
-          <p class="t-text" data-success-text>Ми отримали ваше звернення.</p>
-          <button class="btn btn--green" type="button" data-reset><span class="btn__inner t-btn">Надіслати ще одне</span></button>
+          <h2 class="contact-success__title t-hero" tabindex="-1" data-success-title>%t.feedback.form.contact-success-title%</h2>
+          <p class="t-text" data-success-text>%t.feedback.form.p%</p>
+          <button class="btn btn--green" type="button" data-reset>%t.feedback.form.btn%</button>
         </div>
       </div>
     </section>

@@ -1,19 +1,23 @@
-import { PRODUCTS, BRANDS, CATEGORIES } from '../data/products.js';
-import { PRODUCT_TEXTS, PRODUCT_SERVE, PRODUCT_DELIVERY } from '../data/product-texts.js';
+import { PRODUCTS as PRODUCTS_UK, BRANDS, CATEGORIES as CATEGORIES_UK } from '../data/products.js';
+import * as TEXTS_UK from '../data/product-texts.js';
+import { t, locale, fmtPrice } from '../i18n/runtime.js';
+import { localizeCategories, localizeProduct, localizeProductTexts } from '../i18n/localize.js';
 import { initAccordions } from './accordion.js';
 import { addToCart } from './cart-counter.js';
 import { createPhotoStage, warm, whenIdle } from './photo-stage.js';
 
+const PRODUCTS = PRODUCTS_UK.map((p) => localizeProduct(p, locale())); // мова сторінки: оверлеї src/i18n/data/*.en.js
+const CATEGORIES = localizeCategories(CATEGORIES_UK, locale());
+const { PRODUCT_TEXTS, PRODUCT_SERVE, PRODUCT_DELIVERY } = localizeProductTexts(TEXTS_UK, locale());
 const base = import.meta.env.BASE_URL;
 const main = document.querySelector('#product');
 const tpl = (id) => document.querySelector(`#${id}`).content.firstElementChild.cloneNode(true);
-const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
-const fmtVol = (l) => `${String(l).replace('.', ',')} л`;
+const fmtVol = (l) => t('js.vol.l', { n: String(l).replace('.', locale() === 'en' ? '.' : ',') }); // «0,7 л» / «0.7 L»
 const volIcon = (l) => (l <= 0.6 ? 'bottle-0-5' : l <= 0.85 ? 'bottle-0-7' : 'bottle-1'); // іконка пляшки за об'ємом (0,5 / 0,7 / 1 л)
 const withIcon = (node, l) => { const i = el('span', `icon icon--${volIcon(l)}`); i.setAttribute('aria-hidden', 'true'); node.prepend(i); return node; };
 // «іконка міцності + значення» (.strength): лише шапка продукту YC («42% alc»); у табах-акордеонах іконок немає (b2a56fb1)
 const strengthNode = (text, cls = '') => { const n = el('span', `strength ${cls}`.trim()); const i = el('span', 'icon icon--strength'); i.setAttribute('aria-hidden', 'true'); n.append(i, text); return n; };
-const fmtMl = (l) => `${Math.round(l * 1000)} мл`; // 0.5 л → «500 мл» (YasnoCraft 205:2442)
+const fmtMl = (l) => t('js.vol.ml', { n: Math.round(l * 1000) }); // 0.5 л → «500 мл» (YasnoCraft 205:2442)
 const SUFFIX = 'YasnoCraft × Bazylsprings';
 
 const setMeta = (title, description) => {
@@ -38,22 +42,22 @@ const labelled = (label, text) => {
 
 // ---- тексти шести акордеонів: повні (3 позиції) або з products.js; порожній акордеон не показуємо ----
 function buildSections(p) {
-  const t = PRODUCT_TEXTS[p.slug];
+  const txt = PRODUCT_TEXTS[p.slug];
   const serve = PRODUCT_SERVE[p.slug];
   const volumes = p.volumes.map((v) => fmtVol(v.l)).join(' / ');
   const about = [];
   const sensory = [];
   const features = [];
-  if (t) {
-    about.push(...[t.lead, ...t.about].filter(Boolean).map((s) => { const n = el('p'); n.textContent = s; return n; }));
-    t.sensory.forEach(([k, v]) => sensory.push(labelled(k, v)));
-    t.features.forEach((f) => { const li = el('li'); li.textContent = f; features.push(li); });
+  if (txt) {
+    about.push(...[txt.lead, ...txt.about].filter(Boolean).map((s) => { const n = el('p'); n.textContent = s; return n; }));
+    txt.sensory.forEach(([k, v]) => sensory.push(labelled(k, v)));
+    txt.features.forEach((f) => { const li = el('li'); li.textContent = f; features.push(li); });
   } else {
     if (p.description) about.push(el('p', '', p.description));
-    if (p.notes) sensory.push(labelled('Смак', p.notes));
-    if (p.kind) features.push(el('li', '', `Тип: ${p.kind}`));
-    if (p.abv) features.push(el('li', '', `Міцність: ${p.abv}%`));
-    if (p.volumes.length) features.push(el('li', '', `${p.volumes.length > 1 ? "Об'єми" : "Об'єм"}: ${volumes}`));
+    if (p.notes) sensory.push(labelled(t('js.product.taste'), p.notes));
+    if (p.kind) features.push(el('li', '', t('js.product.type-line', { v: p.kind })));
+    if (p.abv) features.push(el('li', '', t('js.product.abv-line', { v: p.abv })));
+    if (p.volumes.length) features.push(el('li', '', `${p.volumes.length > 1 ? t('js.product.volumes') : t('js.product.volume')}: ${volumes}`));
   }
   const ul = features.length ? el('ul') : null;
   if (ul) ul.append(...features);
@@ -63,13 +67,13 @@ function buildSections(p) {
   const brandLabel = BRANDS.find((b) => b.id === p.brand)?.label;
   const catLabel = CATEGORIES.find((c) => c.id === p.category)?.label;
   const specRows = [
-    ['Бренд', brandLabel],
-    ['Категорія', catLabel],
-    ['Тип', p.kind],
-    ['Міцність', p.abv ? `${p.abv}%` : null],
-    [p.volumes.length > 1 ? "Об'єми" : "Об'єм", volumes],
-    ['Країна', 'Україна'],
-    ['Виробник', 'Дистилерія в Ясногородці, Київська область'],
+    [t('js.product.brand'), brandLabel],
+    [t('js.product.category'), catLabel],
+    [t('js.product.type'), p.kind],
+    [t('js.product.abv'), p.abv ? `${p.abv}%` : null],
+    [p.volumes.length > 1 ? t('js.product.volumes') : t('js.product.volume'), volumes],
+    [t('js.product.country'), t('js.product.ukraine')],
+    [t('js.product.maker'), t('js.product.maker-value')],
   ].filter(([, v]) => v);
   const dl = el('dl', 'product-specs');
   specRows.forEach(([k, v]) => {
@@ -80,12 +84,12 @@ function buildSections(p) {
   // «Доставка й оплата»
   const delivery = PRODUCT_DELIVERY.map(([k, v]) => labelled(k, v));
   return [
-    ['Про напій', about],
-    ['Колір, смак, аромат', sensory],
-    ['Особливості', ul ? [ul] : []],
-    ['Як подавати', serveNodes],
-    ['Характеристики', specRows.length ? [dl] : []],
-    ['Доставка й оплата', delivery],
+    [t('js.product.acc.about'), about],
+    [t('js.product.acc.sensory'), sensory],
+    [t('js.product.acc.features'), ul ? [ul] : []],
+    [t('js.product.acc.serve'), serveNodes],
+    [t('js.product.acc.specs'), specRows.length ? [dl] : []],
+    [t('js.product.acc.delivery'), delivery],
   ].filter(([, nodes]) => nodes.length);
 }
 
@@ -94,8 +98,8 @@ function renderNotFound() {
   main.removeAttribute('data-brand');
   document.body.classList.remove('page-product'); // «не знайдено»: бежеве тло без візерунка (зона header знову зелена)
   main.replaceChildren(tpl('product-notfound-template'));
-  setMeta('Товар не знайдено');
-  document.title = `Товар не знайдено — ${SUFFIX}`;
+  setMeta(t('js.product.notfound'));
+  document.title = `${t('js.product.notfound')} — ${SUFFIX}`;
 }
 
 function renderProduct(p) {
@@ -122,7 +126,7 @@ function renderProduct(p) {
     const b = el('button', 'product-thumb');
     b.type = 'button';
     b.dataset.reveal = 'rise';
-    b.setAttribute('aria-label', `Фото ${i + 1} з ${slides.length}`);
+    b.setAttribute('aria-label', t('js.product.photo', { a: i + 1, b: slides.length }));
     const im = el('img');
     im.src = base + s.thumb;
     im.alt = '';
@@ -205,7 +209,7 @@ function renderProduct(p) {
   const last = sameCat ? p.nameLines.slice(1).join(' ') : p.nameLines.join(' ');
   const crumbs = q('.product-crumbs');
   const items = [
-    ['каталог', 'catalog.html'],
+    [t('js.product.crumb-catalog'), 'catalog.html'],
     [brand.label, `catalog.html?brand=${brand.id}`],
     [cat.label, `catalog.html?brand=${brand.id}#${cat.id}`],
     [last, null],

@@ -12,3 +12,11 @@ export function t(key, vars) {
 }
 /** ціна: «1 150 ₴» (uk) / «₴1,150» (en) */
 export const fmtPrice = (n) => t('js.price', { n: n.toLocaleString(locale() === 'en' ? 'en-GB' : 'uk-UA') });
+/** множина: tPlural('js.count.items', 5) → ключі js.count.items.one|few|many (uk: 1 / 2–4 / 5+; en: one / many) */
+export function tPlural(prefix, n, vars = {}) {
+  const m10 = n % 10, m100 = n % 100;
+  const form = locale() === 'en' ? (n === 1 ? 'one' : 'many') : (m10 === 1 && m100 !== 11 ? 'one' : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'few' : 'many');
+  return t(`${prefix}.${form}`, { n, ...vars });
+}
+/** об'єм: 0.7 → «0,7 л» / «0.7 L» */
+export const fmtLiters = (l) => t('js.vol.l', { n: String(l).replace('.', locale() === 'en' ? '.' : ',') });

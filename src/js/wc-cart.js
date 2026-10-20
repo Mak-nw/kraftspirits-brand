@@ -5,6 +5,7 @@ import {
   state, SHIPPING_TARIFF, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, renderCartCount, seedDemoIfNeeded, resolveLines,
   calcTotals, showNotice, clearNotices,
 } from './wc-common.js';
+import { t } from '../i18n/runtime.js';
 
 // Модуль у try/finally (як wc-checkout.js): при падінні будь-якого коду сторінка не лишається прихованою (verify-D2); без JS — <noscript> у cart.html
 try {
@@ -41,7 +42,7 @@ try {
         qs('img', tr).src = l.image;
         qs('[data-wc-name]', tr).textContent = l.name;
         qs('[data-wc-volume]', tr).textContent = fmtVol(l.volume);
-        qs('[data-wc-remove]', tr).setAttribute('aria-label', `Видалити «${l.name}»`);
+        qs('[data-wc-remove]', tr).setAttribute('aria-label', t('js.cart.remove', { name: l.name }));
         qs('[data-wc-price]', tr).textContent = fmtMoney(l.price);
         qs('[data-wc-subtotal-row]', tr).textContent = fmtMoney(l.subtotal);
         const input = qs('input.qty', tr);
@@ -79,8 +80,8 @@ try {
     removed = { item, index };
     const line = resolveLines([item])[0];
     save(list);
-    showNotice(notices, 'message-link', `«${line ? line.name : 'Товар'}» видалено.`, {
-      href: '#', link: 'Повернути', focus: true,
+    showNotice(notices, 'message-link', t('js.cart.removed', { name: line ? line.name : t('js.cart.product') }), {
+      href: '#', link: t('js.cart.undo'), focus: true,
       onClick: () => { const l = readCart(); l.splice(Math.min(removed.index, l.length), 0, removed.item); save(l); clearNotices(notices); },
     });
   }

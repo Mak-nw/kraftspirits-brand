@@ -1,8 +1,12 @@
 // Спільне для cart.html і checkout.html (симуляція WooCommerce-шаблонів без бекенду).
 // Кошик — РЕАЛЬНИЙ кошик сайту (cart-counter.js: localStorage 'ks_cart' = [{ slug, volume, qty }]); дані товарів — src/data/products.js.
 // Службові параметри (лише для перегляду/перевірок): ?state=<стан сторінки>, ?demo=1 — покласти демо-позиції в порожній кошик.
-import { PRODUCTS } from '../data/products.js';
+import { PRODUCTS as PRODUCTS_UK } from '../data/products.js';
+import { t, locale } from '../i18n/runtime.js';
+import { localizeProduct } from '../i18n/localize.js';
 import { readCart, writeCart, renderCartCount } from './cart-counter.js';
+
+const PRODUCTS = PRODUCTS_UK.map((p) => localizeProduct(p, locale())); // назви позицій мовою сторінки
 
 export { readCart, writeCart, renderCartCount };
 
@@ -10,8 +14,8 @@ const base = import.meta.env.BASE_URL;
 export const query = new URLSearchParams(location.search);
 export const state = query.get('state') || '';
 
-export const SHIPPING_TARIFF = 'за тарифами перевізника*'; // значення рядка «Доставка» для «Нової пошти» (кошик, подяка, кабінет); зірочка — примітка SHIPPING_TARIFF_NOTE під таблицею підсумків
-export const SHIPPING_TARIFF_NOTE = '* вартість доставки розраховується за тарифами обраного перевізника';
+export const SHIPPING_TARIFF = t('js.ship.tariff'); // значення рядка «Доставка» для «Нової пошти» (кошик, подяка, кабінет); зірочка — примітка SHIPPING_TARIFF_NOTE під таблицею підсумків
+export const SHIPPING_TARIFF_NOTE = t('js.ship.tariff-note');
 const DEMO_ITEMS = [
   { slug: 'gin-yasnyi', volume: 0.7, qty: 2 },
   { slug: 'calvados-3', volume: 0.7, qty: 1 },
@@ -21,8 +25,8 @@ const ORDER_KEY = 'ks_order'; // знімок останнього справж�
 const hasRealOrder = () => { try { return !!sessionStorage.getItem(ORDER_KEY); } catch { return false; } };
 const DEMO_STATES = ['error', 'thanks'];
 
-export const fmtMoney = (n) => `${n.toLocaleString('uk-UA')} ₴`;
-export const fmtVol = (l) => `${String(l).replace('.', ',')} л`;
+export const fmtMoney = (n) => t('js.money', { n: n.toLocaleString(locale() === 'en' ? 'en-GB' : 'uk-UA') }); // «1 150 ₴» (nbsp) / «₴1,150»
+export const fmtVol = (l) => t('js.vol.nbsp', { n: String(l).replace('.', locale() === 'en' ? '.' : ',') }); // «0,7 л» (nbsp) / «0.7 L»
 export const qs = (sel, root = document) => root.querySelector(sel);
 export const qsa = (sel, root = document) => [...root.querySelectorAll(sel)];
 

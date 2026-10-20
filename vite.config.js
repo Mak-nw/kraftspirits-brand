@@ -13,7 +13,7 @@ import { FAQ } from './src/data/faq.js';
 import { faqView } from './src/data/faq-view.js';
 import { LEGAL } from './src/data/legal.js';
 import { legalLists } from './src/data/legal-view.js';
-import { localizeHtml, sitemapXml, writeStubs } from './tools/i18n.mjs';
+import { localizeHtml, sitemapXml, translateHtml, writeStubs } from './tools/i18n.mjs';
 import { localizeCocktails, localizeContacts, localizeFaq, localizeLegal } from './src/i18n/localize-build.js';
 import { LOCALES } from './src/i18n/config.js';
 
@@ -64,7 +64,7 @@ const I18N_MISSING = []; // ключі, яких немає в en (для сто
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
   // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
-  const renderers = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, createRenderer({ root, lists: LISTS_BY_LOCALE[l], getLpPage: (name) => LP.view(name, l) })]));
+  const renderers = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, createRenderer({ root, lists: LISTS_BY_LOCALE[l], getLpPage: (name) => LP.view(name, l), translate: (tpl) => translateHtml(tpl, l, { page: 'partial', missing: I18N_MISSING }) })]));
   return {
     name: 'html-partials',
     configResolved(config) { base = config.base; },
