@@ -1,5 +1,5 @@
 import { PRODUCTS } from '../data/products.js';
-import { OCCASIONS, HITS, DEFAULT_IMAGE } from '../data/occasions.js';
+import { OCCASIONS } from '../data/occasions.js';
 import { cssMs } from './duration.js';
 import { locale, t, fmtPrice } from '../i18n/runtime.js';
 import { localizeProduct, localizeOccasion } from '../i18n/localize.js';
@@ -29,9 +29,9 @@ function init(root) {
   const lc = locale();
   const bySlug = new Map(PRODUCTS.map((p) => [p.slug, localizeProduct(p, lc)])); // en: назви/опис з src/i18n/data/products.en.js
   const pick = (slugs) => slugs.map((s) => bySlug.get(s)).filter((p) => p && p.status === 'available');
-  const hits = pick(HITS);
 
-  const state = { occasion: null, list: hits, i: 0 };
+  // слайдер відкривається на першій події (OCCASIONS[0]); вибір завжди є, зняти його не можна
+  const state = { occasion: OCCASIONS[0].id, list: pick(OCCASIONS[0].slugs), i: 0 };
 
   // ---- картка ----
   const renderCard = (p) => {
@@ -114,7 +114,7 @@ function init(root) {
   // Порядок накладання задає data-rank (1 = найстаріший … N = найновіший), z-index за ним — у sections.css.
   const layers = new Map();
   const order = []; // id шарів за свіжістю вибору; останній — найвищий
-  const bgOf = (id) => (id === 'intro' ? { id, image: DEFAULT_IMAGE } : id ? OCCASIONS.find((o) => o.id === id) : null); // 'intro' — фон початкового стану, не чіп
+  const bgOf = (id) => OCCASIONS.find((o) => o.id === id);
   root.querySelectorAll('.picker__bg[data-occasion]').forEach((el) => layers.set(el.dataset.occasion, el));
   const initial = bgs.querySelector('.picker__bg.is-active');
   if (initial) { order.push(initial.dataset.occasion); initial.dataset.rank = '1'; }
@@ -160,20 +160,19 @@ function init(root) {
   let token = 0;
   const select = async (id) => {
     const my = ++token;
-    const occ = id ? bgOf(id) : null;
+    const occ = bgOf(id);
     state.occasion = id;
-    state.list = occ ? pick(occ.slugs) : hits;
+    state.list = pick(occ.slugs);
     state.i = 0;
     chips.forEach((c, k) => {
-      const on = !!occ && OCCASIONS[k].id === id;
+      const on = OCCASIONS[k].id === id;
       c.setAttribute('aria-pressed', String(on));
       c.classList.toggle('is-active', on);
     });
-    const bgId = occ ? occ.id : 'intro';
-    await loaded(ensureLayer(bgId)); // без мигання: показуємо фон, лише коли він завантажений
+    await loaded(ensureLayer(occ.id)); // без мигання: показуємо фон, лише коли він завантажений
     if (my !== token) return;
-    setBg(bgId);
-    root.dataset.occasion = occ ? occ.id : '';
+    setBg(occ.id);
+    root.dataset.occasion = occ.id;
     syncArrows();
     showCard(true, 'next');
   };
@@ -190,7 +189,8 @@ function init(root) {
   row.addEventListener('click', (e) => {
     const chip = e.target.closest('.chip');
     if (!chip) return;
-    select(chip.getAttribute('aria-pressed') === 'true' ? null : chip.dataset.occasion);
+    if (chip.getAttribute('aria-pressed') === 'true') return; // активний чіп повторним кліком не знімається
+    select(chip.dataset.occasion);
   });
 
   // ---- попереднє завантаження при першому hover/focus чіпа ----
@@ -206,7 +206,11 @@ function init(root) {
   row.addEventListener('pointerover', warm);
   row.addEventListener('focusin', warm);
 
-  // ---- початковий стан: «Хіти», фон intro, чіпи не активні ----
-  if (hits.length) showCard(false);
+  // ---- початковий стан: перша подія (фон gift уже в розмітці), її чіп активний, картка першого товару ----
+  chips[0].setAttribute('aria-pressed', 'true');
+  chips[0].classList.add('is-active');
+  root.dataset.occasion = OCCASIONS[0].id;
+  bgs.dataset.occasion = OCCASIONS[0].id;
+  if (state.list.length) showCard(false);
   syncArrows();
 }

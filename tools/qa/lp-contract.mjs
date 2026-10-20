@@ -90,8 +90,10 @@ function variantsOf(type) {
   } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
     const sc = clone(s); if (type === 'offers') { delete s.scene; ['bg', 'bgW', 'bgH', 'bgSlot'].forEach((k) => delete sc[k]); }   // offers: фон — рівно одне з bg (фото) або scene (панорама)
+    if (type === 'layers') delete s.shape;   // shape: barrel — лише з look: about (окремий варіант нижче)
     const a = clone(s); delete a.look; out.push(['', a]);
     out.push(['look about', s]);
+    if (type === 'layers') { const bl = clone(s); bl.shape = 'barrel'; out.push(['barrel', bl]); }   // look: about + кадр-бочка (lp-arches--barrel)
     if (type === 'offers') out.push(['scene', sc]);
   } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
@@ -154,7 +156,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'layers.shape', 'layers.look', 'layers.items.img', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -303,6 +305,9 @@ cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom =
 cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
 cross('tiles: look about без shape circle', (p) => { S(p).look = 'about'; delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
 cross('tiles: look about + shape circle (валідно)', (p) => { S(p).look = 'about'; }, true, true, 'tiles [circle');
+cross('layers: shape barrel без look about', (p) => { delete S(p).look; }, false, false, 'layers [barrel');
+cross('layers: shape barrel без img у пункті', (p) => { delete S(p).items[0].img; }, false, false, 'layers [barrel');
+cross('layers: look about + shape barrel (валідно)', () => {}, true, true, 'layers [barrel');
 cross('look: значення поза переліком', (p) => { S(p).look = 'other'; }, false, false, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
@@ -442,6 +447,15 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
     const q = clone(validPages[0][1]); delete q.sections[0].titleSize; delete q.sections[0].titleCols; delete q.sections[0].lead; const h2 = render(q); note(/<h1 class="hero__title t-hero heading-center"/.test(h2) && !/hero__subtitle/.test(h2), 'render hero: без titleSize — .t-hero; без lead — підзаголовка немає'); }
   { const p = clone(byType('formats')); sec(p).items.forEach((it) => delete it.lead); const h = render(p); note(!/lp-format__lead/.test(h), 'render formats: без lead — підпису над капсулою немає'); jsOk(p) === true || note(false, 'formats без lead валідні (JS)'); note(jsonOk(p) === true, 'formats без lead валідні (JSON)');
     const p1 = clone(byType('formats')); delete sec(p1).items[1].lead; note(/aria-hidden="true">&nbsp;<\/span>/.test(render(p1)), 'render formats: lead лише в одній панелі — у другій резерв рядка (спільні рядки subgrid)'); }
+  // вкладки верхнього рівня (page.tabs): друга hero = старт вкладки; розмітка — tablist + дві панелі; негативні контролі (JS і JSON)
+  { const mk = () => { const p = clone(validPages[0][1]); const h2 = clone(p.sections[0]); h2.id = 'h-two'; p.sections[0].id = 'h-one'; p.sections.push(h2); p.tabs = [{ key: 'one', label: 'Один', start: 'h-one' }, { key: 'two', label: 'Два', start: 'h-two' }]; return p; };
+    const p = mk(); note(jsOk(p) === true && jsonOk(p) === true, 'tabs: дві hero зі стартами вкладок — валідно (JS і JSON)', `${jsOk(p)}`);
+    const html = render(p); note(/role="tablist"/.test(html) && (html.match(/role="tab"/g) || []).length === 2 && (html.match(/role="tabpanel"/g) || []).length === 2 && /data-tabs-hash/.test(html) && /id="panel-two"/.test(html) && (html.match(/<h1/g) || []).length === 2, 'render tabs: tablist, 2 вкладки, 2 панелі, hash, 2 hero');
+    const noTabs = mk(); delete noTabs.tabs; note(jsOk(noTabs) !== true && jsonOk(noTabs) !== true, 'tabs: друга hero без tabs — відхиляється');
+    const badStart = mk(); badStart.tabs[1].start = 'nope'; note(jsOk(badStart) !== true, 'tabs: start не веде на hero — відхиляється');
+    const orphan = mk(); orphan.tabs = [orphan.tabs[0], { key: 'x', label: 'X', start: 'h-one' }]; note(jsOk(orphan) !== true, 'tabs: повторний start — відхиляється');
+    const first = mk(); first.tabs = [first.tabs[1], first.tabs[0]]; note(jsOk(first) !== true, 'tabs: перша вкладка не з першої секції — відхиляється');
+    const lbl = mk(); lbl.tabsLabel = 'x'; delete lbl.tabs; delete lbl.sections[lbl.sections.length - 1]; lbl.sections.length = lbl.sections.length - 1; note(jsOk(lbl) !== true, 'tabsLabel без tabs — відхиляється'); }
   { const p = cnt('tiles', 4, 10); sec(p).id = 'eq'; const html = render(p); note(/lp-tiles__grid--eq lp-tiles__grid--n4/.test(html) && !/lp-tile lp-span--/.test(html), 'render tiles: 4 плитки на 10 колонок → рівний поділ (lp-tiles__grid--n4), без lp-span'); }
   { const html = render(byType('tiles [circle')); note(/lp-tile--zoom-75/.test(html) && /t-spec/.test(html), 'render tiles [circle]: zoom → клас lp-tile--zoom-75; підпис — роль .t-spec'); note(/lp-tiles--over/.test(html), 'render tiles [circle]: captionOver → клас lp-tiles--over'); const p2 = clone(byType('tiles [circle')); sec(p2).captionOver = false; note(!/lp-tiles--over/.test(render(p2)), 'render tiles [circle]: captionOver: false (типово) не дає класу'); }
 }

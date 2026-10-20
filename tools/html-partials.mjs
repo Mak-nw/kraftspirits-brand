@@ -17,10 +17,10 @@ const BLOCK_RE = /\{\{#([\w-]+)\}\}([\s\S]*?)\{\{\/\1\}\}/g;
 
 /**
  * @param {{ root: string, lists?: Record<string, any[]>, getLpPage?: (name: string) => any }} o
- *   root — корінь проєкту (там partials/); lists — списки для @each верхнього рівня; getLpPage — вигляд сторінки lp (lpView) за ім'ям
+ *   root — корінь проєкту (там partials/); translate — (шаблон) => шаблон з підставленими %t.ключ% мови (i18n; типово тотожна); lists — списки для @each верхнього рівня; getLpPage — вигляд сторінки lp (lpView) за ім'ям
  * @returns {(html: string, scope?: object) => string}
  */
-export function createRenderer({ root, lists = {}, getLpPage = () => null }) {
+export function createRenderer({ root, lists = {}, getLpPage = () => null, translate = (s) => s }) {
   const blocks = (tpl, params) => {
     // {{#key}}...{{/key}} — блок лише якщо параметр key непорожній; повтор — для вкладених блоків з іншим ключем
     let prev;
@@ -30,7 +30,7 @@ export function createRenderer({ root, lists = {}, getLpPage = () => null }) {
   const fill = (tpl, params) => blocks(tpl, params)
     // {{key}} або {{key|типове значення}}; {{key|$other}} — типове значення = параметр other (напр. id поля за замовчуванням = name)
     .replace(/\{\{([\w-]+)(?:\|([^}]*))?\}\}/g, (__, key, def) => params[key] ?? (def?.startsWith('$') ? params[def.slice(1)] : def) ?? '');
-  const readPartial = (name) => readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8');
+  const readPartial = (name) => translate(readFileSync(resolve(root, 'partials', `${name}.html`), 'utf8')); // translate (i18n): %t.ключ% у шаблоні partial → текст мови ДО підстановки {{параметрів}}: значення словника можуть містити {{title}}
   const lpPage = (name) => { const pg = getLpPage(name); if (!pg) throw new Error(`@page ${name}: немає даних сторінки (src/data/${name}.js за схемою lp-schema.js)`); return pg; };
   const lpSection = (s) => render(fill(readPartial(`lp/${s.type}`), s), s);
   const render = (html, scope = {}) =>

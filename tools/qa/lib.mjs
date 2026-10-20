@@ -62,7 +62,7 @@ export function pageSpec(spec) {
   const [pathAndQuery, hash = ''] = spec.split('#');
   const [p, q = ''] = pathAndQuery.split('?');
   const path = /\.html$/.test(p) ? p : `${p}.html`;
-  return { spec, name: p.replace(/\.html$/, ''), path, query: q, hash: hash ? `#${hash}` : '', label: spec };
+  return { spec, name: p.replace(/\.html$/, '').replace(/^en\//, ''), locale: /^en\//.test(p) ? 'en' : 'uk', path, query: q, hash: hash ? `#${hash}` : '', label: spec };
 }
 /**
  * URL сторінки зі службовими параметрами.

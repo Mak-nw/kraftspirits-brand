@@ -1,14 +1,18 @@
-import { PRODUCTS, BRANDS, CATEGORIES } from '../data/products.js';
+import { PRODUCTS as PRODUCTS_UK, BRANDS, CATEGORIES as CATEGORIES_UK } from '../data/products.js';
+import { t, tPlural, fmtPrice, locale } from '../i18n/runtime.js';
+import { localizeCategories, localizeProduct } from '../i18n/localize.js';
 import { initSelect } from './select.js';
 import { createGridMotion } from './catalog-motion.js';
 
 // ---- дані та стан ----
 const ALL = 'all';
+const PRODUCTS = PRODUCTS_UK.map((p) => localizeProduct(p, locale())); // мова сторінки: назви/ноти з src/i18n/data/products.en.js
+const CATEGORIES = localizeCategories(CATEGORIES_UK, locale());
 const SORTS = [
-  { value: 'default', label: 'за замовчуванням' },
-  { value: 'price-asc', label: 'ціна: зростання' },
-  { value: 'price-desc', label: 'ціна: спадання' },
-  { value: 'name', label: 'назва А–Я' },
+  { value: 'default', label: t('js.sort.default') },
+  { value: 'price-asc', label: t('js.sort.price-asc') },
+  { value: 'price-desc', label: t('js.sort.price-desc') },
+  { value: 'name', label: t('js.sort.name') },
 ];
 const base = import.meta.env.BASE_URL;
 const grid = document.querySelector('[data-catalog-grid]');
@@ -18,13 +22,8 @@ const countEl = document.querySelector('[data-catalog-count]');
 const navItems = [...document.querySelectorAll('[data-cat]')];
 const state = { category: ALL, brand: ALL, sort: 'default' };
 
-const fmtPrice = (n) => `${n.toLocaleString('uk-UA')} ₴`;
-// «позиція / позиції / позицій»
-const plural = (n) => {
-  const m10 = n % 10, m100 = n % 100;
-  const word = m10 === 1 && m100 !== 11 ? 'позиція' : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'позиції' : 'позицій';
-  return `${n} ${word}`;
-};
+// «14 позицій» / «14 products»
+const plural = (n) => tPlural('js.catalog.items', n);
 
 // ---- картки (розмітка — partials/components/product-card.html, вона ж у <template>) ----
 const cards = new Map();
@@ -52,7 +51,7 @@ PRODUCTS.forEach((p) => {
     price.remove();
   } else {
     a.href = `product.html?id=${encodeURIComponent(p.slug)}`;
-    price.textContent = (p.volumes.length > 1 ? 'від ' : '') + fmtPrice(p.price);
+    price.textContent = (p.volumes.length > 1 ? t('js.price.from') : '') + fmtPrice(p.price);
   }
   cards.set(p.slug, a);
   grid.append(a);
@@ -62,8 +61,8 @@ const motion = createGridMotion({ grid, empty, cards });
 
 // ---- селекти ----
 const sels = {
-  brand: initSelect(document.querySelector('[data-select="brand"]'), { options: [{ value: ALL, label: 'Усі' }, ...BRANDS.map((b) => ({ value: b.id, label: b.label }))] }),
-  category: initSelect(document.querySelector('[data-select="category"]'), { options: [{ value: ALL, label: 'Усі' }, ...CATEGORIES.map((c) => ({ value: c.id, label: c.label }))] }),
+  brand: initSelect(document.querySelector('[data-select="brand"]'), { options: [{ value: ALL, label: t('js.select.all') }, ...BRANDS.map((b) => ({ value: b.id, label: b.label }))] }),
+  category: initSelect(document.querySelector('[data-select="category"]'), { options: [{ value: ALL, label: t('js.select.all') }, ...CATEGORIES.map((c) => ({ value: c.id, label: c.label }))] }),
   sort: initSelect(document.querySelector('[data-select="sort"]'), { options: SORTS }),
 };
 
@@ -90,7 +89,7 @@ const sorters = {
   default: (a, b) => a.id - b.id,
   'price-asc': (a, b) => (a.price ?? Infinity) - (b.price ?? Infinity) || a.id - b.id,
   'price-desc': (a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity) || a.id - b.id,
-  name: (a, b) => a.name.localeCompare(b.name, 'uk'),
+  name: (a, b) => a.name.localeCompare(b.name, locale()),
 };
 let firstApply = true;
 const apply = () => {

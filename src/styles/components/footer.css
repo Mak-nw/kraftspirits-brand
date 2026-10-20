@@ -10,7 +10,7 @@
 .site-footer__col--menu { grid-column: 1 / span 3; }
 .site-footer__col--catalog { grid-column: 4 / span 3; }
 .site-footer__col--docs { grid-column: 8 / span 3; } /* «Документація» — справа (колонки 8–10), колонка 7 порожня */
-.site-footer__order { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); width: 100%; margin-bottom: var(--space-70); } /* над логотипами: дві кнопки .btn--block однакової ширини (по 2 колонки: 4–5 і 6–7, центр = центр сторінки), проміжок = зазор сітки 40u (горизонталь за DS) */
+.site-footer__order { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); width: 100%; margin-top: var(--space-70); margin-bottom: var(--space-100); } /* над логотипами: дві кнопки .btn--block однакової ширини (по 2 колонки: 4–5 і 6–7, центр = центр сторінки), проміжок = зазор сітки 40u (горизонталь за DS); відступ над кнопками --space-70 (від колонок меню, dca97a5f), під ними --space-100 (до логотипа; 99031f1e); --footer-h-top збільшена на ту саму суму відносно 659 = 70 + (100 − 70), щоб вільний простір між блоками лишився */
 .site-footer__order > .btn:nth-child(1) { grid-column: 4 / span 2; }
 .site-footer__order > .btn:nth-child(2) { grid-column: 6 / span 2; }
 /* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-btn на посиланні (як кнопки сайту); регістр — КАПС, як у шапці (рішення замовника) */

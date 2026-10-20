@@ -2,6 +2,7 @@
 // open(photos, index): photos = [{ src, alt }]. Модальний діалог (showModal): фокус усередині, Esc закриває, фокус повертається
 // на кнопку, з якої відкрили. ←/→ і стрілки — гортання по колу, лічильник «N з M». Фото — спільна cross-fade сцена (photo-stage.js).
 import { createPhotoStage, warm } from './photo-stage.js';
+import { t } from '../i18n/runtime.js';
 
 export function createLightbox(dialog) {
   if (!dialog) return null;
@@ -16,7 +17,7 @@ export function createLightbox(dialog) {
   const go = (i) => {
     index = (i + list.length) % list.length;
     stage.show(list[index]);
-    count.textContent = `${index + 1} з ${list.length}`;
+    count.textContent = t('js.of', { a: index + 1, b: list.length });
     if (list.length > 1) warm(list[(index + 1) % list.length].src);
     onChange?.(index);
   };

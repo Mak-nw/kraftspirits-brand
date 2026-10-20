@@ -8,14 +8,16 @@ export const LOCALES = {
   en: { code: 'en', short: 'EN', name: 'English', hreflang: 'en', prefix: 'en/' },
 };
 
-// Сторінки без мовних версій: службова 404 (одна на весь сайт, <base href>) і внутрішня дизайн-система.
-export const NO_LOCALE_PAGES = ['404', 'design-system'];
+// Сторінки без мовних версій: внутрішня дизайн-система.
+export const NO_LOCALE_PAGES = ['design-system'];
+// Службові сторінки з мовними версіями, але без canonical/hreflang/sitemap (noindex): 404. GitHub Pages віддає один 404.html на весь сайт: англійську версію (en/404.html) вмикає inline-скрипт за збереженою мовою ks_lang.
+export const NOINDEX_PAGES = ['404'];
 
 // Статус перекладу сторінки за мовою: 'done' — текст повністю перекладений (lang="en", індексується, у sitemap);
 // відсутній запис = 'draft' — /en/<сторінка>.html існує (шапка, футер, вікові ворота англійською), тіло ще українською:
 // <html lang="uk" data-locale="en">, <meta name="robots" content="noindex">, canonical → українська сторінка, у sitemap немає.
 // Після повного перекладу сторінки — рядок сюди і перевірка `npm run qa:i18n`.
 export const PAGE_STATUS = {
-  en: { index: 'done' },
+  en: { index: 'done', catalog: 'done', '404': 'done', cart: 'done', contacts: 'done', feedback: 'done', product: 'done', about: 'done', faq: 'done', cocktails: 'done', barrels: 'done', excursions: 'done', offer: 'done', privacy: 'done', cookies: 'done', delivery: 'done', 'age-policy': 'done', 'barrels-terms': 'done', checkout: 'done', account: 'done' },
 };
 export const pageStatus = (locale, name) => (locale === DEFAULT_LOCALE ? 'done' : PAGE_STATUS[locale]?.[name] || 'draft');

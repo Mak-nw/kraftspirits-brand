@@ -182,6 +182,7 @@
 .lp-group--center .lp-group__approx { margin-left: calc(var(--shift-lp-approx-ink) / -2 + var(--lp-num-ink, 0em)); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
 .lp-group--center .lp-group__fact-value { text-indent: calc(var(--shift-lp-approx-ink) / 2); }
 .lp-group__num { margin-top: var(--space-lp-ledger-row); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lp-room--warm .lp-compare__grid .lp-group__num, .lp-room--deep .lp-compare__grid .lp-group__num { color: var(--color-gold); } /* великий рядок compare на темній кімнаті (barrels, #profit): золотий токен, як точки маршруту; дрібний підпис .lp-group__unit і вартість не змінюються */
 .lp-group__approx { margin-left: var(--shift-lp-approx-ink); margin-right: var(--space-lp-approx-gap); } /* «≈» піднято до середини висоти цифр (old-style) */
 .lp-group__unit { margin-top: var(--space-15); text-indent: var(--lp-caption-optic, 0em); color: var(--lp-on-paper-muted); }
 .lp-group__list { align-self: start; margin-top: var(--space-lp-wall-top); text-align: start; }
@@ -348,6 +349,10 @@
 .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; grid-row: 2; }
 .lp-arches .about-still__arch { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) * var(--ratio-lp-arch-rise)); } /* склепіння = 0.42 ширини арки (як about-still, але n колонок) */
 .lp-arches .about-still .t-desc { text-wrap: balance; }
+/* shape: barrel (layers, look: about): кадр-бочка замість арки; той самий бокс (13:14 — ті самі висота й підписи), контур = силует бочки сцени «льох» (кришка/дно дугою, випуклі боки; viewBox-копія path lp-cellar__cask); фото обрізається маскою, hairline — другою маскою того ж контуру */
+.lp-arches--barrel .lp-arch { overflow: visible; border: 0; border-radius: 0; }
+.lp-arches--barrel .lp-arch__img { -webkit-mask: url('/assets/img/lp-barrel-mask.svg') 0 0 / 100% 100% no-repeat; mask: url('/assets/img/lp-barrel-mask.svg') 0 0 / 100% 100% no-repeat; }
+.lp-arches--barrel .lp-arch::after { content: ''; position: absolute; inset: 0; background: var(--lp-hairline); -webkit-mask: url('/assets/img/lp-barrel-line.svg') 0 0 / 100% 100% no-repeat; mask: url('/assets/img/lp-barrel-line.svg') 0 0 / 100% 100% no-repeat; pointer-events: none; }
 .lp-arches--cards { --size-lp-tile-ring: var(--size-about-ring-line); --lp-tile-ring: var(--color-brown); } /* кільце фото в картці — hairline коричневим на золоті (як кільце принципу) */
 .lp-arches--cards .about-principle { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) / 2); } /* верх картки = півколо на всю ширину (для 4 карток на 10 колонок = значення .about-principle) */
 .lp-arches__origin { white-space: pre-line; }
@@ -380,3 +385,9 @@
 /* ---------- демо в design-system.html: справжні секції сторінок (<!--@lp сторінка секція-->) у ширині демо-панелі ---------- */
 .demo-panel.ds-lp { display: block; padding: 0; overflow: clip; }
 .ds-lp.lp-scope { --grid-w: var(--size-lp-demo-w); }
+
+/* ---------- вкладки верхнього рівня (page.tabs): компонент DS .tabs (cocktails.css; вигляд вкладки = .product-volume), панель — вся «під-сторінка» (hero + секції) ----------
+   Смуга з перемикачем — кімната deep над hero: зона під fixed-пілюлею header (--size-header-h) + повітря; перемикач по центру. Лише токени. */
+.lp-tabs__bar { padding-top: calc(var(--size-header-h) + var(--space-20)); padding-bottom: var(--space-20); }
+.lp-tabs .lp-tabs__list { justify-content: center; } /* два класса: cocktails.css (.tabs__list / .tabs__panels) подключено після lp.css */
+.lp-tabs .lp-tabs__panels { padding-top: 0; }

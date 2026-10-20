@@ -45,10 +45,51 @@
         {
           "$ref": "#/$defs/hero"
         }
+      ]
+    },
+    "tabs": {
+      "type": [
+        "array",
+        "null"
       ],
+      "minItems": 2,
+      "maxItems": 3,
       "items": {
-        "$ref": "#/$defs/section"
+        "type": [
+          "object",
+          "null"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 1,
+            "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{17})[\\s\\S]*$"
+          },
+          "start": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "start"
+        ]
       }
+    },
+    "tabsLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 40,
+      "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
     }
   },
   "required": [
@@ -57,6 +98,54 @@
     "metaTitle",
     "metaDescription",
     "sections"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "tabs"
+        ],
+        "properties": {
+          "tabs": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "type": "array",
+            "prefixItems": [
+              true
+            ],
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/hero"
+                },
+                {
+                  "$ref": "#/$defs/section"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sections": {
+            "type": "array",
+            "prefixItems": [
+              true
+            ],
+            "items": {
+              "$ref": "#/$defs/section"
+            }
+          }
+        }
+      }
+    }
   ],
   "x-rules": [
     {
@@ -156,6 +245,12 @@
       "rule": "довжина `price` залежить від кількості пропозицій: 1 — ≤ 21, 2 — ≤ 10, 3 — ≤ 6 знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у `priceNote`)"
     },
     {
+      "id": "layers-barrel-needs-look",
+      "scope": "layers",
+      "expressed": true,
+      "rule": "`shape: barrel` (кадр-бочка замість арки): лише з `look: about` (арки-фото `.lp-arch`) і фото `img` у кожному пункті"
+    },
+    {
       "id": "look-tiles-circle",
       "scope": "tiles",
       "expressed": true,
@@ -178,6 +273,12 @@
       "scope": "page",
       "expressed": true,
       "rule": "перша секція — `hero`, і вона єдина (без неї немає `<h1>`)"
+    },
+    {
+      "id": "tabs-start-hero",
+      "scope": "page",
+      "expressed": false,
+      "rule": "`tabs` (2–3 вкладки): `tabs[].start` — `id` hero-секції; перша вкладка стартує з першої секції; кожна наступна hero сторінки — старт вкладки (без `tabs` hero лише одна); `key` і `start` унікальні; `tabsLabel` лише разом з `tabs`"
     },
     {
       "id": "ids-unique",
@@ -445,6 +546,13 @@
                 null
               ]
             },
+            "shape": {
+              "enum": [
+                "barrel",
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 6,
@@ -567,6 +675,43 @@
                     }
                   ]
                 }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "shape": {
+                    "const": "barrel"
+                  }
+                },
+                "required": [
+                  "shape"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "look": {
+                    "const": "about"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "img"
+                      ],
+                      "properties": {
+                        "img": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "look"
+                ]
               }
             }
           ]

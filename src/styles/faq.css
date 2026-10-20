@@ -28,7 +28,7 @@
 .faq-page__title { grid-column: var(--col-faq-cards); text-align: center; }
 .faq-page__list { grid-column: var(--col-faq-cards); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-faq-card-row-gap); align-items: start; } /* дві колонки карток однакової ширини (2 × 1fr у колонках 2–9), зазор між колонками = вертикальний відступ між картками 5u (рішення замовника 19.10.2026); колонки FAQ не на межах колонок сітки — дозволений виняток */
 .faq-page__col { display: grid; row-gap: var(--space-faq-card-row-gap); min-width: 0; } /* дві НЕЗАЛЕЖНІ колонки: розкриття питання зсуває лише свою колонку; вертикальний відступ карток 5u */
-.faq-page__list--span8 { grid-column: auto; column-gap: var(--grid-gap); width: var(--grid-span-8); margin: var(--space-about-head) auto 0; } /* модифікатор: список поза сіткою .faq-page__grid (about.html) — 8 колонок по центру, відступ від заголовка секції токеном */
+.faq-page__list--span8 { grid-column: auto; width: var(--grid-span-8); margin: var(--space-about-head) auto 0; } /* модифікатор: список поза сіткою .faq-page__grid (about.html) — 8 колонок по центру, відступ від заголовка секції токеном; зазор між колонками НЕ перевизначається — спільне правило FAQ (column-gap = вертикальний, --space-faq-card-row-gap) */
 
 /* Юридичні сторінки (privacy, cookies, offer, delivery, age-policy, barrels-terms; partials/sections/legal-doc + legal-section, дані src/data/legal.js):
    світла сторінка (beige тло, зелений текст), ОДИН вертикальний стовпець без sticky і без бічної колонки; усе вирівняно по лівому краю в 6 середніх колонках 4–9

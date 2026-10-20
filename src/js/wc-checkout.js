@@ -2,10 +2,14 @@
 // Бекенду немає: «Підтвердити замовлення» перевіряє поля (як checkout.js WooCommerce: помилки зверху + .woocommerce-invalid у полях), зберігає знімок замовлення в sessionStorage,
 // очищає кошик і веде на ?state=thanks. Стани: ?state=error (помилки валідації) | thanks (подяка) | empty (порожній кошик); ?demo=1 (демо-позиції). Довідники НП — src/data/checkout-demo.js (демо).
 import { initSelect } from './select.js';
+import { t as tt, locale, tPlural } from '../i18n/runtime.js';
+import { localizeCheckoutDemo } from '../i18n/localize.js';
 import {
-  state, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, fmtMoney, fmtVol, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, calcTotals, syncNativeSelect,
+  state, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, fmtMoney, fmtVol, dateLocale, qs, qsa, readCart, writeCart, seedDemoIfNeeded, resolveLines, calcTotals, syncNativeSelect,
 } from './wc-common.js';
-import { NP_AREAS, NP_CITIES, npWarehouses, npAddress, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
+import * as CHECKOUT_DEMO from '../data/checkout-demo.js';
+
+const { NP_AREAS, NP_CITIES, npWarehouses, npAddress, SHIPPING_LABELS, PAYMENT_LABELS } = localizeCheckoutDemo(CHECKOUT_DEMO, locale());
 
 const ORDER_KEY = 'ks_order'; // те саме значення — у wc-common.js (seedDemoIfNeeded)
 seedDemoIfNeeded();
@@ -80,9 +84,9 @@ function initForm() {
   // ---------- доставка / оплата ----------
   const method = () => qs('input[name="shipping_method[0]"]:checked', form).value;
   const shipNote = (m) => ({
-    np: 'Вартість доставки — за тарифами перевізника.',
-    courier: 'Вартість доставки по Києву розраховується окремо.',
-    pickup: 'Адресу дистилерії дивіться на сторінці «Контакти».',
+    np: tt('js.wc.ship.np'),
+    courier: tt('js.wc.ship.courier'),
+    pickup: tt('js.wc.ship.pickup'),
   }[m]);
   const applyShipping = () => {
     const m = method();
@@ -107,16 +111,16 @@ function initForm() {
   const field = (name) => qs(`#${name}`, form); // id поля = name (у select-полів це прихований справжній <select>; id кнопки — name_button)
   const val = (name) => (field(name)?.value || '').trim();
   const RULES = [
-    { name: 'billing_first_name', label: 'Ім\'я', test: (v) => v.length >= 2 },
-    { name: 'billing_last_name', label: 'Прізвище', test: (v) => v.length >= 2 },
-    { name: 'billing_phone', label: 'Телефон', test: (v) => !!v, bad: (v) => !(PHONE_RE.test(v) && digits(v).length >= 9 && digits(v).length <= 15), badMsg: 'вкажіть номер у форматі +380…' },
-    { name: 'billing_email', label: 'E-mail', test: (v) => !!v, bad: (v) => !EMAIL_RE.test(v), badMsg: 'перевірте адресу e-mail' },
-    { name: 'billing_state', label: 'Область', test: (v) => !!v },
-    { name: 'billing_city', label: 'Місто', test: (v) => !!v },
-    { name: 'billing_warehouse', label: 'Відділення або поштомат', test: (v) => !!v },
-    { name: 'billing_address_1', label: 'Адреса доставки', test: (v) => v.length >= 5 },
-    { name: 'terms', label: 'Умови та оферта', check: true, msg: 'потрібна ваша згода з умовами' },
-    { name: 'age_confirm', label: 'Підтвердження віку 18+', check: true, msg: 'підтвердіть, що вам виповнилося 18 років' },
+    { name: 'billing_first_name', label: tt('js.wc.f.first'), test: (v) => v.length >= 2 },
+    { name: 'billing_last_name', label: tt('js.wc.f.last'), test: (v) => v.length >= 2 },
+    { name: 'billing_phone', label: tt('js.wc.f.phone'), test: (v) => !!v, bad: (v) => !(PHONE_RE.test(v) && digits(v).length >= 9 && digits(v).length <= 15), badMsg: tt('js.wc.m.phone') },
+    { name: 'billing_email', label: 'E-mail', test: (v) => !!v, bad: (v) => !EMAIL_RE.test(v), badMsg: tt('js.wc.m.email') },
+    { name: 'billing_state', label: tt('js.wc.f.area'), test: (v) => !!v },
+    { name: 'billing_city', label: tt('js.wc.f.city'), test: (v) => !!v },
+    { name: 'billing_warehouse', label: tt('js.wc.f.warehouse'), test: (v) => !!v },
+    { name: 'billing_address_1', label: tt('js.wc.f.address'), test: (v) => v.length >= 5 },
+    { name: 'terms', label: tt('js.wc.f.terms'), check: true, msg: tt('js.wc.m.terms') },
+    { name: 'age_confirm', label: tt('js.wc.f.age'), check: true, msg: tt('js.wc.m.age') },
   ];
   const controlOf = (name) => (qs(`#${name}_field .select__button`, form) || field(name));
   const paint = (name, msg) => {
@@ -138,11 +142,11 @@ function initForm() {
       let short = '';
       let long = '';
       if (r.check) {
-        if (!field(r.name).checked) { short = r.msg[0].toUpperCase() + r.msg.slice(1); long = `${r.label} — ${r.msg}.`; }
+        if (!field(r.name).checked) { short = r.msg[0].toUpperCase() + r.msg.slice(1); long = tt('js.wc.v.long', { label: r.label, msg: r.msg }); }
       } else {
         const v = val(r.name);
-        if (!r.test(v)) { short = 'Обов\'язкове поле'; long = `${r.label} — обов'язкове поле.`; }
-        else if (r.bad && r.bad(v)) { short = r.badMsg[0].toUpperCase() + r.badMsg.slice(1); long = `${r.label} — ${r.badMsg}.`; }
+        if (!r.test(v)) { short = tt('js.wc.v.required'); long = tt('js.wc.v.required-long', { label: r.label }); }
+        else if (r.bad && r.bad(v)) { short = r.badMsg[0].toUpperCase() + r.badMsg.slice(1); long = tt('js.wc.v.long', { label: r.label, msg: r.badMsg }); }
       }
       paint(r.name, short);
       if (short) errors.push({ name: r.name, long });
@@ -183,7 +187,7 @@ function initForm() {
     const area = qs('#billing_state_field .select__value', form)?.textContent;
     const city = qs('#billing_city_field .select__value', form)?.textContent;
     const wh = qs('#billing_warehouse_field .select__value', form)?.textContent;
-    const delivery = m === 'np' ? npAddress(area, city, wh) : m === 'courier' ? `Київ, ${val('billing_address_1')}` : SHIPPING_LABELS.pickup;
+    const delivery = m === 'np' ? npAddress(area, city, wh) : m === 'courier' ? tt('js.wc.kyiv-addr', { v: val('billing_address_1') }) : SHIPPING_LABELS.pickup;
     const order = {
       number: String(10000 + Math.floor(Math.random() * 9000)),
       date: new Date().toISOString(),
@@ -202,7 +206,7 @@ function initForm() {
 
   // ---------- стан «помилки валідації» (?state=error): частково заповнена форма → та сама перевірка, що при відправці ----------
   if (state === 'error') {
-    field('billing_first_name').value = 'Олена';
+    field('billing_first_name').value = tt('js.wc.demo.first');
     field('billing_email').value = 'olena@';
     submitted = true;
     validate(false);
@@ -216,13 +220,13 @@ function initThanks() {
   if (!order) {
     const demoLines = resolveLines(readCart());
     order = {
-      number: '10427', date: new Date().toISOString(), name: 'Олена Коваленко', phone: '+380 50 123 45 67', email: 'name@example.com',
-      shipping: 'np', delivery: 'Київська область, Бровари, Відділення №1', payment: 'card', lines: demoLines,
+      number: '10427', date: new Date().toISOString(), name: tt('js.wc.demo.name'), phone: '+380 50 123 45 67', email: 'name@example.com',
+      shipping: 'np', delivery: tt('js.wc.demo.delivery'), payment: 'card', lines: demoLines,
     };
   }
   const t = calcTotals(order.lines);
   qs('[data-wc-order-number]', root).textContent = order.number;
-  qs('[data-wc-order-date]', root).textContent = new Date(order.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+  qs('[data-wc-order-date]', root).textContent = new Date(order.date).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'long', year: 'numeric' });
   qs('[data-wc-order-email]', root).textContent = order.email;
   qs('[data-wc-order-total]', root).textContent = fmtMoney(t.total);
   qs('[data-wc-order-method]', root).textContent = PAYMENT_LABELS[order.payment] || PAYMENT_LABELS.card;

@@ -3,7 +3,11 @@
 //  • VITE_FORM_ENDPOINT задано (змінна середовища збірки) → POST JSON на цей URL (Formspree/Getform/власний/Telegram-проксі), очікується 2xx;
 //  • не задано (зараз) → чесний запасний канал: відкривається поштовий клієнт із готовим листом (mailto: на e-mail із contacts.js).
 // Дані форми не зберігаються й не логуються.
-import { contacts } from '../data/contacts.js';
+import { contacts as contactsUk } from '../data/contacts.js';
+import { t, locale } from '../i18n/runtime.js';
+import { localizeContacts } from '../i18n/localize.js';
+
+const contacts = localizeContacts(contactsUk, locale()); // теми й підказки мовою сторінки
 
 const ENDPOINT = (import.meta.env.VITE_FORM_ENDPOINT || '').trim();
 const MSG_MAX = 1500; // обрізання тексту в mailto (ліміт довжини URL у поштових клієнтах)
@@ -69,19 +73,19 @@ function init() {
   // повертає { поле: повідомлення } для невалідних; phone/email — спільне правило «хоча б одне»
   const check = () => {
     const errors = {};
-    if (!select.value) errors.topic = 'Оберіть тему звернення';
-    if (el('name').value.trim().length < 2) errors.name = 'Вкажіть, як до вас звертатись';
+    if (!select.value) errors.topic = t('js.form.err.topic');
+    if (el('name').value.trim().length < 2) errors.name = t('js.form.err.name');
     const phone = el('phone').value.trim();
     const email = el('email').value.trim();
     if (!phone && !email) {
-      errors.phone = 'Вкажіть телефон або e-mail, щоб ми могли відповісти';
+      errors.phone = t('js.form.err.contact');
       errors.email = errors.phone;
     } else {
-      if (phone && !(PHONE_RE.test(phone) && digits(phone).length >= 9 && digits(phone).length <= 15)) errors.phone = 'Перевірте номер телефону';
-      if (email && !EMAIL_RE.test(email)) errors.email = 'Перевірте адресу e-mail';
+      if (phone && !(PHONE_RE.test(phone) && digits(phone).length >= 9 && digits(phone).length <= 15)) errors.phone = t('js.form.err.phone');
+      if (email && !EMAIL_RE.test(email)) errors.email = t('js.form.err.email');
     }
-    if (el('message').value.trim().length < 3) errors.message = 'Напишіть кілька слів про ваше питання';
-    if (!el('consent').checked) errors.consent = 'Потрібна ваша згода, щоб надіслати звернення';
+    if (el('message').value.trim().length < 3) errors.message = t('js.form.err.message');
+    if (!el('consent').checked) errors.consent = t('js.form.err.consent');
     return errors;
   };
   const ORDER = ['topic', 'name', 'phone', 'email', 'consent', 'message'];
@@ -109,7 +113,7 @@ function init() {
   const setLoading = (on) => {
     submitBtn.disabled = on;
     submitBtn.setAttribute('aria-busy', String(on));
-    submitLabel.textContent = on ? 'Надсилаємо…' : 'Надіслати';
+    submitLabel.textContent = on ? t('js.form.sending') : t('js.form.send');
   };
   const showAlert = (nodes) => { alertEl.replaceChildren(...nodes); alertEl.hidden = false; };
   const hideAlert = () => { alertEl.hidden = true; alertEl.replaceChildren(); };
@@ -127,12 +131,12 @@ function init() {
 
   // запасний канал: лист у поштовому клієнті; клік по прихованому <a> (а не location) — сторінка не навігується геть, якщо клієнта немає
   const openMailto = (d) => {
-    const lines = [`Тема: ${d.topicLabel}`, `Ім'я: ${d.name}`];
-    if (d.phone) lines.push(`Телефон: ${d.phone}`);
+    const lines = [t('js.form.mail.topic', { v: d.topicLabel }), t('js.form.mail.name', { v: d.name })];
+    if (d.phone) lines.push(t('js.form.mail.phone', { v: d.phone }));
     if (d.email) lines.push(`E-mail: ${d.email}`);
-    lines.push('', 'Повідомлення:', d.message.slice(0, MSG_MAX));
+    lines.push('', t('js.form.mail.message'), d.message.slice(0, MSG_MAX));
     const body = lines.join('\r\n');
-    const href = `mailto:${contacts.email}?subject=${encodeURIComponent(`Звернення: ${d.topicLabel}`)}&body=${encodeURIComponent(body)}`;
+    const href = `mailto:${contacts.email}?subject=${encodeURIComponent(t('js.form.mail.subject', { v: d.topicLabel }))}&body=${encodeURIComponent(body)}`;
     const a = document.createElement('a');
     a.href = href;
     a.hidden = true;
@@ -149,11 +153,11 @@ function init() {
   };
 
   const showSuccess = (mode) => {
-    successTitle.textContent = mode === 'mailto' ? 'Майже готово' : 'Дякуємо!';
+    successTitle.textContent = mode === 'mailto' ? t('js.form.almost') : t('js.form.thanks');
     if (mode === 'mailto') {
-      successText.replaceChildren('Відкрито ваш поштовий клієнт — надішліть підготовлений лист. Якщо він не відкрився, напишіть нам на ', emailLink(), '.');
+      successText.replaceChildren(t('js.form.mailto'), emailLink(), '.');
     } else {
-      successText.textContent = 'Ми отримали ваше звернення й відповімо найближчим часом.';
+      successText.textContent = t('js.form.received');
     }
     form.inert = true;
     form.setAttribute('aria-hidden', 'true');
@@ -192,7 +196,7 @@ function init() {
         if (!res.ok) throw new Error('bad status');
         showSuccess('sent');
       } catch {
-        showAlert(['Не вдалося надіслати звернення. Спробуйте ще раз або напишіть нам на ', emailLink(), '.']);
+        showAlert([t('js.form.failed'), emailLink(), '.']);
       }
     } else {
       openMailto(d);
@@ -233,6 +237,6 @@ function init() {
   // ?size=200|50 (сторінка «Ф'ючерсні бочки»): префіл повідомлення, якщо воно порожнє
   const BARREL_SIZES = { 200: '200 L', 50: '50 L' };
   const size = BARREL_SIZES[params.get('size')];
-  if (size && initial === 'barrel' && !el('message').value.trim()) el('message').value = `Цікавить бочка ${size}`;
+  if (size && initial === 'barrel' && !el('message').value.trim()) el('message').value = t('js.form.barrel-size', { v: size });
   if (initial) applyTopic(initial);
 }

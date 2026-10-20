@@ -29,7 +29,8 @@ export const DECK_TAG_MAX = 20;
 export const COUNT_MAX = 99999;              // лічильник групи compare: ціле 0…99 999
 // число `.t-stat` не переноситься: у вузьких групах (span 2–3) вміщується менше цифр (разом із розділювачем розрядів; з «≈» — ще менше)
 export const COUNT_CAP = { 2: { plain: 999, approx: 99 }, 3: { plain: 99999, approx: 999 } };
-export const LABELS = { approx: 'приблизно ' };   // службовий текст для читачів екрана
+export const LABELS = { approx: 'приблизно ' };
+export const LABELS_EN = { approx: 'approximately ' };   // службовий текст для читачів екрана
 
 const T = (max, req = false, extra = {}) => ({ type: 'text', max, req, ...extra });   // текст (екранується)
 const URL_ = (req = false, extra = {}) => ({ type: 'url', req, ...extra });            // посилання або шлях (див. URL_SOURCE); extra.startsWith — обов'язковий префікс шляху
@@ -61,6 +62,7 @@ export const HERO_TITLE_SIZES = ['large'];   // `hero.titleSize`: 'large' — H1
 export const PLACE_TITLE_SIZES = ['small'];   // `place.titleSize`: 'small' — H2 панелі роллю .t-lead (40u) замість .t-h2 (67u): довге слово («Ясногородка») вміщується в панель цілим, не розривається дефісом (дефект E3-B); без поля — .t-h2
 export const HERO_FADES = ['green', 'teal', 'brown'];       // `hero.fade`: колір градієнта знизу вгору (токен палітри --color-<значення>; без поля — градієнта немає; рішення замовника 53422015)
 export const PANEL_TONES = ['green', 'teal'];            // тон великої панелі formats: роль теми --lp-format-<тон> (значення — токени палітри)
+export const TAB_LABEL_MAX = 20;   // `tabs[].label`: підпис вкладки (чіп .product-volume у ряду)
 export const LOOKS = ['about'];   // `look`: 'about' — вигляд компонентів сторінки «Про нас» (арки lp-arch, картки-арки принципів, панелі brand-panel, картка tour-card з мапою); без поля — типовий вигляд шаблону (barrels не змінюється)
 const LOOK = { look: E(LOOKS) };
 const CTA = O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true) });
@@ -81,12 +83,16 @@ export const SCHEMA = {
     metaTitle: T(70, true),
     metaDescription: T(200, true),   // пошуковики показують ≈155 знаків
     sections: L({ type: 'section' }, 1, 20, true),
+    // Вкладки верхнього рівня (необов'язково): сторінка з кількома «під-сторінками» (напр. «B2B» / «Івенти»). Секції лишаються ПЛОСКИМ списком `sections`; кожна вкладка починається зі
+    // своєї hero-секції (`start` = її `id`) і триває до наступного старту. Перемикач — компонент DS `.tabs` (WAI-ARIA, src/js/tabs.js), hash `#<key>` відкриває вкладку; перша — типова.
+    tabs: L(O({ key: { type: 'id', req: true }, label: T(TAB_LABEL_MAX, true, { word: BTN_WORD }), start: { type: 'id', req: true } }), 2, 3),
+    tabsLabel: T(40),   // aria-label перемикача вкладок (назва групи для читачів екрана)
   },
   sections: {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
     hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), ...TITLE, titleSize: E(HERO_TITLE_SIZES), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), fade: E(HERO_FADES), cta: { ...O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green']) }), req: true } },   // cta.variant — тон кнопки hero (типово — тон сторінки): на градієнті hero.fade кнопка тону сторінки зливається з тлом — задають світлу (beige)
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2–6 (n рівних блоків контейнера; 4 на 10 колонок — по 348.55u)
-    layers: { ...BASE, ...TITLE, ...LOOK, room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },
+    layers: { ...BASE, ...TITLE, ...LOOK, shape: E(['barrel']), room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
     //    deck: true — «колода»: кожен крок = велика картка з фото на тлі (img кроку, cover), картки прилипають під header і наїжджають одна на одну (CSS sticky);
     //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
@@ -195,6 +201,9 @@ export const RULES = [
   { id: 'offers-price-capacity', types: ['offers'], path: '', doc: `довжина \`price\` залежить від кількості пропозицій: 1 — ≤ ${PRICE_MAX[1]}, 2 — ≤ ${PRICE_MAX[2]}, 3 — ≤ ${PRICE_MAX[3]} знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у \`priceNote\`)`,
     check: (s) => { const cap = PRICE_MAX[s.items.length]; const bad = s.items.findIndex((it) => [...it.price].length > cap); return bad < 0 ? '' : `items[${bad}].price: довжина ${[...s.items[bad].price].length} > ${cap} знаків при ${s.items.length} пропозиціях (одиницю виміру — в priceNote)`; },
     json: { allOf: Object.entries(PRICE_MAX).map(([n, cap]) => ({ if: { properties: { items: { type: 'array', minItems: +n, maxItems: +n } }, required: ['items'] }, then: { properties: { items: { type: 'array', items: { type: 'object', properties: { price: { type: 'string', maxLength: cap } } } } } } })) } },
+  { id: 'layers-barrel-needs-look', types: ['layers'], path: '', doc: '`shape: barrel` (кадр-бочка замість арки): лише з `look: about` (арки-фото `.lp-arch`) і фото `img` у кожному пункті',
+    check: (s) => (s.shape === 'barrel' && (s.look !== 'about' || s.items.some((it) => !has(it.img))) ? 'shape: barrel потребує look: about і img у кожному пункті' : ''),
+    json: { if: { properties: { shape: { const: 'barrel' } }, required: ['shape'] }, then: { properties: { look: { const: 'about' }, items: { type: 'array', items: { type: 'object', ...present('img') } } }, required: ['look'] } } },
   { id: 'look-tiles-circle', types: ['tiles'], path: '', doc: '`look: about`: картки-арки з колом-фото — лише з `shape: circle` (кожна плитка з фото)',
     check: (s) => (s.look === 'about' && s.shape !== 'circle' ? 'look: about потребує shape: circle' : ''),
     json: { if: { properties: { look: { const: 'about' } }, required: ['look'] }, then: { properties: { shape: { const: 'circle' } }, required: ['shape'] } } },
@@ -208,6 +217,7 @@ export const RULES = [
 /* Правила сторінки: hero першим і єдиним; id секцій і key у списках унікальні; якорі `#id` ведуть на секцію сторінки */
 export const PAGE_RULES = [
   { id: 'hero-first', doc: 'перша секція — `hero`, і вона єдина (без неї немає `<h1>`)', json: true },
+  { id: 'tabs-start-hero', doc: '`tabs` (2–3 вкладки): `tabs[].start` — `id` hero-секції; перша вкладка стартує з першої секції; кожна наступна hero сторінки — старт вкладки (без `tabs` hero лише одна); `key` і `start` унікальні; `tabsLabel` лише разом з `tabs`', json: null },
   { id: 'ids-unique', doc: '`id` секцій унікальні в межах сторінки', json: null },
   { id: 'keys-unique', doc: '`key` унікальний у межах свого списку (`layers.items`, `steps.items`, `tiles.items`, `compare.groups`, `formats.items`, `offers.items`) — з нього будується CSS-клас', json: null },
   { id: 'stack-after-block', doc: '`stack: true` дозволено лише секції, перед якою стоїть `card` або `place` (стек = ряд великих блоків; після hero чи інших типів стека немає)', json: null },
@@ -283,12 +293,26 @@ export function validatePage(page) {
   if (!Array.isArray(sections) || !sections.length) fail(`${page.slug}.sections`, 'порожньо');
   if (sections.length > SCHEMA.page.sections.max) fail(`${page.slug}.sections`, `секцій ${sections.length}, допустимо 1–${SCHEMA.page.sections.max}`);
   const ids = new Set();
+  // вкладки: start кожної — id hero-секції; перша вкладка стартує з першої секції; key і start унікальні; решта hero лише на стартах
+  const tabStarts = new Set();
+  if (page.tabs) {
+    const keys = new Set();
+    page.tabs.forEach((tb, j) => {
+      const p = `${page.slug}.tabs[${j}]`;
+      if (keys.has(tb.key)) fail(`${p}.key`, `key «${tb.key}» повторюється`); keys.add(tb.key);
+      if (tabStarts.has(tb.start)) fail(`${p}.start`, `start «${tb.start}» повторюється`); tabStarts.add(tb.start);
+      const k = sections.findIndex((x) => x.id === tb.start);
+      if (k < 0 || sections[k].type !== 'hero') fail(`${p}.start`, `«${tb.start}» має бути id hero-секції`);
+      if (j === 0 && k !== 0) fail(`${p}.start`, 'перша вкладка стартує з першої секції сторінки');
+    });
+    sections.forEach((x, k) => { if (x.type === 'hero' && !tabStarts.has(x.id) && k > 0) fail(`${page.slug}.sections[${k}]`, 'hero без вкладки: додайте її id в tabs[].start'); });
+  } else if (page.tabsLabel) fail(`${page.slug}.tabsLabel`, 'задається лише разом з tabs');
   sections.forEach((s, i) => {
     const path = `${page.slug}.sections[${i}](${s.id || s.type})`;
     const def = SCHEMA.sections[s.type];
     if (!def) fail(path, `невідомий type «${s.type}»; допустимо: ${Object.keys(SCHEMA.sections).join(', ')}`);
     if (i === 0 && s.type !== 'hero') fail(path, 'перша секція має бути hero (без нього немає <h1>)');
-    if (i > 0 && s.type === 'hero') fail(path, 'hero може бути лише першою (і єдиною) секцією');
+    if (i > 0 && s.type === 'hero' && !(tabStarts.has(s.id))) fail(path, 'hero може бути лише першою (і єдиною) секцією; з `tabs` — ще й на початку кожної вкладки (tabs[].start = id цієї hero)');
     if (s.id) { if (ids.has(s.id)) fail(path, `id «${s.id}» повторюється`); ids.add(s.id); }
     check({ type: 'object', fields: def }, s, path);
     if (s.stack === true && !['card', 'place'].includes(sections[i - 1]?.type)) fail(path, 'stack: true дозволено лише після секції card або place (стек великих блоків)');
@@ -318,7 +342,8 @@ const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;'
 const t = (v) => esc(v).replace(/%(?=(?:contacts\.\w+|BASE_URL)%)/g, '&#37;');
 const li = (arr) => (arr || []).map((x) => ({ text: t(x) }));
 const longestRun = (s) => Math.max(0, ...String(s).split(/[ \n]+/).map((w) => [...w].length)); // найдовший непереносний відрізок (nbsp не розриває)
-const fmt = (n) => Number(n).toLocaleString('uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
+let LOC = 'uk'; // мова поточного lpView (env.locale): числа, службові підписи, одиниця «шт.»
+const fmt = (n) => Number(n).toLocaleString(LOC === 'en' ? 'en-GB' : 'uk-UA'); // 1 234 (nbsp); те саме робить lp.js під час лічби
 // Кімната-погріб (compare.groups[].cellar, partials/media/cellar-*.html; рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): геометрія рахується з count, span і liters групи.
 // Кімната = ширина групи (span колонок + зазори, у u як сітка: колонка 115.42u, зазор 40u) × CELLAR.h; стелажі з двох боків ідуть углиб до точки сходу (перспектива), пляшки тонуть у фоні.
 // Одиниця виміру — ПРОЛІТ стелажа = 2 стіни × 4 полиці × 6 пляшок = 48 (96 = 2 прольоти, 383 = 7 повних + 47: найдальша пляшка-«хвіст» не добудована). Бочка — по центру кімнати на підлозі; розмір ∝ літражу^(1/3) (об'єм → лінійний розмір).
@@ -360,7 +385,7 @@ const VIEW = {
   layers: (s) => {
     const cut = s.items.some((it) => it.img);
     const about = s.look === 'about';
-    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${s.items.length}`, cut: cut ? '1' : '', noCut: cut ? '' : '1', nMod: ` lp-layers--n${s.items.length}`,   // n рівних блоків контейнера (lp.css): 2, 5 лягають на колонки, 3, 4, 6 — рівний поділ
+    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${s.items.length}${s.shape === 'barrel' ? ' lp-arches--barrel' : ''}`, cut: cut ? '1' : '', noCut: cut ? '' : '1', nMod: ` lp-layers--n${s.items.length}`,   // n рівних блоків контейнера (lp.css): 2, 5 лягають на колонки, 3, 4, 6 — рівний поділ
       items: s.items.map((it) => ({ key: it.key, span: '', icon: it.icon || '', title: t(it.title), text: t(it.text), img: it.img || '', slot: t(it.slot) })) };
   },
   steps: (s) => {
@@ -374,7 +399,7 @@ const VIEW = {
   },
   compare: (s) => ({ ...head(s), note: t(s.note), rv: s.reveal === false ? '' : '1',   // reveal: false — групи без появи і без count-up (число одразу фінальне)
     groups: s.groups.map((g) => ({ rv: s.reveal === false ? '' : '1', key: g.key, span: g.span, mods: `${g.cellar ? ' lp-group--has-cellar' : ''}${g.accent ? ' lp-group--accent' : ''}${g.align === 'center' ? ' lp-group--center' : ''} lp-group--${g.key}`,
-      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LABELS.approx, sizeShow: g.countWord ? '' : '1', inlineLiters: g.countWord ? '1' : '', countWord: t(g.countWord), unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
+      label: t(g.label), count: g.count, countText: fmt(g.count), approx: g.approx ? '1' : '', approxLabel: LOC === 'en' ? LABELS_EN.approx : LABELS.approx, sizeShow: g.countWord ? '' : '1', inlineLiters: g.countWord ? '1' : '', countWord: t(g.countWord), unit: t(g.unit), cellar: g.cellar || '', ...(g.cellar ? cellarView(g.count, g.span, g.liters, g.key) : {}), list: li(g.list),
       facts: (g.facts || []).map((f) => ({ value: t(f.value), label: t(f.label), valueMod: [...f.value].length > 16 ? ' lp-group__fact-value--wrap' : '' })) })) }),
   formats: (s) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', lookMod: s.look === 'about' ? ' lp-look--about' : '',
     items: s.items.map((it) => ({ key: it.key, tone: it.tone, span: colsOf(s) / s.items.length, lead: t(it.lead), leadGap: !it.lead && s.items.some((x) => x.lead) ? '1' : '',   // lead у ОДНІЙ панелі: у другій — порожній рядок тієї ж висоти (спільні рядки subgrid)
@@ -393,7 +418,7 @@ const VIEW = {
   offers: (s, p) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', gridMod: ` lp-offers__grid--n${s.items.length}`, offersMod: `${s.scene ? ' lp-offers--scene' : ''}${s.airy ? ' lp-offers--airy' : ''}`, scene: s.scene || '', bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),
     routeFrom: t(s.route?.from), routeTo: t(s.route?.to), routeIcon: s.route?.icon || '',
     items: s.items.map((it) => ({ key: it.key, span: '', tone: p.tone, look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', title: t(it.title), price: t(it.price), priceNote: t(it.priceNote),
-      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd).replace(/шт\./g, '<span class="lp-offer__unit">шт.</span>'), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
+      facts: (it.facts || []).map((f) => ({ swapMod: s.look === 'about' ? ' lp-offer__fact--swap' : '', dt: t(f.dt), dd: t(f.dd).replace(LOC === 'en' ? /\bpcs\b/g : /шт\./g, `<span class="lp-offer__unit">${LOC === 'en' ? 'pcs' : 'шт.'}</span>`), ddMod: [...f.dd].length > 24 || longestRun(f.dd) > 14 ? ' lp-offer__dd--wrap' : '' })),
       includes: li(it.includes), ctaText: t(it.cta.text), ctaHref: esc(it.cta.href) })),
     footText: t(s.foot?.text), footNote: t(s.foot?.note), footCtas: (s.foot?.ctas || []).map((c) => ({ text: t(c.text), href: esc(c.href), variant: c.variant })) }),
   card: (s, p) => ({ ...head(s), text: t(s.text), ctaText: t(s.cta.text), ctaHref: esc(s.cta.href), tone: p.tone,
@@ -416,6 +441,7 @@ const VIEW = {
  * env.themeTone — тон кнопок за замовчуванням з теми (`--lp-tone` у src/styles/themes/<theme>.css); якщо `tone` у даних не задано.
  */
 export function lpView(page, env = {}) {
+  LOC = env.locale || 'uk';
   validatePage(page);
   const tone = page.tone || env.themeTone;
   if (!tone) fail(`${page.slug}.tone`, `не задано: вкажіть tone у даних або роль --lp-tone у src/styles/themes/${page.theme}.css`);
@@ -430,5 +456,17 @@ export function lpView(page, env = {}) {
     const mods = `${s.cols && s.cols !== GRID_COLS ? ` lp-cols--${s.cols}` : ''}${s.pad ? ` lp-pad--${s.pad}` : ''}${s.join ? ' lp-sec--join' : ''}${next?.join ? ' lp-sec--join-next' : ''}${s.stack ? ' lp-sec--stack' : ''}${next?.stack ? ' lp-sec--stack-next' : ''}`;
     return { type: s.type, room, mods, ...VIEW[s.type](s, p) };   // (hero задає свої mods: hero--panel)
   });
+  if (page.tabs) {   // вкладки: у плоский список вставляються службові блоки (partials/lp/tabbar|tabpanel-open|tabpanel-close|tabs-close): перемикач + обгортки панелей
+    const starts = page.tabs.map((tb) => sections.findIndex((x) => x.id === tb.start));
+    const tabsView = page.tabs.map((tb, j) => ({ key: tb.key, label: t(tb.label), active: j === 0 ? ' is-active' : '', selected: j === 0 ? 'true' : 'false', tabindex: j === 0 ? '' : ' tabindex="-1"' }));
+    const wrapped = [{ type: 'tabbar', room: 'deep', mods: '', tabsLabel: t(page.tabsLabel || ''), tabs: tabsView }];
+    sections.forEach((s, i) => {
+      const j = starts.indexOf(i);
+      if (j >= 0) { if (j > 0) wrapped.push({ type: 'tabpanel-close', mods: '' }); wrapped.push({ type: 'tabpanel-open', mods: '', ...tabsView[j] }); }
+      wrapped.push(s);
+    });
+    wrapped.push({ type: 'tabpanel-close', mods: '' }, { type: 'tabs-close', mods: '' });
+    return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections: wrapped, tabs: tabsView };
+  }
   return { slug: page.slug, theme: page.theme, tone, metaTitle: t(page.metaTitle), metaDescription: t(page.metaDescription), sections };
 }

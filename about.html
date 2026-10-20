@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts-->
   <!--@include head-age-->
-  <title>Про дім: дистилерія YasnoCraft × Bazylsprings, Ясногородка</title>
-  <meta name="description" content="Дім, у якому зерно стає дистилятом: дистилерія повного циклу в Ясногородці, збудована за 15 місяців. Два бренди, три установки, екскурсії й бочки.">
+  <title>%t.about.title%</title>
+  <meta name="description" content="%t.about.desc%">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
@@ -23,10 +23,10 @@
 
     <!-- 1. HERO (макет p1; перше фото замовника — аерофото будівлі; градієнт зеленого лише знизу: 100% → 0 вгору (hero.fade)): H1 і кнопка по центру внизу -->
     <section class="hero about-hero hero--fade hero--fade-green" data-reveal-load data-parallax="soft" aria-labelledby="about-title">
-      <img class="hero__bg" data-reveal="fade" src="/assets/img/about-hero-distillery.webp" width="2000" height="1116" alt="Будівля дистилерії YasnoCraft × Bazylsprings у Ясногородці з висоти: хвилястий дах, скляний фасад, ліс і ставок" fetchpriority="high">
+      <img class="hero__bg" data-reveal="fade" src="/assets/img/about-hero-distillery.webp" width="2000" height="1116" alt="%t.about.hero-bg.alt%" fetchpriority="high">
       <div class="about-hero__content">
-        <h1 class="t-hero heading-center heading-wide" id="about-title" data-reveal="rise">Дім, у якому зерно стає<br>дистилятом</h1>
-        <!--@include components/btn variant="btn--light" href="#place" text="Як влаштований дім" reveal="rise"-->
+        <h1 class="t-hero heading-center heading-wide" id="about-title" data-reveal="rise">%t.about.about-title%</h1>
+        <!--@include components/btn variant="btn--light" href="#place" text="%t.about.btn.text%" reveal="rise"-->
       </div>
     </section>
 
@@ -35,8 +35,8 @@
     <section class="about-sec theme-green about-place" id="place" aria-labelledby="place-title">
       <div class="about-track" data-process-track>
         <div class="about-place__text">
-          <h2 class="t-h2 heading-center heading-wide about-place__title" id="place-title" data-reveal="rise">Усе відбувається<br>на одному<br>майданчику</h2>
-          <p class="t-desc about-place__lead" data-reveal="rise">Дистилерію проєктували так, щоб гості бачили виробництво від сировини до розливу.</p>
+          <h2 class="t-h2 heading-center heading-wide about-place__title" id="place-title" data-reveal="rise">%t.about.place.place-title%</h2>
+          <p class="t-desc about-place__lead" data-reveal="rise">%t.about.place.about-place-lead%</p>
         </div>
         <!--@include about/process-track-->
       </div>
@@ -48,28 +48,28 @@
       <img class="about-story__bg" src="/assets/img/about-history-bg.webp" width="1920" height="1574" alt="" loading="lazy">
       <div class="about__grid about-story__grid">
         <div class="about-story__head">
-          <h2 class="t-hero" id="story-title" data-reveal="rise">15 місяців від першого дня будівництва до запуску</h2>
-          <p class="t-desc about-story__lead" data-reveal="rise">Будували під час війни. Найважче давались логістика, постачання складових, безпека й нестабільна електрика.</p>
+          <h2 class="t-hero" id="story-title" data-reveal="rise">%t.about.story.story-title%</h2>
+          <p class="t-desc about-story__lead" data-reveal="rise">%t.about.story.about-story-lead%</p>
         </div>
         <ul class="about-story__rings lp-tiles--circle">
           <li class="about-ring">
             <p class="about-ring__circle lp-tile__media"><span class="t-lead">95%</span></p>
-            <p class="t-stat-label">Складових проєкту забезпечили в Україні</p>
+            <p class="t-stat-label">%t.about.story.p%</p>
           </li>
           <li class="about-ring">
-            <p class="about-ring__circle lp-tile__media"><span class="t-lead">400 л</span></p>
-            <p class="t-stat-label">Напоїв за одну зміну</p>
+            <p class="about-ring__circle lp-tile__media">%t.about.story.about-ring-circle%</p>
+            <p class="t-stat-label">%t.about.story.p-2%</p>
           </li>
         </ul>
         <div class="about-story__milestone about-story__milestone--start" data-reveal="rise">
           <p class="t-lead about-story__date">1.05.2025</p>
-          <img class="about-story__photo" src="/assets/img/about-build-draft.webp" width="720" height="1080" loading="lazy" alt="Ілюстрація (AI-чернетка): бетонний каркас будівлі з краном на початку будівництва">
-          <p class="t-desc about-story__text">Будівництво почалося 1 травня 2025 року. Ідея засновника Віктора Базильчука: власне виробництво повного циклу, де зрозуміло, звідки взявся кожен продукт.</p>
+          <img class="about-story__photo" src="/assets/img/about-build-draft.webp" width="720" height="1080" loading="lazy" alt="%t.about.story.about-story-photo.alt%">
+          <p class="t-desc about-story__text">%t.about.story.about-story-text%</p>
         </div>
         <div class="about-story__milestone about-story__milestone--finish" data-reveal="rise">
           <p class="t-lead about-story__date">8.08.2026</p>
-          <p class="t-desc about-story__text">8 серпня 2026 року відкрили першу чергу. На відкритті зібрали 585 000 грн для Центру масштабування технологічних рішень військової частини А4753.</p>
-          <img class="about-story__photo" src="/assets/img/about-opening.webp" width="960" height="1200" loading="lazy" alt="Відкриття дистилерії 8 серпня 2026 року: гості біля бочок у залі витримки">
+          <p class="t-desc about-story__text">%t.about.story.about-story-text-2%</p>
+          <img class="about-story__photo" src="/assets/img/about-opening.webp" width="960" height="1200" loading="lazy" alt="%t.about.story.about-story-photo.alt-2%">
         </div>
       </div>
     </section>
@@ -81,23 +81,23 @@
     <!-- 5. ЦИТАТА І ЛЮДИ (макет p5): бежевий фон; цитата ліворуч (кол. 1–6), Герман Марущак праворуч (кол. 9–10); нижче Віктор: портрет без фону + графіка пагорбів позаду, імʼя великим унизу ліворуч -->
     <section class="about-sec theme-beige about-people" id="people" aria-labelledby="people-title">
       <img class="about-people__hills" src="/assets/img/about-hills.webp" width="940" height="328" alt="" loading="lazy">
-      <img class="about-people__viktor" src="/assets/img/about-viktor-cut.webp" width="810" height="678" alt="Віктор Базильчук, засновник дистилерії" loading="lazy">
+      <img class="about-people__viktor" src="/assets/img/about-viktor-cut.webp" width="810" height="678" alt="%t.about.people.about-people-viktor.alt%" loading="lazy">
       <div class="about__grid about-people__grid">
         <figure class="about-people__quote" data-reveal="rise">
-          <blockquote class="about-people__bq"><p class="t-hero" id="people-title">«Поєднання традиційної та<br>вакуумної дистиляції дає<br>нам більше можливостей<br>для роботи з різною<br>сировиною»</p></blockquote>
+          <blockquote class="about-people__bq"><p class="t-hero" id="people-title">%t.about.people.people-title%</p></blockquote>
         </figure>
         <figure class="about-people__german" data-reveal="rise">
-          <img class="about-people__ava" src="/assets/img/about-german.webp" width="157" height="157" loading="lazy" alt="Герман Марущак, директор виробництва">
-          <figcaption><span class="t-product-name">Герман Марущак</span><span class="t-kicker">директор виробництва</span></figcaption>
+          <img class="about-people__ava" src="/assets/img/about-german.webp" width="157" height="157" loading="lazy" alt="%t.about.people.about-people-ava.alt%">
+          <figcaption>%t.about.people.figcaption%</figcaption>
         </figure>
         <div class="about-people__intro" data-reveal="rise">
           <p class="about-people__dots lp-tiles--circle" aria-hidden="true"><span class="lp-tile__media"><img src="/assets/brand-icons/about-wheat.svg" width="24" height="24" alt=""></span><span class="lp-tile__media"><img src="/assets/brand-icons/about-team.svg" width="24" height="24" alt=""></span></p>
-          <p class="t-desc">Віктор Базильчук сформував концепцію дистилерії, виробничу модель і команду.</p>
+          <p class="t-desc">%t.about.people.p%</p>
         </div>
-        <p class="t-desc about-people__note" data-reveal="rise">За плечима в нього аграрний сектор, виробництво, робота із зерном та експорт.</p>
+        <p class="t-desc about-people__note" data-reveal="rise">%t.about.people.about-people-note%</p>
         <div class="about-people__name" data-reveal="rise">
-          <p class="t-lead">Засновник</p>
-          <h2 class="t-h2">Віктор<br>Базильчук</h2>
+          <p class="t-lead">%t.about.people.p-2%</p>
+          <h2 class="t-h2">%t.about.people.h2%</h2>
         </div>
       </div>
     </section>
@@ -105,55 +105,55 @@
     <!-- 6. ТРИ УСТАНОВКИ (макет p6): темний фон, H2 і підпис по центру, три арки-фото (.lp-arch; центральна вища) з підписами -->
     <section class="about-sec theme-brown about-stills" id="stills" aria-labelledby="stills-title">
       <div class="about__grid about-stills__head">
-        <h2 class="t-h2 heading-center" id="stills-title" data-reveal="rise">Три<br>установки</h2>
-        <p class="t-desc about-stills__lead" data-reveal="rise">Традиційну перегонку використовуємо для зернових дистилятів, які далі йдуть на витримку. Сировина: зерно та фрукти з України, переробляємо в Україні.</p>
+        <h2 class="t-h2 heading-center" id="stills-title" data-reveal="rise">%t.about.stills.stills-title%</h2>
+        <p class="t-desc about-stills__lead" data-reveal="rise">%t.about.stills.about-stills-lead%</p>
       </div>
       <ul class="about-stills__row">
         <li class="about-still" data-reveal="rise">
-          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-wash.webp" width="933" height="1400" loading="lazy" alt="Мідна бражна установка з шоломом і колонами в цеху дистилерії"></div>
-          <p class="t-lead">Бражна</p>
-          <p class="t-stat-label">3660 л.</p>
+          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-wash.webp" width="933" height="1400" loading="lazy" alt="%t.about.stills.lp-arch-img.alt%"></div>
+          <p class="t-lead">%t.about.stills.p%</p>
+          <p class="t-stat-label">%t.about.stills.p-2%</p>
         </li>
         <li class="about-still about-still--tall" data-reveal="rise">
-          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-spirit.webp" width="900" height="1600" loading="lazy" alt="Мідна колона спиртової установки зі шкалами й оглядовими вікнами"></div>
-          <p class="t-lead">Спиртова</p>
-          <p class="t-stat-label">2420 л.</p>
+          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-spirit.webp" width="900" height="1600" loading="lazy" alt="%t.about.stills.lp-arch-img.alt-2%"></div>
+          <p class="t-lead">%t.about.stills.p-3%</p>
+          <p class="t-stat-label">%t.about.stills.p-4%</p>
         </li>
         <li class="about-still" data-reveal="rise">
-          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-vac.webp" width="933" height="1400" loading="lazy" alt="Мідна вакуумна установка з оглядовим люком у цеху"></div>
-          <p class="t-lead">Вакуумна</p>
-          <p class="t-stat-label">410 л.</p>
+          <div class="lp-arch about-still__arch"><img class="lp-arch__img" src="/assets/img/about-still-vac.webp" width="933" height="1400" loading="lazy" alt="%t.about.stills.lp-arch-img.alt-3%"></div>
+          <p class="t-lead">%t.about.stills.p-5%</p>
+          <p class="t-stat-label">%t.about.stills.p-6%</p>
         </li>
       </ul>
     </section>
 
     <!-- 7. ЕКСКУРСІЇ І БОЧКА (макет p7): ті самі панелі tour-card з ромбовим патерном, що на головній -->
     <section class="tours about-tours">
-      <!--@include components/tour-card id="tour" kicker="Екскурсії" title="Побачте дистиляцію<br>на власні очі" text="Покажемо весь шлях від зерна до пляшки: мідні куби, ферментацію, бочкову залу. Наприкінці — дегустація в нашій кімнаті. Групи невеликі, тому час потрібно бронювати наперед." btn="Забронювати час" href="excursions.html" photo="home-tour-distillery.webp" alt="Мідний перегінний куб у дистилерії"-->
-      <!--@include components/tour-card id="barrel" mod=" tour-card--photo-first" kicker="Усе в одному місці, усе нашими руками" title="Бочка,<br>що дозріває<br>для вас" text="Оберіть бочку Bazylsprings або YasnoCraft — вона дозріватиме в нашій бочковій залі, а ви стежитимете за її розвитком. Для закладів і колекціонерів пропонуємо також дистилят у бочках і порожні дубові бочки" btn="Отримати пропозицію" href="barrels.html" photo="home-tour-barrels.webp" alt="Дубові бочки у бочковій залі"-->
+      <!--@include components/tour-card id="tour" kicker="%t.about.tour.kicker%" title="%t.about.tour.title%" text="%t.about.tour.text%" btn="%t.about.tour.btn%" href="excursions.html" photo="home-tour-distillery.webp" alt="%t.about.tour.alt%"-->
+      <!--@include components/tour-card id="barrel" mod=" tour-card--photo-first" kicker="%t.about.barrel.kicker%" title="%t.about.barrel.title%" text="%t.about.barrel.text%" btn="%t.about.barrel.btn%" href="barrels.html" photo="home-tour-barrels.webp" alt="%t.about.barrel.alt%"-->
     </section>
 
     <!-- 8. НАШІ ПРИНЦИПИ (макет p8): H2 по центру, чотири картки-арки (.lp-arch із золотою заливкою; еталон ref/principles-new.webp), у кожній темний вінець-sunburst (symbol principle-crown) з іконкою, назва й опис унизу -->
     <section class="about-sec theme-brown about-principles" id="principles" aria-labelledby="principles-title">
       <div class="about__grid">
-        <h2 class="t-h2 heading-center" id="principles-title" data-reveal="rise">Наші<br>принципи</h2>
+        <h2 class="t-h2 heading-center" id="principles-title" data-reveal="rise">%t.about.principles.principles-title%</h2>
       </div>
       <ul class="about-principles__list">
         <li class="about-principle lp-arch" data-reveal="rise">
           <p class="about-principle__ring"><svg class="about-principle__crown" aria-hidden="true"><use href="#principle-crown"/></svg><svg class="about-principle__icon" aria-hidden="true"><use href="#principle-icon-1"/></svg></p>
-          <div class="about-principle__text"><h3 class="t-product-name">Не поспішати</h3><p class="t-desc">Нова позиція з'являється, коли має характер і роль</p></div>
+          <div class="about-principle__text"><h3 class="t-product-name">%t.about.principles.h3%</h3><p class="t-desc">%t.about.principles.p%</p></div>
         </li>
         <li class="about-principle lp-arch" data-reveal="rise">
           <p class="about-principle__ring"><svg class="about-principle__crown" aria-hidden="true"><use href="#principle-crown"/></svg><svg class="about-principle__icon" aria-hidden="true"><use href="#principle-icon-2"/></svg></p>
-          <div class="about-principle__text"><h3 class="t-product-name">Контролювати шлях</h3><p class="t-desc">Від сировини до пляшки на одному майданчику</p></div>
+          <div class="about-principle__text"><h3 class="t-product-name">%t.about.principles.h3-2%</h3><p class="t-desc">%t.about.principles.p-2%</p></div>
         </li>
         <li class="about-principle lp-arch" data-reveal="rise">
           <p class="about-principle__ring"><svg class="about-principle__crown" aria-hidden="true"><use href="#principle-crown"/></svg><svg class="about-principle__icon" aria-hidden="true"><use href="#principle-icon-3"/></svg></p>
-          <div class="about-principle__text"><h3 class="t-product-name">Без перебільшень</h3><p class="t-desc">Говоримо лише про те, що можемо підтвердити на виробництві</p></div>
+          <div class="about-principle__text"><h3 class="t-product-name">%t.about.principles.h3-3%</h3><p class="t-desc">%t.about.principles.p-3%</p></div>
         </li>
         <li class="about-principle lp-arch" data-reveal="rise">
           <p class="about-principle__ring"><svg class="about-principle__crown" aria-hidden="true"><use href="#principle-crown"/></svg><svg class="about-principle__icon" aria-hidden="true"><use href="#principle-icon-4"/></svg></p>
-          <div class="about-principle__text"><h3 class="t-product-name">Поважати час</h3><p class="t-desc">Витримка як основа характеру Bazylsprings</p></div>
+          <div class="about-principle__text"><h3 class="t-product-name">%t.about.principles.h3-4%</h3><p class="t-desc">%t.about.principles.p-4%</p></div>
         </li>
       </ul>
     </section>
@@ -161,16 +161,16 @@
     <!-- 10. FAQ (макет p10; футер p9 — спільний partial нижче): бежевий фон, H2 по центру, дві колонки карток (faq-item card) -->
     <section class="about-sec theme-beige about-faq" id="faq" aria-labelledby="about-faq-title">
       <div class="about__grid">
-        <h2 class="t-hero heading-center heading-wide" id="about-faq-title" data-reveal="rise">Відповіді на поширені<br>запитання</h2>
+        <h2 class="t-hero heading-center heading-wide" id="about-faq-title" data-reveal="rise">%t.about.faq.about-faq-title%</h2>
       </div>
       <div class="faq-page__list faq-page__list--span8" data-acc-keys>
         <div class="faq-page__col">
-          <!--@include components/faq-item id="about-q1" q="Хто стоїть за дистилерією?" a="Засновник — Віктор Базильчук. Він сформував концепцію дистилерії, виробничу модель і команду; за плечима аграрний сектор, виробництво, робота із зерном та експорт. Виробництвом керує Герман Марущак."-->
-          <!--@include components/faq-item id="about-q3" q="Чим YasnoCraft відрізняється від Bazylsprings?" a="Це два бренди однієї дистилерії. YasnoCraft робить джин, фруктові й зернові дистиляти, бренді та настоянки. Bazylsprings є whisky house: зернові дистиляти, витримка в бочці та купаж. У 2020 році White Whiskey від Bazylsprings посів перше місце на Ukrainian Craft Spirits Awards у своїй категорії."-->
+          <!--@include components/faq-item id="about-q1" q="%t.about.about-q1.q%" a="%t.about.about-q1.a%"-->
+          <!--@include components/faq-item id="about-q3" q="%t.about.about-q3.q%" a="%t.about.about-q3.a%"-->
         </div>
         <div class="faq-page__col">
-          <!--@include components/faq-item id="about-q4" q="Скільки будували дистилерію?" a="15 місяців. Будівництво почалося 1 травня 2025 року, першу чергу відкрили 8 серпня 2026 року. Основні лінії вже працюють, фінальне дооснащення триває."-->
-          <!--@include components/faq-item id="about-q5" q="Чи можна побачити виробництво?" a="Так. Виробництво спроєктоване для гостей: шлях від сировини до розливу, установки, зони витримки, наприкінці дегустація. Екскурсії проводимо для груп від 6 осіб, з 24 жовтня; формати на 4 або 8 напоїв із закусками. Деталі й бронювання на сторінці екскурсій."-->
+          <!--@include components/faq-item id="about-q4" q="%t.about.about-q4.q%" a="%t.about.about-q4.a%"-->
+          <!--@include components/faq-item id="about-q5" q="%t.about.about-q5.q%" a="%t.about.about-q5.a%"-->
         </div>
       </div>
     </section>

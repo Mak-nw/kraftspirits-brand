@@ -51,7 +51,11 @@ export function buildJsonSchema() {
   const nonHero = types.filter((t) => t !== 'hero');
 
   const page = obj(SCHEMA.page);
-  page.properties.sections = { type: 'array', minItems: 1, maxItems: SCHEMA.page.sections.max, prefixItems: [{ $ref: '#/$defs/hero' }], items: { $ref: '#/$defs/section' } };
+  // без `tabs` — одна hero першою; з `tabs` (вкладки верхнього рівня) — ще й hero на старті кожної вкладки (збіг start з id hero перевіряє лише validatePage, правило tabs-start-hero)
+  page.properties.sections = { type: 'array', minItems: 1, maxItems: SCHEMA.page.sections.max, prefixItems: [{ $ref: '#/$defs/hero' }] };
+  (page.allOf ||= []).push({ if: { required: ['tabs'], properties: { tabs: { type: 'array', minItems: 1 } } },
+    then: { properties: { sections: { type: 'array', prefixItems: [true], items: { oneOf: [{ $ref: '#/$defs/hero' }, { $ref: '#/$defs/section' }] } } } },
+    else: { properties: { sections: { type: 'array', prefixItems: [true], items: { $ref: '#/$defs/section' } } } } });
 
   const xrules = [
     ...RULES.map((r) => ({ id: r.id, scope: r.types.join(', '), expressed: !!r.json, rule: r.doc })),

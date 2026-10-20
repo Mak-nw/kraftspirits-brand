@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts price="1"-->
   <!--@include head-age-->
-  <title>Товар — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Сторінка товару дистилерії YasnoCraft × Bazylsprings.">
+  <title>%t.product.title%</title>
+  <meta name="description" content="%t.product.desc%">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
@@ -20,8 +20,8 @@
   <main class="product" id="product" aria-live="polite" data-pending>
     <noscript>
       <div class="product-notfound">
-        <p class="t-lead">Для перегляду товару потрібен JavaScript.</p>
-        <!--@include components/btn variant="btn--green" href="catalog.html" text="До каталогу"-->
+        <p class="t-lead">%t.product.product.p%</p>
+        <!--@include components/btn variant="btn--green" href="catalog.html" text="%t.product.btn.text%"-->
       </div>
     </noscript>
   </main>
@@ -32,8 +32,8 @@
   <template id="acc-item-template"><!--@include components/acc-item q=""--></template>
   <template id="product-notfound-template">
     <div class="product-notfound" data-reveal="fade">
-      <h1 class="t-hero heading-center">Товар не знайдено</h1>
-      <!--@include components/btn variant="btn--green" href="catalog.html" text="До каталогу"-->
+      <h1 class="t-hero heading-center">%t.product.product-notfound-template.h1%</h1>
+      <!--@include components/btn variant="btn--green" href="catalog.html" text="%t.product.btn.text-2%"-->
     </div>
   </template>
   <!--@include footer-->

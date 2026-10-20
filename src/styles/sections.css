@@ -35,6 +35,11 @@
    (його накриває новий шар). Частково видимий шар (is-out) гаснить плавно з поточного значення за --duration-bg. */
 .picker__bgs { position: absolute; z-index: 0; left: 0; bottom: 0; width: 100%; height: var(--size-picker-bg-h); overflow: hidden; }
 .picker__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; max-width: none; opacity: 0; transition: opacity 0s linear var(--duration-bg); }
+.picker__bg[data-occasion="gift"] { object-position: var(--pos-picker-bg-gift); }
+.picker__bg[data-occasion="collection"] { object-position: var(--pos-picker-bg-collection); }
+.picker__bg[data-occasion="tasting"] { object-position: var(--pos-picker-bg-tasting); }
+.picker__bg[data-occasion="bar"] { object-position: var(--pos-picker-bg-bar); }
+.picker__bgs::after { content: ""; position: absolute; inset: 0; z-index: 7; pointer-events: none; background: color-mix(in srgb, var(--color-black) var(--share-picker-bg-shade), transparent); } /* затемнювач фото-фону (контраст світлих стрілок ≥3:1) */
 .picker__bg.is-active { opacity: 1; transition: opacity var(--duration-bg) var(--ease-out); }
 .picker__bg.is-out { transition: opacity var(--duration-bg) var(--ease-out); }
 .picker__bg[data-rank="1"] { z-index: 1; }
@@ -48,6 +53,6 @@
 .picker__text { width: var(--grid-span-4); max-width: 100%; padding-inline: calc((var(--grid-span-4) - var(--container-picker-text)) / 2); } /* бокс = 4 колонки (5–8); міра рядка 500u (переноси підібрано) = внутрішній padding */
 .picker .chip-row { margin-top: var(--space-70); } /* 224:3737 y 475 − низ заголовка 405 */
 .picker .slider { width: var(--grid-span-6); max-width: 100%; margin-top: var(--space-60); } /* бокс каруселі = 6 колонок по центру (4–9); стрілки й картка центровані всередині */ /* 224:3790 y 560 − низ чіпів 500 */
-.picker .slider .arrow-btn { align-self: flex-start; margin-top: var(--offset-picker-arrow-top); } /* 224:3775: y 818 від верху секції = 258 від верху картки */
+.picker .slider .arrow-btn { align-self: flex-start; margin-top: calc(var(--offset-picker-arrow-top) + (var(--size-arrow-btn-h) - var(--size-arrow-btn-sm)) / 2); } /* центр кнопки там же, де був центр великої (66u) */
 .picker .slider .product-card--catalog { width: var(--size-picker-card-w); } /* 224:3790 */
 

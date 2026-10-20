@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts price="1"-->
   <!--@include head-age-->
-  <title>Каталог — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Каталог дистилерії в Ясногородці: джин, кальвадос, фруктові шнапси, настоянки, віскі та колекційні пляшки YasnoCraft і Bazylsprings.">
+  <title>%t.catalog.title%</title>
+  <meta name="description" content="%t.catalog.desc%">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
@@ -17,49 +17,44 @@
   <!--@include components/age-gate-->
   <!--@include header-->
   <main class="catalog-page">
-    <h1 class="visually-hidden">Каталог</h1>
-    <nav class="catalog-nav t-hero" aria-label="Категорії каталогу" data-reveal="rise">
-      <a class="catalog-nav__item" data-cat="all" href="#all">Весь каталог,</a>
-      <a class="catalog-nav__item" data-cat="gin" href="#gin">Джин,</a>
-      <a class="catalog-nav__item" data-cat="calvados" href="#calvados">Кальвадос,</a>
-      <a class="catalog-nav__item" data-cat="schnapps" href="#schnapps">Фруктові шнапси,</a>
-      <a class="catalog-nav__item" data-cat="tinctures" href="#tinctures">Настоянки,</a>
-      <a class="catalog-nav__item" data-cat="fruit-in-bottle" href="#fruit-in-bottle">Фрукт у пляшці</a>
+    <h1 class="visually-hidden">%t.catalog.visually-hidden%</h1>
+    <nav class="catalog-nav t-hero" aria-label="%t.catalog.catalog-nav.label%" data-reveal="rise">
+      %t.catalog.catalog-nav%
     </nav>
 
-    <div class="catalog-bar" role="group" aria-label="Фільтри та сортування" data-reveal="fade">
+    <div class="catalog-bar" role="group" aria-label="%t.catalog.catalog-bar.label%" data-reveal="fade">
       <div class="catalog-bar__group catalog-bar__group--filters">
-        <!--@include components/select id="filter-brand" name="brand" label="Бренд"-->
-        <!--@include components/select id="filter-category" name="category" label="Категорія"-->
+        <!--@include components/select id="filter-brand" name="brand" label="%t.catalog.filter-brand.label%"-->
+        <!--@include components/select id="filter-category" name="category" label="%t.catalog.filter-category.label%"-->
       </div>
       <div class="catalog-bar__group">
-        <!--@include components/select id="filter-sort" name="sort" label="Сортування" value="за замовчуванням"-->
-        <p class="visually-hidden" data-catalog-count aria-live="polite">14 позицій</p>
+        <!--@include components/select id="filter-sort" name="sort" label="%t.catalog.filter-sort.label%" value="%t.catalog.filter-sort.value%"-->
+        <p class="visually-hidden" data-catalog-count aria-live="polite">%t.catalog.visually-hidden-2%</p>
       </div>
     </div>
 
-    <h2 class="visually-hidden">Асортимент</h2>
+    <h2 class="visually-hidden">%t.catalog.visually-hidden-3%</h2>
     <div class="catalog-grid" data-catalog-grid data-pending></div>
     <div class="catalog-empty" data-catalog-empty hidden>
-      <p class="t-lead">Нічого не знайдено</p>
-      <!--@include components/btn variant="btn--light" href="#all" text="Скинути"-->
+      <p class="t-lead">%t.catalog.p%</p>
+      <!--@include components/btn variant="btn--light" href="#all" text="%t.catalog.btn.text%"-->
     </div>
 
     <template id="product-card-template"><!--@include components/product-card mod=" product-card--catalog" slug="" name="" price="" image="data:," brand=""--></template>
 
     <noscript>
       <ul class="catalog-noscript t-caption">
-        <li><a href="product.html?id=gin-yasnyi">Джин Ясногородський</a></li>
-        <li><a href="product.html?id=gin-garden">Джин Садовий</a></li>
-        <li><a href="product.html?id=gin-barrel">Джин Бочковий</a></li>
-        <li><a href="product.html?id=calvados-3">Кальвадос 3 роки</a></li>
-        <li><a href="product.html?id=calvados-5">Кальвадос 5 років</a></li>
-        <li><a href="product.html?id=schnapps-plum">Шнапс сливовий</a></li>
-        <li><a href="product.html?id=schnapps-pear">Шнапс грушевий</a></li>
-        <li><a href="product.html?id=schnapps-cherry">Шнапс вишневий</a></li>
-        <li><a href="product.html?id=tincture-herbal">Настоянка трав'яна</a></li>
-        <li><a href="product.html?id=tincture-rowan">Настоянка горобинова</a></li>
-        <li><a href="product.html?id=fruit-watermelon">Фрукт у пляшці · Кавун</a></li>
+        <li>%t.catalog.li%</li>
+        <li>%t.catalog.li-2%</li>
+        <li>%t.catalog.li-3%</li>
+        <li>%t.catalog.li-4%</li>
+        <li>%t.catalog.li-5%</li>
+        <li>%t.catalog.li-6%</li>
+        <li>%t.catalog.li-7%</li>
+        <li>%t.catalog.li-8%</li>
+        <li>%t.catalog.li-9%</li>
+        <li>%t.catalog.li-10%</li>
+        <li>%t.catalog.li-11%</li>
         <li><a href="product.html?id=whiskey-white">White Whiskey</a></li>
         <li><a href="product.html?id=barley-spirit">Barley Spirit</a></li>
         <li><a href="product.html?id=oak-notes">Oak Notes</a></li>
