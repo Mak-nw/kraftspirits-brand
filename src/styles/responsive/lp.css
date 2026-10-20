@@ -28,6 +28,7 @@
   /* arches (look: about: «що дає бочка», «чотири враження», «чотири характери»): склепіння рахується від n колонок — n зменшуємо за шириною */
   .lp-arches--n5, .lp-arches--n6 { --lp-n: 3; row-gap: var(--space-50); }
   .lp-arches--cards { --lp-n: 2; row-gap: var(--space-50); }
+  .lp-arches--n4 { --lp-n: 2; row-gap: var(--space-50); }  /* 4 арки в ряд на планшеті рвуть назви («ПРИВАТНИЙ», «ВАКУУМНА»): 2 + 2, як «Три установки» на about */
   /* fpanel (формати, look: about): панелі поруч (span 5 → 4 з 8 колонок), напої в 2 колонки */
   .lp-fpanel__drinks--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* offers: «airy» і панорама — той самий потік, нижній відступ під панелями лишається для води/хвиль */
@@ -78,6 +79,7 @@
   .lp-arches, .lp-arches--n3, .lp-arches--n4, .lp-arches--n5, .lp-arches--n6 { --lp-n: 2; row-gap: var(--space-50); }
   .lp-arches--n2 { --lp-n: 2; }
   .lp-arches .about-still { width: 100%; }  /* підписи арок/бочок на всю ширину колонки (82% з about давало 130px і рвало слова) */
+  .lp-arches--n3 > .about-still:last-child { grid-column: 1 / -1; width: calc((100% - var(--grid-gap)) / 2); justify-self: center; }  /* третя арка без пари — по центру, ширина = колонка */
   .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; }
   /* compare (кімнати-погреби): одна кімната під другою, на всю ширину; рядок «200 Л ≈ 383 ПЛЯШКИ» — два рядки симетрично (text-wrap: balance) */
   .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-70); }
