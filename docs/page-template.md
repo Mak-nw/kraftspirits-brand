@@ -238,7 +238,7 @@ HTML у полях не приймається (усе екранується); 
 
 | Тип | Вигляд з `look: about` | Partial |
 |---|---|---|
-| `layers` | арки-фото `.lp-arch` (`.about-still`, як «Три установки») + назва `.t-lead` і опис `.t-desc` під аркою; `img` пункту — фото арки (без `img` арка порожня) | `lp/layer-arch` |
+| `layers` | арки-фото `.lp-arch` (`.about-still`, як «Три установки») + назва `.t-lead` і опис `.t-desc` під аркою; `img` пункту — фото арки (без `img` арка порожня); з `shape: barrel` (лише `look: about`, `img` у кожному пункті) кадр — силует бочки замість арки (той самий бокс і підписи; контур = бочка сцени «льох»; маска `lp-barrel-mask.svg` + hairline `lp-barrel-line.svg`), без нього — арка | `lp/layer-arch` |
 | `tiles` (лише `shape: circle`) | картки-арки з золотою заливкою (`.about-principle`, як «Наші принципи»): кадр-коло фото (`tone`, `imgPos`, `zoom` — як у колі), назва й опис унизу; `captionOver` ігнорується | `lp/tile-card` |
 | `formats` | панелі `.brand-panel` (беж, прямий зовнішній кут + заокруглений внутрішній бокс): число `.t-h2` + одиниця `.t-lead`, напої з hairline-рядками, факти; рядки двох панелей спільні (subgrid) | `lp/format-panel`, `-drink`, `-fact` |
 | `offers` | ті самі панелі `.contacts-panel`, але: назва роллю `.t-lead`; рядки фактів «значення \| підпис» (значення зліва, підпис справа); ціна з «грн» (`price` + `priceNote`) одним елементом ролі `.t-price` (як ціна на сторінці товару) внизу перед кнопкою | `lp/offer`, `lp/offer-fact` |
@@ -307,6 +307,7 @@ HTML у полях не приймається (усе екранується); 
 | `tiles-alt-needs-img` | tiles | `alt` лише з `img` | так |
 | `tiles-circle-needs-img` | tiles | `shape: circle` ⇒ `img` у кожній плитці | так |
 | `tiles-circle-origin-2lines` | tiles | `shape: circle`: `origin` — рівно два рядки (один `\n`, кожен ≤ 32) | так |
+| `layers-barrel-needs-look` | layers | `shape: barrel` лише з `look: about` і `img` у кожному пункті | так |
 | `look-tiles-circle` | tiles | `look: about` лише з `shape: circle` | так |
 | `tiles-circle-fields` | tiles | `leadCols` секції, `tone` / `imgPos` / `zoom` плитки лише з `shape: circle` | так |
 | `offers-media` | offers | не більше одного з `bg` / `scene` | так |

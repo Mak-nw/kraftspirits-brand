@@ -349,6 +349,10 @@
 .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; grid-row: 2; }
 .lp-arches .about-still__arch { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) * var(--ratio-lp-arch-rise)); } /* склепіння = 0.42 ширини арки (як about-still, але n колонок) */
 .lp-arches .about-still .t-desc { text-wrap: balance; }
+/* shape: barrel (layers, look: about): кадр-бочка замість арки; той самий бокс (13:14 — ті самі висота й підписи), контур = силует бочки сцени «льох» (кришка/дно дугою, випуклі боки; viewBox-копія path lp-cellar__cask); фото обрізається маскою, hairline — другою маскою того ж контуру */
+.lp-arches--barrel .lp-arch { overflow: visible; border: 0; border-radius: 0; }
+.lp-arches--barrel .lp-arch__img { -webkit-mask: url('/assets/img/lp-barrel-mask.svg') 0 0 / 100% 100% no-repeat; mask: url('/assets/img/lp-barrel-mask.svg') 0 0 / 100% 100% no-repeat; }
+.lp-arches--barrel .lp-arch::after { content: ''; position: absolute; inset: 0; background: var(--lp-hairline); -webkit-mask: url('/assets/img/lp-barrel-line.svg') 0 0 / 100% 100% no-repeat; mask: url('/assets/img/lp-barrel-line.svg') 0 0 / 100% 100% no-repeat; pointer-events: none; }
 .lp-arches--cards { --size-lp-tile-ring: var(--size-about-ring-line); --lp-tile-ring: var(--color-brown); } /* кільце фото в картці — hairline коричневим на золоті (як кільце принципу) */
 .lp-arches--cards .about-principle { --lp-rise: calc((var(--lp-w) - (var(--lp-n) - 1) * var(--grid-gap)) / var(--lp-n) / 2); } /* верх картки = півколо на всю ширину (для 4 карток на 10 колонок = значення .about-principle) */
 .lp-arches__origin { white-space: pre-line; }

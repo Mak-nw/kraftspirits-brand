@@ -156,6 +156,12 @@
       "rule": "довжина `price` залежить від кількості пропозицій: 1 — ≤ 21, 2 — ≤ 10, 3 — ≤ 6 знаків (цифри; слова вужче — одиницю («грн», «з людини») пишіть у `priceNote`)"
     },
     {
+      "id": "layers-barrel-needs-look",
+      "scope": "layers",
+      "expressed": true,
+      "rule": "`shape: barrel` (кадр-бочка замість арки): лише з `look: about` (арки-фото `.lp-arch`) і фото `img` у кожному пункті"
+    },
+    {
       "id": "look-tiles-circle",
       "scope": "tiles",
       "expressed": true,
@@ -445,6 +451,13 @@
                 null
               ]
             },
+            "shape": {
+              "enum": [
+                "barrel",
+                "",
+                null
+              ]
+            },
             "cols": {
               "enum": [
                 6,
@@ -567,6 +580,43 @@
                     }
                   ]
                 }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "shape": {
+                    "const": "barrel"
+                  }
+                },
+                "required": [
+                  "shape"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "look": {
+                    "const": "about"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "img"
+                      ],
+                      "properties": {
+                        "img": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "look"
+                ]
               }
             }
           ]

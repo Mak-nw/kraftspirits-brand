@@ -90,8 +90,10 @@ function variantsOf(type) {
   } else if (['layers', 'formats', 'place', 'offers'].includes(type)) {   // look: about — вигляд «Про нас» (арки / панелі brand-panel / картка tour-card з мапою) і типовий без поля
     if (type !== 'place') delete s.cols;
     const sc = clone(s); if (type === 'offers') { delete s.scene; ['bg', 'bgW', 'bgH', 'bgSlot'].forEach((k) => delete sc[k]); }   // offers: фон — рівно одне з bg (фото) або scene (панорама)
+    if (type === 'layers') delete s.shape;   // shape: barrel — лише з look: about (окремий варіант нижче)
     const a = clone(s); delete a.look; out.push(['', a]);
     out.push(['look about', s]);
+    if (type === 'layers') { const bl = clone(s); bl.shape = 'barrel'; out.push(['barrel', bl]); }   // look: about + кадр-бочка (lp-arches--barrel)
     if (type === 'offers') out.push(['scene', sc]);
   } else { if (['layers', 'formats', 'offers'].includes(type)) delete s.cols; out.push(['', s]); } // cols цих типів залежить від кількості пунктів — перевіряється окремо (блок «cols і pad» нижче)
   return out;
@@ -154,7 +156,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'layers.shape', 'layers.look', 'layers.items.img', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -303,6 +305,9 @@ cross('tiles: zoom поза кроками (1.3)', (p) => { S(p).items[0].zoom =
 cross('tiles: zoom = 2 (крайній крок)', (p) => { S(p).items[0].zoom = 2; }, true, true, 'tiles [circle');
 cross('tiles: look about без shape circle', (p) => { S(p).look = 'about'; delete S(p).shape; delete S(p).leadCols; delete S(p).captionOver; S(p).items.forEach((t) => { delete t.tone; delete t.imgPos; delete t.zoom; }); }, false, false, 'tiles [circle');
 cross('tiles: look about + shape circle (валідно)', (p) => { S(p).look = 'about'; }, true, true, 'tiles [circle');
+cross('layers: shape barrel без look about', (p) => { delete S(p).look; }, false, false, 'layers [barrel');
+cross('layers: shape barrel без img у пункті', (p) => { delete S(p).items[0].img; }, false, false, 'layers [barrel');
+cross('layers: look about + shape barrel (валідно)', () => {}, true, true, 'layers [barrel');
 cross('look: значення поза переліком', (p) => { S(p).look = 'other'; }, false, false, 'tiles [circle');
 cross('tiles: tone поза переліком', (p) => { S(p).items[0].tone = 'red'; }, false, false, 'tiles [circle');
 cross('tiles: alt без img', (p) => { S(p).items[0].alt = 'x'; }, false, false, 'tiles [engraving');
