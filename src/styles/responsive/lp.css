@@ -77,6 +77,7 @@
   /* arches: 2 колонки (склепіння від n = 2) */
   .lp-arches, .lp-arches--n3, .lp-arches--n4, .lp-arches--n5, .lp-arches--n6 { --lp-n: 2; row-gap: var(--space-50); }
   .lp-arches--n2 { --lp-n: 2; }
+  .lp-arches .about-still { width: 100%; }  /* підписи арок/бочок на всю ширину колонки (82% з about давало 130px і рвало слова) */
   .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; }
   /* compare (кімнати-погреби): одна кімната під другою, на всю ширину; рядок «200 Л ≈ 383 ПЛЯШКИ» — два рядки симетрично (text-wrap: balance) */
   .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-70); }

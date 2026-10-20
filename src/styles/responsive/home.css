@@ -32,6 +32,17 @@
   .brand-choice__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-70); }
   .intro__body { width: 100%; }
   .chip-row .chip { flex: 1 1 45%; }
+  /* слайдер підбору: картка займає все місце між золотими стрілками 44px (зазор = gap слайдера), щоб назви не обрізались */
+  .picker .slider {
+    --size-card-cat2-w: calc(var(--grid-w) - 2 * (var(--size-arrow-btn-w) + var(--space-30)));
+    --size-picker-card-w: var(--size-card-cat2-w); --size-arch-w: calc(var(--size-card-cat2-w) - 2 * var(--offset-arch));
+    --cu: calc(var(--size-card-cat2-w) / 348.55);
+    --size-card-cat2-h: calc(480 * var(--cu)); --space-card-cat2-photo-top: calc(44 * var(--cu)); --size-card-cat2-photo-h: calc(298 * var(--cu));
+    --space-card-cat2-body-top: calc(20 * var(--cu)); --space-card-cat2-body-gap: calc(20 * var(--cu)); --space-card-cat2-body-bottom: calc(30 * var(--cu));
+    --radius-card-arch: calc(5 * var(--cu)); --size-arch-top-h: calc(180 * var(--cu)); --size-arch-bottom-h: calc(10 * var(--cu)); --size-arch-seam: calc(1 * var(--cu));
+    --offset-arch: calc(6 * var(--cu)); --liquid-wave-h: calc(24 * var(--cu));
+    --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu));
+  }
 }
 
 /* головна, «Два бренди» (.brands + .brand-half, картка з вирізом-пляшкою): на ≤ 1023 половини одна під одною (картка = вся ширина сітки), геометрія картки (мова 737×934 u макета)
