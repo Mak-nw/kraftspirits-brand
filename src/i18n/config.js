@@ -16,6 +16,6 @@ export const NO_LOCALE_PAGES = ['404', 'design-system'];
 // <html lang="uk" data-locale="en">, <meta name="robots" content="noindex">, canonical → українська сторінка, у sitemap немає.
 // Після повного перекладу сторінки — рядок сюди і перевірка `npm run qa:i18n`.
 export const PAGE_STATUS = {
-  en: { index: 'done', catalog: 'done', cart: 'done', contacts: 'done', feedback: 'done', product: 'done', about: 'done', faq: 'done', cocktails: 'done' },
+  en: { index: 'done', catalog: 'done', cart: 'done', contacts: 'done', feedback: 'done', product: 'done', about: 'done', faq: 'done', cocktails: 'done', barrels: 'done', excursions: 'done' },
 };
 export const pageStatus = (locale, name) => (locale === DEFAULT_LOCALE ? 'done' : PAGE_STATUS[locale]?.[name] || 'draft');
