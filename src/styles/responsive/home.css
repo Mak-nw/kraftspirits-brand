@@ -33,3 +33,24 @@
   .intro__body { width: 100%; }
   .chip-row .chip { flex: 1 1 45%; }
 }
+
+/* головна, «Два бренди» (.brands + .brand-half, картка з вирізом-пляшкою): на ≤ 1023 половини одна під одною (картка = вся ширина сітки), геометрія картки (мова 737×934 u макета)
+   масштабується власною одиницею --bhu = ширина картки / 737.1, тож виріз пляшки, логотип, текст і кнопка зберігають пропорції; маска (SVG) розтягується на картку без спотворення */
+@media (max-width: 1023.98px) {
+  .brands { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .brand-half {
+    --bhu: calc(var(--grid-w) / 737.1);
+    height: calc(934 * var(--bhu) + 2 * var(--space-50));
+    --size-brand-card-h: calc(934 * var(--bhu)); --size-brand-card-yc-w: var(--grid-w); --size-brand-card-bs-w: var(--grid-w);
+    --offset-brand-card-top: var(--space-50); --offset-brand-card-yc-x: var(--grid-margin); --offset-brand-card-bs-x: var(--grid-margin);
+    --offset-brand-content-top: calc(80 * var(--bhu)); --size-brand-content-w: 60%; --size-brand-logo-box-h: calc(172 * var(--bhu));
+    --size-brand-logo-yc-w: calc(402 * var(--bhu)); --size-brand-logo-yc-h: calc(106 * var(--bhu));
+    --size-brand-logo-bs-w: calc(263 * var(--bhu)); --size-brand-logo-bs-h: calc(152 * var(--bhu));
+    --offset-brand-cta-top: calc(786 * var(--bhu));
+  }
+}
+@media (max-width: 767.98px) {
+  /* телефон: текст бренду лягає у 4 рядки — логотип-бокс і верх контенту стиснуті, щоб текст не заходив на виріз пляшки */
+  .brand-half { --offset-brand-content-top: calc(52 * var(--bhu)); --size-brand-logo-box-h: calc(110 * var(--bhu)); --size-brand-content-w: 76%; }
+  .brand-half { --size-brand-logo-yc-w: calc(330 * var(--bhu)); --size-brand-logo-yc-h: calc(87 * var(--bhu)); --size-brand-logo-bs-w: calc(160 * var(--bhu)); --size-brand-logo-bs-h: calc(92 * var(--bhu)); }
+}

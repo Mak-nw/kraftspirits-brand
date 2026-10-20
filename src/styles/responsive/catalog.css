@@ -16,8 +16,11 @@
   .product-volume { min-height: var(--size-touch-target); display: inline-flex; align-items: center; }
   /* контакти */
   .contacts { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
-  .contacts-map { min-height: var(--size-contacts-map-min-h); }
-  .contacts-map-panel { display: flex; flex-direction: column; }
+  /* вікно «контакти»: картка з даними зверху, мапа (фон десктопного вікна) під нею окремим блоком */
+  .contacts-window { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-contacts-card-inset); }
+  .contacts-window > .contacts-info { grid-column: auto; order: 1; }
+  .contacts-window > .contacts-window__map { position: relative; inset: auto; order: 2; flex: none; height: var(--size-contacts-map-min-h); }
+  .contacts-map { min-height: var(--size-contacts-map-min-h); border-radius: var(--radius-panel); }
   /* зворотній зв'язок: одна колонка (порядок: заголовок, тип, контакти, повідомлення, згода, кнопка) */
   .feedback-form { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-feedback-block-gap); }
   .feedback-col--aside > *, .feedback-col--main > * { grid-column: auto; }

@@ -25,6 +25,24 @@
   .lp-place__panel { min-height: 0; }
   .lp-route { width: var(--grid-w); }
   .lp-steps__card { height: auto; min-height: var(--size-lp-deck-min-h); }
+  /* arches (look: about: «що дає бочка», «чотири враження», «чотири характери»): склепіння рахується від n колонок — n зменшуємо за шириною */
+  .lp-arches--n5, .lp-arches--n6 { --lp-n: 3; row-gap: var(--space-50); }
+  .lp-arches--cards { --lp-n: 2; row-gap: var(--space-50); }
+  /* fpanel (формати, look: about): панелі поруч (span 5 → 4 з 8 колонок), напої в 2 колонки */
+  .lp-fpanel__drinks--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* offers: «airy» і панорама — той самий потік, нижній відступ під панелями лишається для води/хвиль */
+  .lp-offers--airy .lp-offers__grid { column-gap: var(--space-30); }
+  /* картки-арки (дегустація): висота за вмістом (на десктопі — співвідношення 33:50, на вузькому текст не вміщується), на всю ширину комірки */
+  .lp-arches--cards .about-principle { aspect-ratio: auto; width: 100%; justify-content: flex-start; gap: var(--space-30); }
+  /* колода split: висота за вмістом (без запасу min-height десктопної колоди) */
+  .lp-steps__card--split { height: auto; min-height: 0; }
+  /* offers (look: about): блок ціни — стовпцем (ціна над кнопкою), бо дві панелі в ряд вузькі для рядка */
+  .lp-look--about .lp-offer__buy { flex-direction: column; justify-content: center; text-align: center; }
+  .lp-look--about .lp-offer__price { text-wrap: balance; }
+  /* колода кроків (split: овал/lottie): текст зверху, медіа під ним; кути картки — як на десктопі (--radius-panel) */
+  .lp-steps__split-box { grid-template-columns: minmax(0, 1fr); }
+  .lp-steps__split-text { height: auto; }
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.45); }
   .lp-slots { display: none; }
 }
 @media (max-width: 767.98px) {
@@ -56,11 +74,33 @@
   .lp-format { grid-row: auto; grid-template-rows: none; display: flex; flex-direction: column; align-items: center; padding: var(--space-lp-format-pad); }
   .lp-format__drinks, .lp-format__facts { width: 100%; }
   .lp-offers__actions { flex-wrap: wrap; }
+  /* arches: 2 колонки (склепіння від n = 2) */
+  .lp-arches, .lp-arches--n3, .lp-arches--n4, .lp-arches--n5, .lp-arches--n6 { --lp-n: 2; row-gap: var(--space-50); }
+  .lp-arches--n2 { --lp-n: 2; }
+  .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; }
+  /* compare (кімнати-погреби): одна кімната під другою, на всю ширину; рядок «200 Л ≈ 383 ПЛЯШКИ» — два рядки симетрично (text-wrap: balance) */
+  .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-70); }
+  .lp-compare__head, .lp-compare__note { grid-column: 1 / -1; grid-row: auto; }
+  .lp-group, .lp-group[class*="lp-span--"] { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; }
+  .lp-group--has-cellar .lp-group__num { text-align: center; }
+  /* formats (fpanel): панелі одна під одною; рядки підпис · число · напої · факти — у потоці без спільної сітки */
+  .lp-formats__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-50); }
+  .lp-formats__head { grid-column: 1 / -1; grid-row: auto; }
+  .lp-look--about .lp-fpanel, .lp-look--about .lp-fpanel[class*="lp-span--"] { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; }
+  .lp-fpanel__box { grid-row: auto; grid-template-rows: none; }
+  .lp-fpanel__lead, .lp-fpanel__badge, .lp-fpanel__drinks, .lp-fpanel__facts { grid-row: auto; }
+  /* offers: шапка/панелі/підвал в одну колонку (span-и даних не створюють неявних колонок) */
+  .lp-offers__grid > * { grid-column: 1 / -1; }
+  .lp-offers--airy .lp-offers__grid { row-gap: var(--space-30); }
+  .lp-look--about .lp-offer__buy { flex-wrap: wrap; justify-content: center; }
+  .lp-look--about .lp-offer__offer .lp-list { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
+  .lp-look--about .lp-offer__offer .lp-list li + li { padding-inline-start: 0; border-inline-start: 0; }
   .lp-route { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .lp-route__side--from { grid-column: 1 / span 2; } .lp-route__side--to { grid-column: 3 / span 2; }
   .lp-layer__icon { --icon-size: calc(36 * var(--u)); }
   .lp-format__facts { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
   /* колода кроків: фото зверху, текст під ним (текст не лежить на фото) */
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.6); }
   .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
   .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * 0.55); }
   .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }

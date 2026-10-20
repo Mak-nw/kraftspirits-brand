@@ -20,10 +20,12 @@
   .site-header__logo { height: var(--size-touch-target); }
   .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
   .site-footer__list { gap: 0; }
-  .site-footer__list a, .site-footer__list li.nav-link, .site-footer__offer a { display: flex; align-items: center; min-height: var(--size-touch-target); }
-  .site-footer__list a { width: 100%; }
-  .site-footer__offer a { min-width: var(--size-touch-target); }
-  .site-footer__offer { row-gap: 0; }
   .woocommerce .quantity .arrow-btn { flex: none; }
   .contacts-item__value { min-height: var(--size-touch-target); display: flex; align-items: center; }
+}
+
+/* вікові ворота (вікно без роздільника між логотипами): на вузькому телефоні кнопки одна під одною, на всю ширину картки */
+@media (max-width: 479.98px) {
+  .age-card__actions { grid-template-columns: minmax(0, 1fr); }
+  .age-card__logos { gap: var(--space-30); }
 }

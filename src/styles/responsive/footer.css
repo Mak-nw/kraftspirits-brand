@@ -1,0 +1,37 @@
+/* АДАПТИВ: footer (docs/responsive.md). Лише поза діапазоном 1200–1920.
+   Розкладка main: «Меню» (1–3) · «Каталог» (4–6) · «Документація» (8–10) · кнопки замовлення (.site-footer__order) · © і вордмарк · бірюзовий блок. */
+@media (max-width: 1199.98px) {
+  .site-footer__list { gap: 0; }
+  .site-footer__list a:not(.btn), .site-footer__list li.nav-link { display: flex; align-items: center; min-height: var(--size-touch-target); }
+  .site-footer__list a:not(.btn) { width: 100%; }  /* вся ширина колонки клікабельна: ціль ≥ 44 і по ширині */
+  .site-footer__col--docs .site-footer__list a:not(.btn) { justify-content: flex-end; }  /* «Документація» праворуч, як на десктопі */
+  .site-footer__order .btn__inner { min-height: var(--size-touch-target); }
+}
+@media (max-width: 1023.98px) {
+  .site-footer__top { height: auto; padding: var(--space-70) var(--grid-margin) 0; gap: var(--space-50); }
+  .site-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-50); }
+  .site-footer__col--menu, .site-footer__col--catalog, .site-footer__col--docs { grid-column: auto; }
+  .site-footer__col { gap: var(--space-20); }
+  .site-footer__list a:not(.btn), .site-footer__list li.nav-link { white-space: normal; width: 100%; }
+  /* «Документація» — як решта колонок, по лівому краю (права вирівняність лише на десктопі) */
+  .site-footer__col--docs { text-align: left; }
+  .site-footer__col--docs .site-footer__list a:not(.btn) { margin-left: 0; justify-content: flex-start; }
+  /* кнопки замовлення: однакова ширина, на всю ширину вмісту, рівні між собою */
+  .site-footer__order { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-20); margin-bottom: var(--space-50); }
+  .site-footer__order > .btn:nth-child(1), .site-footer__order > .btn:nth-child(2) { grid-column: auto; }
+  .site-footer__legal { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); padding-bottom: var(--space-30); }
+  .site-footer__legal .site-footer__wordmark { position: static; width: 100%; justify-content: center; margin-top: var(--space-30); }
+  .site-footer__bottom { height: auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding: var(--space-50) var(--grid-margin); }
+  .site-footer__bottom .site-footer__wordmark { justify-self: auto; width: 100%; }
+  .site-footer__age { white-space: normal; text-wrap: balance; }
+}
+@media (max-width: 767.98px) {
+  /* телефон: Меню / Каталог / Документація одна під одною, кнопки замовлення одна під одною на всю ширину */
+  .site-footer__cols { grid-template-columns: minmax(0, 1fr); }
+  .site-footer__order { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-20); }
+}
+/* малі ноути 1024–1199: висота верху футера — мінімум (малий текст із підлогами px не вміщується в --footer-h-top) */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .site-footer__top { height: auto; min-height: var(--footer-h-top); }
+  .site-footer__order { margin-bottom: var(--space-50); }
+}

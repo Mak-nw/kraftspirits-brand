@@ -41,6 +41,7 @@
 /* адаптив (поза діапазоном 1200–1920): docs/responsive.md; ПІСЛЯ всіх сторінкових стилів */
 @import './responsive/global.css';
 @import './responsive/header.css';
+@import './responsive/footer.css';
 @import './responsive/home.css';
 @import './responsive/catalog.css';
 @import './responsive/pages.css';
