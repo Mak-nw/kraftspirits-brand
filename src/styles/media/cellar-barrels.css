@@ -11,7 +11,8 @@
 /* група з кімнатою: медіа = кімната з бочкою + підпис літрів під бочкою; ПІД медіа по центру — число, одиниця, вартість (рішення замовника, рев'ю bd9b41dc). Рядки спільні (subgrid) → кімнати й тексти обох груп на одній висоті. */
 .lp-group--has-cellar .lp-cellar { grid-row: 1; margin-top: 0; }
 .lp-group--has-cellar .lp-group__size { grid-row: 2; margin-top: var(--space-15); }
-.lp-group--has-cellar .lp-group__num { grid-row: 3; margin-top: var(--space-40); } /* підпис літрів → число: на крок шкали менше за 50u (рев'ю 21962fd3, «зменшити відступ») */
+.lp-group--has-cellar .lp-group__num { grid-row: 3; margin-top: var(--space-40); white-space: normal; text-wrap: balance; text-indent: var(--lp-num-ink, 0em); } /* кімната → рядок «200 Л ≈ 383 ПЛЯШКИ» (відгук 1a979e42; підпис літрів під бочкою прибрано, літраж у рядку); не влазить в одну лінію — переноситься симетрично (balance) */
+.lp-group--has-cellar.lp-group--center .lp-group__approx { margin-left: var(--shift-lp-approx-ink); } /* «≈» у середині рядка «200 Л ≈ 383 ПЛЯШКИ»: поправка лівого поля не потрібна (центруємо чорнило всього рядка через --lp-num-ink) */
 .lp-group--has-cellar .lp-group__unit { grid-row: 4; margin-top: var(--space-10); } /* число → підпис: найближчий менший за 15u токен шкали (рев'ю b2fbcff1) */
 .lp-group--has-cellar .lp-group__facts { grid-row: 5; margin-top: var(--space-lp-ledger-row); }
 .lp-group--has-cellar { grid-template-columns: minmax(0, 1fr); min-width: 0; } /* усі елементи групи — на ширину кімнати (= колонки сітки), текст по центру (.lp-group--center) → центр тексту = центр кімнати */

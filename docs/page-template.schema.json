@@ -1412,6 +1412,14 @@
                       "null"
                     ]
                   },
+                  "countWord": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 20,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
                   "unit": {
                     "type": "string",
                     "maxLength": 40,
