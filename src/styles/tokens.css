@@ -638,6 +638,22 @@
   --crop-hero-logo-bs-y: -92.95%;  /* 224:3660 кадрування PNG bazylsprings-logo (top) */
   --crop-hero-logo-bs-h: 318.94%;  /* 224:3660 */
 
+  --size-sec-brands: calc(974 * var(--u));        /* 224:3596 */
+  --size-brand-card-h: calc(934 * var(--u));      /* 224:3806 / 224:3606 картка-«Subtract» */
+  --size-brand-card-yc-w: var(--grid-span-5);     /* картка = 5 колонок сітки: YC — колонки 1–5 (737.1u; було 6 з 12 = 892.5u, Figma 224:3806 — 912); маска home-brand-card-yc.svg перебудовано під 737.1 (виріз-пляшка по центру, без розтягування) */
+  --size-brand-card-bs-w: var(--grid-span-5);     /* BS — колонки 6–10 (737.1u; Figma 224:3606 — 914); шов між картками — зазор колонок 40u (фото-половини за рамками колонок лишаються на всю ширину екрана) */
+  --offset-brand-card-top: calc(20 * var(--u));   /* 224:3806 y 242 − (−222) */
+  --offset-brand-card-yc-x: var(--grid-margin);   /* початок колонки 1 (у координатах половини 0–960u) */
+  --offset-brand-card-bs-x: calc(var(--grid-margin) + 5 * var(--grid-step) - 960 * var(--u)); /* початок колонки 6 у координатах правої половини (960–1920u) = 20u */
+  --offset-brand-content-top: calc(80 * var(--u)); /* 224:3809 y 322 − 242: колонка логотип+текст */
+  --size-brand-content-w: var(--grid-span-3);     /* колонка логотип+текст = 3 колонки по центру картки з 5 (колонки 2–4 / 7–9; було 4 з 6; Figma 224:3809 — 482) */
+  --size-brand-logo-box-h: calc(172 * var(--u));  /* 224:3810 / 224:3802 (вектор + padding 10) */
+  --space-28: calc(28 * var(--u));                /* 224:3809 gap логотип → текст */
+  --size-brand-logo-yc-w: calc(402 * var(--u));   /* 224:3817 */
+  --size-brand-logo-yc-h: calc(106 * var(--u));   /* 224:3817 */
+  --size-brand-logo-bs-w: calc(263 * var(--u));   /* 224:3609 */
+  --size-brand-logo-bs-h: calc(152 * var(--u));   /* 224:3609 */
+  --offset-brand-cta-top: calc(786 * var(--u));   /* 224:3813 y 1028 − 242: кнопка від верху картки */
   /* Вибір бренду (.brand-panel / .brand-choice; макет «About Us» стор. 4, панель 770×674, масштаб макета 1920) */
   --ratio-brand-panel: 805 / 540;                 /* пропорція панелі (еталон brand-picker-new: 805×540; ширина = 5 колонок сітки, висота за пропорцією) */
   --space-brand-panel-pt: calc(70 * var(--u));    /* відступ зверху до боксу логотипа */
