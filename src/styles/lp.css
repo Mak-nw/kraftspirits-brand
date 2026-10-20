@@ -176,7 +176,8 @@
 .lp-group__size { text-indent: var(--lp-label-optic, 0em); }
 .lp-group--accent .lp-group__size { color: var(--lp-on-paper); }
 .lp-group--center { text-align: center; }
-.lp-group--center .lp-group__size, .lp-group--center .lp-group__unit, .lp-group--center .lp-group__fact-label { text-indent: 0; }
+.lp-group--center .lp-group__size { text-indent: 0; }
+.lp-group--center .lp-group__unit, .lp-group--center .lp-group__fact-label { text-indent: var(--lp-caption-optic, 0em); } /* центрований підпис: text-indent зсуває чорнило на половину значення; поправка бокових полів перших/останніх літер виміряна чорнилом */
 .lp-group--center .lp-group__fact { align-items: center; }
 .lp-group--center .lp-group__approx { margin-left: calc(var(--shift-lp-approx-ink) / -2 + var(--lp-num-ink, 0em)); } /* центрований текст: поправка ліво-бічного поля «≈» вдвічі менша й з протилежним знаком (виміряно чорнилом) */
 .lp-group--center .lp-group__fact-value { text-indent: calc(var(--shift-lp-approx-ink) / 2); }
