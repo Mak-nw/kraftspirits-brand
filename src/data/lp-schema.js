@@ -92,7 +92,7 @@ export const SCHEMA = {
     // 1. Перший екран: фото на весь екран, h1, лід, кнопка (кімнати немає, kicker/caption не показуються)
     hero: { ...base('room', 'join', 'pad', 'kicker', 'caption'), ...TITLE, titleSize: E(HERO_TITLE_SIZES), id: { type: 'id' }, lead: T(160), ...MEDIA_IMG, img: URL_(true), panel: B(), fade: E(HERO_FADES), cta: { ...O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['light', 'beige', 'gold', 'teal', 'green']) }), req: true } },   // cta.variant — тон кнопки hero (типово — тон сторінки): на градієнті hero.fade кнопка тону сторінки зливається з тлом — задають світлу (beige)
     // 2. Шари / переваги: «розріз» із фото-смуг впритул (img у кожного пункту) + підписи; без фото — лише підписи. items: 2–6 (n рівних блоків контейнера; 4 на 10 колонок — по 348.55u)
-    layers: { ...BASE, ...TITLE, ...LOOK, shape: E(['barrel']), room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },
+    layers: { ...BASE, ...TITLE, ...LOOK, shape: E(['barrel']), room: E(ROOMS, false, 'warm'), cols: COLS('layers'), items: L(O({ key: { type: 'id', req: true }, icon: { type: 'icon' }, title: T(25, true), value: T(12), text: T(90, true), img: URL_(), slot: T(240) }), 2, 6, true) },   // value — число-показник під назвою роллю .t-stat-label (як «3660 л.» у «Три установки» на about), напр. «3 660 л»
     // 3. Кроки: sticky-арка з медіа (scene — гравюра partials/media/scene-<назва>.html АБО img — фото) + кроки-цифри.
     //    deck: true — «колода»: кожен крок = велика картка з фото на тлі (img кроку, cover), картки прилипають під header і наїжджають одна на одну (CSS sticky);
     //    тоді арки немає (scene/img секції не задаються), cols (10 · 12) — ширина колоди, у кроку — img (обов'язково), alt, slot, imgPos, zoom, tags
@@ -386,7 +386,7 @@ const VIEW = {
     const cut = s.items.some((it) => it.img);
     const about = s.look === 'about';
     return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${s.items.length}${s.shape === 'barrel' ? ' lp-arches--barrel' : ''}`, cut: cut ? '1' : '', noCut: cut ? '' : '1', nMod: ` lp-layers--n${s.items.length}`,   // n рівних блоків контейнера (lp.css): 2, 5 лягають на колонки, 3, 4, 6 — рівний поділ
-      items: s.items.map((it) => ({ key: it.key, span: '', icon: it.icon || '', title: t(it.title), text: t(it.text), img: it.img || '', slot: t(it.slot) })) };
+      items: s.items.map((it) => ({ key: it.key, span: '', icon: it.icon || '', title: t(it.title), value: t(it.value), text: t(it.text), img: it.img || '', slot: t(it.slot) })) };
   },
   steps: (s) => {
     const rich = !!(s.kicker || s.lead || s.caption);

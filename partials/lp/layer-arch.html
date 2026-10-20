@@ -1,5 +1,6 @@
 <li class="about-still lp-arches__item lp-layer--{{key}}" data-reveal="rise">
   <div class="lp-arch about-still__arch"{{#slot}} data-slot="{{slot}}"{{/slot}}>{{#img}}<img class="lp-arch__img" src="{{img}}" width="1024" height="1024" alt="" loading="lazy" decoding="async">{{/img}}</div>
   <h3 class="t-lead">{{title}}</h3>
+  {{#value}}<p class="t-stat-label">{{value}}</p>{{/value}}
   <p class="t-desc">{{text}}</p>
 </li>
