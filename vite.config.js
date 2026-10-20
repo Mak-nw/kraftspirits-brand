@@ -80,7 +80,7 @@ function htmlPartials() {
         if (enName) html = readFileSync(resolve(root, `${enName}.html`), 'utf8');
         await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]), locale);
         const out = localizeHtml(fillContacts(renderers[locale](html), locale), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
-        return out.replaceAll('%BASE_URL%', base);
+        return out.replaceAll('%BASE_URL%', locale === 'en' && name === '404' ? `${base}en/` : base);
       },
     },
     generateBundle() { if (process.env.SITE_URL) this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(root, base, process.env.SITE_URL) }); },

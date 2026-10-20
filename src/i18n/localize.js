@@ -7,6 +7,7 @@ import occasionsEn from './data/occasions.en.js';
 import categoriesEn from './data/categories.en.js';
 import productTextsEn from './data/product-texts.en.js';
 import contactsEn from './data/contacts.en.js';
+import demoEn from './data/demo.en.js';
 
 const OVERLAYS = { products: { en: productsEn }, occasions: { en: occasionsEn } };
 const merge = (kind, item, key, locale) => (locale === DEFAULT_LOCALE ? item : { ...item, ...(OVERLAYS[kind][locale]?.[key] || {}) });
@@ -24,3 +25,29 @@ export function localizeProductTexts({ PRODUCT_TEXTS, PRODUCT_SERVE, PRODUCT_DEL
   };
 }
 export const localizeContacts = (contacts, locale) => (locale === DEFAULT_LOCALE ? contacts : deepOverlay(contacts, locale === 'en' ? contactsEn : undefined));
+
+/** демо-довідники оформлення (область/місто/відділення Нової пошти, способи доставки й оплати): src/data/checkout-demo.js + оверлей demo.en.js */
+export function localizeCheckoutDemo(d, locale) {
+  if (locale === DEFAULT_LOCALE) return d;
+  const o = demoEn.checkout;
+  return {
+    ...d,
+    NP_AREAS: deepOverlay(d.NP_AREAS, o.areas),
+    NP_CITIES: deepOverlay(d.NP_CITIES, o.cities),
+    npWarehouses: () => deepOverlay(d.npWarehouses(), o.warehouses),
+    SHIPPING_LABELS: deepOverlay(d.SHIPPING_LABELS, o.shipping),
+    PAYMENT_LABELS: deepOverlay(d.PAYMENT_LABELS, o.payment),
+  };
+}
+/** демо-акаунт і замовлення (src/data/account-demo.js + оверлей demo.en.js): ім'я, етапи, статуси, нотатки, адреса отримувача */
+export function localizeAccountDemo(d, locale) {
+  if (locale === DEFAULT_LOCALE) return d;
+  const o = demoEn.account;
+  return {
+    ...d,
+    DEMO_USER: deepOverlay(d.DEMO_USER, o.user),
+    TRACK_STEPS: deepOverlay(d.TRACK_STEPS, o.steps),
+    STATUS: deepOverlay(d.STATUS, o.status),
+    ORDERS: deepOverlay(d.ORDERS, o.orders),
+  };
+}

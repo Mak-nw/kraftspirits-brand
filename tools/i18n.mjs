@@ -4,7 +4,7 @@
 //   · localizeHtml: <html lang/data-locale>, посилання перемикача мови, hreflang/canonical (лише коли задано SITE_URL), robots noindex для чернеток, inline-скрипт «запам'ятана мова».
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { DEFAULT_LOCALE, LANG_KEY, LOCALES, NO_LOCALE_PAGES, pageStatus } from '../src/i18n/config.js';
+import { DEFAULT_LOCALE, LANG_KEY, LOCALES, NO_LOCALE_PAGES, NOINDEX_PAGES, pageStatus } from '../src/i18n/config.js';
 import { DICTS } from '../src/i18n/dicts.js';
 
 const T_RE = /%t\.([\w.-]+)%/g;
@@ -69,10 +69,12 @@ export function localizeHtml(html, { locale, name, base, siteUrl = '', missing =
   if (!excluded) {
     if (locale === DEFAULT_LOCALE) {
       // збережена мова en → одразу (до paint) на англійську версію цієї ж сторінки; англійські сторінки нічого не переспрямовують (петлі нема)
-      head.push(`<script>(function(){try{if(localStorage.getItem('${LANG_KEY}')==='en')location.replace('${relUrl('uk', 'en', name)}'+location.search+location.hash)}catch(e){}})();</script>`);
+      // 404 стоїть на будь-якій глибині URL (<base href>): шлях до англійської версії — від кореня збірки (%BASE_URL% підставляє vite.config.js), а не відносний
+      const to = name === '404' ? `%BASE_URL%${relUrl('uk', 'en', name)}` : relUrl('uk', 'en', name);
+      head.push(`<script>(function(){try{if(localStorage.getItem('${LANG_KEY}')==='en')location.replace('${to}'+location.search+location.hash)}catch(e){}})();</script>`);
     }
     if (status === 'draft') head.push('<meta name="robots" content="noindex">');
-    if (siteUrl) {
+    if (siteUrl && !NOINDEX_PAGES.includes(name)) {
       const canonicalLocale = status === 'draft' ? DEFAULT_LOCALE : locale;
       head.push(`<link rel="canonical" href="${urlOf(siteUrl, base, canonicalLocale, name)}">`);
       const alts = Object.keys(LOCALES).filter((c) => pageStatus(c, name) === 'done');
@@ -94,7 +96,7 @@ export function localizeHtml(html, { locale, name, base, siteUrl = '', missing =
 
 /** sitemap.xml (лише коли задано SITE_URL): усі сторінки uk; у пар uk/en зі статусом done — xhtml:link alternate */
 export function sitemapXml(root, base, siteUrl) {
-  const names = localizedPages(root).filter((n) => !['account', 'cart', 'checkout'].includes(n));
+  const names = localizedPages(root).filter((n) => !['account', 'cart', 'checkout', ...NOINDEX_PAGES].includes(n));
   const row = (locale, name) => {
     const alts = Object.keys(LOCALES).filter((c) => pageStatus(c, name) === 'done');
     const links = alts.length > 1 ? alts.map((c) => `<xhtml:link rel="alternate" hreflang="${LOCALES[c].hreflang}" href="${urlOf(siteUrl, base, c, name)}"/>`).join('') : '';

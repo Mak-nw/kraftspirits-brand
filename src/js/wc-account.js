@@ -4,9 +4,14 @@
 // Стани (?state=): login · login-error · lost · lost-sent · register · register-error · logout · dashboard · orders (&page=N) · empty-orders · order-view (&order=№) · tracking · tracking-result (&order=№) · tracking-error ·
 // addresses · addresses-saved · account · account-saved · account-error; &guest=1 (tracking*) — відстеження без входу. Усі стани «усередині кабінету» самі вмикають демо-вхід.
 import { initSelect } from './select.js';
-import { query, state, fmtMoney, fmtVol, qs, qsa, resolveLines, calcTotals, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, showNotice, syncNativeSelect } from './wc-common.js';
-import { DEMO_USER, ORDERS, STATUS, TRACK_STEPS, NOVA_POSHTA_TRACKING, ORDERS_PER_PAGE } from '../data/account-demo.js';
-import { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } from '../data/checkout-demo.js';
+import { t as tt, locale, tPlural } from '../i18n/runtime.js';
+import { localizeAccountDemo, localizeCheckoutDemo } from '../i18n/localize.js';
+import { query, state, fmtMoney, fmtVol, dateLocale, qs, qsa, resolveLines, calcTotals, SHIPPING_TARIFF, SHIPPING_TARIFF_NOTE, showNotice, syncNativeSelect } from './wc-common.js';
+import * as ACCOUNT_DEMO from '../data/account-demo.js';
+import * as CHECKOUT_DEMO from '../data/checkout-demo.js';
+
+const { DEMO_USER, ORDERS, STATUS, TRACK_STEPS, NOVA_POSHTA_TRACKING, ORDERS_PER_PAGE } = localizeAccountDemo(ACCOUNT_DEMO, locale());
+const { NP_AREAS, NP_CITIES, npWarehouses, SHIPPING_LABELS, PAYMENT_LABELS } = localizeCheckoutDemo(CHECKOUT_DEMO, locale());
 
 // Модуль у try/finally (як wc-checkout.js): при падінні будь-якого коду сторінка не лишається прихованою (verify-D2); без JS — <noscript> в account.html
 try {
@@ -46,10 +51,10 @@ try {
   if (layout === 'account') qs('[data-wc-layout="account"]', root).hidden = false; else qs('[data-wc-layout="guest"]', root).hidden = false;
 
   // ---------- спільне: дати, суми, нотиси, валідація ----------
-  const fmtDate = (iso) => new Date(iso).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
-  const fmtTime = (iso) => new Date(iso).toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
-  const fmtWhen = (iso) => `${new Date(iso).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}, ${fmtTime(iso)}`;
-  const plural = (n) => { const m = n % 100; const d = n % 10; return m > 10 && m < 15 ? 'товарів' : d === 1 ? 'товар' : d > 1 && d < 5 ? 'товари' : 'товарів'; };
+  const fmtDate = (iso) => new Date(iso).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'long', year: 'numeric' });
+  const fmtTime = (iso) => new Date(iso).toLocaleTimeString(dateLocale(), { hour: '2-digit', minute: '2-digit' });
+  const fmtWhen = (iso) => `${new Date(iso).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'long' })}, ${fmtTime(iso)}`;
+  const plural = (n) => tPlural('js.wc.item', n, { n: '' }).trim(); // «товар / товари / товарів» / «item / items»
   const findOrder = (num) => ORDERS.find((o) => o.number === String(num).replace(/^#/, '').trim());
   const orderTotals = (o) => { const lines = resolveLines(o.lines); return { lines, t: calcTotals(lines), count: lines.reduce((s, l) => s + l.qty, 0) }; };
   const shippingText = (o, t) => (o.shipping === 'np' ? SHIPPING_TARIFF : SHIPPING_LABELS[o.shipping]);
@@ -104,8 +109,8 @@ try {
         const v = r.check ? (field(r.name).checked ? 'on' : '') : (field(r.name).value || '').trim();
         let short = '';
         let long = '';
-        if (r.check ? !v : !(r.test ? r.test(v) : !!v)) { short = r.check ? cap(r.msg) : 'Обов\'язкове поле'; long = r.check ? `${r.label} — ${r.msg}.` : `${r.label} — обов'язкове поле.`; }
-        else if (r.bad && r.bad(v)) { short = cap(r.badMsg); long = `${r.label} — ${r.badMsg}.`; }
+        if (r.check ? !v : !(r.test ? r.test(v) : !!v)) { short = r.check ? cap(r.msg) : tt('js.wc.v.required'); long = r.check ? tt('js.wc.v.long', { label: r.label, msg: r.msg }) : tt('js.wc.v.required-long', { label: r.label }); }
+        else if (r.bad && r.bad(v)) { short = cap(r.badMsg); long = tt('js.wc.v.long', { label: r.label, msg: r.badMsg }); }
         paint(r.name, short);
         if (short) errors.push({ name: r.name, long });
       });
@@ -168,7 +173,7 @@ try {
     qsa('[data-wc-order-date]', root2).forEach((el) => { el.textContent = fmtDate(o.date); });
     qsa('[data-wc-order-status]', root2).forEach((el) => { el.textContent = STATUS[o.status].label; });
     const tot = qs('[data-wc-order-total]', root2);
-    if (tot) tot.textContent = `${fmtMoney(orderTotals(o).t.total)} за ${orderTotals(o).count} ${plural(orderTotals(o).count)}`;
+    if (tot) tot.textContent = tt('js.wc.total-for', { m: fmtMoney(orderTotals(o).t.total), n: orderTotals(o).count, w: plural(orderTotals(o).count) });
   }
 
   // ---------- таблиця замовлень (myaccount/orders.php) ----------
@@ -179,18 +184,18 @@ try {
       tr.classList.add(`woocommerce-orders-table__row--status-${o.status}`);
       const a = qs('[data-wc-number]', tr);
       a.href = `account.html?state=order-view&order=${o.number}`;
-      a.textContent = `№${o.number}`;
-      a.setAttribute('aria-label', `Замовлення №${o.number}`);
+      a.textContent = tt('js.wc.no-short', { n: o.number });
+      a.setAttribute('aria-label', tt('js.wc.order-no', { n: o.number }));
       const time = qs('time', tr);
       time.dateTime = o.date;
       time.textContent = fmtDate(o.date);
       qs('[data-wc-status]', tr).textContent = STATUS[o.status].label;
       const { t, count } = orderTotals(o);
       qs('[data-wc-total]', tr).textContent = fmtMoney(t.total);
-      qs('[data-wc-count]', tr).textContent = `за ${count} ${plural(count)}`;
+      qs('[data-wc-count]', tr).textContent = tt('js.wc.for-items', { n: count, w: plural(count) });
       const v = qs('[data-wc-view-link]', tr);
       v.href = `account.html?state=order-view&order=${o.number}`;
-      v.setAttribute('aria-label', `Переглянути замовлення №${o.number}`);
+      v.setAttribute('aria-label', tt('js.wc.order-view', { n: o.number }));
       return tr;
     }));
   }
@@ -200,8 +205,8 @@ try {
     login() {
       const form = qs('form', section);
       const v = createValidator(form, [
-        { name: 'username', label: 'Логін або e-mail', test: (x) => !!x },
-        { name: 'password', label: 'Пароль', test: (x) => !!x },
+        { name: 'username', label: tt('js.wc.f.login'), test: (x) => !!x },
+        { name: 'password', label: tt('js.wc.f.password'), test: (x) => !!x },
       ]);
       form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -211,15 +216,15 @@ try {
       });
       if (state === 'login-error') {
         v.field('username').value = 'olena@example.com';
-        v.renderGroup([], ['Невірний логін або пароль. Перевірте дані й спробуйте ще раз.']);
+        v.renderGroup([], [tt('js.wc.a.login-error')]);
         v.paint('password', '', true);
         v.paint('username', '', true);
-      } else if (state === 'logout') noteQuiet('message', 'Ви вийшли з акаунта.');
+      } else if (state === 'logout') noteQuiet('message', tt('js.wc.a.logout'));
     },
     lost() {
       const form = qs('form', section);
       const done = qs('[data-wc-lost-done]', section);
-      const v = createValidator(form, [{ name: 'user_login', label: 'Логін або e-mail', test: (x) => !!x }]);
+      const v = createValidator(form, [{ name: 'user_login', label: tt('js.wc.f.login'), test: (x) => !!x }]);
       const showDone = () => { form.hidden = true; done.hidden = false; };
       form.addEventListener('submit', (e) => { e.preventDefault(); if (v.validate(true)) showDone(); });
       if (state === 'lost-sent') showDone();
@@ -227,11 +232,11 @@ try {
     register() {
       const form = qs('form', section);
       const v = createValidator(form, [
-        { name: 'reg_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: 'перевірте адресу e-mail' },
-        { name: 'reg_password', label: 'Пароль', test: (x) => !!x, bad: (x) => x.length < 8, badMsg: 'не менше 8 символів' },
-        { name: 'reg_consent', label: 'Політика конфіденційності й оферта', check: true, msg: 'потрібна ваша згода' },
+        { name: 'reg_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: tt('js.wc.m.email') },
+        { name: 'reg_password', label: tt('js.wc.f.password'), test: (x) => !!x, bad: (x) => x.length < 8, badMsg: tt('js.wc.m.pw8') },
+        { name: 'reg_consent', label: tt('js.wc.f.policy'), check: true, msg: tt('js.wc.m.consent') },
       ]);
-      const exists = (focus = true) => v.fail('reg_email', 'Цей e-mail уже зареєстровано', 'E-mail — акаунт із такою адресою вже зареєстровано. Увійдіть або відновіть пароль.', focus);
+      const exists = (focus = true) => v.fail('reg_email', tt('js.wc.a.exists-short'), tt('js.wc.a.exists-long'), focus);
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         if (!v.validate(true)) return;
@@ -252,7 +257,7 @@ try {
       const u = getUser();
       qs('[data-wc-user-name]', section).textContent = u.first;
       fillOrdersRows(qs('[data-wc-orders-rows]', section), ORDERS.slice(0, 3));
-      if (store.get(FLASH_KEY)) { store.del(FLASH_KEY); noteQuiet('message', 'Акаунт створено. Ласкаво просимо!'); }
+      if (store.get(FLASH_KEY)) { store.del(FLASH_KEY); noteQuiet('message', tt('js.wc.a.registered')); }
     },
     orders() {
       const empty = state === 'empty-orders';
@@ -276,7 +281,7 @@ try {
       const asked = query.get('order');
       const o = findOrder(asked) || (asked ? null : ORDERS[1]); // без &order — демо-замовлення; невідомий номер — «не знайдено» (як view-order.php WooCommerce: нотис «Замовлення не знайдено»)
       if (!o) {
-        qs('h1', section).textContent = 'Замовлення не знайдено';
+        qs('h1', section).textContent = tt('js.wc.a.order-missing');
         qsa('.woocommerce-order-overview, .wc-actions, [data-wc-notes-wrap], [data-wc-order-details]', section).forEach((el) => el.remove());
         qs('[data-wc-order-missing]', section).hidden = false;
         return;
@@ -291,13 +296,13 @@ try {
     tracking() {
       const form = qs('form', section);
       const v = createValidator(form, [
-        { name: 'orderid', label: 'Номер замовлення', test: (x) => !!x },
-        { name: 'order_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: 'перевірте адресу e-mail' },
+        { name: 'orderid', label: tt('js.wc.f.orderid'), test: (x) => !!x },
+        { name: 'order_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: tt('js.wc.m.email') },
       ]);
       const notFound = () => {
         v.paint('orderid', '', true);
         v.paint('order_email', '', true);
-        v.renderGroup([], ['Не вдалося знайти замовлення з такими даними. Перевірте номер і e-mail із листа-підтвердження.']);
+        v.renderGroup([], [tt('js.wc.a.track-notfound')]);
       };
       if (!guestMode) v.field('order_email').value = getUser().email;
       form.addEventListener('submit', (e) => {
@@ -335,17 +340,17 @@ try {
           else if (i === step) {
             li.setAttribute('aria-current', 'step');
             lab.classList.replace('t-text', 't-product-name');
-            when.textContent = i === TRACK_STEPS.length - 1 ? `— отримано ${at ? fmtWhen(at) : ''}`.trim() : `— поточний етап${at ? `, ${fmtWhen(at)}` : ''}`;
+            when.textContent = i === TRACK_STEPS.length - 1 ? tt('js.wc.step.received', { at: at ? fmtWhen(at) : '' }).trim() : tt('js.wc.step.current', { at: at ? `, ${fmtWhen(at)}` : '' });
           } else when.textContent = '';
           return li;
         }));
         const link = qs('[data-wc-ttn-link]', section);
         const text = qs('[data-wc-ttn-text]', section);
         if (o.ttn && step >= 3) {
-          text.replaceChildren('Номер експрес-накладної: ', Object.assign(document.createElement('strong'), { className: 't-spec', textContent: o.ttn }));
+          text.replaceChildren(tt('js.wc.a.ttn'), Object.assign(document.createElement('strong'), { className: 't-spec', textContent: o.ttn }));
           link.href = `${NOVA_POSHTA_TRACKING}${o.ttn}`;
           link.hidden = false;
-        } else text.textContent = 'Номер експрес-накладної з\'явиться після передачі замовлення «Новій пошті».';
+        } else text.textContent = tt('js.wc.a.ttn-later');
       }
       fillNotes(section, o);
       fillOrderDetails(qs('[data-wc-order-details]', section), o);
@@ -377,12 +382,12 @@ try {
         else if (w.dataset.field === 'billing_city') setSelect('billing_warehouse', npWarehouses());
       });
       const v = createValidator(form, [
-        { name: 'billing_first_name', label: 'Ім\'я', test: (x) => x.length >= 2 },
-        { name: 'billing_last_name', label: 'Прізвище', test: (x) => x.length >= 2 },
-        { name: 'billing_phone', label: 'Телефон', test: (x) => !!x, bad: (x) => !(PHONE_RE.test(x) && x.replace(/\D/g, '').length >= 9 && x.replace(/\D/g, '').length <= 15), badMsg: 'вкажіть номер у форматі +380…' },
-        { name: 'billing_state', label: 'Область', test: (x) => !!x },
-        { name: 'billing_city', label: 'Місто', test: (x) => !!x },
-        { name: 'billing_warehouse', label: 'Відділення або поштомат', test: (x) => !!x },
+        { name: 'billing_first_name', label: tt('js.wc.f.first'), test: (x) => x.length >= 2 },
+        { name: 'billing_last_name', label: tt('js.wc.f.last'), test: (x) => x.length >= 2 },
+        { name: 'billing_phone', label: tt('js.wc.f.phone'), test: (x) => !!x, bad: (x) => !(PHONE_RE.test(x) && x.replace(/\D/g, '').length >= 9 && x.replace(/\D/g, '').length <= 15), badMsg: tt('js.wc.m.phone') },
+        { name: 'billing_state', label: tt('js.wc.f.area'), test: (x) => !!x },
+        { name: 'billing_city', label: tt('js.wc.f.city'), test: (x) => !!x },
+        { name: 'billing_warehouse', label: tt('js.wc.f.warehouse'), test: (x) => !!x },
       ]);
       form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -391,9 +396,9 @@ try {
           first: v.field('billing_first_name').value.trim(), last: v.field('billing_last_name').value.trim(), phone: v.field('billing_phone').value.trim(),
           address: { area: v.field('billing_state').value, city: v.field('billing_city').value, warehouse: v.field('billing_warehouse').value },
         });
-        note('message', 'Адресу збережено.');
+        note('message', tt('js.wc.a.addr-saved'));
       });
-      if (state === 'addresses-saved') noteQuiet('message', 'Адресу збережено.');
+      if (state === 'addresses-saved') noteQuiet('message', tt('js.wc.a.addr-saved'));
     },
     account() {
       const form = qs('form', section);
@@ -404,23 +409,23 @@ try {
       qs('#account_email', form).value = u.email;
       const pw = () => ['password_current', 'password_1', 'password_2'].some((n) => qs(`#${n}`, form).value);
       const v = createValidator(form, [
-        { name: 'account_first_name', label: 'Ім\'я', test: (x) => x.length >= 2 },
-        { name: 'account_last_name', label: 'Прізвище', test: (x) => x.length >= 2 },
-        { name: 'account_display_name', label: 'Відображуване ім\'я', test: (x) => x.length >= 2 },
-        { name: 'account_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: 'перевірте адресу e-mail' },
-        { name: 'password_current', label: 'Поточний пароль', test: (x) => !!x || !pw() },
-        { name: 'password_1', label: 'Новий пароль', test: (x) => !!x || !pw(), bad: (x) => !!x && x.length < 8, badMsg: 'не менше 8 символів' },
+        { name: 'account_first_name', label: tt('js.wc.f.first'), test: (x) => x.length >= 2 },
+        { name: 'account_last_name', label: tt('js.wc.f.last'), test: (x) => x.length >= 2 },
+        { name: 'account_display_name', label: tt('js.wc.f.display'), test: (x) => x.length >= 2 },
+        { name: 'account_email', label: 'E-mail', test: (x) => !!x, bad: (x) => !EMAIL_RE.test(x), badMsg: tt('js.wc.m.email') },
+        { name: 'password_current', label: tt('js.wc.f.pw-current'), test: (x) => !!x || !pw() },
+        { name: 'password_1', label: tt('js.wc.f.pw-new'), test: (x) => !!x || !pw(), bad: (x) => !!x && x.length < 8, badMsg: tt('js.wc.m.pw8') },
       ]);
-      const mismatch = (focus = true) => v.fail('password_2', 'Паролі не збігаються', 'Підтвердження пароля — паролі не збігаються.', focus);
+      const mismatch = (focus = true) => v.fail('password_2', tt('js.wc.a.pw-mismatch-short'), tt('js.wc.a.pw-mismatch-long'), focus);
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         if (!v.validate(true)) return;
         if (pw() && qs('#password_1', form).value !== qs('#password_2', form).value) { mismatch(); return; }
         saveUser({ first: qs('#account_first_name', form).value.trim(), last: qs('#account_last_name', form).value.trim(), display: qs('#account_display_name', form).value.trim(), email: qs('#account_email', form).value.trim() });
         ['password_current', 'password_1', 'password_2'].forEach((n) => { qs(`#${n}`, form).value = ''; });
-        note('message', 'Зміни збережено.');
+        note('message', tt('js.wc.a.saved'));
       });
-      if (state === 'account-saved') noteQuiet('message', 'Зміни збережено.');
+      if (state === 'account-saved') noteQuiet('message', tt('js.wc.a.saved'));
       if (state === 'account-error') {
         qs('#password_current', form).value = 'oldpassword';
         qs('#password_1', form).value = 'newpassword1';

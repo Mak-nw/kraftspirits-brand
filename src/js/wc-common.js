@@ -2,7 +2,11 @@
 // Кошик — РЕАЛЬНИЙ кошик сайту (cart-counter.js: localStorage 'ks_cart' = [{ slug, volume, qty }]); дані товарів — src/data/products.js.
 // Службові параметри (лише для перегляду/перевірок): ?state=<стан сторінки>, ?demo=1 — покласти демо-позиції в порожній кошик.
 import { PRODUCTS as PRODUCTS_UK } from '../data/products.js';
-import { t, locale } from '../i18n/runtime.js';
+import { t, locale, extend } from '../i18n/runtime.js';
+import wcUk from '../i18n/uk/js-wc.js';
+import wcEn from '../i18n/en/js-wc.js';
+
+extend(wcUk, wcEn); // рядки кошика/оформлення/кабінету (js.wc.*) — лише на цих сторінках
 import { localizeProduct } from '../i18n/localize.js';
 import { readCart, writeCart, renderCartCount } from './cart-counter.js';
 
@@ -27,6 +31,8 @@ const DEMO_STATES = ['error', 'thanks'];
 
 export const fmtMoney = (n) => t('js.money', { n: n.toLocaleString(locale() === 'en' ? 'en-GB' : 'uk-UA') }); // «1 150 ₴» (nbsp) / «₴1,150»
 export const fmtVol = (l) => t('js.vol.nbsp', { n: String(l).replace('.', locale() === 'en' ? '.' : ',') }); // «0,7 л» (nbsp) / «0.7 L»
+/** мова для Date.toLocale…String */
+export const dateLocale = () => (locale() === 'en' ? 'en-GB' : 'uk-UA');
 export const qs = (sel, root = document) => root.querySelector(sel);
 export const qsa = (sel, root = document) => [...root.querySelectorAll(sel)];
 

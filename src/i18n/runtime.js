@@ -4,6 +4,8 @@ import uk from './uk/js.js';
 import en from './en/js.js';
 
 const DICT = { uk, en };
+/** додаткові словники сторінок (js-wc.js для кошика/оформлення/кабінету): не потрапляють у глобальний js.js */
+export const extend = (ukDict, enDict) => { Object.assign(DICT.uk, ukDict); Object.assign(DICT.en, enDict); };
 export const locale = () => document.documentElement.dataset.locale || DEFAULT_LOCALE;
 /** t('js.cart.count', { n: 3 }) → «Кошик ( 3 )» / «Cart ( 3 )»; немає ключа в мові → українське (еталон) */
 export function t(key, vars) {

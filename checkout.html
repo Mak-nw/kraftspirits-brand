@@ -6,8 +6,8 @@
   <!--@include head-icons-->
   <!--@include head-fonts price="1"-->
   <!--@include head-age-->
-  <title>Оформлення замовлення — YasnoCraft × Bazylsprings</title>
-  <meta name="description" content="Оформлення замовлення в інтернет-магазині YasnoCraft × Bazylsprings: дані одержувача, доставка «Новою поштою», оплата та підтвердження віку 18+.">
+  <title>%t.checkout.title%</title>
+  <meta name="description" content="%t.checkout.desc%">
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="/src/styles/main.css">
   <script type="module" src="/src/js/viewport.js"></script>
@@ -26,90 +26,90 @@
     <div class="woocommerce">
       <noscript>
         <section class="contacts-panel wc-main wc-main--cart">
-          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="Для оформлення замовлення потрібен JavaScript. Увімкніть його в браузері або перегляньте товари в каталозі." href="catalog.html" link="До каталогу"-->
+          <!--@include components/wc-notice cls="woocommerce-info" role="status" text="%t.checkout.wc-notice.text%" href="catalog.html" link="%t.checkout.wc-notice.link%"-->
         </section>
       </noscript>
 
       <form name="checkout" method="post" class="checkout woocommerce-checkout wc-grid wc-grid--checkout" action="checkout.html" enctype="multipart/form-data" aria-labelledby="checkout-title" novalidate data-wc-view="form">
         <div class="col2-set contacts-panel wc-main wc-main--checkout" id="customer_details">
-          <h1 class="t-hero" id="checkout-title">Оформлення замовлення</h1>
+          <h1 class="t-hero" id="checkout-title">%t.checkout.customer-details.checkout-title%</h1>
           <div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout" data-wc-notices></div>
           <div class="col-1">
             <div class="woocommerce-billing-fields">
-              <h2 class="t-lead">Дані одержувача</h2>
+              <h2 class="t-lead">%t.checkout.customer-details.h2%</h2>
               <div class="woocommerce-billing-fields__field-wrapper">
                 <input type="hidden" name="billing_country" id="billing_country" value="UA">
                 <input type="hidden" name="billing_postcode" id="billing_postcode" value="">
-                <!--@include components/wc-field name="billing_first_name" label="Ім'я" row="form-row-first" req="1" autocomplete="given-name" placeholder="Ім'я одержувача"-->
-                <!--@include components/wc-field name="billing_last_name" label="Прізвище" row="form-row-last" req="1" autocomplete="family-name" placeholder="Прізвище одержувача"-->
-                <!--@include components/wc-field name="billing_phone" label="Телефон" type="tel" row="form-row-first" req="1" inputmode="tel" autocomplete="tel" placeholder="+380"-->
+                <!--@include components/wc-field name="billing_first_name" label="%t.checkout.wc-field.label%" row="form-row-first" req="1" autocomplete="given-name" placeholder="%t.checkout.wc-field.placeholder%"-->
+                <!--@include components/wc-field name="billing_last_name" label="%t.checkout.wc-field.label-2%" row="form-row-last" req="1" autocomplete="family-name" placeholder="%t.checkout.wc-field.placeholder-2%"-->
+                <!--@include components/wc-field name="billing_phone" label="%t.checkout.wc-field.label-3%" type="tel" row="form-row-first" req="1" inputmode="tel" autocomplete="tel" placeholder="+380"-->
                 <!--@include components/wc-field name="billing_email" label="E-mail" type="email" row="form-row-last" req="1" inputmode="email" autocomplete="email" placeholder="name@example.com"-->
-                <!--@include components/wc-select name="billing_state" label="Область" placeholder="Оберіть область" row="form-row-first" req="1" for="np"-->
-                <!--@include components/wc-select name="billing_city" label="Місто" placeholder="Оберіть місто" row="form-row-last" req="1" for="np"-->
-                <!--@include components/wc-select name="billing_warehouse" label="Відділення або поштомат «Нової пошти»" placeholder="Оберіть відділення або поштомат" row="form-row-wide" req="1" for="np"-->
-                <!--@include components/wc-field name="billing_address_1" label="Адреса доставки по Києву" row="form-row-wide" req="1" autocomplete="street-address" placeholder="Вулиця, будинок, квартира" for="courier" hidden="1"-->
+                <!--@include components/wc-select name="billing_state" label="%t.checkout.wc-select.label%" placeholder="%t.checkout.wc-select.placeholder%" row="form-row-first" req="1" for="np"-->
+                <!--@include components/wc-select name="billing_city" label="%t.checkout.wc-select.label-2%" placeholder="%t.checkout.wc-select.placeholder-2%" row="form-row-last" req="1" for="np"-->
+                <!--@include components/wc-select name="billing_warehouse" label="%t.checkout.wc-select.label-3%" placeholder="%t.checkout.wc-select.placeholder-3%" row="form-row-wide" req="1" for="np"-->
+                <!--@include components/wc-field name="billing_address_1" label="%t.checkout.wc-field.label-4%" row="form-row-wide" req="1" autocomplete="street-address" placeholder="%t.checkout.wc-field.placeholder-3%" for="courier" hidden="1"-->
               </div>
             </div>
           </div>
           <div class="col-2">
             <div class="woocommerce-shipping-fields" hidden>
-              <h3 id="ship-to-different-address"><label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox"><input id="ship-to-different-address-checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" type="checkbox" name="ship_to_different_address" value="1" tabindex="-1"><span>Доставити за іншою адресою</span></label></h3>
+              <h3 id="ship-to-different-address"><label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox"><input id="ship-to-different-address-checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" type="checkbox" name="ship_to_different_address" value="1" tabindex="-1"><span>%t.checkout.ship-to-different-address.span%</span></label></h3>
               <div class="shipping_address"></div>
             </div>
             <div class="woocommerce-additional-fields">
               <div class="woocommerce-additional-fields__field-wrapper">
-                <!--@include components/wc-textarea name="order_comments" label="Коментар до замовлення" opt="1" rows="3" placeholder="Побажання щодо доставки або подарункового пакування"-->
+                <!--@include components/wc-textarea name="order_comments" label="%t.checkout.wc-textarea.label%" opt="1" rows="3" placeholder="%t.checkout.wc-textarea.placeholder%"-->
               </div>
             </div>
           </div>
         </div>
 
         <div class="woocommerce-checkout-review-wrapper contacts-panel wc-aside wc-aside--checkout">
-          <h2 class="t-lead" id="order_review_heading">Ваше замовлення</h2>
+          <h2 class="t-lead" id="order_review_heading">%t.checkout.checkout.order-review-heading%</h2>
           <div id="order_review" class="woocommerce-checkout-review-order">
             <table class="shop_table woocommerce-checkout-review-order-table">
               <thead>
                 <tr>
-                  <th class="product-name t-btn" scope="col">Товар</th>
-                  <th class="product-total t-btn" scope="col">Разом</th>
+                  <th class="product-name t-btn" scope="col">%t.checkout.order-review.product-name%</th>
+                  <th class="product-total t-btn" scope="col">%t.checkout.order-review.product-total%</th>
                 </tr>
               </thead>
               <tbody data-wc-rows></tbody>
               <tfoot>
-                <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="0 ₴" attr="data-wc-subtotal"-->
+                <!--@include components/wc-row cls="cart-subtotal" label="%t.checkout.wc-row.label%" value="0 ₴" attr="data-wc-subtotal"-->
                 <tr class="woocommerce-shipping-totals shipping">
-                  <th class="t-text" scope="row">Доставка</th>
-                  <td data-title="Доставка">
+                  <th class="t-text" scope="row">%t.checkout.order-review.th%</th>
+                  <td data-title="%t.checkout.order-review.td.data-title%">
                     <ul id="shipping_method" class="woocommerce-shipping-methods">
-                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_np" value="np" label="Нова пошта: відділення або поштомат" checked="1"--></li>
-                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_courier" value="courier" label="Кур'єр по Києву"--></li>
-                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_pickup" value="pickup" label="Самовивіз з дистилерії"--></li>
+                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_np" value="np" label="%t.checkout.shipping-method-0-np.label%" checked="1"--></li>
+                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_courier" value="courier" label="%t.checkout.shipping-method-0-courier.label%"--></li>
+                      <li><!--@include components/wc-radio name="shipping_method[0]" id="shipping_method_0_pickup" value="pickup" label="%t.checkout.shipping-method-0-pickup.label%"--></li>
                     </ul>
-                    <p class="t-text" data-wc-shipping-note>Вартість доставки — за тарифами перевізника.</p>
+                    <p class="t-text" data-wc-shipping-note>%t.checkout.order-review.p%</p>
                   </td>
                 </tr>
-                <!--@include components/wc-row cls="order-total" label="Разом" value="0 ₴" attr="data-wc-total"-->
+                <!--@include components/wc-row cls="order-total" label="%t.checkout.wc-row.label-2%" value="0 ₴" attr="data-wc-total"-->
               </tfoot>
             </table>
 
             <div id="payment" class="woocommerce-checkout-payment">
               <ul class="wc_payment_methods payment_methods methods">
                 <li class="wc_payment_method payment_method_card">
-                  <!--@include components/wc-radio name="payment_method" id="payment_method_card" value="card" label="Оплата карткою онлайн" checked="1"-->
-                  <div class="payment_box payment_method_card t-text">Після підтвердження ви перейдете на сторінку платіжного сервісу.</div>
+                  <!--@include components/wc-radio name="payment_method" id="payment_method_card" value="card" label="%t.checkout.payment-method-card.label%" checked="1"-->
+                  <div class="payment_box payment_method_card t-text">%t.checkout.payment.payment-box%</div>
                 </li>
                 <li class="wc_payment_method payment_method_bacs">
-                  <!--@include components/wc-radio name="payment_method" id="payment_method_bacs" value="bacs" label="Оплата за реквізитами"-->
-                  <div class="payment_box payment_method_bacs t-text" hidden>Реквізити надішлемо на e-mail після підтвердження замовлення.</div>
+                  <!--@include components/wc-radio name="payment_method" id="payment_method_bacs" value="bacs" label="%t.checkout.payment-method-bacs.label%"-->
+                  <div class="payment_box payment_method_bacs t-text" hidden>%t.checkout.payment.payment-box-2%</div>
                 </li>
               </ul>
               <div class="form-row place-order">
                 <div class="woocommerce-terms-and-conditions-wrapper">
-                  <!--@include components/wc-check name="terms" req="1" label="Погоджуюсь з <a href='offer.html' target='_blank' rel='noopener'>публічною офертою</a>, <a href='privacy.html' target='_blank' rel='noopener'>політикою конфіденційності</a> та <a href='delivery.html' target='_blank' rel='noopener'>умовами доставки й оплати</a>"-->
-                  <!--@include components/wc-check name="age_confirm" req="1" label="Мені виповнилося 18 років. Вік підтверджується через застосунок «Дія» перед оплатою та під час отримання (<a href='age-policy.html' target='_blank' rel='noopener'>як це працює</a>)"-->
+                  <!--@include components/wc-check name="terms" req="1" label="%t.checkout.wc-check.label%"-->
+                  <!--@include components/wc-check name="age_confirm" req="1" label="%t.checkout.wc-check.label-2%"-->
                 </div>
                 <!--@include components/wc-nonce name="woocommerce-process-checkout-nonce" referer="/checkout.html"-->
-                <button type="submit" class="button alt btn btn--green btn--block" name="woocommerce_checkout_place_order" id="place_order" value="Підтвердити замовлення"><span class="btn__inner t-btn">Підтвердити замовлення</span></button>
+                <button type="submit" class="button alt btn btn--green btn--block" name="woocommerce_checkout_place_order" id="place_order" value="%t.checkout.payment.place-order.value%">%t.checkout.payment.place-order%</button>
               </div>
             </div>
           </div>
@@ -118,53 +118,53 @@
 
       <div class="wc-grid wc-grid--cart" data-wc-view="empty" hidden>
         <section class="contacts-panel wc-main wc-main--cart" aria-labelledby="checkout-empty-title">
-          <h1 class="t-hero" id="checkout-empty-title">Оформлення замовлення</h1>
+          <h1 class="t-hero" id="checkout-empty-title">%t.checkout.checkout.checkout-empty-title%</h1>
           <div class="wc-cart-empty">
-            <p class="woocommerce-info t-lead">Оформлення недоступне, поки кошик порожній.</p>
-            <p class="return-to-shop"><a class="button wc-backward btn btn--green" href="catalog.html"><span class="btn__inner t-btn">Повернутись до каталогу</span></a></p>
+            <p class="woocommerce-info t-lead">%t.checkout.checkout.woocommerce-info%</p>
+            <p class="return-to-shop">%t.checkout.checkout.return-to-shop%</p>
           </div>
         </section>
       </div>
 
       <div class="woocommerce-order wc-grid wc-grid--cart" data-wc-view="thanks" hidden>
         <section class="contacts-panel wc-main wc-main--cart wc-order-main" aria-labelledby="thanks-title">
-          <h1 class="t-hero" id="thanks-title">Дякуємо за замовлення</h1>
-          <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received contact-success t-lead">Ваше замовлення отримано.</p>
+          <h1 class="t-hero" id="thanks-title">%t.checkout.checkout.thanks-title%</h1>
+          <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received contact-success t-lead">%t.checkout.checkout.woocommerce-notice%</p>
           <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
-            <li class="woocommerce-order-overview__order order t-text">Номер замовлення <mark class="order-number t-spec" data-wc-order-number></mark></li>
-            <li class="woocommerce-order-overview__date date t-text">Дата <mark class="order-date t-spec" data-wc-order-date></mark></li>
+            <li class="woocommerce-order-overview__order order t-text">%t.checkout.checkout.woocommerce-order-overview-order%</li>
+            <li class="woocommerce-order-overview__date date t-text">%t.checkout.checkout.woocommerce-order-overview-date%</li>
             <li class="woocommerce-order-overview__email email t-text">E-mail <strong class="t-spec" data-wc-order-email></strong></li>
-            <li class="woocommerce-order-overview__total total t-text">Разом <strong class="t-spec" data-wc-order-total></strong></li>
-            <li class="woocommerce-order-overview__payment-method method t-text">Спосіб оплати <strong class="t-spec" data-wc-order-method></strong></li>
+            <li class="woocommerce-order-overview__total total t-text">%t.checkout.checkout.woocommerce-order-overview-total%</li>
+            <li class="woocommerce-order-overview__payment-method method t-text">%t.checkout.checkout.woocommerce-order-overview-payment-method%</li>
           </ul>
           <section class="woocommerce-order-details">
-            <h2 class="woocommerce-order-details__title t-lead">Деталі замовлення</h2>
+            <h2 class="woocommerce-order-details__title t-lead">%t.checkout.checkout.woocommerce-order-details-title%</h2>
             <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
               <thead>
                 <tr>
-                  <th class="woocommerce-table__product-name product-name t-btn" scope="col">Товар</th>
-                  <th class="woocommerce-table__product-table product-total t-btn" scope="col">Разом</th>
+                  <th class="woocommerce-table__product-name product-name t-btn" scope="col">%t.checkout.checkout.woocommerce-table-product-name%</th>
+                  <th class="woocommerce-table__product-table product-total t-btn" scope="col">%t.checkout.checkout.woocommerce-table-product-table%</th>
                 </tr>
               </thead>
               <tbody data-wc-rows></tbody>
               <tfoot>
-                <!--@include components/wc-row cls="cart-subtotal" label="Проміжний підсумок" value="" attr="data-wc-subtotal"-->
-                <!--@include components/wc-row cls="shipping" label="Доставка" value="" attr="data-wc-shipping"-->
-                <!--@include components/wc-row cls="order-total" label="Разом" value="" attr="data-wc-total"-->
+                <!--@include components/wc-row cls="cart-subtotal" label="%t.checkout.wc-row.label-3%" value="" attr="data-wc-subtotal"-->
+                <!--@include components/wc-row cls="shipping" label="%t.checkout.wc-row.label-4%" value="" attr="data-wc-shipping"-->
+                <!--@include components/wc-row cls="order-total" label="%t.checkout.wc-row.label-5%" value="" attr="data-wc-total"-->
               </tfoot>
             </table>
             <p class="t-text" data-wc-ship-note hidden></p>
           </section>
         </section>
-        <aside class="contacts-panel wc-aside" aria-label="Одержувач і відстеження">
+        <aside class="contacts-panel wc-aside" aria-label="%t.checkout.checkout.contacts-panel.label%">
           <section class="woocommerce-customer-details">
-            <h2 class="woocommerce-column__title t-lead">Одержувач</h2>
+            <h2 class="woocommerce-column__title t-lead">%t.checkout.checkout.woocommerce-column-title%</h2>
             <address class="t-text" data-wc-address></address>
           </section>
           <section class="wc-order-track">
-            <h2 class="t-lead">Відстежити замовлення</h2>
-            <p class="t-text">Номер експрес-накладної надішлемо на телефон або e-mail. Статус замовлення — у кабінеті.</p>
-            <a class="button btn btn--green btn--block" href="account.html?state=tracking"><span class="btn__inner t-btn">Відстежити замовлення</span></a>
+            <h2 class="t-lead">%t.checkout.checkout.h2%</h2>
+            <p class="t-text">%t.checkout.checkout.p%</p>
+            <a class="button btn btn--green btn--block" href="account.html?state=tracking">%t.checkout.checkout.button%</a>
           </section>
         </aside>
       </div>
@@ -190,8 +190,8 @@
 
   <template id="wc-tpl-review-row">
     <tr class="cart_item">
-      <td class="product-name" data-title="Товар"><span class="t-product-name" data-wc-name></span> <strong class="product-quantity t-spec">&times;&nbsp;<span data-wc-qty></span></strong><dl class="variation"><dt class="variation-Obyem t-spec">Об'єм:</dt><dd class="variation-Obyem t-spec"><p class="t-spec" data-wc-volume></p></dd></dl></td>
-      <td class="product-total t-price" data-title="Разом" data-wc-line-total></td>
+      <td class="product-name" data-title="%t.checkout.wc-tpl-review-row.product-name.data-title%"><span class="t-product-name" data-wc-name></span> <strong class="product-quantity t-spec">&times;&nbsp;<span data-wc-qty></span></strong><dl class="variation"><dt class="variation-Obyem t-spec">%t.checkout.wc-tpl-review-row.variation-obyem%</dt><dd class="variation-Obyem t-spec"><p class="t-spec" data-wc-volume></p></dd></dl></td>
+      <td class="product-total t-price" data-title="%t.checkout.wc-tpl-review-row.product-total.data-title%" data-wc-line-total></td>
     </tr>
   </template>
   <template id="wc-tpl-error"><!--@include components/wc-error text=""--></template>
