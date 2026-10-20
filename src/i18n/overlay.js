@@ -19,7 +19,7 @@ export function deepOverlay(base, over) {
 /** список об'єктів з ключем-полем (slug/id): оверлей — об'єкт { [slug]: часткові дані } */
 export const overlayList = (list, over, keyField = 'slug') => (over ? list.map((it) => deepOverlay(it, over[it[keyField]])) : list);
 /** всі шляхи рядків із кириличними літерами (для qa:i18n І4: у локалізованих даних не лишилось українського) */
-export function cyrPaths(v, path = '', out = [], skip = /(^|\.)(slot|bgSlot|draft)$/) {
+export function cyrPaths(v, path = '', out = [], skip = /(^|\.)(slot|bgSlot|draft|todo|invented)$/) {
   if (typeof v === 'string') { if (/[А-Яа-яІіЇїЄєҐґ]/.test(v) && !skip.test(path)) out.push(`${path}: ${v.slice(0, 40)}`); }
   else if (Array.isArray(v)) v.forEach((x, i) => cyrPaths(x, `${path}[${i}]`, out, skip));
   else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) cyrPaths(x, path ? `${path}.${k}` : k, out, skip);

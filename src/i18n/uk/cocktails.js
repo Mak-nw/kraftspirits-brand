@@ -13,4 +13,8 @@ export default {
   'cocktails.block.slot-photo': 'Фото коктейлю «{{title}}»: один кадр 4:5, лише бокал, src/data/cocktails.js → photos',
   'cocktails.block.zoom': 'Відкрити фото «{{title}}» на весь екран',
   'cocktails.block.slot-product': 'Товар для коктейлю: product «{{productSlug}}» у src/data/cocktails.js{{#productNote}} ({{productNote}}){{/productNote}}',
+  'cocktails.title': 'Коктейлі — YasnoCraft × Bazylsprings',
+  'cocktails.desc': 'Класичні коктейлі з напоями YasnoCraft і Bazylsprings: інгредієнти, приготування й подача. Для кожного рецепта — картка напою з каталогу.',
+  'cocktails.cocktails-h1': 'Коктейлі',
+  'cocktails.cocktails-lead': 'Класичні коктейлі з напоями YasnoCraft і Bazylsprings. У кожному рецепті є інгредієнти, кроки й подача, а поруч картка напою з каталогу.',
 };

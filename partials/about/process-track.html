@@ -2,61 +2,61 @@
      Pinned horizontal scroll: вертикальний скрол рухає весь трек (текст + стрічка) вліво на весь екран, поки секція закріплена (src/js/about-process.js; розпірка .about-place-run у about.html); reduced-motion — нативний overflow-x. У кожній арці — зациклена векторна Lottie (public/assets/lottie/process-NN.json; генератор tools/lottie/gen-process.mjs).
      Арка = наявний .lp-arch (hairline). Підключення: директивою include (about/process-track) у section#place всередині .about-track після .about-place__text. Стилі: src/styles/pages/about-process.css; опис — design-system.html#about-page. -->
 <div class="about-process" data-process>
-  <div class="about-process__viewport" data-process-viewport role="region" aria-label="Етапи виробництва від осолодження до розливу">
+  <div class="about-process__viewport" data-process-viewport role="region" aria-label="%t.about.process.about-process-viewport.label%">
     <ol class="about-process__list" role="list">
-      <li class="about-process__item" aria-label="Етап 1: Осолодження й подрібнення">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-01" data-poster="30" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">01</span><span class="t-caption">Осолодження й подрібнення</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 2: Варіння">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-2%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-02" data-poster="20" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">02</span><span class="t-caption">Варіння</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-2%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 3: Бродіння">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-3%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-03" data-poster="30" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">03</span><span class="t-caption">Бродіння</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-3%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 4: Дистиляція">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-4%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-04" data-poster="20" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">04</span><span class="t-caption">Дистиляція</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-4%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 5: Витримка в бочках">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-5%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-05" data-poster="60" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">05</span><span class="t-caption">Витримка в бочках</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-5%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 6: Купажування">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-6%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-06" data-poster="20" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">06</span><span class="t-caption">Купажування</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-6%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 7: Фільтрація">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-7%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-07" data-poster="30" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">07</span><span class="t-caption">Фільтрація</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-7%</p>
         </div>
         <span class="about-process__link" aria-hidden="true"></span>
       </li>
-      <li class="about-process__item" aria-label="Етап 8: Розлив">
+      <li class="about-process__item" aria-label="%t.about.process.about-process-item.label-8%">
         <div class="lp-arch about-process__arch">
           <div class="about-process__anim" data-lottie="process-08" data-poster="60" aria-hidden="true"></div>
-          <p class="about-process__text"><span class="t-kicker">08</span><span class="t-caption">Розлив</span></p>
+          <p class="about-process__text">%t.about.process.about-process-text-8%</p>
         </div>
       </li>
     </ol>

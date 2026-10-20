@@ -13,4 +13,8 @@ export default {
   'cocktails.block.slot-photo': 'Photo of “{{title}}”: a single 4:5 frame, glass only, src/data/cocktails.js → photos',
   'cocktails.block.zoom': 'Open the photo of “{{title}}” full screen',
   'cocktails.block.slot-product': 'Product for the cocktail: product “{{productSlug}}” in src/data/cocktails.js{{#productNote}} ({{productNote}}){{/productNote}}',
+  'cocktails.title': 'Cocktails — YasnoCraft × Bazylsprings',
+  'cocktails.desc': 'Classic cocktails made with YasnoCraft and Bazylsprings drinks: ingredients, method and serving. Each recipe comes with the drink’s catalogue card.',
+  'cocktails.cocktails-h1': 'Cocktails',
+  'cocktails.cocktails-lead': 'Classic cocktails made with YasnoCraft and Bazylsprings drinks. Every recipe has ingredients, steps and serving, and the drink’s catalogue card next to it.',
 };

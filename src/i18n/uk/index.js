@@ -9,5 +9,7 @@ import contacts from './contacts.js';
 import feedback from './feedback.js';
 import product from './product.js';
 import cocktails from './cocktails.js';
-export const files = { common, js, home, shared, catalog, cart, contacts, feedback, product, cocktails };
+import about from './about.js';
+import faq from './faq.js';
+export const files = { common, js, home, shared, catalog, cart, contacts, feedback, product, cocktails, about, faq };
 export default Object.assign({}, ...Object.values(files));

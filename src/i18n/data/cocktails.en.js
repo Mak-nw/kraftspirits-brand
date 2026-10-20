@@ -1,2 +1,113 @@
-// cocktails: English overlay (docs/i18n.md). Empty until translated.
-export default {};
+// English overlay on src/data/cocktails.js: key = slug. Fields: title, original (empty: the English title is shown as the heading), description, photos[].alt, ingredients[] { name, amount }, steps[], serve { glass, garnish }, productNote.
+// DRAFT like the Ukrainian source (classic recipes, client to confirm). Units: ml, dashes; glossary: docs/i18n.md.
+const photo = (n) => [{ alt: `${n} cocktail: a glass of the drink` }];
+export default {
+  'gin-tonic': {
+    title: 'Gin & Tonic', original: '', photos: photo('Gin & Tonic'),
+    description: 'The simplest way to get to know gin: juniper and citrus open up in the bitterness of the tonic. Refreshing without too much sweetness. A good drink for a warm evening on the terrace or an unhurried chat before dinner.',
+    ingredients: [{ name: 'Gin', amount: '50 ml' }, { name: 'Tonic, chilled', amount: '150 ml' }, { name: 'Lime', amount: '1 slice' }, { name: 'Ice cubes', amount: 'to the top' }],
+    steps: ['Fill a glass to the top with ice.', 'Pour in the gin.', 'Add the tonic slowly down a bar spoon to keep the bubbles.', 'Stir gently once from the bottom up.', 'Garnish with a slice of lime.'],
+    serve: { glass: 'Highball or balloon glass', garnish: 'A slice of lime, optionally a sprig of rosemary' },
+  },
+  negroni: {
+    title: 'Negroni', original: '', photos: photo('Negroni'),
+    description: 'Equal parts gin, red vermouth and bitter. The taste is deep, with orange bitterness and the warm sweetness of vermouth. Gin rested in oak adds soft vanilla. A classic aperitif before dinner.',
+    ingredients: [{ name: 'Gin', amount: '30 ml' }, { name: 'Red vermouth', amount: '30 ml' }, { name: 'Red bitter', amount: '30 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Fill a mixing glass with ice.', 'Add the gin, vermouth and bitter.', 'Stir with a bar spoon for 20–30 seconds until chilled.', 'Strain into a glass over one large ice cube.', 'Squeeze an orange peel over the drink and drop it in.'],
+    serve: { glass: 'Old fashioned (rocks) glass', garnish: 'Orange twist' },
+  },
+  'dry-martini': {
+    title: 'Dry Martini', original: '', photos: photo('Dry Martini'),
+    description: 'Gin and a drop of dry vermouth, well chilled and nothing more. Clean and cool, with juniper at the centre. A cocktail for those who want to taste the gin itself. Served with light snacks or as an aperitif.',
+    ingredients: [{ name: 'Gin', amount: '60 ml' }, { name: 'Dry vermouth', amount: '10 ml' }, { name: 'Ice', amount: 'as needed' }, { name: 'Olive or lemon peel', amount: '1' }],
+    steps: ['Chill the glass in the freezer or with ice.', 'Combine the gin and vermouth in a mixing glass with ice.', 'Stir with a bar spoon for about 30 seconds.', 'Strain into the chilled glass.', 'Add an olive on a pick or squeeze a lemon peel over the drink.'],
+    serve: { glass: 'Martini or coupe glass', garnish: 'Olive or lemon twist' },
+  },
+  gimlet: {
+    title: 'Gimlet', original: '', photos: photo('Gimlet'),
+    description: 'Gin, fresh lime juice and a little sugar syrup. Sourness and sweetness are in balance, and the herbal notes of Garden Gin make the flavour greener. A short, bright cocktail that is easy to make at home.',
+    ingredients: [{ name: 'Gin', amount: '60 ml' }, { name: 'Fresh lime juice', amount: '20 ml' }, { name: 'Sugar syrup 1:1', amount: '15 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Chill the glass.', 'Fill a shaker with ice.', 'Add the gin, lime juice and syrup.', 'Shake hard for 10–12 seconds.', 'Double strain into the chilled glass.'],
+    serve: { glass: 'Coupe', garnish: 'A thin lime wheel or lime twist' },
+  },
+  'gin-basil-smash': {
+    title: 'Gin Basil Smash', original: '', photos: photo('Gin Basil Smash'),
+    description: 'Fresh basil, lemon and gin: herbal, bright green and very aromatic. Garden Gin, with its basil and cucumber, feels natural here. Suits a summer dinner, a cheese board or tomato dishes.',
+    ingredients: [{ name: 'Gin', amount: '60 ml' }, { name: 'Fresh lemon juice', amount: '25 ml' }, { name: 'Sugar syrup 1:1', amount: '20 ml' }, { name: 'Basil leaves', amount: '8–10' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Put the basil leaves in a shaker.', 'Press lightly with a muddler to release the aroma without crushing the leaves.', 'Add the gin, lemon juice, syrup and ice.', 'Shake hard for 12–15 seconds.', 'Double strain into a glass with fresh ice.'],
+    serve: { glass: 'Old fashioned (rocks) glass', garnish: 'A basil top' },
+  },
+  'tom-collins': {
+    title: 'Tom Collins', original: '', photos: photo('Tom Collins'),
+    description: 'A long, refreshing cocktail: gin, lemon, a little sweetness and soda. Light, with soft bubbles and a clean citrus taste. It stays fresh in the heat and goes well with dinner outdoors.',
+    ingredients: [{ name: 'Gin', amount: '50 ml' }, { name: 'Fresh lemon juice', amount: '25 ml' }, { name: 'Sugar syrup 1:1', amount: '15 ml' }, { name: 'Soda, chilled', amount: '60–80 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Fill a glass with ice.', 'Shake the gin, lemon juice and syrup in a shaker with ice.', 'Strain into the glass.', 'Top up with soda.', 'Stir gently and garnish.'],
+    serve: { glass: 'Collins or highball', garnish: 'A slice of lemon' },
+  },
+  'old-fashioned': {
+    title: 'Old Fashioned', original: '', photos: photo('Old Fashioned'),
+    description: 'A strong spirit, a little sugar, aromatic bitters and orange peel. Oak, vanilla and caramel gain volume, and the peel adds light. A cocktail for a slow evening, sipped in small mouthfuls while the ice melts.',
+    ingredients: [{ name: 'Aged whisky-style spirit', amount: '60 ml' }, { name: 'Sugar syrup 2:1', amount: '7.5 ml' }, { name: 'Aromatic bitters', amount: '2 dashes' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Combine the syrup and bitters in a mixing glass.', 'Add the whisky and ice.', 'Stir with a bar spoon for 20–30 seconds.', 'Strain into a glass over one large ice cube.', 'Squeeze an orange peel over the drink and drop it in.'],
+    serve: { glass: 'Old fashioned (rocks) glass', garnish: 'Orange twist' },
+    productNote: 'Classically an aged whisky; Oak Notes is the closest item (an oak-stave infusion, whisky style).',
+  },
+  manhattan: {
+    title: 'Manhattan', original: '', photos: photo('Manhattan'),
+    description: 'Whisky, red vermouth and a few drops of bitters, stirred until cold. The taste is dense and warm: spice, dried fruit, wood. A classic cocktail before dinner or after it, when you want something composed and unhurried.',
+    ingredients: [{ name: 'Aged whisky-style spirit', amount: '50 ml' }, { name: 'Red vermouth', amount: '25 ml' }, { name: 'Aromatic bitters', amount: '2 dashes' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Chill the glass.', 'Combine the whisky, vermouth and bitters in a mixing glass with ice.', 'Stir with a bar spoon for about 30 seconds.', 'Strain into the chilled glass.', 'Garnish with a cocktail cherry.'],
+    serve: { glass: 'Coupe or martini glass', garnish: 'Cocktail cherry' },
+    productNote: 'Classically an aged whisky; Oak Notes is the closest item in the range.',
+  },
+  'whiskey-sour': {
+    title: 'Whiskey Sour', original: '', photos: photo('Whiskey Sour'),
+    description: 'Whisky, fresh lemon and sugar syrup, with sour and sweet in balance. A clean grain distillate gives a lighter, bready version of the classic. A good cocktail to start with if you are new to whisky in mixology.',
+    ingredients: [{ name: 'Whisky', amount: '50 ml' }, { name: 'Fresh lemon juice', amount: '25 ml' }, { name: 'Sugar syrup 1:1', amount: '20 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Fill a shaker with ice.', 'Add the whisky, lemon juice and syrup.', 'Shake hard for 10–12 seconds.', 'Strain into a glass over fresh ice.', 'Garnish with lemon zest.'],
+    serve: { glass: 'Old fashioned (rocks) glass', garnish: 'Lemon zest, optionally a cocktail cherry' },
+    productNote: 'Classically an aged whisky; with unaged White Whiskey the taste is lighter.',
+  },
+  'whiskey-mule': {
+    title: 'Whiskey Mule', original: '', photos: photo('Whiskey Mule'),
+    description: 'Whisky, lime and ginger beer over ice. Spicy and refreshing, with a clear ginger warmth over a grain base. A long drink that is easy to make for a group: all you need is a glass, ice and a bar spoon.',
+    ingredients: [{ name: 'Whisky', amount: '50 ml' }, { name: 'Fresh lime juice', amount: '15 ml' }, { name: 'Ginger beer, chilled', amount: '120 ml' }, { name: 'Ice', amount: 'to the top' }],
+    steps: ['Fill a mug or glass with ice.', 'Pour in the whisky and lime juice.', 'Top up with ginger beer.', 'Stir lightly with a bar spoon.', 'Garnish with a slice of lime.'],
+    serve: { glass: 'Copper mug or highball', garnish: 'A slice of lime, optionally a sprig of mint' },
+  },
+  'whisky-highball': {
+    title: 'Highball', original: '', photos: photo('Highball'),
+    description: 'Distillate, soda and plenty of ice. With so few ingredients the base sounds clean: barley malt, bready softness and the freshness of the bubbles. A light long drink for dinner or an unhurried conversation.',
+    ingredients: [{ name: 'Barley distillate', amount: '50 ml' }, { name: 'Soda, chilled', amount: '150 ml' }, { name: 'Lemon peel', amount: '1 strip' }, { name: 'Ice cubes', amount: 'to the top' }],
+    steps: ['Fill a glass with ice and stir to chill it.', 'Pour off the melt water.', 'Pour in the distillate.', 'Add the soda slowly down a bar spoon.', 'Stir once and squeeze the lemon peel over the drink.'],
+    serve: { glass: 'Highball', garnish: 'Lemon peel' },
+  },
+  'jack-rose': {
+    title: 'Jack Rose', original: '', photos: photo('Jack Rose'),
+    description: 'Apple brandy, lemon and grenadine. A pink cocktail with the aroma of baked apple and a light berry sweetness. Short and festive, it suits autumn evenings and small bites.',
+    ingredients: [{ name: 'Calvados', amount: '45 ml' }, { name: 'Fresh lemon juice', amount: '20 ml' }, { name: 'Grenadine', amount: '15 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Chill the glass.', 'Fill a shaker with ice.', 'Add the calvados, lemon juice and grenadine.', 'Shake hard for 10–12 seconds.', 'Double strain into the chilled glass.'],
+    serve: { glass: 'Coupe', garnish: 'A thin slice of apple' },
+  },
+  'calvados-sidecar': {
+    title: 'Calvados Sidecar', original: '', photos: photo('Calvados Sidecar'),
+    description: 'A classic sidecar built on apple brandy. The honey and dried apple of the calvados meet orange liqueur and lemon. A warm, citrusy, composed cocktail for an evening with a few friends.',
+    ingredients: [{ name: 'Calvados', amount: '50 ml' }, { name: 'Orange liqueur', amount: '20 ml' }, { name: 'Fresh lemon juice', amount: '20 ml' }, { name: 'Ice', amount: 'as needed' }],
+    steps: ['Chill the glass.', 'Fill a shaker with ice.', 'Add the calvados, liqueur and lemon juice.', 'Shake hard for 10–12 seconds.', 'Strain into the chilled glass.'],
+    serve: { glass: 'Coupe', garnish: 'Orange twist' },
+  },
+  'pear-highball': {
+    title: 'Pear Highball', photos: photo('Pear Highball'),
+    description: 'Pear schnapps, soda and fresh mint. Pear and honey sound light, the bubbles keep the taste fresh and the mint adds coolness. A simple long drink for a summer dinner, made right in the glass.',
+    ingredients: [{ name: 'Pear schnapps', amount: '50 ml' }, { name: 'Soda or tonic, chilled', amount: '120 ml' }, { name: 'Mint', amount: '2 sprigs' }, { name: 'Ice cubes', amount: 'to the top' }],
+    steps: ['Clap the mint lightly between your palms to release the aroma.', 'Put the mint in a glass and fill it with ice.', 'Pour in the schnapps.', 'Top up with soda or tonic.', 'Stir gently and garnish with a slice of pear.'],
+    serve: { glass: 'Highball', garnish: 'A thin slice of pear and a sprig of mint' },
+  },
+  'herbal-tonic': {
+    title: 'Herbal Tonic', photos: photo('Herbal Tonic'),
+    description: 'Herbal tincture with tonic and thyme. Mint, thyme and a light bitterness of bark turn lighter and fresher. A long drink for a quiet evening, when you want herbal flavour, freshness and unhurried talk.',
+    ingredients: [{ name: 'Herbal tincture', amount: '40 ml' }, { name: 'Tonic, chilled', amount: '120 ml' }, { name: 'Lemon peel', amount: '1 strip' }, { name: 'Ice cubes', amount: 'to the top' }],
+    steps: ['Fill a glass with ice.', 'Pour in the tincture.', 'Add the tonic slowly.', 'Stir once with a bar spoon.', 'Squeeze the lemon peel over the drink and add a sprig of thyme.'],
+    serve: { glass: 'Highball or balloon glass', garnish: 'A sprig of thyme and lemon peel' },
+  },
+};
