@@ -11,5 +11,6 @@ import product from './product.js';
 import cocktails from './cocktails.js';
 import about from './about.js';
 import faq from './faq.js';
-export const files = { common, js, home, shared, catalog, cart, contacts, feedback, product, cocktails, about, faq };
+import legal from './legal.js';
+export const files = { common, js, home, shared, catalog, cart, contacts, feedback, product, cocktails, about, faq, legal };
 export default Object.assign({}, ...Object.values(files));
