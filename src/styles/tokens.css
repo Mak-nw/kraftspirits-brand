@@ -452,7 +452,7 @@
   /* рядки-акордеони (summary як кнопка-рядок): фон на hover; FAQ = єдина картка (.acc--faq в .acc-frame, макет About Us p10) */
   --btn-row-faq-bg-default:            var(--color-light);            /* кремова картка всередині рамки .acc-frame; найближчий колір палітри до крему макета */
   --btn-row-faq-bg-hover:              var(--color-hover-acc-product); /* hover картки: теплий беж DS (як рядок акордеона товару) */
-  --space-faq-card-row-gap:            var(--space-5);               /* вертикальний відступ між картками-рядками .acc-frame (макет p10: майже впритул; рішення замовника); горизонтальний між колонками теж = цей токен (5u; рішення замовника 19.10.2026; лише на about — модифікатор --span8 лишає --grid-gap 40u) */
+  --space-faq-card-row-gap:            var(--space-5);               /* вертикальний відступ між картками-рядками .acc-frame (макет p10: майже впритул; рішення замовника); горизонтальний між колонками теж = цей токен (5u; рішення замовника 19.10.2026 і 20.10.2026 (594672f7): у УСІХ списках FAQ на ВСІХ сторінках, включно з about --span8) */
   --space-faq-card-inset:              var(--space-5);                /* відступ між зовнішньою hairline-рамкою .acc-frame і карткою (макет: ~5u) */
   --radius-faq-card:                   var(--radius-panel);           /* закруглення картки; зовнішня рамка .acc-frame — прямі кути (--radius-none), як на макеті */
   --btn-row-product-bg-default:        transparent;
