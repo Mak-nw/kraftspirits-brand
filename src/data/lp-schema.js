@@ -420,7 +420,7 @@ const VIEW = {
     const about = s.look === 'about';
     const per = s.perRow || n;
     const eq = cols % per !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
-    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${n}`, shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.leadCols ? ` lp-tiles--lead-${s.leadCols}` : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.bare ? ' lp-tiles--bare' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
+    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${n}`, shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.leadCols ? ` lp-tiles--lead-${s.leadCols}` : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.bare ? ' lp-tiles--bare' : ''}${s.items.every((it) => it.engraving === 'engraving-crown') ? ' lp-tiles--crown' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
       gridMod: `${eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${per}` : ''}${s.perRow ? ' lp-tiles__grid--rows' : ''}`,
       items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / per, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
         toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };

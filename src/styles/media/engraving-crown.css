@@ -1,0 +1,8 @@
+/* МЕДІА «engraving-crown» (partials/media/engraving-crown.html; шаблон lp, тип tiles, поле engraving). Вінець з 16 золотих клинів і тонким колом — той самий, що на «Наших принципах» (about): геометрія в partials/components/crown-ring.html. Рішення замовника 2e409990 («стиль кругу візьмемо з секції про принципи; іконку всередині замінимо»). */
+:root {
+  --size-crown-icon-share: 0.34;                                                              /* значок у вінці: бокс 34% діаметра (сітка 24, поля ≈ 2–3) ⇒ видима висота ≈ 26–27% — як у рефі замовника (коло 280 → значок ≈ 75) */
+  --size-crown-finish-icon: calc(var(--size-barrels-finish-head) * var(--size-crown-icon-share));
+}
+.lp-engraving--crown { color: var(--lp-accent); } /* клини й коло — currentColor = золото теми (як на about: --color-gold) */
+.lp-tiles--crown { --size-barrels-finish-icon: var(--size-crown-finish-icon); }
+.lp-tiles--crown .lp-tile__icon { color: var(--lp-accent); }

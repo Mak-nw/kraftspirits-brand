@@ -76,6 +76,7 @@ function variantsOf(type) {
   } else if (type === 'tiles') {
     const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; delete a.bare; delete a.perRow; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
     const bp = clone(a); bp.bare = true; bp.perRow = 3; bp.cols = 6; bp.items = Array.from({ length: 6 }, (_, i) => ({ ...bp.items[0], key: `k${i}` })); out.push(['engraving bare 3x2', bp]);
+    const cw = clone(a); cw.items.forEach((t) => { t.engraving = 'engraving-crown'; }); out.push(['engraving crown', cw]);   // вінець principle-crown (рішення замовника 2e409990)
     const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; delete b.bare; delete b.perRow; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
     const c = clone(s); delete c.look; delete c.bare; delete c.perRow; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
     const d = clone(c); d.look = 'about'; out.push(['circle+look about', d]);   // картки-арки «Про нас» (partials/lp/tile-card)
@@ -136,6 +137,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
       note(html.includes('lp-tiles--bare') === (label === 'engraving bare 3x2') && html.includes('lp-tiles__grid--rows') === (label === 'engraving bare 3x2'), `render tiles [${label}]: bare → lp-tiles--bare, perRow → lp-tiles__grid--rows`);
+      note(html.includes('lp-tiles--crown') === (label === 'engraving crown') && html.includes('lp-engraving--crown') === (label === 'engraving crown') && (label !== 'engraving crown' || html.includes('<circle cx="107" cy="107" r="106.5"')), `render tiles [${label}]: engraving-crown → lp-tiles--crown + вінець (коло + клини з components/crown-ring)`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
       if (!s.look) note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
     }
