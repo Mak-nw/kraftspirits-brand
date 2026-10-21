@@ -15,8 +15,8 @@
   .b2b-ref__btn { width: auto; margin-top: var(--space-30); }
   .b2b-ref__btn-in { transform: none; }
   .b2b-ref__facts { margin-top: var(--space-30); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; column-gap: var(--grid-gap); row-gap: var(--space-50); }
-  .b2b-ref__fact-title, .b2b-ref__fact-text { width: auto; font-size: var(--font-size-text); line-height: var(--lh-normal); }
-  .b2b-ref__fact-title { font-size: var(--font-size-title); }
+  .b2b-ref__fact-title { width: auto; font-size: var(--font-size-title); line-height: var(--lh-normal); }
+  .b2b-ref__fact-text { width: auto; font: var(--type-desc-weight) var(--type-desc-size)/var(--type-desc-lh) var(--type-desc-font); letter-spacing: var(--type-desc-ls); } /* роль t-desc */
 }
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { aspect-ratio: 776 / 500; }
@@ -35,7 +35,7 @@
   .b2b-ref--10 .brand-half--bazylsprings[class] .brand-half__card::before { -webkit-mask-image: url('/assets/img/home-brand-card-bs.svg'); mask-image: url('/assets/img/home-brand-card-bs.svg'); }
   .b2b-ref--10 .brand-half[class] .brand-half__bg { inset: 0; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
   .b2b-ref--10 .brand-half__cta { top: var(--offset-brand-cta-top); }
-  .b2b-ref--10 .btn__inner { letter-spacing: normal; }
+  .b2b-ref--10 .btn__inner { letter-spacing: var(--type-btn-ls); }
 }
 @media (max-width: 767.98px) {
   .b2b-ref--10 .brand-half[class] { --size-brand-content-w: 76%; }
