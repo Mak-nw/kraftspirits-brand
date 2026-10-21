@@ -48,6 +48,9 @@ async function probe(page, width) {
         }
       }
     }
+    // scrollIntoView у R2 зсуває контейнери з overflow:hidden/clip (напр. вікно карти) — повертаємо, щоб R3/R5 міряли початковий стан
+    for (const el of document.querySelectorAll('*')) if ((el.scrollLeft || el.scrollTop) && /(hidden|clip)/.test(getComputedStyle(el).overflowX) && el !== document.documentElement) { el.scrollLeft = 0; el.scrollTop = 0; }
+    window.scrollTo(0, 0);
     // R3 + R4 + R5: текстові вузли
     const rg = document.createRange(); const rects = [];
     const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
