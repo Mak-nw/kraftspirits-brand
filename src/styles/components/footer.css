@@ -14,7 +14,7 @@
 .site-footer__order > .btn:nth-child(1) { grid-column: 4 / span 2; }
 .site-footer__order > .btn:nth-child(2) { grid-column: 6 / span 2; }
 /* крок пунктів 31 = 16 (рядок --nav-box-h) + 15 (gap): висоту рядка дає роль .t-btn на посиланні (як кнопки сайту); регістр — КАПС, як у шапці (рішення замовника) */
-.site-footer__list { display: flex; flex-direction: column; gap: var(--space-15); }
+.site-footer__list { display: flex; flex-direction: column; gap: var(--space-10); } /* 1e3acd16: вертикальний відступ між посиланнями зменшено 15 → 10 (крок 32,4u); на адаптиві (<1200) gap 0 — рядок = ціль 44 px */
 .site-footer__list a:not(.btn) { display: block; width: fit-content; max-width: 100%; } /* block: inline-block тягнув рядок на baseline і ламав крок 31; fit-content: клікабельна зона й фокус-кільце вузькі за текстом (кільце виступає в зазор між колонками / поле, не обрізується) */
 /* рядок: © / wordmark по центру / юридичні посилання; 194:1260 top 623 → 20 до низу бежевої частини */
 .site-footer__legal { align-items: end; padding-bottom: var(--space-20); position: relative; }
