@@ -15,6 +15,7 @@
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
   .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
   .wc-grid--guest { grid-template-columns: minmax(0, 1fr); }
+  .woocommerce-account .wc-grid--guest .lost_password .btn__inner { white-space: nowrap; } /* «Забули пароль?» завжди в один рядок (f1688fb6) */
   .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content { grid-column: auto; }
   .woocommerce-MyAccount-navigation ul { flex-direction: row; flex-wrap: wrap; }
   .woocommerce-MyAccount-navigation li { flex: 1 1 auto; }
@@ -26,6 +27,8 @@
   .woocommerce-orders-table, .woocommerce table.order_details { width: 100%; }
 }
 @media (max-width: 767.98px) {
+  /* гостьовий екран: кнопки одна під одною на всю ширину форми, підпис «Забули пароль?» — в один рядок (замовник f1688fb6) */
+  .woocommerce-account .wc-grid--guest .wc-actions { grid-template-columns: minmax(0, 1fr); }
   /* кошик: рядок позиції = картка (фото | назва, ціна, кількість, разом) */
   /* кабінет: таблиця замовлень = картки (номер · статус / дата · сума / кнопка на всю ширину) */
   .woocommerce-orders-table { display: block; }
