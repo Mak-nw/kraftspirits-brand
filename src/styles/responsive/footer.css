@@ -6,6 +6,10 @@
   .site-footer__list a:not(.btn) { width: 100%; }  /* вся ширина колонки клікабельна: ціль ≥ 44 і по ширині */
   .site-footer__col--docs .site-footer__list a:not(.btn) { justify-content: flex-end; }  /* «Документація» праворуч, як на десктопі */
   .site-footer__order .btn__inner { min-height: var(--size-touch-target); }
+  /* нижній рядок: «© 2026» по центру (рішення замовника fadcbcc5), вордмарк yasnocraft під ним у потоці (на десктопі © зліва в колонках 1–3: вордмарк на тому ж рядку) */
+  .site-footer__legal { display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding-bottom: var(--space-30); }
+  .site-footer__copy { text-align: center; }
+  .site-footer__legal .site-footer__wordmark { position: static; width: 100%; justify-content: center; margin-top: var(--space-30); }
 }
 @media (max-width: 1023.98px) {
   .site-footer__top { height: auto; padding: var(--space-70) var(--grid-margin) 0; gap: var(--space-50); }
@@ -19,8 +23,6 @@
   /* кнопки замовлення: однакова ширина, на всю ширину вмісту, рівні між собою */
   .site-footer__order { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-20); margin-bottom: var(--space-50); }
   .site-footer__order > .btn:nth-child(1), .site-footer__order > .btn:nth-child(2) { grid-column: auto; }
-  .site-footer__legal { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); padding-bottom: var(--space-30); }
-  .site-footer__legal .site-footer__wordmark { position: static; width: 100%; justify-content: center; margin-top: var(--space-30); }
   .site-footer__bottom { height: auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding: var(--space-50) var(--grid-margin); }
   .site-footer__bottom .site-footer__wordmark { justify-self: auto; width: 100%; }
   .site-footer__age { white-space: normal; text-wrap: balance; }
@@ -34,7 +36,7 @@
 /* малі ноути 1024–1199: висота верху футера — мінімум (малий текст із підлогами px не вміщується в --footer-h-top) */
 @media (min-width: 1024px) and (max-width: 1199.98px) {
   .site-footer__top { height: auto; min-height: var(--footer-h-top); }
-  .site-footer__order { margin-bottom: var(--space-140); }  /* вордмарк абсолютний (внизу рядка legal): відступ кнопки → лого, як на десктопі, інакше з 11 пунктами меню кнопки лягають на лого */
+  .site-footer__order { margin-bottom: var(--space-50); }  /* вордмарк у потоці під «©» (див. вище): відступ кнопки → лого як на планшеті */
   .site-footer__order > .btn:nth-child(1) { grid-column: 3 / span 3; }  /* кнопки по 3 колонки (центр сторінки зберігається): у 2 колонок підпис «Замовити екскурсію» не вміщується */
   .site-footer__order > .btn:nth-child(2) { grid-column: 6 / span 3; }
 }
