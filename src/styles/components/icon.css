@@ -45,7 +45,7 @@
 .icon--events-tech { -webkit-mask-image: url('/assets/icons/events-tech.svg'); mask-image: url('/assets/icons/events-tech.svg'); }                   /* Техніка: проєктор */
 .icon--events-catering { -webkit-mask-image: url('/assets/icons/events-catering.svg'); mask-image: url('/assets/icons/events-catering.svg'); }       /* Харчування: виделка й ніж */
 .icon--events-atmosphere { -webkit-mask-image: url('/assets/icons/events-atmosphere.svg'); mask-image: url('/assets/icons/events-atmosphere.svg'); } /* Атмосфера: мідний перегінний куб */
-/* бочки: маршрут «Кентуккі — Київ" — корабель по центру лінії */
+/* бочки: маршрут «Кентуккі — Київ» — корабель по центру лінії */
 .icon--barrels-ship { -webkit-mask-image: url('/assets/icons/barrels-ship.svg'); mask-image: url('/assets/icons/barrels-ship.svg'); }
 
 /* Міцність з іконкою (.strength): склянка strength.svg ліворуч від тексту («42% alc» у шапці продукту YC; в акордеонах товару іконок немає).
