@@ -19,11 +19,11 @@ const PROBE = (GRID_COLS) => {
     const c = sec.querySelector(GRIDS); const b = c.getBoundingClientRect(); const sb = sec.getBoundingClientRect();
     const center = sb.left + sb.width / 2; const k = (GRID_COLS - n) / 2;
     const out = { id: sec.id, n, left: b.left, width: b.width, expWidth: px(`var(--grid-span-${n})`), center, cx: b.left + b.width / 2, k, gridLeft: center - gridW / 2, step, gridW };
-    const eq = sec.querySelector('.lp-tiles__grid--eq');
+    const eq = sec.querySelector('.lp-tiles__grid--eq, .lp-tiles__grid--rows'); // perRow + cols 6: плитки по 2 колонки (ділять cols), без класу --eq — перевіряємо так само: рівні блоки з зазором колонок
     if (eq) {
       const figs = [...eq.querySelectorAll(':scope > .lp-tile, :scope > .lp-arches > li')].map((f) => f.getBoundingClientRect());
       const perRow = eq.classList.contains('lp-tiles__grid--rows'); // поле perRow: плитки у кілька рядів (3 у ряд, 6 плиток = 2 ряди)
-      const per = perRow ? +(eq.className.match(/lp-tiles__grid--n(\d+)/) || [])[1] : figs.length;
+      const per = perRow ? (+(eq.className.match(/lp-tiles__grid--n(\d+)/) || [])[1] || 3) : figs.length;
       const m = per; const w = (eq.getBoundingClientRect().width - (m - 1) * gap) / m;
       const rowsOf = []; figs.forEach((r, i) => { (rowsOf[Math.floor(i / per)] ||= []).push(r); });
       const tops = [...new Set(figs.map((r) => Math.round(r.top)))].length;

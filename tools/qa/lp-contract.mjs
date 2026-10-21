@@ -75,7 +75,7 @@ function variantsOf(type) {
     const d2 = clone(d1); d2.items.forEach((it) => { delete it.img; it.lottie = '/assets/lottie/barrel-01-pour.json'; }); out.push(['deck split lottie', d2]);   // split: текст | Lottie // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
     const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; delete a.bare; delete a.perRow; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
-    const bp = clone(a); bp.bare = true; bp.perRow = 3; bp.items = Array.from({ length: 6 }, (_, i) => ({ ...bp.items[0], key: `k${i}` })); out.push(['engraving bare 3x2', bp]);
+    const bp = clone(a); bp.bare = true; bp.perRow = 3; bp.cols = 6; bp.items = Array.from({ length: 6 }, (_, i) => ({ ...bp.items[0], key: `k${i}` })); out.push(['engraving bare 3x2', bp]);
     const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; delete b.bare; delete b.perRow; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
     const c = clone(s); delete c.look; delete c.bare; delete c.perRow; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
     const d = clone(c); d.look = 'about'; out.push(['circle+look about', d]);   // картки-арки «Про нас» (partials/lp/tile-card)
