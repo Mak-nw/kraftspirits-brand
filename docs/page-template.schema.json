@@ -1586,9 +1586,11 @@
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "unit": {
-                    "type": "string",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "maxLength": 40,
-                    "minLength": 1,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "cellar": {
@@ -1660,8 +1662,7 @@
                   "key",
                   "label",
                   "span",
-                  "count",
-                  "unit"
+                  "count"
                 ],
                 "allOf": [
                   {

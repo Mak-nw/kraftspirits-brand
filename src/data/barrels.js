@@ -54,10 +54,10 @@ export const barrels = {
       title: 'Скільки пляшок ви отримаєте?',
       groups: [
         // кімнати-погреби (рішення замовника 19.10: «погріб у перспективі», бочка по центру кімнати): обидві кімнати однакової ширини: span 5 (колонки 1–5 і 6–10); різницю ×4 дають глибина (прольоти) й розмір бочки;
-        // під кімнатою по центру ОДИН великий рядок «200 Л ≈ 383 ПЛЯШКИ» (label літри + ≈ + count + countWord; відгук 1a979e42), нижче «по 0,7 л» і вартість однієї пляшки; розмір бочки з liters, стелажі з count (1 проліт = 48 пляшок); media/cellar-barrels
-        { key: 'b50', label: `${B50.liters} л`, liters: B50.liters, span: 5, align: 'center', accent: true, count: B50.bottles, approx: true, countWord: B50.bottlesWord, unit: 'по 0,7 л', cellar: 'cellar-barrels',
+        // під кімнатою по центру ОДИН великий рядок «200 Л ≈ 383 ПЛЯШКИ» (label літри + ≈ + count + countWord; відгук 1a979e42), нижче вартість однієї пляшки (рядка «по 0,7 л» немає — рев'ю 7bb3bec5; unit у групі необов'язковий); розмір бочки з liters, стелажі з count (1 проліт = 48 пляшок); media/cellar-barrels
+        { key: 'b50', label: `${B50.liters} л`, liters: B50.liters, span: 5, align: 'center', accent: true, count: B50.bottles, approx: true, countWord: B50.bottlesWord, cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B50.cost}`, label: 'вартість вмісту однієї пляшки' }] },
-        { key: 'b200', label: `${B200.liters} л`, liters: B200.liters, span: 5, align: 'center', count: B200.bottles, approx: true, countWord: B200.bottlesWord, unit: 'по 0,7 л', cellar: 'cellar-barrels',
+        { key: 'b200', label: `${B200.liters} л`, liters: B200.liters, span: 5, align: 'center', count: B200.bottles, approx: true, countWord: B200.bottlesWord, cellar: 'cellar-barrels',
           facts: [{ value: `≈ ${B200.cost}`, label: 'вартість вмісту однієї пляшки' }] },
       ],
     },

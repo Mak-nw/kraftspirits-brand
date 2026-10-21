@@ -101,7 +101,7 @@ export const SCHEMA = {
     // 4. Порівняння: групи поруч (span колонок) — ярлик, число (+ «≈»), одиниця, медіа cellar (кімната-погріб partials/media/cellar-<назва>.html, бочка по центру) АБО list, факти
     compare: { ...BASE, ...TITLE, room: E(ROOMS, false, 'paper'), cols: COLS('compare'), note: T(200), reveal: B(), groups: L(O({
       key: { type: 'id', req: true }, label: T(25, true), span: E([2, 3, 4, 5, 6, 7, 8], true), align: E(['start', 'center'], false, 'start'), accent: B(),
-      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), countWord: T(20), unit: T(40, true), cellar: { type: 'partial', kind: 'cellar' }, liters: N(false, { int: true, min: 1, max: 1000 }), list: L(T(90), 0, 8),
+      count: N(true, { int: true, min: 0, max: COUNT_MAX }), approx: B(), countWord: T(20), unit: T(40), cellar: { type: 'partial', kind: 'cellar' }, liters: N(false, { int: true, min: 1, max: 1000 }), list: L(T(90), 0, 8),
       facts: L(O({ value: T(60, true), label: T(60, true) }), 0, 3),
     }), 2, 3, true) },
     // 4б. Формати: дві великі панелі поруч (по 5 колонок, шов 5u): підпис, капсула з великим числом і одиницею, 2–4 колонки (назва + опис), 0–2 факти
