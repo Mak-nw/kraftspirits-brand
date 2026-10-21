@@ -1,7 +1,7 @@
 // Дані сторінки «Івенти» (events.html) — посадкова сторінка за шаблоном lp (src/data/lp-schema.js, docs/page-template.md); збірка — за сторінкою-шаблоном excursions.js.
 // Рішення замовника: B2B і Івенти — ДВІ ОКРЕМІ СТОРІНКИ без вкладок і перемикача; B2B — src/data/b2b.js. Стилістика Опуса (3380ba4 / cad89c5): hero з коричневим градієнтом, фото distillery-tour.
 // Тексти — з документа замовника YASNOCRAFT_B2B_та_Івенти.docx; факти лише з нього, без нових цін і обіцянок. [потрібно уточнити] — видимі плейсхолдери для замовника.
-// Ритм кімнат: hero (fade brown) → tiles warm · circle · about · loose (3 арки) → tiles warm join (3 арки) → steps deep · deck split → card warm pad 40 → card stack (фото зліва)
+// Ритм кімнат: hero (fade brown) → tiles warm loose · bare engraving-кола 3×2 → steps deep · deck split → card warm pad 40 → card stack (фото зліва)
 // Медіа: ПЛЕЙСХОЛДЕРИ — наявні кадри проєкту; у `slot` — ТЗ на зйомку. Нових зображень не генеровано.
 // Тема — src/styles/themes/excursions.css (YasnoCraft: зелений + коричневий).
 const PH = (what) => `ПЛЕЙСХОЛДЕР (кадр з наявних). Потрібне фото: ${what}`;
@@ -22,22 +22,16 @@ export const events = {
       cta: { text: 'Обговорити подію', href: 'feedback.html?topic=events', variant: 'beige' },
     },
     {
-      // 6 пунктів документа — дві секції по 3 картки-арки (tiles circle + look about, як «Дегустація» на excursions), cols 8; 6 в один ряд рвуть назви, тому 3 + 3 у спільній кімнаті (друга — join)
-      type: 'tiles', id: 'events-venue', room: 'warm', shape: 'circle', look: 'about', cols: 8, loose: true,
+      // 6 пунктів документа — ОДНА секція tiles за еталоном barrels «Подальша витримка»: коло з гравюри engraving-barrels-head БЕЗ решітки (bare) з іконкою, сітка 3×2 (perRow), спільний заголовок (рішення замовника 21.10.2026)
+      type: 'tiles', id: 'events-venue', room: 'warm', loose: true, bare: true, perRow: 3,
       kicker: 'Івенти', title: 'Що є на локації',
       items: [
-        { key: 'capacity', name: 'Місткість', origin: 'Від 30\nдо 200 гостей', img: '/assets/img/occasions/bar.webp', alt: 'Світла зала дистилерії', tone: 'brown', zoom: 1.25, slot: PH('зала з гостями за столами, загальний план') },
-        { key: 'food', name: 'Харчування', origin: 'Кейтеринг\nза вашим запитом', img: '/assets/img/excursions-tex-snacks.webp', alt: 'Дошка з горіхами й закусками', tone: 'brown', slot: PH('фуршетний стіл / кейтеринг на заході') },
-        { key: 'atmosphere', name: 'Атмосфера', origin: 'Справжнє виробництво\nзамість банкетного залу', img: '/assets/img/home-tour-barrels.webp', alt: 'Бочки YasnoCraft', tone: 'brown', slot: PH('бочки й куби як декорація заходу, гості поруч') },
-      ],
-    },
-    {
-      type: 'tiles', id: 'events-safety', room: 'warm', join: true, shape: 'circle', look: 'about', cols: 8,
-      title: 'Світло, звук і безпека',   // [потрібно уточнити] у документі один список «Що є на локації»; заголовок другої трійки додано
-      items: [
-        { key: 'power', name: 'Без перебоїв', origin: 'Стабільне світло\nта інтернет', img: '/assets/img/excursions-shop.webp', alt: 'Освітлена вітрина з пляшками', tone: 'brown', slot: PH('зала ввечері при робочому світлі') },
-        { key: 'shelter', name: 'Укриття', origin: 'Сертифіковане бомбосховище\nна території', img: '/assets/img/barrels-tex-char.webp', alt: '', tone: 'brown', slot: PH('вхід до укриття на території [потрібно уточнити: чи можна знімати]') },
-        { key: 'tech', name: 'Техніка', origin: 'Звукове обладнання\nта проєктор', img: '/assets/img/excursions-price-bg.webp', alt: 'Освітлений цех з мідними кубами', tone: 'brown', slot: PH('сцена: екран проєктора й колонки в залі') },
+        { key: 'capacity', engraving: 'engraving-barrels-head', icon: 'events-capacity', name: 'Місткість', origin: 'Від 30 до 200 гостей' },
+        { key: 'power', engraving: 'engraving-barrels-head', icon: 'events-power', name: 'Без перебоїв', origin: 'Стабільне світло та інтернет' },
+        { key: 'shelter', engraving: 'engraving-barrels-head', icon: 'events-shelter', name: 'Бомбосховище', origin: 'Сертифіковане укриття на території' },
+        { key: 'tech', engraving: 'engraving-barrels-head', icon: 'events-tech', name: 'Техніка', origin: 'Звукове обладнання та проектор' },
+        { key: 'food', engraving: 'engraving-barrels-head', icon: 'events-catering', name: 'Харчування', origin: 'Кейтеринг за вашим запитом' },
+        { key: 'atmosphere', engraving: 'engraving-barrels-head', icon: 'events-atmosphere', name: 'Атмосфера', origin: 'Справжнє виробництво замість банкетного залу' },
       ],
     },
     {

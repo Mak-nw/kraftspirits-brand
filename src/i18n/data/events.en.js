@@ -4,15 +4,13 @@ export default {
   metaDescription: 'Hold your event among copper stills and barrels at the YasnoCraft distillery near Kyiv: 30 to 200 guests, a business part, a production tour and a tasting.',
   sections: [
     { title: 'Make your event one of a kind', lead: 'Host an event among copper stills, barrels and the smell of malt: a business meeting, a production tour and a tasting evening in one place.', alt: 'Guests on a tour of the YasnoCraft distillery floor', cta: { text: 'Discuss your event' } },
-    { kicker: 'Events', title: 'What the location offers', items: [
-      { name: 'Capacity', origin: 'From 30\nto 200 guests', alt: 'A bright hall at the distillery' },
-      { name: 'Catering', origin: 'Catering\non request', alt: 'A board with nuts and snacks' },
-      { name: 'Atmosphere', origin: 'Real production\ninstead of a banquet hall', alt: 'YasnoCraft barrels' },
-    ] },
-    { title: 'Power, sound and safety', items: [
-      { name: 'No interruptions', origin: 'Stable power\nand internet', alt: 'A lit display with bottles' },
-      { name: 'Shelter', origin: 'Certified bomb shelter\non site', alt: '' },
-      { name: 'Equipment', origin: 'Sound equipment\nand a projector', alt: 'A lit hall with copper stills' },
+    { kicker: 'Events', title: 'What’s on site', items: [
+      { name: 'Capacity', origin: 'From 30 to 200 guests' },
+      { name: 'No interruptions', origin: 'Stable power and internet' },
+      { name: 'Bomb shelter', origin: 'Certified shelter on site' },
+      { name: 'Equipment', origin: 'Sound system and projector' },
+      { name: 'Catering', origin: 'Catering on request' },
+      { name: 'Atmosphere', origin: 'A working distillery instead of a banquet hall' },
     ] },
     { kicker: 'Programme', title: 'The evening format', items: [
       { title: 'Business part', text: 'A conference, strategy session, presentation or meeting with partners' },
