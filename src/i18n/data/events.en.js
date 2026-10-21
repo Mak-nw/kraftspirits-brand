@@ -16,9 +16,9 @@ export default {
       { title: 'Business part', text: 'A conference, strategy session, presentation or meeting with partners' },
       { title: 'Production tour', text: 'Guests follow the path from grain to bottling' },
       { title: 'Tasting', text: 'YasnoCraft whisky, gins, brandy and tinctures', tags: ['Whisky', 'Gins', 'Brandy', 'Tinctures'] },
-      { title: 'Time to talk', text: 'Free time after the programme [to be confirmed: length and format]', alt: 'Distillery guests chatting and posing for a photo by a barrel, glasses in hand' },
+      { title: 'Time to talk', text: 'Free time after the programme to talk', alt: 'Distillery guests chatting and posing for a photo by a barrel, glasses in hand' },
     ] },
-    { kicker: 'Events', title: 'Tell us about your event', text: 'Describe the event: format, number of guests and preferred date. We will come back with a proposal [to be confirmed: prices and hire terms].', alt: 'The distillery grounds from above: buildings, lawns, fields and roads around', cta: { text: 'Discuss your event' } },
+    { kicker: 'Events', title: 'Tell us about your event', text: 'Describe the event: format, number of guests and preferred date. We will come back with a proposal.', alt: 'The distillery grounds from above: buildings, lawns, fields and roads around', cta: { text: 'Discuss your event' } },
     { kicker: 'Request', title: 'Leave a request for your event', text: 'Tell us when you plan the event and how many guests to expect, and we will suggest a format for the evening at the distillery.', alt: 'A copper pot still in a bright distillery hall', cta: { text: 'Leave a request' } },
   ],
 };
