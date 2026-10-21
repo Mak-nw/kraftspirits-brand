@@ -63,11 +63,12 @@ const I18N_MISSING = []; // ключі, яких немає в en (для сто
 
 function htmlPartials() {
   let base = '/'; // config.base: BUILD_BASE у build/preview, '/' у dev
+  let isBuild = false; // production-збірка: службові data-slot (примітки про фото/згоду, шляхи папок замовника) у публічний HTML не потрапляють
   // рушій partials (include/each/page/lp) — tools/html-partials.mjs; його ж використовує контрактна перевірка шаблону lp (tools/qa/lp-contract.mjs)
   const renderers = Object.fromEntries(Object.keys(LOCALES).map((l) => [l, createRenderer({ root, lists: LISTS_BY_LOCALE[l], getLpPage: (name) => LP.view(name, l), translate: (tpl) => translateHtml(tpl, l, { page: 'partial', missing: I18N_MISSING }) })]));
   return {
     name: 'html-partials',
-    configResolved(config) { base = config.base; },
+    configResolved(config) { base = config.base; isBuild = config.command === 'build'; },
     // %BASE_URL% (404.html: <base href>) підставляємо самі, щоб dev і build/preview давали однаковий результат
     // i18n (docs/i18n.md): en/<name>.html — стаб; вміст = корінь <name>.html, мова en. Для обох мов: partials → %contacts.*% → %t.*% (словники) → мовна обробка (lang, перемикач, hreflang).
     transformIndexHtml: {
@@ -80,7 +81,8 @@ function htmlPartials() {
         if (enName) html = readFileSync(resolve(root, `${enName}.html`), 'utf8');
         await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]), locale);
         const out = localizeHtml(fillContacts(renderers[locale](html), locale), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
-        return out.replaceAll('%BASE_URL%', locale === 'en' && name === '404' ? `${base}en/` : base);
+        const res = out.replaceAll('%BASE_URL%', locale === 'en' && name === '404' ? `${base}en/` : base);
+        return isBuild ? res.replace(/\s+data-slot=("[^"]*"|'[^']*')/g, '') : res; // лишається лише в dev (?slots=on)
       },
     },
     generateBundle() { if (process.env.SITE_URL) this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(root, base, process.env.SITE_URL) }); },
