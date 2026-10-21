@@ -143,6 +143,8 @@ export async function runResp(o) {
 }
 const dedupe = (arr, key) => { const m = new Map(); for (const x of arr) if (!m.has(key(x))) m.set(key(x), x); return [...m.values()]; };
 if (import.meta.url === `file://${process.argv[1]}`) await runMain('responsive', { widths: RESP_WIDTHS, scrollbar: 'none' }, async (o) => {
+  // без --pages: design-system.html (десктопна демо-сторінка) виключена зі стандартного набору — її адаптив міряє `npm run qa:resp-ds`; з явним --pages вона лишається
+  if (!o.pages) o = { ...o, pagesList: o.pagesList.filter((p) => pageSpec(p).name !== 'design-system') };
   const wantR7 = !o.rules || /R7/i.test(String(o.rules));
   const onlyR7 = o.rules && String(o.rules).split(',').every((r) => r.trim().toUpperCase() === 'R7');
   const reps = [];
