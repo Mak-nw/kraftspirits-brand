@@ -40,7 +40,10 @@ export async function measureHeader(page, minLogo) {
     const barR = bar.getBoundingClientRect();
     const off = li.length ? (Math.min(...li.map((x) => x.l)) + Math.max(...li.map((x) => x.r))) / 2 - (barR.left + barR.right) / 2 : 0;
     const offY = li.length ? (Math.min(...li.map((x) => x.t)) + Math.max(...li.map((x) => x.b))) / 2 - (barR.top + barR.bottom) / 2 : 0;
-    return { n: items.length, pairs: out, off: +off.toFixed(2), offY: stack ? +offY.toFixed(2) : 0 };
+    /* < 768: відступ кнопки «меню» від лівого краю пілюлі = відступу від верху/низу (замовник: «боковий падінг менший за висотний»), ±0.5 px */
+    const mb = bar.querySelector('.site-header__menu-btn'), mr = mb ? mb.getBoundingClientRect() : null;
+    const padDiff = stack && mr ? Math.max(Math.abs((mr.left - barR.left) - (mr.top - barR.top)), Math.abs((mr.left - barR.left) - (barR.bottom - mr.bottom))) : 0;
+    return { n: items.length, pairs: out, off: +off.toFixed(2), offY: stack ? +offY.toFixed(2) : 0, padDiff: +padDiff.toFixed(2) };
   }, minLogo);
 }
 
@@ -69,6 +72,7 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
             }
             if (Math.abs(m.off) > 0.5) rep.add({ rule: 'R8', page: `${loc}/${name}@${w}`, selector: 'пара логотипів', value: `зсув центру ${m.off}px > 0.5px`, msg: 'логотипи не по центру пілюлі' });
             if (Math.abs(m.offY) > 0.5) rep.add({ rule: 'R8', page: `${loc}/${name}@${w}`, selector: 'пара логотипів', value: `зсув центру по вертикалі ${m.offY}px > 0.5px`, msg: 'логотипи не по центру пілюлі по вертикалі' });
+            if (m.padDiff > 0.5) rep.add({ rule: 'R8', page: `${loc}/${name}@${w}`, selector: 'кнопка «меню»', value: `бокове/висотне поле пілюлі відрізняються на ${m.padDiff}px > 0.5px`, msg: 'падінг кнопки від бокового краю пілюлі ≠ від верху/низу' });
             const ctlKind = !control ? null : (ctl.wide === null && w >= 1024 && loc === 'uk' && name === 'index') ? 'wide' : (ctl.narrow === null && w === 390 && loc === 'uk' && name === 'catalog') ? 'narrow' : null;
             if (ctlKind) {
               await page.evaluate((ml) => { const s = document.createElement('style'); s.textContent = `.site-header__side--end a[href$="cart.html"]{transform:translateX(${ml}px)!important}`; document.head.appendChild(s); }, -80);

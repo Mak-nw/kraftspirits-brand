@@ -85,3 +85,9 @@
   .site-header__logo--yc img { left: var(--header-stack-yc-x); top: calc(var(--header-stack-yc-y) + var(--header-stack-hit)); margin-top: 0; }
   .site-header__logo--bs img { left: var(--header-stack-bs-x); top: calc(var(--header-stack-bs-y) + var(--header-logos-stack-gap) / 2); margin-top: 0; }
 }
+
+/* телефон < 768 (замовник: «боковий падінг менший за висотний, видно по кнопці меню»): відступ крайніх кнопок (меню — зліва, кошик — справа) від бокового краю пілюлі = відступу від верхнього/нижнього краю: (--header3-h − 44) / 2 = --space-15 (tokens.css) */
+@media (max-width: 767.98px) {
+  .site-header__side:not(.site-header__side--end) { padding-left: var(--space-15); }
+  .site-header__side--end { padding-right: var(--space-15); }
+}
