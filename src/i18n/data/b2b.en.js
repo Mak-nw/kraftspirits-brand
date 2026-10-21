@@ -5,7 +5,7 @@ export default {
   metaDescription: 'Private label bottling, gift sets and certificates, and contract production at the YasnoCraft distillery near Kyiv. We reply to every request within 1 working day.',
   sections: [
     { title: 'A distillery that works for your brand', lead: 'A full cycle from grain to bottle near Kyiv. We bottle drinks under your label, assemble gift sets and produce to your recipe.', alt: 'The YasnoCraft distillery building among fields and ponds', cta: { text: 'Leave a request' } },
-    {},   // ref 10 (two brand cards): texts come from the home page dictionary (t.home.choice.*)
+    { title: 'Everything happens on one site.', text: 'We designed the distillery so guests can see production from raw material to bottling.', alt: 'A bottle of Yasnyi gin with a cork and a green label on a beige background' },
     { title: 'Gift sets.', text: 'Gifts for partners, clients and your team, put together for your task. You choose the contents of the set, we design the packaging with your logo, and inside - drinks from our own distillery.', alt: 'A gift box with a ribbon and a bottle by the window', cta: { text: 'How the house works' } },
     { title: 'Gift certificates.', text: 'Give an experience instead of things. A certificate for a tour with a tasting at our distillery suits friends, colleagues, family or partners: you buy it, you give it, and the recipient picks the date.', alt: 'A terrace table with glasses against fields' },
     { title: 'Contract production.', text: 'We make drinks to your recipe or develop one together with our team. Suits brands that want to launch their own line without building a production site.', alt: 'A copper still in the distillery hall', items: [
