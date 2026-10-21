@@ -10,7 +10,7 @@
 |---|---|
 | `npm run qa` | швидкий smoke: check-ds (static) + links + hscroll (1200/1440/1920) + states, ширина 1920 |
 | `npm run qa:full` | повний: ширини 1200,1440,1920 × dpr 1,2 × смуга classic+none; check-ds static+dynamic, links, hscroll, states, arch, cls |
-| `npm run qa:check-ds` | check-ds (S1–S11 статика + D1–D19 у браузері; D12/D18/D19 входять у загальний прогін, design-system.html із D12/D15/D19 виключено; у D18 — лише демо brand-choice (`.brand-choice`, 40u)); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` (типографіка: `-- --rules S11,D13 --widths 1200,1440,1920 --scrollbar none`; повний дамп D13 → `<out>/d13.json`) |
+| `npm run qa:check-ds` | check-ds (S1–S11 статика + D1–D19 у браузері; D12/D18/D19 входять у загальний прогін, design-system.html із D12/D15/D18/D19 виключено (D18: єдине демо sections/brands — половини впритул, зазору 40u немає; `--d18-ds` повертає)); `-- --static-only` / `-- --dynamic-only` / `-- --rules S4,D5` (типографіка: `-- --rules S11,D13 --widths 1200,1440,1920 --scrollbar none`; повний дамп D13 → `<out>/d13.json`) |
 | `npm run qa:links` | усі внутрішні `<a href>` і якорі; `-- --matrix` друкує «звідки → куди» |
 | `npm run qa:states` | стани кнопок проти токенів `--btn-*` + транзиції + фокус-кільце |
 | `npm run qa:arch` | товщина контуру арки 14 карток каталогу, 8 ширин × dpr 1,2 × classic/none |

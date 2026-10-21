@@ -266,7 +266,7 @@ export async function runDynamic(opts, allow, rep) {
         await page.evaluate(() => document.querySelectorAll('[data-qa-t]').forEach((e) => e.removeAttribute('data-qa-t')));
         collect.push({ label, spec, width: combo.width, sb: combo.scrollbar, data });
         if (want12 && (spec.name !== 'design-system' || opts.d12Ds)) grid12.push({ label, spec, width: combo.width, sb: combo.scrollbar, gate: false, data: await collectStable(page, COLLECT_GRID, { ...gcfg, root: null }, sigGrid) });
-        if (want18) d18.push({ label, spec, width: combo.width, data: await collectStable(page, COLLECT_D18, spec.name === 'design-system' ? { ...d18cfg, root: '.brands' } : d18cfg, sigD18) }); // design-system: лише демо brands (корінь .ds-brands-demo) — 40u по колонках
+        if (want18 && (spec.name !== 'design-system' || opts.d18Ds)) d18.push({ label, spec, width: combo.width, data: await collectStable(page, COLLECT_D18, d18cfg, sigD18) }); // design-system із D18 виключено (як D12/D15/D19): єдине великопанельне демо — sections/brands (.brands) — дві половини впритул на всю ширину вікна (gap 0, bleed), пари з зазором 40u там немає; --d18-ds повертає
         if (wantHeroCtx && spec.name !== 'design-system') d19.push({ label, spec, data: await evalRetry(page, COLLECT_D19, d19cfg) });
         // D5: підкреслення (лише для першої комбінації ширини/смуги — це не залежить від ширини)
         if (want('D5') && combo === combos[0]) {
