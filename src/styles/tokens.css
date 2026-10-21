@@ -1197,7 +1197,6 @@
     --size-hero-logo-bs-w: var(--grid-w);
     --size-hero-logo-bs-h: calc(102.611 * var(--hero-k));
     --offset-hero-logo-bs-top: calc(82.491 * var(--hero-k));
-    --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
     --size-picker-head-h: calc(300 * var(--u));
     --scale-cocktail-thumb: 1;                                 /* мініатюри коктейлів: на дотик без зменшення (≥ 44 px) */
     --size-product-stage-w: var(--grid-w);                     /* товар: фото й панель — одна під одною на всю ширину вмісту */
@@ -1357,6 +1356,7 @@
 /* АДАПТИВ: токени layout-розмірів responsive/*.css (раніше були літералами/локальними змінними у responsive/*.css) */
 @media (max-width: 1199.98px) {
   :root {
+    --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
     /* літерали з responsive/lp.css, about.css, pages.css (значення ті самі, винесено в токени) */
     --ratio-lp-split-media-h-tablet: 0.45;                     /* колода split (≤ 1023): висота медіа = 0.45 ширини сітки */
     --ratio-lp-split-media-h-phone: 0.6;                       /* те саме на телефоні */
