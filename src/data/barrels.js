@@ -66,10 +66,10 @@ export const barrels = {
       title: 'Подальша витримка',
       lead: `Бочки з-під марсали, мадери, портвейну, хересу${NB}— кожна додає свій унікальний відтінок смаку`,
       items: [
-        { key: 'marsala', engraving: 'engraving-barrels-head', icon: 'barrels-grape', name: 'Marsala', origin: 'Сицилія, Італія', notes: NOTES.marsala, slot: HEAD('марсали') },
-        { key: 'madeira', engraving: 'engraving-barrels-head', icon: 'barrels-mountain', name: 'Madeira', origin: 'Мадейра, Португалія', notes: NOTES.madeira, slot: HEAD('мадери') },
-        { key: 'port', engraving: 'engraving-barrels-head', icon: 'barrels-glass', name: 'Port', origin: 'Долина Дору, Португалія', notes: NOTES.port, slot: HEAD('портвейну') },
-        { key: 'sherry', engraving: 'engraving-barrels-head', icon: 'barrels-sun', name: 'Sherry', origin: 'Херес, Іспанія', notes: NOTES.sherry, slot: HEAD('хересу') },
+        { key: 'marsala', engraving: 'engraving-crown', icon: 'barrels-apricot', name: 'Marsala', origin: 'Сицилія, Італія', notes: NOTES.marsala, slot: HEAD('марсали') },
+        { key: 'madeira', engraving: 'engraving-crown', icon: 'barrels-island', name: 'Madeira', origin: 'Мадейра, Португалія', notes: NOTES.madeira, slot: HEAD('мадери') },
+        { key: 'port', engraving: 'engraving-crown', icon: 'barrels-grapes', name: 'Port', origin: 'Долина Дору, Португалія', notes: NOTES.port, slot: HEAD('портвейну') },
+        { key: 'sherry', engraving: 'engraving-crown', icon: 'barrels-sun-line', name: 'Sherry', origin: 'Херес, Іспанія', notes: NOTES.sherry, slot: HEAD('хересу') },
       ],
     },
     {
