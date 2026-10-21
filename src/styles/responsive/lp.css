@@ -66,7 +66,7 @@
   .lp-tiles__grid, .lp-tiles__grid--n3, .lp-tiles__grid--n4, .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-50); }
   .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lp-tiles__head { grid-column: 1 / -1; grid-row: auto; }
-  .lp-tile { grid-row: auto; grid-template-rows: auto auto; }
+  .lp-tile { grid-row: auto; grid-template-rows: auto auto; align-content: start; }  /* плитка, розтягнута до вищого сусіда в ряду, не роздає зайву висоту авто-рядкам: коло лишається кругом, підписи — від верху ряду */
   .lp-tile__caption { grid-row: auto; grid-template-rows: none; display: block; }
   .lp-tiles--crown .lp-tile__caption > * { display: block; }  /* вінці: назва / походження / ноти — окремі рядки-блоки (як на планшеті, де caption = grid); інакше inline-span зливає їх в один абзац і ігнорує margin-top — зазор коло → назва = 0 */
   .lp-tiles--crown .lp-tile__name { margin-top: var(--space-15); }  /* +10 px між колом і назвою на 440 (коментар 5689fdd8; 15u = 10.3 px на 440, 9.1 на 390, 7.5 на 320) */
