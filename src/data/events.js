@@ -22,8 +22,8 @@ export const events = {
       cta: { text: 'Обговорити подію', href: 'feedback.html?topic=events', variant: 'beige' },
     },
     {
-      // 6 пунктів документа — ОДНА секція tiles за еталоном barrels «Подальша витримка»: коло з гравюри engraving-barrels-head БЕЗ решітки (bare) з іконкою, сітка 3×2 (perRow), спільний заголовок (рішення замовника 21.10.2026)
-      type: 'tiles', id: 'events-venue', room: 'warm', loose: true, bare: true, perRow: 3,
+      // 6 пунктів документа — ОДНА секція tiles за еталоном barrels «Подальша витримка»: коло з гравюри engraving-barrels-head БЕЗ решітки (bare) з іконкою, сітка 3×2 (perRow) на 6 колонках по центру (cols: 6, по 2 колонки на картку; рішення замовника 03b6af72), спільний заголовок (рішення замовника 21.10.2026)
+      type: 'tiles', id: 'events-venue', room: 'warm', loose: true, bare: true, perRow: 3, cols: 6,
       kicker: 'Івенти', title: 'Що є на локації',
       items: [
         { key: 'capacity', engraving: 'engraving-barrels-head', icon: 'events-capacity', name: 'Місткість', origin: 'Від 30 до 200 гостей' },
