@@ -19,11 +19,11 @@
 .arrow-btn--sm img { width: var(--size-arrow-btn-sm-icon); height: auto; transform: rotate(-90deg); }
 .arrow-btn--sm.arrow-btn--prev { transform: none; }
 .arrow-btn--sm.arrow-btn--prev img { transform: rotate(90deg); }
-/* --gold: заливка як у кнопки .btn--gold (ті ж токени --btn-gold-bg/border-*), шеврон chevron-down.svg темний (без інверсії) — стрілки слайдера головної на фото/teal */
-.arrow-btn--gold {
-  --btn-bg: var(--btn-gold-bg-default); --btn-bg-hover: var(--btn-gold-bg-hover); --btn-bg-focus: var(--btn-gold-bg-focus); --btn-bg-active: var(--btn-gold-bg-active); --btn-bg-disabled: var(--btn-gold-bg-disabled);
-  --btn-border: var(--btn-gold-border-default); --btn-border-hover: var(--btn-gold-border-hover); --btn-border-focus: var(--btn-gold-border-focus); --btn-border-active: var(--btn-gold-border-active); --btn-border-disabled: var(--btn-gold-border-disabled);
-  --btn-icon-filter: var(--btn-arrow-icon-filter-default); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-default); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-default); --btn-icon-filter-active: var(--btn-arrow-icon-filter-default); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-default);
+/* --teal (темно-синя, «navy» замовника 8b6e4b23): заливка/рамка як у кнопки .btn--teal (ті ж токени --btn-teal-bg-*, --btn-teal-border-*), шеврон chevron-down.svg світлий (інверсія в усіх станах — hover-заливка зелена, теж темна) — стрілки слайдера головної на фото */
+.arrow-btn--teal {
+  --btn-bg: var(--btn-teal-bg-default); --btn-bg-hover: var(--btn-teal-bg-hover); --btn-bg-focus: var(--btn-teal-bg-focus); --btn-bg-active: var(--btn-teal-bg-active); --btn-bg-disabled: var(--btn-teal-bg-disabled);
+  --btn-border: var(--btn-teal-border-default); --btn-border-hover: var(--btn-teal-border-hover); --btn-border-focus: var(--btn-teal-border-focus); --btn-border-active: var(--btn-teal-border-active); --btn-border-disabled: var(--btn-teal-border-disabled);
+  --btn-icon-filter: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-active: var(--btn-arrow-icon-filter-hover); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-hover);
 }
 /* hover/focus: світла заливка, іконка (світла) інвертується в темну */
 .arrow-btn:focus-visible { background-color: var(--btn-bg-focus); border-color: var(--btn-border-focus); transition-duration: var(--btn-transition-duration-focus); }
