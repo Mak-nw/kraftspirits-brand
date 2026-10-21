@@ -1,47 +1,43 @@
 /* ВИНЯТОК 1:1 МАКЕТ ЗАМОВНИКА (b2b.pdf стор. 7–9, 11; пряма вказівка замовника 21.10: «я дав точний реф і сказав 1в1, в обхід правил шаблону для цих секцій»).
-   Лише для секцій type: 'ref' сторінки b2b (partials/lp/b2b-ref-<n>.html). Геометрія — з PDF у одиницях --u (1u = 1px при 1920); кольори PDF = токени DS (беж #dcdbcf, зелений #223520).
+   Лише для секцій type: 'ref' сторінки b2b (partials/lp/b2b-ref-<n>.html). ПОЗИЦІЇ — НА СІТЦІ 10 КОЛОНОК (21.10, питання замовника «чому не по сітці»): секція = CSS-grid на --grid-w (поле --grid-margin, зазор --grid-gap), фото = 5 колонок (--grid-span-5; PDF 784u → 737,1u, висота кадру 622u збережена, кадр cover), текст = 4 колонки (--grid-span-4); між фото й текстом — 1 вільна колонка; вертикаль — по центру (висоти секцій 948u/961u з PDF). Від PDF лишились типографіка, маска-«квиток» і кнопка (виняток — не позиції). Шрифти/відступи — з PDF в --u (1u = 1px при 1920); кольори PDF = токени DS (беж #dcdbcf, зелений #223520).
    Нових візуальних елементів поза макетом немає; кнопка — ІСНУЮЧИЙ компонент. Рамка фото «квиток» = прямокутник 776×622 з виїмками на 4 кутах (mask SVG з контурів PDF). Адаптив <1200 — окрема гілка. */
 .b2b-ref { position: relative; overflow: hidden; width: 100%; height: calc(948 * var(--u)); background: var(--color-green); color: var(--color-beige); font-family: var(--font-family-serif); }
-.b2b-ref__photo { position: absolute; top: calc(163 * var(--u)); width: calc(776 * var(--u)); height: calc(622 * var(--u));
+.b2b-ref__photo { position: relative; align-self: center; height: calc(622 * var(--u));
   -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20776%20622%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20fill-rule=%27evenodd%27%20d=%27M0%200H776%20V622%20H0Z%20M21.78%20596.94C26.32%20595.82%2031.05%20597.84%2033.39%20601.89C35.73%20605.94%2035.11%20611.04%2031.87%20614.42L8.5%20638.77L-11%20605L21.78%20596.94Z%20M755.08%20596.94C750.54%20595.82%20745.81%20597.84%20743.47%20601.89C741.13%20605.94%20741.75%20611.04%20744.99%20614.42L768.36%20638.77L787.86%20605L755.08%20596.94Z%20M32.85%2013.58C35.1%2017.67%2034.38%2022.77%2031.07%2026.07C27.77%2029.38%2022.67%2030.1%2018.58%2027.85L-11%2011.58L16.58%20-16L32.85%2013.58Z%20M744.01%2013.58C741.76%2017.67%20742.48%2022.77%20745.79%2026.07C749.09%2029.38%20754.19%2030.1%20758.29%2027.85L787.86%2011.58L760.28%20-16L744.01%2013.58Z%27/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20776%20622%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20fill-rule=%27evenodd%27%20d=%27M0%200H776%20V622%20H0Z%20M21.78%20596.94C26.32%20595.82%2031.05%20597.84%2033.39%20601.89C35.73%20605.94%2035.11%20611.04%2031.87%20614.42L8.5%20638.77L-11%20605L21.78%20596.94Z%20M755.08%20596.94C750.54%20595.82%20745.81%20597.84%20743.47%20601.89C741.13%20605.94%20741.75%20611.04%20744.99%20614.42L768.36%20638.77L787.86%20605L755.08%20596.94Z%20M32.85%2013.58C35.1%2017.67%2034.38%2022.77%2031.07%2026.07C27.77%2029.38%2022.67%2030.1%2018.58%2027.85L-11%2011.58L16.58%20-16L32.85%2013.58Z%20M744.01%2013.58C741.76%2017.67%20742.48%2022.77%20745.79%2026.07C749.09%2029.38%20754.19%2030.1%20758.29%2027.85L787.86%2011.58L760.28%20-16L744.01%2013.58Z%27/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; }
 .b2b-ref__photo img { position: absolute; display: block; max-width: none; }
-.b2b-ref__title, .b2b-ref__text, .b2b-ref__facts, .b2b-ref__btn { position: absolute; margin: 0; }
-.b2b-ref__title { font-weight: 600; font-size: calc(70 * var(--u)); line-height: calc(70 * var(--u)); text-transform: uppercase; letter-spacing: 0; width: calc(560 * var(--u)); }
-.b2b-ref__text { font-weight: 600; font-size: calc(20 * var(--u)); line-height: calc(20 * var(--u)); letter-spacing: 0; width: calc(480 * var(--u)); }
+.b2b-ref__body { align-self: center; min-width: 0; display: flex; flex-direction: column; }
+.b2b-ref__title, .b2b-ref__text, .b2b-ref__facts, .b2b-ref__btn { margin: 0; }
+.b2b-ref__title { font-weight: 600; font-size: calc(70 * var(--u)); line-height: calc(70 * var(--u)); text-transform: uppercase; letter-spacing: 0; }
+.b2b-ref__text { margin-top: calc(19 * var(--u)); font-weight: 600; font-size: calc(20 * var(--u)); line-height: calc(20 * var(--u)); letter-spacing: 0; }
 /* кнопка макета знята з вікна 1728 (масштаб 0.9): кнопка DS (.btn--light) без змін, стиснута до 0.9 */
+.b2b-ref__btn { margin-top: calc(23 * var(--u)); height: calc(61.2 * var(--u)); }
 .b2b-ref__btn-in { transform: scale(0.9); transform-origin: 0 0; width: max-content; }
 
+/* сітка секції: 10 колонок на --grid-w; кадр фото (ширина 5 колонок) центрує зум-кроп зображення (left = зсув PDF + пів різниці ширин) */
+.b2b-ref { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); padding-inline: var(--grid-margin); }
+.b2b-ref--8 .b2b-ref__photo, .b2b-ref--7 .b2b-ref__photo { grid-column: 6 / 11; }
+.b2b-ref--8 .b2b-ref__body, .b2b-ref--7 .b2b-ref__body { grid-column: 1 / 5; grid-row: 1; }
+.b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { grid-column: 1 / 6; }
+.b2b-ref--9 .b2b-ref__body, .b2b-ref--11 .b2b-ref__body { grid-column: 7 / 11; }
+.b2b-ref--8 .b2b-ref__photo, .b2b-ref--7 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { grid-row: 1; }
+.b2b-ref { --b2b-ref-dx: calc((var(--grid-span-5) - 776 * var(--u)) / 2); }
+
 /* стор. 9: фото ліворуч */
-.b2b-ref--9 .b2b-ref__photo { left: calc(170 * var(--u)); }
-.b2b-ref--9 .b2b-ref__photo img { left: calc(-380.11 * var(--u)); top: calc(-116 * var(--u)); width: calc(1518.22 * var(--u)); height: calc(854 * var(--u)); }
-.b2b-ref--9 .b2b-ref__title { left: calc(1115 * var(--u)); top: calc(310 * var(--u)); }
-.b2b-ref--9 .b2b-ref__text { left: calc(1115 * var(--u)); top: calc(469 * var(--u)); }
-.b2b-ref--9 .b2b-ref__btn { left: calc(1120 * var(--u)); top: calc(572 * var(--u)); }
-/* EN: заголовок «Gift sets.» — один рядок (UK — два): абзац і кнопка піднято на висоту одного рядка заголовка (70u), щоб пропуск заголовок → абзац лишився як у PDF при двох рядках (19u); UK не змінюється */
-html[lang="en"] .b2b-ref--9 .b2b-ref__text { top: calc(399 * var(--u)); }
-html[lang="en"] .b2b-ref--9 .b2b-ref__btn { top: calc(502 * var(--u)); }
+.b2b-ref--9 .b2b-ref__photo img { left: calc(var(--b2b-ref-dx) - 380.11 * var(--u)); top: calc(-116 * var(--u)); width: calc(1518.22 * var(--u)); height: calc(854 * var(--u)); }
 
 /* стор. 8: текст ліворуч, фото праворуч */
-.b2b-ref--8 .b2b-ref__photo { left: calc(974 * var(--u)); }
-.b2b-ref--8 .b2b-ref__photo img { left: calc(-430.22 * var(--u)); top: calc(-138 * var(--u)); width: calc(1596.44 * var(--u)); height: calc(898 * var(--u)); }
-.b2b-ref--8 .b2b-ref__title { left: calc(170 * var(--u)); top: calc(355 * var(--u)); }
-.b2b-ref--8 .b2b-ref__text { left: calc(170 * var(--u)); top: calc(514 * var(--u)); }
+.b2b-ref--8 .b2b-ref__photo img { left: calc(var(--b2b-ref-dx) - 430.22 * var(--u)); top: calc(-138 * var(--u)); width: calc(1596.44 * var(--u)); height: calc(898 * var(--u)); }
 
-/* стор. 11: фото ліворуч, заголовок і сітка 2×2 фактів праворуч */
-.b2b-ref--11 .b2b-ref__photo { left: calc(170 * var(--u)); }
-.b2b-ref--11 .b2b-ref__photo img { left: calc(-39 * var(--u)); top: calc(-16 * var(--u)); width: calc(854 * var(--u)); height: calc(854 * var(--u)); }
-.b2b-ref--11 .b2b-ref__title { left: calc(1115 * var(--u)); top: calc(161 * var(--u)); }
-.b2b-ref--11 .b2b-ref__text { left: calc(1115 * var(--u)); top: calc(320 * var(--u)); }
-.b2b-ref__facts { left: calc(1115 * var(--u)); top: calc(439.5 * var(--u)); width: calc(648 * var(--u)); display: grid; grid-template-columns: calc(324 * var(--u)) calc(324 * var(--u)); grid-auto-rows: calc(182 * var(--u)); }
+/* стор. 11: фото ліворуч, заголовок і сітка 2×2 фактів праворуч (кожен факт = 2 колонки сітки) */
+.b2b-ref--11 .b2b-ref__photo img { left: calc(var(--b2b-ref-dx) - 39 * var(--u)); top: calc(-16 * var(--u)); width: calc(854 * var(--u)); height: calc(854 * var(--u)); }
+.b2b-ref__facts { margin-top: calc(19.5 * var(--u)); display: grid; grid-template-columns: var(--grid-span-2) var(--grid-span-2); column-gap: var(--grid-gap); grid-auto-rows: minmax(calc(182 * var(--u)), auto); }
 .b2b-ref__fact { min-width: 0; }
-.b2b-ref__fact-title { margin: 0; width: calc(285 * var(--u)); font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(30 * var(--u)); text-transform: uppercase; }
-.b2b-ref__fact-text { margin: calc(10.5 * var(--u)) 0 0; width: calc(285 * var(--u)); font-weight: 500; letter-spacing: calc(1 * var(--u)); font-size: calc(20 * var(--u)); line-height: calc(24 * var(--u)); }
+.b2b-ref__fact-title { margin: 0; font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(30 * var(--u)); text-transform: uppercase; }
+.b2b-ref__fact-text { margin: calc(10.5 * var(--u)) 0 0; font-weight: 500; letter-spacing: calc(1 * var(--u)); font-size: calc(20 * var(--u)); line-height: calc(24 * var(--u)); }
 
-/* стор. 7 (Frame 147, скрін замовника 21.10.2026, 1718×860 = кадр 1920×961): текст ліворуч, фото праворуч; висота секції 961u (не 948u, як решта), фото 784×628u (кадр джин «Ясний» 1800×1936, cover-кадр знято піксельним збігом) */
+/* стор. 7 (Frame 147): текст ліворуч, фото праворуч; висота секції 961u, фото 628u заввишки */
 .b2b-ref--7 { height: calc(961 * var(--u)); }
-.b2b-ref--7 .b2b-ref__photo { left: calc(986 * var(--u)); top: calc(182 * var(--u)); width: calc(784 * var(--u)); height: calc(628 * var(--u)); }
-.b2b-ref--7 .b2b-ref__photo img { left: calc(-40.2 * var(--u)); top: calc(-83.8 * var(--u)); width: calc(825 * var(--u)); height: calc(887.4 * var(--u)); }
-.b2b-ref--7 .b2b-ref__title { left: calc(180 * var(--u)); top: calc(347 * var(--u)); font-size: calc(70.8 * var(--u)); line-height: calc(71 * var(--u)); }
-.b2b-ref--7 .b2b-ref__text { left: calc(180 * var(--u)); top: calc(650 * var(--u)); font-size: calc(20.2 * var(--u)); }
-/* EN: заголовок — 3 рядки (UK — 4): лід піднято на 71u (рядок заголовка), пропуск заголовок → лід лишається як у макеті */
-html[lang="en"] .b2b-ref--7 .b2b-ref__text { top: calc(579 * var(--u)); }
+.b2b-ref--7 .b2b-ref__photo { height: calc(628 * var(--u)); }
+.b2b-ref--7 .b2b-ref__photo img { left: calc((var(--grid-span-5) - 784 * var(--u)) / 2 - 40.2 * var(--u)); top: calc(-83.8 * var(--u)); width: calc(825 * var(--u)); height: calc(887.4 * var(--u)); }
+.b2b-ref--7 .b2b-ref__title { font-size: calc(70.8 * var(--u)); line-height: calc(71 * var(--u)); }
+.b2b-ref--7 .b2b-ref__text { font-size: calc(20.2 * var(--u)); }
