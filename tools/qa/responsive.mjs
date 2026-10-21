@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // responsive: перевірки адаптиву (docs/responsive.md) для ширин поза діапазоном 1200–1920 (і на ньому — без змін, лише контроль).
 //   node tools/qa/responsive.mjs [--url http://localhost:PORT/] [--pages index,catalog,…] [--widths 320,360,375,390,430,600,768,834,1024,1100,2560,3440] [--rules R1,R2,…] [--json]
+// R7 (шапка) — tools/qa/header-overlap.mjs, запускається тут же (ширини ≤ 1199 із --widths + 1024/1050/1100/1150/1199, обидві локалі, позитивний контроль); --rules R7 запускає лише його.
 // Правила (динамічні, у браузері; сторінка в статичному режимі ?age=ok&reveal=off&parallax=off):
 //   R1  жодного горизонтального скролу/зрізу сторінки (lib.hscroll: scrollWidth і елементи за межами в'юпорта)
 //   R2  touch-цілі ≥ 44×44 px (лише ширини ≤ 1199): видимі a/button/input/select/textarea/summary/[role=button|tab|radio|switch], окрім посилань усередині суцільного тексту (є сусідній текст),
@@ -9,6 +10,7 @@
 //   R4  розмір шрифту видимого тексту ≥ 11 px (ширини ≤ 1199) — читабельність
 //   R5  перетин текстових блоків: прямокутники тексту двох різних елементів (не предок/нащадок) перетинаються > 25% меншого
 //   R6  ключові елементи: h1 видимий у в'юпорті по ширині; кнопка «меню» ≥ 44 px (≤ 1023); футер; main непорожній; картинки не розтягнуті (aspect рендера ≈ натуральний або object-fit cover/contain)
+import { runHeaderOverlap, R7_WIDTHS } from './header-overlap.mjs';
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, hscroll, hscrollBad, waitStable, sleep } from './lib.mjs';
 
 export const RESP_WIDTHS = '320,360,375,390,430,600,768,834,1024,1100,2560,3440';
@@ -137,4 +139,11 @@ export async function runResp(o) {
   return rep;
 }
 const dedupe = (arr, key) => { const m = new Map(); for (const x of arr) if (!m.has(key(x))) m.set(key(x), x); return [...m.values()]; };
-if (import.meta.url === `file://${process.argv[1]}`) await runMain('responsive', { widths: RESP_WIDTHS, scrollbar: 'none' }, runResp);
+if (import.meta.url === `file://${process.argv[1]}`) await runMain('responsive', { widths: RESP_WIDTHS, scrollbar: 'none' }, async (o) => {
+  const wantR7 = !o.rules || /R7/i.test(String(o.rules));
+  const onlyR7 = o.rules && String(o.rules).split(',').every((r) => r.trim().toUpperCase() === 'R7');
+  const reps = [];
+  if (!onlyR7) reps.push(await runResp(o));
+  if (wantR7) reps.push(await runHeaderOverlap({ ...o, r7Widths: [...new Set([...o.widths.filter((w) => w <= 1199), ...R7_WIDTHS])].sort((a, b) => a - b) }, { control: true }));
+  return reps;
+});
