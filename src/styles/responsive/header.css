@@ -54,3 +54,15 @@
     --btn-border: transparent; --btn-border-hover: transparent; --btn-border-focus: transparent; --btn-border-active: transparent;
   }
 }
+
+/* випадне меню на < 1200 (рішення замовника): пункти сторінок у 2 колонки рівної ширини (порядок рядками: 1 2 / 3 4 …), крок рядків = висота пункту (touch ≥ 44) + мінімальний зазор --space-5 (було ≈ 66 px); між блоками панелі (мова / сторінки / «Кошик» / дії) — --space-10. Рядок мови, «Кошик» і дії внизу — на всю ширину. Довгі підписи («Ф'ючерсні бочки», «Зворотній зв'язок») у вузькій колонці переносяться на 2 рядки симетрично (balance), висота пункту росте за змістом. Десктопне меню ≥ 1200 без змін */
+@media (max-width: 1199.98px) {
+  .site-header__menu:not(.site-header__menu--lang) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); align-content: start; }
+  .site-header__menu:not(.site-header__menu--lang) .nav-cell--menu { height: auto; min-height: var(--size-touch-target); white-space: normal; text-wrap: balance; }
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-lang,
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-actions,
+  .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu[href="cart.html"] { grid-column: 1 / -1; }
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-lang { margin-bottom: var(--space-5); }
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-actions { margin-top: var(--space-5); gap: var(--space-5); }
+  .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu[href="cart.html"] { margin-top: var(--space-5); }
+}
