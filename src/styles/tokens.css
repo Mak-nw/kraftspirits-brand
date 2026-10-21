@@ -479,16 +479,16 @@
   --flip-x: -1;                     /* семантичний токен, вузла Figma немає; дзеркало по X для стрілки prev (scaleX) */
 
   /* ---------- Header (194:1374) ---------- */
-  --header-logo-cell-w: calc(220.37 * var(--u));  /* 194:1383 / 194:1385 комірка логотипа (блок 194:1382), ширина */
-  --header-logo-cell-h: calc(63 * var(--u));      /* 194:1383 / 194:1385 комірка логотипа, висота */
-  --header-logo-yc-x: calc(9.33 * var(--u));      /* 194:1384 YasnoCraft-зображення в комірці: left */
-  --header-logo-yc-y: calc(18.41 * var(--u));     /* 194:1384 top */
-  --header-logo-yc-w: calc(201.763 * var(--u));   /* 194:1384 width */
-  --header-logo-yc-h: calc(29.547 * var(--u));    /* 194:1384 height */
-  --header-logo-bs-x: calc(20.74 * var(--u));     /* 194:1386 Bazylsprings-зображення в комірці: left */
-  --header-logo-bs-y: calc(1.81 * var(--u));      /* 194:1386 top */
-  --header-logo-bs-w: calc(178.889 * var(--u));   /* 194:1386 width */
-  --header-logo-bs-h: calc(59.63 * var(--u));     /* 194:1386 height */
+  --header-logo-cell-w: calc(220.37 * var(--u) * var(--header-logo-k, 1));  /* 194:1383 / 194:1385 комірка логотипа (блок 194:1382), ширина */
+  --header-logo-cell-h: calc(63 * var(--u) * var(--header-logo-k, 1));      /* 194:1383 / 194:1385 комірка логотипа, висота */
+  --header-logo-yc-x: calc(9.33 * var(--u) * var(--header-logo-k, 1));      /* 194:1384 YasnoCraft-зображення в комірці: left */
+  --header-logo-yc-y: calc(18.41 * var(--u) * var(--header-logo-k, 1));     /* 194:1384 top */
+  --header-logo-yc-w: calc(201.763 * var(--u) * var(--header-logo-k, 1));   /* 194:1384 width */
+  --header-logo-yc-h: calc(29.547 * var(--u) * var(--header-logo-k, 1));    /* 194:1384 height */
+  --header-logo-bs-x: calc(20.74 * var(--u) * var(--header-logo-k, 1));     /* 194:1386 Bazylsprings-зображення в комірці: left */
+  --header-logo-bs-y: calc(1.81 * var(--u) * var(--header-logo-k, 1));      /* 194:1386 top */
+  --header-logo-bs-w: calc(178.889 * var(--u) * var(--header-logo-k, 1));   /* 194:1386 width */
+  --header-logo-bs-h: calc(59.63 * var(--u) * var(--header-logo-k, 1));     /* 194:1386 height */
 
   /* ---------- Footer (194:1235) ---------- */
   --footer-h-top: calc(873 * var(--u));           /* бежева частина футера (1070 = 873 + 197): 873 = 759 + 40 (--space-140 − 100: відступ кнопки → логотип, коментар замовника 828ffcd5) + 37 (рядок меню «Івенти» у колонці) + 37 (вільний простір між блоками збільшено, щоб чорнило низ кнопок → верх YASNOCRAFT ≈ 104px на 1920); відступ колонки → кнопки лишається --space-70 + вільний простір */
@@ -1123,4 +1123,245 @@
   --space-about-track-gap: var(--grid-step);                /* pinned-трек: зазор між блоком тексту (ширина в'юпорта) і першою аркою = 1 крок сітки (155u); стрічка йде повз текст, не поверх */
   --size-about-process-list-w: calc(8 * var(--size-about-process-arch-w) + 7 * var(--size-about-process-link-w)); /* стрічка: 8 арок + 7 ліній між ними (кінцевої лінії нема) */
   --size-about-process-run: calc(var(--vw, 100vw) / 2 + var(--space-about-track-gap) + var(--size-about-process-list-w) - var(--size-about-process-arch-w) / 2); /* хід треку = вертикальний хід розпірки .about-place-run: текст виїжджає (в'юпорт) і стрічка проходить увесь екран до кінцевого положення — остання арка по центру в'юпорта */
+}
+
+/* ===================================================================
+   АДАПТИВ (рішення замовника 2026-10-19: «адаптив всього сайту: телефони, планшети, малі ноути, екрани більші за 1920»; docs/responsive.md).
+   Діапазон 1200–1920 НЕ ЧІПАЄМО (піксель у піксель): усе нижче живе ЛИШЕ в медіа-запитах поза ним (< 1200 і > 1920). Ширини — за ВІКНОМ (media query включає смугу прокрутки).
+   Масштаб --u (1 px макета 1920) за діапазонами:
+     > 1920 («великі»)   : u росте пропорційно до 2560 (u = 1.333), далі «заморожується»: сцена 1920u (2560 px) по центру; фони секцій на всю ширину (full-bleed), контент — у 10 колонках сцени (--page-inset додається до поля сітки).
+     1024–1199 («малі ноути»): u = vw/1920 (пропорційне стискання тієї ж 10-колонкової сітки); малий текст — з підлогами в px (читабельність).
+     768–1023 («планшети»)  : u = vw/1100 (768 → 0.70, 1023 → 0.93); сітка 8 колонок, поле 54u, зазор 30u.
+     < 768 («телефони»)     : u = clamp(0.5px, vw/640, 0.9px) (390 → 0.61; 320 → 0.5); сітка 4 колонки, поле 44u, зазор 30u; текстові ролі — власні розміри (vw-клампи).
+   Ролі .t-* ті самі, змінюються лише їхні розмірні токени (--font-size-*); нових ролей/компонентів немає. Розкладки (стеки, прокрутка) — у src/styles/responsive/*.css.
+   =================================================================== */
+@media (min-width: 1921px) {
+  :root {
+    --u: calc(clamp(1185px, var(--vw, 100vw), 2560px) / 1920);
+    --page-inset: max(0px, calc((var(--vw, 100vw) - 1920 * var(--u)) / 2));   /* поле сцени: різниця між вікном і 1920u (0 до 2560) */
+  }
+  :root, .lp-scope {
+    --grid-margin: calc(202.9 * var(--u) + var(--page-inset));  /* від краю ВІКНА до колонки 1: поле сцени + поле сітки (фони секцій лишаються на всю ширину) */
+    --grid-w: calc(1514.2 * var(--u));
+  }
+  :root { --space-product-page-x: calc(202.9 * var(--u)); --size-product-page-w: calc(1920 * var(--u)); }
+}
+
+/* малі ноути 1024–1199: та сама сітка, u = vw/1920; підлоги px для малого тексту й контролів (≥ 44px під дотик планшета в ландшафті) */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  :root {
+    --u: calc(var(--vw, 100vw) / 1920);
+    --font-size-chip: max(calc(25 * var(--u)), 14px);
+    --font-size-title: max(calc(20 * var(--u)), 13px);
+    --font-size-text: max(calc(16 * var(--u)), 12px);
+    --font-size-small: max(calc(12 * var(--u)), 11px);
+    --font-size-nav: max(calc(14 * var(--u)), 12px);
+    --nav-box-h: max(calc(16 * var(--u)), 16px);
+    --size-btn-h: max(calc(56 * var(--u)), var(--size-touch-target));
+    --header3-h: max(calc(73 * var(--u)), calc(var(--size-touch-target) + 2 * var(--space-5)));
+    --header2-cell-h: max(calc(42 * var(--u)), var(--size-touch-target));
+    --header2-btn-outline-h: max(calc(44 * var(--u)), var(--size-touch-target));
+    --header2-btn-ghost-h: max(calc(44 * var(--u)), var(--size-touch-target));
+    --header2-btn-fill-h: max(calc(44 * var(--u)), var(--size-touch-target));
+    --header3-menu-w: max(calc(310 * var(--u)), 260px);
+    --header-logo-k: 0.8;                                      /* пара логотипів у шапці 1024–1199: зазор до кнопки мови ≥ 16 px (R7; без зменшення було перекриття до 36 px) */
+    --size-arrow-btn-w: max(calc(64 * var(--u)), var(--size-touch-target));
+    --size-arrow-btn-h: max(calc(66 * var(--u)), var(--size-touch-target));
+  }
+}
+
+/* планшети і телефони: сітка не 10 колонок 1920u, а від ширини вікна */
+@media (max-width: 1023.98px) {
+  :root, .lp-scope {
+    --grid-w: calc(var(--vw, 100vw) - 2 * var(--grid-margin));
+    --grid-span-9: var(--grid-w);
+    --grid-span-10: var(--grid-w);
+  }
+  :root {
+    --size-btn-h: max(calc(56 * var(--u)), var(--size-touch-target));
+    --size-control-h: var(--size-btn-h);
+    --header3-h: calc(var(--size-touch-target) + 2 * var(--space-5));
+    --header2-cell-h: var(--size-touch-target);
+    --header2-btn-outline-h: var(--size-touch-target);
+    --header2-btn-ghost-h: var(--size-touch-target);
+    --header2-btn-fill-h: var(--size-touch-target);
+    --header3-top: var(--space-10);
+    --size-product-page-w: 100vw;
+    --header-logo-k: 0.8;                                      /* пара логотипів у пілюлі менша (місце під «меню» і кошик) */
+    --hero-k: calc(var(--grid-w) / 983);                       /* одиниця hero-логотипів: група 983u = ширина вмісту (на ≥ 1200 983u) */
+    --size-hero-logos-w: var(--grid-w);
+    --size-hero-logos-h: calc(185.103 * var(--hero-k));
+    --size-hero-logo-yc-w: calc(860.269 * var(--hero-k));
+    --size-hero-logo-yc-h: calc(98.3 * var(--hero-k));
+    --size-hero-logo-bs-w: var(--grid-w);
+    --size-hero-logo-bs-h: calc(102.611 * var(--hero-k));
+    --offset-hero-logo-bs-top: calc(82.491 * var(--hero-k));
+    --offset-hero-logos-top: calc(var(--size-header-h) + var(--space-70));
+    --size-sec-hero: max(calc(1086 * var(--u)), 480px);
+    --size-picker-head-h: calc(300 * var(--u));
+    --scale-cocktail-thumb: 1;                                 /* мініатюри коктейлів: на дотик без зменшення (≥ 44 px) */
+    --size-product-stage-w: var(--grid-w);                     /* товар: фото й панель — одна під одною на всю ширину вмісту */
+    --size-product-panel-w: var(--grid-w);
+    --size-product-frame-h: min(calc(var(--grid-w) * 1.1), 100svh);
+    --size-contacts-panel-min-h: 0px;
+    --size-contacts-map-min-h: max(calc(360 * var(--u)), 280px);
+    --size-select-w: max(calc(200 * var(--u)), 120px);
+    --col-faq-cards: 1 / -1;                                   /* FAQ: картки на всю ширину вмісту */
+    --grid-cols-7-3: minmax(0, 1fr);                           /* пари великих блоків (кошик, оформлення, контакти, «місце» lp) стають одним стовпцем */
+    --grid-cols-6-4: minmax(0, 1fr);
+    --grid-cols-4-6: minmax(0, 1fr);
+    --size-sec-intro: auto;
+    --size-sec-tours: auto;
+    --size-sec-picker: auto;
+    --size-sec-about: auto;
+    --ratio-r-photo: 4 / 3;                                    /* адаптив: кадр фото-панелі, що стоїть над текстом (tour-card) */
+    --size-arrow-btn-w: var(--size-touch-target);
+    --size-arrow-btn-h: var(--size-touch-target);
+  }
+}
+
+/* планшети 768–1023 */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  :root {
+    --u: calc(var(--vw, 100vw) / 1100);
+    --font-size-wordmark: calc(137 * var(--u));
+    --font-size-stat: calc(100 * var(--u));
+    --font-size-h2: calc(67 * var(--u));
+    --font-size-hero: calc(55 * var(--u));
+    --font-size-lead: calc(40 * var(--u));
+    --font-size-chip: max(calc(25 * var(--u)), 16px);
+    --font-size-title: max(calc(20 * var(--u)), 15px);
+    --font-size-text: max(calc(16 * var(--u)), 14px);
+    --font-size-small: max(calc(12 * var(--u)), 12px);
+    --font-size-nav: max(calc(14 * var(--u)), 13px);
+    --nav-box-h: 18px;
+    --ratio-r-photo: 16 / 9;
+  }
+  :root, .lp-scope {
+    --grid-cols: 8;
+    --grid-margin: calc(54 * var(--u));
+    --grid-gap: calc(30 * var(--u));
+    --size-card-cat2-w: calc((var(--grid-w) - 2 * var(--grid-gap)) / 3);   /* картка каталогу: 3 рівні блоки в ряд */
+    --container-lp-hero-sub: var(--grid-span-6);
+    --span-lp-stage: 3;                                         /* lp steps: арка — колонки 1–3, кроки — 4–8 */
+    --col-lp-chapters: 4;
+    --span-lp-chapter-text: 4;
+    --span-feedback-aside: 4;
+    --span-feedback-main: 4;
+    --span-wc-account-nav: 3;
+    --span-wc-account-main: 5;
+    --catalog-grid-reserve-rows: 5;
+    --col-faq-intro: 2 / span 6;
+    --col-cocktails-intro: 2 / span 6;
+    --size-heading-w: var(--grid-span-6);        /* заголовок: 6 з 8 колонок по центру */
+    --size-heading-w-wide: var(--grid-w);
+  }
+}
+
+/* телефони < 768 (320…767) */
+@media (max-width: 767.98px) {
+  :root {
+    --u: clamp(0.5px, calc(var(--vw, 100vw) / 640), 0.9px);
+    --font-size-wordmark: calc(var(--vw, 100vw) * 0.118);
+    --font-size-stat: calc(var(--vw, 100vw) * 0.115);
+    --font-size-h2: clamp(26px, calc(var(--vw, 100vw) * 0.072), 40px);
+    --font-size-hero: clamp(24px, calc(var(--vw, 100vw) * 0.078), 44px);
+    --font-size-lead: clamp(18px, calc(var(--vw, 100vw) * 0.048), 30px);
+    --font-size-chip: clamp(15px, calc(var(--vw, 100vw) * 0.04), 20px);
+    --font-size-title: clamp(13px, calc(var(--vw, 100vw) * 0.041), 18px);
+    --font-size-text: clamp(14px, calc(var(--vw, 100vw) * 0.037), 16px);
+    --font-size-small: 12px;
+    --font-size-nav: 13px;
+    --nav-box-h: 18px;
+    --header-logo-k: 0.72;
+    /* крок шкали відступів на телефоні: ті самі токени, менші значення (секції 100u → 70u тощо) */
+    --space-100: calc(70 * var(--u));
+    --space-70: calc(50 * var(--u));
+    --space-50: calc(36 * var(--u));
+    --space-85: calc(60 * var(--u));
+    --space-177: calc(100 * var(--u));
+    --space-197: calc(100 * var(--u));
+    --space-208: calc(100 * var(--u));
+    --space-lp-section-y: calc(100 * var(--u));
+    --space-lp-room-join: calc(80 * var(--u));
+    --size-product-thumb-w: calc(90 * var(--u));
+    --size-product-thumb-h: calc(119.4 * var(--u));
+    --catalog-grid-reserve-rows: 7;
+    --space-tour-pad: calc(50 * var(--u));
+  }
+  :root, .lp-scope {
+    --grid-cols: 4;
+    --grid-margin: calc(44 * var(--u));
+    --grid-gap: calc(30 * var(--u));
+    --size-card-cat2-w: calc((var(--grid-w) - var(--grid-gap)) / 2);        /* картка каталогу: 2 рівні блоки в ряд */
+    --grid-span-5: var(--grid-w);                               /* 4 колонки: блоки ширші за 4 колонки = на всю ширину вмісту */
+    --grid-span-6: var(--grid-w);
+    --grid-span-7: var(--grid-w);
+    --grid-span-8: var(--grid-w);
+    --container-lp-hero-sub: var(--grid-w);
+    --span-lp-stage: 4;
+    --col-lp-chapters: 1;
+    --span-lp-chapter-text: 4;
+    --size-lp-stage-max: 100%;
+    --span-feedback-aside: 4;
+    --span-feedback-main: 4;
+    --span-wc-account-nav: 4;
+    --span-wc-account-main: 4;
+    --size-lp-deck-min-h: calc(520 * var(--u));
+    --space-lp-deck-peek: var(--space-50);
+    --space-lp-deck-pad: var(--space-50);
+    --col-faq-intro: 1 / -1;
+    --col-cocktails-intro: 1 / -1;
+    --size-heading-w: var(--grid-w);             /* заголовок: на всю ширину вмісту (4 колонки) */
+    --size-heading-w-wide: var(--grid-w);
+  }
+}
+
+/* вузький телефон: пара логотипів шапки менша й пілюля ширша (відступ від краю вікна — половина поля сітки), щоб логотипи не налізали на меню/кабінет (R7: зазор ≥ 8 px).
+   Брейкпоінти 440/360 — літеральні числа в @media (як і решта брейкпоінтів проєкту, CSS не дозволяє var() у медіа-запиті); значення — токени для responsive/header.css */
+@media (max-width: 440px) {
+  :root { --header-logo-k: 0.55; --header-bar-inset: calc(var(--grid-margin) / 2); }
+}
+@media (max-width: 360px) {
+  :root { --header-logo-k: 0.42; }
+}
+
+/* АДАПТИВ: токени layout-розмірів responsive/*.css (раніше були літералами/локальними змінними у responsive/*.css) */
+@media (max-width: 1199.98px) {
+  :root {
+    --ratio-b2b-photo: 776 / 622;                              /* b2b, секції 8/9/11: кадр фото-«квитка» над текстом (телефон) */
+    --size-brand-content-w-laptop: calc(560 * var(--u));       /* b2b, стор. 10 на 1024–1199: ширина тексту бренду (440u → 560u, не лягає на виріз пляшки) */
+  }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  :root { --ratio-b2b-photo: 776 / 500; }                      /* той самий кадр на планшеті/малому ноуті: нижчий */
+}
+@media (max-width: 1023.98px) {
+  :root {
+    --ratio-about-photo-start: 288 / 332;                      /* про нас, віха «початок»: кадр фото в стовпчику */
+    --ratio-about-photo-finish: 304 / 332;                     /* про нас, віха «сьогодні» */
+    --ratio-cocktail-media: 4 / 5;                             /* коктейль: кадр фото над панеллю рецепта */
+    --size-brand-content-w-stack: 60%;                         /* картки брендів (головна, b2b стор. 10) одна під одною: ширина текстового блоку */
+  }
+  /* геометрія картки каталогу від її реальної ширини (--size-card-cat2-w): 1 px макета = --cu; слайдер підбору переозначає ширину картки, тож токени перераховуються і на ньому */
+  :root, .picker .slider {
+    --cu: calc(var(--size-card-cat2-w) / 348.55);
+    --size-card-cat2-h: calc(480 * var(--cu));
+    --space-card-cat2-photo-top: calc(44 * var(--cu));
+    --size-card-cat2-photo-h: calc(298 * var(--cu));
+    --space-card-cat2-body-top: calc(20 * var(--cu));
+    --space-card-cat2-body-gap: calc(20 * var(--cu));
+    --space-card-cat2-body-bottom: calc(30 * var(--cu));
+    --radius-card-catalog: calc(10 * var(--cu));
+    --radius-card-arch: calc(5 * var(--cu));
+    --size-arch-top-h: calc(180 * var(--cu));
+    --size-arch-bottom-h: calc(10 * var(--cu));
+    --size-arch-seam: calc(1 * var(--cu));
+    --offset-arch: calc(6 * var(--cu));
+    --liquid-wave-h: calc(24 * var(--cu));
+  }
+}
+@media (max-width: 767.98px) {
+  :root { --size-brand-content-w-stack: 76%; }
+  .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
 }

@@ -1,0 +1,57 @@
+/* АДАПТИВ: коктейлі, кошик, оформлення, кабінет, мапа, вікові ворота, лайтбокс. Лише поза діапазоном 1200–1920. */
+@media (max-width: 1023.98px) {
+  /* ---- коктейлі: фото, панель з рецептом і картка товару — одна під одною ---- */
+  .cocktails { width: var(--grid-w); }
+  .cocktails__intro { grid-template-columns: minmax(0, 1fr); }
+  .cocktails__intro > * { grid-column: 1 / -1; }
+  .cocktail { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-cocktail-plate-gap); }
+  .cocktail__media { order: 1; aspect-ratio: var(--ratio-cocktail-media); }
+  .cocktail__body { order: 2; min-height: 0; }
+  .cocktail__item { order: 3; align-self: start; justify-self: center; width: var(--size-card-cat2-w); }
+  .cocktail--tall .cocktail__body { min-height: 0; }
+  .cocktail__item .product-card--catalog { height: var(--size-card-cat2-h); }
+  .cocktail__item .product-card--catalog::before { height: var(--size-arch-h); }
+  .tabs__list { flex-wrap: wrap; }
+  /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
+  .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  .wc-grid--guest { grid-template-columns: minmax(0, 1fr); }
+  .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content { grid-column: auto; }
+  .woocommerce-MyAccount-navigation ul { flex-direction: row; flex-wrap: wrap; }
+  .woocommerce-MyAccount-navigation li { flex: 1 1 auto; }
+  .woocommerce table.cart td.actions .wc-grid--actions { grid-template-columns: minmax(0, 1fr); }
+  .woocommerce table.cart td.actions .wc-grid--actions .coupon { display: flex; flex-wrap: wrap; }
+  .woocommerce table.cart td.actions .wc-grid--actions .coupon .field__control, .woocommerce .coupon .field__control { width: auto; flex: 1 1 100%; }
+  .woocommerce table.cart td.actions .wc-grid--actions .coupon > .btn, .woocommerce table.cart td.actions .wc-grid--actions > .btn { flex: 1 1 auto; }
+  .woocommerce a.remove { min-width: var(--size-touch-target); min-height: var(--size-touch-target); display: inline-flex; align-items: center; justify-content: center; }
+  .woocommerce-orders-table, .woocommerce table.order_details { width: 100%; }
+}
+@media (max-width: 767.98px) {
+  /* кошик: рядок позиції = картка (фото | назва, ціна, кількість, разом) */
+  /* кабінет: таблиця замовлень = картки (номер · статус / дата · сума / кнопка на всю ширину) */
+  .woocommerce-orders-table { display: block; }
+  .woocommerce-orders-table thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
+  .woocommerce-orders-table tbody { display: block; }
+  .woocommerce-orders-table tr.woocommerce-orders-table__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "num status" "date total" "act act"; column-gap: var(--space-20); row-gap: var(--space-10); align-items: center; padding-block: var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+  .woocommerce-orders-table tr.woocommerce-orders-table__row > :is(th, td) { display: block; padding: 0; border: 0; }
+  .woocommerce-orders-table__cell-order-number { grid-area: num; }
+  .woocommerce-orders-table__cell-order-status { grid-area: status; text-align: end; }
+  .woocommerce-orders-table__cell-order-date { grid-area: date; }
+  .woocommerce-orders-table__cell-order-total { grid-area: total; text-align: end; }
+  .woocommerce-orders-table__cell-order-actions { grid-area: act; }
+  .woocommerce-orders-table__cell-order-actions .btn { display: flex; width: 100%; }
+  .woocommerce table.cart thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); }
+  .woocommerce table.cart, .woocommerce table.cart tbody { display: block; }
+  .woocommerce table.cart tr.cart_item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "thumb name remove" "thumb price price" "thumb qty sub"; column-gap: var(--space-20); row-gap: var(--space-10); align-items: center; padding-block: var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+  .woocommerce table.cart tr.cart_item > td { display: block; padding: 0; border: 0; }
+  .woocommerce table.cart td.product-thumbnail { grid-area: thumb; }
+  .woocommerce table.cart td.product-name { grid-area: name; width: auto; }
+  .woocommerce table.cart td.product-remove { grid-area: remove; justify-self: end; }
+  .woocommerce table.cart td.product-price { grid-area: price; }
+  .woocommerce table.cart td.product-quantity { grid-area: qty; }
+  .woocommerce table.cart td.product-subtotal { grid-area: sub; text-align: end; }
+  .woocommerce table.cart tr:not(.cart_item), .woocommerce table.cart tr:not(.cart_item) > td { display: block; width: 100%; }
+  .woocommerce .quantity .qty { width: calc(var(--size-wc-qty-w) * 0.8); }
+  .woocommerce-account [data-wc-view] form, .woocommerce-account [data-wc-view] fieldset, .woocommerce-billing-fields__field-wrapper, .woocommerce-additional-fields__field-wrapper, .woocommerce-account [data-wc-view] .woocommerce-columns--addresses { grid-template-columns: minmax(0, 1fr); }
+  .woocommerce table.order_details tfoot td, .woocommerce table.shop_table :is(.product-price, .product-subtotal, .product-quantity, .product-total) { white-space: normal; }
+  :is(.woocommerce-order-overview, .woocommerce-OrderUpdates) > li { flex-wrap: wrap; }
+}

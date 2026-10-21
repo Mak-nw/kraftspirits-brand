@@ -15,7 +15,7 @@ export async function probeD17(page, cfg = D17_DEFAULTS) {
   return page.evaluate((c) => {
     const vw = document.documentElement.clientWidth;
     const px = (expr) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;visibility:hidden;height:0;width:${expr}`; document.body.appendChild(d); const w = d.getBoundingClientRect().width; d.remove(); return w; };
-    const span4 = px('var(--grid-span-4)'); const span6 = px('var(--grid-span-6)'); const gridMargin = px('var(--grid-margin)'); const step = px('var(--grid-step)');
+    const small = !matchMedia('(min-width: 1200px)').matches; /* адаптив (<1200): ширина заголовка = токен --size-heading-w (планшет 6 з 8 колонок, телефон 4 з 4), а не 4 колонки 10-колонкової сітки */ const span4 = px(small ? 'var(--size-heading-w)' : 'var(--grid-span-4)'); const span6 = px(small ? 'var(--size-heading-w-wide)' : 'var(--grid-span-6)'); const gridMargin = px('var(--grid-margin)'); const step = px('var(--grid-step)');
     const name = (el) => { const p = []; for (let n = el; n && n.nodeType === 1 && p.length < 3; n = n.parentElement) { p.unshift(n.tagName.toLowerCase() + (n.id ? `#${n.id}` : '') + [...n.classList].slice(0, 2).map((x) => `.${x}`).join('')); } return p.join(' > '); };
     const out = [];
     for (const el of document.querySelectorAll('.t-hero, .t-h2')) {
@@ -27,7 +27,7 @@ export async function probeD17(page, cfg = D17_DEFAULTS) {
       let wide = '';
       if (el.scrollWidth > el.clientWidth + 1) { const words = el.textContent.trim().split(/\s+/); wide = words.sort((a, b2) => b2.length - a.length)[0] || ''; }
       out.push({ el: name(el), text: el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40), left: b.left, width: b.width, wide: el.classList.contains('heading-wide'), span6, cx: b.left + b.width / 2, vw, span4, gridMargin, step, align: cs.textAlign,
-        cls: el.classList.contains('heading-center') ? 'center' : el.classList.contains('heading-start') ? 'start' : '', legal: !!el.closest('.faq-page__intro--legal'),
+        cls: el.classList.contains('heading-center') ? 'center' : el.classList.contains('heading-start') ? 'start' : '', legal: !!el.closest('.faq-page__intro--legal') && !small,
         wrap: cs.overflowWrap, hyphens: cs.hyphens, wordBreak: cs.wordBreak, lines: Math.round(b.height / lh), over: el.scrollWidth - el.clientWidth, wideWord: wide });
     }
     // 4. текст у панелях (.cocktail__body, .contacts-panel) не виходить за контент-бокс (межі без padding і рамки; допуск праворуч tolerancePx; ліворуч panelLeftOpticPx=2 — оптичний зсув ярликів фактів лендингу --lp-fact-optic ≈ −1.2px): міряємо rect кожного текстового вузла (Range), а не scrollWidth —
@@ -70,6 +70,7 @@ export function analyzeD17(cells, cfg = D17_DEFAULTS) {
 
 /** позитивний контроль: ширина заголовка 12 колонок → кількість порушень (має бути > 0) */
 export async function controlD17(page, cfg = D17_DEFAULTS) {
+  if (await page.evaluate(() => !matchMedia('(min-width: 1200px)').matches)) return null; // адаптив (< 1200): ширина заголовка = --size-heading-w, контроль «10 колонок» не застосовний
   await page.evaluate(() => { const s = document.createElement('style'); s.id = 'qa-d17-control'; s.textContent = ':root{--size-heading-w:var(--grid-span-10);--size-heading-w-wide:var(--grid-span-10)}'; document.head.appendChild(s); });
   const cells = [{ label: 'control', data: await probeD17(page, cfg) }];
   await page.evaluate(() => document.getElementById('qa-d17-control')?.remove());
@@ -78,6 +79,7 @@ export async function controlD17(page, cfg = D17_DEFAULTS) {
 
 /** позитивний контроль правила 4 (лише коли на сторінці є .cocktail__body): поля панелі коктейлю 100u (стандарт 50u вміщується, 19.10.2026) → слово «кальвадосом» виходить → порушень > 0 */
 export async function controlD17Panel(page, cfg = D17_DEFAULTS) {
+  if (await page.evaluate(() => !matchMedia('(min-width: 1200px)').matches)) return null;
   if (!(await page.$('.cocktail__body'))) return null;
   await page.evaluate(() => { const s = document.createElement('style'); s.id = 'qa-d17-panel-control'; s.textContent = '.cocktail__body{padding-inline:calc(100 * var(--u)) !important}'; document.head.appendChild(s); });
   const cells = [{ label: 'control', data: await probeD17(page, cfg) }];

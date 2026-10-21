@@ -1,0 +1,48 @@
+/* АДАПТИВ: каталог, сторінка товару, контакти, зворотній зв'язок, FAQ/юридичні. Лише поза діапазоном 1200–1920. */
+@media (max-width: 1023.98px) {
+  /* каталог */
+  .catalog-nav { width: var(--grid-w); }
+  .catalog-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-10) var(--space-select-gap); width: var(--grid-w); }
+  .catalog-bar__group, .catalog-bar__group--filters { grid-column: auto; flex-wrap: wrap; }
+  .catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); width: var(--grid-w); }
+  .select { min-height: var(--size-touch-target); }
+  .select__option { min-height: var(--size-touch-target); display: flex; align-items: center; }
+  /* товар: фото зверху (не sticky), панель під ним */
+  .product { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  .product-media { position: relative; top: auto; grid-area: auto; width: 100%; }
+  .product-panel { grid-area: auto; }
+  .product-thumbs { top: auto; bottom: var(--space-product-thumb-inset); flex-direction: row; }
+  .product-crumbs { flex-wrap: wrap; }
+  .product-title { width: var(--size-heading-w); max-width: 100%; margin-inline: auto; }  /* заголовок товару: ширина токена заголовків (D17), по центру панелі */
+  .product-volume { min-height: var(--size-touch-target); display: inline-flex; align-items: center; }
+  /* контакти */
+  .contacts { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  /* вікно «контакти»: картка з даними зверху, мапа (фон десктопного вікна) під нею окремим блоком */
+  .contacts-window { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-contacts-card-inset); }
+  .contacts-window > .contacts-info { grid-column: auto; order: 1; }
+  .contacts-window > .contacts-window__map { position: relative; inset: auto; order: 2; flex: none; height: var(--size-contacts-map-min-h); }
+  .contacts-map { min-height: var(--size-contacts-map-min-h); border-radius: var(--radius-panel); }
+  /* зворотній зв'язок: одна колонка (порядок: заголовок, тип, контакти, повідомлення, згода, кнопка) */
+  .feedback-form { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-feedback-block-gap); }
+  .feedback-col--aside > *, .feedback-col--main > * { grid-column: auto; }
+  .feedback-col--aside > .feedback-head { order: 1; }
+  .feedback-col--aside > [data-field="topic"] { order: 2; }
+  .feedback-col--aside > .feedback-block { order: 3; }
+  .feedback-col--main > .feedback-message { order: 4; }
+  .feedback-col--aside > .check-field { order: 5; }
+  .feedback-col--main > .feedback-foot { order: 6; padding-bottom: 0; justify-content: stretch; }
+  .feedback-col--main > .contact-form__alert { order: 7; }
+  .feedback-foot .btn { width: 100%; }
+  .check { min-height: var(--size-touch-target); align-items: center; }
+  /* FAQ / юридичні */
+  .faq-page__grid { width: var(--grid-w); }
+  .faq-page__list--span8 { width: 100%; }
+}
+@media (max-width: 767.98px) {
+  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .feedback-pair { grid-template-columns: minmax(0, 1fr); }
+  .topic-group { grid-template-columns: minmax(0, 1fr); }
+  .faq-page__list { grid-template-columns: minmax(0, 1fr); }
+  .contacts-data { grid-template-columns: minmax(0, 1fr); }
+  .contacts-item--wide { grid-column: auto; }
+}

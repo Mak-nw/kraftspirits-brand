@@ -1,0 +1,116 @@
+/* АДАПТИВ: шаблон посадкової сторінки (lp: barrels, excursions; файли lp.css, lp-media.css, themes/*, pages/barrels.css, pages/excursions.css — для злиття з правкою екскурсій див. docs/responsive.md).
+   Лише поза діапазоном 1200–1920. Планшет: сітка 8 колонок; телефон: 4 колонки, плитки/панелі — стовпцем. */
+@media (max-width: 1023.98px) {
+  /* span колонок за даними: 10 → 8 колонок (планшет), нижче окремо (телефон: 4) */
+  .lp-span--1 { grid-column: span 1; } .lp-span--2, .lp-span--3 { grid-column: span 2; } .lp-span--4 { grid-column: span 3; }
+  .lp-span--5 { grid-column: span 4; } .lp-span--6 { grid-column: span 5; } .lp-span--7, .lp-span--8 { grid-column: span 6; }
+  .lp-span--9 { grid-column: span 7; } .lp-span--10 { grid-column: span 8; }
+  .hero--lp .hero__content { top: auto; bottom: var(--offset-lp-hero-bottom); }
+  .hero--lp:not(.hero--fade) .hero__content { top: var(--offset-lp-hero-top); bottom: auto; }
+  .lp-head__lead, .lp-offers__note, .lp-offers__fine { width: var(--size-lp-text-w); }
+  /* layers: смуги фото — одним рядом, підписи — сіткою 2 колонки (планшет — до 4) */
+  .lp-layers { grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-30); }
+  .lp-layers__cut { grid-column: 1 / -1; grid-row: auto; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); height: var(--size-lp-layer-band-h); }
+  .lp-layers__band, .lp-layers__band:last-child { margin-right: 0; }
+  .lp-layer, .lp-layers--text .lp-layer { grid-row: auto; }
+  /* steps: кроки на планшеті — поруч з аркою (3 + 5 колонок), на телефоні нижче */
+  .lp-steps__chapters { grid-row: 2; }
+  /* compare / tiles / offers / formats */
+  .lp-compare__grid, .lp-formats__grid, .lp-tiles__grid, .lp-offers__grid, .lp-layers { width: var(--lp-w); }
+  .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lp-layers--n4, .lp-layers--n5, .lp-layers--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
+  .lp-format__drinks--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-30); }
+  .lp-place__grid { row-gap: var(--grid-gap-panels); }
+  .lp-place__panel { min-height: 0; }
+  .lp-route { width: var(--grid-w); }
+  .lp-steps__card { height: auto; min-height: var(--size-lp-deck-min-h); }
+  /* arches (look: about: «що дає бочка», «чотири враження», «чотири характери»): склепіння рахується від n колонок — n зменшуємо за шириною */
+  .lp-arches--n5, .lp-arches--n6 { --lp-n: 3; row-gap: var(--space-50); }
+  .lp-arches--cards { --lp-n: 2; row-gap: var(--space-50); }
+  .lp-arches--cards.lp-arches--n3 > .lp-arches__card:last-child { grid-column: 1 / -1; width: calc((100% - var(--grid-gap)) / 2); justify-self: center; }  /* 3 арки в 2 колонки: третя без пари — по центру */
+  .lp-arches--n4 { --lp-n: 2; row-gap: var(--space-50); }  /* 4 арки в ряд на планшеті рвуть назви («ПРИВАТНИЙ», «ВАКУУМНА»): 2 + 2, як «Три установки» на about */
+  /* fpanel (формати, look: about): панелі поруч (span 5 → 4 з 8 колонок), напої в 2 колонки */
+  .lp-fpanel__drinks--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* offers: «airy» і панорама — той самий потік, нижній відступ під панелями лишається для води/хвиль */
+  .lp-offers--airy .lp-offers__grid { column-gap: var(--space-30); }
+  /* картки-арки (дегустація): висота за вмістом (на десктопі — співвідношення 33:50, на вузькому текст не вміщується), на всю ширину комірки */
+  .lp-arches--cards .about-principle { aspect-ratio: auto; width: 100%; justify-content: flex-start; gap: var(--space-30); }
+  /* колода split: висота за вмістом (без запасу min-height десктопної колоди) */
+  .lp-steps__card--split { height: auto; min-height: 0; }
+  /* offers (look: about): блок ціни — стовпцем (ціна над кнопкою), бо дві панелі в ряд вузькі для рядка */
+  .lp-look--about .lp-offer__buy { flex-direction: column; justify-content: center; text-align: center; }
+  .lp-look--about .lp-offer__price { text-wrap: balance; }
+  /* колода кроків (split: овал/lottie): текст зверху, медіа під ним; кути картки — як на десктопі (--radius-panel) */
+  .lp-steps__split-box { grid-template-columns: minmax(0, 1fr); }
+  .lp-steps__split-text { height: auto; }
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.45); }
+  .lp-slots { display: none; }
+}
+@media (max-width: 767.98px) {
+  .lp-cols--6, .lp-cols--8 { --lp-cols: 4; --lp-w: var(--grid-w); }
+  .lp-span--1, .lp-span--2, .lp-span--3 { grid-column: span 1; } .lp-span--4, .lp-span--5, .lp-span--6 { grid-column: span 2; }
+  .lp-span--7, .lp-span--8 { grid-column: span 3; } .lp-span--9, .lp-span--10 { grid-column: span 4; }
+  /* layers: 2 колонки підписів */
+  .lp-layers--n3, .lp-layers--n4, .lp-layers--n5, .lp-layers--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-layers { column-gap: var(--grid-gap); }
+  /* steps: арка зверху (не sticky), кроки під нею */
+  .lp-steps__grid { grid-template-rows: auto auto auto; }
+  .lp-steps__stage { grid-column: 1 / -1; grid-row: 2; position: relative; top: auto; justify-self: center; width: 70%; height: calc(var(--grid-w) * 0.7 * 1.1); margin-bottom: var(--space-lp-head); }
+  .lp-steps__chapters { grid-column: 1 / -1; grid-row: 3; }
+  .lp-step { padding-top: var(--space-lp-chapter-rule); }
+  .lp-step__text { max-width: none; }
+  /* compare: групи за span (2 + 2) лишаються поруч */
+  /* tiles: 2 колонки без спільних рядків */
+  .lp-tiles__grid, .lp-tiles__grid--n3, .lp-tiles__grid--n4, .lp-tiles__grid--n5, .lp-tiles__grid--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-50); }
+  .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-tiles__head { grid-column: 1 / -1; grid-row: auto; }
+  .lp-tile { grid-row: auto; grid-template-rows: auto auto; }
+  .lp-tile__caption { grid-row: auto; grid-template-rows: none; display: block; }
+  .lp-tiles--over .lp-tile__media, .lp-tiles--over .lp-tile__caption { grid-row: 1; }
+  .lp-tiles--over .lp-tile { grid-template-rows: auto; }
+  .lp-tiles--lead-2 .lp-head__lead, .lp-tiles--lead-3 .lp-head__lead, .lp-tiles--lead-4 .lp-head__lead, .lp-tiles--lead-5 .lp-head__lead, .lp-tiles--lead-6 .lp-head__lead { width: 100%; }
+  /* offers / formats: панелі стовпцем */
+  .lp-offers__grid--n2, .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
+  .lp-formats__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .lp-format { grid-row: auto; grid-template-rows: none; display: flex; flex-direction: column; align-items: center; padding: var(--space-lp-format-pad); }
+  .lp-format__drinks, .lp-format__facts { width: 100%; }
+  .lp-offers__actions { flex-wrap: wrap; }
+  /* arches: 2 колонки (склепіння від n = 2) */
+  .lp-arches, .lp-arches--n3, .lp-arches--n4, .lp-arches--n5, .lp-arches--n6 { --lp-n: 2; row-gap: var(--space-50); }
+  .lp-arches--n2 { --lp-n: 2; }
+  .lp-arches .about-still { width: 100%; }  /* підписи арок/бочок на всю ширину колонки (82% з about давало 130px і рвало слова) */
+  .lp-arches--n3 > .about-still:last-child, .lp-arches--n3 > .lp-arches__card:last-child { grid-column: 1 / -1; width: calc((100% - var(--grid-gap)) / 2); justify-self: center; }  /* третя арка без пари — по центру, ширина = колонка */
+  .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; }
+  /* compare (кімнати-погреби): одна кімната під другою, на всю ширину; рядок «200 Л ≈ 383 ПЛЯШКИ» — два рядки симетрично (text-wrap: balance) */
+  .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-70); }
+  .lp-compare__head, .lp-compare__note { grid-column: 1 / -1; grid-row: auto; }
+  .lp-group, .lp-group[class*="lp-span--"] { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; }
+  .lp-group--has-cellar .lp-group__num { text-align: center; }
+  /* formats (fpanel): панелі одна під одною; рядки підпис · число · напої · факти — у потоці без спільної сітки */
+  .lp-formats__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-50); }
+  .lp-formats__head { grid-column: 1 / -1; grid-row: auto; }
+  .lp-look--about .lp-fpanel, .lp-look--about .lp-fpanel[class*="lp-span--"] { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; }
+  .lp-fpanel__box { grid-row: auto; grid-template-rows: none; }
+  .lp-fpanel__lead, .lp-fpanel__badge, .lp-fpanel__drinks, .lp-fpanel__facts { grid-row: auto; }
+  /* offers: шапка/панелі/підвал в одну колонку (span-и даних не створюють неявних колонок) */
+  .lp-offers__grid > * { grid-column: 1 / -1; }
+  .lp-offers--airy .lp-offers__grid { row-gap: var(--space-30); }
+  .lp-look--about .lp-offer__buy { flex-wrap: wrap; justify-content: center; }
+  .lp-look--about .lp-offer__offer .lp-list { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
+  .lp-look--about .lp-offer__offer .lp-list li + li { padding-inline-start: 0; border-inline-start: 0; }
+  .lp-route { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lp-route__side--from { grid-column: 1 / span 2; } .lp-route__side--to { grid-column: 3 / span 2; }
+  .lp-layer__icon { --icon-size: calc(36 * var(--u)); }
+  .lp-format__facts { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
+  /* колода кроків: фото зверху, текст під ним (текст не лежить на фото) */
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.6); }
+  .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
+  .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * 0.55); }
+  .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }
+  /* tiles perRow (events «Що є на локації»): на телефоні 2 колонки × 3 ряди, коло = ширина колонки, рядки без спільної сітки (другий ряд DS — grid-row: 6 — скинуто) */
+  .lp-tiles__grid--rows { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  .lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: auto; margin-top: 0; }
+  .lp-tiles__grid--rows .lp-tile__caption > * { display: block; }
+  .lp-tiles__grid--rows .lp-tile { align-content: start; }
+}

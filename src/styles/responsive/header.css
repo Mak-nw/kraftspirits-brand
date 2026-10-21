@@ -1,0 +1,47 @@
+/* АДАПТИВ: header і footer (docs/responsive.md). Лише поза діапазоном 1200–1920. */
+
+/* ≤ 1023 (планшети й телефони): у пілюлі лишаються «меню», пара логотипів і кошик (+ кабінет на планшеті); решта — у випадному меню (на ≥1024 ці пункти приховані) */
+.site-header__menu-extra { display: none; }
+@media (max-width: 1023.98px) {
+  .site-header__menu-extra { display: flex; }
+  .site-header__side:not(.site-header__side--end) > .nav-cell--ghost { display: none; }                      /* «каталог», «про дім» → у меню */
+  .site-header__side--end > .nav-cell--fill { display: none; }                  /* «підказати?» → у меню */
+  .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; width: auto; left: var(--grid-margin); right: var(--grid-margin); margin-inline: 0; }
+  .site-header__side { padding-left: var(--space-5); }
+  .site-header__side--end { padding-right: var(--space-5); gap: var(--space-5); }
+  /* кабінет — окрема кругла кнопка в пілюлі зліва від кошика: дубль у меню не потрібен */
+  .site-header__menu-extra[href="account.html"] { display: none; }
+  .site-header__side--end > .nav-cell--round { order: -1; min-width: var(--size-touch-target); }
+  .site-header__logos { justify-self: center; }
+  .site-header__logo { height: var(--size-touch-target); }                      /* область дотику логотипа ≥ 44 px: зображення центруються у вищій комірці */
+  .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
+  /* меню — на всю ширину пілюлі, з прокруткою, якщо не вміщується у вікно */
+  .site-header__menu:not(.site-header__menu--lang) { width: 100%; max-height: calc(100svh - var(--header3-top) - var(--header3-h) - var(--header3-menu-gap) - var(--space-10)); overflow-y: auto; overscroll-behavior: contain; }
+  .site-header__menu:not(.site-header__menu--lang) .nav-cell--menu { width: 100%; }
+  .site-header__menu--lang { max-height: none; overflow: visible; left: auto; right: 0; } /* перемикач мови ближче до правого краю: панель росте вліво */
+}
+/* «меню» — лише іконка і на малих ноутах 1024–1199 (підпис лишається для читачів екрана; aria-label на кнопці) */
+@media (max-width: 1199.98px) {
+  .site-header__menu-btn { width: var(--size-touch-target); padding-inline: 0; justify-content: center; }
+  .site-header__menu-btn > span { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+/* малі ноути 1024–1199: ліва й права групи займають майже всю пілюлю, а логотипи при «центрі в'юпорта» наїжджали на кнопку мови (R7). Тепер, як на планшеті,
+   пара логотипів стоїть по центру ВІЛЬНОГО проміжку між групами (колонки auto | 1fr | auto), масштаб пари — токен --header-logo-k (tokens.css, блок АДАПТИВ) */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .site-header__logos { justify-self: center; }
+}
+/* вузький телефон (≤ 440): пілюля ширша на токен --header-bar-inset (tokens.css), масштаб логотипів (--header-logo-k) — з токенів: логотипи не налізають на меню/кабінет (R7) */
+@media (max-width: 440px) {
+  .site-header__bar { left: var(--header-bar-inset); right: var(--header-bar-inset); }
+}
+/* телефон: кошик — лише іконка (підпис лишається для читачів екрана) */
+@media (max-width: 767.98px) {
+  .site-header__side--end > .nav-cell--ghost .nav-cell__label { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .site-header__side--end > .nav-cell--ghost { width: var(--size-touch-target); padding-inline: 0; }
+}
+
+/* перемикач мови: touch-ціль ≥ 44 px (кнопка «UA»/«EN» — як «меню»: квадратна комірка) */
+@media (max-width: 1199.98px) {
+  .site-header__lang-btn { min-width: var(--size-touch-target); padding-inline: var(--space-5); justify-content: center; }
+}

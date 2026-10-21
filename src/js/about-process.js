@@ -14,9 +14,12 @@ if (root) {
   const run = document.querySelector('[data-process-run]');
   const stack = run?.parentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // адаптив (docs/responsive.md): pinned лише на ≥ 1024 і без reduced-motion; на планшетах/телефонах (дотик) — стрічка арок з нативною горизонтальною прокруткою (CSS responsive/about.css)
+  const small = window.matchMedia('(max-width: 1023.98px)');
+  let teardown = null;
 
-  if (reduce.matches) viewport.setAttribute('tabindex', '0'); // нативно прокручувана область має бути фокусною
-  else if (run && stack && list) {
+  const pinOn = () => {
+    if (!run || !stack || !list) return;
     const tokens = getComputedStyle(document.documentElement);
     const LERP = Math.min(Math.max(parseFloat(tokens.getPropertyValue('--parallax-lerp')) || 0.08, 0.01), 1);
     let travel = 0, cur = 0, target = 0, raf = 0, last = 0, set = NaN;
@@ -42,9 +45,22 @@ if (root) {
     write();
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onResize);
-    new ResizeObserver(onResize).observe(run);
     addEventListener('load', onResize);
-  }
+    const ro = new ResizeObserver(onResize); ro.observe(run);
+    teardown = () => {
+      removeEventListener('scroll', onScroll); removeEventListener('resize', onResize); removeEventListener('load', onResize); ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+      list.style.transform = '';
+    };
+  };
+  const applyMode = () => {
+    const noPin = reduce.matches || small.matches;
+    if (noPin) { teardown?.(); teardown = null; viewport.setAttribute('tabindex', '0'); } // нативно прокручувана область має бути фокусною
+    else { viewport.removeAttribute('tabindex'); if (!teardown) pinOn(); }
+  };
+  applyMode();
+  reduce.addEventListener('change', applyMode);
+  small.addEventListener('change', applyMode);
 
   // Lottie
   const slots = [...root.querySelectorAll('[data-lottie]')];
