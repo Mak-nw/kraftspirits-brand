@@ -73,7 +73,7 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
     if (!ctl) rep.add({ rule: 'R7', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'навмисне перекриття НЕ виявлено — перевірка не працює' });
   }
   rep.note(`${n} замірів (локалі ${locales.join('/')} × сторінок ${pages.length} × ширин ${widths.length})`);
-  if (table) { for (const [k, v] of [...minGap].filter(([k]) => /логотип/.test(k) && v < 60).sort()) console.log(k.padEnd(60), v); }
+  if (table) { for (const [k, v] of [...minGap].filter(([k, v]) => /логотип/.test(k) && v < 60).sort()) console.log(k.padEnd(60), v); }
   return rep;
 }
 if (import.meta.url === `file://${process.argv[1]}`) await runMain('header-overlap', { widths: R7_WIDTHS.join(','), scrollbar: 'none', locales: 'uk,en' }, (o) => runHeaderOverlap({ ...o, r7Widths: o.widths }, { control: o.control !== false, table: !!o.table }));
