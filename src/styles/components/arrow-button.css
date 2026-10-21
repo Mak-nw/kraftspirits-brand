@@ -19,10 +19,11 @@
 .arrow-btn--sm img { width: var(--size-arrow-btn-sm-icon); height: auto; transform: rotate(-90deg); }
 .arrow-btn--sm.arrow-btn--prev { transform: none; }
 .arrow-btn--sm.arrow-btn--prev img { transform: rotate(90deg); }
-/* --light (рішення замовника, питання 6: «замість синього заливку світлим, як в компоненті кнопки кольору»): заливка/рамка як у кнопки .btn--light (ті ж токени --btn-light-bg-*, --btn-light-border-*), шеврон chevron-down.svg темний (власний колір #223520 = --btn-light-text-default) без інверсії в усіх станах — стрілки слайдера головної на темних і світлих слайдах */
+/* --light (рішення замовника, питання 6: «замість синього заливку світлим, як в компоненті кнопки кольору»): заливка/рамка як у кнопки .btn--light (ті ж токени --btn-light-bg-*, --btn-light-border-*), шеврон chevron-down-bold.svg (жирніший варіант chevron-down.svg: лінія 1.5 із закругленими кінцями, той самий габарит 12.6×6.9) темний (власний колір #223520 = --btn-light-text-default) без інверсії в усіх станах; рамка — темно-зелена --btn-arrow-light-border-* товщиною --border-arrow-light (2 hairline, всередині box-sizing: 44×44 не змінюється) у всіх станах — ободок читається на світлих ділянках фото; стрілки слайдера головної на темних і світлих слайдах */
 .arrow-btn--light {
   --btn-bg: var(--btn-light-bg-default); --btn-bg-hover: var(--btn-light-bg-hover); --btn-bg-focus: var(--btn-light-bg-focus); --btn-bg-active: var(--btn-light-bg-active); --btn-bg-disabled: var(--btn-light-bg-disabled);
-  --btn-border: var(--btn-light-border-default); --btn-border-hover: var(--btn-light-border-hover); --btn-border-focus: var(--btn-light-border-focus); --btn-border-active: var(--btn-light-border-active); --btn-border-disabled: var(--btn-light-border-disabled);
+  --btn-border: var(--btn-arrow-light-border-default); --btn-border-hover: var(--btn-arrow-light-border-hover); --btn-border-focus: var(--btn-arrow-light-border-focus); --btn-border-active: var(--btn-arrow-light-border-active); --btn-border-disabled: var(--btn-arrow-light-border-disabled);
+  border-width: var(--border-arrow-light);
   --btn-icon-filter: var(--btn-arrow-icon-filter-default); --btn-icon-filter-hover: var(--btn-arrow-icon-filter-default); --btn-icon-filter-focus: var(--btn-arrow-icon-filter-default); --btn-icon-filter-active: var(--btn-arrow-icon-filter-default); --btn-icon-filter-disabled: var(--btn-arrow-icon-filter-default);
 }
 /* hover/focus: світла заливка, іконка (світла) інвертується в темну */

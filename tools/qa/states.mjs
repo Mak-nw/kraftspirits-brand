@@ -24,7 +24,7 @@ const FAMILIES = [
     trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'],
   })),
   { family: 'arrow-btn', variant: 'arrow', token: 'arrow', sel: '.arrow-btn:not(.arrow-btn--light)', props: { bg: { el: SELF, css: 'backgroundColor' }, border: { el: SELF, css: 'borderTopColor' }, 'icon-filter': { el: 'img', css: 'filter', raw: true } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'] },
-  { family: 'arrow-btn', variant: 'arrow-light', token: 'light', sel: '.arrow-btn--light', props: { bg: { el: SELF, css: 'backgroundColor' }, border: { el: SELF, css: 'borderTopColor' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'] }, // заливка/рамка = токени btn--light; шеврон темний без інверсії (фільтр none в усіх станах)
+  { family: 'arrow-btn', variant: 'arrow-light', token: 'light', sel: '.arrow-btn--light', props: { bg: { el: SELF, css: 'backgroundColor' }, border: { el: SELF, css: 'borderTopColor', token: 'arrow-light' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'] }, // заливка = токени btn--light, рамка = --btn-arrow-light-border-* (темно-зелена, 2 hairline, незмінна в станах); шеврон темний без інверсії (фільтр none в усіх станах)
   // степер кількості (cart: .quantity__btn «+»): власних токенів --btn-* немає, очікування — з базових токенів (--color-green/--color-beige, --btn-active-mix); перехід у всіх станах = --btn-transition-duration; disabled — нативний атрибут
   { family: 'quantity', variant: 'qty-btn', token: 'qty', sel: '.quantity__btn:last-of-type', props: { bg: { el: SELF, css: 'backgroundColor' }, text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'], disabledAttr: 'disabled', transAll: true,
     expRaw: (tk, state) => { const g = tk['--color-green']?.value, b = tk['--color-beige']?.value, mix = tk['--btn-active-mix']?.raw; return { default: { bg: 'transparent', text: g }, hover: { bg: g, text: b }, focus: { bg: g, text: b }, active: { bg: `color-mix(in srgb, ${g} ${mix}, rgb(0,0,0))`, text: b }, disabled: { bg: 'transparent', text: g } }[state]; } },
@@ -119,7 +119,7 @@ async function checkFamily(page, h, fam, tk, rep, where) {
   const sel = `.${fam.family === 'nav-link' ? 'nav-link' : fam.family}${fam.variant.match(/^(outline|fill|ghost)$/) && fam.family === 'nav-cell' ? `--${fam.variant}` : ''}`;
   const nm = await h.evaluate((el) => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim() ? `.${el.className.trim().split(/\s+/).slice(0, 3).join('.')}` : ''));
   const label = `${fam.family}:${fam.variant} (${nm})`;
-  const tokVal = (prop, state) => tk[`--btn-${fam.token}-${prop}-${state}`]?.value;
+  const tokVal = (prop, state) => tk[`--btn-${fam.props[prop]?.token || fam.token}-${prop}-${state}`]?.value; // props[p].token — власний префікс токена властивості (arrow-light: рамка)
   const mkExp = async (state) => {
     const exp = {};
     if (fam.expRaw) { const r = fam.expRaw(tk, state), ks = Object.keys(fam.props), n = await normColors(page, ks.map((k) => r[k])); ks.forEach((k, i) => { exp[k] = n[i]; }); return exp; }

@@ -393,6 +393,14 @@
   --btn-arrow-border-active:     var(--btn-arrow-border-hover);
   --btn-arrow-border-disabled:   var(--btn-arrow-border-default);
 
+  /* arrow-btn--light (слайдер головної): темна рамка по краю кола — ободок читається на світлих ділянках фото (рішення замовника: «жирніше + обводка кнопки»); заливка/hover/active — токени btn--light, рамка не міняється в станах */
+  --border-arrow-light:                calc(2 * var(--border-hairline));
+  --btn-arrow-light-border-default:    var(--btn-light-text-default);
+  --btn-arrow-light-border-hover:      var(--btn-arrow-light-border-default);
+  --btn-arrow-light-border-focus:      var(--btn-arrow-light-border-default);
+  --btn-arrow-light-border-active:     var(--btn-arrow-light-border-default);
+  --btn-arrow-light-border-disabled:   var(--btn-arrow-light-border-default);
+
   /* arrow-btn: іконка (img.filter) */
   --btn-arrow-icon-filter-default:     none;
   --btn-arrow-icon-filter-hover:       invert(1);
