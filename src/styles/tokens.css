@@ -1362,6 +1362,7 @@
     --space-tour-gap: var(--space-stack-gap);                  /* tours головної (і lp-стеки) < 1200 — той самий зазор */
     --offset-hero-logos-lift: calc(0 * var(--size-hero-logo-bs-h));  /* підйом групи лого головної від центру: 768–1199 — 0 (телефон нижче) */
     --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2 - var(--offset-hero-logos-lift)); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
+    --offset-lp-hero-bottom: max(var(--space-177), 30%);        /* hero усіх сторінок з блоком «заголовок + кнопка» (excursions, barrels, events, b2b, about + en) на <1200: блок піднято (коментар замовника 125371bc, «на всіх херо в адаптах піднімемо дів з заголовком вище»): низ блоку на 30% висоти hero від низу, не нижче колишнього відступу --space-177 (на планшеті 177u, на телефоні 100u). Низькі вікна (844×390, 568×320): hero = мін. висота 660u, блок лишається під шапкою (≥ 35 px запасу, виміряно). Головна (логотипи по центру) — --offset-hero-logos-top вище. ≥ 1200 лишається 177u */
     /* літерали з responsive/lp.css, about.css, pages.css (значення ті самі, винесено в токени) */
     --ratio-lp-split-media-h-tablet: 0.45;                     /* колода split (≤ 1023): висота медіа = 0.45 ширини сітки */
     --ratio-lp-split-media-h-phone: 0.6;                       /* те саме на телефоні */
