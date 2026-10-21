@@ -138,6 +138,8 @@
 .arrow-btn.is-focus { background-color: var(--btn-bg-focus); border-color: var(--btn-border-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }
 .arrow-btn.is-focus img { filter: var(--btn-icon-filter-focus); }
 .arrow-btn.is-active { background-color: var(--btn-bg-active); border-color: var(--btn-border-active); }
+.quantity__btn:is(.is-hover, .is-focus) { background: var(--qty-bg-hover); color: var(--qty-fg-hover); }
+.quantity__btn.is-active { background: var(--qty-bg-active); color: var(--qty-fg-hover); }
 .arrow-btn.is-active img { filter: var(--btn-icon-filter-active); }
 .chip.is-hover { color: var(--btn-text-hover); }
 .chip.is-focus { color: var(--btn-text-focus); outline: var(--btn-focus-ring-width) solid var(--btn-focus-ring-color-auto); outline-offset: var(--btn-focus-ring-offset); }

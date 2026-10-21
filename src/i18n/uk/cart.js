@@ -27,7 +27,7 @@ export default {
   'cart.wc-tpl-row.product-quantity.data-title': 'Кількість',
   'cart.cart-qty.label': 'Кількість',
   'cart.wc-tpl-row.product-subtotal.data-title': 'Разом',
-  'cart.qty.arrow-btn.label': 'Зменшити кількість',
-  'cart.qty.arrow-btn.label-2': 'Збільшити кількість',
+  'cart.qty.minus': 'Зменшити кількість',
+  'cart.qty.plus': 'Збільшити кількість',
   'cart.qty.label': 'Кількість',
 };

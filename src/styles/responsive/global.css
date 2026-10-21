@@ -21,7 +21,6 @@
   .site-header__logo { height: var(--size-touch-target); }
   .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }
   .site-footer__list { gap: 0; }
-  .woocommerce .quantity .arrow-btn { flex: none; }
   .contacts-item__value { min-height: var(--size-touch-target); display: flex; align-items: center; }
 }
 

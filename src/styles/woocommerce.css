@@ -51,14 +51,18 @@ body.page-account .wc-page:has([data-wc-layout="guest"]:not([hidden])) > .woocom
 .woocommerce a.remove { --wc-remove-pad-x: max(var(--space-5), calc(var(--size-touch-target) - var(--size-wc-remove-glyph) - var(--space-15))); --wc-remove-pad-y: max(var(--space-5), calc((var(--size-touch-target) - 1lh) / 2)); display: inline-block; padding: var(--wc-remove-pad-y) var(--space-15) var(--wc-remove-pad-y) var(--wc-remove-pad-x); margin: calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--space-15)) calc(-1 * var(--wc-remove-pad-y)) calc(-1 * var(--wc-remove-pad-x)); transition: color var(--duration-fast) var(--ease-out); } /* «×»: роль t-lead + поле під палець: область дотику ≥ --size-touch-target (44px) по обох осях; поле компенсоване від'ємним відступом — знак і розкладка колонки ті самі; праворуч поле = --space-15 (≤ порожнього padding комірки, до фото не заходить), решту дає ліве поле (порожня ділянка панелі) */
 @media (hover: hover) { .woocommerce a.remove:hover { color: var(--color-teal); } }
 
-/* кількість: стрілки = .arrow-btn.arrow-btn--sm (проста мала кругла кнопка з однією hairline-обводкою, шеврон chevron-down.svg; на світлій панелі кольори словника інвертовано — так само, як контактна панель перемикає hover .btn--outline у contacts.css); поле — .field__control між ними */
-.quantity { display: flex; align-items: center; gap: var(--space-5); }
-.quantity .qty { width: var(--size-wc-qty-w); text-align: center; appearance: textfield; -moz-appearance: textfield; }
+/* кількість (рішення замовника, варіант C, коментар 88e2ab42): один прямокутний контур (--radius-btn, hairline), всередині [ − | 1 | + ] з вертикальними hairline-роздільниками, без кіл; кнопки 44×44 (--size-touch-target), поле вужче. Кольори — словник кнопок: hover/focus = заливка кольором тексту й інверсія знака (як .btn--outline), active = hover, затемнений на (100% − --btn-active-mix), disabled («−» на 1, «+» на 99) = --btn-disabled-opacity. Знаки «−»/«+» — текстова роль .t-chip (currentColor). */
+.quantity { --qty-fg: var(--color-green); --qty-bg-hover: var(--color-green); --qty-fg-hover: var(--color-beige); --qty-bg-active: color-mix(in srgb, var(--qty-bg-hover) var(--btn-active-mix), var(--color-black)); display: flex; width: fit-content; align-items: stretch; color: var(--qty-fg); border: var(--border-hairline) solid var(--qty-fg); border-radius: var(--radius-btn); }
+.quantity .qty { box-sizing: border-box; width: var(--size-wc-qty-w); min-height: var(--size-touch-target); margin: 0; padding: 0; text-align: center; color: var(--qty-fg); background: transparent; border: 0; border-inline: var(--border-hairline) solid var(--qty-fg); border-radius: 0; appearance: textfield; -moz-appearance: textfield; }
+.quantity .qty:is(:hover, :focus-visible) { background: transparent; border-color: var(--qty-fg); }
 .quantity .qty::-webkit-inner-spin-button, .quantity .qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-.woocommerce .quantity .arrow-btn {
-  --btn-bg: var(--btn-outline-bg-default); --btn-bg-hover: var(--btn-green-bg-default); --btn-bg-focus: var(--btn-green-bg-default); --btn-bg-active: var(--btn-green-bg-active); --btn-bg-disabled: var(--btn-outline-bg-default);
-  --btn-border: var(--btn-outline-border-default); --btn-border-hover: var(--btn-green-border-default); --btn-border-focus: var(--btn-green-border-default); --btn-border-active: var(--btn-green-border-default); --btn-border-disabled: var(--btn-outline-border-default);
-}
+.quantity__btn { all: unset; box-sizing: border-box; flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--size-touch-target); height: var(--size-touch-target); cursor: pointer; color: var(--qty-fg); background: transparent; transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
+.quantity__btn:first-of-type { border-start-start-radius: calc(var(--radius-btn) - var(--border-hairline)); border-end-start-radius: calc(var(--radius-btn) - var(--border-hairline)); }
+.quantity__btn:last-of-type { border-start-end-radius: calc(var(--radius-btn) - var(--border-hairline)); border-end-end-radius: calc(var(--radius-btn) - var(--border-hairline)); }
+.quantity__btn:focus-visible { background: var(--qty-bg-hover); color: var(--qty-fg-hover); outline: var(--focus-ring-width) solid var(--qty-fg); outline-offset: var(--focus-ring-offset); } /* focus = hover + кільце кольору тексту (D6) */
+@media (hover: hover) { .quantity__btn:hover { background: var(--qty-bg-hover); color: var(--qty-fg-hover); } }
+.quantity__btn:active { background: var(--qty-bg-active); color: var(--qty-fg-hover); }
+.quantity__btn:disabled { opacity: var(--btn-disabled-opacity); cursor: var(--btn-disabled-cursor); pointer-events: none; background: transparent; color: var(--qty-fg); }
 
 
 

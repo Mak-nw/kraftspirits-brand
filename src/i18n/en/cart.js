@@ -28,6 +28,6 @@ export default {
   'cart.cart-qty.label': 'Quantity',
   'cart.wc-tpl-row.product-subtotal.data-title': 'Total',
   'cart.qty.label': 'Quantity',
-  'cart.qty.arrow-btn.label': 'Decrease quantity',
-  'cart.qty.arrow-btn.label-2': 'Increase quantity',
+  'cart.qty.minus': 'Decrease quantity',
+  'cart.qty.plus': 'Increase quantity',
 };

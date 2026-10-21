@@ -53,6 +53,7 @@ try {
         tbody.append(tr);
       });
       renderTotals(lines);
+      syncAllQty();
     }
     if (!forceEmpty) renderCartCount();
   }
@@ -86,18 +87,27 @@ try {
     });
   }
 
+  // «−» вимикається на мінімумі (1), «+» — на максимумі (99)
+  const syncQtyButtons = (box) => {
+    const input = qs('input.qty', box), v = parseInt(input.value, 10) || 1;
+    qs('[data-wc-qty-step="-1"]', box).disabled = v <= 1;
+    qs('[data-wc-qty-step="1"]', box).disabled = v >= 99;
+  };
+  const syncAllQty = () => qsa('.quantity', form).forEach(syncQtyButtons);
+
   form.addEventListener('click', (e) => {
     const step = e.target.closest('[data-wc-qty-step]');
     if (step) {
       const input = qs('input.qty', step.closest('.quantity'));
       input.value = String(Math.max(1, Math.min(99, (parseInt(input.value, 10) || 1) + Number(step.dataset.wcQtyStep))));
       commitQty(step.closest('tr'));
+      syncQtyButtons(step.closest('.quantity'));
       return;
     }
     const rm = e.target.closest('[data-wc-remove]');
     if (rm) { e.preventDefault(); removeLine(rm.closest('tr')); }
   });
-  form.addEventListener('change', (e) => { if (e.target.matches('input.qty')) { const input = e.target; input.value = String(Math.max(1, Math.min(99, parseInt(input.value, 10) || 1))); commitQty(input.closest('tr')); } });
+  form.addEventListener('change', (e) => { if (e.target.matches('input.qty')) { const input = e.target; input.value = String(Math.max(1, Math.min(99, parseInt(input.value, 10) || 1))); commitQty(input.closest('tr')); syncQtyButtons(input.closest('.quantity')); } });
   form.addEventListener('submit', (e) => e.preventDefault());
 
   // початковий стан
