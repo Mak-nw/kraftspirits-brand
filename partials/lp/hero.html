@@ -4,7 +4,7 @@
         {{#panel}}<div class="contacts-panel hero__panel" data-reveal="rise">{{/panel}}
         <h1 class="hero__title {{titleRole}} heading-center{{titleMod}}" data-reveal="rise">{{title}}</h1>
         {{#lead}}<p class="hero__subtitle t-desc" data-reveal="rise">{{lead}}</p>{{/lead}}
-        <!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" reveal="rise"-->
+        {{#ctaText}}<!--@include components/btn variant="btn--{{tone}}" href="{{ctaHref}}" text="{{ctaText}}" reveal="rise"-->{{/ctaText}}
         {{#panel}}</div>{{/panel}}
       </div>
     </section>

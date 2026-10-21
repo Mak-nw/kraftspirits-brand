@@ -1,16 +1,10 @@
 /* АДАПТИВ: коктейлі, кошик, оформлення, кабінет, мапа, вікові ворота, лайтбокс. Лише поза діапазоном 1200–1920. */
 @media (max-width: 1023.98px) {
   /* ---- коктейлі: фото, панель з рецептом і картка товару — одна під одною ---- */
-  .cocktails { width: var(--grid-w); }
-  .cocktails__intro { grid-template-columns: minmax(0, 1fr); }
-  .cocktails__intro > * { grid-column: 1 / -1; }
-  .cocktail { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-cocktail-plate-gap); }
-  .cocktail__media { order: 1; aspect-ratio: var(--ratio-cocktail-media); }
-  .cocktail__body { order: 2; min-height: 0; }
-  .cocktail__item { order: 3; align-self: start; justify-self: center; width: var(--size-card-cat2-w); }
-  .cocktail--tall .cocktail__body { min-height: 0; }
-  .cocktail__item .product-card--catalog { height: var(--size-card-cat2-h); }
-  .cocktail__item .product-card--catalog::before { height: var(--size-arch-h); }
+  .cocktails__list { width: var(--grid-w); }
+  .tour-card--cocktail { min-height: 0; }
+  .tour-card--cocktail .tour-card__text { flex-direction: column; align-items: stretch; gap: var(--space-40); }
+  .tour-card--cocktail .tour-card__aside { align-self: center; align-items: center; text-align: center; } /* картка товару — внизу блоку по центру, оригінального розміру каталогу на цій ширині */
   .tabs__list { flex-wrap: wrap; }
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
   .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }

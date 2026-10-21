@@ -338,8 +338,8 @@ export async function runDynamic(opts, allow, rep) {
           d18.push({ label: label0(st), spec: sp, width: combo.width, data: await collectStable(pg, COLLECT_D18, d18cfg, sigD18) });
           await pg.close().catch(() => {});
         }
-        // позитивні контролі: product і cocktails (режим 5u: зазор 40u МАЄ дати порушення) і about (режим 40u: зазор 5u МАЄ дати порушення)
-        for (const nm of ['product?id=gin-yasnyi', 'cocktails', 'cart?demo=1', 'about']) {
+        // позитивні контролі: product (режим 5u: зазор 40u МАЄ дати порушення; cocktails — стек склеєних tour-card, горизонтальних пар великих блоків немає) і about (режим 40u: зазор 5u МАЄ дати порушення)
+        for (const nm of ['product?id=gin-yasnyi', 'cart?demo=1', 'about']) {
           const sp0 = pageSpec(nm); const mode = d18Mode(sp0.name, d18cfg);
           const cp = await openPage(L.browser, pageUrl(opts.url, sp0, 'static'), { width: combo.width, height: opts.height, dpr: combo.dpr, cache: true, settle: false });
           await waitStable(cp); await sleep(300); await waitLayoutStable(cp);
@@ -506,7 +506,7 @@ export async function runDynamic(opts, allow, rep) {
     // Рукописні сторінки без файлу даних lp: дозвіл hero.fade зафіксовано ТУТ, вузько (одна сторінка, один токен). about.html («Про дім») — вимога замовника:
     // «на херо … фотка [будівлі]. Поверх неї градієнт кольором зеленого фону, знизу 100, зверху 0 прозорості» (сторінку перероблено з шаблону lp на рукописну, src/data/about.js видалено).
     // Перевірка градієнта та сама (рівно один linear-gradient(to top, <токен --color-green> 0%, transparent 100%) на .hero::after, без filter/mask/тіні/opacity); інший тон чи інша сторінка — порушення.
-    const HAND_FADE = { about: 'green' }; // about: нижній градієнт hero.fade + верхній hero--fade-top (hero-d19.mjs; рішення замовника «градієнт зверху»)
+    const HAND_FADE = { about: 'green', cocktails: 'green' }; // about: нижній градієнт hero.fade + верхній hero--fade-top (hero-d19.mjs; рішення замовника «градієнт зверху»)
     let off = 0, fadeSeen = 0;
     const dataFade = {};   // hero.fade із даних сторінки (єдине джерело дозволу градієнта D19); сторінки без файлу даних (index) — без fade
     const dataFadeById = {};   // сторінка з вкладками (page.tabs, напр. b2b): кілька hero — fade звіряється з hero за його id

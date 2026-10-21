@@ -12,20 +12,16 @@
   <script type="module" src="/src/js/viewport.js"></script>
   <script type="module" src="/src/js/header-menu.js"></script>
 </head>
-<body class="page-cocktails">
+<body class="page-cocktails theme-excursions">
   <!--@include body-vw-->
   <!--@include components/age-gate-->
   <!--@include header-->
   <main class="cocktails">
-    <header class="cocktails__intro" data-reveal="rise">
-      <h1 class="cocktails__h1 t-hero heading-center">%t.cocktails.cocktails-h1%</h1>
-      <p class="cocktails__lead t-desc">%t.cocktails.cocktails-lead%</p>
-    </header>
+    <!--@include lp/hero id="cocktails-hero" mods=" hero--fade hero--fade-green" img="/assets/img/cocktails-hero.webp" alt="%t.cocktails.hero.alt%" title="%t.cocktails.hero.title%" titleRole="t-h2" titleMod=" heading-wide"-->
     <div class="cocktails__list">
       <!--@each cocktails components/cocktail-->
     </div>
   </main>
-  <!--@include components/lightbox-->
   <!--@include footer-->
   <script type="module" src="/src/js/cocktails.js"></script>
 </body>

@@ -1,36 +1,34 @@
-<article class="cocktail{{mods}}" id="{{slug}}" aria-labelledby="{{slug}}-title" data-cocktail{{#draft}} data-draft{{/draft}}>
-  <div class="cocktail__body contacts-panel">
-    <div class="cocktail__head" data-reveal="rise">
-      <h2 class="cocktail__title t-hero" id="{{slug}}-title">{{title}}</h2>
-      {{#original}}<p class="cocktail__original t-desc" lang="en">{{original}}</p>{{/original}}
-      <p class="cocktail__desc t-text">{{description}}</p>
-    </div>
-    <div class="tabs cocktail__tabs" data-tabs data-reveal="rise">
-      <div class="tabs__list t-kicker" role="tablist" aria-label="%t.cocktails.block.tabs-label%">
-        <button class="tabs__tab product-volume is-active" type="button" role="tab" id="{{slug}}-tab-ingredients" aria-controls="{{slug}}-panel-ingredients" aria-selected="true">%t.cocktails.block.tab-ingredients%</button>
-        <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-steps" aria-controls="{{slug}}-panel-steps" aria-selected="false" tabindex="-1">%t.cocktails.block.tab-steps%</button>
-        <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-serve" aria-controls="{{slug}}-panel-serve" aria-selected="false" tabindex="-1">%t.cocktails.block.tab-serve%</button>
+<article class="tour-card tour-card--photo-first tour-card--cocktail" id="{{slug}}" aria-labelledby="{{slug}}-title" data-cocktail{{#draft}} data-draft{{/draft}}>
+  <div class="tour-card__text">
+    <div class="tour-card__main">
+      <div class="tour-card__head">
+        {{#original}}<p class="t-kicker" lang="en" data-reveal="rise">{{original}}</p>{{/original}}
+        <h2 class="t-hero" id="{{slug}}-title" data-reveal="rise">{{title}}</h2>
+        <p class="tour-card__body t-text" data-reveal="rise">{{description}}</p>
       </div>
-      <div class="tabs__panels">
-        <div class="tabs__panel is-active" role="tabpanel" id="{{slug}}-panel-ingredients" aria-labelledby="{{slug}}-tab-ingredients" tabindex="0">
-          <dl class="product-specs cocktail__specs t-text"><!--@each ingredients components/cocktail-ingredient--></dl>
+      <div class="tabs" data-tabs data-reveal="rise">
+        <div class="tabs__list t-kicker" role="tablist" aria-label="%t.cocktails.block.tabs-label%">
+          <button class="tabs__tab product-volume is-active" type="button" role="tab" id="{{slug}}-tab-ingredients" aria-controls="{{slug}}-panel-ingredients" aria-selected="true">%t.cocktails.block.tab-ingredients%</button>
+          <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-steps" aria-controls="{{slug}}-panel-steps" aria-selected="false" tabindex="-1">%t.cocktails.block.tab-steps%</button>
+          <button class="tabs__tab product-volume" type="button" role="tab" id="{{slug}}-tab-serve" aria-controls="{{slug}}-panel-serve" aria-selected="false" tabindex="-1">%t.cocktails.block.tab-serve%</button>
         </div>
-        <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-steps" aria-labelledby="{{slug}}-tab-steps" tabindex="0">
-          <ol class="cocktail__steps t-text"><!--@each steps components/cocktail-step--></ol>
-        </div>
-        <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-serve" aria-labelledby="{{slug}}-tab-serve" tabindex="0">
-          <dl class="product-specs cocktail__specs t-text"><dt>%t.cocktails.block.serve-glass%</dt><dd>{{glass}}</dd><dt>%t.cocktails.block.serve-garnish%</dt><dd>{{garnish}}</dd></dl>
+        <div class="tabs__panels">
+          <div class="tabs__panel is-active" role="tabpanel" id="{{slug}}-panel-ingredients" aria-labelledby="{{slug}}-tab-ingredients" tabindex="0">
+            <dl class="product-specs cocktail__specs t-text"><!--@each ingredients components/cocktail-ingredient--></dl>
+          </div>
+          <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-steps" aria-labelledby="{{slug}}-tab-steps" tabindex="0">
+            <ol class="cocktail__steps t-text"><!--@each steps components/cocktail-step--></ol>
+          </div>
+          <div class="tabs__panel" role="tabpanel" id="{{slug}}-panel-serve" aria-labelledby="{{slug}}-tab-serve" tabindex="0">
+            <dl class="product-specs cocktail__specs t-text"><dt>%t.cocktails.block.serve-glass%</dt><dd>{{glass}}</dd><dt>%t.cocktails.block.serve-garnish%</dt><dd>{{garnish}}</dd></dl>
+          </div>
         </div>
       </div>
     </div>
+    {{#hasProduct}}<div class="tour-card__aside" data-name="{{productName}}" data-slot="%t.cocktails.block.slot-product%">
+      <p class="t-kicker" data-reveal="rise">%t.cocktails.block.made-from%</p>
+      <!--@include components/product-card mod=" product-card--catalog" slug="{{productSlug}}" name="{{productNameHtml}}" price="{{productPrice}}" image="{{productImage}}" brand="{{productBrand}}"-->
+    </div>{{/hasProduct}}
   </div>
-  <div class="cocktail__media" data-gallery>
-    <div class="product-stage cocktail__stage" data-stage data-reveal="fade" data-slot="%t.cocktails.block.slot-photo%">
-      <img class="product-stage__img" src="{{photoSrc}}" alt="{{photoAlt}}" loading="{{loading}}" fetchpriority="{{fetchpriority}}" decoding="async">
-    </div>
-    <button class="cocktail__zoom" type="button" data-gallery-open aria-label="%t.cocktails.block.zoom%"></button>
-  </div>
-  {{#hasProduct}}<div class="cocktail__item" data-name="{{productName}}" data-slot="%t.cocktails.block.slot-product%">
-    <!--@include components/product-card mod=" product-card--catalog" slug="{{productSlug}}" name="{{productNameHtml}}" price="{{productPrice}}" image="{{productImage}}" brand="{{productBrand}}"-->
-  </div>{{/hasProduct}}
+  <div class="tour-card__photo" data-parallax data-parallax-bleed data-slot="%t.cocktails.block.slot-photo%"><img data-reveal="fade" src="{{photoSrc}}" alt="{{photoAlt}}" loading="{{loading}}" fetchpriority="{{fetchpriority}}" decoding="async"></div>
 </article>

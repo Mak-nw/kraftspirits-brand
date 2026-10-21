@@ -1,46 +1,18 @@
-/* Сторінка «Коктейлі» (cocktails.html). Блок — partials/components/cocktail.html, дані — src/data/cocktails.js (опис — design-system.html#cocktails).
-   Тло сторінки — --color-green з візерунком ромбів DS (catalog-pattern-diamond.svg, тон-в-тон, плитка --size-pattern-catalog-tile; те саме, що на каталозі/товарі/контактах; коментар замовника «на фон сторінки коктейлів фірмовий патерн»); світла панель DS — лише під текстовою частиною блоку. Блоки однакові: фото 4 / текст 5 / картка товару (колонки),
-   висота ряду = найвищий із трьох (фото 4:5), між блоками — відступ (жодних нових ліній/рамок/маркерів: лише елементи дизайн-системи). Перевикористано: фото-сцена й мініатюри сторінки товару (.product-stage, .product-thumbs),
-   перемикач .product-volume (таби), .product-specs (інгредієнти, подача), картка каталогу (partial product-card + .product-card--catalog без змін). */
-.cocktails { width: var(--grid-w); margin-inline: auto; padding: var(--space-cocktails-top) 0 var(--space-cocktails-bottom); color: var(--color-beige); }
-/* CLS: partials/body-vw.html міряє ширину html на самому початку <body>, коли вмісту ще немає. Короткі сторінки Chrome малює після повного розбору (до того
-   viewport.js уточнює --vw), а довгий HTML коктейлів (≈110 КБ) малює частинами — з --vw без смуги прокрутки, і поява смуги зсувала макет (CLS ≈0.01 на 1200).
-   body одразу на 1px вищий за вікно: класична смуга є вже в момент заміру (у режимі без смуги — нічого не змінюється); на розкладку не впливає (сторінка й так ≈10 вікон) */
-.page-cocktails { min-height: calc(100svh + var(--border-hairline)); background: url('/assets/img/catalog-pattern-diamond.svg') 0 0 / var(--size-pattern-catalog-tile) var(--size-pattern-catalog-tile) repeat, var(--color-green); }
-.page-cocktails .site-header { background: transparent; } /* плитка від y=0 через зону header, як на каталозі/товарі */
-
-/* вступ: заголовок і рядок по центру екрана (коментар замовника 23941060) — 6 середніх колонок сітки (4–9), текст центрований; між вступом і блоками та між блоками — лише відступ */
-.cocktails__intro { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); }
-.cocktails__intro { row-gap: var(--space-30); text-align: center; }
-.cocktails__intro > * { grid-column: var(--col-cocktails-intro); }
-.cocktails__lead { text-wrap: balance; }
-.cocktails__list { display: grid; row-gap: var(--space-cocktail-block-gap); margin-top: var(--space-cocktail-block-gap); }
-
-/* блок коктейлю на зеленому тлі сторінки (коментар замовника 3a227bc8: світла заливка лише під ТЕКСТОВОЮ частиною), порядок зліва направо (bb972de6): ТЕКСТ — ІСНУЮЧА панель DS .contacts-panel
-   (beige, рамка кольору панелі, --radius-panel, поле --space-contacts-pad), СЛАЙДЕР-галерея (ширина 4 колонок сітки каталогу, висота = текстова панель .cocktail__body (stretch), кадр cover по центру; 976a748f) і картка каталогу (426.25u) стоять прямо на зеленому.
-   Між трьома плашками ОДНАКОВИЙ горизонтальний проміжок --space-cocktail-plate-gap = 5u (--grid-gap-panels; виняток замовника 19.10.2026 для коктейлів); панель забирає весь простір, що лишився (≈574u; горизонтальне поле панелі --space-cocktail-pad-x = 50u).
-   Усі три притиснуті до верху й не розтягуються (897ea0d1): панель — за вмістом (висота табів = найвища панель), слайдер і панель — однієї висоти (stretch), картка — своєї висоти до верху; ряд = найвищий із трьох (довша панель з даних збільшує ряд). Порядок у DOM = порядок Tab.
-   Попередній варіант (весь блок на одній панелі) — коміт 40d8ee3. */
-.cocktail { display: grid; grid-template-columns: var(--grid-cocktail-block); column-gap: var(--space-cocktail-plate-gap); row-gap: 0; align-items: start; }
-.cocktail__media { --accent: var(--color-green); position: relative; align-self: stretch; } /* слайдер = висота текстової панелі (нотатка замовника 976a748f «як дів боді»); кадр cover */ /* --accent — рамка вибраної мініатюри (.product-thumb[aria-pressed], як на товарі); лише в галереї, щоб картка каталогу не успадковувала */
-.cocktail__zoom { position: absolute; inset: 0; border-radius: var(--radius-product-frame); cursor: zoom-in; }
-.cocktail__zoom:focus-visible { outline-color: var(--color-beige); } /* кільце — поза фото, на зеленому тлі: зелене кільце (колір тла) не видно (D6) */
-/* панель: висота за вмістом (скинуто мін. висоту .contacts-panel), проміжок flex-колонки скинуто; ширина = весь простір, що лишився від слайдера й картки (--grid-cocktail-block), текст — з лівого краю панелі */
-.cocktail__body { padding-inline: var(--space-cocktail-pad-x); min-height: var(--size-cocktail-h); justify-content: space-between; gap: 0; min-width: 0; } /* мін. висота = ряд (картка/слайдер); верхня група (заголовок, назва, опис) — до верху, таби + список — до низу, вільне місце між ними (5eafdcb5); вищий вміст збільшує панель */
-.cocktail--tall .cocktail__body { min-height: var(--size-cocktail-h-tall); } /* вищий блок за даними (tall: true): панель, слайдер і картка — одна висота ряду; без обрізання вмісту */
-.cocktail__title { margin-top: var(--shift-cocktail-title-cap-top); text-wrap: balance; } /* оптика: верх чорнила капітелі = внутрішній верх панелі (як --shift-barrels-cap-top) */
-.cocktail__tabs { margin-top: var(--space-50); } /* таби одразу під описом — щільно */
-.cocktail__original { margin-top: var(--space-cocktail-head-gap); color: var(--color-green); }
-.cocktail__desc { margin-top: var(--space-cocktail-head-gap); text-wrap: pretty; } /* на всю ширину тіла (5 колонок) */
-.cocktail__item { display: grid; align-content: start; min-width: 0; } /* картка каталогу ДОСЛІВНО (ширина 426.25u = 3 колонки, висота — її токен); арка й кільце фокуса — як у каталозі (на зеленому тлі), перевизначень немає */
-/* картка каталогу в блоці розтягується на висоту ряду (верх і низ = панель і слайдер; нотатка замовника «ітем справа» ): параметр існуючої .product-card--catalog лише на цій сторінці. Ширина 348.55u (як у каталозі), арка (маска з трьох шарів product-card-arch-top/mid/bottom.svg) подовжується
-   на ту саму різницю висоти (прямі сторони не змінюються, дуга й нижня лінія не розтягуються), пляшка лишається того ж розміру по центру зони фото, назва й ціна притиснуті до низу */
-.cocktail__item { align-self: stretch; align-content: stretch; }
-.cocktail__item .product-card--catalog { height: 100%; }
-.cocktail__item .product-card--catalog::before { height: var(--size-cocktail-arch-h); }
-/* арка (маска з трьох шарів, components/product-card-catalog.css) на будь-яку висоту ряду: верх (дуга) і низ (нижня лінія) не розтягуються, розтягується лише середина з бічними лініями — нижня лінія не товщає (вищий блок tall 658u і вкладка «Приготування» у вузькій панелі) */
-.cocktail__item .product-card--catalog .product-card__media { display: flex; align-items: center; }
-.cocktail__item .product-card--catalog .product-card__media img { flex: none; height: var(--size-cocktail-card-photo-h); }
+/* Сторінка «Коктейлі» (cocktails.html). Макет замовника (coctails.pdf, кадри 1–2): hero + стек блоків. Блок — partials/components/cocktail.html, дані — src/data/cocktails.js (опис — design-system.html#cocktails).
+   ПЕРЕВИКОРИСТАНО БЕЗ ЗМІН: hero шаблону lp (partials/lp/hero.html, .hero--lp.hero--fade-green, висота в'юпорта, шапка поверх); блок = панель .tour-card.tour-card--photo-first з головної («Побачте дистиляцію на власні очі» / «Бочка, що дозріває для вас»: бежева колонка з ромбами + фото 4 колонки + ½ зазору,
+   радіус, рамка 5u); .tabs + .product-volume (таби зі сторінки товару), .product-specs-рядки з hairline, картка каталогу (.product-card--catalog у оригінальному розмірі: ширина --size-card-cat2-w, висота --size-card-cat2-h — не масштабується, арка без перевизначень).
+   Параметр tour-card--cocktail лише розкладає вміст текстової колонки: ліворуч (заголовок, опис, таби), праворуч «Створено з» + картка; висота — за вмістом, мін. = висота панелі tour-card. Колір тексту й шва — --color-green (макет). Нових елементів/ліній/тіней немає. */
+.page-cocktails .site-header { --size-header-zone-h: 0px; } /* як .page-home і lp: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
+.page-cocktails { background: var(--color-green); }
+.cocktails__list { display: flex; flex-direction: column; gap: var(--space-stack-gap); width: var(--grid-w); margin-inline: auto; padding-block: var(--space-cocktail-block-gap); }
+.tour-card--cocktail { width: 100%; height: auto; min-height: var(--size-tour-card-h); color: var(--color-green); }
+.tour-card--cocktail .tour-card__photo { border-color: var(--color-green); }
+.tour-card--cocktail .tour-card__text { flex-direction: row; align-items: stretch; gap: var(--grid-gap); padding: var(--space-cocktail-pad-x); } /* поле панелі = поле панелі контактів 50u; між колонками — зазор сітки */
+.tour-card--cocktail .tour-card__main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-50); } /* верх: заголовок + опис; низ: таби + рядки */
+.tour-card--cocktail .tour-card__head { width: 100%; }
+.tour-card--cocktail .tour-card__body { width: 100%; text-wrap: pretty; }
+.tour-card__aside .product-card--catalog:focus-visible { outline-color: var(--color-green); } /* кільце фокуса — на бежевій панелі (у каталозі, на зеленому тлі, воно beige): параметр кольору, не новий стиль */
+.tour-card__aside { flex: none; width: var(--size-card-cat2-w); display: flex; flex-direction: column; gap: var(--space-30); } /* «Створено з»: підпис (рядок kicker, як над заголовком) і картка каталогу ДОСЛІВНО: верх картки = верх заголовка */
 
 /* таби (компонент .tabs: розмітка WAI-ARIA, логіка src/js/tabs.js); вигляд вкладки = перемикач об'єму товару (.product-volume) */
 /* таби згруповані по лівому краю панелі, вертикальний центр; проміжок — один токен --space-cocktail-tabs-gap (коментар 580810af) */

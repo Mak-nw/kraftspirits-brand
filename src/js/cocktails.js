@@ -1,23 +1,12 @@
 // Сторінка «Коктейлі» (cocktails.html). Розмітку будує vite.config.js із src/data/cocktails.js; тут лише поведінка:
-// клік по фото → повноекранний перегляд (один кадр, слайдера нема), таби, ?slots=on.
-import { createLightbox } from './lightbox.js';
+// таби рецепта, назва товару в картці як у каталозі, ?slots=on, reveal і паралакс (hero, фото блоків — спільні модулі сайту).
 import { initTabs } from './tabs.js';
 
-const lightbox = createLightbox(document.querySelector('[data-lightbox]'));
-
 document.querySelectorAll('[data-cocktail]').forEach((block) => {
-  // один кадр коктейлю: клік по фото → повноекранний перегляд
-  const gallery = block.querySelector('[data-gallery]');
-  const first = gallery.querySelector('.product-stage__img');
-  const photos = [{ src: first.getAttribute('src'), alt: first.alt }];
-  const zoom = gallery.querySelector('[data-gallery-open]');
-  zoom.addEventListener('click', () => lightbox?.open(photos, 0, { from: zoom }));
-
-  // таби
   block.querySelectorAll('[data-tabs]').forEach(initTabs);
 
   // картка товару — як у каталозі: catalog.js ставить alt = p.name (назва з products.js, а не текст h3 з <br>)
-  const item = block.querySelector('.cocktail__item');
+  const item = block.querySelector('.tour-card__aside');
   const img = item?.querySelector('.product-card__media img');
   if (img) img.alt = item.dataset.name;
 });
@@ -37,3 +26,4 @@ if (/[?&]slots=on/.test(location.search)) {
 }
 
 await import('./reveal.js');
+await import('./parallax.js');
