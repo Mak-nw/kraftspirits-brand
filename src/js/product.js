@@ -40,6 +40,24 @@ const labelled = (label, text) => {
   return p;
 };
 
+// вміст власного таба: абзаци (text), список (items), абзаци після списку (note), кнопки-посилання (links: той самий .btn--light, що й на інших сторінках)
+function customTabNodes(tab) {
+  const nodes = (tab.text || []).map((s) => el('p', '', s));
+  if (tab.items?.length) {
+    const ul = el('ul');
+    tab.items.forEach((s) => ul.append(el('li', '', s)));
+    nodes.push(ul);
+  }
+  (tab.note || []).forEach((s) => nodes.push(el('p', '', s)));
+  (tab.links || []).forEach((l) => {
+    const a = el('a', 'btn btn--light');
+    a.href = l.href;
+    a.append(el('span', 'btn__inner t-btn', l.label));
+    nodes.push(a);
+  });
+  return nodes;
+}
+
 // ---- тексти шести акордеонів: повні (3 позиції) або з products.js; порожній акордеон не показуємо ----
 function buildSections(p) {
   const txt = PRODUCT_TEXTS[p.slug];
@@ -49,9 +67,9 @@ function buildSections(p) {
   const sensory = [];
   const features = [];
   if (txt) {
-    about.push(...[txt.lead, ...txt.about].filter(Boolean).map((s) => { const n = el('p'); n.textContent = s; return n; }));
-    txt.sensory.forEach(([k, v]) => sensory.push(labelled(k, v)));
-    txt.features.forEach((f) => { const li = el('li'); li.textContent = f; features.push(li); });
+    about.push(...[txt.lead, ...(txt.about || [])].filter(Boolean).map((s) => { const n = el('p'); n.textContent = s; return n; }));
+    (txt.sensory || []).forEach(([k, v]) => sensory.push(labelled(k, v)));
+    (txt.features || []).forEach((f) => { const li = el('li'); li.textContent = f; features.push(li); });
   } else {
     if (p.description) about.push(el('p', '', p.description));
     if (p.notes) sensory.push(labelled(t('js.product.taste'), p.notes));
@@ -83,6 +101,14 @@ function buildSections(p) {
   });
   // «Доставка й оплата»
   const delivery = PRODUCT_DELIVERY.map(([k, v]) => labelled(k, v));
+  // власні таби товару (подарункові набори, поле tabs у product-texts.js): замість «Про напій … Як подавати»; далі — «Характеристики» і «Доставка й оплата»
+  if (txt?.tabs) {
+    return [
+      ...txt.tabs.map((tab) => [tab.title, customTabNodes(tab)]),
+      [t('js.product.acc.specs'), specRows.length ? [dl] : []],
+      [t('js.product.acc.delivery'), delivery],
+    ].filter(([, nodes]) => nodes.length);
+  }
   return [
     [t('js.product.acc.about'), about],
     [t('js.product.acc.sensory'), sensory],
