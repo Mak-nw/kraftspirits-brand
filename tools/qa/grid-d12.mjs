@@ -21,7 +21,7 @@ export const GRID_DEFAULTS = {
   regionProfile: { header: 'catalog', footer: 'catalog' }, // header/footer однакові на всіх сторінках → єдина еталонна сітка (не залежить від профілю сторінки)
   skipSelectors: ['.btn', '.chip', '.nav-cell', '.select', '.arrow-btn', '.nav-link', 'button', 'input', 'select', 'textarea', 'label', '.visually-hidden', '.skip-link', '.hit-area', '.maplibregl-ctrl', '.maplibregl-ctrl-group', '.product-thumbs' /* мініатюри — накладка всередині фото з відступом-токеном, не блок сітки */],
   noRecordSelectors: ['dt', 'dd', 'li', 'td', 'th', 'tr', 'option'], // комірки/пункти списків: перевіряється їхній контейнер (ul/dl/table), не кожен пункт
-  recordAlwaysSelectors: ['li.lp-layer', 'li.lp-arches__item'], // виняток із noRecordSelectors: пункти layers — n рівних блоків контейнера (4 на 10 колонок; li.lp-arches__item — те саме для look: about, арки-фото layers), схема «рівний поділ» (applyEqualDivision) приймає їхні внутрішні шви; діти (назва, текст) успадковують перевірений ліво-край пункту
+  recordAlwaysSelectors: ['li.lp-layer', 'li.lp-arches__item', 'li.about-principle'], // li.about-principle: 4 рівні колонки без фону (арку прибрано, рішення замовника c8b031dd), як layers; виняток із noRecordSelectors: пункти layers — n рівних блоків контейнера (4 на 10 колонок; li.lp-arches__item — те саме для look: about, арки-фото layers), схема «рівний поділ» (applyEqualDivision) приймає їхні внутрішні шви; діти (назва, текст) успадковують перевірений ліво-край пункту
   deep: false,          // true: заходити всередину карток/панелей із власним фоном/рамкою (за замовч. картка = завершений компонент)
 };
 
