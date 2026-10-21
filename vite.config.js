@@ -82,7 +82,9 @@ function htmlPartials() {
         await LP.ensure([...html.matchAll(LP_NAMES_RE)].map((m) => m[1]), locale);
         const out = localizeHtml(fillContacts(renderers[locale](html), locale), { locale, name, base, siteUrl: process.env.SITE_URL, missing: I18N_MISSING });
         const res = out.replaceAll('%BASE_URL%', locale === 'en' && name === '404' ? `${base}en/` : base);
-        return isBuild ? res.replace(/\s+data-slot=("[^"]*"|'[^']*')/g, '') : res; // лишається лише в dev (?slots=on)
+        if (!isBuild) return res; // у dev лишаються data-slot (?slots=on) і коментарі
+        // production: без data-slot і без HTML-коментарів (службові шляхи/примітки замовника); умовні `<!--[if …` і вміст script/style зберігаються
+        return res.replace(/\s+data-slot=("[^"]*"|'[^']*')/g, '').replace(/(<(script|style)\b[\s\S]*?<\/\2>)|<!--(?!\[if)[\s\S]*?-->/gi, (m, keep) => keep || '');
       },
     },
     generateBundle() { if (process.env.SITE_URL) this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(root, base, process.env.SITE_URL) }); },
