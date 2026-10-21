@@ -3,11 +3,12 @@
 //   node tools/qa/header-overlap.mjs [--url http://localhost:PORT/] [--pages index,catalog,…] [--widths …] [--locales uk,en] [--table] [--control]
 // Елементи: видимі кнопки/посилання пілюлі (.nav-cell поза випадним меню) і зображення логотипів (.site-header__logo img). Зазор між прямокутниками (rect): max(dx, dy); < 0 = перетин.
 // Пороги: кнопка↔кнопка ≥ 0; логотип↔логотип ≥ 0; логотип↔кнопка ≥ 8 px (320…1023) і ≥ 16 px (1024…1199).
-// Позитивні контролі (--control, вмикаються й у npm run qa:resp): у відкритій сторінці до кнопки «Кошик» додається margin-left:-300px (1024–1199) / -80px (≤ 1023) (кнопка наїжджає на сусідню; кнопки мови в пілюлі на < 1200 немає — вона в меню) — перевірка МАЄ дати порушення; 0 порушень = перевірка не працює.
+// R8 (рішення замовника 056bf88a): пара логотипів (YC.left … BS.right) стоїть РІВНО по центру пілюлі: |центр групи − центр пілюлі| ≤ 0.5 px на всіх ширинах 320…1199.
+// Позитивні контролі (--control, вмикаються й у npm run qa:resp): у відкритій сторінці до кнопки «Кошик» зсувається transform:translateX(-80px) (кнопка наїжджає на сусідню; кнопки мови в пілюлі на < 1200 немає — вона в меню) — перевірка МАЄ дати порушення; 0 порушень = перевірка не працює.
 //   Два контролі: гілка 1024–1199 (uk/index, перша ширина ≥ 1024) і гілка ≤ 1023 (uk/catalog @ 390 — НЕ index; кошик поруч із кнопкою кабінету).
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, waitStable, sleep, defaultPages } from './lib.mjs';
 
-export const R7_WIDTHS = [320, 360, 375, 390, 430, 600, 768, 834, 1024, 1050, 1100, 1150, 1199];
+export const R7_WIDTHS = [320, 340, 359, 360, 374, 375, 389, 390, 429, 430, 440, 441, 599, 600, 767, 768, 834, 1023, 1024, 1049, 1050, 1099, 1100, 1150, 1199];
 const MIN_GAP = (w) => (w >= 1024 ? 16 : 8);
 
 /** замір у браузері: прямокутники й попарні зазори елементів шапки */
@@ -30,7 +31,11 @@ export async function measureHeader(page, minLogo) {
       const need = a.logo !== b.logo ? minLogo : 0;
       out.push({ a: a.name, b: b.name, gap: +gap.toFixed(1), need, cross: a.logo !== b.logo });
     }
-    return { n: items.length, pairs: out };
+    /* R8: центр групи логотипів (YC.left … BS.right) проти центру пілюлі */
+    const li = items.filter((x) => x.logo);
+    const barR = bar.getBoundingClientRect();
+    const off = li.length ? (Math.min(...li.map((x) => x.l)) + Math.max(...li.map((x) => x.r))) / 2 - (barR.left + barR.right) / 2 : 0;
+    return { n: items.length, pairs: out, off: +off.toFixed(2) };
   }, minLogo);
 }
 
@@ -40,7 +45,7 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
   const widths = o.r7Widths || R7_WIDTHS;
   const pages = (o.pagesList || defaultPages()).map((p) => pageSpec(p).name).filter((n, i, a) => a.indexOf(n) === i);
   const L = await launch({ scrollbar: 'none', chrome: o.chrome, out: o.out });
-  const minGap = new Map(); let n = 0; const ctl = { wide: null, narrow: null };
+  const minGap = new Map(); let n = 0; const ctl = { wide: null, narrow: null, r8: null };
   try {
     for (const loc of locales) for (const name of pages) {
       const spec = pageSpec((loc === 'en' ? 'en/' : '') + name.replace(/\?.*$/, '') + (name.includes('?') ? '' : ''));
@@ -57,11 +62,13 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
               const key = `${p.a}×${p.b}@${w}`; minGap.set(key, Math.min(minGap.get(key) ?? 1e9, p.gap));
               if (p.gap < p.need) rep.add({ rule: 'R7', page: `${loc}/${name}@${w}`, selector: `${p.a}  ×  ${p.b}`, value: `зазор ${p.gap}px < ${p.need}px`, msg: 'елементи шапки перетинаються/надто близько' });
             }
+            if (Math.abs(m.off) > 0.5) rep.add({ rule: 'R8', page: `${loc}/${name}@${w}`, selector: 'пара логотипів', value: `зсув центру ${m.off}px > 0.5px`, msg: 'логотипи не по центру пілюлі' });
             const ctlKind = !control ? null : (ctl.wide === null && w >= 1024 && loc === 'uk' && name === 'index') ? 'wide' : (ctl.narrow === null && w === 390 && loc === 'uk' && name === 'catalog') ? 'narrow' : null;
             if (ctlKind) {
-              await page.evaluate((ml) => { const s = document.createElement('style'); s.textContent = `.site-header__side--end a[href$="cart.html"]{margin-left:${ml}px!important}`; document.head.appendChild(s); }, ctlKind === 'wide' ? -300 : -80);
+              await page.evaluate((ml) => { const s = document.createElement('style'); s.textContent = `.site-header__side--end a[href$="cart.html"]{transform:translateX(${ml}px)!important}`; document.head.appendChild(s); }, -80);
               await sleep(80); const c = await measureHeader(page, MIN_GAP(w));
               ctl[ctlKind] = c.pairs.filter((p) => p.gap < p.need).length;
+              if (ctlKind === 'narrow') { await page.evaluate(() => { const s = document.createElement('style'); s.textContent = '.site-header__logos{left:calc(var(--header-logos-ink-shift) + 20px)!important}'; document.head.appendChild(s); }); await sleep(80); ctl.r8 = Math.abs((await measureHeader(page, MIN_GAP(w))).off) > 0.5 ? 1 : 0; }
             }
             break;
           } catch (e) { if (attempt === 2) rep.add({ rule: 'R0', page: `${loc}/${name}@${w}`, selector: 'qa', value: String(e.message).slice(0, 100), msg: 'збій заміру' }); else await sleep(1200); }
@@ -71,8 +78,10 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
     }
   } finally { await L.close(); }
   if (control) {
-    rep.note(`позитивний контроль (кошик з margin-left:-300px (1024–1199) / -80px (≤ 1023)): 1024–1199 (uk/index) ${ctl.wide} порушень; ≤ 1023 (uk/catalog @ 390) ${ctl.narrow} порушень`);
+    rep.note(`позитивний контроль (кошик зсунуто на -80px): 1024–1199 (uk/index) ${ctl.wide} порушень; ≤ 1023 (uk/catalog @ 390) ${ctl.narrow} порушень`);
     const planned = { wide: widths.some((w) => w >= 1024) && pages.includes('index') && locales.includes('uk'), narrow: widths.includes(390) && pages.includes('catalog') && locales.includes('uk') }; /* контроль обов'язковий, лише якщо його сторінка/ширина входить у запуск */
+    rep.note(`позитивний контроль R8 (група логотипів зсунута на 20px, uk/catalog @ 390): ${ctl.r8 ? 'порушення виявлено' : 'НЕ виявлено'}`);
+    if (planned.narrow && !ctl.r8) rep.add({ rule: 'R8', page: 'control', selector: 'контроль R8', value: '0 порушень', msg: 'зсув логотипів на 20px НЕ виявлено — перевірка не працює' });
     for (const [k, label] of [['wide', '1024–1199'], ['narrow', '≤ 1023 (390, catalog)']]) if (planned[k] && !ctl[k]) rep.add({ rule: 'R7', page: 'control', selector: 'контроль ' + label, value: ctl[k] === null ? 'контроль не виконано' : '0 порушень', msg: 'навмисне перекриття НЕ виявлено — перевірка не працює' });
   }
   rep.note(`${n} замірів (локалі ${locales.join('/')} × сторінок ${pages.length} × ширин ${widths.length})`);

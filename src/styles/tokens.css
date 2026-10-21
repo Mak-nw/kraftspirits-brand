@@ -1165,7 +1165,7 @@
     --header2-btn-ghost-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header2-btn-fill-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header3-menu-w: max(calc(310 * var(--u)), 260px);
-    --header-logo-k: 0.8;                                      /* пара логотипів у шапці 1024–1199: зазор до кнопки мови ≥ 16 px (R7; без зменшення було перекриття до 36 px) */
+    --header-logo-k: 0.95;                                     /* пара логотипів у шапці 1024–1199: найбільший k, при якому пара рівно по центру пілюлі й зазори R7 ≥ 16 px (виміряно: на 1024 макс. 0.97; з 1050 — повний розмір, див. нижче) */
     --size-arrow-btn-w: max(calc(64 * var(--u)), var(--size-touch-target));
     --size-arrow-btn-h: max(calc(66 * var(--u)), var(--size-touch-target));
   }
@@ -1188,7 +1188,7 @@
     --header2-btn-fill-h: var(--size-touch-target);
     --header3-top: var(--space-10);
     --size-product-page-w: 100vw;
-    --header-logo-k: 0.8;                                      /* пара логотипів у пілюлі менша (місце під «меню» і кошик) */
+    --header-logo-k: 1;                                        /* пара логотипів у пілюлі 768–1023 — повний розмір десктопу (виміряно: макс. ≥ 1.11, R7 ≥ 8 px) */
     --hero-k: calc(var(--grid-w) / 983);                       /* одиниця hero-логотипів: група 983u = ширина вмісту (на ≥ 1200 983u) */
     --size-hero-logos-w: var(--grid-w);
     --size-hero-logos-h: calc(185.103 * var(--hero-k));
@@ -1273,7 +1273,7 @@
     --font-size-small: 12px;
     --font-size-nav: 13px;
     --nav-box-h: 18px;
-    --header-logo-k: 0.72;
+    --header-logo-k: 0.85;                                     /* 600–767: макс. на 600 — 0.86 (R7 ≥ 8 px при логотипах рівно по центрі) */
     /* крок шкали відступів на телефоні: ті самі токени, менші значення (секції 100u → 70u тощо) */
     --space-100: calc(70 * var(--u));
     --space-70: calc(50 * var(--u));
@@ -1319,11 +1319,36 @@
 
 /* вузький телефон: пара логотипів шапки менша й пілюля ширша (відступ від краю вікна — половина поля сітки), щоб логотипи не налізали на меню/кабінет (R7: зазор ≥ 8 px).
    Брейкпоінти 440/360 — літеральні числа в @media (як і решта брейкпоінтів проєкту, CSS не дозволяє var() у медіа-запиті); значення — токени для responsive/header.css */
-@media (max-width: 440px) {
-  :root { --header-logo-k: 0.55; --header-bar-inset: calc(var(--grid-margin) / 2); }
+@media (min-width: 1050px) and (max-width: 1199.98px) {
+  :root { --header-logo-k: 1; }                              /* 1050–1199: повний розмір (макс. на 1050 — 1.02) */
 }
-@media (max-width: 360px) {
-  :root { --header-logo-k: 0.42; }
+@media (max-width: 599.98px) {
+  :root { --header-bar-inset: calc(var(--grid-margin) / 2); --header-logo-k: 0.86; }   /* 540–599 (макс. на 540 — 0.87); пілюля ≤ 599 ширша на половину поля сітки */
+}
+@media (max-width: 539.98px) {
+  :root { --header-logo-k: 0.81; }   /* 500–539 (макс. на 500 — 0.82) */
+}
+@media (max-width: 499.98px) {
+  :root { --header-logo-k: 0.78; }   /* 470–499 (макс. на 470 — 0.79) */
+}
+@media (max-width: 469.98px) {
+  :root { --header-logo-k: 0.72; }   /* 430–469 (макс. на 430 — 0.73; 441 — 0.74) */
+}
+@media (max-width: 429.98px) {
+  :root { --header-logo-k: 0.65; }   /* 390–429 (макс. на 390 — 0.66) */
+}
+@media (max-width: 389.98px) {
+  :root { --header-logo-k: 0.61; }   /* 375–389 (макс. на 375 — 0.62) */
+}
+@media (max-width: 374.98px) {
+  :root { --header-logo-k: 0.53; }   /* 340–374 (макс. на 340 — 0.54) */
+}
+@media (max-width: 339.98px) {
+  :root { --header-logo-k: 0.48; }   /* 320–339 (макс. на 320 — 0.49; більше — лише якщо кабінет/кошик забрати з пілюлі) */
+}
+/* пара логотипів у шапці на < 1200 стоїть РІВНО по центру пілюлі по видимих краях (YC.left … BS.right): зображення в комірках мають різні поля (YC 9.33, BS 20.74 зліва; праворуч 9.27 / 20.7), тому група зсунута вправо на піврізниці полів (194:1384 / 194:1386) */
+@media (max-width: 1199.98px) {
+  :root { --header-logos-ink-shift: calc(5.705 * var(--u) * var(--header-logo-k, 1)); }
 }
 
 /* hero = в'юпорт: svh (small viewport height) — висота не стрибає від адресного рядка мобільних браузерів; браузери без svh лишаються на 100vh (рішення замовника 224a3702) */
