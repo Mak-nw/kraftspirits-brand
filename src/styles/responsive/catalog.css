@@ -7,7 +7,7 @@
   .catalog-bar__group, .catalog-bar__group--filters { display: contents; }
   .catalog-bar .select { grid-column: span 4; width: 100%; }
   .catalog-bar .select__field { flex: 1 1 auto; width: auto; min-width: 0; }
-  .catalog-bar .select__value { white-space: normal; }  /* довге значення («ЗА ЗАМОВЧУВАННЯМ» на 320) переноситься, а не виштовхує шеврон за край */
+  .catalog-bar .select__value { min-width: 0; overflow: hidden; text-overflow: ellipsis; }  /* значення в один рядок («ЗА ЗАМОВЧУВАННЯМ» на 320 обрізається «…», шеврон лишається на місці): три поля однакової висоти */
   .catalog-bar__group:not(.catalog-bar__group--filters) .select { grid-column: 1 / -1; }
   .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); width: var(--grid-w); }
   .select { min-height: var(--size-touch-target); }
