@@ -35,10 +35,10 @@
 .icon--barrels-oak { -webkit-mask-image: url('/assets/icons/barrels-oak.svg'); mask-image: url('/assets/icons/barrels-oak.svg'); }             /* бочки S2: феноли (кільце з групою OH) */
 
 /* бочки S5 «Подальша витримка»: значок вина в центрі днища (24x24, tools/icon-style.json) */
-.icon--barrels-grape { -webkit-mask-image: url('/assets/icons/barrels-grape.svg'); mask-image: url('/assets/icons/barrels-grape.svg'); }          /* Marsala: виноград */
-.icon--barrels-mountain { -webkit-mask-image: url('/assets/icons/barrels-mountain.svg'); mask-image: url('/assets/icons/barrels-mountain.svg'); } /* Madeira: острів у морі (гори й хвиля) */
-.icon--barrels-glass { -webkit-mask-image: url('/assets/icons/barrels-glass.svg'); mask-image: url('/assets/icons/barrels-glass.svg'); }          /* Port: келих */
-.icon--barrels-sun { -webkit-mask-image: url('/assets/icons/barrels-sun.svg'); mask-image: url('/assets/icons/barrels-sun.svg'); }                /* Sherry: сонце */
+.icon--barrels-apricot { -webkit-mask-image: url('/assets/icons/barrels-apricot.svg'); mask-image: url('/assets/icons/barrels-apricot.svg'); } /* Marsala: абрикос з листком; лінія 0.6 у сітці 24 — як principle-icon-1…4 (about), рішення замовника 2e409990 */
+.icon--barrels-island { -webkit-mask-image: url('/assets/icons/barrels-island.svg'); mask-image: url('/assets/icons/barrels-island.svg'); } /* Madeira: острів у морі (гора й хвилі); лінія 0.6 у сітці 24 — як principle-icon-1…4 (about), рішення замовника 2e409990 */
+.icon--barrels-grapes { -webkit-mask-image: url('/assets/icons/barrels-grapes.svg'); mask-image: url('/assets/icons/barrels-grapes.svg'); } /* Port: кетяг винограду (Долина Дору); лінія 0.6 у сітці 24 — як principle-icon-1…4 (about), рішення замовника 2e409990 */
+.icon--barrels-sun-line { -webkit-mask-image: url('/assets/icons/barrels-sun-line.svg'); mask-image: url('/assets/icons/barrels-sun-line.svg'); } /* Sherry: сонце; лінія 0.6 у сітці 24 — як principle-icon-1…4 (about), рішення замовника 2e409990 */
 /* events «Що є на локації» (24x24, лінія 1.5, tools/icon-style.json): значок у колі tiles (bare) */
 .icon--events-capacity { -webkit-mask-image: url('/assets/icons/events-capacity.svg'); mask-image: url('/assets/icons/events-capacity.svg'); }       /* Місткість: троє людей */
 .icon--events-power { -webkit-mask-image: url('/assets/icons/events-power.svg'); mask-image: url('/assets/icons/events-power.svg'); }                /* Без перебоїв: блискавка */
