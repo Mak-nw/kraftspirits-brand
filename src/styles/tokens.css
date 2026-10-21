@@ -1213,20 +1213,6 @@
     --size-sec-tours: auto;
     --size-sec-picker: auto;
     --size-sec-about: auto;
-    --cu: calc(var(--size-card-cat2-w) / 348.55);              /* одиниця картки каталогу: 1 px макета при ширині 348.55u; геометрія картки (фото, арка, відступи) масштабується від її РЕАЛЬНОЇ ширини, а не від --u */
-    --size-card-cat2-h: calc(480 * var(--cu));
-    --space-card-cat2-photo-top: calc(44 * var(--cu));
-    --size-card-cat2-photo-h: calc(298 * var(--cu));
-    --space-card-cat2-body-top: calc(20 * var(--cu));
-    --space-card-cat2-body-gap: calc(20 * var(--cu));
-    --space-card-cat2-body-bottom: calc(30 * var(--cu));
-    --radius-card-catalog: calc(10 * var(--cu));
-    --radius-card-arch: calc(5 * var(--cu));
-    --size-arch-top-h: calc(180 * var(--cu));
-    --size-arch-bottom-h: calc(10 * var(--cu));
-    --size-arch-seam: calc(1 * var(--cu));
-    --offset-arch: calc(6 * var(--cu));
-    --liquid-wave-h: calc(24 * var(--cu));
     --ratio-r-photo: 4 / 3;                                    /* адаптив: кадр фото-панелі, що стоїть над текстом (tour-card) */
     --size-arrow-btn-w: var(--size-touch-target);
     --size-arrow-btn-h: var(--size-touch-target);
@@ -1337,4 +1323,44 @@
 }
 @media (max-width: 360px) {
   :root { --header-logo-k: 0.42; }
+}
+
+/* АДАПТИВ: токени layout-розмірів responsive/*.css (раніше були літералами/локальними змінними у responsive/*.css) */
+@media (max-width: 1199.98px) {
+  :root {
+    --ratio-b2b-photo: 776 / 622;                              /* b2b, секції 8/9/11: кадр фото-«квитка» над текстом (телефон) */
+    --size-brand-content-w-laptop: calc(560 * var(--u));       /* b2b, стор. 10 на 1024–1199: ширина тексту бренду (440u → 560u, не лягає на виріз пляшки) */
+  }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  :root { --ratio-b2b-photo: 776 / 500; }                      /* той самий кадр на планшеті/малому ноуті: нижчий */
+}
+@media (max-width: 1023.98px) {
+  :root {
+    --ratio-about-photo-start: 288 / 332;                      /* про нас, віха «початок»: кадр фото в стовпчику */
+    --ratio-about-photo-finish: 304 / 332;                     /* про нас, віха «сьогодні» */
+    --ratio-cocktail-media: 4 / 5;                             /* коктейль: кадр фото над панеллю рецепта */
+    --size-brand-content-w-stack: 60%;                         /* картки брендів (головна, b2b стор. 10) одна під одною: ширина текстового блоку */
+  }
+  /* геометрія картки каталогу від її реальної ширини (--size-card-cat2-w): 1 px макета = --cu; слайдер підбору переозначає ширину картки, тож токени перераховуються і на ньому */
+  :root, .picker .slider {
+    --cu: calc(var(--size-card-cat2-w) / 348.55);
+    --size-card-cat2-h: calc(480 * var(--cu));
+    --space-card-cat2-photo-top: calc(44 * var(--cu));
+    --size-card-cat2-photo-h: calc(298 * var(--cu));
+    --space-card-cat2-body-top: calc(20 * var(--cu));
+    --space-card-cat2-body-gap: calc(20 * var(--cu));
+    --space-card-cat2-body-bottom: calc(30 * var(--cu));
+    --radius-card-catalog: calc(10 * var(--cu));
+    --radius-card-arch: calc(5 * var(--cu));
+    --size-arch-top-h: calc(180 * var(--cu));
+    --size-arch-bottom-h: calc(10 * var(--cu));
+    --size-arch-seam: calc(1 * var(--cu));
+    --offset-arch: calc(6 * var(--cu));
+    --liquid-wave-h: calc(24 * var(--cu));
+  }
+}
+@media (max-width: 767.98px) {
+  :root { --size-brand-content-w-stack: 76%; }
+  .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
 }

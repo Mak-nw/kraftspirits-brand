@@ -18,8 +18,8 @@
   .about-story__milestone, .about-story__milestone--start { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); margin-top: var(--space-about-head); }
   .about-story__milestone--finish .about-story__text, .about-story__milestone--finish .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--start .about-story__text { grid-column: auto; grid-row: auto; margin-left: 0; }
   .about-story__date { order: 1; }
-  .about-story__photo { order: 2; width: min(var(--size-about-milestone-w1), 100%); height: auto; aspect-ratio: 288 / 332; }
-  .about-story__milestone--finish .about-story__photo { width: min(var(--size-about-milestone-w2), 100%); aspect-ratio: 304 / 332; margin-left: 0; }
+  .about-story__photo { order: 2; width: min(var(--size-about-milestone-w1), 100%); height: auto; aspect-ratio: var(--ratio-about-photo-start); }
+  .about-story__milestone--finish .about-story__photo { width: min(var(--size-about-milestone-w2), 100%); aspect-ratio: var(--ratio-about-photo-finish); margin-left: 0; }
   .about-story__text { order: 3; width: 100%; }
   /* цитата і люди: стовпець; портрет і пагорби — внизу секції */
   .about-people { min-height: 0; padding-bottom: 0; }

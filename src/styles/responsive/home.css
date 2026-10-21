@@ -36,12 +36,6 @@
   .picker .slider {
     --size-card-cat2-w: calc(var(--grid-w) - 2 * (var(--size-arrow-btn-w) + var(--space-30)));
     --size-picker-card-w: var(--size-card-cat2-w); --size-arch-w: calc(var(--size-card-cat2-w) - 2 * var(--offset-arch));
-    --cu: calc(var(--size-card-cat2-w) / 348.55);
-    --size-card-cat2-h: calc(480 * var(--cu)); --space-card-cat2-photo-top: calc(44 * var(--cu)); --size-card-cat2-photo-h: calc(298 * var(--cu));
-    --space-card-cat2-body-top: calc(20 * var(--cu)); --space-card-cat2-body-gap: calc(20 * var(--cu)); --space-card-cat2-body-bottom: calc(30 * var(--cu));
-    --radius-card-arch: calc(5 * var(--cu)); --size-arch-top-h: calc(180 * var(--cu)); --size-arch-bottom-h: calc(10 * var(--cu)); --size-arch-seam: calc(1 * var(--cu));
-    --offset-arch: calc(6 * var(--cu)); --liquid-wave-h: calc(24 * var(--cu));
-    --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu));
   }
 }
 
@@ -54,7 +48,7 @@
     height: calc(934 * var(--bhu) + 2 * var(--space-50));
     --size-brand-card-h: calc(934 * var(--bhu)); --size-brand-card-yc-w: var(--grid-w); --size-brand-card-bs-w: var(--grid-w);
     --offset-brand-card-top: var(--space-50); --offset-brand-card-yc-x: var(--grid-margin); --offset-brand-card-bs-x: var(--grid-margin);
-    --offset-brand-content-top: calc(80 * var(--bhu)); --size-brand-content-w: 60%; --size-brand-logo-box-h: calc(172 * var(--bhu));
+    --offset-brand-content-top: calc(80 * var(--bhu)); --size-brand-content-w: var(--size-brand-content-w-stack); --size-brand-logo-box-h: calc(172 * var(--bhu));
     --size-brand-logo-yc-w: calc(402 * var(--bhu)); --size-brand-logo-yc-h: calc(106 * var(--bhu));
     --size-brand-logo-bs-w: calc(263 * var(--bhu)); --size-brand-logo-bs-h: calc(152 * var(--bhu));
     --offset-brand-cta-top: calc(786 * var(--bhu));
@@ -62,6 +56,6 @@
 }
 @media (max-width: 767.98px) {
   /* телефон: текст бренду лягає у 4 рядки — логотип-бокс і верх контенту стиснуті, щоб текст не заходив на виріз пляшки */
-  .brand-half { --offset-brand-content-top: calc(52 * var(--bhu)); --size-brand-logo-box-h: calc(110 * var(--bhu)); --size-brand-content-w: 76%; }
+  .brand-half { --offset-brand-content-top: calc(52 * var(--bhu)); --size-brand-logo-box-h: calc(110 * var(--bhu)); --size-brand-content-w: var(--size-brand-content-w-stack); }
   .brand-half { --size-brand-logo-yc-w: calc(330 * var(--bhu)); --size-brand-logo-yc-h: calc(87 * var(--bhu)); --size-brand-logo-bs-w: calc(160 * var(--bhu)); --size-brand-logo-bs-h: calc(92 * var(--bhu)); }
 }

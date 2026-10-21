@@ -5,7 +5,7 @@
   .cocktails__intro { grid-template-columns: minmax(0, 1fr); }
   .cocktails__intro > * { grid-column: 1 / -1; }
   .cocktail { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-cocktail-plate-gap); }
-  .cocktail__media { order: 1; aspect-ratio: 4 / 5; }
+  .cocktail__media { order: 1; aspect-ratio: var(--ratio-cocktail-media); }
   .cocktail__body { order: 2; min-height: 0; }
   .cocktail__item { order: 3; align-self: start; justify-self: center; width: var(--size-card-cat2-w); }
   .cocktail--tall .cocktail__body { min-height: 0; }

@@ -4,7 +4,7 @@
    ≤ 1023 — картки одна під одною за правилами brand-half головної (responsive/home.css, --bhu). Нових візуальних елементів немає. */
 @media (max-width: 1199.98px) {
   .b2b-ref--8, .b2b-ref--9, .b2b-ref--11 { display: flex; flex-direction: column; align-items: flex-start; height: auto; padding: var(--space-100) var(--grid-margin); gap: var(--space-30); }
-  .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { position: relative; top: auto; left: auto; flex: none; width: 100%; aspect-ratio: 776 / 622; margin-bottom: var(--space-30); }
+  .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { position: relative; top: auto; left: auto; flex: none; width: 100%; aspect-ratio: var(--ratio-b2b-photo); margin-bottom: var(--space-30); }
   .b2b-ref[class] .b2b-ref__photo img { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
   .b2b-ref--8 .b2b-ref__title, .b2b-ref--9 .b2b-ref__title, .b2b-ref--11 .b2b-ref__title,
   .b2b-ref--8 .b2b-ref__text, .b2b-ref--9 .b2b-ref__text, .b2b-ref--11 .b2b-ref__text,
@@ -18,17 +18,14 @@
   .b2b-ref__fact-title { width: auto; font-size: var(--font-size-title); line-height: var(--lh-normal); }
   .b2b-ref__fact-text { width: auto; font: var(--type-desc-weight) var(--type-desc-size)/var(--type-desc-lh) var(--type-desc-font); letter-spacing: var(--type-desc-ls); } /* роль t-desc */
 }
-@media (min-width: 768px) and (max-width: 1199.98px) {
-  .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { aspect-ratio: 776 / 500; }
-}
 /* стор. 10 на 1024–1199: u-геометрія макета, але текст бренду ширший (440u → 560u), щоб на малих ноутах не лягав на виріз пляшки */
 @media (min-width: 1024px) and (max-width: 1199.98px) {
-  .b2b-ref--10 .brand-half { --size-brand-content-w: calc(560 * var(--u)); }
+  .b2b-ref--10 .brand-half { --size-brand-content-w: var(--size-brand-content-w-laptop); }
 }
 /* стор. 10 на ≤ 1023: картки брендів одна під одною на всю ширину сітки, висота автоматична; геометрія й маска — як у «Два бренди» головної (скидання u-перевизначень b2b-ref.css) */
 @media (max-width: 1023.98px) {
   .b2b-ref--10 { grid-template-columns: minmax(0, 1fr); height: auto; }
-  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: 60%; }
+  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: var(--size-brand-content-w-stack); }
   .b2b-ref--10 .brand-half--yasnocraft[class] { --bh-card-x: var(--offset-brand-card-yc-x); --bh-card-w: var(--size-brand-card-yc-w); }
   .b2b-ref--10 .brand-half--bazylsprings[class] { --bh-card-x: var(--offset-brand-card-bs-x); --bh-card-w: var(--size-brand-card-bs-w); }
   .b2b-ref--10 .brand-half--yasnocraft[class] .brand-half__card::before { -webkit-mask-image: url('/assets/img/home-brand-card-yc.svg'); mask-image: url('/assets/img/home-brand-card-yc.svg'); }
@@ -38,6 +35,6 @@
   .b2b-ref--10 .btn__inner { letter-spacing: var(--type-btn-ls); }
 }
 @media (max-width: 767.98px) {
-  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: 76%; }
+  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: var(--size-brand-content-w-stack); }
   .b2b-ref__facts { grid-template-columns: minmax(0, 1fr); }
 }
