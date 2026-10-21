@@ -37,7 +37,7 @@
   /* три установки */
   .about-stills__head > * { grid-column: 1 / -1; }
   .about-stills__lead { grid-column: 1 / -1; max-width: none; }
-  /* принципи (без арки: коло з іконкою + текст по центру; колонки 4 → 2 → 1) */
+  /* принципи (без арки: коло з іконкою + текст по центру; колонки 4 → 2, на телефоні теж 2×2 — коментар замовника ab2c08e2) */
   .about-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--grid-gap); }
   .about-faq .faq-page__list--span8 { width: 100%; }
 }
@@ -47,5 +47,4 @@
   .about-stills__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-50); justify-items: center; }
   .about-still { width: calc(100% * var(--ratio-about-still-w-phone)); }
   .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * var(--ratio-about-still-w-phone) * var(--ratio-lp-arch-rise)); }
-  .about-principles__list { grid-template-columns: minmax(0, 1fr); }
 }
