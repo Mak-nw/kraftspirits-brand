@@ -14,11 +14,11 @@
       <!--@include components/chip label="%t.home.picker.chip.bar%"-->
     </div>
     <div class="slider" data-slider role="group" aria-roledescription="%t.home.picker.slider%" aria-label="%t.home.picker.slider.label%">
-      <!--@include components/arrow-btn mod=" arrow-btn--sm arrow-btn--teal arrow-btn--prev" icon="chevron-down.svg" label="%t.home.picker.prev%" attr="data-slider-prev"-->
+      <!--@include components/arrow-btn mod=" arrow-btn--sm arrow-btn--light arrow-btn--prev" icon="chevron-down.svg" label="%t.home.picker.prev%" attr="data-slider-prev"-->
       <div class="slider__track" data-slider-track aria-live="polite" aria-atomic="true">
         <!-- картку «Хіти» рендерить picker.js з <template> (без JS трек порожній, без порожнього посилання) -->
       </div>
-      <!--@include components/arrow-btn mod=" arrow-btn--sm arrow-btn--teal" icon="chevron-down.svg" label="%t.home.picker.next%" attr="data-slider-next"-->
+      <!--@include components/arrow-btn mod=" arrow-btn--sm arrow-btn--light" icon="chevron-down.svg" label="%t.home.picker.next%" attr="data-slider-next"-->
     </div>
     <template id="picker-card-template"><!--@include components/product-card mod=" product-card--catalog slider__slide" slug="__slug__" name="" price="" image="data:,"--></template>
     <template id="picker-chip-template"><!--@include components/chip label=""--></template>
