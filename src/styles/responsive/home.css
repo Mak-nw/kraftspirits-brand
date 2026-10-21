@@ -31,7 +31,7 @@
 @media (max-width: 767.98px) {
   .brand-choice__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-70); }
   .intro__body { width: 100%; }
-  .chip-row .chip { flex: 1 1 45%; }
+  .chip-row .chip { flex: 1 1 45%; min-width: max-content; } /* довгий підпис (en «bar/restaurant» @320) не вилазить за чіп і не лізе на сусідній: чіп не вужчий за вміст, завширокий переходить на новий рядок */
   /* слайдер підбору: картка займає все місце між золотими стрілками 44px (зазор = gap слайдера), щоб назви не обрізались */
   .picker .slider {
     --size-card-cat2-w: calc(var(--grid-w) - 2 * (var(--size-arrow-btn-w) + var(--space-30)));
