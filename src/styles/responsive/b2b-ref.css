@@ -1,21 +1,22 @@
-/* АДАПТИВ: b2b, секції типу ref (b2b-ref.css = виняток 1:1 макета, абсолютне позиціювання в --u працює лише ≥ 1200).
+/* АДАПТИВ: b2b, секції типу ref (b2b-ref.css = виняток 1:1 макета; сітка 10 колонок у --u працює лише ≥ 1200).
    < 1200: секції 7/8/9/11 перевёрстано в ПОТІК (відхід від 1:1 лише поза 1200–1920): фото-«квиток» зверху (маска розтягується разом з фото, виїмки зменшуються пропорційно),
    далі заголовок, абзац, кнопка (≥ 44) або факти; шрифти — через розмірні токени ролей (--font-size-*), без px. Секція 10 (картки брендів): ≥ 1024 — як було (дві картки, u-геометрія),
    ≤ 1023 — картки одна під одною за правилами brand-half головної (responsive/home.css, --bhu). Нових візуальних елементів немає. */
 @media (max-width: 1199.98px) {
   .b2b-ref--7, .b2b-ref--8, .b2b-ref--9, .b2b-ref--11 { display: flex; flex-direction: column; align-items: flex-start; height: auto; padding: var(--space-100) var(--grid-margin); gap: var(--space-30); }
-  .b2b-ref--7 .b2b-ref__photo, .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { position: relative; top: auto; left: auto; flex: none; width: 100%; aspect-ratio: var(--ratio-b2b-photo); margin-bottom: var(--space-30); }
+  .b2b-ref--7 .b2b-ref__photo, .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { position: relative; top: auto; left: auto; flex: none; width: 100%; height: auto; grid-column: auto; grid-row: auto; align-self: auto; aspect-ratio: var(--ratio-b2b-photo); margin-bottom: var(--space-30); }
   .b2b-ref[class] .b2b-ref__photo img { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
   .b2b-ref--7 .b2b-ref__photo img { object-position: 50% var(--pos-b2b-ref7-photo-y); }
   .b2b-ref--7 .b2b-ref__title, .b2b-ref--8 .b2b-ref__title, .b2b-ref--9 .b2b-ref__title, .b2b-ref--11 .b2b-ref__title,
   .b2b-ref--7 .b2b-ref__text, .b2b-ref--8 .b2b-ref__text, .b2b-ref--9 .b2b-ref__text, .b2b-ref--11 .b2b-ref__text,
-  .b2b-ref--9 .b2b-ref__btn, .b2b-ref--11 .b2b-ref__facts { position: static; left: auto; top: auto; width: 100%; max-width: var(--size-lp-text-w, 100%); }
+  .b2b-ref--9 .b2b-ref__btn, .b2b-ref--11 .b2b-ref__facts { width: 100%; max-width: var(--size-lp-text-w, 100%); }
+  .b2b-ref .b2b-ref__body { grid-column: auto; grid-row: auto; align-self: auto; width: 100%; gap: var(--space-30); }
+  .b2b-ref .b2b-ref__text { margin-top: 0; }
   .b2b-ref__title { font-size: var(--font-size-h2); line-height: var(--lh-none); }
   .b2b-ref__text { font-size: var(--font-size-text); line-height: var(--lh-normal); }
   .b2b-ref--7 .b2b-ref__title { font-size: var(--font-size-h2); line-height: var(--lh-none); } /* секція 7 має власні u-розміри (70.8u/20.2u) — на < 1200 ті самі токени ролей, що в 8/9/11 */
   .b2b-ref--7 .b2b-ref__text { font-size: var(--font-size-text); }
-  html[lang="en"] .b2b-ref--7 .b2b-ref__text, html[lang="en"] .b2b-ref--9 .b2b-ref__text, html[lang="en"] .b2b-ref--9 .b2b-ref__btn { top: auto; }
-  .b2b-ref__btn { width: auto; margin-top: var(--space-30); }
+    .b2b-ref__btn { width: auto; height: auto; margin-top: var(--space-30); }
   .b2b-ref__btn-in { transform: none; }
   .b2b-ref__facts { margin-top: var(--space-30); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; column-gap: var(--grid-gap); row-gap: var(--space-50); }
   .b2b-ref__fact-title { width: auto; font-size: var(--font-size-title); line-height: var(--lh-normal); }
