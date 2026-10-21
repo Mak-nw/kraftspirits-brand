@@ -18,7 +18,7 @@ const ALL = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6'];
 
 export const R2_LINK_MIN_H = 22;
 export const R2_MENU_MIN_H = 33; // px: пункт сторінки меню = 0.8 × --size-touch-target (35,2) із запасом на округлення
-const R2_EXEMPT_SEL = '.site-footer__list a:not(.btn)';
+const R2_EXEMPT_SEL = '.site-footer__list a:not(.btn), .site-header__logo'; // + логотипи шапки: на < 768 вертикальна пара (рішення замовника) — область дотику кожного ≈ ½ висоти пілюлі (≥ 22); на ≥ 768 логотипи 44 px і виняток не діє
 async function probe(page, width) {
   return page.evaluate(({ width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H }) => {
     const out = { touch: [], text: [], small: [], overlap: [], key: [], stretch: [] };

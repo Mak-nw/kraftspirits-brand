@@ -1273,7 +1273,15 @@
     --font-size-small: 12px;
     --font-size-nav: 13px;
     --nav-box-h: 18px;
-    --header-logo-k: 0.85;                                     /* 600–767: макс. на 600 — 0.86 (R7 ≥ 8 px при логотипах рівно по центрі) */
+    --header-logo-k: 1.15;                                     /* телефон < 768: пара логотипів ВЕРТИКАЛЬНО (YASNOCRAFT над BAZYLSPRINGS; замовник): k — множник тієї ж пари, що й на десктопі, по сходинках ширини нижче (≈ 0.9 від найбільшого при R7 ≥ 8 px, у вищих — обмежено висотою пілюлі); 540–767: 1.15 */
+    --header3-h: calc(var(--size-touch-target) + 2 * var(--space-15));   /* пілюля шапки трохи вища (замовник: «трохи збільшимо висоту хедера — це дасть збільшити лого»); 390: 50 → 62 px; усе, що залежить від висоти шапки (меню, hero, sticky, scroll-padding), читає --size-header-h / --header3-h */
+    --header-stack-hit: calc((var(--header3-h) - var(--header-stack-yc-h) - var(--header-stack-bs-h) - var(--header-logos-stack-gap)) / 2);  /* поле області дотику над YC і під BS = до краю пілюлі */
+    --header-logos-stack-gap: var(--space-10);                  /* вертикальний зазор між видимими краями (ink) YASNOCRAFT і BAZYLSPRINGS у шапці (≥ 4 px, 320: 5, 390: 6) */
+    /* геометрія вертикальної пари: комірка = видимий (ink) прямокутник логотипа, зображення зсунуте на ink-відступи (u × k; виміряно по альфа-каналу webp: YC 3824×560, BS 2172×724) */
+    --header-stack-yc-w: calc(194.8 * var(--u) * var(--header-logo-k, 1));  --header-stack-yc-h: calc(23.85 * var(--u) * var(--header-logo-k, 1));
+    --header-stack-yc-x: calc(-3.48 * var(--u) * var(--header-logo-k, 1));  --header-stack-yc-y: calc(-2.8 * var(--u) * var(--header-logo-k, 1));
+    --header-stack-bs-w: calc(163.42 * var(--u) * var(--header-logo-k, 1)); --header-stack-bs-h: calc(22.57 * var(--u) * var(--header-logo-k, 1));
+    --header-stack-bs-x: calc(-7.58 * var(--u) * var(--header-logo-k, 1));  --header-stack-bs-y: calc(-19.36 * var(--u) * var(--header-logo-k, 1));
     /* крок шкали відступів на телефоні: ті самі токени, менші значення (секції 100u → 70u тощо) */
     --space-100: calc(70 * var(--u));
     --space-70: calc(50 * var(--u));
@@ -1324,32 +1332,35 @@
   :root { --header-logo-k: 1; }                              /* 1050–1199: повний розмір (макс. на 1050 — 1.02) */
 }
 @media (max-width: 599.98px) {
-  :root { --header-bar-inset: calc(var(--grid-margin) / 2); --header-logo-k: 0.86; }   /* 540–599 (макс. на 540 — 0.87); пілюля ≤ 599 ширша на половину поля сітки */
+  :root { --header-bar-inset: calc(var(--grid-margin) / 2); --header-logo-k: 1.15; }   /* 540–599 (обмежено висотою пілюлі: макс. на 540 — 1.22); пілюля ≤ 599 ширша на половину поля сітки */
 }
 @media (max-width: 539.98px) {
-  :root { --header-logo-k: 0.81; }   /* 500–539 (макс. на 500 — 0.82) */
+  :root { --header-logo-k: 1.25; }   /* 500–539 (макс. на 500 — 1.26 за висотою пілюлі) */
 }
 @media (max-width: 499.98px) {
-  :root { --header-logo-k: 0.78; }   /* 470–499 (макс. на 470 — 0.79) */
+  :root { --header-logo-k: 1.25; }   /* 470–499 (макс. на 470 — 1.30 за висотою пілюлі) */
 }
 @media (max-width: 469.98px) {
-  :root { --header-logo-k: 0.72; }   /* 430–469 (макс. на 430 — 0.73; 441 — 0.74) */
+  :root { --header-logo-k: 1.35; }   /* 430–469 (макс. на 430 — 1.36 за висотою пілюлі) */
 }
 @media (max-width: 429.98px) {
-  :root { --header-logo-k: 0.65; }   /* 390–429 (макс. на 390 — 0.66) */
+  :root { --header-logo-k: 1.25; }   /* 390–429 (0.9 від макс. на 390 — 1.39) */
 }
 @media (max-width: 389.98px) {
-  :root { --header-logo-k: 0.61; }   /* 375–389 (макс. на 375 — 0.62) */
+  :root { --header-logo-k: 1.19; }   /* 375–389 (0.9 від макс. на 375 — 1.33) */
 }
 @media (max-width: 374.98px) {
-  :root { --header-logo-k: 0.53; }   /* 340–374 (макс. на 340 — 0.54) */
+  :root { --header-logo-k: 1.03; }   /* 340–374 (0.9 від макс. на 340 — 1.15) */
 }
 @media (max-width: 339.98px) {
-  :root { --header-logo-k: 0.48; }   /* 320–339 (макс. на 320 — 0.49; більше — лише якщо кабінет/кошик забрати з пілюлі) */
+  :root { --header-logo-k: 0.93; }   /* 320–339 (0.9 від макс. на 320 — 1.04) */
 }
 /* пара логотипів у шапці на < 1200 стоїть РІВНО по центру пілюлі по видимих краях (YC.left … BS.right): зображення в комірках мають різні поля (YC 9.33, BS 20.74 зліва; праворуч 9.27 / 20.7), тому група зсунута вправо на піврізниці полів (194:1384 / 194:1386) */
 @media (max-width: 1199.98px) {
   :root { --header-logos-ink-shift: calc(5.705 * var(--u) * var(--header-logo-k, 1)); }
+}
+@media (max-width: 767.98px) {
+  :root { --header-logos-ink-shift: 0px; }                    /* телефон: комірки вертикальної пари = ink-прямокутники, зсув не потрібен */
 }
 
 /* hero = в'юпорт: svh (small viewport height) — висота не стрибає від адресного рядка мобільних браузерів; браузери без svh лишаються на 100vh (рішення замовника 224a3702) */

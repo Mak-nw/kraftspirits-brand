@@ -74,3 +74,14 @@
   .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-actions { margin-top: var(--space-30); }
   .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu:not([href="cart.html"]) { min-height: calc(var(--size-touch-target) * 0.8); }
 }
+
+/* телефон < 768 (замовник: «на мобільному адаптиві в хедер поставимо лого вертикально, трохи збільшимо висоту хедера — це дасть збільшити лого»): YASNOCRAFT зверху, BAZYLSPRINGS під ним (як у hero головної), по центру пілюлі (R8) і по вертикалі. Комірка кожного логотипа = його видимий (ink) прямокутник (токени --header-stack-*), тож центрування й зазор --header-logos-stack-gap — по видимих краях; висота пілюлі — токен --header3-h (tokens.css), розмір пари — --header-logo-k */
+@media (max-width: 767.98px) {
+  .site-header__logos { flex-direction: column; gap: var(--header-logos-stack-gap); }
+  /* область дотику кожного логотипа: ink-бокс + поля (padding з компенсацією margin — розкладка не змінюється): YC росте вгору до краю пілюлі, BS — вниз, між ними — по півзазору; разом обидва перекривають усю висоту пілюлі без накладання (висота кожного ≈ ½ пілюлі, < 44 px — неминуче при вертикальній парі в пілюлі 62 px; виняток R2 у tools/qa/responsive.mjs) */
+  .site-header__logo--yc, .site-header__logo--bs { box-sizing: content-box; }
+  .site-header__logo--yc { width: var(--header-stack-yc-w); height: var(--header-stack-yc-h); padding: var(--header-stack-hit) 0 calc(var(--header-logos-stack-gap) / 2); margin: calc(-1 * var(--header-stack-hit)) 0 calc(-0.5 * var(--header-logos-stack-gap)); }
+  .site-header__logo--bs { width: var(--header-stack-bs-w); height: var(--header-stack-bs-h); padding: calc(var(--header-logos-stack-gap) / 2) 0 var(--header-stack-hit); margin: calc(-0.5 * var(--header-logos-stack-gap)) 0 calc(-1 * var(--header-stack-hit)); }
+  .site-header__logo--yc img { left: var(--header-stack-yc-x); top: calc(var(--header-stack-yc-y) + var(--header-stack-hit)); margin-top: 0; }
+  .site-header__logo--bs img { left: var(--header-stack-bs-x); top: calc(var(--header-stack-bs-y) + var(--header-logos-stack-gap) / 2); margin-top: 0; }
+}
