@@ -200,3 +200,7 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 ## Подарункові набори (gift-tube, gift-wood-box) — слоти фото
 - hero 1800×1936: `img/product-hero-gift-tube-new.webp`, `img/product-hero-gift-wood-box-new.webp`; виріз 800×1060 (прозорий WebP): `img/products/gift-tube.webp`, `img/products/gift-wood-box.webp` (картка каталогу). Генерує окремий виконавець.
 - До появи фото в цих файлах лежать placeholder-копії зображень вмісту (`product-hero-yasnyi-new` / `products/gin-yasnyi`, `product-hero-oak-notes-new` / `products/oak-notes`): замінити файлами з генерації (ті самі імена), AI-фото — на затвердження замовнику. `gallery` наборів порожній (мініатюри слайдера — фото самої пляшки).
+
+## Events hero (21.10.2026)
+- `img/events-hero-festive.webp` (2400×1600, 398 КБ) — РЕАЛЬНЕ фото відкриття дистилерії: `photo/Фото Яснокрафт 6/Відкриття_частина2/605A1146.jpg` (зал із бочками YASNOCRAFT/BAZYLSPRINGS, золоті промені, облич немає). Тимчасовий вибір оркестратора за коментарем замовника 7c87d20f («святкове фото з папки реальних»); замінюється за вибором замовника. Кандидати: `img/proto-bg/events-hero-1..8.webp`. Кадрування — типове (object-fit: cover, центр); окремого поля imgPos у hero немає.
+- Попередній hero (`img/distillery-tour.webp`) на events більше не використовується; файл лишається (слот «Усе в одному місці»).

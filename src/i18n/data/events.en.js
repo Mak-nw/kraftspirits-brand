@@ -3,7 +3,7 @@ export default {
   metaTitle: 'Events at the YasnoCraft distillery: 30 to 200 guests',
   metaDescription: 'Hold your event among copper stills and barrels at the YasnoCraft distillery near Kyiv: 30 to 200 guests, a business part, a production tour and a tasting.',
   sections: [
-    { title: 'Make your event one of a kind', lead: 'Host an event among copper stills, barrels and the smell of malt: a business meeting, a production tour and a tasting evening in one place.', alt: 'Guests on a tour of the YasnoCraft distillery floor', cta: { text: 'Discuss your event' } },
+    { title: 'Make your event one of a kind', lead: 'Host an event among copper stills, barrels and the smell of malt: a business meeting, a production tour and a tasting evening in one place.', alt: 'A festively decorated hall with YasnoCraft and Bazylsprings barrels and golden rays of light', cta: { text: 'Discuss your event' } },
     { kicker: 'Events', title: 'What’s on site', items: [
       { name: 'Capacity', origin: 'From 30 to 200 guests' },
       { name: 'No interruptions', origin: 'Stable power and internet' },
