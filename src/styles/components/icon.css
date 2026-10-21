@@ -38,7 +38,14 @@
 .icon--barrels-mountain { -webkit-mask-image: url('/assets/icons/barrels-mountain.svg'); mask-image: url('/assets/icons/barrels-mountain.svg'); } /* Madeira: острів у морі (гори й хвиля) */
 .icon--barrels-glass { -webkit-mask-image: url('/assets/icons/barrels-glass.svg'); mask-image: url('/assets/icons/barrels-glass.svg'); }          /* Port: келих */
 .icon--barrels-sun { -webkit-mask-image: url('/assets/icons/barrels-sun.svg'); mask-image: url('/assets/icons/barrels-sun.svg'); }                /* Sherry: сонце */
-/* бочки: маршрут «Кентуккі — Київ» — корабель по центру лінії */
+/* events «Що є на локації» (24x24, лінія 1.5, tools/icon-style.json): значок у колі tiles (bare) */
+.icon--events-capacity { -webkit-mask-image: url('/assets/icons/events-capacity.svg'); mask-image: url('/assets/icons/events-capacity.svg'); }       /* Місткість: троє людей */
+.icon--events-power { -webkit-mask-image: url('/assets/icons/events-power.svg'); mask-image: url('/assets/icons/events-power.svg'); }                /* Без перебоїв: блискавка */
+.icon--events-shelter { -webkit-mask-image: url('/assets/icons/events-shelter.svg'); mask-image: url('/assets/icons/events-shelter.svg'); }          /* Бомбосховище: щит із позначкою */
+.icon--events-tech { -webkit-mask-image: url('/assets/icons/events-tech.svg'); mask-image: url('/assets/icons/events-tech.svg'); }                   /* Техніка: проєктор */
+.icon--events-catering { -webkit-mask-image: url('/assets/icons/events-catering.svg'); mask-image: url('/assets/icons/events-catering.svg'); }       /* Харчування: виделка й ніж */
+.icon--events-atmosphere { -webkit-mask-image: url('/assets/icons/events-atmosphere.svg'); mask-image: url('/assets/icons/events-atmosphere.svg'); } /* Атмосфера: мідний перегінний куб */
+/* бочки: маршрут «Кентуккі — Київ" — корабель по центру лінії */
 .icon--barrels-ship { -webkit-mask-image: url('/assets/icons/barrels-ship.svg'); mask-image: url('/assets/icons/barrels-ship.svg'); }
 
 /* Міцність з іконкою (.strength): склянка strength.svg ліворуч від тексту («42% alc» у шапці продукту YC; в акордеонах товару іконок немає).
