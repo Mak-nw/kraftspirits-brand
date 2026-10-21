@@ -13,7 +13,7 @@
   <script type="module" src="/src/js/header-menu.js"></script>
 </head>
 <!-- Сторінка «Про дім» — РУКОПИСНА (не шаблон lp), 1:1 за макетом замовника ref/About Us.pdf (10 секцій) на єдиній 10-колонковій сітці.
-     CSS src/styles/pages/about-page.css, JS src/js/about.js. Компоненти: hero (+fade), .lp-arch, коло lp-tiles--circle, tour-card, brand-choice, faq-item. Опис — design-system.html#about-page. -->
+     CSS src/styles/pages/about-page.css, JS src/js/about.js. Компоненти: hero (+fade), .lp-arch, коло lp-tiles--circle, tour-card, brands/brand-half (як на головній), faq-item. Опис — design-system.html#about-page. -->
 <body class="page-about">
   <!--@include body-vw-->
   <!--@include components/age-gate-->
@@ -75,8 +75,11 @@
     </section>
     </div>
 
-    <!-- 4. ВИБІР БРЕНДУ (еталон ref/brand-picker-new.webp): спільний компонент brand-choice (T4) -->
-    <!--@include sections/brand-choice-->
+    <!-- 4. ВИБІР БРЕНДУ (рішення замовника 912263f4: «замінити на блок з головної»): заголовок секції + ТОЙ САМИЙ partial sections/brands, що на головній (brand-half) -->
+    <section class="brand-choice" aria-labelledby="brand-choice-title">
+      <h2 class="t-h2 heading-center" id="brand-choice-title" data-reveal="rise">%t.home.choice.title%</h2>
+    </section>
+    <!--@include sections/brands-->
 
     <!-- 5. ЦИТАТА І ЛЮДИ (макет p5): бежевий фон; цитата ліворуч (кол. 1–6), Герман Марущак праворуч (кол. 9–10); нижче Віктор: портрет без фону + графіка пагорбів позаду, імʼя великим унизу ліворуч -->
     <section class="about-sec theme-beige about-people" id="people" aria-labelledby="people-title">
