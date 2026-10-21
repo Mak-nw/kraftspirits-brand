@@ -26,7 +26,7 @@ await runMain('hero-vh', { widths: '1200', scrollbar: 'none', pages: PAGES, vps:
           const lg = [...e.querySelectorAll('.hero__logo')].map((x) => { const r = x.getBoundingClientRect(); return (r.left + r.right) / 2; });
           const lgs = e.querySelector('.hero__logos')?.getBoundingClientRect();
           const pr = document.createElement('div'); pr.style.cssText = 'position:absolute;visibility:hidden;width:var(--size-hero-min-h)'; document.body.appendChild(pr); const minH = pr.getBoundingClientRect().width; pr.remove();
-          return { top: q.top, bottom: q.bottom, h: q.height, ih: innerHeight, vw: document.documentElement.clientWidth, bar: bar?.bottom ?? 0, ct: cr?.top, cb: cr?.bottom, lg, lgs: lgs && { t: lgs.top, b: lgs.bottom }, minH };
+          return { top: q.top, bottom: q.bottom, h: q.height, ih: innerHeight, vw: document.documentElement.clientWidth, bar: bar?.bottom ?? 0, ct: cr?.top, cb: cr?.bottom, lg, bsh: document.querySelector('.hero__logo--bs')?.getBoundingClientRect().height, lgs: lgs && { t: lgs.top, b: lgs.bottom }, minH };
         });
         const m = await measure(); if (!m) { await page.close(); continue; }
         n++;
@@ -37,7 +37,7 @@ await runMain('hero-vh', { widths: '1200', scrollbar: 'none', pages: PAGES, vps:
         if (m.ct !== undefined && (m.ct < m.bar - 1 || m.cb > m.h + 1)) rep.add({ rule: 'HV', page: label, selector: '.hero__content', value: `content ${m.ct.toFixed(0)}…${m.cb.toFixed(0)}, шапка до ${m.bar.toFixed(0)}, hero ${m.h.toFixed(0)}`, msg: 'контент hero під шапкою / у межах hero' });
         if (m.lg.length) {
           for (const c of m.lg) if (Math.abs(c - m.vw / 2) > 0.5) rep.add({ rule: 'HV', page: label, selector: '.hero__logo', value: `центр ${c.toFixed(1)} ≠ ${m.vw / 2}`, msg: 'написи головної по центру' });
-          if (w < 1200 && m.lgs) { const free = m.h - m.bar; const mid = m.bar + free / 2; const lc = (m.lgs.t + m.lgs.b) / 2; if (Math.abs(lc - mid) > 1) rep.add({ rule: 'HV', page: label, selector: '.hero__logos', value: `центр по вертикалі ${lc.toFixed(1)} ≠ ${mid.toFixed(1)}`, msg: 'написи головної по центру між шапкою і низом (<1200)' }); }
+          if (w < 1200 && m.lgs) { const free = m.h - m.bar; const lift = w < 768 ? 0.2 * m.bsh : 0; const mid = m.bar + free / 2 - lift; const lc = (m.lgs.t + m.lgs.b) / 2; if (Math.abs(lc - mid) > 1) rep.add({ rule: 'HV', page: label, selector: '.hero__logos', value: `центр по вертикалі ${lc.toFixed(1)} ≠ ${mid.toFixed(1)}`, msg: 'написи головної по центру між шапкою і низом (<1200; на <768 вище на 20% висоти BAZYLSPRINGS)' }); }
         }
         if (ctl === null && spec.name === 'index' && w === 1440) { // позитивний контроль: примусова висота
           await page.addStyleTag({ content: '.hero { height: 1086px !important; }' }); await sleep(150);

@@ -1360,7 +1360,8 @@
   :root {
     --space-stack-gap: var(--space-30);                       /* < 1200: вертикальний зазор між блоками-картками стека = 30u (телефон 390: 18 px, планшет 768: 27 px; було 5u = 3–5 px, картки впритул; aa292ac9) */
     --space-tour-gap: var(--space-stack-gap);                  /* tours головної (і lp-стеки) < 1200 — той самий зазор */
-    --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
+    --offset-hero-logos-lift: calc(0 * var(--size-hero-logo-bs-h));  /* підйом групи лого головної від центру: 768–1199 — 0 (телефон нижче) */
+    --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2 - var(--offset-hero-logos-lift)); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
     /* літерали з responsive/lp.css, about.css, pages.css (значення ті самі, винесено в токени) */
     --ratio-lp-split-media-h-tablet: 0.45;                     /* колода split (≤ 1023): висота медіа = 0.45 ширини сітки */
     --ratio-lp-split-media-h-phone: 0.6;                       /* те саме на телефоні */
@@ -1414,6 +1415,7 @@
 }
 @media (max-width: 767.98px) {
   :root { --size-brand-content-w-stack: 76%; }
+  :root { --offset-hero-logos-lift: calc(0.2 * var(--size-hero-logo-bs-h)); } /* телефон <768: група YASNOCRAFT + BAZYLSPRINGS піднята на 20% висоти BAZYLSPRINGS від центру між шапкою і низом (коментарі замовника 83d711cb/079882d1; змінює 34751384 лише на телефоні) */
   .catalog-grid { --size-card-cat2-w: var(--grid-w); }
   .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
 }
