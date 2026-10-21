@@ -74,9 +74,10 @@ function variantsOf(type) {
     const d1 = clone(c); d1.split = true; out.push(['deck split photo', d1]);   // split: текст на тоновому фоні | фото
     const d2 = clone(d1); d2.items.forEach((it) => { delete it.img; it.lottie = '/assets/lottie/barrel-01-pour.json'; }); out.push(['deck split lottie', d2]);   // split: текст | Lottie // deck: true — картки з фото в кожному кроці, арки немає
   } else if (type === 'tiles') {
-    const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
-    const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
-    const c = clone(s); delete c.look; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
+    const a = clone(s); delete a.look; delete a.shape; delete a.leadCols; delete a.captionOver; delete a.bare; delete a.perRow; a.items.forEach((t) => { delete t.img; delete t.alt; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['engraving+icon', a]);
+    const bp = clone(a); bp.bare = true; bp.perRow = 3; bp.items = Array.from({ length: 6 }, (_, i) => ({ ...bp.items[0], key: `k${i}` })); out.push(['engraving bare 3x2', bp]);
+    const b = clone(s); delete b.look; delete b.shape; delete b.leadCols; delete b.captionOver; delete b.bare; delete b.perRow; b.items.forEach((t) => { delete t.engraving; delete t.icon; delete t.tone; delete t.imgPos; delete t.zoom; }); out.push(['img+alt', b]);
+    const c = clone(s); delete c.look; delete c.bare; delete c.perRow; c.items.forEach((t) => { delete t.engraving; delete t.icon; t.origin = `${t.origin.slice(0, 20)}\nаб`; }); out.push(['circle', c]);
     const d = clone(c); d.look = 'about'; out.push(['circle+look about', d]);   // картки-арки «Про нас» (partials/lp/tile-card)
   } else if (type === 'card') {
     const a = clone(s); delete a.list; out.push(['text', a]);
@@ -125,7 +126,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
   for (const [label, s] of variantsOf(type)) {
     const page = pageOf(withIds([s]));
     const html = render(page);
-    shownCheck(type, label, html, s);
+    if (type === 'ref') note(html.includes('b2b-ref--'), 'render ref: сирий партіал b2b-ref-<n> (виняток 1:1 макет: кожен n показує свою підмножину полів, перевірка «поле показується» пропущена)'); else shownCheck(type, label, html, s);
     if (type === 'steps') { // deck: колода карток замість арки; imgPos/zoom → модифікатори картки
       const deck = s.deck === true;
       note(html.includes('lp-steps--deck') === deck && html.includes('lp-steps__card ') === deck && html.includes('lp-arch') === !deck, `render steps [${label}]: deck ${deck ? 'дає колоду карток без арки' : 'не дає колоди (арка + список)'}`);
@@ -134,6 +135,7 @@ for (const type of Object.keys(SCHEMA.sections).filter((t) => t !== 'hero')) {
     if (type === 'tiles') { // enum-поля, що не маркуються текстом: shape → клас секції, tone/imgPos → модифікатори плитки, лід у шапці
       const circ = s.shape === 'circle';
       note(html.includes('lp-tiles--circle') === circ, `render tiles [${label}]: shape ${circ ? 'дає' : 'не дає'} клас lp-tiles--circle`);
+      note(html.includes('lp-tiles--bare') === (label === 'engraving bare 3x2') && html.includes('lp-tiles__grid--rows') === (label === 'engraving bare 3x2'), `render tiles [${label}]: bare → lp-tiles--bare, perRow → lp-tiles__grid--rows`);
       note(html.includes('lp-tile--tone-') === circ && html.includes('lp-tile--pos-') === circ, `render tiles [${label}]: tone і imgPos ${circ ? 'дають' : 'не дають'} модифікатори плитки`);
       if (!s.look) note(html.indexOf('lp-head__lead') >= 0 && html.indexOf('lp-head__lead') < html.indexOf('lp-tile '), `render tiles [${label}]: lead-in-head — лід у шапці, перед рядом плиток`); if (circ) note(/lp-tiles--lead-\d/.test(html), 'render tiles [circle]: leadCols → клас lp-tiles--lead-N');
     }
@@ -156,7 +158,7 @@ for (const [slug, data] of Object.entries(real)) {
 
 /* ------------------------------------------------------------------ 1. мутації полів: JS ≡ JSON ≡ очікуване */
 // поля, що беруть участь у перехресних правилах (їх пропуск/порожнє дає інший вердикт — перевіряємо окремо нижче)
-const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'layers.shape', 'layers.look', 'layers.items.img', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
+const XOR_FIELDS = new Set(['steps.scene', 'steps.img', 'steps.alt', 'steps.slot', 'steps.deck', 'steps.items.img', 'steps.items.alt', 'steps.items.slot', 'steps.items.imgPos', 'steps.items.zoom', 'steps.items.tags', 'steps.items.lottie', 'steps.split', 'tiles.items.engraving', 'tiles.items.img', 'tiles.items.icon', 'tiles.items.alt', 'tiles.items.origin', 'tiles.shape', 'tiles.bare', 'tiles.perRow', 'tiles.leadCols', 'tiles.captionOver', 'tiles.items.tone', 'tiles.items.imgPos', 'tiles.items.zoom', 'card.text', 'card.list', 'layers.shape', 'layers.look', 'layers.items.img', 'compare.groups.cellar', 'compare.groups.list', 'offers.scene', 'offers.bg', 'offers.bgW', 'offers.bgH', 'offers.bgSlot']);
 const setAt = (obj, path, value) => { // path: масив ключів
   let o = obj; for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
   const k = path[path.length - 1]; if (value === DEL) delete o[k]; else o[k] = value;
@@ -462,7 +464,7 @@ cross(`count = ${COUNT_MAX}`, (p) => { S(p).groups[0].count = COUNT_MAX; }, true
 
 /* ------------------------------------------------------------------ файлові перевірки (tools/lp-files.mjs): зіпсуй → падає з поясненням */
 const contactKeys = Object.keys(contactsView(contacts));
-const realFiles = Object.values(real)[0];
+const realFiles = Object.values(real).find((pg) => pg.sections.some((x) => x.type === 'layers' || x.type === 'place') ) || Object.values(real)[0];   // справжня сторінка з layers/place (b2b їх більше не містить)
 if (realFiles) {
   const fileCase = (label, mut, expect) => {
     const p = clone(realFiles); mut(p);

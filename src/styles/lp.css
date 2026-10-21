@@ -266,6 +266,9 @@
 .lp-tiles--over .lp-tile__name { margin-top: 0; }
 .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-tiles__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tiles__grid--n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .lp-tiles__grid--n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .lp-tiles__grid--n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+/* perRow: плитки в кілька рядів (3 у ряд, 6 пунктів): другий ряд — свої 4 спільні рядки subgrid під першим */
+.lp-tiles__grid--rows { grid-template-rows: repeat(9, auto); }
+.lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: 6 / span 4; margin-top: var(--space-lp-tile-row); }
 .lp-tiles--lead-2 .lp-head__lead { width: var(--grid-span-2); } .lp-tiles--lead-3 .lp-head__lead { width: var(--grid-span-3); } .lp-tiles--lead-4 .lp-head__lead { width: var(--grid-span-4); } .lp-tiles--lead-5 .lp-head__lead { width: var(--grid-span-5); } .lp-tiles--lead-6 .lp-head__lead { width: var(--grid-span-6); } /* поле leadCols: ширина ліда в шапці (рев'ю dcd66896, ce0223c5: лід — у шапці під H2) */
 
 /* ---------- offers: фото на ВСЮ секцію без затемнення (рев'ю 003d2383, ee14a4bc, 8263cbc6); поверх — шапка й панелі-пропозиції ----------

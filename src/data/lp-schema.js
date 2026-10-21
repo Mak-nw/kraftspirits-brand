@@ -112,7 +112,7 @@ export const SCHEMA = {
     }), 2, 2, true) },
     // 5. Плитки: медіа (engraving — гравюра partials/media/engraving-<назва>.html + icon АБО img — фото 3:4) + назва, підпис, ноти.
     //    shape: 'circle' — коло замість рамки 3:4: лише з фото, tone (тло кола), imgPos (кадр) і zoom (масштаб фото в колі) за даними, captionOver (назва й опис поверх фото всередині кола), лід — у шапці під H2 (ширина leadCols)
-    tiles: { ...BASE, ...TITLE, ...LOOK, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true) },
+    tiles: { ...BASE, ...TITLE, ...LOOK, room: E(ROOMS, false, 'paper'), cols: COLS('tiles'), shape: E(['circle']), captionOver: B(), bare: B(), perRow: E([3]), leadCols: E([2, 3, 4, 5, 6]), loose: B(), items: L(O({ key: { type: 'id', req: true }, engraving: { type: 'partial', kind: 'engraving' }, icon: { type: 'icon' }, ...MEDIA_IMG, tone: E(TILE_TONES), imgPos: E(TILE_POS), zoom: E(TILE_ZOOM), name: T(25, true), origin: T(60, true), notes: T(60) }), 2, 6, true) },
     // 6. Пропозиції/ціна: фото на всю секцію (bg) + шапка (маршрут, лід) + панелі DS + необов'язковий рядок-підпис (foot; нема даних — блок не рендериться)
     offers: { ...base('caption'), ...TITLE, ...LOOK, room: E(ROOMS, false, 'deep'), cols: COLS('offers'), airy: B(), scene: { type: 'partial', kind: 'scene' }, bg: URL_(), bgW: N(false, { int: true, min: 1, max: 10000 }), bgH: N(false, { int: true, min: 1, max: 10000 }), bgSlot: T(240),
       route: O({ from: T(30, true), to: T(30, true), icon: { type: 'icon', req: true } }),
@@ -185,6 +185,12 @@ export const RULES = [
   { id: 'tiles-alt-needs-img', types: ['tiles'], path: 'items', doc: '`alt` плитки має сенс лише з `img`',
     check: (t) => (has(t.alt) && !has(t.img) ? 'alt доступний лише разом з img' : ''), json: dependent('alt', 'img') },
   { id: 'tiles-circle-needs-img', types: ['tiles'], path: '', doc: '`shape: circle`: кожна плитка з фото `img` (гравюри в колі немає)',
+  { id: 'tiles-bare-engraving', types: ['tiles'], path: '', doc: '`bare` (коло без решітки гравюри) — лише коли кожна плитка з `engraving`',
+    check: (s) => (s.bare === true && s.items.some((it) => !has(it.engraving)) ? 'bare потребує engraving у кожній плитці' : ''),
+    json: { if: { properties: { bare: { const: true } }, required: ['bare'] }, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('engraving') } } } } } },
+  { id: 'tiles-perrow-6', types: ['tiles'], path: '', doc: '`perRow: 3` (плитки в два ряди по три) — рівно 6 плиток',
+    check: (s) => (has(s.perRow) && s.items.length !== 6 ? 'perRow: 3 потребує рівно 6 плиток' : ''),
+    json: { if: { required: ['perRow'], properties: { perRow: { type: 'number' } } }, then: { properties: { items: { type: 'array', minItems: 6, maxItems: 6 } } } } },
     check: (s) => (s.shape === 'circle' && s.items.some((it) => !has(it.img)) ? 'shape: circle потребує img у кожній плитці' : ''),
     json: { if: { properties: { shape: { const: 'circle' } }, required: ['shape'] }, then: { properties: { items: { type: 'array', items: { type: 'object', ...present('img') } } } } } },
   { id: 'tiles-circle-fields', types: ['tiles'], path: '', doc: '`leadCols` і `captionOver` секції, `tone`, `imgPos` і `zoom` плитки мають сенс лише з `shape: circle`',
@@ -411,10 +417,11 @@ const VIEW = {
     const round = s.shape === 'circle';   // коло: лід — у шапці під H2, як в інших секціях (рев'ю ce0223c5); раніше стояв під рядом плиток
     const n = s.items.length; const cols = colsOf(s);
     const about = s.look === 'about';
-    const eq = cols % n !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
-    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${n}`, shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.leadCols ? ` lp-tiles--lead-${s.leadCols}` : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
-      gridMod: eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${n}` : '',
-      items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / n, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
+    const per = s.perRow || n;
+    const eq = cols % per !== 0;            // пунктів не ділять колонок (напр. 4 плитки на 10 колонок): n рівних блоків контейнера з зазором колонок, краї ряду — на межах колонок
+    return { ...head(s), look: about ? '1' : '', noLook: about ? '' : '1', lookMod: about ? ' lp-look--about' : '', arches: `lp-arches--n${n}`, shapeMod: `${round ? ' lp-tiles--circle' : ''}${s.leadCols ? ` lp-tiles--lead-${s.leadCols}` : ''}${round && s.captionOver ? ' lp-tiles--over' : ''}${s.bare ? ' lp-tiles--bare' : ''}${s.loose ? ' lp-sec--loose' : ''}`,
+      gridMod: `${eq ? ` lp-tiles__grid--eq lp-tiles__grid--n${per}` : ''}${s.perRow ? ' lp-tiles__grid--rows' : ''}`,
+      items: s.items.map((it) => ({ key: it.key, span: eq ? '' : cols / per, engraving: it.engraving || '', icon: it.icon || '', img: it.img || '', alt: t(it.alt), slot: t(it.slot),
         toneMod: it.tone ? ` lp-tile--tone-${it.tone}` : '', posMod: `${it.imgPos ? ` lp-tile--pos-${it.imgPos}` : ''}${it.zoom ? ` lp-tile--zoom-${Math.round(it.zoom * 100)}` : ''}`, originRole: round ? 't-spec' : 't-text', name: t(it.name), origin: t(it.origin), notes: t(it.notes) })) };
   },
   offers: (s, p) => ({ ...head(s), look: s.look === 'about' ? '1' : '', noLook: s.look === 'about' ? '' : '1', gridMod: ` lp-offers__grid--n${s.items.length}`, offersMod: `${s.scene ? ' lp-offers--scene' : ''}${s.airy ? ' lp-offers--airy' : ''}`, scene: s.scene || '', bg: s.bg || '', bgW: s.bgW || '', bgH: s.bgH || '', bgSlot: t(s.bgSlot),

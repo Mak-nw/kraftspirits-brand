@@ -10,3 +10,7 @@
 .lp-engraving__rim, .lp-engraving__boards { vector-effect: non-scaling-stroke; stroke-width: var(--border-hairline); } /* одна hairline-лінія DS (1px за будь-якого масштабу) */
 .lp-engraving__rim { stroke-width: var(--border-barrels-rim); } /* обідок днища вдвічі товщий за клепки (рев'ю 3cc0afdd) */
 .lp-tile__icon { --icon-size: var(--size-barrels-finish-icon); color: inherit; position: absolute; top: 50%; left: 50%; translate: -50% -50%; } /* іконка DS у центрі гравюри (поле icon плитки; розмір — частка гравюри) */
+
+/* bare (поле секції tiles): коло без решітки — лише обідок, іконка крупніша (частка гравюри) */
+.lp-tiles--bare { --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.34); }
+.lp-tiles--bare .lp-engraving__boards { display: none; }

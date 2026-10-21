@@ -995,6 +995,7 @@
   --scale-lp-finish-hover: 1.03;                 /* hover: медіа плитки трохи наближається */
   --ratio-lp-tile-img: 3 / 4;                    /* фото плитки (пляшка/келих) — портрет 3:4 у рамці --radius-panel */
   --space-lp-tile-caption: var(--space-30);      /* медіа → назва */
+  --space-lp-tile-row: var(--space-70);          /* perRow: проміжок між рядами плиток (як шапка → вміст) */
   --space-lp-tile-over-bottom: calc(40 * var(--u));  /* captionOver: відступ підпису від низу кола (хорда кола на цій висоті вміщує найширший рядок) */
   --size-lp-tile-ring: calc(7 * var(--u));       /* shape: circle — товсте кільце навколо кола (реф замовника 2026-10-16: ≈7px на 1920); було hairline */
   --scale-lp-zoom-75: 0.75;                      /* <1: фото зменшується, знизу лишається тло кола (місце під підпис captionOver) */

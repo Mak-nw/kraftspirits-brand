@@ -209,6 +209,18 @@
       "rule": "`alt` плитки має сенс лише з `img`"
     },
     {
+      "id": "tiles-bare-engraving",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`bare` (коло без решітки гравюри) — лише коли кожна плитка з `engraving`"
+    },
+    {
+      "id": "tiles-perrow-6",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`perRow: 3` (плитки в два ряди по три) — рівно 6 плиток"
+    },
+    {
       "id": "tiles-circle-needs-img",
       "scope": "tiles",
       "expressed": true,
@@ -2228,6 +2240,19 @@
               ]
             },
             "leadCols": {
+            "bare": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "perRow": {
+              "enum": [
+                3,
+                "",
+                null
+              ]
+            },
               "enum": [
                 2,
                 3,
@@ -2524,6 +2549,58 @@
               }
             },
             {
+            {
+              "if": {
+                "properties": {
+                  "bare": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "bare"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "engraving"
+                      ],
+                      "properties": {
+                        "engraving": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "perRow"
+                ],
+                "properties": {
+                  "perRow": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 6,
+                    "maxItems": 6
+                  }
+                }
+              }
+            },
               "if": {
                 "properties": {
                   "shape": {
