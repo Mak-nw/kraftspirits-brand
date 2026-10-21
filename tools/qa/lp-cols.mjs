@@ -22,8 +22,12 @@ const PROBE = (GRID_COLS) => {
     const eq = sec.querySelector('.lp-tiles__grid--eq');
     if (eq) {
       const figs = [...eq.querySelectorAll(':scope > .lp-tile, :scope > .lp-arches > li')].map((f) => f.getBoundingClientRect());
-      const m = figs.length; const w = (eq.getBoundingClientRect().width - (m - 1) * gap) / m;
-      out.eq = { n: m, w, widths: figs.map((r) => r.width), gaps: figs.slice(1).map((r, i) => r.left - figs[i].right), expGap: gap, imgs: !sec.classList.contains('lp-tiles--circle') || sec.classList.contains('lp-look--about') ? [] : [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().width), imgH: [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().height) };
+      const perRow = eq.classList.contains('lp-tiles__grid--rows'); // поле perRow: плитки у кілька рядів (3 у ряд, 6 плиток = 2 ряди)
+      const per = perRow ? +(eq.className.match(/lp-tiles__grid--n(\d+)/) || [])[1] : figs.length;
+      const m = per; const w = (eq.getBoundingClientRect().width - (m - 1) * gap) / m;
+      const rowsOf = []; figs.forEach((r, i) => { (rowsOf[Math.floor(i / per)] ||= []).push(r); });
+      const tops = [...new Set(figs.map((r) => Math.round(r.top)))].length;
+      out.eq = { n: m, w, widths: figs.map((r) => r.width), gaps: rowsOf.flatMap((row) => row.slice(1).map((r, i) => r.left - row[i].right)), expGap: gap, perRow, expPer: perRow ? 3 : 0, expRows: perRow ? 2 : 0, per, rows: rowsOf.length, tops, lefts: rowsOf.map((row) => row.map((r) => r.left)), rowGap: rowsOf.length > 1 ? rowsOf[1][0].top - Math.max(...rowsOf[0].map((r) => r.bottom)) : 0, imgs: !sec.classList.contains('lp-tiles--circle') || sec.classList.contains('lp-look--about') ? [] : [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().width), imgH: [...eq.querySelectorAll('.lp-tile__media')].map((el) => el.getBoundingClientRect().height) };
     }
     return out;
   });
@@ -46,6 +50,12 @@ const check = (d, rep, label) => {
     if (c.eq) {
       c.eq.widths.forEach((w, i) => { if (Math.abs(w - c.eq.w) > 0.6) add({ rule: 'COLS-EQ', selector: `#${c.id} плитка ${i + 1}`, value: `ширина ${w.toFixed(2)}px ≠ ${c.eq.w.toFixed(2)}px`, msg: 'рівний поділ: плитки однакової ширини (ширина − (n−1)·зазор)/n' }); });
       c.eq.gaps.forEach((g, i) => { if (Math.abs(g - c.eq.expGap) > 0.6) add({ rule: 'COLS-EQ', selector: `#${c.id} шов ${i + 1}`, value: `зазор ${g.toFixed(2)}px ≠ ${c.eq.expGap.toFixed(2)}px`, msg: 'рівний поділ: зазор = --grid-gap' }); });
+      if (c.eq.perRow) {
+        if (c.eq.per !== c.eq.expPer || c.eq.rows !== c.eq.expRows) add({ rule: 'COLS-EQ', selector: `#${c.id}`, value: `${c.eq.per} у ряд × ${c.eq.rows} ряди(в) ≠ ${c.eq.expPer}×${c.eq.expRows}`, msg: 'perRow: 3 плитки в ряд, 2 ряди' });
+        if (c.eq.tops !== c.eq.expRows) add({ rule: 'COLS-EQ', selector: `#${c.id}`, value: `${c.eq.tops} різних верхніх країв, очікується ${c.eq.expRows}`, msg: 'perRow: плитки одного ряду мають спільний верх' });
+        c.eq.lefts.slice(1).forEach((row) => row.forEach((l, i) => { if (Math.abs(l - c.eq.lefts[0][i]) > 0.6) add({ rule: 'COLS-EQ', selector: `#${c.id} ряд 2 плитка ${i + 1}`, value: `лівий край ${l.toFixed(2)} ≠ ${c.eq.lefts[0][i].toFixed(2)}`, msg: 'perRow: колонки другого ряду під першим' }); }));
+        if (c.eq.rowGap <= 0) add({ rule: 'COLS-EQ', selector: `#${c.id}`, value: `проміжок між рядами ${c.eq.rowGap.toFixed(1)}px`, msg: 'perRow: другий ряд нижче першого' });
+      }
       c.eq.imgs.forEach((w, i) => { if (Math.abs(w - c.eq.w) > 0.6 || Math.abs(c.eq.imgH[i] - w) > 0.6) add({ rule: 'COLS-EQ', selector: `#${c.id} коло ${i + 1}`, value: `${w.toFixed(2)}×${c.eq.imgH[i].toFixed(2)}px, очікується коло ${c.eq.w.toFixed(2)}`, msg: 'діаметр кола = ширина блока' }); });
     }
   }
@@ -58,7 +68,7 @@ const check = (d, rep, label) => {
 
 await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pages: 'excursions' }, async (o) => {
   const rep = new Report('lp-cols');
-  const ctl = { wide: null, eq: null, pad: null, padStack: null }; let colsCount = 0; let padCount = 0; let eqCount = 0;
+  const ctl = { wide: null, eq: null, pad: null, padStack: null, row: null }; let colsCount = 0; let padCount = 0; let eqCount = 0;
   for (const combo of matrix(o, { dprs: [o.dpr[0]] })) {
     const L = await launch({ scrollbar: combo.scrollbar, chrome: o.chrome, out: o.out });
     try {
@@ -79,6 +89,10 @@ await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pag
           await page.addStyleTag({ content: '.lp-tiles__grid--eq > .lp-tile:first-child { margin-right: calc(-1 * var(--grid-gap)); }' });
           const dd = await page.evaluate(PROBE, GRID_COLS); ctl.eq = check(dd, { add() {} }, 'ctl');
         }
+        if (d.cols.some((c) => c.eq?.perRow) && ctl.row === null) { // (б2) perRow зламано: 4 у ряд замість 3
+          await page.addStyleTag({ content: '.lp-tiles__grid--rows { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }' });
+          const dd = await page.evaluate(PROBE, GRID_COLS); ctl.row = check(dd, { add() {} }, 'ctl');
+        }
         if (d.pads.length && ctl.pad === null) { // (в) pad перебито
           await page.addStyleTag({ content: '[class*="lp-pad--"] { padding-block: calc(150 * var(--u)) !important; }' });
           const dd = await page.evaluate(PROBE, GRID_COLS); ctl.pad = check(dd, { add() {} }, 'ctl');
@@ -91,9 +105,10 @@ await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pag
       }
     } finally { await L.close(); }
   }
-  rep.info({ rule: 'COLS', msg: `секцій з cols ${colsCount} (з них рівний поділ ${eqCount}), з pad ${padCount} на ${o.widths.length * o.scrollbar.length} комбінаціях; контролі: «контейнер на 10 колонок» ${ctl.wide} порушень, «зламаний рівний поділ» ${ctl.eq} порушень, «pad 150u» ${ctl.pad} порушень, «pad перед стеком ≠ 0» ${ctl.padStack} порушень` });
+  rep.info({ rule: 'COLS', msg: `секцій з cols ${colsCount} (з них рівний поділ ${eqCount}), з pad ${padCount} на ${o.widths.length * o.scrollbar.length} комбінаціях; контролі: «контейнер на 10 колонок» ${ctl.wide} порушень, «зламаний рівний поділ» ${ctl.eq} порушень, «perRow 4 у ряд» ${ctl.row} порушень, «pad 150u» ${ctl.pad} порушень, «pad перед стеком ≠ 0» ${ctl.padStack} порушень` });
   if (colsCount && !ctl.wide) rep.add({ rule: 'COLS', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'контейнер завширшки 10 колонок НЕ дав порушення — перевірка cols не працює' });
   if (eqCount && !ctl.eq) rep.add({ rule: 'COLS-EQ', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'зламаний рівний поділ НЕ дав порушення — перевірка не працює' });
+  if (ctl.row !== null && !ctl.row) rep.add({ rule: 'COLS-EQ', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'perRow зламано (4 у ряд) НЕ дало порушення — перевірка не працює' });
   if (padCount && !ctl.pad) rep.add({ rule: 'PAD', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'pad 150u НЕ дав порушення — перевірка не працює' });
   if (ctl.padStack !== null && !ctl.padStack) rep.add({ rule: 'PAD', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'padding-bottom ≠ 0 перед стеком НЕ дав порушення — перевірка не працює' });
   return rep;
