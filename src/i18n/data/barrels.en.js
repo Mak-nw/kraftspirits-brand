@@ -17,8 +17,8 @@ export default {
       { title: 'Bottling', text: 'After maturing, the whisky is brought down to drinking strength of 40% ABV and bottled in 0.7 L bottles', alt: 'Animation: a bottle fills with whisky' },
     ] },
     { title: 'How many bottles will you get?', groups: [
-      { label: '50 L', countWord: 'bottles', unit: '0.7 L each', facts: [{ value: '≈ €20.83', label: 'cost of the contents per bottle' }] },
-      { label: '200 L', countWord: 'bottles', unit: '0.7 L each', facts: [{ value: '≈ €15.66', label: 'cost of the contents per bottle' }] },
+      { label: '50 L', countWord: 'bottles', facts: [{ value: '≈ €20.83', label: 'cost of the contents per bottle' }] },
+      { label: '200 L', countWord: 'bottles', facts: [{ value: '≈ €15.66', label: 'cost of the contents per bottle' }] },
     ] },
     { title: 'Further ageing', lead: `Casks that held marsala, madeira, port or sherry${NB}— each adds its own shade of flavour`, items: [
       { origin: 'Sicily, Italy', notes: 'apricot, honey, almond' },

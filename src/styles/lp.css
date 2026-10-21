@@ -2,7 +2,7 @@
    (src/styles/themes/<тема>.css — лише ролі кольорів). Тут — ЛИШЕ загальні блоки шаблону; жодного селектора під конкретну сторінку, секцію чи ілюстрацію
    (ілюстрації — src/styles/media/<вид>-<назва>.css, оптика й кадр конкретної сторінки — src/styles/pages/<сторінка>.css). Кольори — ролі теми --lp-*
    (тема мапить їх на палітру DS), розміри — токени блоку «Шаблон посадкової сторінки» в tokens.css. Опис схеми — docs/page-template.md.
-   Типи секцій (partials/lp/<type>.html): hero · layers · steps · compare · tiles · offers · card · place · faq.
+   Типи секцій (partials/lp/<type>.html): hero · layers · steps · compare · tiles · offers · card · place · brands · faq.
    Словник — лише елементи design-system.html (CLAUDE.md п. 5б): суцільні кольори палітри, типографіка, hairline-лінії й рамки (одна лінія), панель beige
    + --radius-panel, кнопки, список DS, арка. Без ромбів-маркерів, подвійних рамок, світіння, тіней і зерна. Сітка всіх секцій — 10 колонок єдиної сітки сайту
    (еталон D12): вміст 1514.2u, зазор 40u; кожен блок — від початку колонки до кінця колонки. Шапки секцій — по центру. Оптичні поправки тексту — text-indent
@@ -266,6 +266,9 @@
 .lp-tiles--over .lp-tile__name { margin-top: 0; }
 .lp-tiles__grid--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lp-tiles__grid--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tiles__grid--n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .lp-tiles__grid--n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .lp-tiles__grid--n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+/* perRow: плитки в кілька рядів (3 у ряд, 6 пунктів): другий ряд — свої 4 спільні рядки subgrid під першим */
+.lp-tiles__grid--rows { grid-template-rows: repeat(9, auto); }
+.lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: 6 / span 4; margin-top: var(--space-lp-tile-row); }
 .lp-tiles--lead-2 .lp-head__lead { width: var(--grid-span-2); } .lp-tiles--lead-3 .lp-head__lead { width: var(--grid-span-3); } .lp-tiles--lead-4 .lp-head__lead { width: var(--grid-span-4); } .lp-tiles--lead-5 .lp-head__lead { width: var(--grid-span-5); } .lp-tiles--lead-6 .lp-head__lead { width: var(--grid-span-6); } /* поле leadCols: ширина ліда в шапці (рев'ю dcd66896, ce0223c5: лід — у шапці під H2) */
 
 /* ---------- offers: фото на ВСЮ секцію без затемнення (рев'ю 003d2383, ee14a4bc, 8263cbc6); поверх — шапка й панелі-пропозиції ----------
@@ -325,6 +328,9 @@
 /* ---------- card: ІСНУЮЧА панель .tour-card (головна, «Екскурсії/Бочкова торгівля») на сітці 10 колонок ---------- */
 .lp-card__grid { width: var(--grid-w); margin-inline: auto; }
 .lp-card .tour-card { width: 100%; } /* фото-колонка = 5 колонок + ½ зазору (--size-tour-photo-box-w, tokens.css): шов текст | фото посередині зазору */
+
+/* ---------- brands: шапка секції + ІСНУЮЧІ дві половини brand-half головної (partials/sections/brands, на всю ширину вікна; своїх стилів у них тут немає) ---------- */
+.lp-brands__head { margin-bottom: var(--space-lp-head); }
 
 /* ---------- place: ІСНУЮЧІ панель .contacts-panel (5 колонок) і мапа .contacts-map (7 колонок) зі сторінки контактів ---------- */
 .lp-place__grid { display: grid; grid-template-columns: var(--grid-cols-4-6); column-gap: var(--grid-gap); align-items: stretch; width: var(--grid-w); margin-inline: auto; }

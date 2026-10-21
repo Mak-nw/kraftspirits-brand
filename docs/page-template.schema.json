@@ -209,6 +209,18 @@
       "rule": "`alt` плитки має сенс лише з `img`"
     },
     {
+      "id": "tiles-bare-engraving",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`bare` (коло без решітки гравюри) — лише коли кожна плитка з `engraving`"
+    },
+    {
+      "id": "tiles-perrow-6",
+      "scope": "tiles",
+      "expressed": true,
+      "rule": "`perRow: 3` (плитки в два ряди по три) — рівно 6 плиток"
+    },
+    {
       "id": "tiles-circle-needs-img",
       "scope": "tiles",
       "expressed": true,
@@ -1574,9 +1586,11 @@
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "unit": {
-                    "type": "string",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "maxLength": 40,
-                    "minLength": 1,
                     "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
                   },
                   "cellar": {
@@ -1648,8 +1662,7 @@
                   "key",
                   "label",
                   "span",
-                  "count",
-                  "unit"
+                  "count"
                 ],
                 "allOf": [
                   {
@@ -2227,6 +2240,19 @@
                 "null"
               ]
             },
+            "bare": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "perRow": {
+              "enum": [
+                3,
+                "",
+                null
+              ]
+            },
             "leadCols": {
               "enum": [
                 2,
@@ -2520,6 +2546,58 @@
                       }
                     }
                   ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "bare": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "bare"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "engraving"
+                      ],
+                      "properties": {
+                        "engraving": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "perRow"
+                ],
+                "properties": {
+                  "perRow": {
+                    "type": "number"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 6,
+                    "maxItems": 6
+                  }
                 }
               }
             },
@@ -3827,6 +3905,120 @@
               }
             }
           ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "ref"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "n": {
+              "enum": [
+                "8",
+                "9",
+                "10",
+                "11"
+              ]
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 60,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "text": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 400,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "img": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+            },
+            "alt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 140,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cta": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 40,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                },
+                "href": {
+                  "type": "string",
+                  "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+                }
+              },
+              "required": [
+                "text",
+                "href"
+              ]
+            },
+            "items": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  }
+                },
+                "required": [
+                  "title",
+                  "text"
+                ]
+              }
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "n"
+          ],
+          "title": "ref"
         },
         {
           "type": "object",

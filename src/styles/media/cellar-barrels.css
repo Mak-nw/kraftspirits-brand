@@ -15,6 +15,7 @@
 .lp-group--has-cellar.lp-group--center .lp-group__approx { margin-left: var(--shift-lp-approx-ink); } /* «≈» у середині рядка «200 Л ≈ 383 ПЛЯШКИ»: поправка лівого поля не потрібна (центруємо чорнило всього рядка через --lp-num-ink) */
 .lp-group--has-cellar .lp-group__unit { grid-row: 4; margin-top: var(--space-10); } /* число → підпис: найближчий менший за 15u токен шкали (рев'ю b2fbcff1) */
 .lp-group--has-cellar .lp-group__facts { grid-row: 5; margin-top: var(--space-lp-ledger-row); }
+.lp-group--has-cellar:not(:has(.lp-group__unit)) .lp-group__facts { margin-top: var(--space-70); } /* без строки «одиниця» (рев'ю 7bb3bec5): вартість впритул під великим рядком; 70u — найближчий токен шкали до колишніх 10 + рядок + 30 (≈ 64u) */
 .lp-group--has-cellar { grid-template-columns: minmax(0, 1fr); min-width: 0; } /* усі елементи групи — на ширину кімнати (= колонки сітки), текст по центру (.lp-group--center) → центр тексту = центр кімнати */
 
 .lp-cellar { display: block; width: 100%; height: auto; margin-top: var(--space-lp-wall-top); color: var(--lp-accent); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: var(--svg-stroke-hair); }
