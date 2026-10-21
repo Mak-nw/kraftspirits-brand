@@ -6,3 +6,4 @@
 .lp-engraving--crown { color: var(--lp-accent); } /* клини й коло — currentColor = золото теми (як на about: --color-gold) */
 .lp-tiles--crown { --size-barrels-finish-icon: var(--size-crown-finish-icon); }
 .lp-tiles--crown .lp-tile__icon { color: var(--lp-accent); }
+.lp-tiles--crown .lp-tiles__grid--rows { --size-barrels-finish-head: var(--size-circle-ring); --size-barrels-finish-icon: calc(var(--size-circle-ring) * var(--size-crown-icon-share)); } /* events «Що є на локації» (perRow): коло ФІКСОВАНОГО розміру = кільце принципів про нас (токен --size-circle-ring), а не частка ширини картки */

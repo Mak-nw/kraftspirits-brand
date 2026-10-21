@@ -5,6 +5,13 @@
   .lp-span--1 { grid-column: span 1; } .lp-span--2, .lp-span--3 { grid-column: span 2; } .lp-span--4 { grid-column: span 3; }
   .lp-span--5 { grid-column: span 4; } .lp-span--6 { grid-column: span 5; } .lp-span--7, .lp-span--8 { grid-column: span 6; }
   .lp-span--9 { grid-column: span 7; } .lp-span--10 { grid-column: span 8; }
+  /* tiles perRow (events «Що є на локації»): ≤ 1023 — 2 колонки × 3 ряди (коло фіксованого розміру як у принципів, --size-circle-ring, на 768 у 3 колонки не вміщується), рядки без спільної сітки (другий ряд DS — grid-row: 6 — скинуто); плитка = коло + група (caption — блок, діти — рядки) */
+  .lp-tiles__grid--rows { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: auto; row-gap: var(--space-50); }
+  .lp-tiles__grid--rows .lp-tiles__head { grid-column: 1 / -1; grid-row: auto; }
+  .lp-tiles__grid--rows .lp-tile, .lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: auto; grid-template-rows: auto auto; align-content: start; margin-top: 0; }
+  .lp-tiles__grid--rows .lp-tile__caption { grid-row: auto; grid-template-rows: none; display: block; }
+  .lp-tiles__grid--rows .lp-tile__caption > * { display: block; }
+  .lp-tiles--crown .lp-tiles__grid--rows .lp-tile { row-gap: var(--space-30); --space-lp-tile-caption: 0; }  /* зазор коло → група на рівні плитки (як у вінців barrels на телефоні) */
   .hero--lp .hero__content { top: auto; bottom: var(--offset-lp-hero-bottom); }
   .hero--lp:not(.hero--fade) .hero__content { top: var(--offset-lp-hero-top); bottom: auto; }
   .lp-head__lead, .lp-offers__note, .lp-offers__fine { width: var(--size-lp-text-w); }
@@ -68,8 +75,8 @@
   .lp-tiles__head { grid-column: 1 / -1; grid-row: auto; }
   .lp-tile { grid-row: auto; grid-template-rows: auto auto; align-content: start; }  /* плитка, розтягнута до вищого сусіда в ряду, не роздає зайву висоту авто-рядкам: коло лишається кругом, підписи — від верху ряду */
   .lp-tile__caption { grid-row: auto; grid-template-rows: none; display: block; }
-  .lp-tiles--crown .lp-tile__caption > * { display: block; }  /* вінці: назва / походження / ноти — окремі рядки-блоки (як на планшеті, де caption = grid); інакше inline-span зливає їх в один абзац і ігнорує margin-top — зазор коло → назва = 0 */
-  .lp-tiles--crown .lp-tile__name { margin-top: var(--space-15); }  /* +10 px між колом і назвою на 440 (коментар 5689fdd8; 15u = 10.3 px на 440, 9.1 на 390, 7.5 на 320) */
+  .lp-tiles--crown .lp-tile__caption > * { display: block; }  /* вінці: назва / походження / ноти — окремі рядки-блоки (як на планшеті, де caption = grid); інакше inline-span зливає їх в один абзац */
+  .lp-tiles--crown .lp-tile { row-gap: var(--space-30); --space-lp-tile-caption: 0; }  /* зазор коло → група (назва + опис) — на РІВНІ плитки (row-gap, як gap у принципів/дегустації), 30u = 20.6 px на 440; відступ стилю тексту не чіпаємо: власний margin-top назви (токен --space-lp-tile-caption) у блоці вінця обнулено, щоб не додавався до row-gap (коментар замовника 5689fdd8) */
   .lp-tiles--over .lp-tile__media, .lp-tiles--over .lp-tile__caption { grid-row: 1; }
   .lp-tiles--over .lp-tile { grid-template-rows: auto; }
   .lp-tiles--lead-2 .lp-head__lead, .lp-tiles--lead-3 .lp-head__lead, .lp-tiles--lead-4 .lp-head__lead, .lp-tiles--lead-5 .lp-head__lead, .lp-tiles--lead-6 .lp-head__lead { width: 100%; }
@@ -111,9 +118,4 @@
   .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
   .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * var(--ratio-lp-card-img-h-phone)); }
   .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }
-  /* tiles perRow (events «Що є на локації»): на телефоні 2 колонки × 3 ряди, коло = ширина колонки, рядки без спільної сітки (другий ряд DS — grid-row: 6 — скинуто) */
-  .lp-tiles__grid--rows { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
-  .lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: auto; margin-top: 0; }
-  .lp-tiles__grid--rows .lp-tile__caption > * { display: block; }
-  .lp-tiles__grid--rows .lp-tile { align-content: start; }
 }
