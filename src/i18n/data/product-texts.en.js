@@ -67,6 +67,86 @@ export default {
         'Gift box and card come with the gift presentation',
       ],
     },
+    'gift-tube': {
+      lead: 'A 0.5 L bottle of YasnoCraft gin in a gift tube. A ready gift, no extra wrapping needed.',
+      tabs: [
+        {
+          title: 'About the set',
+          text: [
+            'The set holds a 0.5 L bottle of Yasnohorodka Gin by YasnoCraft, 43% ABV: juniper, fresh citrus and herbs, distilled three times at our own distillery. The bottle comes in a gift tube, so it can be handed over as it is.',
+            'It works for partners and clients, for your team, for holidays and thank-yous. The tube can be finished for your company or event; see the Personalisation tab.',
+          ],
+        },
+        {
+          title: 'What is in the set',
+          items: [
+            'Yasnohorodka Gin by YasnoCraft, 0.5 L, 43% ABV',
+            'Gift tube',
+            'Gift card',
+            'Branded ribbon (on request)',
+          ],
+        },
+        {
+          title: 'Personalisation',
+          text: ['The set can be finished to your order. What you can change:'],
+          items: [
+            'your company logo or name on the tube (printing, a sticker or hot-foil stamping; we will pick the method to suit your logo)',
+            'a custom label on the bottle with your name or message',
+            'a card with your own text',
+            'a branded ribbon',
+          ],
+          note: ['The minimum run and the production time depend on the finish, and we agree them when you order.'],
+        },
+        {
+          title: 'Orders for companies',
+          text: [
+            'The sets are ordered for partners, clients and teams. We work under a contract, issue an invoice to a legal entity and provide the closing documents.',
+            'Tell us what you need: how many sets, the finish you want, the date of handover. We will prepare a proposal.',
+          ],
+          links: [{ label: 'Terms for companies', href: 'b2b.html' }, { label: 'Request a proposal', href: 'feedback.html?topic=b2b' }],
+        },
+      ],
+    },
+    'gift-wood-box': {
+      lead: 'A 0.5 L bottle of Bazylsprings Oak Notes in a wooden gift box. For the moments that call for a serious gesture.',
+      tabs: [
+        {
+          title: 'About the set',
+          text: [
+            'The set holds a 0.5 L bottle of Bazylsprings Oak Notes, 42% ABV: a grain distillate infused on oak staves, with notes of oak, vanilla, caramel and soft spice. The bottle comes in a wooden gift box.',
+            'It is made for partners, key clients and executives, for anniversaries and thank-yous. The lid of the box can carry an engraving; see the Personalisation tab.',
+          ],
+        },
+        {
+          title: 'What is in the set',
+          items: [
+            'Bazylsprings Oak Notes, 0.5 L, 42% ABV',
+            'Wooden gift box',
+            'Gift card',
+            'Branded ribbon (on request)',
+          ],
+        },
+        {
+          title: 'Personalisation',
+          text: ['The set can be finished to your order. What you can change:'],
+          items: [
+            'laser engraving of a message or your company logo on the wooden lid of the box',
+            'a custom label on the bottle with your name or message',
+            'a card with your own text',
+            'a branded ribbon',
+          ],
+          note: ['The minimum run and the production time depend on the finish, and we agree them when you order.'],
+        },
+        {
+          title: 'Orders for companies',
+          text: [
+            'The sets are ordered for partners, clients and teams. We work under a contract, issue an invoice to a legal entity and provide the closing documents.',
+            'Tell us what you need: how many sets, the finish you want, the date of handover. We will prepare a proposal.',
+          ],
+          links: [{ label: 'Terms for companies', href: 'b2b.html' }, { label: 'Request a proposal', href: 'feedback.html?topic=b2b' }],
+        },
+      ],
+    },
   },
   serve: {
     'gin-yasnyi': 'Gin and tonic 1:3 with a lime twist; a martini; chilled, over ice.',

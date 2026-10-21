@@ -191,3 +191,7 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 - Підсумок наповненості (очима): gift — пляшка повна, коробка закрита; tasting — 4 келихи з віскі, пляшка з гіном; collection — усі пляшки на полиці з рідиною, келихи наповнені (кілька мікро-келихів на підвіконні зліва малі); bar — пляшки й склянки з віскі/льодом (лише 2–3 дрібні келихи на краю кадру лишились порожні).
 - Інтеграція: смуга фону 1920×683u (cover) → кадр 16:9 обрізається по висоті; позиція по вертикалі в токенах `--pos-picker-bg-{gift,collection,tasting,bar}` (gift/tasting 100%, collection 60%, bar 65%) — щоб келихи/пляшки були збоку від картки (360×495 по центру). Затемнювач: `.picker__bgs::after` з `color-mix(black, var(--share-picker-bg-shade))` = 45% (аналог `--share-lp-split-shade`): без нього світлі стрілки #eae9e8 мали на фото 1.1–2.5:1 (< 3:1), з ним 3.0–11.7:1 (медіана ≥3.4) на всіх 4 слайдах і 1920/1440/1200.
 
+
+## Подарункові набори (gift-tube, gift-wood-box) — слоти фото
+- hero 1800×1936: `img/product-hero-gift-tube-new.webp`, `img/product-hero-gift-wood-box-new.webp`; виріз 800×1060 (прозорий WebP): `img/products/gift-tube.webp`, `img/products/gift-wood-box.webp` (картка каталогу). Генерує окремий виконавець.
+- До появи фото в цих файлах лежать placeholder-копії зображень вмісту (`product-hero-yasnyi-new` / `products/gin-yasnyi`, `product-hero-oak-notes-new` / `products/oak-notes`): замінити файлами з генерації (ті самі імена), AI-фото — на затвердження замовнику. `gallery` наборів порожній (мініатюри слайдера — фото самої пляшки).
