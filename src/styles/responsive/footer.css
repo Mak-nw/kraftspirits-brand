@@ -9,7 +9,7 @@
 }
 @media (max-width: 1023.98px) {
   .site-footer__top { height: auto; padding: var(--space-70) var(--grid-margin) 0; gap: var(--space-50); }
-  .site-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-50); }
+  .site-footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-50); align-items: start; }  /* планшет: 3 колонки в один ряд */
   .site-footer__col--menu, .site-footer__col--catalog, .site-footer__col--docs { grid-column: auto; }
   .site-footer__col { gap: var(--space-20); }
   .site-footer__list a:not(.btn), .site-footer__list li.nav-link { white-space: normal; width: 100%; }
@@ -26,8 +26,9 @@
   .site-footer__age { white-space: normal; text-wrap: balance; }
 }
 @media (max-width: 767.98px) {
-  /* телефон: Меню / Каталог / Документація одна під одною, кнопки замовлення одна під одною на всю ширину */
-  .site-footer__cols { grid-template-columns: minmax(0, 1fr); }
+  /* телефон: сітка 2×2 (рішення замовника c4f85c9d): «Меню» | «Каталог» / «Документація» | (порожньо); колонка = 2 з 4 колонок сітки, пункти в один стовпчик, довгі назви переносяться по словах;
+     кнопки замовлення одна під одною на всю ширину над логотипами */
+  .site-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--grid-gap); }
   .site-footer__order { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-20); }
 }
 /* малі ноути 1024–1199: висота верху футера — мінімум (малий текст із підлогами px не вміщується в --footer-h-top) */
