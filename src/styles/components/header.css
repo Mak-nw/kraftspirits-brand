@@ -38,6 +38,10 @@
    (ті самі панель, ховер/клік/клавіатура — header-menu.js, анімація, пункти .nav-cell--menu). Обгортка .site-header__lang — відносний контейнер: панель під кнопкою, ліворуч від її краю, на тій самій висоті від пілюлі, що й панель «меню»
    (вертикаль: від низу кнопки до низу пілюлі (header3-h − висота кнопки)/2 + --header3-menu-gap). Активна мова = стан selected контурної кнопки (--btn-nav-outline-*-selected), без нових стилів. */
 .site-header__lang { position: relative; flex: none; display: flex; }
+.site-header__lang-btn { gap: var(--space-10); } /* текст → шеврон */
+.site-header__lang-btn .icon--chevron-down { --icon-size: var(--size-arrow-btn-sm-icon); }
+.site-header__lang-btn[aria-expanded="true"] .icon--chevron-down { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .site-header__lang-btn .icon--chevron-down { transition: none; } }
 .site-header__menu--lang { --header3-lang-drop: calc((var(--header3-h) - var(--header2-btn-outline-h)) / 2 + var(--header3-menu-gap)); top: calc(100% + var(--header3-lang-drop)); width: max-content; min-width: 100%; }
 .site-header__menu--lang::before { height: var(--header3-lang-drop); } /* «місток» ховеру: від низу кнопки до верху панелі */
 .site-header__menu--lang .nav-cell--menu[aria-current="true"], .site-header__menu-lang .nav-cell--menu[aria-current="true"] { border-radius: var(--radius-btn); background: var(--btn-nav-outline-bg-selected); color: var(--btn-nav-outline-text-selected); }

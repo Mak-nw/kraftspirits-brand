@@ -65,14 +65,15 @@ a.nav-cell--fill:focus-visible { outline-color: var(--btn-focus-ring-color-on-da
 
 /* «каталог» (висота 44, як «Кошик»/«підказати?», 214:2902): у спокої без рамки й заливки (текст + іконка, як раніше); hover/focus-visible — та сама світла заливка, що в «меню» / «Кошик» (токени --btn-nav-ghost-*); іконка = currentColor. Рамки нема, висота фіксована, ширина hug (вміст + padding-inline), тож розмір і позиція комірки й іконки на hover/focus не змінюються, а заливка має відступ від тексту й іконки з боків. */
 .nav-cell--ghost { border-radius: var(--radius-btn); background: var(--btn-bg); color: var(--btn-text); transition: background-color var(--btn-transition-duration) var(--btn-transition-ease), color var(--btn-transition-duration) var(--btn-transition-ease); }
-a.nav-cell--ghost:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
+a.nav-cell--ghost:focus-visible, button.nav-cell--ghost:focus-visible { outline-color: var(--btn-focus-ring-color-on-dark); background: var(--btn-bg-focus); color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) {
-  a.nav-cell--ghost:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
+  a.nav-cell--ghost:hover, button.nav-cell--ghost:hover { background: var(--btn-bg-hover); color: var(--btn-text-hover); }
 }
+button.nav-cell--ghost[aria-expanded="true"] { background: var(--btn-bg-hover); color: var(--btn-text-hover); } /* відкрита випадайка (кнопка мови): заливка hover, як selected у контурних */
 @media (prefers-reduced-motion: reduce) { .nav-cell--ghost { transition: none; } }
 
 /* active (натиснуто): заливка hover на 8% темніша (--btn-active-mix); перехід короткий. Масштабування не застосовується (комірка фіксованого розміру) */
-a.nav-cell--outline:active, button.nav-cell--outline:active, a.nav-cell--fill:active, a.nav-cell--ghost:active { background: var(--btn-bg-active); color: var(--btn-text-active); transition-duration: var(--btn-transition-duration-focus); }
+a.nav-cell--outline:active, button.nav-cell--outline:active, a.nav-cell--fill:active, a.nav-cell--ghost:active, button.nav-cell--ghost:active { background: var(--btn-bg-active); color: var(--btn-text-active); transition-duration: var(--btn-transition-duration-focus); }
 a.nav-cell--outline:active, button.nav-cell--outline:active, a.nav-cell--fill:active { border-color: var(--btn-border-active); }
 
 /* disabled / aria-disabled: приглушення, курсор, стани hover/focus/active = disabled (default); нативний :disabled без pointer-events */
