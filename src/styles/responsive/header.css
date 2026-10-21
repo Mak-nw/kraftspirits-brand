@@ -45,3 +45,12 @@
   .site-header__menu-lang { display: flex; }
   .site-header__menu .site-header__menu-lang .nav-cell--menu { flex: 1 1 0; width: auto; min-width: 0; justify-content: center; }
 }
+
+/* кабінет на < 1200 (рішення замовника 8ee29299): без обводки — ghost-вигляд, як у «Кошика»/«Каталогу» (кольори станів = токени --btn-nav-ghost-*); рамка лишається прозорою, тож бокс 44×44 і положення ті самі; focus-visible (кільце) — із nav.css. На ≥ 1200 квадратна обводка без змін */
+@media (max-width: 1199.98px) {
+  .site-header__side--end > a.nav-cell--square {
+    --btn-bg: var(--btn-nav-ghost-bg-default); --btn-bg-hover: var(--btn-nav-ghost-bg-hover); --btn-bg-focus: var(--btn-nav-ghost-bg-focus); --btn-bg-active: var(--btn-nav-ghost-bg-active);
+    --btn-text: var(--btn-nav-ghost-text-default); --btn-text-hover: var(--btn-nav-ghost-text-hover); --btn-text-focus: var(--btn-nav-ghost-text-focus); --btn-text-active: var(--btn-nav-ghost-text-active);
+    --btn-border: transparent; --btn-border-hover: transparent; --btn-border-focus: transparent; --btn-border-active: transparent;
+  }
+}
