@@ -1,0 +1,49 @@
+/* ВИНЯТОК 1:1 МАКЕТ ЗАМОВНИКА (b2b.pdf стор. 8–11; пряма вказівка замовника 21.10: «я дав точний реф і сказав 1в1, в обхід правил шаблону для цих секцій»).
+   Лише для секцій type: 'ref' сторінки b2b (partials/lp/b2b-ref-<n>.html). Геометрія — з PDF у одиницях --u (1u = 1px при 1920); кольори PDF = токени DS (беж #dcdbcf, зелений #223520).
+   Нових візуальних елементів поза макетом немає; кнопка і brand-half — ІСНУЮЧІ компоненти. Рамка фото «квиток» = прямокутник 776×622 з виїмками на 4 кутах (mask SVG з контурів PDF). Адаптив <1200 — окрема гілка. */
+.b2b-ref { position: relative; overflow: hidden; width: 100%; height: calc(948 * var(--u)); background: var(--color-green); color: var(--color-beige); font-family: var(--font-family-serif); }
+.b2b-ref--10 { height: auto; background: none; }
+/* стор. 10: ІСНУЮЧИЙ brand-half; у макеті картки ширші за сітку головної (912 / 914) і з маскою пляшки з PDF, фон — фото 2048² з PDF */
+.b2b-ref--10 { display: grid; grid-template-columns: 1fr 1fr; height: calc(974 * var(--u)); }
+.b2b-ref--10 .brand-half { --size-brand-content-w: calc(440 * var(--u)); }
+.b2b-ref--10 .brand-half--yasnocraft { --bh-card-x: calc(43 * var(--u)); --bh-card-w: calc(912 * var(--u)); }
+.b2b-ref--10 .brand-half--bazylsprings { --bh-card-x: calc(5 * var(--u)); --bh-card-w: calc(914 * var(--u)); }
+.b2b-ref--10 .brand-half--yasnocraft .brand-half__card::before { -webkit-mask-image: url('/assets/img/b2b-brand-card-yc.svg'); mask-image: url('/assets/img/b2b-brand-card-yc.svg'); }
+.b2b-ref--10 .brand-half--bazylsprings .brand-half__card::before { -webkit-mask-image: url('/assets/img/b2b-brand-card-bs.svg'); mask-image: url('/assets/img/b2b-brand-card-bs.svg'); }
+.b2b-ref--10 .brand-half__bg { inset: auto; object-fit: fill; top: calc(-222 * var(--u)); }
+.b2b-ref--10 .brand-half--yasnocraft .brand-half__bg { left: calc(-82 * var(--u)); width: calc(1255 * var(--u)); height: calc(1255 * var(--u)); }
+.b2b-ref--10 .brand-half--bazylsprings .brand-half__bg { left: calc(-101 * var(--u)); width: calc(1247 * var(--u)); height: calc(1247 * var(--u)); }
+.b2b-ref__photo { position: absolute; top: calc(163 * var(--u)); width: calc(776 * var(--u)); height: calc(622 * var(--u));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20776%20622%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20fill-rule=%27evenodd%27%20d=%27M0%200H776%20V622%20H0Z%20M21.78%20596.94C26.32%20595.82%2031.05%20597.84%2033.39%20601.89C35.73%20605.94%2035.11%20611.04%2031.87%20614.42L8.5%20638.77L-11%20605L21.78%20596.94Z%20M755.08%20596.94C750.54%20595.82%20745.81%20597.84%20743.47%20601.89C741.13%20605.94%20741.75%20611.04%20744.99%20614.42L768.36%20638.77L787.86%20605L755.08%20596.94Z%20M32.85%2013.58C35.1%2017.67%2034.38%2022.77%2031.07%2026.07C27.77%2029.38%2022.67%2030.1%2018.58%2027.85L-11%2011.58L16.58%20-16L32.85%2013.58Z%20M744.01%2013.58C741.76%2017.67%20742.48%2022.77%20745.79%2026.07C749.09%2029.38%20754.19%2030.1%20758.29%2027.85L787.86%2011.58L760.28%20-16L744.01%2013.58Z%27/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20776%20622%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20fill-rule=%27evenodd%27%20d=%27M0%200H776%20V622%20H0Z%20M21.78%20596.94C26.32%20595.82%2031.05%20597.84%2033.39%20601.89C35.73%20605.94%2035.11%20611.04%2031.87%20614.42L8.5%20638.77L-11%20605L21.78%20596.94Z%20M755.08%20596.94C750.54%20595.82%20745.81%20597.84%20743.47%20601.89C741.13%20605.94%20741.75%20611.04%20744.99%20614.42L768.36%20638.77L787.86%20605L755.08%20596.94Z%20M32.85%2013.58C35.1%2017.67%2034.38%2022.77%2031.07%2026.07C27.77%2029.38%2022.67%2030.1%2018.58%2027.85L-11%2011.58L16.58%20-16L32.85%2013.58Z%20M744.01%2013.58C741.76%2017.67%20742.48%2022.77%20745.79%2026.07C749.09%2029.38%20754.19%2030.1%20758.29%2027.85L787.86%2011.58L760.28%20-16L744.01%2013.58Z%27/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; }
+.b2b-ref__photo img { position: absolute; display: block; max-width: none; }
+.b2b-ref__title, .b2b-ref__text, .b2b-ref__facts, .b2b-ref__btn { position: absolute; margin: 0; }
+.b2b-ref__title { font-weight: 600; font-size: calc(70 * var(--u)); line-height: calc(70 * var(--u)); text-transform: uppercase; letter-spacing: 0; width: calc(560 * var(--u)); }
+.b2b-ref__text { font-weight: 600; font-size: calc(20 * var(--u)); line-height: calc(20 * var(--u)); letter-spacing: 0; width: calc(480 * var(--u)); }
+/* кнопка макета знята з вікна 1728 (масштаб 0.9): кнопка DS (.btn--light) без змін, стиснута до 0.9 */
+.b2b-ref__btn-in { transform: scale(0.9); transform-origin: 0 0; width: max-content; }
+
+/* стор. 9: фото ліворуч */
+.b2b-ref--9 .b2b-ref__photo { left: calc(170 * var(--u)); }
+.b2b-ref--9 .b2b-ref__photo img { left: calc(-380.11 * var(--u)); top: calc(-116 * var(--u)); width: calc(1518.22 * var(--u)); height: calc(854 * var(--u)); }
+.b2b-ref--9 .b2b-ref__title { left: calc(1115 * var(--u)); top: calc(310 * var(--u)); }
+.b2b-ref--9 .b2b-ref__text { left: calc(1115 * var(--u)); top: calc(469 * var(--u)); }
+.b2b-ref--9 .b2b-ref__btn { left: calc(1120 * var(--u)); top: calc(572 * var(--u)); }
+
+/* стор. 8: текст ліворуч, фото праворуч */
+.b2b-ref--8 .b2b-ref__photo { left: calc(974 * var(--u)); }
+.b2b-ref--8 .b2b-ref__photo img { left: calc(-430.22 * var(--u)); top: calc(-138 * var(--u)); width: calc(1596.44 * var(--u)); height: calc(898 * var(--u)); }
+.b2b-ref--8 .b2b-ref__title { left: calc(170 * var(--u)); top: calc(355 * var(--u)); }
+.b2b-ref--8 .b2b-ref__text { left: calc(170 * var(--u)); top: calc(514 * var(--u)); }
+
+/* стор. 11: фото ліворуч, заголовок і сітка 2×2 фактів праворуч */
+.b2b-ref--11 .b2b-ref__photo { left: calc(170 * var(--u)); }
+.b2b-ref--11 .b2b-ref__photo img { left: calc(-39 * var(--u)); top: calc(-16 * var(--u)); width: calc(854 * var(--u)); height: calc(854 * var(--u)); }
+.b2b-ref--11 .b2b-ref__title { left: calc(1115 * var(--u)); top: calc(161 * var(--u)); }
+.b2b-ref--11 .b2b-ref__text { left: calc(1115 * var(--u)); top: calc(320 * var(--u)); }
+.b2b-ref__facts { left: calc(1115 * var(--u)); top: calc(439.5 * var(--u)); width: calc(648 * var(--u)); display: grid; grid-template-columns: calc(324 * var(--u)) calc(324 * var(--u)); grid-auto-rows: calc(182 * var(--u)); }
+.b2b-ref__fact { min-width: 0; }
+.b2b-ref__fact-title { margin: 0; width: calc(285 * var(--u)); font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(30 * var(--u)); text-transform: uppercase; }
+.b2b-ref__fact-text { margin: calc(10.5 * var(--u)) 0 0; width: calc(285 * var(--u)); font-weight: 500; letter-spacing: calc(1 * var(--u)); font-size: calc(20 * var(--u)); line-height: calc(24 * var(--u)); }
+
+.b2b-ref--10 .btn__inner { letter-spacing: calc(0.4 * var(--u)); } /* текст кнопки макета на 3px ширший (211 проти 208) */
+.b2b-ref--10 .brand-half__cta { top: calc(785.5 * var(--u)); }

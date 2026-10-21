@@ -162,7 +162,7 @@
     },
     {
       "id": "pad-exclusive",
-      "scope": "layers, steps, compare, formats, tiles, offers, card, place, brands, faq",
+      "scope": "layers, steps, compare, formats, tiles, offers, card, place, faq",
       "expressed": true,
       "rule": "`pad` задає власний верхній і нижній відступ секції, тож не задається разом з `loose` (інший розмір того самого відступу), `join` (верх = 0) і `stack` (верх = зазор стека). Нижній відступ перед `join`-секцією лишається за сусідом; перед секцією-стеком `pad` перемагає: він і є зазор до стекової секції (її верх = 0)"
     },
@@ -2240,7 +2240,6 @@
                 "null"
               ]
             },
-            "leadCols": {
             "bare": {
               "type": [
                 "boolean",
@@ -2254,6 +2253,7 @@
                 null
               ]
             },
+            "leadCols": {
               "enum": [
                 2,
                 3,
@@ -2550,7 +2550,6 @@
               }
             },
             {
-            {
               "if": {
                 "properties": {
                   "bare": {
@@ -2602,6 +2601,7 @@
                 }
               }
             },
+            {
               "if": {
                 "properties": {
                   "shape": {
@@ -3911,119 +3911,114 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "const": "brands"
+              "const": "ref"
             },
             "id": {
               "type": "string",
               "pattern": "^[a-z0-9-]+$"
             },
-            "room": {
+            "n": {
               "enum": [
-                "warm",
-                "deep",
-                "paper",
-                "",
-                null
-              ],
-              "default": "deep"
-            },
-            "join": {
-              "type": [
-                "boolean",
-                "null"
-              ]
-            },
-            "pad": {
-              "enum": [
-                20,
-                30,
-                40,
-                50,
-                70,
-                100,
-                "",
-                null
+                "8",
+                "9",
+                "10",
+                "11"
               ]
             },
             "title": {
-              "type": "string",
-              "maxLength": 60,
-              "minLength": 1,
-              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
-            },
-            "lead": {
               "type": [
                 "string",
                 "null"
               ],
-              "maxLength": 320,
+              "maxLength": 60,
               "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
             },
-            "titleCols": {
-              "enum": [
-                4,
-                6,
-                "",
-                null
+            "text": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 400,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "img": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?:|#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+            },
+            "alt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 140,
+              "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+            },
+            "cta": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 40,
+                  "minLength": 1,
+                  "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                },
+                "href": {
+                  "type": "string",
+                  "pattern": "^(?:#[a-z0-9-]+|/(?!/)[^\\s\"<>]*|https?://[^\\s\"<>]+|tel:\\+?[0-9]+|mailto:[^\\s\"<>]+|%contacts\\.\\w+%|[a-z0-9-]+\\.html(?:[?#][^\\s\"<>]*)?)$"
+                }
+              },
+              "required": [
+                "text",
+                "href"
               ]
+            },
+            "items": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "pattern": "^(?![\\s\\S]*[^ \\n\\r\\t]{31})[\\s\\S]*$"
+                  }
+                },
+                "required": [
+                  "title",
+                  "text"
+                ]
+              }
             }
           },
           "required": [
             "type",
             "id",
-            "title"
+            "n"
           ],
-          "title": "brands",
-          "allOf": [
-            {
-              "if": {
-                "required": [
-                  "pad"
-                ],
-                "properties": {
-                  "pad": {
-                    "type": "number"
-                  }
-                }
-              },
-              "then": {
-                "not": {
-                  "anyOf": [
-                    {
-                      "required": [
-                        "loose"
-                      ],
-                      "properties": {
-                        "loose": {
-                          "const": true
-                        }
-                      }
-                    },
-                    {
-                      "required": [
-                        "join"
-                      ],
-                      "properties": {
-                        "join": {
-                          "const": true
-                        }
-                      }
-                    },
-                    {
-                      "required": [
-                        "stack"
-                      ],
-                      "properties": {
-                        "stack": {
-                          "const": true
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          ]
+          "title": "ref"
         },
         {
           "type": "object",
