@@ -16,13 +16,23 @@ import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, hscroll, 
 export const RESP_WIDTHS = '320,360,375,390,430,600,768,834,1024,1100,2560,3440';
 const ALL = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6'];
 
+export const R2_LINK_MIN_H = 22;
+export const R2_MENU_MIN_H = 33; // px: пункт сторінки меню = 0.8 × --size-touch-target (35,2) із запасом на округлення
+const R2_EXEMPT_SEL = '.site-footer__list a:not(.btn)';
 async function probe(page, width) {
-  return page.evaluate((width) => {
+  return page.evaluate(({ width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H }) => {
     const out = { touch: [], text: [], small: [], overlap: [], key: [], stretch: [] };
     const vw = document.documentElement.clientWidth;
     const nm = (el) => { const p = []; for (let n = el; n && n.nodeType === 1 && p.length < 3; n = n.parentElement) p.unshift(n.tagName.toLowerCase() + (n.id ? `#${n.id}` : '') + [...n.classList].slice(0, 2).map((x) => `.${x}`).join('')); return p.join(' > '); };
     const visible = (el) => { if (el.closest('template, [hidden], [inert], noscript, [aria-hidden="true"]') && !el.matches('input, button, a')) return false; const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity === 0) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
     const gated = !!document.querySelector('.age-gate:not([hidden])');
+    // R2б: пункти СТОРІНОК випадного меню (< 1200; меню закрите, але має розкладку): ПРЯМА ВКАЗІВКА замовника 21.10.2026 — touch < 44 px допустимо (docs/responsive.md §4б), мінімум R2_MENU_MIN_H і без перекриття рядків; рядок мови, «Кошик» і дії ≥ 44 перевіряє цикл нижче
+    if (width <= 1199) {
+      const nav = document.querySelector('.site-header__menu:not(.site-header__menu--lang)');
+      const it = [...(nav?.children || [])].filter((a) => a.matches('a.nav-cell--menu:not([data-lang]):not([href$="cart.html"])') && a.getClientRects().length > 0);
+      const rs = it.map((a) => a.getBoundingClientRect());
+      rs.forEach((r, i) => { if (r.height < R2_MENU_MIN_H - 0.5) out.touch.push({ el: nm(it[i]), w: +r.width.toFixed(1), h: +r.height.toFixed(1), text: (it[i].textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28) + ' (меню)' }); for (let j = i + 1; j < rs.length; j++) { const ox = Math.min(r.right, rs[j].right) - Math.max(r.left, rs[j].left), oy = Math.min(r.bottom, rs[j].bottom) - Math.max(r.top, rs[j].top); if (ox > 0.5 && oy > 0.5) out.touch.push({ el: nm(it[i]), w: +r.width.toFixed(1), h: +r.height.toFixed(1), text: `перекриття з «${(it[j].textContent || '').trim().slice(0, 16)}» (меню)` }); } });
+    }
     // R2
     if (width <= 1199) {
       const sel = 'a[href], button, input:not([type=hidden]), select, textarea, summary, [role=button], [role=tab], [role=radio], [role=switch]';
@@ -37,6 +47,8 @@ async function probe(page, width) {
         if (el.tagName === 'A' && cs.display === 'inline') { const par = el.parentElement; const own = [...par.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim()).length; if (own) continue; }
         // скрол-зона / відео-контроль
         if (r.bottom < 0 || r.top > 1e6) continue;
+        // ВИНЯТОК (пряма вказівка замовника 21.10.2026, docs/responsive.md §4б): посилання списків футера (<1200) вже не мають 44 px висоти — рядки зближено; мінімум — R2_LINK_MIN_H (22 px = природна висота рядка), по ширині — вся колонка
+        if (el.matches(R2_EXEMPT_SEL)) { if (r.height < R2_LINK_MIN_H - 0.5) out.touch.push({ el: nm(el), w: +r.width.toFixed(1), h: +r.height.toFixed(1), text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28) }); continue; }
         if (r.width < 43.5 || r.height < 43.5) {
           // справжня область дотику може бути більшою за бокс (псевдоелемент ::after, padding предка): перевіряємо hit-тестом точок на ±21.5 px від центру по «короткій» осі
           el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
@@ -103,7 +115,7 @@ async function probe(page, width) {
       if (r.width > 24 && Math.abs(a / n - 1) > 0.04 && !im.closest('svg')) out.stretch.push({ el: nm(im), render: +a.toFixed(3), natural: +n.toFixed(3) });
     }
     return out;
-  }, width);
+  }, { width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H });
 }
 
 export async function runResp(o) {
@@ -136,6 +148,18 @@ export async function runResp(o) {
         break;
         } catch (e) { rep.items.length = before; await page?.close().catch(() => {}); if (attempt === 2) rep.add({ rule: 'R0', page: `${spec.label}@${w}`, selector: 'qa', value: String(e.message).slice(0, 120), msg: 'збій заміру (dev-сервер перезавантажив сторінку?)' }); else await sleep(1500); }
       }
+    }
+    // позитивний контроль R2-винятку футера: посилання списків стиснуто до 10 px — перевірка МАЄ дати порушення (0 = перевірка не працює)
+    if (rules.has('R2')) {
+      const cp = await openPage(L.browser, pageUrl(o.url, pageSpec('index'), 'static'), { width: 390, height: 800, dpr: 1, settle: false });
+      try {
+        await waitStable(cp, {}); await cp.addStyleTag({ content: '.site-footer__list a:not(.btn){min-height:0!important;height:10px!important;line-height:10px!important;overflow:hidden}' });
+        const pc = await probe(cp, 390);
+        if (!pc.touch.some((t) => /site-footer__list|a\.nav-link/.test(t.el) || t.h < R2_LINK_MIN_H)) rep.add({ rule: 'R2', page: 'control', selector: 'контроль R2 (футер)', value: '0 порушень', msg: 'стиснуті до 10 px посилання футера НЕ виявлено — перевірка не працює' });
+        await cp.addStyleTag({ content: '.site-header__menu:not(.site-header__menu--lang) > a.nav-cell--menu:not([data-lang]):not([href$="cart.html"]){min-height:0!important;height:10px!important}' });
+        const pm = await probe(cp, 390);
+        if (!pm.touch.some((t) => /\(меню\)/.test(t.text))) rep.add({ rule: 'R2', page: 'control', selector: 'контроль R2 (меню)', value: '0 порушень', msg: 'стиснуті до 10 px пункти меню НЕ виявлено — перевірка не працює' });
+      } finally { await cp.close().catch(() => {}); }
     }
   } finally { await L.close(); }
   rep.note(`${n} замірів (сторінок ${o.pagesList.length} × ширин ${o.widths.length})`);

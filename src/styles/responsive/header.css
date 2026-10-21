@@ -66,3 +66,11 @@
   .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-actions { margin-top: var(--space-5); gap: var(--space-5); }
   .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu[href="cart.html"] { margin-top: var(--space-5); }
 }
+
+/* випадне меню на < 1200, тонке налаштування (замовник 21.10.2026, скріни 118/119): ЗБІЛЬШЕНО простір МІЖ секціями панелі (мова → сторінки → «Кошик» → дії: --space-30 замість --space-5), а в колонках ПУНКТІВ СТОРІНОК рядки зближено на ~18% (крок 47 → ≈ 38 px на 390 і 768): висота пункту сторінки = 0.8 від --size-touch-target (≈ 35 px) + проміжок --space-5. Це ПРЯМА ВКАЗІВКА замовника: touch-ціль пунктів сторінок меню < 44 px (виняток, docs/responsive.md §4б); рядок мови, «Кошик» і кнопки дій лишаються ≥ 44 px. Довгі підписи, що переносяться на 2 рядки, ростуть за змістом (min-height — лише підлога). */
+@media (max-width: 1199.98px) {
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-lang { margin-bottom: var(--space-30); }
+  .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu[href="cart.html"] { margin-top: var(--space-30); }
+  .site-header__menu:not(.site-header__menu--lang) > .site-header__menu-actions { margin-top: var(--space-30); }
+  .site-header__menu:not(.site-header__menu--lang) > .nav-cell--menu:not([href="cart.html"]) { min-height: calc(var(--size-touch-target) * 0.8); }
+}
