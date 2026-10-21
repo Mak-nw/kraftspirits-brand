@@ -14,12 +14,12 @@
   .about-story__head { gap: var(--space-about-stack); }
   .about-story__lead { max-width: none; }
   .about-story__rings { grid-template-columns: repeat(2, minmax(0, var(--size-about-ring))); justify-content: space-between; margin-top: var(--space-about-head); }
-  .about-story__milestone, .about-story__milestone--start { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-20); margin-top: var(--space-about-head); }
-  .about-story__milestone--finish .about-story__text, .about-story__milestone--finish .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--start .about-story__text { grid-column: auto; grid-row: auto; margin-left: 0; }
-  .about-story__date { order: 1; }
-  .about-story__photo { order: 2; width: min(var(--size-about-milestone-w1), 100%); height: auto; aspect-ratio: var(--ratio-about-photo-start); }
-  .about-story__milestone--finish .about-story__photo { width: min(var(--size-about-milestone-w2), 100%); aspect-ratio: var(--ratio-about-photo-finish); margin-left: 0; }
-  .about-story__text { order: 3; width: 100%; }
+  /* віхи (коментар замовника 2585b00f): ліва колонка сітки — дата/рік, права — фото, під ним опис; планшет 8 колонок: 2 + 6 */
+  .about-story__milestone, .about-story__milestone--start { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: start; row-gap: var(--space-20); margin-top: var(--space-about-head); }
+  .about-story__date { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+  .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo { grid-column: 3 / -1; grid-row: 1; width: 100%; height: auto; margin-left: 0; aspect-ratio: var(--ratio-about-photo-start); }
+  .about-story__milestone--finish .about-story__photo { aspect-ratio: var(--ratio-about-photo-finish); }
+  .about-story__text, .about-story__milestone--start .about-story__text, .about-story__milestone--finish .about-story__text { grid-column: 3 / -1; grid-row: 2; width: auto; margin-left: 0; }
   /* цитата і люди: стовпець; портрет і пагорби — внизу секції */
   .about-people { min-height: 0; padding-bottom: 0; }
   .about-people__grid { display: flex; flex-direction: column; gap: var(--space-about-head); padding-bottom: var(--space-about-head); }
@@ -41,6 +41,8 @@
   .about-faq .faq-page__list--span8 { width: 100%; }
 }
 @media (max-width: 767.98px) {
+  .about-story__date { grid-column: 1 / span 1; }
+  .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo, .about-story__text, .about-story__milestone--start .about-story__text, .about-story__milestone--finish .about-story__text { grid-column: 2 / -1; }
   .about-stills__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-50); justify-items: center; }
   .about-still { width: calc(100% * var(--ratio-about-still-w-phone)); }
   .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * var(--ratio-about-still-w-phone) * var(--ratio-lp-arch-rise)); }
