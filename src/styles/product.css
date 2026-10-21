@@ -81,7 +81,8 @@
 /* акордеони й крихти */
 .product-acc { width: var(--size-product-body-w); color: var(--accent); }
 .product-acc .acc { color: var(--accent); border-bottom-color: var(--accent-line); }
-.product-crumbs { display: flex; gap: var(--space-30); color: var(--accent); }
+.product-crumbs { display: flex; align-items: center; gap: var(--space-30); color: var(--accent); }
+.product-crumbs__step { display: flex; align-items: center; gap: var(--space-30); min-width: 0; } /* «/» і крихта — одна цілісна ланка: перенос лише між ланками, роздільник по центру рядка разом з посиланнями */
 .product-crumbs a { text-decoration: none; transition: opacity var(--duration-fast) var(--ease-out); }
 @media (hover: hover) { .product-crumbs a:hover { opacity: var(--opacity-crumb-hover); } } /* hover крихт: лише прозорість (токен), без підкреслення */
 .product-crumbs a:focus-visible { opacity: var(--opacity-crumb-hover); transition-duration: var(--duration-focus); }

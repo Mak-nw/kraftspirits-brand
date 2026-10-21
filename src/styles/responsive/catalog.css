@@ -18,7 +18,7 @@
   .product-media { position: relative; top: auto; grid-area: auto; width: 100%; }
   .product-panel { grid-area: auto; }
   .product-thumbs { top: auto; bottom: var(--space-product-thumb-inset); flex-direction: row; }
-  .product-crumbs { flex-wrap: wrap; }
+  .product-crumbs { flex-wrap: wrap; row-gap: 0; }  /* рядки крихт без додаткового вертикального проміжку: кожна ланка вже має touch-висоту 44 */
   .product-title { width: var(--size-heading-w); max-width: 100%; margin-inline: auto; }  /* заголовок товару: ширина токена заголовків (D17), по центру панелі */
   .product-volume { min-height: var(--size-touch-target); display: inline-flex; align-items: center; }
   /* контакти */

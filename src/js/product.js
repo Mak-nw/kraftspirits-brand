@@ -241,9 +241,12 @@ function renderProduct(p) {
     [last, null],
   ];
   items.forEach(([text, href], i) => {
-    if (i) crumbs.append(el('span', '', '/'));
-    if (href) { const a = el('a', '', text); a.href = href; crumbs.append(a); }
-    else { const s = el('span', '', text); s.setAttribute('aria-current', 'page'); crumbs.append(s); }
+    const node = href ? el('a', '', text) : el('span', '', text);
+    if (href) node.href = href; else node.setAttribute('aria-current', 'page');
+    if (!i) { crumbs.append(node); return; }
+    const step = el('span', 'product-crumbs__step'); // «/» + крихта разом: роздільник не лишається сам наприкінці/на початку рядка
+    const sep = el('span', '', '/'); sep.setAttribute('aria-hidden', 'true');
+    step.append(sep, node); crumbs.append(step);
   });
 
   main.replaceChildren(root);
