@@ -3,6 +3,8 @@
    Стани — токени --btn-choice-* (tokens.css): default / hover / focus-visible (кільце) / active / selected (aria-checked="true": заливка green, текст beige + постійне кільце outline, як у кнопок на focus; selected+focus — кільце вдвічі товще). Disabled не передбачено (тема завжди доступна).
    Клавіатура (JS, contact-form.js): Tab заходить у групу на вибрану плитку (або першу), стрілки рухають і вибирають, Space/Enter вибирають, Home/End — перша/остання. */
 .topic-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-topic-gap); }
+/* непарна кількість плиток: остання займає обидві колонки (без «сироти») */
+.topic-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .topic-tile {
   display: flex; align-items: center; justify-content: flex-start; min-height: var(--size-topic-tile-min-h); margin: 0; padding: var(--space-10) var(--space-20);
   background: var(--btn-choice-bg-default); color: var(--btn-choice-text-default);

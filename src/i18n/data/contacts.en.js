@@ -9,6 +9,5 @@ export default {
     { label: 'B2B partnerships', hint: 'Company name, what you are interested in (private label, gift sets, certificates, contract production) and the approximate volume' },
     { label: 'Events', hint: 'Event format, number of guests and preferred date' },
     { label: 'Other questions', hint: 'Describe your question and we will advise' },
-    { label: 'Other', hint: 'Tell us how we can help' },
   ],
 };
