@@ -28,7 +28,7 @@
   .about-people__bq br { display: none; }
   .about-people__german { order: 2; align-items: flex-start; text-align: left; }
   .about-people__german figcaption { align-items: flex-start; }
-  .about-people__ava { width: min(var(--size-about-avatar), 30%); min-width: calc(80 * var(--u)); }
+  .about-people__ava { width: min(var(--size-about-avatar), var(--size-about-ava-max-share)); min-width: var(--size-about-ava-min); }
   .about-people__intro { order: 3; }
   .about-people__note { order: 4; margin-top: 0; text-align: left; }
   .about-people__name { order: 5; }
@@ -37,15 +37,13 @@
   /* три установки */
   .about-stills__head > * { grid-column: 1 / -1; }
   .about-stills__lead { grid-column: 1 / -1; max-width: none; }
-  /* принципи */
+  /* принципи (без арки: коло з іконкою + текст по центру; колонки 4 → 2 → 1) */
   .about-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--grid-gap); }
-  .about-principle { --lp-rise: calc((var(--grid-w) - var(--grid-gap)) / 4); padding: var(--space-50) var(--space-30) var(--space-30); }
   .about-faq .faq-page__list--span8 { width: 100%; }
 }
 @media (max-width: 767.98px) {
   .about-stills__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-50); justify-items: center; }
-  .about-still { width: 82%; }
-  .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * 0.82 * var(--ratio-lp-arch-rise)); }
+  .about-still { width: calc(100% * var(--ratio-about-still-w-phone)); }
+  .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * var(--ratio-about-still-w-phone) * var(--ratio-lp-arch-rise)); }
   .about-principles__list { grid-template-columns: minmax(0, 1fr); }
-  .about-principle { --lp-rise: calc(var(--grid-w) / 2); width: 86%; margin-inline: auto; }
 }

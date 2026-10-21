@@ -50,7 +50,7 @@
   .woocommerce table.cart td.product-quantity { grid-area: qty; }
   .woocommerce table.cart td.product-subtotal { grid-area: sub; text-align: end; }
   .woocommerce table.cart tr:not(.cart_item), .woocommerce table.cart tr:not(.cart_item) > td { display: block; width: 100%; }
-  .woocommerce .quantity .qty { width: calc(var(--size-wc-qty-w) * 0.8); }
+  .woocommerce .quantity .qty { width: calc(var(--size-wc-qty-w) * var(--ratio-wc-qty-w-phone)); }
   .woocommerce-account [data-wc-view] form, .woocommerce-account [data-wc-view] fieldset, .woocommerce-billing-fields__field-wrapper, .woocommerce-additional-fields__field-wrapper, .woocommerce-account [data-wc-view] .woocommerce-columns--addresses { grid-template-columns: minmax(0, 1fr); }
   .woocommerce table.order_details tfoot td, .woocommerce table.shop_table :is(.product-price, .product-subtotal, .product-quantity, .product-total) { white-space: normal; }
   :is(.woocommerce-order-overview, .woocommerce-OrderUpdates) > li { flex-wrap: wrap; }

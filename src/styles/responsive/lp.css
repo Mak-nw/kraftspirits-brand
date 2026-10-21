@@ -44,7 +44,7 @@
   /* колода кроків (split: овал/lottie): текст зверху, медіа під ним; кути картки — як на десктопі (--radius-panel) */
   .lp-steps__split-box { grid-template-columns: minmax(0, 1fr); }
   .lp-steps__split-text { height: auto; }
-  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.45); }
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * var(--ratio-lp-split-media-h-tablet)); }
   .lp-slots { display: none; }
 }
 @media (max-width: 767.98px) {
@@ -56,7 +56,7 @@
   .lp-layers { column-gap: var(--grid-gap); }
   /* steps: арка зверху (не sticky), кроки під нею */
   .lp-steps__grid { grid-template-rows: auto auto auto; }
-  .lp-steps__stage { grid-column: 1 / -1; grid-row: 2; position: relative; top: auto; justify-self: center; width: 70%; height: calc(var(--grid-w) * 0.7 * 1.1); margin-bottom: var(--space-lp-head); }
+  .lp-steps__stage { grid-column: 1 / -1; grid-row: 2; position: relative; top: auto; justify-self: center; width: var(--size-lp-stage-w-phone); height: calc(var(--grid-w) * var(--ratio-lp-stage-w-phone) * var(--ratio-lp-stage-h-phone)); margin-bottom: var(--space-lp-head); }
   .lp-steps__chapters { grid-column: 1 / -1; grid-row: 3; }
   .lp-step { padding-top: var(--space-lp-chapter-rule); }
   .lp-step__text { max-width: none; }
@@ -101,12 +101,12 @@
   .lp-look--about .lp-offer__offer .lp-list li + li { padding-inline-start: 0; border-inline-start: 0; }
   .lp-route { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .lp-route__side--from { grid-column: 1 / span 2; } .lp-route__side--to { grid-column: 3 / span 2; }
-  .lp-layer__icon { --icon-size: calc(36 * var(--u)); }
+  .lp-layer__icon { --icon-size: var(--size-lp-layer-icon-phone); }
   .lp-format__facts { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
   /* колода кроків: фото зверху, текст під ним (текст не лежить на фото) */
-  .lp-steps__split-media { min-height: calc(var(--grid-w) * 0.6); }
+  .lp-steps__split-media { min-height: calc(var(--grid-w) * var(--ratio-lp-split-media-h-phone)); }
   .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
-  .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * 0.55); }
+  .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * var(--ratio-lp-card-img-h-phone)); }
   .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }
   /* tiles perRow (events «Що є на локації»): на телефоні 2 колонки × 3 ряди, коло = ширина колонки, рядки без спільної сітки (другий ряд DS — grid-row: 6 — скинуто) */
   .lp-tiles__grid--rows { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
