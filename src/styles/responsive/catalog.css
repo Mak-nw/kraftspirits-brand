@@ -14,7 +14,7 @@
   .catalog-bar .select__list { left: 0; min-width: 0; max-width: 100%; }  /* список від лівого краю свого селекта і не ширший за нього (на 320 «Сортування» заходило за в'юпорт на 2px) */
   .select__option { min-height: var(--size-touch-target); display: flex; align-items: center; }
   /* товар: фото зверху (не sticky), панель під ним */
-  .product { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  .product { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }
   .product-media { position: relative; top: auto; grid-area: auto; width: 100%; }
   .product-panel { grid-area: auto; }
   .product-thumbs { top: auto; bottom: var(--space-product-thumb-inset); flex-direction: row; }
@@ -22,7 +22,7 @@
   .product-title { width: var(--size-heading-w); max-width: 100%; margin-inline: auto; }  /* заголовок товару: ширина токена заголовків (D17), по центру панелі */
   .product-volume { min-height: var(--size-touch-target); display: inline-flex; align-items: center; }
   /* контакти */
-  .contacts { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  .contacts { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }
   /* вікно «контакти»: картка з даними зверху, мапа (фон десктопного вікна) під нею окремим блоком */
   .contacts-window { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-contacts-card-inset); }
   .contacts-window > .contacts-info { grid-column: auto; order: 1; }

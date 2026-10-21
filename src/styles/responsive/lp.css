@@ -21,7 +21,7 @@
   .lp-layers--n4, .lp-layers--n5, .lp-layers--n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lp-offers__grid--n3 { grid-template-columns: minmax(0, 1fr); }
   .lp-format__drinks--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-30); }
-  .lp-place__grid { row-gap: var(--grid-gap-panels); }
+  .lp-place__grid { row-gap: var(--space-stack-gap); }
   .lp-place__panel { min-height: 0; }
   .lp-group--has-cellar:not(:has(.lp-group__unit)) .lp-group__facts { margin-top: var(--space-40); }  /* великий рядок «200 Л ≈ 383 ПЛЯШКИ» → опис вартості: на ≤ 1023 (планшет і телефон) ближче (70u → 40u; відгук 04078154) */
   .lp-route { width: var(--grid-w); }

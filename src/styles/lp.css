@@ -30,7 +30,7 @@
 .lp-sec.lp-sec--loose.lp-sec--join-next { padding-bottom: var(--space-lp-section-y); } /* loose + продовження кімнати нижче: 150 → 177u (крок вгору) */
 /* stack: true (card / place) — стек великих блоків (як tours наприкінці головної): секція в ТІЙ САМІЙ кімнаті, що попередня (lpView), без верхнього відступу секції; між блоками --grid-gap-panels (5u), великого повітря немає */
 .lp-sec.lp-sec--stack-next { padding-bottom: 0; }
-.lp-sec.lp-sec--stack { padding-top: var(--grid-gap-panels); }
+.lp-sec.lp-sec--stack { padding-top: var(--space-stack-gap); }
 /* stack після секції з `pad` (рев'ю 5d981ca1, замінило d360474e: «відступ менше, логіка як на головній»): нижній відступ попередньої секції = 0 і при заданому pad (стоїть після .lp-pad-*, тому перемагає), зазор до стекової секції — той самий 5u, що між tour-card на головній; верхній відступ попередньої (pad) лишається */
 /* шапка секції (кікер / заголовок / лід / підписи) — по центру сітки (рев'ю e725d1be, a40df587, 73b1b655) */
 .lp-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-stack); text-align: center; }

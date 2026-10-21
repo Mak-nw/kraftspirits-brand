@@ -13,7 +13,7 @@
   .cocktail__item .product-card--catalog::before { height: var(--size-arch-h); }
   .tabs__list { flex-wrap: wrap; }
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
-  .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
+  .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }
   .wc-grid--guest { grid-template-columns: minmax(0, 1fr); }
   .woocommerce-account .wc-grid--guest .lost_password .btn__inner { white-space: nowrap; } /* «Забули пароль?» завжди в один рядок (f1688fb6) */
   .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content { grid-column: auto; }

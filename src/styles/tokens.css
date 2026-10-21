@@ -728,6 +728,7 @@
      Пара великих блоків лягає на колонки сітки: n + m колонок = --grid-span-n --grid-span-m (n + m = 10), шов — рівно зазор колонок; зовнішні краї на колонках 1 і 10 (D12, D18). */
   --grid-gap-panels: var(--space-5);
   --grid-half-panel: calc((var(--grid-w) - var(--grid-gap-panels)) / 2);
+  --space-stack-gap: var(--grid-gap-panels);   /* ВЕРТИКАЛЬНИЙ зазор між великими блоками-картками, що стоять один над одним (стек lp, tours головної, колонка product/contacts/кошика); ≥ 1200 = 5u, < 1200 — крок шкали (див. блок АДАПТИВ; коментар замовника aa292ac9: на телефоні 5u ≈ 3 px — картки впритул) */
   --grid-cols-7-3: var(--grid-span-7) var(--grid-span-3);
   --grid-cols-6-4: var(--grid-span-6) var(--grid-span-4);
   --grid-cols-4-6: var(--grid-span-4) var(--grid-span-6);
@@ -1357,6 +1358,8 @@
 /* АДАПТИВ: токени layout-розмірів responsive/*.css (раніше були літералами/локальними змінними у responsive/*.css) */
 @media (max-width: 1199.98px) {
   :root {
+    --space-stack-gap: var(--space-30);                       /* < 1200: вертикальний зазор між блоками-картками стека = 30u (телефон 390: 18 px, планшет 768: 27 px; було 5u = 3–5 px, картки впритул; aa292ac9) */
+    --space-tour-gap: var(--space-stack-gap);                  /* tours головної (і lp-стеки) < 1200 — той самий зазор */
     --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
     /* літерали з responsive/lp.css, about.css, pages.css (значення ті самі, винесено в токени) */
     --ratio-lp-split-media-h-tablet: 0.45;                     /* колода split (≤ 1023): висота медіа = 0.45 ширини сітки */
