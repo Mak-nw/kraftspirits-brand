@@ -14,3 +14,4 @@
 /* bare (поле секції tiles): коло без решітки — лише обідок, іконка крупніша (частка гравюри) */
 .lp-tiles--bare { --size-barrels-finish-icon: calc(var(--size-barrels-finish-head) * 0.34); }
 .lp-tiles--bare .lp-engraving__boards { display: none; }
+.lp-tiles--bare .lp-tile__icon { color: var(--lp-accent); } /* значок у колі bare — золото, той самий токен, що обідок (stroke .lp-engraving = --lp-accent); на barrels-плитках (без bare) іконка лишається currentColor */
