@@ -1281,8 +1281,9 @@
     --space-177: calc(100 * var(--u));
     --space-197: calc(100 * var(--u));
     --space-208: calc(100 * var(--u));
-    --space-lp-section-y: calc(100 * var(--u));
-    --space-lp-room-join: calc(80 * var(--u));
+    --space-lp-section-y: var(--space-140);                   /* lp-секції на телефоні: 100u → 140u (крок шкали вгору; коментар замовника a68d1b16 «більше відступ між секціями»); 767 px: 126 px на бік ≈ планшет 768 (124 px) */
+    --space-lp-section-y-loose: calc(177 * var(--u));         /* `loose` лишається на крок вище за звичайну секцію (було збігалось: 177 → 100u) */
+    --space-lp-room-join: calc(120 * var(--u));               /* продовження кімнати: було 80u; лишається меншим за --space-lp-section-y (пропорція десктопу 150/177) */
     --size-product-thumb-w: calc(90 * var(--u));
     --size-product-thumb-h: calc(119.4 * var(--u));
     --catalog-grid-reserve-rows: 7;
