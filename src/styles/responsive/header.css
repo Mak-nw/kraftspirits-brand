@@ -10,9 +10,9 @@
   .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; width: auto; left: var(--grid-margin); right: var(--grid-margin); margin-inline: 0; }
   .site-header__side { padding-left: var(--space-5); }
   .site-header__side--end { padding-right: var(--space-5); gap: var(--space-5); }
-  /* кабінет — окрема кругла кнопка в пілюлі зліва від кошика: дубль у меню не потрібен */
+  /* кабінет — окрема квадратна кнопка в пілюлі зліва від кошика: дубль у меню не потрібен */
   .site-header__menu-extra[href="account.html"] { display: none; }
-  .site-header__side--end > .nav-cell--round { order: -1; min-width: var(--size-touch-target); }
+  .site-header__side--end > .nav-cell--square { order: -1; min-width: var(--size-touch-target); }
   .site-header__logos { justify-self: center; }
   .site-header__logo { height: var(--size-touch-target); }                      /* область дотику логотипа ≥ 44 px: зображення центруються у вищій комірці */
   .site-header__logo img { margin-top: calc((var(--size-touch-target) - var(--header-logo-cell-h)) / 2); }

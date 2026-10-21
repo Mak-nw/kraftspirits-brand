@@ -9,7 +9,7 @@
 export const D16_DEFAULTS = {
   tolerancePx: 1,
   targets: [
-    { name: '.nav-cell', sel: '.nav-cell:not(.nav-cell--round)', min: 'var(--header3-menu-item-px)' },
+    { name: '.nav-cell', sel: '.nav-cell:not(.nav-cell--square)', min: 'var(--header3-menu-item-px)' },
     { name: '.btn', sel: '.btn', min: 'calc(var(--space-5) + var(--border-hairline) + var(--space-btn-pr-arrow))' },
     { name: '.arrow-btn', sel: '.arrow-btn', min: 'calc(var(--space-5) + var(--border-hairline))' },
     { name: '.topic-tile', sel: '.topic-tile', min: 'calc(var(--space-20) + var(--border-hairline))' },

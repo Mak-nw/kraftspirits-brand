@@ -51,7 +51,7 @@ a.nav-link--on-light:focus-visible { color: var(--btn-navlink-light-text-focus);
 .nav-cell--outline { height: var(--header2-btn-outline-h); background: var(--btn-bg); color: var(--btn-text); }
 .nav-cell--ghost { height: var(--header2-btn-ghost-h); }
 .nav-cell--fill { height: var(--header2-btn-fill-h); background: var(--btn-bg); color: var(--btn-text); }
-.nav-cell--round { width: var(--header2-btn-outline-h); padding-inline: 0; border-radius: var(--radius-round); } /* «мій кабінет» (рішення замовника: «кнопку мій кабінет зробимо як ободка кругу»): контурна кнопка-коло лише з іконкою; діаметр = висота кнопок хедера (44u), рамка hairline, стани — як .nav-cell--outline; без підпису (aria-label + title у розмітці) */
+.nav-cell--square { width: var(--header2-btn-outline-h); padding-inline: 0; } /* «мій кабінет» (рішення замовника b7ec3097: квадратна обводка, стиль як в інших кнопок хедера): контурна кнопка лише з іконкою; сторона = висота кнопок хедера (44u); радіус --radius-btn, рамка hairline і стани — від .nav-cell--outline; без підпису (aria-label + title у розмітці) */
 /* hover/focus кнопок: лише колір/фон (рамка стала, розміри не змінюються) */
 a.nav-cell--outline:focus-visible, button.nav-cell--outline:focus-visible { background: var(--btn-bg-focus); color: var(--btn-text-focus); border-color: var(--btn-border-focus); }
 button.nav-cell--outline[aria-expanded="true"] { background: var(--btn-bg-selected); color: var(--btn-text-selected); border-color: var(--btn-border-selected); } /* відкрите меню (selected) */
