@@ -4,7 +4,7 @@
    Параметр tour-card--cocktail лише розкладає вміст текстової колонки: ліворуч (заголовок, опис, таби), праворуч «Створено з» + картка; висота — за вмістом, мін. = висота панелі tour-card. Колір тексту й шва — --color-green (макет). Нових елементів/ліній/тіней немає. */
 .page-cocktails .site-header { --size-header-zone-h: 0px; } /* як .page-home і lp: зони header у потоці нема, hero з y=0, пілюля fixed поверх */
 .page-cocktails { background: var(--color-green); }
-.cocktails__list { display: flex; flex-direction: column; gap: var(--space-stack-gap); width: var(--grid-w); margin-inline: auto; padding-block: var(--space-cocktail-block-gap); }
+.cocktails__list { display: flex; flex-direction: column; gap: var(--space-cocktail-gap); width: var(--grid-w); margin-inline: auto; padding-block: var(--space-cocktail-block-gap); }
 .tour-card--cocktail { width: 100%; height: auto; min-height: var(--size-tour-card-h); color: var(--color-green); }
 .tour-card--cocktail .tour-card__photo { border-color: var(--color-green); }
 .tour-card--cocktail .tour-card__text { flex-direction: row; align-items: stretch; gap: var(--grid-gap); padding: var(--space-cocktail-pad-x); } /* поле панелі = поле панелі контактів 50u; між колонками — зазор сітки */

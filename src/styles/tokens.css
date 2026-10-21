@@ -1038,6 +1038,7 @@
   --shift-cocktail-title-cap-top: calc(-1 * (round(down, (var(--type-hero-lh) * 1em - round(var(--font-ascent-serif) * 1em, 1px) - round(var(--font-descent-serif) * 1em, 1px)) / 2, 1px) + round(var(--font-ascent-serif) * 1em, 1px) - var(--font-cap-height-serif-ink) * 1em));
   --space-cocktail-head-gap: var(--space-5);                    /* проміжки заголовок → англ. назва → опис однакові (коментарі ee619752, c555575c: «гап = 4,5» — одиниці не вказано, найближчий крок шкали 5u; питання в формі) */
   --space-cocktail-block-gap: var(--space-100);                 /* відступ вступ → блок і між блоками (лише простір, без ліній) */
+  --space-cocktail-gap: var(--space-30);                        /* вертикальний зазор між блоками коктейлів: рішення замовника 21.10.2026, відповідь 3B (як у макеті ≈30px на 1920) на відміну від 5u правила стеку --space-stack-gap */
   --space-cocktails-top: var(--space-catalog-title-top2);       /* 83u: від зони header до заголовка (як каталог) */
   --space-cocktails-bottom: var(--space-100);
   --space-lightbox-pad: var(--space-50);
