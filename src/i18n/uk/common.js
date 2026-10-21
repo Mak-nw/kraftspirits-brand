@@ -27,6 +27,7 @@ export default {
   'header.lang.code': 'UA',
   'header.lang.btn': 'UA, мова сайту',
   'header.lang.menu': 'Мова сайту',
+  'header.menu.lang': 'Мова',
   // ---- футер ----
   'footer.menu': 'Меню',
   'footer.docs': 'Документація',

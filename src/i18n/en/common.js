@@ -28,6 +28,7 @@ export default {
   'header.lang.code': 'EN',
   'header.lang.btn': 'EN, site language',
   'header.lang.menu': 'Site language',
+  'header.menu.lang': 'Language',
   // ---- footer ----
   'footer.menu': 'Menu',
   'footer.docs': 'Documents',

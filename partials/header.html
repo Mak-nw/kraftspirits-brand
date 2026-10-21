@@ -3,6 +3,10 @@
     <div class="site-header__side">
       <button class="nav-cell nav-cell--outline t-btn site-header__menu-btn" type="button" aria-expanded="false" aria-controls="{{menu-id|site-menu}}" aria-label="%t.header.menu.btn.open%"><svg class="site-header__burger" viewBox="0 0 11.4707 13" aria-hidden="true" focusable="false"><rect class="site-header__burger-line site-header__burger-line--edge" x="0" y="0" width="11.4707" height="2.29395"/><rect class="site-header__burger-line" x="0" y="5.35254" width="11.4707" height="2.29492"/><rect class="site-header__burger-line site-header__burger-line--edge" x="0" y="10.7061" width="11.4707" height="2.2939"/></svg><span>%t.header.menu.btn%</span></button>
       <nav class="site-header__menu" id="{{menu-id|site-menu}}" aria-label="%t.header.menu.nav%">
+        <div class="site-header__menu-lang" role="group" aria-label="%t.header.menu.lang%">
+          <a class="nav-link nav-cell nav-cell--menu t-btn" href="%lang.uk%" lang="uk" hreflang="uk" data-lang="uk"%lang.cur.uk%>Українська</a>
+          <a class="nav-link nav-cell nav-cell--menu t-btn" href="%lang.en%" lang="en" hreflang="en" data-lang="en"%lang.cur.en%>English</a>
+        </div>
         <a class="nav-link nav-cell nav-cell--menu t-btn" href="index.html">%t.header.menu.home%</a>
         <a class="nav-link nav-cell nav-cell--menu t-btn site-header__menu-extra" href="catalog.html">%t.header.menu.catalog%</a>
         <a class="nav-link nav-cell nav-cell--menu t-btn" href="about.html">%t.header.menu.about%</a>

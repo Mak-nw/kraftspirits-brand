@@ -2,6 +2,7 @@
 
 /* ≤ 1023 (планшети й телефони): у пілюлі лишаються «меню», пара логотипів і кошик (+ кабінет на планшеті); решта — у випадному меню (на ≥1024 ці пункти приховані) */
 .site-header__menu-extra { display: none; }
+.site-header__menu-lang { display: none; }                                      /* перемикач мови у меню — лише на < 1200 (на ≥ 1200 мова — кнопка в пілюлі) */
 @media (max-width: 1023.98px) {
   .site-header__menu-extra { display: flex; }
   .site-header__side:not(.site-header__side--end) > .nav-cell--ghost { display: none; }                      /* «каталог», «про дім» → у меню */
@@ -18,7 +19,6 @@
   /* меню — на всю ширину пілюлі, з прокруткою, якщо не вміщується у вікно */
   .site-header__menu:not(.site-header__menu--lang) { width: 100%; max-height: calc(100svh - var(--header3-top) - var(--header3-h) - var(--header3-menu-gap) - var(--space-10)); overflow-y: auto; overscroll-behavior: contain; }
   .site-header__menu:not(.site-header__menu--lang) .nav-cell--menu { width: 100%; }
-  .site-header__menu--lang { max-height: none; overflow: visible; left: auto; right: 0; } /* перемикач мови ближче до правого краю: панель росте вліво */
 }
 /* «меню» — лише іконка і на малих ноутах 1024–1199 (підпис лишається для читачів екрана; aria-label на кнопці) */
 @media (max-width: 1199.98px) {
@@ -41,7 +41,10 @@
   .site-header__side--end > .nav-cell--ghost { width: var(--size-touch-target); padding-inline: 0; }
 }
 
-/* перемикач мови: touch-ціль ≥ 44 px (кнопка «UA»/«EN» — як «меню»: квадратна комірка) */
+/* перемикач мови (docs/i18n.md) на < 1200: кнопка «UA»/«EN» зникає з пілюлі, а ПЕРШИМ рядком випадного меню стоять «Українська» | «English» (пункти .nav-cell--menu в одному рядку,
+   активна мова — стан selected, як у випадайці мови на десктопі; кожне посилання веде на відповідник сторінки, JS — initLangLinks у header-menu.js; ≥ 44 px завдяки --size-touch-target пунктів меню) */
 @media (max-width: 1199.98px) {
-  .site-header__lang-btn { min-width: var(--size-touch-target); padding-inline: var(--space-5); justify-content: center; }
+  .site-header__lang { display: none; }
+  .site-header__menu-lang { display: flex; }
+  .site-header__menu .site-header__menu-lang .nav-cell--menu { flex: 1 1 0; width: auto; min-width: 0; justify-content: center; }
 }

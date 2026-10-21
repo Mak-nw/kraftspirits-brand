@@ -102,7 +102,9 @@ function init(header) {
   if (btn && menu) initDropdown(header, btn, menu, { outside: '.site-header__side:not(.site-header__side--end), .site-header__menu:not(.site-header__menu--lang)', labels: [t('js.menu.open'), t('js.menu.close')] });
   const langBtn = header.querySelector('.site-header__lang-btn');
   const langMenu = header.querySelector('.site-header__menu--lang');
-  if (langBtn && langMenu) { initDropdown(header, langBtn, langMenu, { outside: '.site-header__lang', labels: null }); initLangLinks(langMenu); }
+  if (langBtn && langMenu) initDropdown(header, langBtn, langMenu, { outside: '.site-header__lang', labels: null });
+  // посилання мови є і в кнопці-випадайці (≥ 1200), і першим рядком мобільного меню (< 1200; .site-header__menu-lang): однакова логіка
+  header.querySelectorAll('.site-header__menu--lang, .site-header__menu-lang').forEach(initLangLinks);
 
   // поточна сторінка: aria-current для посилання на неї (візуального стану в Figma немає); посилання перемикача мови (data-lang) мають власний aria-current
   const here = location.pathname.split('/').pop() || 'index.html';
