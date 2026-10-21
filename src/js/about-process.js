@@ -14,8 +14,6 @@ if (root) {
   const run = document.querySelector('[data-process-run]');
   const stack = run?.parentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // адаптив (docs/responsive.md): pinned лише на ≥ 1024 і без reduced-motion; на планшетах/телефонах (дотик) — стрічка арок з нативною горизонтальною прокруткою (CSS responsive/about.css)
-  const small = window.matchMedia('(max-width: 1023.98px)');
   let teardown = null;
 
   const pinOn = () => {
@@ -54,13 +52,12 @@ if (root) {
     };
   };
   const applyMode = () => {
-    const noPin = reduce.matches || small.matches;
+    const noPin = reduce.matches; // pinned на всіх ширинах (рішення замовника 0f3ae2a4); без pin лише prefers-reduced-motion
     if (noPin) { teardown?.(); teardown = null; viewport.setAttribute('tabindex', '0'); } // нативно прокручувана область має бути фокусною
     else { viewport.removeAttribute('tabindex'); if (!teardown) pinOn(); }
   };
   applyMode();
   reduce.addEventListener('change', applyMode);
-  small.addEventListener('change', applyMode);
 
   // Lottie
   const slots = [...root.querySelectorAll('[data-lottie]')];

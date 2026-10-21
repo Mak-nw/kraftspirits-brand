@@ -60,7 +60,7 @@ async function probe(page, width) {
       if (!t || !pe || pe.closest('template, script, style, noscript, [hidden], .visually-hidden, .lp-sr, .screen-reader-text, [inert], svg, .maplibregl-map, [data-age-gate]') && !gated) continue;
       if (pe.closest('script, style, template, noscript, svg')) continue;
       if (pe.closest('details:not([open]) > :not(summary)')) continue; /* закритий акордеон: вміст не відображається */
-      if (width >= 1024 && pe.closest('.about-track')) continue; /* pinned-трек про-нас: стрічка арок поза екраном за задумом (їде від скролу) */
+      if (pe.closest('.about-track')) continue; /* pinned-трек про-нас: стрічка арок поза екраном за задумом (їде від скролу) */
       if (!visible(pe)) continue;
       const cs = getComputedStyle(pe);
       if ([...(function* () { for (let p = pe; p && p !== document.body; p = p.parentElement) yield p; })()].some((p) => getComputedStyle(p).clipPath !== 'none' && /inset\(50%\)/.test(getComputedStyle(p).clipPath))) continue; /* візуально прихований текст для читачів екрана */

@@ -1,13 +1,6 @@
 /* АДАПТИВ: сторінка «Про дім» (about.html). Лише поза діапазоном 1200–1920 (замовник: «в сторінку про нас нічого не змінювати» — для десктопу). */
 @media (max-width: 1023.98px) {
   .about__grid { width: var(--grid-w); }
-  /* секція 3: БЕЗ pinned-скролу (дотик): секція в потоці, стрічка арок — нативна горизонтальна прокрутка */
-  .about-place { position: relative; display: block; height: auto; padding-block: var(--space-about-sec-y); scroll-margin-top: 0; overflow: clip; }
-  .about-track { position: static; inset: auto; display: flex; flex-direction: column; align-items: stretch; row-gap: var(--space-about-stack); width: auto; will-change: auto; transform: none !important; }
-  .about-place__text { width: auto; padding-inline: var(--grid-margin); }
-  .about-process { margin-left: 0; }
-  .about-process__viewport { overflow: auto hidden; padding-inline: var(--grid-margin); -webkit-overflow-scrolling: touch; }
-  .about-place-run { display: none; }
   /* «15 місяців»: усе одним стовпцем */
   .about-story { padding-top: var(--space-about-sec-y); padding-bottom: var(--space-about-sec-y); }
   .about-story__grid > * { grid-column: 1 / -1; grid-row: auto; }
