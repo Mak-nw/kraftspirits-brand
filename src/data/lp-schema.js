@@ -124,7 +124,7 @@ export const SCHEMA = {
     place: { ...base('caption'), ...STACK, ...LOOK, titleSize: E(PLACE_TITLE_SIZES), room: E(ROOMS, false, 'deep'), facts: L(O({ label: T(30, true), value: T(90, true), icon: { type: 'icon' }, href: URL_() }), 1, 5, true), ctas: L(O({ text: T(24, true, { word: BTN_WORD }), href: URL_(true), variant: E(['green', 'teal', 'outline'], true) }), 0, 2) },
     // 8б. Бренди: ІСНУЮЧА секція головної «Два характери» (partials/sections/brands: дві половини brand-half з вирізом-пляшкою) під шапкою (H2 + лід) у кімнаті. Тексти карток, лого, фото й посилання — ті самі, що на головній (ключі t.home.choice.*); у даних секції лише шапка
     // 8в. ВИНЯТКОВИЙ тип 1:1 макет замовника (лише за його прямою вказівкою, docs/page-template.md): сирий партіал partials/lp/b2b-ref-<n>.html + src/styles/b2b-ref.css; стилів не валідуємо, поля необов'язкові (кожен n показує свою підмножину)
-    ref: { type: { type: 'type', req: true }, id: { type: 'id', req: true }, n: E(['8', '9', '10', '11'], true), title: T(60), text: T(400), img: URL_(), alt: T(140), cta: O({ text: T(40, true), href: URL_(true) }), items: L(O({ title: T(40, true), text: T(200, true) }), 0, 4) },
+    ref: { type: { type: 'type', req: true }, id: { type: 'id', req: true }, n: E(['7', '8', '9', '11'], true), title: T(60), text: T(400), img: URL_(), alt: T(140), cta: O({ text: T(40, true), href: URL_(true) }), items: L(O({ title: T(40, true), text: T(200, true) }), 0, 4) },
     // 9. Питання: ІСНУЮЧА група FAQ (faq-group + faq-item), дві колонки (кікера, ліду й підпису немає — лише заголовок групи)
     faq: { ...base('kicker', 'lead', 'caption'), room: E(ROOMS, false, 'deep'), cols: COLS('faq'), items: L(O({ q: T(90, true), a: T(600, true) }), 1, 12, true) },
   },
