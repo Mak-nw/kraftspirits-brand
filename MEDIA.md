@@ -184,6 +184,11 @@ Barley Spirit і Oak Notes — темне скло й вміст; White Whiskey 
 ### (е.3) Оновлення 20.10.2026: нові пляшки (generative/newbottles2)
 Усі 14 фото ітемів перегенеровані на нових пляшках замовника (`bottles-png/`: Barley Wind/Wave/Ft-Barley, Distiller, Elixir) з тими самими етикетками; Seedream 5 Pro 3:4. Hero й вирізи перезаписано за тими самими іменами (`product-hero-<slug>-new.webp`, `products/<slug>.webp`) — `products.js` не змінювався. Виріз — Magnific `images_remove_background` (14 × 3 кредити). Попередні файли — у scratchpad `bk-oct20/`. Джерела: `../generative/newbottles2/`.
 
+### Подарункові набори gift-tube / gift-wood-box (21.10.2026)
+- Файли: `product-hero-gift-tube-new.webp`, `product-hero-gift-wood-box-new.webp` (1800×1936 WebP q85; кадр 1328×1760 масштабовано до висоти 1936, боки добудовано фоном) і вирізи `products/gift-tube.webp`, `products/gift-wood-box.webp` (800×1060, об'єкт 740 px заввишки). AI-згенеровані, на затвердження замовнику.
+- Генерація: Seedream 5 Pro 3:4 1.5k, референс — hero gin-yasnyi / oak-notes (етикетки збережені); 4 кадри × 75 = 300 кр + 2 вирізи (images_remove_background) × 3 = 6 кр; усього 306 кр.
+- Обрано: tube = A (туба позаду, пляшка спереду), wood-box = B (пляшка стоїть у відкритому ящику, на фронті знак BS). Варіанти A/B: `proto-bg.html`, секція «Подарункові набори». Вибір можна змінити.
+
 ## Фони слайдера «не знаєте з чого почати» (picker): gift / collection / tasting / bar (20.10.2026)
 - Файли: `public/assets/img/occasions/{gift,collection,tasting,bar}.webp` (2400×1350 WebP q85). AI-згенеровані (позначено), на затвердження замовнику до публікації.
 - Походження: кадри композиції A зі світлом ≈15:00 (золоте, ненав'язливе) → image-to-image `images_reimagine` (Nano Banana, strength 0.4–0.5) з промптом «та сама композиція і світло, але всі келихи, склянки й пляшки наповнені напоєм (бурштиновий віскі, прозорий джин)»; причина: зауваження замовника «на фото ПУСТІ пляшки чи бокали». Робочі файли: scratchpad `bg-gen4/<slug>-A-gold-filled.{png,webp}` (джерело модель віддає 1344×768, до 2400×1350 масштабовано sips — як і попередні кадри).

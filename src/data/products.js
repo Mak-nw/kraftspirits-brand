@@ -450,8 +450,8 @@ export const PRODUCTS = [
     "slug": "gift-tube",
     "name": "Подарунковий набір «Ясний» у тубі",
     "nameLines": [
-      "Подарунковий набір",
-      "«Ясний» у тубі"
+      "Набір «Ясний»",
+      "у тубі"
     ],
     "brand": "yasnocraft",
     "category": "gift-sets",
@@ -477,8 +477,8 @@ export const PRODUCTS = [
     "slug": "gift-wood-box",
     "name": "Подарунковий набір «Oak Notes» у дерев'яному ящику",
     "nameLines": [
-      "Подарунковий набір",
-      "«Oak Notes» у ящику"
+      "Набір «Oak Notes»",
+      "у ящику"
     ],
     "brand": "bazylsprings",
     "category": "gift-sets",
