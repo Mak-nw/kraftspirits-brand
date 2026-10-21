@@ -78,6 +78,6 @@ export async function runLinks(o) {
   } finally { await L.close(); }
   return rep;
 }
-// каталог читає hash як категорію: #gifts → «весь каталог» (за README), тому для catalog.html хеші-категорії не є якорями DOM
-const isDynamicHash = (h) => /^(all|gin|calvados|schnapps|tinctures|whisky|fruit-in-bottle|gifts)$/.test(h);
+// каталог читає hash як категорію: #gift-sets → фільтр gift-sets (за README), тому для catalog.html хеші-категорії не є якорями DOM
+const isDynamicHash = (h) => /^(all|gin|calvados|schnapps|tinctures|whisky|fruit-in-bottle|gift-sets)$/.test(h);
 if (import.meta.url === `file://${process.argv[1]}`) await runMain('links', { widths: '1440' }, runLinks);
