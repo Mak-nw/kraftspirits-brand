@@ -4,7 +4,6 @@
 // (3) reveal і паралакс hero — спільні модулі сайту; (4) кроки [data-steps] перемикають стан гравюри арки (data-step);
 // (5) ?slots=on — огляд місць під фото; (6) FAQ — акордеони DS (accordion.js); (7) мапа DS (contacts-map.js) — лише якщо секція «місце» є на сторінці.
 import { cssTimeMs } from './duration.js';
-import { initTabs } from './tabs.js';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -71,7 +70,11 @@ if (/[?&]slots=on/.test(location.search)) {
 }
 
 // (9) вкладки верхнього рівня (page.tabs): компонент DS .tabs, hash #<key> відкриває вкладку (src/js/tabs.js)
-document.querySelectorAll('[data-tabs]').forEach(initTabs);
+// модуль вантажиться лише коли вкладки є в DOM (barrels/excursions/b2b/events їх не мають)
+if (document.querySelector('[data-tabs]')) {
+  const { initTabs } = await import('./tabs.js');
+  document.querySelectorAll('[data-tabs]').forEach(initTabs);
+}
 
 // (6) FAQ (секція faq): ті самі акордеони й клавіатура, що на faq.html
 if (document.querySelector('[data-faq-list]')) {
