@@ -28,6 +28,9 @@
 .b2b-ref--9 .b2b-ref__title { left: calc(1115 * var(--u)); top: calc(310 * var(--u)); }
 .b2b-ref--9 .b2b-ref__text { left: calc(1115 * var(--u)); top: calc(469 * var(--u)); }
 .b2b-ref--9 .b2b-ref__btn { left: calc(1120 * var(--u)); top: calc(572 * var(--u)); }
+/* EN: заголовок «Gift sets.» — один рядок (UK — два): абзац і кнопка піднято на висоту одного рядка заголовка (70u), щоб пропуск заголовок → абзац лишився як у PDF при двох рядках (19u); UK не змінюється */
+html[lang="en"] .b2b-ref--9 .b2b-ref__text { top: calc(399 * var(--u)); }
+html[lang="en"] .b2b-ref--9 .b2b-ref__btn { top: calc(502 * var(--u)); }
 
 /* стор. 8: текст ліворуч, фото праворуч */
 .b2b-ref--8 .b2b-ref__photo { left: calc(974 * var(--u)); }
