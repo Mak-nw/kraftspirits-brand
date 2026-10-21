@@ -86,7 +86,7 @@
   .lp-arches--n3 > .about-still:last-child, .lp-arches--n3 > .lp-arches__card:last-child { grid-column: 1 / -1; width: calc((100% - var(--grid-gap)) / 2); justify-self: center; }  /* третя арка без пари — по центру, ширина = колонка */
   .lp-tiles__grid > .lp-arches { grid-column: 1 / -1; }
   /* compare (кімнати-погреби): одна кімната під другою, на всю ширину; рядок «200 Л ≈ 383 ПЛЯШКИ» — два рядки симетрично (text-wrap: balance) */
-  .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-70); }
+  .lp-compare__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: var(--space-100); }
   .lp-compare__head, .lp-compare__note { grid-column: 1 / -1; grid-row: auto; }
   .lp-group, .lp-group[class*="lp-span--"] { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; }
   .lp-group--has-cellar .lp-group__num { text-align: center; }
