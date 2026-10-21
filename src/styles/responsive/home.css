@@ -1,6 +1,5 @@
 /* АДАПТИВ: головна (index) і спільні секції (brand-choice, stats, tour-card, picker). Лише поза діапазоном 1200–1920. */
 @media (max-width: 1023.98px) {
-  .hero { min-height: var(--size-sec-hero); }
   .about-brief { min-height: 0; }
   .about-brief__inner { width: 100%; }
   .about-brief__kicker, .about-brief__text { width: 100%; }
@@ -38,6 +37,13 @@
     --size-card-cat2-w: calc(var(--grid-w) - 2 * (var(--size-arrow-btn-w) + var(--space-30)));
     --size-picker-card-w: var(--size-card-cat2-w); --size-arch-w: calc(var(--size-card-cat2-w) - 2 * var(--offset-arch));
   }
+}
+
+/* picker chips: синя шапка (a10797da) — на <1200 чіпи в суцільному темно-синьому верхньому блоці (разом із заголовком), фото-фон починається під ним */
+@media (max-width: 1199.98px) {
+  .picker__head { height: auto; }
+  .picker .chip-row { width: 100%; margin-top: 0; padding: var(--space-70) calc((100% - var(--grid-w)) / 2) var(--space-30); background: var(--color-teal); position: relative; z-index: 8; }
+  .picker .slider { margin-top: 0; padding-top: var(--space-60); }
 }
 
 /* головна, «Два бренди» (.brands + .brand-half, картка з вирізом-пляшкою): на ≤ 1023 половини одна під одною (картка = вся ширина сітки), геометрія картки (мова 737×934 u макета)
