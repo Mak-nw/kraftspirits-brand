@@ -17,10 +17,13 @@ export const RESP_WIDTHS = '320,360,375,390,430,600,768,834,1024,1100,2560,3440'
 const ALL = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6'];
 
 export const R2_LINK_MIN_H = 22;
+export const R2_QTY_MIN_H = 42; // px: кнопка степера кількості (.quantity__btn) = контур 44 − 2×hairline (рішення замовника, питання 10 B; docs/responsive.md §4в)
 export const R2_MENU_MIN_H = 33; // px: пункт сторінки меню = 0.8 × --size-touch-target (35,2) із запасом на округлення
+export const R2_QTY_FIELD_MIN_W = 28; // px: поле кількості між кнопками (--size-wc-qty-w, мін. 30,2 на 1200) — вузьке за задумом, висота = внутрішня 42
+const R2_QTY_SEL = '.quantity__btn, .quantity .qty';
 const R2_EXEMPT_SEL = '.site-footer__list a:not(.btn), .site-header__logo'; // + логотипи шапки: на < 768 вертикальна пара (рішення замовника) — область дотику кожного ≈ ½ висоти пілюлі (≥ 22); на ≥ 768 логотипи 44 px і виняток не діє
 async function probe(page, width) {
-  return page.evaluate(({ width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H }) => {
+  return page.evaluate(({ width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H, R2_QTY_SEL, R2_QTY_MIN_H, R2_QTY_FIELD_MIN_W }) => {
     const out = { touch: [], text: [], small: [], overlap: [], key: [], stretch: [] };
     const vw = document.documentElement.clientWidth;
     const nm = (el) => { const p = []; for (let n = el; n && n.nodeType === 1 && p.length < 3; n = n.parentElement) p.unshift(n.tagName.toLowerCase() + (n.id ? `#${n.id}` : '') + [...n.classList].slice(0, 2).map((x) => `.${x}`).join('')); return p.join(' > '); };
@@ -49,6 +52,8 @@ async function probe(page, width) {
         if (r.bottom < 0 || r.top > 1e6) continue;
         // ВИНЯТОК (пряма вказівка замовника 21.10.2026, docs/responsive.md §4б): посилання списків футера (<1200) вже не мають 44 px висоти — рядки зближено; мінімум — R2_LINK_MIN_H (22 px = природна висота рядка), по ширині — вся колонка
         if (el.matches(R2_EXEMPT_SEL)) { if (r.height < R2_LINK_MIN_H - 0.5) out.touch.push({ el: nm(el), w: +r.width.toFixed(1), h: +r.height.toFixed(1), text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28) }); continue; }
+        // ВИНЯТОК (рішення замовника 21.10.2026, питання 10 B; docs/responsive.md §4в): кнопки (44×42) і поле (≥ 28×42) степера кількості — візуально в контурі 44 (контур 44 з рамкою), hit-area ::after на всі 44; мінімум — R2_QTY_MIN_H (42) по висоті і 44 по ширині
+        if (el.matches(R2_QTY_SEL)) { if (r.height < R2_QTY_MIN_H - 0.5 || r.width < (el.matches('.qty') ? R2_QTY_FIELD_MIN_W : 43.5)) out.touch.push({ el: nm(el), w: +r.width.toFixed(1), h: +r.height.toFixed(1), text: (el.getAttribute('aria-label') || '').slice(0, 28) }); continue; }
         if (r.width < 43.5 || r.height < 43.5) {
           // справжня область дотику може бути більшою за бокс (псевдоелемент ::after, padding предка): перевіряємо hit-тестом точок на ±21.5 px від центру по «короткій» осі
           el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
@@ -115,7 +120,7 @@ async function probe(page, width) {
       if (r.width > 24 && Math.abs(a / n - 1) > 0.04 && !im.closest('svg')) out.stretch.push({ el: nm(im), render: +a.toFixed(3), natural: +n.toFixed(3) });
     }
     return out;
-  }, { width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H });
+  }, { width, R2_EXEMPT_SEL, R2_LINK_MIN_H, R2_MENU_MIN_H, R2_QTY_SEL, R2_QTY_MIN_H, R2_QTY_FIELD_MIN_W });
 }
 
 export async function runResp(o) {
@@ -160,6 +165,17 @@ export async function runResp(o) {
         const pm = await probe(cp, 390);
         if (!pm.touch.some((t) => /\(меню\)/.test(t.text))) rep.add({ rule: 'R2', page: 'control', selector: 'контроль R2 (меню)', value: '0 порушень', msg: 'стиснуті до 10 px пункти меню НЕ виявлено — перевірка не працює' });
       } finally { await cp.close().catch(() => {}); }
+    }
+    // позитивний контроль R2-винятку степера: кнопки .quantity__btn стиснуто до 30 px по висоті — перевірка МАЄ дати порушення
+    if (rules.has('R2')) {
+      const cq = await openPage(L.browser, pageUrl(o.url, pageSpec('cart?demo=1'), 'static'), { width: 390, height: 800, dpr: 1, settle: false });
+      try {
+        await waitStable(cq, {});
+        const p0 = await probe(cq, 390); if (p0.touch.some((t) => /quantity__btn/.test(t.el))) rep.add({ rule: 'R2', page: 'control', selector: 'контроль R2 (степер)', value: 'порушення без стиснення', msg: 'нормальний степер уже дає R2-порушення' });
+        await cq.addStyleTag({ content: '.quantity__btn{height:30px!important;align-self:center!important}' });
+        const pq = await probe(cq, 390);
+        if (!pq.touch.some((t) => /quantity__btn/.test(t.el))) rep.add({ rule: 'R2', page: 'control', selector: 'контроль R2 (степер)', value: '0 порушень', msg: 'стиснуті до 30 px кнопки степера НЕ виявлено — перевірка не працює' });
+      } finally { await cq.close().catch(() => {}); }
     }
   } finally { await L.close(); }
   rep.note(`${n} замірів (сторінок ${o.pagesList.length} × ширин ${o.widths.length})`);
