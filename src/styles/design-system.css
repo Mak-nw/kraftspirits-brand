@@ -36,6 +36,14 @@
 .space-bar--15 { width: var(--space-15); } .space-bar--20 { width: var(--space-20); } .space-bar--26 { width: var(--space-26); }
 .space-bar--30 { width: var(--space-30); } .space-bar--37 { width: var(--space-37); } .space-bar--40 { width: var(--space-40); }
 .space-bar--46 { width: var(--space-46); } .space-bar--50 { width: var(--space-50); } .space-bar--70 { width: var(--space-70); }
+.space-bar--28 { width: var(--space-28); }
+.space-bar--60 { width: var(--space-60); }
+.space-bar--85 { width: var(--space-85); }
+.space-bar--100 { width: var(--space-100); }
+.space-bar--140 { width: var(--space-140); }
+.space-bar--177 { width: var(--space-177); }
+.space-bar--197 { width: var(--space-197); }
+.space-bar--208 { width: var(--space-208); }
 .space-bar--grid-margin { width: var(--grid-margin); } .space-bar--container-text { width: var(--container-text); }
 .space-bar--container-wide { width: var(--container-wide); } .space-bar--grid-w { width: var(--grid-w); }
 /* демо єдиної сітки: 10 колонок із токенів --grid-* (кольори й роль тексту — наявні, як у .space-row__bar) */

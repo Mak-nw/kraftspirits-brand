@@ -312,6 +312,7 @@
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-15 · 194:1402</span><span class="space-row__bar space-bar--15"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-20 · 194:1352</span><span class="space-row__bar space-bar--20"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-26 · 194:1327</span><span class="space-row__bar space-bar--26"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-28 · 224:3809 (gap логотип → текст)</span><span class="space-row__bar space-bar--28"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-30 · 194:1368</span><span class="space-row__bar space-bar--30"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-37 · 194:1375</span><span class="space-row__bar space-bar--37"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-40 · 194:1329</span><span class="space-row__bar space-bar--40"></span></div>
@@ -319,6 +320,12 @@
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-50 · 194:1275</span><span class="space-row__bar space-bar--50"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--space-70 · 194:1388</span><span class="space-row__bar space-bar--70"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--grid-margin (202.9) · єдина сітка</span><span class="space-row__bar space-bar--grid-margin"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-85 · 194:1326 (чіпи → картка)</span><span class="space-row__bar space-bar--85"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-100 · 224:3639 (gap блоків)</span><span class="space-row__bar space-bar--100"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-140 · проміжний крок між 100 і 177; за запитом замовника (99031f1e/828ffcd5): відступ кнопки → лого футера</span><span class="space-row__bar space-bar--140"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-177 · 194:1185 (top заголовка FAQ)</span><span class="space-row__bar space-bar--177"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-197 · 224:3734 (top заголовка секції підбору)</span><span class="space-row__bar space-bar--197"></span></div>
+      <div class="space-row"><span class="space-row__label ds-meta t-text">--space-208 · 194:1275 / 194:1292 (top заголовка секцій)</span><span class="space-row__bar space-bar--208"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--container-text (712) · 194:1277</span><span class="space-row__bar space-bar--container-text"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--container-wide (1508) · 194:1275</span><span class="space-row__bar space-bar--container-wide"></span></div>
       <div class="space-row"><span class="space-row__label ds-meta t-text">--grid-w (1514.2) · єдина сітка</span><span class="space-row__bar space-bar--grid-w"></span></div>
@@ -461,7 +468,7 @@
           <!--@include components/chip label="дегустація"-->
         </div>
       </div>
-      <p class="ds-meta t-text">Стан active у Figma не намальований (усі чіпи gold) — акцентний стан = колір --color-light (припущення). Слайдер: див. секцію .picker на головній, стрілки [data-slider-prev|next], слайди .slider__slide. Фото-фон слайдера (.picker__bgs) затемнений токеном --share-picker-bg-shade (45% чорного, як --share-lp-split-shade) — світлі стрілки мають ≥3:1 на будь-якому кадрі; позиція кадру в смузі — --pos-picker-bg-*.</p>
+      <p class="ds-meta t-text">Стан active у Figma не намальований (усі чіпи gold) — акцентний стан = колір --color-light (припущення). Слайдер: див. секцію .picker на головній, стрілки [data-slider-prev|next], слайди .slider__slide. Фото-фон слайдера (.picker__bgs) затемнений токеном --share-picker-bg-shade (45% чорного, як --share-lp-split-shade) — стрілки золоті (.arrow-btn--gold, токени .btn--gold), затемнювач .picker__bgs::after утримує їх читабельними на світлих кадрах: піксельно заливка стрілки проти кадру 1.7–3.9:1, шеврон #223520 на золоті 6.27:1; без затемнювача було б 1.0–1.6:1. Це рішення замовника (21.10), контраст ≥3:1 на кожному кадрі не обіцяється; позиція кадру в смузі — --pos-picker-bg-*.</p>
 
       <p class="demo-label t-kicker">Іконки</p>
       <div class="demo-panel theme-beige icon-demo">
