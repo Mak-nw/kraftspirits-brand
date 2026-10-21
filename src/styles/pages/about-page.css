@@ -12,7 +12,6 @@
 .about__grid > .heading-center { grid-column: 1 / -1; } /* заголовки секцій — по центру сітки */
 
 /* ---------- 1. HERO: перше фото замовника + hero.fade (зелений знизу 100% → 0 вгору, наявний; зверху градієнта нема — рішення замовника); H1 і кнопка — в нижній зеленій зоні ---------- */
-.about-hero { height: var(--size-sec-hero); }
 .about-hero__content { position: absolute; z-index: 2; left: 0; right: 0; bottom: var(--offset-about-hero-bottom); display: flex; flex-direction: column; align-items: center; gap: var(--space-lp-hero-gap); text-align: center; color: var(--color-light); }
 
 /* ---------- 2. 15 МІСЯЦІВ: фото-фон, шапка (кол. 3–6) + два статичні кола (кол. 7–10), віхи в шаховому порядку ---------- */

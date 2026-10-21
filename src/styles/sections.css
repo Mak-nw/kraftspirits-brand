@@ -1,7 +1,7 @@
 /* Секції головної (main page 194:1514). Висоти — min-height з Figma; усе з токенів. */
 
-/* Hero 224:3617 (1920×1086): фонове фото на всю секцію, два великі логотипи по центру (Group 1 224:3658). Зони header у потоці нема (page-home), пілюля fixed поверх. */
-.hero { position: relative; overflow: hidden; height: var(--size-sec-hero); background: var(--color-brown); }
+/* Hero 224:3617: висота = в'юпорт (--size-hero-h, рішення замовника 224a3702; у макеті 1086u), не менша за --size-hero-min-h; фонове фото на всю секцію, два великі логотипи по центру (Group 1 224:3658). Зони header у потоці нема (page-home), пілюля fixed поверх. */
+.hero { position: relative; overflow: hidden; height: var(--size-hero-h); min-height: var(--size-hero-min-h); background: var(--color-brown); }
 .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; max-width: none; }
 .hero__logos { position: absolute; top: var(--offset-hero-logos-top); left: 0; right: 0; width: var(--size-hero-logos-w); height: var(--size-hero-logos-h); margin-inline: auto; } /* 224:3658; у макеті група зсунута на −10.5 від центру — нормалізовано до центру сторінки */
 .hero__logo { position: absolute; left: 0; right: 0; margin-inline: auto; display: block; overflow: hidden; }

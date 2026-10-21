@@ -626,7 +626,8 @@
   --type-spec-font: var(--font-family-serif); --type-spec-weight: var(--fw-semibold); --type-spec-size: var(--font-size-title); --type-spec-lh: var(--lh-none); --type-spec-ls: var(--ls-wide); /* 205:2442 «500 мл» / «40% alc»: EB Garamond SemiBold 20, 0.6px, без uppercase */
 
   /* ---------- Головна, новий макет (224:3966, 1920×6484): hero 224:3617 · бренди 224:3596 · вступ 224:3639 · екскурсії 224:3586 · підбір 224:3732 · футер 224:3700 ---------- */
-  --size-sec-hero: calc(1086 * var(--u));         /* 224:3617 */
+  --size-hero-h: 100vh;                           /* hero-екран на ВСІХ сторінках = висота в'юпорта (рішення замовника 224a3702; було 1086u макета 224:3617); 100svh нижче (@supports) — small viewport: без стрибків від адресного рядка на телефонах */
+  --size-hero-min-h: max(calc(660 * var(--u)), 360px); /* нижня межа: на низьких вікнах (landscape-телефон) hero не стискає контент (заголовок + кнопка + відступ 177u + шапка), сторінка просто довша за вікно; на високих мін. не діє (cover) */
   --offset-hero-logos-top: calc(158 * var(--u));  /* 224:3658 Group 1: top 158 */
   --size-hero-logos-w: calc(983 * var(--u));      /* 224:3658 */
   --size-hero-logos-h: calc(185.103 * var(--u));  /* 224:3658 */
@@ -1196,8 +1197,7 @@
     --size-hero-logo-bs-w: var(--grid-w);
     --size-hero-logo-bs-h: calc(102.611 * var(--hero-k));
     --offset-hero-logo-bs-top: calc(82.491 * var(--hero-k));
-    --offset-hero-logos-top: calc(var(--size-header-h) + var(--space-70));
-    --size-sec-hero: max(calc(1086 * var(--u)), 480px);
+    --offset-hero-logos-top: calc(var(--size-header-h) + (100% - var(--size-header-h) - var(--size-hero-logos-h)) / 2); /* головна <1200 (рішення замовника 34751384): напис по центру hero — між зоною шапки і низом екрана (hero = в'юпорт); 100% = висота hero */
     --size-picker-head-h: calc(300 * var(--u));
     --scale-cocktail-thumb: 1;                                 /* мініатюри коктейлів: на дотик без зменшення (≥ 44 px) */
     --size-product-stage-w: var(--grid-w);                     /* товар: фото й панель — одна під одною на всю ширину вмісту */
@@ -1325,6 +1325,9 @@
 @media (max-width: 360px) {
   :root { --header-logo-k: 0.42; }
 }
+
+/* hero = в'юпорт: svh (small viewport height) — висота не стрибає від адресного рядка мобільних браузерів; браузери без svh лишаються на 100vh (рішення замовника 224a3702) */
+@supports (height: 100svh) { :root { --size-hero-h: 100svh; } }
 
 /* АДАПТИВ: токени layout-розмірів responsive/*.css (раніше були літералами/локальними змінними у responsive/*.css) */
 @media (max-width: 1199.98px) {

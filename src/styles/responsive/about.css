@@ -1,7 +1,6 @@
 /* АДАПТИВ: сторінка «Про дім» (about.html). Лише поза діапазоном 1200–1920 (замовник: «в сторінку про нас нічого не змінювати» — для десктопу). */
 @media (max-width: 1023.98px) {
   .about__grid { width: var(--grid-w); }
-  .about-hero { height: var(--size-sec-hero); }
   /* секція 3: БЕЗ pinned-скролу (дотик): секція в потоці, стрічка арок — нативна горизонтальна прокрутка */
   .about-place { position: relative; display: block; height: auto; padding-block: var(--space-about-sec-y); scroll-margin-top: 0; overflow: clip; }
   .about-track { position: static; inset: auto; display: flex; flex-direction: column; align-items: stretch; row-gap: var(--space-about-stack); width: auto; will-change: auto; transform: none !important; }
