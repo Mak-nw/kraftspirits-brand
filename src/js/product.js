@@ -232,7 +232,7 @@ function renderProduct(p) {
   const brand = BRANDS.find((b) => b.id === p.brand);
   const cat = CATEGORIES.find((c) => c.id === p.category);
   const sameCat = cat && p.nameLines[0].toLowerCase() === cat.label.toLowerCase();
-  const last = sameCat ? p.nameLines.slice(1).join(' ') : p.nameLines.join(' ');
+  const last = p.crumb || (sameCat ? p.nameLines.slice(1).join(' ') : p.nameLines.join(' ')); // crumb — коротка назва для крихт (подарункові набори: інакше крихти не вміщуються в 1 рядок)
   const crumbs = q('.product-crumbs');
   const items = [
     [t('js.product.crumb-catalog'), 'catalog.html'],

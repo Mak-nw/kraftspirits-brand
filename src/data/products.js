@@ -453,6 +453,7 @@ export const PRODUCTS = [
       "Набір «Ясний»",
       "у тубі"
     ],
+    "crumb": "«Ясний» у тубі",
     "brand": "yasnocraft",
     "category": "gift-sets",
     "kind": "Подарунковий набір: джин у тубі",
@@ -480,6 +481,7 @@ export const PRODUCTS = [
       "Набір «Oak Notes»",
       "у ящику"
     ],
+    "crumb": "«Oak Notes»",
     "brand": "bazylsprings",
     "category": "gift-sets",
     "kind": "Подарунковий набір: настоянка на дубовій клепці (тип віскі) у дерев'яному ящику",
