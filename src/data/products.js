@@ -1,4 +1,4 @@
-// Позиції каталогу (14). Джерело: site/kraftspirits/src/data/products.json + site/catalog.md (лише читання).
+// Позиції каталогу (16: 14 напоїв + 2 подарункові набори). Джерело: site/kraftspirits/src/data/products.json + site/catalog.md (лише читання).
 // price — мінімальна ціна серед об'ємів (₴), null — ціни немає. Barley Spirit (0.7 л, 2190) і Oak Notes (0.5 л, 1990) — ціни-плейсхолдери з catalog.md, ще не затверджені клієнтом.
 // Сторінка товару YasnoCraft (новий макет 205:2430): hero = велике студійне фото (є у всіх 11 позицій YasnoCraft; hero 900:968, джерело generative/newbottles); gallery[i] = { thumb, large } — 2 мініатюри-накладки (126×167), СПІЛЬНІ для всіх 11 позицій: slider/yc-gin-studio-*, slider/yc-gin-herbs-* (джерело generative/slider, tools/make-slide.mjs); клік замінює велике фото, повторний — повертає hero. Bazylsprings (194:1520): hero = студійне фото (1732×1750, джерело generative/newbottles, whisky-*.png; всі 3 віскі); gallery = 2 мініатюри-накладки всередині фото-фрейму (однакова розкладка YC/BS), спільні для всіх 3: slider/bs-whisky-studio-*, slider/bs-whisky-wheat-*.
 // status 'available' — позиція доступна (картка з посиланням, ціна, покупка) для всіх позицій. image — шлях від кореня public (без початкового «/»), null → плейсхолдер.
@@ -14,6 +14,7 @@ export const CATEGORIES = [
   { id: 'tinctures', label: 'Настоянки' },
   { id: 'whisky', label: 'Віскі' },
   { id: 'fruit-in-bottle', label: 'Фрукт у пляшці' },
+  { id: 'gift-sets', label: 'Подарункові набори' },
 ];
 
 export const PRODUCTS = [
@@ -439,6 +440,63 @@ export const PRODUCTS = [
       { "thumb": "assets/img/slider/bs-whisky-studio-thumb.webp", "large": "assets/img/slider/bs-whisky-studio-lg.webp" },
       { "thumb": "assets/img/slider/bs-whisky-wheat-thumb.webp", "large": "assets/img/slider/bs-whisky-wheat-lg.webp" }
     ],
+    "status": "available"
+  },
+  // ---- Подарункові набори (категорія gift-sets). Склад і тексти табів — product-texts.js (поле tabs).
+  // [потрібно уточнити] ціни орієнтовні: ціна вмісту (обʼєм 0,5 л) + заглушка упаковки (туба +350 ₴, дерев'яний ящик +900 ₴); остаточні ціни підтвердить замовник.
+  // Фото-слоти: hero/image — placeholder (копія вмісту) до генерації фото; gallery порожній (спільні мініатюри слайдера — фото самої пляшки, до набору не підходять).
+  {
+    "id": 15,
+    "slug": "gift-tube",
+    "name": "Подарунковий набір «Ясний» у тубі",
+    "nameLines": [
+      "Подарунковий набір",
+      "«Ясний» у тубі"
+    ],
+    "brand": "yasnocraft",
+    "category": "gift-sets",
+    "kind": "Подарунковий набір: джин у тубі",
+    "notes": "Джин Ясногородський 0,5 л у подарунковій тубі",
+    "abv": 43,
+    "volumes": [
+      {
+        "l": 0.5,
+        "price": 1200
+      }
+    ],
+    "price": 1200,
+    "badge": null,
+    "description": "Пляшка джину Ясногородський YasnoCraft 0,5 л у подарунковій тубі. Готовий подарунок для партнерів, клієнтів і команди.",
+    "image": "assets/img/products/gift-tube.webp",
+    "hero": "assets/img/product-hero-gift-tube-new.webp",
+    "gallery": [],
+    "status": "available"
+  },
+  {
+    "id": 16,
+    "slug": "gift-wood-box",
+    "name": "Подарунковий набір «Oak Notes» у дерев'яному ящику",
+    "nameLines": [
+      "Подарунковий набір",
+      "«Oak Notes» у ящику"
+    ],
+    "brand": "bazylsprings",
+    "category": "gift-sets",
+    "kind": "Подарунковий набір: настоянка на дубовій клепці (тип віскі) у дерев'яному ящику",
+    "notes": "Oak Notes 0,5 л у дерев'яному подарунковому ящику",
+    "abv": 42,
+    "volumes": [
+      {
+        "l": 0.5,
+        "price": 2890
+      }
+    ],
+    "price": 2890,
+    "badge": null,
+    "description": "Пляшка Bazylsprings Oak Notes 0,5 л у дерев'яному подарунковому ящику. Подарунок для тих, кому потрібен серйозний жест.",
+    "image": "assets/img/products/gift-wood-box.webp",
+    "hero": "assets/img/product-hero-gift-wood-box-new.webp",
+    "gallery": [],
     "status": "available"
   }
 ];
