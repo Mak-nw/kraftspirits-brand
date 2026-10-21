@@ -16,6 +16,7 @@
   .about-story__rings { grid-template-columns: repeat(2, minmax(0, var(--size-about-ring))); justify-content: space-between; margin-top: var(--space-about-head); }
   /* віхи (коментар замовника 2585b00f): ліва колонка сітки — дата/рік, права — фото, під ним опис; планшет 8 колонок: 2 + 6 */
   .about-story__milestone, .about-story__milestone--start { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: start; row-gap: var(--space-20); margin-top: var(--space-about-head); }
+  .about-story__milestone--start { margin-top: var(--space-100); } /* кола → перша дата (коментар замовника 26cf04d7): крок 100u (телефон 70u), більший за відступ між віхами */
   .about-story__date { grid-column: 1 / span 2; grid-row: 1 / span 2; }
   .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo { grid-column: 3 / -1; grid-row: 1; width: 100%; height: auto; margin-left: 0; aspect-ratio: var(--ratio-about-photo-start); }
   .about-story__milestone--finish .about-story__photo { aspect-ratio: var(--ratio-about-photo-finish); }
