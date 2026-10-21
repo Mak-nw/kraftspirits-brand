@@ -39,7 +39,7 @@
   .about-stills__lead { grid-column: 1 / -1; max-width: none; }
   /* принципи (без арки: коло з іконкою + текст по центру; колонки 4 → 2, на телефоні теж 2×2 — коментар замовника ab2c08e2) */
   .about-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--grid-gap); }
-  .about-faq .faq-page__list--span8 { width: 100%; }
+  .about-faq .faq-page__list--span8 { width: var(--grid-w); } /* картки-акордеони FAQ — рівно ширина контейнера сітки (4/8 колонок), а не повний в'юпорт (коментар замовника e9c67857) */
 }
 @media (max-width: 767.98px) {
   .about-story__date { grid-column: 1 / span 1; }
