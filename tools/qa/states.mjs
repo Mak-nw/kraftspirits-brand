@@ -3,7 +3,7 @@
 // --btn-<варіант>-<властивість>-<стан> (tokens.css, README «Токени кнопок»). Також перевіряє транзиції станів (default/hover = --btn-transition-duration ≥ 0.3s,
 // focus/active = --btn-transition-duration-focus 0.15s) і товщину фокус-кільця.
 //   node tools/qa/states.mjs [--url …] [--widths 1920] [--scrollbar classic|none] [--only btn,nav-cell] [--json]
-// Сімейства: btn(gold|light|beige|green|teal|outline), nav-cell(outline|fill|ghost), arrow-btn, chip, chip-picker, nav-link(+on-light).
+// Сімейства: btn(gold|light|beige|green|teal|outline), nav-cell(outline|fill|ghost), arrow-btn, chip, chip-picker, nav-link(+on-light), quantity (cart: .quantity__btn).
 // НЕ покрито (немає загальної DOM-схеми; перевіряються лише через design-system.html вручну): select, check, row-faq, row-product, catnav, thumb, volume, choice.
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, tokens, normColors, safeHover, unhover, waitStable, sleep } from './lib.mjs';
 
@@ -25,6 +25,9 @@ const FAMILIES = [
   })),
   { family: 'arrow-btn', variant: 'arrow', token: 'arrow', sel: '.arrow-btn:not(.arrow-btn--light)', props: { bg: { el: SELF, css: 'backgroundColor' }, border: { el: SELF, css: 'borderTopColor' }, 'icon-filter': { el: 'img', css: 'filter', raw: true } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'] },
   { family: 'arrow-btn', variant: 'arrow-light', token: 'light', sel: '.arrow-btn--light', props: { bg: { el: SELF, css: 'backgroundColor' }, border: { el: SELF, css: 'borderTopColor' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'] }, // заливка/рамка = токени btn--light; шеврон темний без інверсії (фільтр none в усіх станах)
+  // степер кількості (cart: .quantity__btn «+»): власних токенів --btn-* немає, очікування — з базових токенів (--color-green/--color-beige, --btn-active-mix); перехід у всіх станах = --btn-transition-duration; disabled — нативний атрибут
+  { family: 'quantity', variant: 'qty-btn', token: 'qty', sel: '.quantity__btn:last-of-type', props: { bg: { el: SELF, css: 'backgroundColor' }, text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus', 'active', 'disabled'], disabledAttr: 'disabled', transAll: true,
+    expRaw: (tk, state) => { const g = tk['--color-green']?.value, b = tk['--color-beige']?.value, mix = tk['--btn-active-mix']?.raw; return { default: { bg: 'transparent', text: g }, hover: { bg: g, text: b }, focus: { bg: g, text: b }, active: { bg: `color-mix(in srgb, ${g} ${mix}, rgb(0,0,0))`, text: b }, disabled: { bg: 'transparent', text: g } }[state]; } },
   { family: 'chip', variant: 'chip', token: 'chip', sel: '.chip', match: (el) => !el.closest('.picker') && !el.classList.contains('is-active') && el.getAttribute('aria-pressed') !== 'true', props: { text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus'] },
   { family: 'chip', variant: 'chip (selected)', token: 'chip', sel: '.chip', match: (el) => !el.closest('.picker') && (el.classList.contains('is-active') || el.getAttribute('aria-pressed') === 'true'), props: { text: { el: SELF, css: 'color' } }, trans: SELF, states: ['selected'] },
   { family: 'chip', variant: 'chip-picker', token: 'chip-picker', sel: '.picker .chip', match: (el) => !el.classList.contains('is-active') && el.getAttribute('aria-pressed') !== 'true', props: { text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus'] },
@@ -32,7 +35,7 @@ const FAMILIES = [
   { family: 'nav-link', variant: 'navlink', token: 'navlink', sel: 'a.nav-link', match: (el) => !el.classList.contains('nav-link--on-light') && !el.classList.contains('nav-cell'), props: { text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus'] },
   { family: 'nav-link', variant: 'navlink-light', token: 'navlink-light', sel: 'a.nav-link.nav-link--on-light', props: { text: { el: SELF, css: 'color' } }, trans: SELF, ring: 'focus', states: ['default', 'hover', 'focus'] },
 ];
-const POOL = ['index', 'catalog', 'product?id=gin-yasnyi', 'product?id=whiskey-white', 'feedback', 'barrels', '404', 'design-system'];
+const POOL = ['index', 'cart', 'catalog', 'product?id=gin-yasnyi', 'product?id=whiskey-white', 'feedback', 'barrels', '404', 'design-system'];
 
 /** знайти придатний видимий елемент; у design-system пропускаємо демо із примусовими класами станів */
 async function findEl(page, fam) {
@@ -74,7 +77,7 @@ export async function runStates(o) {
   const rep = new Report('states');
   const only = o.only ? new Set(String(o.only).split(',')) : null;
   const fams = FAMILIES.filter((f) => !only || only.has(f.family) || only.has(f.variant));
-  let checked = 0, skipped = [];
+  let checked = 0, skipped = []; const ctl = { n: null };
   for (const combo of matrix(o, { dprs: [o.dpr[0]] })) {
     const L = await launch({ scrollbar: combo.scrollbar, chrome: o.chrome, out: o.out });
     try {
@@ -94,12 +97,18 @@ export async function runStates(o) {
           todo.delete(key);
           await checkFamily(page, h, fam, tk, rep, `${spec.label}@${combo.width}${combo.scrollbar === 'classic' ? '' : '/none'}`);
           checked++;
+          if (fam.expRaw) { // позитивний контроль: підміна hover-заливки степера (--qty-bg-hover) МАЄ дати порушення
+            let n = 0; const st = await page.addStyleTag({ content: '.quantity{--qty-bg-hover:rgb(255,0,0)!important}' });
+            await checkFamily(page, h, { ...fam, states: ['hover'] }, tk, { add() { n++; }, note() {} }, 'control');
+            await st.evaluate((el) => el.remove()); ctl.n = n;
+          }
         }
         await page.close().catch(() => {});
       }
       for (const k of todo) skipped.push(k.replace('|', '/'));
     } finally { await L.close(); }
   }
+  if (ctl.n === 0) rep.add({ rule: 'ST1', page: 'control', selector: 'quantity [hover]', value: '0 порушень', msg: 'контроль (--qty-bg-hover: red) НЕ дав порушення — перевірка степера не працює' });
   rep.stats = { variantsChecked: checked, skipped };
   if (skipped.length) rep.note(`не знайдено елемента для: ${skipped.join(', ')}`);
   rep.note('не покрито: select, check, row-faq, row-product, catnav, thumb, volume, choice (див. шапку states.mjs)');
@@ -113,6 +122,7 @@ async function checkFamily(page, h, fam, tk, rep, where) {
   const tokVal = (prop, state) => tk[`--btn-${fam.token}-${prop}-${state}`]?.value;
   const mkExp = async (state) => {
     const exp = {};
+    if (fam.expRaw) { const r = fam.expRaw(tk, state), ks = Object.keys(fam.props), n = await normColors(page, ks.map((k) => r[k])); ks.forEach((k, i) => { exp[k] = n[i]; }); return exp; }
     const colorProps = Object.keys(fam.props).filter((p) => !fam.props[p].raw);
     const raws = colorProps.map((p) => tokVal(p, state));
     const norm = raws.some((x) => x === undefined) ? null : await normColors(page, raws);
@@ -143,7 +153,7 @@ async function checkFamily(page, h, fam, tk, rep, where) {
     if (dur != null && Math.abs(t - dur) > 0.011) rep.add({ rule: 'ST2', page: where, selector: `${label} [${state}]`, value: `transition ${t}s ≠ ${dur}s`, msg: 'тривалість переходу не за політикою' });
     if ((state === 'default' || state === 'hover') && t < 0.3) rep.add({ rule: 'ST2', page: where, selector: `${label} [${state}]`, value: `${t}s`, msg: 'перехід швидший за 0.3s' });
   };
-  const durFast = (tk['--btn-transition-duration']?.value ?? 450) / 1000, durFocus = (tk['--btn-transition-duration-focus']?.value ?? 150) / 1000;
+  const durFast = (tk['--btn-transition-duration']?.value ?? 450) / 1000, durFocus = fam.transAll ? durFast : (tk['--btn-transition-duration-focus']?.value ?? 150) / 1000;
 
   const settle = () => sleep(650);
   // default
@@ -188,7 +198,7 @@ async function checkFamily(page, h, fam, tk, rep, where) {
   }
   // disabled (тимчасово aria-disabled="true"; після перевірки знімаємо)
   if (fam.states.includes('disabled')) {
-    await h.evaluate((el) => el.setAttribute('aria-disabled', 'true'));
+    await h.evaluate((el, at) => el.setAttribute(at, at === 'disabled' ? '' : 'true'), fam.disabledAttr || 'aria-disabled');
     await unhover(page); await settle();
     const a = await read(h, fam);
     await cmp('disabled', a, await mkExp('disabled'), null);
@@ -197,7 +207,7 @@ async function checkFamily(page, h, fam, tk, rep, where) {
     // hover по disabled не змінює значень
     const hv = await safeHover(page, h);
     if (hv.ok) { const a2 = await read(h, fam); const keys = Object.keys(fam.props); const diff = keys.filter((k) => a2[k] !== a[k]); if (diff.length) rep.add({ rule: 'ST1', page: where, selector: `${label} [disabled+hover]`, value: diff.map((k) => `${k}: ${a[k]} → ${a2[k]}`).join('; '), msg: 'disabled змінюється на hover' }); }
-    await h.evaluate((el) => el.removeAttribute('aria-disabled')); await unhover(page);
+    await h.evaluate((el, at) => el.removeAttribute(at), fam.disabledAttr || 'aria-disabled'); await unhover(page);
   }
 }
 

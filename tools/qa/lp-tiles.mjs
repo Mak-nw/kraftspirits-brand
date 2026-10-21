@@ -4,6 +4,7 @@
 //   Причина, яку правило ловить (D-1): на телефоні (< 768, 2 колонки) плитка розтягується до найвищого сусіда в ряду, а її авто-рядки (медіа / підпис) ділять зайву висоту — коло у плитки з коротшим підписом
 //   «виростало» на кілька px і підписи в ряду розходились (кінцеве рішення — align-content: start у .lp-tile). Правило діє на ≤ 767 (2 в ряд) і ≥ 768 (3–6 в ряд), у плитках з підписом поверх фото (.lp-tiles--over) підпис не перевіряється.
 //   Позитивний контроль (в тому ж прогоні, окремо для < 768 і ≥ 768): першій плитці першої секції додано padding-top 10px — перевірка МАЄ дати порушення.
+//   Колонки (TILE-COLS): у `.lp-tiles__grid--rows` (events) < 1024 → 2 колонки (2×3), ≥ 1024 → 3; контроль — `grid-column: span 2` на плитках (768–1023) МАЄ дати порушення.
 // Код виходу: 0 — усе гаразд, 1 — порушення / контроль не спрацював, 2 — збій. Параметри: --url (за замовч. http://localhost:5200/), --widths, --scrollbar, --pages (за замовч. barrels,en/barrels,excursions,events).
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, sleep } from './lib.mjs';
 
@@ -26,6 +27,10 @@ const PROBE = () => {
   return rows;
 };
 
+// Кількість колонок у сітці плиток-вінців `.lp-tiles__grid--rows` (events «Що є на локації»): різних лівих країв плиток. Очікування: < 1024 → 2 (2×3; на 768–1023 .lp-span--2/3 не має розтягувати плитку на обидві колонки — дефект 1×6), ≥ 1024 → 3 (3×2).
+const COLS = () => [...document.querySelectorAll('.lp-tiles__grid--rows')].map((g) => { const t = [...g.querySelectorAll(':scope > .lp-tile')].filter((x) => x.getBoundingClientRect().width); return { sec: g.closest('.lp-sec')?.id || '', n: t.length, cols: new Set(t.map((x) => Math.round(x.getBoundingClientRect().left))).size }; });
+const checkCols = (cols, width, rep, label) => { let bad = 0; const want = width < 1024 ? 2 : 3; for (const c of cols) if (c.cols !== want) { bad++; rep.add({ rule: 'TILE-COLS', page: label, selector: `#${c.sec} .lp-tiles__grid--rows`, value: `${c.cols} колонок (плиток ${c.n})`, msg: `очікується ${want} колонок у ряду плиток` }); } return bad; };
+
 const check = (rows, rep, label) => {
   let bad = 0;
   const add = (x) => { bad++; rep.add({ page: label, ...x }); };
@@ -45,9 +50,9 @@ const check = (rows, rep, label) => {
   return bad;
 };
 
-await runMain('lp-tiles', { widths: '320,360,390,440,599,767,768,1024,1440', scrollbar: 'none', pages: 'barrels,en/barrels,excursions,events' }, async (o) => {
+await runMain('lp-tiles', { widths: '320,360,390,440,599,767,768,900,1023,1024,1440', scrollbar: 'none', pages: 'barrels,en/barrels,excursions,events' }, async (o) => {
   const rep = new Report('lp-tiles');
-  const ctl = { phone: null, wide: null }; let rowsCount = 0;
+  const ctl = { phone: null, wide: null }; let rowsCount = 0, colsCount = 0, ctlCols = null;
   for (const combo of matrix(o, { dprs: [o.dpr[0]] })) {
     const L = await launch({ scrollbar: combo.scrollbar, chrome: o.chrome, out: o.out });
     try {
@@ -58,6 +63,12 @@ await runMain('lp-tiles', { widths: '320,360,390,440,599,767,768,1024,1440', scr
         const rows = await page.evaluate(PROBE);
         rowsCount += rows.length;
         check(rows, rep, label);
+        const cols = await page.evaluate(COLS); colsCount += cols.length; checkCols(cols, combo.width, rep, label);
+        if (cols.length && ctlCols === null && combo.width >= 768 && combo.width < 1024) { // контроль: grid-column: span 2 на плитці (дефект 1×6) МАЄ дати порушення
+          await page.evaluate(() => { const st = document.createElement('style'); st.textContent = '.lp-tiles__grid--rows .lp-tile { grid-column: span 2 !important; }'; document.head.append(st); });
+          await sleep(100);
+          ctlCols = checkCols(await page.evaluate(COLS), combo.width, { add() {} }, 'ctl');
+        }
         const k = combo.width < 768 ? 'phone' : 'wide';
         if (rows.length && ctl[k] === null) { // контроль: padding-top 10px однієї плитки ряду — МАЄ дати порушення
           await page.evaluate(() => { const g = document.querySelector('.lp-tiles__grid'); g?.querySelector(':scope > .lp-tile')?.style.setProperty('padding-top', '10px', 'important'); });
@@ -71,6 +82,9 @@ await runMain('lp-tiles', { widths: '320,360,390,440,599,767,768,1024,1440', scr
   rep.info({ rule: 'TILE-ROW', msg: `рядів плиток (≥ 2 в ряду) ${rowsCount} на ${o.widths.length} ширинах × ${o.pagesList.length} стор.; контролі (padding-top 10px у першій плитці): < 768 → ${ctl.phone} порушень, ≥ 768 → ${ctl.wide}` });
   if (ctl.phone !== null && !ctl.phone) rep.add({ rule: 'TILE-ROW', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'padding-top 10px у плитці (< 768) НЕ дав порушення — перевірка не працює' });
   if (ctl.wide !== null && !ctl.wide) rep.add({ rule: 'TILE-ROW', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'padding-top 10px у плитці (≥ 768) НЕ дав порушення — перевірка не працює' });
+  rep.info({ rule: 'TILE-COLS', msg: `сіток .lp-tiles__grid--rows ${colsCount}: колонок < 1024 → 2, ≥ 1024 → 3; контроль (span 2 на плитці, 768–1023): ${ctlCols} порушень` });
+  if (ctlCols !== null && !ctlCols) rep.add({ rule: 'TILE-COLS', page: 'control', selector: 'контроль', value: '0 порушень', msg: 'grid-column: span 2 на плитці НЕ дав порушення — перевірка колонок не працює' });
+  if (!colsCount) rep.add({ rule: 'TILE-COLS', page: 'control', selector: '.lp-tiles__grid--rows', value: '0 сіток', msg: 'не знайдено жодної сітки вінців — перевірка колонок нічого не перевіряє' });
   if (!rowsCount) rep.add({ rule: 'TILE-ROW', page: 'control', selector: '.lp-tiles__grid', value: '0 рядів', msg: 'не знайдено жодного ряду плиток — перевірка нічого не перевіряє' });
   return rep;
 });
