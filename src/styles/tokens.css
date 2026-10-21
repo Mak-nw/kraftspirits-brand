@@ -1360,7 +1360,7 @@
     --size-brand-content-w-stack: 60%;                         /* картки брендів (головна) одна під одною: ширина текстового блоку */
   }
   /* геометрія картки каталогу від її реальної ширини (--size-card-cat2-w): 1 px макета = --cu; слайдер підбору переозначає ширину картки, тож токени перераховуються і на ньому */
-  :root, .picker .slider {
+  :root, .picker .slider, .catalog-grid {
     --cu: calc(var(--size-card-cat2-w) / 348.55);
     --size-card-cat2-h: calc(480 * var(--cu));
     --space-card-cat2-photo-top: calc(44 * var(--cu));
@@ -1376,8 +1376,15 @@
     --offset-arch: calc(6 * var(--cu));
     --liquid-wave-h: calc(24 * var(--cu));
   }
+  /* сітка каталогу: планшет — 2 картки в ряд, телефон (нижче) — 1; ширина картки лише в сітці каталогу (на :root лишається для слайдера/коктейлю), арка перераховується від неї */
+  .catalog-grid {
+    --size-card-cat2-w: calc((var(--grid-w) - var(--grid-gap)) / 2);
+    --size-arch-w: calc(var(--size-card-cat2-w) - 2 * var(--offset-arch));
+    --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu));
+  }
 }
 @media (max-width: 767.98px) {
   :root { --size-brand-content-w-stack: 76%; }
+  .catalog-grid { --size-card-cat2-w: var(--grid-w); }
   .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
 }
