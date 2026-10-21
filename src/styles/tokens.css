@@ -1163,6 +1163,7 @@
     --header2-btn-ghost-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header2-btn-fill-h: max(calc(44 * var(--u)), var(--size-touch-target));
     --header3-menu-w: max(calc(310 * var(--u)), 260px);
+    --header-logo-k: 0.8;                                      /* пара логотипів у шапці 1024–1199: зазор до кнопки мови ≥ 16 px (R7; без зменшення було перекриття до 36 px) */
     --size-arrow-btn-w: max(calc(64 * var(--u)), var(--size-touch-target));
     --size-arrow-btn-h: max(calc(66 * var(--u)), var(--size-touch-target));
   }
@@ -1327,4 +1328,13 @@
     --size-heading-w: var(--grid-w);             /* заголовок: на всю ширину вмісту (4 колонки) */
     --size-heading-w-wide: var(--grid-w);
   }
+}
+
+/* вузький телефон: пара логотипів шапки менша й пілюля ширша (відступ від краю вікна — половина поля сітки), щоб логотипи не налізали на меню/кабінет (R7: зазор ≥ 8 px).
+   Брейкпоінти 440/360 — літеральні числа в @media (як і решта брейкпоінтів проєкту, CSS не дозволяє var() у медіа-запиті); значення — токени для responsive/header.css */
+@media (max-width: 440px) {
+  :root { --header-logo-k: 0.55; --header-bar-inset: calc(var(--grid-margin) / 2); }
+}
+@media (max-width: 360px) {
+  :root { --header-logo-k: 0.42; }
 }

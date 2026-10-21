@@ -25,9 +25,16 @@
   .site-header__menu-btn { width: var(--size-touch-target); padding-inline: 0; justify-content: center; }
   .site-header__menu-btn > span { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
-/* вузький телефон: пара логотипів менша, щоб не налізала на кабінет і кошик */
-@media (max-width: 440px) { :root { --header-logo-k: 0.6; } }
-@media (max-width: 360px) { :root { --header-logo-k: 0.5; } }
+/* малі ноути 1024–1199: ліва й права групи займають майже всю пілюлю, а логотипи при «центрі в'юпорта» наїжджали на кнопку мови (R7). Тепер, як на планшеті,
+   пара логотипів стоїть по центру ВІЛЬНОГО проміжку між групами (колонки auto | 1fr | auto), масштаб пари — токен --header-logo-k (tokens.css, блок АДАПТИВ) */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .site-header__bar { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .site-header__logos { justify-self: center; }
+}
+/* вузький телефон (≤ 440): пілюля ширша на токен --header-bar-inset (tokens.css), масштаб логотипів (--header-logo-k) — з токенів: логотипи не налізають на меню/кабінет (R7) */
+@media (max-width: 440px) {
+  .site-header__bar { left: var(--header-bar-inset); right: var(--header-bar-inset); }
+}
 /* телефон: кошик — лише іконка (підпис лишається для читачів екрана) */
 @media (max-width: 767.98px) {
   .site-header__side--end > .nav-cell--ghost .nav-cell__label { position: absolute; width: var(--border-hairline); height: var(--border-hairline); margin: calc(-1 * var(--border-hairline)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
