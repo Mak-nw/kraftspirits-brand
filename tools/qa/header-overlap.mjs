@@ -3,8 +3,8 @@
 //   node tools/qa/header-overlap.mjs [--url http://localhost:PORT/] [--pages index,catalog,…] [--widths …] [--locales uk,en] [--table] [--control]
 // Елементи: видимі кнопки/посилання пілюлі (.nav-cell поза випадним меню) і зображення логотипів (.site-header__logo img). Зазор між прямокутниками (rect): max(dx, dy); < 0 = перетин.
 // Пороги: кнопка↔кнопка ≥ 0; логотип↔логотип ≥ 0; логотип↔кнопка ≥ 8 px (320…1023) і ≥ 16 px (1024…1199).
-// Позитивні контролі (--control, вмикаються й у npm run qa:resp): у відкритій сторінці до кнопки мови додається margin-left:-80px (кнопка наїжджає на лого) — перевірка МАЄ дати порушення; 0 порушень = перевірка не працює.
-//   Два контролі: гілка 1024–1199 (uk/index, перша ширина ≥ 1024) і гілка ≤ 1023 (uk/catalog @ 390 — НЕ index; кнопка мови в пілюлі між кабінетом і кошиком).
+// Позитивні контролі (--control, вмикаються й у npm run qa:resp): у відкритій сторінці до кнопки «Кошик» додається margin-left:-300px (1024–1199) / -80px (≤ 1023) (кнопка наїжджає на сусідню; кнопки мови в пілюлі на < 1200 немає — вона в меню) — перевірка МАЄ дати порушення; 0 порушень = перевірка не працює.
+//   Два контролі: гілка 1024–1199 (uk/index, перша ширина ≥ 1024) і гілка ≤ 1023 (uk/catalog @ 390 — НЕ index; кошик поруч із кнопкою кабінету).
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, waitStable, sleep, defaultPages } from './lib.mjs';
 
 export const R7_WIDTHS = [320, 360, 375, 390, 430, 600, 768, 834, 1024, 1050, 1100, 1150, 1199];
@@ -59,7 +59,7 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
             }
             const ctlKind = !control ? null : (ctl.wide === null && w >= 1024 && loc === 'uk' && name === 'index') ? 'wide' : (ctl.narrow === null && w === 390 && loc === 'uk' && name === 'catalog') ? 'narrow' : null;
             if (ctlKind) {
-              await page.evaluate(() => { const s = document.createElement('style'); s.textContent = '.site-header__lang-btn{margin-left:-80px!important}'; document.head.appendChild(s); });
+              await page.evaluate((ml) => { const s = document.createElement('style'); s.textContent = `.site-header__side--end a[href$="cart.html"]{margin-left:${ml}px!important}`; document.head.appendChild(s); }, ctlKind === 'wide' ? -300 : -80);
               await sleep(80); const c = await measureHeader(page, MIN_GAP(w));
               ctl[ctlKind] = c.pairs.filter((p) => p.gap < p.need).length;
             }
@@ -71,7 +71,7 @@ export async function runHeaderOverlap(o, { control = false, table = false } = {
     }
   } finally { await L.close(); }
   if (control) {
-    rep.note(`позитивний контроль (кнопка мови з margin-left:-80px): 1024–1199 (uk/index) ${ctl.wide} порушень; ≤ 1023 (uk/catalog @ 390) ${ctl.narrow} порушень`);
+    rep.note(`позитивний контроль (кошик з margin-left:-300px (1024–1199) / -80px (≤ 1023)): 1024–1199 (uk/index) ${ctl.wide} порушень; ≤ 1023 (uk/catalog @ 390) ${ctl.narrow} порушень`);
     const planned = { wide: widths.some((w) => w >= 1024) && pages.includes('index') && locales.includes('uk'), narrow: widths.includes(390) && pages.includes('catalog') && locales.includes('uk') }; /* контроль обов'язковий, лише якщо його сторінка/ширина входить у запуск */
     for (const [k, label] of [['wide', '1024–1199'], ['narrow', '≤ 1023 (390, catalog)']]) if (planned[k] && !ctl[k]) rep.add({ rule: 'R7', page: 'control', selector: 'контроль ' + label, value: ctl[k] === null ? 'контроль не виконано' : '0 порушень', msg: 'навмисне перекриття НЕ виявлено — перевірка не працює' });
   }

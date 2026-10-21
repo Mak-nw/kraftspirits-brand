@@ -62,7 +62,7 @@ export function COLLECT_D15() {
     barTop: r ? r.top : null, barLeft: r?.left ?? null, barRight: r?.right ?? null, barPos: bar ? getComputedStyle(bar).position : null,
     tokenRaw: getComputedStyle(document.documentElement).getPropertyValue('--header3-top').trim(), tokenPx: px('var(--header3-top)'),
     scrollY: window.scrollY, vw: Math.min(clientW, vwVar), u: Math.min(Math.max(vwVar, 1185), 1920) / 1920,
-    menu: items('.site-header__menu:not(.site-header__menu--lang) a.nav-cell--menu'), lang: (() => { const b = document.querySelector('.site-header__lang-btn'), c = document.querySelector('.site-header__side--end a[href$="cart.html"]'), lg = [...document.querySelectorAll('.site-header__menu--lang a[data-lang]')].map((x) => x.dataset.lang); const rb = b?.getBoundingClientRect(), rc = c?.getBoundingClientRect(); return { has: !!b, right: rb?.right ?? null, cartLeft: rc?.left ?? null, langs: lg, haspopup: b?.getAttribute('aria-haspopup'), expanded: b?.getAttribute('aria-expanded') }; })(), footer: items('.site-footer__col--menu a'),
+    menu: items('.site-header__menu:not(.site-header__menu--lang) a.nav-cell--menu:not([data-lang])'), lang: (() => { const b = document.querySelector('.site-header__lang-btn'), c = document.querySelector('.site-header__side--end a[href$="cart.html"]'), lg = [...document.querySelectorAll('.site-header__menu--lang a[data-lang]')].map((x) => x.dataset.lang); const rb = b?.getBoundingClientRect(), rc = c?.getBoundingClientRect(); return { has: !!b, right: rb?.right ?? null, cartLeft: rc?.left ?? null, langs: lg, menuLang: (() => { const nav = document.querySelector('.site-header__menu:not(.site-header__menu--lang)'), vis = [...(nav?.querySelectorAll('a') || [])].filter((a) => a.getClientRects().length > 0), first = vis.slice(0, 2); return { n: vis.filter((a) => a.dataset.lang).length, firstTwo: first.map((a) => a.dataset.lang || '').join(), minH: Math.min(...first.map((a) => a.getBoundingClientRect().height)), cur: first.filter((a) => a.getAttribute('aria-current') === 'true').map((a) => a.dataset.lang).join(), hrefs: first.map((a) => a.getAttribute('href')).join(), pillShown: !!b && b.getClientRects().length > 0 }; })(), haspopup: b?.getAttribute('aria-haspopup'), expanded: b?.getAttribute('aria-expanded') }; })(), footer: items('.site-footer__col--menu a'),
   };
 }
 
@@ -97,7 +97,16 @@ export function analyzeD15(collect, A = {}, gridCfg = GRID_DEFAULTS) {
     cmp('menu', d.menu);
     // перемикач мови (docs/i18n.md): кнопка зліва від «Кошика», aria-haspopup/aria-expanded, у списку uk і en
     const L = d.lang;
-    if (!L?.has) out.push({ page: c.label, selector: '.site-header__lang-btn', value: 'немає', msg: 'у шапці немає перемикача мови' });
+    // < 1200 (адаптив, docs/responsive.md §3): кнопки мови в пілюлі немає, натомість ПЕРШИМ у меню — «Українська» | «English» (uk,en), активна — aria-current, ≥ 44 px; ≥ 1200 цих пунктів у видимому меню немає
+    const ML = L?.menuLang;
+    if (d.vw < 1200 && ML) {
+      if (ML.pillShown) out.push({ page: c.label, selector: '.site-header__lang-btn', value: 'видима', msg: 'на < 1200 кнопка мови має бути прихована (мова — у меню)' });
+      if (ML.firstTwo !== 'uk,en' || ML.n !== 2) out.push({ page: c.label, selector: '.site-header__menu-lang', value: `перші пункти меню: ${ML.firstTwo || '(немає)'}, видимих мовних ${ML.n}`, msg: 'на < 1200 мова має бути ПЕРШИМ пунктом меню (uk,en)' });
+      if (ML.cur !== (String(c.label).startsWith('en/') ? 'en' : 'uk')) out.push({ page: c.label, selector: '.site-header__menu-lang', value: `aria-current: ${ML.cur || '(немає)'}`, msg: 'активна мова в меню не позначена aria-current' });
+      if (ML.minH < 43.5) out.push({ page: c.label, selector: '.site-header__menu-lang', value: `${ML.minH.toFixed(1)}px`, msg: 'пункти мови в меню < 44px' });
+    } else if (ML && ML.n > 0 && d.vw >= 1200) out.push({ page: c.label, selector: '.site-header__menu-lang', value: `видимих мовних пунктів у меню ${ML.n}`, msg: 'на ≥ 1200 мова лише кнопкою в пілюлі (пунктів меню не дублюємо)' });
+    if (d.vw < 1200) { /* кнопки мови немає: перевірки пілюлі нижче не застосовні */ }
+    else if (!L?.has) out.push({ page: c.label, selector: '.site-header__lang-btn', value: 'немає', msg: 'у шапці немає перемикача мови' });
     else {
       if (!(L.right <= L.cartLeft + tol)) out.push({ page: c.label, selector: '.site-header__lang-btn', value: `правий край ${L.right?.toFixed(1)} > лівий край «Кошика» ${L.cartLeft?.toFixed(1)}`, msg: 'перемикач мови має стояти зліва від «Кошика»' });
       if (L.langs.join() !== 'uk,en' || L.haspopup !== 'true' || L.expanded !== 'false') out.push({ page: c.label, selector: '.site-header__lang-btn', value: `мови ${L.langs.join()}, haspopup=${L.haspopup}, expanded=${L.expanded}`, msg: 'перемикач мови: очікується список uk,en, aria-haspopup="true", aria-expanded="false"' });
