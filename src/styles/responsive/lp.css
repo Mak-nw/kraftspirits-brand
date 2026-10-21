@@ -108,4 +108,9 @@
   .lp-steps__card { display: flex; flex-direction: column; height: auto; min-height: 0; }
   .lp-steps__card-img { position: relative; inset: auto; flex: none; height: calc(var(--grid-w) * 0.55); }
   .lp-steps__card-body { flex: 1 1 auto; width: 100%; height: auto; }
+  /* tiles perRow (events «Що є на локації»): на телефоні 2 колонки × 3 ряди, коло = ширина колонки, рядки без спільної сітки (другий ряд DS — grid-row: 6 — скинуто) */
+  .lp-tiles__grid--rows { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  .lp-tiles__grid--rows .lp-tile:nth-of-type(n+4) { grid-row: auto; margin-top: 0; }
+  .lp-tiles__grid--rows .lp-tile__caption > * { display: block; }
+  .lp-tiles__grid--rows .lp-tile { align-content: start; }
 }

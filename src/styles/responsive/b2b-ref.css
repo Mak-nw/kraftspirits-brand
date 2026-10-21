@@ -1,0 +1,43 @@
+/* АДАПТИВ: b2b, секції типу ref (b2b-ref.css = виняток 1:1 макета, абсолютне позиціювання в --u працює лише ≥ 1200).
+   < 1200: секції 8/9/11 перевёрстано в ПОТІК (відхід від 1:1 лише поза 1200–1920): фото-«квиток» зверху (маска розтягується разом з фото, виїмки зменшуються пропорційно),
+   далі заголовок, абзац, кнопка (≥ 44) або факти; шрифти — через розмірні токени ролей (--font-size-*), без px. Секція 10 (картки брендів): ≥ 1024 — як було (дві картки, u-геометрія),
+   ≤ 1023 — картки одна під одною за правилами brand-half головної (responsive/home.css, --bhu). Нових візуальних елементів немає. */
+@media (max-width: 1199.98px) {
+  .b2b-ref--8, .b2b-ref--9, .b2b-ref--11 { display: flex; flex-direction: column; align-items: flex-start; height: auto; padding: var(--space-100) var(--grid-margin); gap: var(--space-30); }
+  .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { position: relative; top: auto; left: auto; flex: none; width: 100%; aspect-ratio: 776 / 622; margin-bottom: var(--space-30); }
+  .b2b-ref[class] .b2b-ref__photo img { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+  .b2b-ref--8 .b2b-ref__title, .b2b-ref--9 .b2b-ref__title, .b2b-ref--11 .b2b-ref__title,
+  .b2b-ref--8 .b2b-ref__text, .b2b-ref--9 .b2b-ref__text, .b2b-ref--11 .b2b-ref__text,
+  .b2b-ref--9 .b2b-ref__btn, .b2b-ref--11 .b2b-ref__facts { position: static; left: auto; top: auto; width: 100%; max-width: var(--size-lp-text-w, 100%); }
+  .b2b-ref__title { font-size: var(--font-size-h2); line-height: var(--lh-none); }
+  .b2b-ref__text { font-size: var(--font-size-text); line-height: var(--lh-normal); }
+  html[lang="en"] .b2b-ref--9 .b2b-ref__text, html[lang="en"] .b2b-ref--9 .b2b-ref__btn { top: auto; }
+  .b2b-ref__btn { width: auto; margin-top: var(--space-30); }
+  .b2b-ref__btn-in { transform: none; }
+  .b2b-ref__facts { margin-top: var(--space-30); grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; column-gap: var(--grid-gap); row-gap: var(--space-50); }
+  .b2b-ref__fact-title, .b2b-ref__fact-text { width: auto; font-size: var(--font-size-text); line-height: var(--lh-normal); }
+  .b2b-ref__fact-title { font-size: var(--font-size-title); }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .b2b-ref--8 .b2b-ref__photo, .b2b-ref--9 .b2b-ref__photo, .b2b-ref--11 .b2b-ref__photo { aspect-ratio: 776 / 500; }
+}
+/* стор. 10 на 1024–1199: u-геометрія макета, але текст бренду ширший (440u → 560u), щоб на малих ноутах не лягав на виріз пляшки */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .b2b-ref--10 .brand-half { --size-brand-content-w: calc(560 * var(--u)); }
+}
+/* стор. 10 на ≤ 1023: картки брендів одна під одною на всю ширину сітки, висота автоматична; геометрія й маска — як у «Два бренди» головної (скидання u-перевизначень b2b-ref.css) */
+@media (max-width: 1023.98px) {
+  .b2b-ref--10 { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: 60%; }
+  .b2b-ref--10 .brand-half--yasnocraft[class] { --bh-card-x: var(--offset-brand-card-yc-x); --bh-card-w: var(--size-brand-card-yc-w); }
+  .b2b-ref--10 .brand-half--bazylsprings[class] { --bh-card-x: var(--offset-brand-card-bs-x); --bh-card-w: var(--size-brand-card-bs-w); }
+  .b2b-ref--10 .brand-half--yasnocraft[class] .brand-half__card::before { -webkit-mask-image: url('/assets/img/home-brand-card-yc.svg'); mask-image: url('/assets/img/home-brand-card-yc.svg'); }
+  .b2b-ref--10 .brand-half--bazylsprings[class] .brand-half__card::before { -webkit-mask-image: url('/assets/img/home-brand-card-bs.svg'); mask-image: url('/assets/img/home-brand-card-bs.svg'); }
+  .b2b-ref--10 .brand-half[class] .brand-half__bg { inset: 0; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  .b2b-ref--10 .brand-half__cta { top: var(--offset-brand-cta-top); }
+  .b2b-ref--10 .btn__inner { letter-spacing: normal; }
+}
+@media (max-width: 767.98px) {
+  .b2b-ref--10 .brand-half[class] { --size-brand-content-w: 76%; }
+  .b2b-ref__facts { grid-template-columns: minmax(0, 1fr); }
+}
