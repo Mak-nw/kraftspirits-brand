@@ -5,15 +5,14 @@ export default {
   metaDescription: 'Private label bottling, gift sets and certificates, and contract production at the YasnoCraft distillery near Kyiv. We reply to every request within 1 working day.',
   sections: [
     { title: 'A distillery that works for your brand', lead: 'A full cycle from grain to bottle near Kyiv. We bottle drinks under your label, assemble gift sets and produce to your recipe.', alt: 'The YasnoCraft distillery building among fields and ponds', cta: { text: 'Leave a request' } },
-    { title: 'Private label bottling.', lead: 'Our products under your label. Gin, brandy, tincture or liqueur carrying the name of your brand, venue or company: your own drink that builds recognition every day.' },
-    { title: 'Gift sets.', text: 'Gifts for partners, clients and your team, put together for your task. You choose the contents of the set, we design the packaging with your logo, and inside are drinks from our own distillery.', alt: 'A gift box with a ribbon and a bottle by the window', cta: { text: 'Learn more' } },   // [to be confirmed: where the button leads (client mock-up: "How the house works")]
-    { title: 'Gift certificates.', text: 'Give an experience instead of things. A certificate for a tour with a tasting at our distillery suits friends, colleagues, family or partners: you buy it, you give it, and the recipient picks the date.', alt: 'A terrace table with glasses against fields', cta: { text: 'Buy a certificate' } },
-    { title: 'Contract production.', text: 'We make drinks to your recipe or develop one together with our team. Suits brands that want to launch their own line without building a production site.', alt: 'A copper still in the distillery hall', cta: { text: 'Leave a request' } },
-    { title: 'What our production can do', items: [   // [to be confirmed: the client mock-up has no heading for this block]
-      { title: 'Capacity', value: `up to 400${NB}L`, text: 'of drinks per shift' },
-      { title: 'Two classic stills', text: `Wash (3,660${NB}L) and spirit (2,420${NB}L): distilling in a pot still or through plates` },
-      { title: 'Vacuum still', value: `410${NB}L`, text: 'Up to 7 plates and a gin basket. Low temperature keeps fruit and botanical aroma' },
-      { title: 'Full cycle', text: 'Ageing zones, different cask types, blending, filtering and bottling' },
+    {},   // ref 10 (two brand cards): texts come from the home page dictionary (t.home.choice.*)
+    { title: 'Gift sets.', text: 'Gifts for partners, clients and your team, put together for your task. You choose the contents of the set, we design the packaging with your logo, and inside - drinks from our own distillery.', alt: 'A gift box with a ribbon and a bottle by the window', cta: { text: 'How the house works' } },
+    { title: 'Gift certificates.', text: 'Give an experience instead of things. A certificate for a tour with a tasting at our distillery suits friends, colleagues, family or partners: you buy it, you give it, and the recipient picks the date.', alt: 'A terrace table with glasses against fields' },
+    { title: 'Contract production.', text: 'We make drinks to your recipe or develop one together with our team. Suits brands that want to launch their own line without building a production site.', alt: 'A copper still in the distillery hall', items: [
+      { title: 'Capacity:', text: 'up to 400 L of drinks per shift' },
+      { title: 'Two classic stills:', text: 'wash (3,660 L) and spirit (2,420 L) - distilling in a pot still or through plates' },
+      { title: 'Vacuum still:', text: '410 L, up to 7 plates and a gin basket; low distilling temperature keeps fruit and botanical aroma' },
+      { title: 'Full cycle:', text: 'ageing zones, different cask types, blending, filtering and bottling' },
     ] },
     { kicker: 'Working together', title: 'How we work', items: [
       { title: 'Request', text: 'Leave a request and we will reply within 1 working day' },
