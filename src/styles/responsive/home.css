@@ -16,6 +16,7 @@
   .tour-card--photo-first { flex-direction: column-reverse; }
   .tour-card__photo { width: 100%; aspect-ratio: var(--ratio-r-photo); border-width: 0; border-bottom-width: var(--border-tour-frame); }
   .tour-card--photo-first .tour-card__photo { border-width: 0; border-bottom-width: var(--border-tour-frame); }
+  .tour-card__photo .contacts-map { min-height: 0; } /* карта в рамці фото (lp place): мінімум висоти карти контактів (280 px) > рамки 4:3 на < 373 px — низ карти з атрибуцією OSM різався */
   .tour-card__text, .tour-card--photo-first .tour-card__text { flex: none; padding: var(--space-tour-pad); gap: var(--space-40); }
   .tour-card__head { width: 100%; }
   .tour-card .tour-card__body { width: 100%; }
