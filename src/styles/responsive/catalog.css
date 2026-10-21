@@ -11,6 +11,7 @@
   .catalog-bar__group:not(.catalog-bar__group--filters) .select { grid-column: 1 / -1; }
   .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); width: var(--grid-w); }
   .select { min-height: var(--size-touch-target); }
+  .catalog-bar .select__list { left: 0; min-width: 0; max-width: 100%; }  /* список від лівого краю свого селекта і не ширший за нього (на 320 «Сортування» заходило за в'юпорт на 2px) */
   .select__option { min-height: var(--size-touch-target); display: flex; align-items: center; }
   /* товар: фото зверху (не sticky), панель під ним */
   .product { grid-template-columns: minmax(0, 1fr); row-gap: var(--grid-gap-panels); }
