@@ -343,6 +343,8 @@ sections: [ { type: 'hero', id: 'b2b-hero', … }, …секції B2B…, { typ
 | `tiles-media` | tiles | у плитці рівно одне з `engraving` / `img` | так |
 | `tiles-icon-needs-engraving` | tiles | `icon` лише з `engraving` | так |
 | `tiles-alt-needs-img` | tiles | `alt` лише з `img` | так |
+| `tiles-bare-engraving` | tiles | `bare` (коло без решітки гравюри) лише коли кожна плитка з `engraving` | так |
+| `tiles-perrow-6` | tiles | `perRow: 3` (плитки у два ряди по три) — рівно 6 плиток | так |
 | `tiles-circle-needs-img` | tiles | `shape: circle` ⇒ `img` у кожній плитці | так |
 | `tiles-circle-origin-2lines` | tiles | `shape: circle`: `origin` — рівно два рядки (один `\n`, кожен ≤ 32) | так |
 | `layers-barrel-needs-look` | layers | `shape: barrel` лише з `look: about` і `img` у кожному пункті | так |

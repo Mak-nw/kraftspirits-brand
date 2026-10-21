@@ -232,8 +232,9 @@ function runMutations(label, page, sectionIndex) {
         for (let k = 0; k <= t.def.max + 1; k++) {
           if (k > 14) break;
           const arr = Array.from({ length: k }, (_, i) => { const e = clone(proto); if (e && typeof e === 'object' && 'key' in e) e.key = `k${i}`; return e; });
-          const okLen = k >= t.def.min && k <= t.def.max && (!t.def.divides || t.def.divides % k === 0) && !(t.def.req === false && k === 0 && false);
-          const emptyOk = k === 0 && !t.def.req;
+          const perRowSec = t.scopeKey === 'tiles.items' && getAt(page, t.path.slice(0, -1))?.perRow !== undefined;   // правило tiles-perrow-6: з perRow рівно 6 плиток
+          const okLen = k >= t.def.min && k <= t.def.max && (!t.def.divides || t.def.divides % k === 0) && (!perRowSec || k === 6);
+          const emptyOk = k === 0 && !t.def.req && !perRowSec;
           if (skip && k === 0) continue;
           if (t.scopeKey === 'compare.groups' || t.scopeKey === 'offers.items' || t.scopeKey === 'card.list' || t.scopeKey === 'offers.items.facts') { /* залежності правил (сума span, ціна): перевіряємо лише невалідні межі */ if (okLen || emptyOk) continue; }
           const p = clone(page); setAt(p, t.path, arr);
@@ -261,6 +262,8 @@ const S = (p, i = 1) => p.sections[i];
 cross('layers: 7 пунктів (більше за максимум 6)', (p) => { S(p).items = Array.from({ length: 7 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'layers');
 for (const k of [2, 3, 4, 5, 6]) cross(`layers: ${k} пунктів — n рівних блоків контейнера (10 колонок)`, (p) => { S(p).items = Array.from({ length: k }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'layers');
 cross('tiles: 5 пунктів (n рівних блоків)', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, true, true, 'tiles [engraving');
+cross('tiles: perRow 3 і 5 плиток (позитивний контроль tiles-perrow-6, відхиляється)', (p) => { S(p).items = Array.from({ length: 5 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving bare');
+cross('tiles: bare без engraving у плитці (tiles-bare-engraving, відхиляється)', (p) => { delete S(p).items[0].engraving; delete S(p).items[0].icon; S(p).items[0].img = '/q1'; }, false, false, 'tiles [engraving bare');
 cross('tiles: 7 пунктів (більше за максимум)', (p) => { S(p).items = Array.from({ length: 7 }, (_, i) => ({ ...S(p).items[0], key: `k${i}` })); }, false, false, 'tiles [engraving');
 cross('compare: сума span = 9 (JS відхиляє; JSON не виражає)', (p) => { S(p).groups[1].span = 6; }, false, true, 'compare [cellar+list');
 cross('compare: типово cols 10, сума span = 10 (3+7)', (p) => { delete S(p).cols; }, true, true, 'compare [cellar+list');
