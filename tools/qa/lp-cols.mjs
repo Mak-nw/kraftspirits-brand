@@ -6,7 +6,7 @@
 //   pad: секція з класом lp-pad--N має padding-top = --space-N; padding-bottom = --space-N, крім: наступна секція — стек (padding-bottom 0: зазор до стеку = 5u стеку, рішення 5d981ca1) або join (--space-lp-room-join).
 //   Позитивні контролі (в тому ж прогоні): (а) контейнер розтягнуто на 10 колонок (повна сітка) (--lp-w: --grid-w) — перевірка cols МАЄ дати порушення; (б) плитки зі зміненою шириною (рівний
 //   поділ зламано) — МАЄ дати порушення; (в) pad перебито на 150u — МАЄ дати порушення; (г) padding-bottom ≠ 0 перед стеком і padding-top ≠ кроку — МАЄ дати порушення.
-// Код виходу: 0 — усе гаразд, 1 — порушення / контроль не спрацював, 2 — збій. Параметри: --url (за замовч. http://localhost:5200/), --widths, --scrollbar, --pages (за замовч. excursions).
+// Код виходу: 0 — усе гаразд, 1 — порушення / контроль не спрацював, 2 — збій. Параметри: --url (за замовч. http://localhost:5200/), --widths, --scrollbar, --pages (за замовч. excursions,events; perRow: 3 у ряд × 2 ряди, контроль «4 у ряд»).
 const GRID_COLS = 10; // tokens.css --grid-cols (рішення замовника: весь сайт на 10 колонок)
 import { Report, runMain, launch, openPage, pageUrl, pageSpec, matrix, sleep } from './lib.mjs';
 
@@ -66,7 +66,7 @@ const check = (d, rep, label) => {
   return bad;
 };
 
-await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pages: 'excursions' }, async (o) => {
+await runMain('lp-cols', { widths: '1200,1440,1728,1920', scrollbar: 'both', pages: 'excursions,events' }, async (o) => {
   const rep = new Report('lp-cols');
   const ctl = { wide: null, eq: null, pad: null, padStack: null, row: null }; let colsCount = 0; let padCount = 0; let eqCount = 0;
   for (const combo of matrix(o, { dprs: [o.dpr[0]] })) {
