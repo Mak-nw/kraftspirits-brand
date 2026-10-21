@@ -31,6 +31,7 @@
     "qa:lp-stack": "node tools/qa/lp-stack.mjs",
     "qa:lp-cols": "node tools/qa/lp-cols.mjs",
     "qa:hero-btn": "node tools/qa/hero-btn.mjs",
+    "qa:hero-vh": "node tools/qa/hero-vh.mjs",
     "qa:overlay-grid": "node tools/qa/overlay-grid.mjs"
   },
   "devDependencies": {
