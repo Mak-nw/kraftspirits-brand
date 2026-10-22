@@ -5,6 +5,7 @@
   .tour-card--cocktail { min-height: 0; }
   .tour-card--cocktail .tour-card__text { flex-direction: column; align-items: stretch; gap: var(--space-40); }
   .tour-card--cocktail .tour-card__aside { align-self: center; align-items: center; text-align: center; } /* картка товару — внизу блоку по центру, оригінального розміру каталогу на цій ширині */
+  .tour-card--cocktail .tour-card__text:has(> .tour-card__aside) { padding-bottom: 0; } /* картка «Створено з» впритул до нижнього краю панелі (замовник 22.10: під товаром не лишається смуги патерна); бічні/верхній падінги лишаються; без картки товару падінг не міняється */
   .tabs__list { flex-wrap: wrap; }
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
   .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }

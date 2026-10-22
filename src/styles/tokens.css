@@ -1437,6 +1437,7 @@
 }
 @media (max-width: 767.98px) {
   :root { --size-brand-content-w-stack: 76%; }
+  :root { --space-cocktail-gap: var(--space-60); }              /* телефон <768: зазор між блоками коктейлів 60u (390: 36,6 px; було 30u = 18 px; замовник 22.10 «більше відступу між блоками рецептів»); ≥ 768 без змін */
   :root { --offset-hero-logos-lift: calc(0.2 * var(--size-hero-logo-bs-h)); } /* телефон <768: група YASNOCRAFT + BAZYLSPRINGS піднята на 20% висоти BAZYLSPRINGS від центру між шапкою і низом (коментарі замовника 83d711cb/079882d1; змінює 34751384 лише на телефоні) */
   .catalog-grid, .tour-card__aside { --size-card-cat2-w: var(--grid-w); }
   .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
