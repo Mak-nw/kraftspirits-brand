@@ -29,7 +29,11 @@
   .contacts-window > .contacts-window__map { position: relative; inset: auto; order: 2; flex: none; height: var(--size-contacts-map-min-h); }
   .contacts-map { min-height: var(--size-contacts-map-min-h); border-radius: var(--radius-panel); }
   /* зворотній зв'язок: одна колонка (порядок: заголовок, тип, контакти, повідомлення, згода, кнопка) */
-  .feedback-form { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-feedback-block-gap); }
+  /* відступи на рівні груп (група = підпис + поле; всередині групи --space-field-label-gap не змінюється): «Тип звернення» ↔ «Ім'я» ↔ «Телефон» ↔ «E-mail» ↔ «Повідомлення» ↔ згода ↔ кнопка = --space-40 */
+  .feedback-form { display: flex; flex-direction: column; min-height: 0; row-gap: var(--space-40); }
+  .feedback-block { gap: var(--space-40); }
+  /* низ вікна форми/контактів → футер = поле сторінки (відступ від краю екрана до вікна, --space-product-page-x): секція не центрує вікно в в'юпорті, а росте за вмістом */
+  .feedback, .contacts { min-height: 0; justify-content: flex-start; padding-bottom: var(--space-product-page-x); }
   .feedback-col--aside > *, .feedback-col--main > * { grid-column: auto; }
   .feedback-col--aside > .feedback-head { order: 1; }
   .feedback-col--aside > [data-field="topic"] { order: 2; }
@@ -47,7 +51,7 @@
 @media (max-width: 767.98px) {
   .catalog-bar .select { grid-column: 1 / -1; }
   .catalog-grid { grid-template-columns: minmax(0, 1fr); }
-  .feedback-pair { grid-template-columns: minmax(0, 1fr); }
+  .feedback-pair { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-40); } /* «Телефон» ↔ «E-mail» в один стовпець: теж відступ між групами */
   .topic-group { grid-template-columns: minmax(0, 1fr); }
   .faq-page__list { grid-template-columns: minmax(0, 1fr); }
   .contacts-data { grid-template-columns: minmax(0, 1fr); }
