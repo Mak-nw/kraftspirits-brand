@@ -174,7 +174,6 @@
   --duration-accordion: 0.85s;      /* семантичний токен, вузла Figma немає: відкриття/закриття акордеона (висота, opacity тіла, «+» ↔ «−») */
   --ease-accordion: cubic-bezier(0.45, 0, 0.25, 1);  /* семантичний токен, вузла Figma немає: м'яка ease-in-out крива акордеона (без різкого старту й стопу) */
   --acc-icon-bar: 21.85%;           /* семантичний токен, вузла Figma немає: ширина вертикальної риски «+» (1,966 з 9 у Union 194:1190); при відкритті висота риски 100% → 0% */
-  --acc-faq-icon-drop: calc(round(down, (var(--type-faq-size) * var(--lh-normal) - round(var(--font-ascent-serif) * var(--type-faq-size), 1px) - round(var(--font-descent-serif) * var(--type-faq-size), 1px)) / 2, 1px) + round(var(--font-ascent-serif) * var(--type-faq-size), 1px) - (var(--font-cap-height-serif-ink) * var(--type-faq-size) + var(--size-icon-plus)) / 2);  /* семантичний токен: зсув іконки в закритому FAQ-рядку = центр капітелі першого рядка питання (не центр line-box; ті ж round-правила Chrome, що в --shift-cocktail-title-cap-top); при відкритті → 0 (іконка зверху, 194:1188) */
   --reveal-shift: calc(16 * var(--u));   /* семантичний токен, вузла Figma немає: зсув по Y на початку появи (лише translate) */
   --reveal-stagger: 0.12s;          /* семантичний токен, вузла Figma немає: затримка між сусідніми елементами при появі */
   --catalog-leave-lead: calc(var(--duration-fast) * 0.5);   /* семантичний токен, вузла Figma немає: каталог — через скільки після початку згасання карток стартують переїзд решти й зміна висоти сітки */

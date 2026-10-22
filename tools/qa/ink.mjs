@@ -7,7 +7,7 @@
 /** знімок clip (CSS px) -> base64 PNG; аналіз — у браузері через canvas (без зовнішніх залежностей) */
 const shot = (page, clip, o) => page.screenshot({ clip: { ...clip, x: clip.x + o.sx, y: clip.y + o.sy }, type: 'png', encoding: 'base64' });
 /** вертикальні межі маски різниці двох PNG у діапазонах x (пікселі знімка); bottom ексклюзивно */
-async function inkRowsBoth(page, a64, b64, ranges, frac = 0.5)  /* ranges: [x0,x1,y0,y1] */ {
+export async function inkRowsBoth(page, a64, b64, ranges, frac = 0.5)  /* ranges: [x0,x1,y0,y1] */ {
   return page.evaluate(async (a64, b64, ranges, frac) => {
     const load = async (b) => { const bm = await createImageBitmap(await (await fetch(`data:image/png;base64,${b}`)).blob()); const c = new OffscreenCanvas(bm.width, bm.height); const g = c.getContext('2d'); g.drawImage(bm, 0, 0); return g.getImageData(0, 0, bm.width, bm.height); };
     const A = await load(a64), B = await load(b64);

@@ -23,14 +23,12 @@
 
 /* FAQ-рядок = єдиний вигляд «картка» (макет About Us p10, рішення замовника: однаковий FAQ на всіх сторінках): кремова закруглена картка (--radius-faq-card, фон --btn-row-faq-bg-default)
    всередині тонкої зовнішньої hairline-рамки .acc-frame (прямі кути), відступ між ними --space-faq-card-inset. Partial components/faq-item завжди віддає .acc-frame > details.acc.acc--faq.
-   Питання ліворуч, «+» праворуч (механіка іконки та відкриття — .acc; іконка зверху, у закритому рядку опущена до центру першого рядка питання --acc-faq-icon-drop і плавно піднімається при відкритті);
+   Питання ліворуч, «+» праворуч (механіка іконки та відкриття — .acc; іконка по вертикалі в центрі рядка-заголовка = центру таба, і закритим, і відкритим; QA tools/qa/faq-icon.mjs);
    висота закритого рядка = padding 30u + рядок 28u + 30u = 88u у всіх рядків. Усе клікабельне (details), фокус-кільце — глобальне :focus-visible у summary. Тіло відповіді при розгортанні обрізається по заокругленню. */
 .acc-frame { padding: var(--space-faq-card-inset); border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-none); }
 .page-faq .acc-frame { border-color: var(--color-lp-hairline); } /* 4df2b29d: на зеленому тлі faq.html рамка 20% зеленого невидима — світлий hairline темних кімнат (золото 55%) */
 .acc--faq { padding: var(--space-30); border-radius: var(--radius-faq-card); background-color: var(--btn-row-faq-bg-default); transition: background-color var(--duration-base) var(--ease-out); }
-.acc--faq > summary { align-items: flex-start; }
-.acc--faq > summary::after { translate: 0 var(--acc-faq-icon-drop); }
-.acc--faq[open]:not(.is-closing) > summary::after { translate: none; }
+/* «+»/«−» рівно по центру таба (замовник 22.10.2026): рядок-заголовок симетричний (padding 30u зверху/знизу), тож центр summary = центр таба; питання в 1 і 2–3 рядки; у відкритому стані — центр рядка-заголовка (summary), тіло відповіді не впливає. align-items: center — спільне правило .acc > summary; колишні align-items: flex-start і translate за першим рядком (--acc-faq-icon-drop) прибрано: іконка не підвішена до першого рядка */
 
 /* рядок сторінки товару (194:1402): лише нижня лінія, px 20 py 15 */
 .acc--product { padding: var(--space-15) var(--space-20); border-bottom: var(--border-hairline) solid var(--color-line-strong); background-color: var(--btn-row-product-bg-default); transition: background-color var(--duration-fast) var(--ease-out); }
