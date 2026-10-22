@@ -10,7 +10,8 @@
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
   .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }
   .wc-grid--guest { grid-template-columns: minmax(0, 1fr); }
-  .wc-grid--cart { row-gap: var(--grid-gap-panels); } /* КОШИК: зазор між блоками (товари ↔ підсумок) = 5u, як на десктопі (замовник 22.10: «в адаптиві кошику менше місця між блоками, 5 пкс»); виняток з --space-stack-gap (п.18 docs/responsive.md); checkout/account лишаються на --space-stack-gap */
+  .wc-grid--cart { row-gap: var(--grid-gap-panels); } /* КОШИК: зазор між блоками (товари ↔ підсумок) = 5u, як на десктопі (замовник 22.10: «в адаптиві кошику менше місця між блоками, 5 пкс»); виняток з --space-stack-gap (п.18 docs/responsive.md); account лишається на --space-stack-gap, checkout — окреме правило нижче */
+  .wc-grid--checkout { row-gap: var(--grid-gap-panels); } /* ОФОРМЛЕННЯ <1024: зазор між формою і підсумком = 5u, як у кошику (рішення замовника 2B, питання q2 review-out/questions2); account не змінено */
   .woocommerce-account .wc-grid--guest .lost_password .btn__inner { white-space: nowrap; } /* «Забули пароль?» завжди в один рядок (f1688fb6) */
   .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content { grid-column: auto; }
   .woocommerce-MyAccount-navigation ul { flex-direction: row; flex-wrap: wrap; }
