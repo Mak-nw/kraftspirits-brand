@@ -1440,3 +1440,12 @@
   .catalog-grid, .tour-card__aside { --size-card-cat2-w: var(--grid-w); }
   .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }
 }
+/* АДАПТИВ: іконки кабінету і кошика в пілюлі шапки (замовник: «в адаптиві іконки в кнопках кабінет та кошик мають бути більшими»; кнопки лишаються 44×44).
+   Було 22u (--header3-icon-size): на телефоні 11–19.8 px, на 1199 лише 13.6 px. Стало (+≈36%): телефон < 768 — 30u (320: 15, 390: 18.3, 440: 20.6, 599…767: 27 px); 768–1199 — частка від --size-touch-target 0.6 (26.4 px, як на телефоні 599…767, без залежності від u). ≥ 1200 — без змін (--header3-icon-size) */
+:root { --size-icon-header-adapt: var(--header3-icon-size); }
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  :root { --size-icon-header-adapt: calc(var(--size-touch-target) * 0.6); }
+}
+@media (max-width: 767.98px) {
+  :root { --size-icon-header-adapt: calc(30 * var(--u)); }
+}

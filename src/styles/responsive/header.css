@@ -91,3 +91,11 @@
   .site-header__side:not(.site-header__side--end) { padding-left: var(--space-15); }
   .site-header__side--end { padding-right: var(--space-15); }
 }
+
+/* іконки кабінету і кошика в пілюлі на < 1200 — більші (замовник: «в адаптиві іконки в кнопках кабінет та кошик мають бути більшими»): розмір — токен --size-icon-header-adapt (tokens.css, АДАПТИВ); кнопки 44×44 і gap не змінюються, іконка по центру кнопки. До 1023 — всі іконки пілюлі (кошик на 768–1023 — іконка + підпис, місця вистачає: R7 зелений); на 1024–1199 у пілюлі тісно (кнопки з підписом «Кошик»/«Підказати?» зросли б на ≈ 12 px і зачепили б логотип, R7) — там більшою стає лише квадратна кнопка кабінету (ширина не залежить від іконки), кошик і headset як були */
+@media (max-width: 1023.98px) {
+  .site-header__side--end > .nav-cell--icon .icon { --icon-size: var(--size-icon-header-adapt); }
+}
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .site-header__side--end > .nav-cell--square .icon { --icon-size: var(--size-icon-header-adapt); }
+}
