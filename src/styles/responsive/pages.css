@@ -10,6 +10,7 @@
   /* ---- кошик / оформлення / кабінет: панелі одна під одною ---- */
   .wc-grid, .wc-grid--cart, .wc-grid--checkout { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-stack-gap); }
   .wc-grid--guest { grid-template-columns: minmax(0, 1fr); }
+  .wc-grid--cart { row-gap: var(--grid-gap-panels); } /* КОШИК: зазор між блоками (товари ↔ підсумок) = 5u, як на десктопі (замовник 22.10: «в адаптиві кошику менше місця між блоками, 5 пкс»); виняток з --space-stack-gap (п.18 docs/responsive.md); checkout/account лишаються на --space-stack-gap */
   .woocommerce-account .wc-grid--guest .lost_password .btn__inner { white-space: nowrap; } /* «Забули пароль?» завжди в один рядок (f1688fb6) */
   .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content { grid-column: auto; }
   .woocommerce-MyAccount-navigation ul { flex-direction: row; flex-wrap: wrap; }
