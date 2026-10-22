@@ -87,11 +87,9 @@ export const excursions = {
       items: [
         { key: 'f4', title: 'Екскурсія\n+ 4 напої', price: '1500', priceNote: 'грн з людини',
           facts: [{ dt: 'Напоїв', dd: '4' }, { dt: 'Закуски', dd: 'горіхи, крекери, сухе варення' }, { dt: 'Група', dd: 'від 6 осіб' }],
-          includes: ['Екскурсія дистилерією', 'Закуски до дегустації'],
           cta: { text: 'Забронювати', href: 'feedback.html?topic=excursion&format=4' } },
         { key: 'f8', title: 'Екскурсія\n+ 8 напоїв', price: '3800', priceNote: 'грн з людини',
           facts: [{ dt: 'Напоїв', dd: '8' }, { dt: 'Закуски', dd: '+ м\'ясні та сирні делікатеси' }, { dt: 'Група', dd: 'від 6 осіб' }],
-          includes: ['Екскурсія дистилерією', 'Закуски з м\'ясними та сирними делікатесами'],
           cta: { text: 'Забронювати', href: 'feedback.html?topic=excursion&format=8' } },
       ],
     },

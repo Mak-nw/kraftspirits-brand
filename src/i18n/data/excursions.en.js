@@ -37,8 +37,8 @@ export default {
       ], facts: [{ label: 'Snacks', value: 'Nuts, crackers, dry jam, cured meats and cheeses' }, { label: 'Group', value: 'from 6 people' }] },
     ] },
     { kicker: 'Price', title: 'Choose a format and book a date', lead: 'The price is per person and already includes the tour, the tasting and snacks. Groups of 6 or more. Tours run from 24 October.', items: [
-      { title: 'Tour\n+ 4 drinks', price: '₴1,500', priceNote: 'per person', facts: [{ dt: 'Drinks' }, { dt: 'Snacks', dd: 'nuts, crackers, dry jam' }, { dt: 'Group', dd: 'from 6 people' }], includes: ['Distillery tour', 'Snacks for the tasting'], cta: { text: 'Book' } },
-      { title: 'Tour\n+ 8 drinks', price: '₴3,800', priceNote: 'per person', facts: [{ dt: 'Drinks' }, { dt: 'Snacks', dd: '+ cured meats and cheeses' }, { dt: 'Group', dd: 'from 6 people' }], includes: ['Distillery tour', 'Snacks with cured meats and cheeses'], cta: { text: 'Book' } },
+      { title: 'Tour\n+ 4 drinks', price: '₴1,500', priceNote: 'per person', facts: [{ dt: 'Drinks' }, { dt: 'Snacks', dd: 'nuts, crackers, dry jam' }, { dt: 'Group', dd: 'from 6 people' }], cta: { text: 'Book' } },
+      { title: 'Tour\n+ 8 drinks', price: '₴3,800', priceNote: 'per person', facts: [{ dt: 'Drinks' }, { dt: 'Snacks', dd: '+ cured meats and cheeses' }, { dt: 'Group', dd: 'from 6 people' }], cta: { text: 'Book' } },
     ] },
     { kicker: 'The distillery shop', title: 'Take home what you liked', list: [
       'Unique samples: limited batches and special releases',
