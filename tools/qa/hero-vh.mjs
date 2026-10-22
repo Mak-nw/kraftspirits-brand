@@ -37,7 +37,7 @@ await runMain('hero-vh', { widths: '1200', scrollbar: 'none', pages: PAGES, vps:
         if (tall && m.h + 1 < m.minH) rep.add({ rule: 'HV', page: label, selector: '.hero', value: `h ${m.h.toFixed(1)} < мін. ${m.minH.toFixed(1)}`, msg: 'hero нижчий за --size-hero-min-h' });
         if (Math.abs(m.top) > 1) rep.add({ rule: 'HV', page: label, selector: '.hero', value: `top ${m.top.toFixed(1)}`, msg: 'hero починається не з верху екрана' });
         if (m.ct !== undefined && (m.ct < m.bar - 1 || m.cb > m.h + 1)) rep.add({ rule: 'HV', page: label, selector: '.hero__content', value: `content ${m.ct.toFixed(0)}…${m.cb.toFixed(0)}, шапка до ${m.bar.toFixed(0)}, hero ${m.h.toFixed(0)}`, msg: 'контент hero під шапкою / у межах hero' });
-        if (w < 1200 && !tall && m.cb !== undefined && m.h - m.cb < 0.3 * m.h - 1) rep.add({ rule: 'HV', page: label, selector: '.hero__content', value: `під блоком ${(m.h - m.cb).toFixed(0)} < 20% hero (${(0.2 * m.h).toFixed(0)})`, msg: 'блок «заголовок + кнопка» на <1200 піднято: низ ≥ 20% висоти hero (125371bc; 20% — правка замовника після 0c6910c)' });
+        if (w < 1200 && !tall && m.cb !== undefined && m.h - m.cb < 0.2 * m.h - 1) rep.add({ rule: 'HV', page: label, selector: '.hero__content', value: `під блоком ${(m.h - m.cb).toFixed(0)} < 20% hero (${(0.2 * m.h).toFixed(0)})`, msg: 'блок «заголовок + кнопка» на <1200 піднято: низ ≥ 20% висоти hero (125371bc; 20% — правка замовника після 0c6910c)' });
         if (m.lg.length) {
           for (const c of m.lg) if (Math.abs(c - m.vw / 2) > 0.5) rep.add({ rule: 'HV', page: label, selector: '.hero__logo', value: `центр ${c.toFixed(1)} ≠ ${m.vw / 2}`, msg: 'написи головної по центру' });
           if (w < 1200 && m.lgs && m.cork) {
