@@ -144,8 +144,6 @@
   --size-select-w: calc(200 * var(--u));       /* 194:1477 селект фільтра */
 
   /* ---------- Чіп «подія» з ромбами (194:1296, Frame 93/94; розміри 194:1298) ---------- */
-  --size-chip-ornament: calc(21.5 * var(--u));        /* 194:1298 бокс орнаменту (ромба), квадрат */
-  --size-chip-diamond: calc(15.203 * var(--u));       /* 194:1298 ромб-рамка (повернута на -45°) */
   --size-chip-diamond-core: calc(8.485 * var(--u));   /* 194:1298 внутрішній квадрат-заливка ромба */
 
   /* ---------- Демо-блоки design-system.html (розмір демо-блока design-system, вузла Figma немає) ---------- */
@@ -407,15 +405,15 @@
   --btn-arrow-icon-filter-active:      var(--btn-arrow-icon-filter-hover);
   --btn-arrow-icon-filter-disabled:    var(--btn-arrow-icon-filter-default);
 
-  /* chip (чіп-подія, 194:1296): колір тексту й ромбів; selected = .is-active / aria-pressed="true" */
+  /* chip (чіп-подія, 194:1296): колір тексту; selected = .is-active / aria-pressed="true" */
   --btn-chip-text-default:             var(--color-gold);
   --btn-chip-text-hover:               var(--color-light);
   --btn-chip-text-focus:               var(--btn-chip-text-hover);
   --btn-chip-text-selected:            var(--btn-chip-text-hover);
 
-  /* chip на секції підбору (224:3737): beige, активний/hover — gold */
-  --btn-chip-picker-text-default:      var(--color-beige);
-  --btn-chip-picker-text-hover:        var(--color-gold);
+  /* chip на секції підбору (рішення замовника 22.10): активний/hover/focus — --color-light («білий» тексту на темному), неактивний — той самий колір напівпрозорий (= --opacity-crumb-hover 0.6) */
+  --btn-chip-picker-text-default:      color-mix(in srgb, var(--color-light) calc(var(--opacity-crumb-hover) * 100%), transparent);
+  --btn-chip-picker-text-hover:        var(--color-light);
   --btn-chip-picker-text-focus:        var(--btn-chip-picker-text-hover);
   --btn-chip-picker-text-selected:     var(--btn-chip-picker-text-hover);
 

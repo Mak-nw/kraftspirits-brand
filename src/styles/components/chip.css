@@ -1,19 +1,12 @@
-/* Чіп «подія» з ромбами-орнаментами (194:1296). Кнопка-перемикач: .is-active / aria-pressed="true" (selected).
+/* Чіп «подія» (194:1296; ромби-орнаменти прибрано за рішенням замовника 22.10). Кнопка-перемикач: .is-active / aria-pressed="true" (selected).
    Кольори станів — токени --btn-chip-text-<стан> (tokens.css); контекстні змінні --btn-text / --btn-text-hover / -focus / -selected. */
-.chip { --btn-text: var(--btn-chip-text-default); --btn-text-hover: var(--btn-chip-text-hover); --btn-text-focus: var(--btn-chip-text-focus); --btn-text-selected: var(--btn-chip-text-selected); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-20); color: var(--btn-text); cursor: pointer; transition: color var(--btn-transition-duration) var(--btn-transition-ease); }
+.chip { --btn-text: var(--btn-chip-text-default); --btn-text-hover: var(--btn-chip-text-hover); --btn-text-focus: var(--btn-chip-text-focus); --btn-text-selected: var(--btn-chip-text-selected); display: inline-flex; align-items: center; justify-content: center; color: var(--btn-text); cursor: pointer; transition: color var(--btn-transition-duration) var(--btn-transition-ease); }
 .chip.is-active, .chip[aria-pressed="true"] { color: var(--btn-text-selected); }
 .chip:focus-visible { color: var(--btn-text-focus); transition-duration: var(--btn-transition-duration-focus); }
 @media (hover: hover) { .chip:hover { color: var(--btn-text-hover); } }
-.chip__ornament { position: relative; width: var(--size-chip-ornament); height: var(--size-chip-ornament); flex: none; display: grid; place-items: center; }
-.chip__ornament::before {
-  content: ''; width: var(--size-chip-diamond); height: var(--size-chip-diamond);
-  border: var(--border-hairline) solid currentColor;
-  background: linear-gradient(currentColor, currentColor) center / var(--size-chip-diamond-core) var(--size-chip-diamond-core) no-repeat;
-  transform: rotate(var(--angle-chip-diamond));
-}
-/* Рядок чіпів: п'ять рівних колонок (194:1295) */
+/* Рядок чіпів: рівні колонки (194:1295) */
 .chip-row { display: flex; align-items: center; width: var(--grid-w); }
 .chip-row .chip { flex: 1 1 0; min-width: 0; }
 .chip .t-chip { white-space: nowrap; } /* підпис чіпа в один рядок (висота ряду 25 не змінюється) */
-/* на секції підбору (224:3737): чіпи beige, активний/hover — gold (токени --btn-chip-picker-text-<стан>) */
+/* на секції підбору: активний/hover/focus — світлий (білий) текст, неактивний — той самий напівпрозорий (токени --btn-chip-picker-text-<стан>) */
 .picker .chip { --btn-text: var(--btn-chip-picker-text-default); --btn-text-hover: var(--btn-chip-picker-text-hover); --btn-text-focus: var(--btn-chip-picker-text-focus); --btn-text-selected: var(--btn-chip-picker-text-selected); }
