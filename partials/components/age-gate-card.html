@@ -1,12 +1,11 @@
 <div class="age-card">
   <div class="age-card__logos">
-    <img class="age-card__logo age-card__logo--yc" src="/assets/img/home-brand-logo-yc.svg" alt="YasnoCraft" width="241" height="64">
-    <img class="age-card__logo age-card__logo--bs" src="/assets/img/home-brand-logo-bs.svg" alt="Bazylsprings" width="158" height="91">
+    <img class="age-card__logo age-card__logo--yc" src="/assets/img/home-brand-logo-yc.svg" alt="YasnoCraft" width="402" height="106">
+    <img class="age-card__logo age-card__logo--bs" src="/assets/img/home-brand-logo-bs.svg" alt="Bazylsprings" width="263" height="152">
   </div>
   <div class="age-card__stack">
     <section class="age-card__panel" data-age-panel="ask"{{#ask-off}} inert aria-hidden="true"{{/ask-off}}>
       <h2 class="age-card__title t-hero" id="{{id|age-gate}}-title" tabindex="-1" data-age-title><span class="age-card__line">%t.age.title.1%</span> <span class="age-card__line">%t.age.title.2%</span></h2>
-      <p class="age-card__text t-desc" id="{{id|age-gate}}-text">%t.age.text%</p>
       <div class="age-card__actions">
         <!--@include components/btn-button variant="btn--green btn--block" action="confirm" text="%t.age.yes%"-->
         <!--@include components/btn-button variant="btn--outline btn--block" action="deny" text="%t.age.no%"-->
@@ -16,11 +15,11 @@
         <span class="check__box" aria-hidden="true"></span>
         <span class="check__label t-text">%t.age.remember%</span>
       </label>
-      <p class="age-card__legal t-text">%t.age.legal%</p>
+      <p class="age-card__legal t-text" id="{{id|age-gate}}-text" data-age-desc>%t.age.legal%</p>
     </section>
     <section class="age-card__panel age-card__panel--deny" data-age-panel="deny"{{#deny-off}} inert aria-hidden="true"{{/deny-off}}>
       <h2 class="age-card__title t-hero" id="{{id|age-gate}}-deny-title" tabindex="-1" data-age-title>%t.age.deny.title%</h2>
-      <p class="age-card__text t-desc" id="{{id|age-gate}}-deny-text">%t.age.deny.text%</p>
+      <p class="age-card__text t-desc" id="{{id|age-gate}}-deny-text" data-age-desc>%t.age.deny.text%</p>
       <div class="age-card__actions age-card__actions--single">
         <!--@include components/btn-button variant="btn--green" action="back" text="%t.age.deny.back%"-->
       </div>

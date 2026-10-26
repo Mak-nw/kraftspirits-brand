@@ -23,7 +23,8 @@ html:not(.age-ok) .age-gate { display: flex; }
 @media print { .age-gate { display: none !important; } }
 
 .age-card {
-  display: flex; flex-direction: column; align-items: center; gap: var(--space-50);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-100); /* лого ↔ заголовок: макет замовника (≈108u) */
+  container-type: inline-size; /* cqw для ширини логотипів = частка вмісту картки */
   width: min(var(--size-age-card-w), 100%); margin: auto; /* margin: auto — центр, а за низького вікна картка не обрізається зверху: оверлей скролиться */
   padding: var(--space-age-card-pad-y) var(--space-age-card-pad-x);
   background: var(--color-age-card);
@@ -36,29 +37,28 @@ html:not(.age-ok) .age-gate { display: flex; }
 }
 @keyframes age-card-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* пара логотипів (темні версії для світлого фону) */
-.age-card__logos { display: flex; align-items: center; justify-content: center; gap: calc(var(--space-50) * 2 + var(--border-hairline)); /* відстань між логотипами як раніше (роздільника більше немає) */ }
-.age-card__logo { flex: none; max-width: none; }
-.age-card__logo--yc { width: var(--size-age-logo-yc-w); height: var(--size-age-logo-yc-h); }
-.age-card__logo--bs { width: var(--size-age-logo-bs-w); height: var(--size-age-logo-bs-h); }
+/* пара логотипів ВЕРТИКАЛЬНО (макет замовника 10.2026): YASNOCRAFT зверху, BAZYLSPRINGS знизу; темні версії для світлого фону; ширина = частка вмісту картки (cqw), висота за пропорцією SVG */
+.age-card__logos { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: 100%; }
+.age-card__logo { flex: none; max-width: 100%; height: auto; }
+.age-card__logo--yc { width: var(--size-age-logo-yc-w); }
+.age-card__logo--bs { width: var(--size-age-logo-bs-w); }
 
 /* два стани в одній клітинці сітки: картка тримає висоту вищого (питання), стрибка при «Ні» / «Змінити відповідь» немає */
 .age-card__stack { display: grid; width: 100%; }
-.age-card__panel { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-30); }
+.age-card__panel { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-40); }
 .age-card__panel--deny { justify-content: center; }
 .age-card__panel[inert] { visibility: hidden; }
 .age-card__title { text-wrap: balance; }
 .age-card__title:focus { outline: none; }
 .age-card__line { display: block; }
-.age-card__text { max-width: var(--size-age-subtitle-w); color: var(--color-green); }
-.age-card__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-20); width: 100%; margin-top: var(--space-20); }
+.age-card__text { color: var(--color-green); }
+.age-card__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--size-age-actions-gap); width: 100%; }
 .age-card__actions--single { display: flex; justify-content: center; }
 .age-card__nojs { display: none; }
 
 
 /* юридичний уривок: малий кегль, приглушений колір; посилання підкреслені (виняток із правила «підкреслень немає, крім футера» — юридичний текст) */
 .age-card__legal {
-  max-width: var(--size-age-legal-w);
   color: var(--color-age-legal);
 }
 .age-card__legal a { color: var(--color-green); transition: color var(--duration-fast) var(--ease-out); }

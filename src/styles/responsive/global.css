@@ -27,5 +27,4 @@
 /* вікові ворота (вікно без роздільника між логотипами): на вузькому телефоні кнопки одна під одною, на всю ширину картки */
 @media (max-width: 479.98px) {
   .age-card__actions { grid-template-columns: minmax(0, 1fr); }
-  .age-card__logos { gap: var(--space-30); }
 }

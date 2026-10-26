@@ -62,7 +62,6 @@ export default {
   // ---- age gate ----
   'age.title.1': 'Please confirm that you are',
   'age.title.2': '18 or older',
-  'age.text': 'Our website is about alcoholic drinks, so access is open to adult visitors only. Please tell us your age to continue.',
   'age.yes': 'Yes, I am 18 or older',
   'age.no': 'No, I am under 18',
   'age.remember': 'Remember my choice on this device',

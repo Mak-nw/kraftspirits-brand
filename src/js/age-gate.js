@@ -31,7 +31,7 @@ function init() {
       if (on) {
         heading = p.querySelector('[data-age-title]');
         gate.setAttribute('aria-labelledby', heading.id);
-        gate.setAttribute('aria-describedby', p.querySelector('.age-card__text').id);
+        gate.setAttribute('aria-describedby', p.querySelector('[data-age-desc]').id);
       }
     });
     if (focus) heading.focus({ preventScroll: true });
