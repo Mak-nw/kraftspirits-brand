@@ -1,7 +1,6 @@
 /* Вибір бренду (макет «About Us» стор. 4): секція .brand-choice = H2 + пара панелей .brand-panel 5+5 (кожна = 5 колонок, зазор = гап колонок --grid-gap 40u),
    під кожною панеллю кнопка btn--gold. Панель: бежева рамка --border-frame з прямими кутами (--radius-none), усередині заокруглений бокс з hairline-обводкою
    (логотип, заголовок .t-lead, опис .t-desc), знизу смуга-фотофон і пляшка. Partial: components/brand-panel; секція: sections/brand-choice. */
-.brand-choice { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); padding: var(--space-100) var(--grid-margin); background: var(--color-brown); color: var(--color-beige); }
 .brand-choice__grid { display: grid; grid-template-columns: repeat(2, var(--grid-span-5)); gap: var(--grid-gap); width: var(--grid-w); max-width: 100%; }
 .brand-choice__item { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
 .brand-choice__item > .brand-panel { width: 100%; margin-bottom: var(--space-30); }

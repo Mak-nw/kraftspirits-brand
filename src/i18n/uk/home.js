@@ -1,10 +1,7 @@
 // Головна (index.html): сторінкові рядки.
 export default {
   'home.title': 'YasnoCraft × Bazylsprings',
-  'home.choice.title': 'Один дім,<br>два характери',
-  'home.choice.yc.title': 'Крафтова дистилерія',
   'home.choice.yc.text': 'Сучасна дистилерія, яка починає зі смакового профілю: яким має бути аромат, текстура й післясмак.',
-  'home.choice.bs.title': 'Whisky house',
   'home.choice.bs.text': 'Український whisky house, де смак формується витримкою, бочкою й точністю.',
   'home.choice.cta': 'Вивчити асортимент',
   'home.stat.brands': 'Бренди<br>під одним дахом',

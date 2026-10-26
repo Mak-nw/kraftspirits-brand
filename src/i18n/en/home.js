@@ -1,10 +1,7 @@
 // Home page (index.html) — English. DRAFT (copy pass with humanizer-en is the next step).
 export default {
   'home.title': 'YasnoCraft × Bazylsprings',
-  'home.choice.title': 'One house,<br>two characters',
-  'home.choice.yc.title': 'Craft distillery',
   'home.choice.yc.text': 'A modern distillery that starts from the flavour profile: what the aroma, texture and finish should be.',
-  'home.choice.bs.title': 'Whisky house',
   'home.choice.bs.text': 'A Ukrainian whisky house where flavour is shaped by ageing, the barrel and precision.',
   'home.choice.cta': 'Explore the range',
   'home.stat.brands': 'Brands<br>under one roof',
