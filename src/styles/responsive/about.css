@@ -41,8 +41,12 @@
   .about-people__grid { padding-bottom: calc(var(--space-about-head) + var(--space-100)); } /* малюнок пагорбів тут вищий за фото засновника — запас, щоб він не заходив під текст */
 }
 @media (max-width: 767.98px) {
-  .about-story__date { grid-column: 1 / span 1; }
-  .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo, .about-story__text, .about-story__milestone--start .about-story__text, .about-story__milestone--finish .about-story__text { grid-column: 2 / -1; }
+  /* віхи на телефоні (коментар замовника, макет mock-story-phone): стеком в одну колонку — дата, під нею фото на всю ширину колонки, під фото текст; планшет 768–1023 лишається двоколонковим */
+  .about-story__milestone, .about-story__milestone--start { row-gap: 0; }
+  .about-story__milestone--finish { margin-top: var(--space-100); }
+  .about-story__date, .about-story__milestone--start .about-story__date { grid-column: 1 / -1; grid-row: 1; }
+  .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo { grid-column: 1 / -1; grid-row: 2; margin-top: var(--space-70); }
+  .about-story__text, .about-story__milestone--start .about-story__text, .about-story__milestone--finish .about-story__text { grid-column: 1 / -1; grid-row: 3; margin-top: var(--space-85); }
   .about-stills__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-50); justify-items: center; }
   .about-still { width: calc(100% * var(--ratio-about-still-w-phone)); }
   .about-still__arch, .about-still--tall .about-still__arch { --lp-rise: calc(var(--grid-w) * var(--ratio-about-still-w-phone) * var(--ratio-lp-arch-rise)); }
