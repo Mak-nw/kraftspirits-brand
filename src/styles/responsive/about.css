@@ -35,7 +35,10 @@
   .about-people__note { order: 4; margin-top: 0; text-align: left; }
   .about-people__name { order: 5; align-self: flex-start; }
   .about-people__viktor { order: 2; position: relative; z-index: 1; left: auto; bottom: auto; display: block; width: min(var(--grid-span-5), var(--grid-w)); max-width: 100%; }
-  .about-people__hills { width: 100%; }
+  .about-people__hills { width: calc(100% / var(--ratio-about-hills-ink)); max-width: none; right: 0; } /* малюнок (без прозорого поля файлу зліва) від краю до краю секції впритул; зайве зліва ховає overflow секції */
+}
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .about-people__grid { padding-bottom: calc(var(--space-about-head) + var(--space-100)); } /* малюнок пагорбів тут вищий за фото засновника — запас, щоб він не заходив під текст */
 }
 @media (max-width: 767.98px) {
   .about-story__date { grid-column: 1 / span 1; }
