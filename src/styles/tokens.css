@@ -760,8 +760,8 @@
   --size-age-card-w: var(--grid-span-6);                         /* ширина картки = 6 колонок сітки по центру (колонки 3–8, 892.5u; було 860u): 2 рядки заголовка hero 55 + ряд з двох кнопок */
   --space-age-card-pad-y: var(--space-85);                      /* вертикальний padding картки (макет замовника 10.2026: ≈80u зверху до лого і знизу після юр. тексту) */
   --space-age-card-pad-x: var(--space-70);                      /* горизонтальний padding картки */
-  --size-age-logo-yc-w: 50.8cqw;                                /* макет замовника: YASNOCRAFT ≈ 43% ширини картки (382u з 892.5u) = 50.8% ширини вмісту картки (cqw контейнера .age-card); висота за пропорцією SVG 402×106 */
-  --size-age-logo-bs-w: 38.1cqw;                                /* BAZYLSPRINGS ≈ 32% картки (287u) = 38.1cqw; SVG 263×152 */
+  --size-age-logo-yc-w: 49cqw;                                  /* макет замовника v2 (10.2026): YASNOCRAFT ≈ 0.413 ширини картки (369u з 892.5u) = 49% ширини вмісту картки (cqw контейнера .age-card); висота за пропорцією SVG 402×106 */
+  --size-age-logo-bs-w: 30.8cqw;                                /* BAZYLSPRINGS ≈ 0.26 картки (232u) = 30.8cqw; SVG 263×152 */
   --size-age-actions-gap: var(--space-20);                      /* зазор між кнопками «Так/Ні» */
   --size-age-check: round(calc(26 * var(--u)), 1px);            /* квадрат індикатора «запам'ятати» (ціле px — чіткі краї) */
   --border-age-check: round(calc(1.5 * var(--u)), 1px);        /* рамка індикатора 1.5u (ціле px) */
@@ -1430,7 +1430,7 @@
 }
 @media (max-width: 767.98px) {
   :root { --size-brand-content-w-stack: 76%; }
-  :root { --size-age-logo-yc-w: 70cqw; --size-age-logo-bs-w: 52.5cqw; } /* ворота 18+ на телефоні: лого вертикально і на ≈ 1.4× більші за частку десктопу (картка вузька, вміст ≈ 250 px) */
+  :root { --size-age-logo-yc-w: 70cqw; --size-age-logo-bs-w: 52.5cqw; } /* ворота 18+ на телефоні: лого ВЕРТИКАЛЬНО (в ряд BS був би < 40% вмісту) і більші за частку десктопу (картка вузька, вміст ≈ 250 px) */
   :root { --space-cocktail-gap: var(--space-60); }              /* телефон <768: зазор між блоками коктейлів 60u (390: 36,6 px; було 30u = 18 px; замовник 22.10 «більше відступу між блоками рецептів»); ≥ 768 без змін */
   .catalog-grid, .tour-card__aside { --size-card-cat2-w: var(--grid-w); }
   .picker .slider { --size-arch-h: calc(var(--size-card-cat2-h) - 2 * var(--offset-arch) - 0.667 * var(--cu)); }

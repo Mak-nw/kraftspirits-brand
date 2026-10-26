@@ -25,6 +25,9 @@
 }
 
 /* вікові ворота (вікно без роздільника між логотипами): на вузькому телефоні кнопки одна під одною, на всю ширину картки */
+@media (max-width: 767.98px) {
+  .age-card__logos { flex-direction: column; gap: var(--space-30); } /* лого одне під одним: в ряд на 390 BS був би ≈ 31% вмісту */
+}
 @media (max-width: 479.98px) {
   .age-card__actions { grid-template-columns: minmax(0, 1fr); }
 }

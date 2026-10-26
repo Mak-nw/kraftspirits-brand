@@ -23,7 +23,7 @@ html:not(.age-ok) .age-gate { display: flex; }
 @media print { .age-gate { display: none !important; } }
 
 .age-card {
-  display: flex; flex-direction: column; align-items: center; gap: var(--space-100); /* лого ↔ заголовок: макет замовника (≈108u) */
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-85); /* лого ↔ заголовок: макет замовника v2 (≈ 92u до кегля заголовка) */
   container-type: inline-size; /* cqw для ширини логотипів = частка вмісту картки */
   width: min(var(--size-age-card-w), 100%); margin: auto; /* margin: auto — центр, а за низького вікна картка не обрізається зверху: оверлей скролиться */
   padding: var(--space-age-card-pad-y) var(--space-age-card-pad-x);
@@ -37,8 +37,8 @@ html:not(.age-ok) .age-gate { display: flex; }
 }
 @keyframes age-card-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* пара логотипів ВЕРТИКАЛЬНО (макет замовника 10.2026): YASNOCRAFT зверху, BAZYLSPRINGS знизу; темні версії для світлого фону; ширина = частка вмісту картки (cqw), висота за пропорцією SVG */
-.age-card__logos { display: flex; flex-direction: column; align-items: center; gap: var(--space-30); width: 100%; }
+/* пара логотипів В РЯД (макет замовника v2 10.2026): YASNOCRAFT ліворуч, BAZYLSPRINGS праворуч, центри на одній лінії; темні версії для світлого фону; ширина = частка вмісту картки (cqw), висота за пропорцією SVG. На телефоні < 768 — вертикально (responsive/global.css) */
+.age-card__logos { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: var(--space-70); width: 100%; }
 .age-card__logo { flex: none; max-width: 100%; height: auto; }
 .age-card__logo--yc { width: var(--size-age-logo-yc-w); }
 .age-card__logo--bs { width: var(--size-age-logo-bs-w); }
