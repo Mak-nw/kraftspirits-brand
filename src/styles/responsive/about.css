@@ -31,7 +31,7 @@
   .about-people__german { order: 2; align-items: flex-start; text-align: left; }
   .about-people__german figcaption { align-items: flex-start; }
   .about-people__ava { width: min(var(--size-about-avatar), var(--size-about-ava-max-share)); min-width: var(--size-about-ava-min); }
-  .about-people__intro { order: 3; }
+  .about-people__intro { order: 3; margin-top: var(--space-70); } /* две групи: (А) директор — цитата, аватар, ім'я, посада; (Б) власник — кола, абзаци, «Засновник / Віктор Базильчук», фото: між групами відступ ≈ вдвічі більший за міжелементний (--space-about-head + --space-70) */
   .about-people__note { order: 4; margin-top: 0; text-align: left; }
   .about-people__name { order: 5; align-self: flex-start; }
   .about-people__viktor { order: 2; position: relative; z-index: 1; left: auto; bottom: auto; display: block; width: min(var(--grid-span-5), var(--grid-w)); max-width: 100%; }
