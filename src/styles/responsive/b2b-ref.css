@@ -9,7 +9,7 @@
   .b2b-ref--7 .b2b-ref__photo img { object-position: 50% var(--pos-b2b-ref7-photo-y); }
   .b2b-ref--7 .b2b-ref__title, .b2b-ref--8 .b2b-ref__title, .b2b-ref--9 .b2b-ref__title, .b2b-ref--11 .b2b-ref__title,
   .b2b-ref--7 .b2b-ref__text, .b2b-ref--8 .b2b-ref__text, .b2b-ref--9 .b2b-ref__text, .b2b-ref--11 .b2b-ref__text,
-  .b2b-ref--9 .b2b-ref__btn, .b2b-ref--11 .b2b-ref__facts { width: 100%; max-width: var(--size-lp-text-w, 100%); }
+  .b2b-ref--8 .b2b-ref__btn, .b2b-ref--9 .b2b-ref__btn, .b2b-ref--11 .b2b-ref__facts { width: 100%; max-width: var(--size-lp-text-w, 100%); }
   .b2b-ref .b2b-ref__body { grid-column: auto; grid-row: auto; align-self: auto; width: 100%; gap: var(--space-30); }
   .b2b-ref .b2b-ref__text { margin-top: 0; }
   .b2b-ref__title { font-size: var(--font-size-h2); line-height: var(--lh-none); }
