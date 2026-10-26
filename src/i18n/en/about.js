@@ -17,7 +17,7 @@ export default {
   'about.story.about-story-text-2': 'We opened the first phase on 8 August 2026. The opening raised UAH 585,000 for the Centre for Scaling Technology Solutions of military unit A4753.',
   'about.story.about-story-photo.alt-2': 'The distillery opening on 8 August 2026: guests among the barrels in the ageing hall',
   'about.people.about-people-viktor.alt': 'Viktor Bazylchuk, founder of the distillery',
-  'about.people.people-title': '“Combining traditional and<br>vacuum distillation gives<br>us more room to work<br>with different<br>raw materials”',
+  'about.people.people-title': '“Combining traditional and<br> vacuum distillation gives<br> us more room to work<br> with different<br> raw materials”',
   'about.people.about-people-ava.alt': 'Herman Marushchak, head of production',
   'about.people.figcaption': '<span class="t-product-name">Herman Marushchak</span><span class="t-kicker">head of production</span>',
   'about.people.p': 'Viktor Bazylchuk shaped the distillery’s concept, its production model and its team.',

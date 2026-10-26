@@ -14,25 +14,28 @@
   .about-story__photo, .about-story__milestone--start .about-story__photo, .about-story__milestone--finish .about-story__photo { grid-column: 3 / -1; grid-row: 1; width: 100%; height: auto; margin-left: 0; aspect-ratio: var(--ratio-about-photo-start); }
   .about-story__milestone--finish .about-story__photo { aspect-ratio: var(--ratio-about-photo-finish); }
   .about-story__text, .about-story__milestone--start .about-story__text, .about-story__milestone--finish .about-story__text { grid-column: 3 / -1; grid-row: 2; width: auto; margin-left: 0; }
-  /* цитата і люди: стовпець; портрет і пагорби — внизу секції */
-  .about-people { min-height: 0; padding-bottom: 0; }
-  .about-people__grid { display: flex; flex-direction: column; gap: var(--space-about-head); padding-bottom: var(--space-about-head); }
-  .about-people__quote { order: 1; }
-  .about-people__bq br { display: none; }
-  .about-people__german { order: 2; align-items: flex-start; text-align: left; }
-  .about-people__german figcaption { align-items: flex-start; }
-  .about-people__ava { width: min(var(--size-about-avatar), var(--size-about-ava-max-share)); min-width: var(--size-about-ava-min); }
-  .about-people__intro { order: 3; }
-  .about-people__note { order: 4; margin-top: 0; text-align: left; }
-  .about-people__name { order: 5; }
-  .about-people__viktor { position: relative; z-index: 1; left: auto; display: block; width: min(var(--grid-span-5), 100%); margin: 0 auto; }
-  .about-people__hills { width: 100%; }
   /* три установки */
   .about-stills__head > * { grid-column: 1 / -1; }
   .about-stills__lead { grid-column: 1 / -1; max-width: none; }
   /* принципи (без арки: коло з іконкою + текст по центру; колонки 4 → 2, на телефоні теж 2×2 — коментар замовника ab2c08e2) */
   .about-principles__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--grid-gap); }
   .about-faq .faq-page__list--span8 { width: var(--grid-w); } /* картки-акордеони FAQ — рівно ширина контейнера сітки (4/8 колонок), а не повний в'юпорт (коментар замовника e9c67857) */
+}
+/* цитата і люди на <1200 (телефон І планшет, коментар замовника: блок зламано): одна колонка в порядку макета — цитата, аватар + ім'я, кола, два абзаци, «Засновник / Віктор Базильчук», фото засновника внизу секції; пагорби — фоновий шар внизу ПІД фото (не під текстом). Переноси <br> у цитаті ховаються, а пробіл після кожного <br> у даних лишає слова розділеними (раніше display:none на <br> склеював «ДАЄНАМ»). */
+@media (max-width: 1199.98px) {
+  .about-people { min-height: 0; padding-bottom: 0; align-items: center; }
+  .about-people__grid { order: 1; flex: none; align-self: stretch; display: flex; flex-direction: column; gap: var(--space-about-head); padding-bottom: var(--space-about-head); }
+  .about-people__grid > * { min-width: 0; }
+  .about-people__quote { order: 1; overflow-wrap: break-word; }
+  .about-people__bq br { display: none; }
+  .about-people__german { order: 2; align-items: flex-start; text-align: left; }
+  .about-people__german figcaption { align-items: flex-start; }
+  .about-people__ava { width: min(var(--size-about-avatar), var(--size-about-ava-max-share)); min-width: var(--size-about-ava-min); }
+  .about-people__intro { order: 3; }
+  .about-people__note { order: 4; margin-top: 0; text-align: left; }
+  .about-people__name { order: 5; align-self: flex-start; }
+  .about-people__viktor { order: 2; position: relative; z-index: 1; left: auto; bottom: auto; display: block; width: min(var(--grid-span-5), var(--grid-w)); max-width: 100%; }
+  .about-people__hills { width: 100%; }
 }
 @media (max-width: 767.98px) {
   .about-story__date { grid-column: 1 / span 1; }
